@@ -1,0 +1,7 @@
+commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-north-1
+name: timeout
+timeout: 1
+parameters:
+  CreateWaitCondition: {{ var.create_wait_condition }}
+  CreateSecondTopic: {{ var.create_second_topic }}

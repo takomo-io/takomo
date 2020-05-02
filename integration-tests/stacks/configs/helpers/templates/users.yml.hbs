@@ -1,0 +1,25 @@
+Description: IT - users
+Parameters:
+  User1Name:
+    Type: String
+    Description: Name of user 1
+  User2Name:
+    Type: String
+    Description: Name of user 2
+Resources:
+  User1:
+    Type: AWS::IAM::User
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref User1Name
+        - Key: Timestamp
+          Value: {{ timestamp }}
+  User2:
+    Type: AWS::IAM::User
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref User2Name
+        - Key: Timestamp
+          Value: {{ timestamp }}

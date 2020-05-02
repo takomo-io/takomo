@@ -1,0 +1,7 @@
+project: examples-simple
+commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-central-1
+parameters:
+  CidrBlock: 10.0.1.0/24
+tags:
+  Name: Simple stack example

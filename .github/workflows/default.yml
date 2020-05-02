@@ -1,0 +1,60 @@
+name: Default
+
+on:
+  push:
+    branches:
+      - feature/**
+      - release/**
+      - fix/**
+      - master
+
+env:
+  TKM_ORG_A_ID: ${{ secrets.TKM_ORG_A_ID }}
+  TKM_ORG_A_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_A_MASTER_ACCOUNT_ID }}
+  TKM_ORG_A_MASTER_ACCOUNT_NAME: ${{ secrets.TKM_ORG_A_MASTER_ACCOUNT_NAME }}
+  TKM_ORG_A_ACCOUNT_1_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_1_ID }}
+  TKM_ORG_A_ACCOUNT_2_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_2_ID }}
+  TKM_ORG_A_ACCOUNT_3_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_3_ID }}
+  TKM_ORG_A_ACCOUNT_4_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_4_ID }}
+  TKM_ORG_A_ACCOUNT_5_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_5_ID }}
+
+  TKM_ORG_B_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_B_MASTER_ACCOUNT_ID }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1.1.0
+        with:
+          version: 13.2.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - name: Install dependencies
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Unit tests
+        run: yarn test
+      - name: Stacks integration tests
+        run: yarn workspace integration-test-stacks integration-test
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
+      - name: Deployment targets integration tests
+        run: yarn workspace integration-test-deployment-targets integration-test
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
+      - name: Organization creation integration tests
+        run: yarn workspace integration-test-organization-creation integration-test
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_B_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_B_AWS_SECRET_ACCESS_KEY }}
+      - name: Organization integration tests
+        run: yarn workspace integration-test-organization integration-test
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}

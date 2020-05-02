@@ -1,0 +1,57 @@
+{
+  "name": "@takomo/core",
+  "version": "0.0.1",
+  "description": "Takomo Core",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "test": "jest test --passWithNoTests",
+    "integration-test-stacks": "jest integration-tests/stacks",
+    "integration-test-deployment-targets": "jest integration-tests/deployment-targets",
+    "integration-test-organization-a": "jest integration-tests/organization-a",
+    "integration-test-organization-b": "jest integration-tests/organization-b",
+    "ci-unit-test": "jest unit-tests --runInBand --ci",
+    "ci-integration-test-stacks": "jest integration-tests/stacks --maxWorkers=4 --ci",
+    "ci-integration-test-deployment-targets": "jest integration-tests/deployment-targets --maxWorkers=4 --ci",
+    "ci-integration-test-organization-a": "jest integration-tests/organization-a --maxWorkers=1 --ci",
+    "ci-integration-test-organization-b": "jest integration-tests/organization-b --maxWorkers=1 --ci",
+    "postversion": "git push --tags",
+    "api-docs": "typedoc",
+    "depcheck": "depcheck --ignore-dirs=dist"
+  },
+  "dependencies": {
+    "@hapi/joi": "16.1.8",
+    "@takomo/util": "0.0.1",
+    "aws-sdk": "2.656.0",
+    "semver": "7.1.3"
+  },
+  "devDependencies": {
+    "@types/hapi__joi": "16.0.4",
+    "@types/jest": "25.1.1",
+    "@types/node": "12.12.17",
+    "@types/semver": "7.1.0",
+    "typescript": "3.8.3",
+    "jest": "25.5.3",
+    "jest-mock-extended": "1.0.8",
+    "ts-jest": "25.2.1"
+  }
+}

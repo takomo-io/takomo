@@ -1,0 +1,5 @@
+regions: eu-west-1
+template: stack.yml
+templateBucket:
+  name: {{ env.TKM_TEMPLATE_BUCKET }}
+  keyPrefix: my-templates/

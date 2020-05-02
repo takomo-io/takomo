@@ -1,0 +1,34 @@
+#
+# Simulate failing resources with wait condition that
+# is never completed. Use CreateWaitCondition parameter
+# to tell if the wait condition should be created.
+#
+
+Description: IT - failing-stack
+Parameters:
+  CreateWaitCondition:
+    Type: String
+    Description: Create wait condition that fails
+    AllowedValues:
+      - false
+      - true
+
+Conditions:
+  WaitConditionEnabled: !Equals [!Ref CreateWaitCondition, true]
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}
+
+  WaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: WaitConditionEnabled
+
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    Condition: WaitConditionEnabled
+    Properties:
+      Handle: !Ref WaitHandle
+      Timeout: 10
+      Count: 1

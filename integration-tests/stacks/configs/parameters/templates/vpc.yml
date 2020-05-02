@@ -1,0 +1,67 @@
+Description: IT - parameters
+Parameters:
+  VpcCidr:
+    Type: String
+    Description: VPC CIDR block
+  PublicSubnetCidrs:
+    Type: List<String>
+    Description: Subnet cidrs
+  PrivateSubnetCidrs:
+    Type: CommaDelimitedList
+    Description: Subnet cidrs
+  PublicTags:
+    Type: CommaDelimitedList
+    Description: Tags for public subnets
+  PrivateTags:
+    Type: List<String>
+    Description: Tags for private subnets
+  LogGroupRetentionInDays:
+    Type: List<Number>
+    Description: Log group retentions in days
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+  PublicSubnet0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Select [ 0, !Ref PublicSubnetCidrs ]
+      Tags:
+        - Key: Name
+          Value: !Select [ 0, !Ref PublicTags ]
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Select [ 1, !Ref PublicSubnetCidrs ]
+      Tags:
+        - Key: Name
+          Value: !Select [ 1, !Ref PublicTags ]
+  PrivateSubnet0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Select [ 0, !Ref PrivateSubnetCidrs ]
+      Tags:
+        - Key: Name
+          Value: !Select [ 0, !Ref PrivateTags ]
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Select [ 1, !Ref PrivateSubnetCidrs ]
+      Tags:
+        - Key: Name
+          Value: !Select [ 1, !Ref PrivateTags ]
+
+  LogGroup0:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: !Select [ 0, !Ref LogGroupRetentionInDays ]
+
+  LogGroup1:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: !Select [ 1, !Ref LogGroupRetentionInDays ]

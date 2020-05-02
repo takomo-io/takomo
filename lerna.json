@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "packages": ["packages/*", "integration-tests/*"],
+  "command": {
+    "version": {
+      "allowBranch": "master",
+      "conventionalCommits": true,
+      "message": "chore(release): publish %s"
+    },
+    "publish": {
+      "allowBranch": "master",
+      "conventionalCommits": true
+    }
+  }
+}

@@ -1,0 +1,7 @@
+commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+parameters:
+  RetentionInDays:
+    resolver: stack-output
+    stack: /account-1.yml/eu-central-1
+    output: RetentionInDays

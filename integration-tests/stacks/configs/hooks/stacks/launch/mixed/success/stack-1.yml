@@ -1,0 +1,12 @@
+template: hooks.yml
+hooks:
+  - name: hook-1
+    type: cmd
+    stage: before
+    command: ./script1.sh
+  - name: hook-2
+    type: cmd
+    stage: after
+    command: ./script2.sh
+  - name: hook-3
+    type: my-hook

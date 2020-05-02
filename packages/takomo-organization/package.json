@@ -1,0 +1,63 @@
+{
+  "name": "@takomo/organization",
+  "version": "0.0.1",
+  "description": "Takomo Organization",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "depcheck": "depcheck --ignore-dirs=dist",
+    "test": "jest test --passWithNoTests"
+  },
+  "dependencies": {
+    "@hapi/joi": "16.1.8",
+    "@takomo/aws-clients": "0.0.1",
+    "@takomo/config-sets": "0.0.1",
+    "@takomo/core": "0.0.1",
+    "@takomo/util": "0.0.1",
+    "path": "0.12.7",
+    "readdirp": "3.3.0",
+    "lodash.flatten": "4.4.0",
+    "lodash.intersection": "4.4.0",
+    "lodash.last": "3.0.0",
+    "lodash.merge": "4.6.2",
+    "lodash.takerightwhile": "4.6.0",
+    "lodash.uniq": "4.5.0",
+    "lodash.uniqby": "4.7.0",
+    "lodash.without": "4.4.0"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3",
+    "@types/hapi__joi": "16.0.4",
+    "@types/lodash.flatten": "4.4.6",
+    "@types/lodash.intersection": "4.4.6",
+    "@types/lodash.last": "3.0.6",
+    "@types/lodash.merge": "4.6.6",
+    "@types/lodash.takerightwhile": "4.6.6",
+    "@types/lodash.uniq": "4.5.6",
+    "@types/lodash.uniqby": "4.7.6",
+    "@types/lodash.without": "4.4.6",
+    "@types/jest": "25.1.1",
+    "jest": "25.5.3",
+    "jest-mock-extended": "1.0.8",
+    "ts-jest": "25.2.1"
+  }
+}

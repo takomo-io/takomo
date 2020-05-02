@@ -1,0 +1,63 @@
+{
+  "name": "takomo",
+  "version": "0.0.1",
+  "description": "Organize, configure and deploy your CloudFormation stacks",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "aws",
+    "cloudformation",
+    "cfn",
+    "deploy"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "depcheck": "depcheck --ignore-dirs=dist",
+    "integration-test-stacks": "jest integration-tests/stacks",
+    "integration-test-deployment-targets": "jest integration-tests/deployment-targets",
+    "integration-test-organization-a": "jest integration-tests/organization-a",
+    "integration-test-organization-b": "jest integration-tests/organization-b",
+    "ci-unit-test": "jest unit-tests --runInBand --ci",
+    "ci-integration-test-stacks": "jest integration-tests/stacks --maxWorkers=4 --ci",
+    "ci-integration-test-deployment-targets": "jest integration-tests/deployment-targets --maxWorkers=4 --ci",
+    "ci-integration-test-organization-a": "jest integration-tests/organization-a --maxWorkers=1 --ci",
+    "ci-integration-test-organization-b": "jest integration-tests/organization-b --maxWorkers=1 --ci",
+    "postversion": "git push --tags",
+    "api-docs": "typedoc"
+  },
+  "bin": {
+    "tkm": "./bin/tkm",
+    "takomo": "./bin/tkm"
+  },
+  "dependencies": {
+    "@takomo/cli": "0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3"
+  }
+}

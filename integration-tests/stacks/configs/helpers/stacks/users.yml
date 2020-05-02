@@ -1,0 +1,5 @@
+regions: eu-central-1
+template: users.yml.hbs
+parameters:
+  User1Name: James Bond
+  User2Name: {{ to-upper-case 'Doctor No' }}

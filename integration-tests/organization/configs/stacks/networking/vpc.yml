@@ -1,0 +1,6 @@
+regions: eu-central-1
+template: networking/vpc.yml
+parameters:
+  CidrBlock: {{ var.vpcCidr }}
+tags:
+  CostCenter: {{ var.costCenter }}

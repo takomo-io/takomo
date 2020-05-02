@@ -1,0 +1,7 @@
+Description: IT - cancel-stack
+Resources:
+
+  Queue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "cancel-stack-queue"

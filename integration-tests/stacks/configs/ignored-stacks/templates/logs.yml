@@ -1,0 +1,5 @@
+Description: IT - ignored-stacks
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

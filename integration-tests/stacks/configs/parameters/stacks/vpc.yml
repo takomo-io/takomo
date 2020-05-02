@@ -1,0 +1,14 @@
+parameters:
+  VpcCidr: 10.0.0.0/24
+  PublicSubnetCidrs:
+    - 10.0.0.0/26
+    - 10.0.0.64/26
+  PrivateSubnetCidrs:
+    - 10.0.0.128/26
+    - 10.0.0.192/26
+  PublicTags: tag1, tag2, tag3
+  PrivateTags: tagA, tagB, tagC
+  LogGroupRetentionInDays:
+    - 5
+    - resolver: cmd
+      command: echo 30

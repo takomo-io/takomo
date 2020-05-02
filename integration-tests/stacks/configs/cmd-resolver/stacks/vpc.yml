@@ -1,0 +1,7 @@
+project: examples-cmd-resolver
+commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+parameters:
+  CidrBlock:
+    resolver: cmd
+    command: echo 10.0.0.0/25

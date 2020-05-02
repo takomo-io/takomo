@@ -1,0 +1,22 @@
+#
+# Initial configuration
+#
+
+serviceControlPolicies:
+  FullAWSAccess:
+    awsManaged: true
+    description: Default AWS managed policy
+
+organizationalUnits:
+  Root:
+    serviceControlPolicies: FullAWSAccess
+    accounts:
+      - id: "{{ env.TKM_ORG_A_MASTER_ACCOUNT_ID }}"
+        description: master
+  Root/test-accounts:
+    accounts:
+      - "{{ env.TKM_ORG_A_ACCOUNT_1_ID }}"
+      - "{{ env.TKM_ORG_A_ACCOUNT_2_ID }}"
+      - "{{ env.TKM_ORG_A_ACCOUNT_3_ID }}"
+      - "{{ env.TKM_ORG_A_ACCOUNT_4_ID }}"
+      - "{{ env.TKM_ORG_A_ACCOUNT_5_ID }}"

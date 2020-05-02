@@ -1,0 +1,18 @@
+deploymentGroups:
+  Example:
+    configSets: logs2
+    targets:
+      - name: foo
+        deploymentRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+        vars:
+          accountId: "{{ env.TKM_ORG_A_ACCOUNT_1_ID }}"
+      - name: bar
+        deploymentRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
+        vars:
+          accountId: "{{ env.TKM_ORG_A_ACCOUNT_2_ID }}"
+
+configSets:
+  logs2:
+    description: Logging configs 2
+    commandPaths:
+      - /logs-2.yml

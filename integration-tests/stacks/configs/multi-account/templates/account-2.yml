@@ -1,0 +1,14 @@
+Description: IT - multi-account
+Parameters:
+  RetentionInDays:
+    Type: Number
+    Description: Retention in days
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: !Ref RetentionInDays
+Outputs:
+  RetentionInDays:
+    Description: Retention in days
+    Value: !Ref RetentionInDays

@@ -1,0 +1,6 @@
+template: queues.yml.hbs
+data:
+  queueNames:
+    {{#each var.queues}}
+    - {{this}}
+    {{/each}}

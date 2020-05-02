@@ -1,0 +1,10 @@
+Description: IT - external resolver
+Parameters:
+  Code:
+    Type: String
+    Description: Code
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub log-group-${Code}

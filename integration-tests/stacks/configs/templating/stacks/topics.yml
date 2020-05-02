@@ -1,0 +1,6 @@
+template: topics.yml.hbs
+data:
+  topics:
+    - one
+    - two
+    - three

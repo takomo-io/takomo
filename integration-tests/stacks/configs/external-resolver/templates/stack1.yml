@@ -1,0 +1,9 @@
+Description: IT - external resolver
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}
+Outputs:
+  MyCode:
+    Description: Code
+    Value: 123456789

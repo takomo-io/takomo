@@ -1,0 +1,7 @@
+template: hooks.yml
+hooks:
+  - name: hook-1
+    type: error
+    stage: after
+    operation: create
+depends: /launch/after/error/stack-1.yml

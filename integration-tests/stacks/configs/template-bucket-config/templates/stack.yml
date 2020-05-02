@@ -1,0 +1,5 @@
+Description: IT - template-bucket-config
+Resources:
+  LogGRoup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

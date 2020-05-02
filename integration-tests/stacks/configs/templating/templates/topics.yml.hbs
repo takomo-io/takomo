@@ -1,0 +1,10 @@
+Description: IT - templating
+Resources:
+
+  {{#each stack.data.topics}}
+  Topic{{@index}}:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: TopicName{{@index}}
+  {{/each}}
+

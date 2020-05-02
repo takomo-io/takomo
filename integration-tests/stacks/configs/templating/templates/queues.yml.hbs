@@ -1,0 +1,9 @@
+Description: IT - templating
+Resources:
+
+  {{#each stack.data.queueNames}}
+  Queue{{@index}}:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: {{this}}
+  {{/each}}

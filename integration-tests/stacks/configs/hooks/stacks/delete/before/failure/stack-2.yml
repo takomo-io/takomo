@@ -1,0 +1,7 @@
+template: hooks.yml
+hooks:
+  - name: hook-1
+    type: failure
+    stage: before
+    operation: delete
+depends: /delete/before/failure/stack-1.yml

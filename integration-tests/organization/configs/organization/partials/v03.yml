@@ -1,0 +1,32 @@
+#
+# Add new organizational units:
+#
+# - Root/sandbox accounts/sandbox-1
+# - Root/sandbox accounts/sandbox-2
+#
+# Move accounts 4 and 5 to 'Root/sandbox accounts/sandbox-2'
+#
+# Also update the example policy name
+#
+
+serviceControlPolicies:
+  example:
+    description: Example policy with a better name
+
+organizationalUnits:
+  Root:
+    serviceControlPolicies:
+      - example
+    accounts:
+      - id: "{{ env.TKM_ORG_A_MASTER_ACCOUNT_ID }}"
+        description: master
+  Root/test-accounts:
+    accounts:
+      - "{{ env.TKM_ORG_A_ACCOUNT_1_ID }}"
+      - "{{ env.TKM_ORG_A_ACCOUNT_2_ID }}"
+      - "{{ env.TKM_ORG_A_ACCOUNT_3_ID }}"
+  "Root/sandbox accounts/sandbox-1": {}
+  "Root/sandbox accounts/sandbox-2":
+    accounts:
+      - "{{ env.TKM_ORG_A_ACCOUNT_4_ID }}"
+      - "{{ env.TKM_ORG_A_ACCOUNT_5_ID }}"

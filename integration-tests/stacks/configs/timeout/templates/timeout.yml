@@ -1,0 +1,51 @@
+#
+# Simulate resources that take too long to create with
+# wait condition that is never completed. Use CreateWaitCondition
+# parameter to tell if the wait condition should be created.
+#
+
+Description: IT - timeout
+Parameters:
+
+  CreateWaitCondition:
+    Type: String
+    Description: Create wait condition that fails
+    AllowedValues:
+      - false
+      - true
+
+  CreateSecondTopic:
+    Type: String
+    Description: Create second topic
+    AllowedValues:
+      - false
+      - true
+
+Conditions:
+  WaitConditionEnabled: !Equals [ !Ref CreateWaitCondition, true ]
+  SecondTopicEnabled: !Equals [ !Ref CreateSecondTopic, true ]
+
+Resources:
+
+  Topic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "timeout-topic"
+
+  SecondTopic:
+    Type: AWS::SNS::Topic
+    Condition: SecondTopicEnabled
+    Properties:
+      TopicName: "timeout-topic-second"
+
+  WaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: WaitConditionEnabled
+
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    Condition: WaitConditionEnabled
+    Properties:
+      Handle: !Ref WaitHandle
+      Timeout: 300
+      Count: 1

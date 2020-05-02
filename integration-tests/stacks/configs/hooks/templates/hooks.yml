@@ -1,0 +1,5 @@
+Description: IT - hooks
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

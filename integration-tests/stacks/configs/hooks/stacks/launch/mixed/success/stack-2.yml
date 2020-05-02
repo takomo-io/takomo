@@ -1,0 +1,10 @@
+template: hooks.yml
+hooks:
+  - name: hook-1
+    type: my-hook
+    stage:
+      - before
+      - after
+  - name: hook-2
+    type: my-hook
+    status: success

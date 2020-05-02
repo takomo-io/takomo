@@ -1,0 +1,1 @@
+export { parseOrganizationConfigFile } from "./parser"

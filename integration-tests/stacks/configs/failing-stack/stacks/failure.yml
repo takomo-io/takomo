@@ -1,0 +1,5 @@
+template: failing-template.yml
+commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+parameters:
+  CreateWaitCondition: {{ var.create_wait_condition }}

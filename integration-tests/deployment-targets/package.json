@@ -1,0 +1,42 @@
+{
+  "name": "integration-test-deployment-targets",
+  "private": true,
+  "version": "0.0.1",
+  "description": "",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "scripts": {
+    "buildx": "tsc -p tsconfig.build.json",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "depcheck": "depcheck --ignore-dirs=dist",
+    "integration-test": "jest test --passWithNoTests --maxWorkers=4 --ci"
+  },
+  "dependencies": {
+    "aws-sdk": "2.656.0",
+    "@takomo/core": "0.0.1",
+    "@takomo/cli": "0.0.1",
+    "@takomo/cli-io": "0.0.1",
+    "@takomo/organization": "0.0.1",
+    "@takomo/stacks": "0.0.1",
+    "@takomo/util": "0.0.1",
+    "@takomo/deployment-targets": "0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3",
+    "@types/hapi__joi": "16.0.4",
+    "@types/jest": "25.1.1",
+    "jest": "25.5.3",
+    "jest-mock-extended": "1.0.8",
+    "ts-jest": "25.2.1",
+    "dotenv": "8.2.0"
+  }
+}

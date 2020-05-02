@@ -1,0 +1,9 @@
+regions: eu-west-1
+template: stack2.yml
+parameters:
+  Code:
+    resolver: external-stack-output
+    stack: examples-external-parameter-resolver-account-a-stack1
+    region: us-east-1
+    output: MyCode
+depends: /account-a/stack1.yml

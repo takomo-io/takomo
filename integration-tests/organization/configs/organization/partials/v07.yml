@@ -1,0 +1,44 @@
+#
+# Enabled tag policies. Add config sets.
+#
+
+tagPolicies: true
+
+organizationalUnits:
+  Root:
+    accounts:
+      - id: "{{ env.TKM_ORG_A_MASTER_ACCOUNT_ID }}"
+        description: master
+        status: disabled
+  Root/test-accounts:
+    bootstrapConfigSets:
+      - bootstrap
+    configSets:
+      - basic
+    accounts:
+      - id: "{{ env.TKM_ORG_A_ACCOUNT_1_ID }}"
+        vars:
+          vpcCidr: 10.0.0.0/24
+          costCenter: aaa
+      - id: "{{ env.TKM_ORG_A_ACCOUNT_2_ID }}"
+        vars:
+          vpcCidr: 10.0.1.0/24
+          costCenter: bbb
+      - id: "{{ env.TKM_ORG_A_ACCOUNT_3_ID }}"
+        vars:
+          vpcCidr: 10.0.2.0/24
+          costCenter: ccc
+  "Root/sandbox accounts/sandbox-1": {}
+  "Root/sandbox accounts/sandbox-2":
+    configSets:
+      - basic
+      - logs
+    accounts:
+      - id: "{{ env.TKM_ORG_A_ACCOUNT_4_ID }}"
+        vars:
+          vpcCidr: 10.0.3.0/24
+          costCenter: ddd
+      - id: "{{ env.TKM_ORG_A_ACCOUNT_5_ID }}"
+        vars:
+          vpcCidr: 10.0.4.0/24
+          costCenter: eee
