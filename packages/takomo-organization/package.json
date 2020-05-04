@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Takomo Organization",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -29,12 +29,10 @@
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
-    "@takomo/aws-clients": "0.0.1",
-    "@takomo/config-sets": "0.0.1",
-    "@takomo/core": "0.0.1",
-    "@takomo/util": "0.0.1",
-    "path": "0.12.7",
-    "readdirp": "3.3.0",
+    "@takomo/aws-clients": "^0.0.2",
+    "@takomo/config-sets": "^0.0.2",
+    "@takomo/core": "^0.0.2",
+    "@takomo/util": "^0.0.2",
     "lodash.flatten": "4.4.0",
     "lodash.intersection": "4.4.0",
     "lodash.last": "3.0.0",
@@ -42,11 +40,13 @@
     "lodash.takerightwhile": "4.6.0",
     "lodash.uniq": "4.5.0",
     "lodash.uniqby": "4.7.0",
-    "lodash.without": "4.4.0"
+    "lodash.without": "4.4.0",
+    "path": "0.12.7",
+    "readdirp": "3.3.0"
   },
   "devDependencies": {
-    "typescript": "3.8.3",
     "@types/hapi__joi": "16.0.4",
+    "@types/jest": "25.1.1",
     "@types/lodash.flatten": "4.4.6",
     "@types/lodash.intersection": "4.4.6",
     "@types/lodash.last": "3.0.6",
@@ -55,9 +55,9 @@
     "@types/lodash.uniq": "4.5.6",
     "@types/lodash.uniqby": "4.7.6",
     "@types/lodash.without": "4.4.6",
-    "@types/jest": "25.1.1",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
-    "ts-jest": "25.2.1"
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
   }
 }

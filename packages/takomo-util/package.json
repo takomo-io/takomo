@@ -1,6 +1,6 @@
 {
   "name": "@takomo/util",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Takomo Util",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,23 +28,23 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "js-yaml": "3.13.1",
-    "pretty-ms": "5.1.0",
-    "handlebars": "4.7.6",
+    "@hapi/joi": "16.1.8",
     "chalk": "3.0.0",
     "date-and-time": "0.11.1",
     "easy-table": "1.1.1",
-    "@hapi/joi": "16.1.8"
+    "handlebars": "4.7.6",
+    "js-yaml": "3.13.1",
+    "pretty-ms": "5.1.0"
   },
   "devDependencies": {
     "@types/date-and-time": "0.6.0",
-    "typescript": "3.8.3",
-    "@types/js-yaml": "3.12.1",
     "@types/easy-table": "0.0.32",
     "@types/hapi__joi": "16.0.4",
     "@types/jest": "25.1.1",
+    "@types/js-yaml": "3.12.1",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
-    "ts-jest": "25.2.1"
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
   }
 }

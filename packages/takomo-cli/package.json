@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Takomo CLI",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,28 +28,28 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/cli-io": "0.0.1",
-    "@takomo/config-sets": "0.0.1",
-    "@takomo/core": "0.0.1",
-    "@takomo/deployment-targets": "0.0.1",
-    "@takomo/organization": "0.0.1",
-    "@takomo/stacks": "0.0.1",
-    "@takomo/util": "0.0.1",
+    "@takomo/cli-io": "^0.0.2",
+    "@takomo/config-sets": "^0.0.2",
+    "@takomo/core": "^0.0.2",
+    "@takomo/deployment-targets": "^0.0.2",
+    "@takomo/organization": "^0.0.2",
+    "@takomo/stacks": "^0.0.2",
+    "@takomo/util": "^0.0.2",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.1.1",
-    "pretty-ms": "5.1.0",
     "lodash.merge": "4.6.2",
+    "pretty-ms": "5.1.0",
     "yargs": "13.3.0"
   },
   "devDependencies": {
     "@types/easy-table": "0.0.32",
-    "@types/yargs": "13.0.3",
-    "@types/lodash.merge": "4.6.6",
-    "typescript": "3.8.3",
     "@types/jest": "25.1.1",
+    "@types/lodash.merge": "4.6.6",
+    "@types/yargs": "13.0.3",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
-    "ts-jest": "25.2.1"
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
   }
 }

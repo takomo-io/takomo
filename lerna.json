@@ -1,8 +1,11 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "packages": ["packages/*", "integration-tests/*"],
+  "packages": [
+    "packages/*",
+    "integration-tests/*"
+  ],
   "command": {
     "version": {
       "allowBranch": "master",

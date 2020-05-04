@@ -1,7 +1,7 @@
 {
   "name": "integration-test-organization-creation",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Takomo integration tests for organization creation",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -21,22 +21,22 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=4 --ci"
   },
   "dependencies": {
-    "aws-sdk": "2.656.0",
-    "@takomo/core": "0.0.1",
-    "@takomo/cli": "0.0.1",
-    "@takomo/cli-io": "0.0.1",
-    "@takomo/organization": "0.0.1",
-    "@takomo/stacks": "0.0.1",
-    "@takomo/util": "0.0.1",
-    "@takomo/deployment-targets": "0.0.1"
+    "@takomo/cli": "^0.0.2",
+    "@takomo/cli-io": "^0.0.2",
+    "@takomo/core": "^0.0.2",
+    "@takomo/deployment-targets": "^0.0.2",
+    "@takomo/organization": "^0.0.2",
+    "@takomo/stacks": "^0.0.2",
+    "@takomo/util": "^0.0.2",
+    "aws-sdk": "2.656.0"
   },
   "devDependencies": {
-    "typescript": "3.8.3",
     "@types/hapi__joi": "16.0.4",
     "@types/jest": "25.1.1",
+    "dotenv": "8.2.0",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
     "ts-jest": "25.2.1",
-    "dotenv": "8.2.0"
+    "typescript": "3.8.3"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Takomo Stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,15 +28,15 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/aws-clients": "0.0.1",
-    "@takomo/core": "0.0.1",
-    "@takomo/util": "0.0.1"
+    "@takomo/aws-clients": "^0.0.2",
+    "@takomo/core": "^0.0.2",
+    "@takomo/util": "^0.0.2"
   },
   "devDependencies": {
-    "typescript": "3.8.3",
     "@types/jest": "25.1.1",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
-    "ts-jest": "25.2.1"
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
   }
 }

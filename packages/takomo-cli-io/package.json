@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli-io",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Takomo CLI IO",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,30 +28,30 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/core": "0.0.1",
-    "@takomo/organization": "0.0.1",
-    "@takomo/stacks": "0.0.1",
-    "@takomo/util": "0.0.1",
-    "@takomo/deployment-targets": "0.0.1",
+    "@takomo/core": "^0.0.2",
+    "@takomo/deployment-targets": "^0.0.2",
+    "@takomo/organization": "^0.0.2",
+    "@takomo/stacks": "^0.0.2",
+    "@takomo/util": "^0.0.2",
     "date-and-time": "0.11.1",
+    "diff": "4.0.1",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.1.1",
     "inquirer": "7.0.6",
     "inquirer-autocomplete-prompt": "1.0.2",
-    "yargs": "13.3.0",
-    "diff": "4.0.1"
+    "yargs": "13.3.0"
   },
   "devDependencies": {
     "@types/date-and-time": "0.6.0",
+    "@types/diff": "4.0.2",
     "@types/easy-table": "0.0.32",
     "@types/inquirer": "6.5.0",
-    "@types/yargs": "13.0.3",
-    "typescript": "3.8.3",
     "@types/jest": "25.1.1",
-    "@types/diff": "4.0.2",
+    "@types/yargs": "13.0.3",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
-    "ts-jest": "25.2.1"
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
   }
 }
