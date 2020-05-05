@@ -26,7 +26,7 @@
     "test": "lerna run test",
     "commit": "git-cz",
     "publish-version": "lerna version",
-    "publish-packages": "lerna publish from-package --yes"
+    "publish-packages": "lerna publish from-package --create-release github --yes"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "2.22.0",
