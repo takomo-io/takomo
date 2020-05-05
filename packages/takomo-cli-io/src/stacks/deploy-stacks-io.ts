@@ -31,7 +31,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
   chooseCommandPath = async (
     rootStackGroup: StackGroup,
   ): Promise<CommandPath> => {
-    const allStackGroups = collectFromHierarchy(rootStackGroup, s =>
+    const allStackGroups = collectFromHierarchy(rootStackGroup, (s) =>
       s.getChildren(),
     )
 
@@ -39,7 +39,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       (collected, stackGroup) => [
         ...collected,
         stackGroup.getPath(),
-        ...stackGroup.getStacks().map(s => s.getPath()),
+        ...stackGroup.getStacks().map((s) => s.getPath()),
       ],
       new Array<string>(),
     )
@@ -49,7 +49,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       input: string,
     ): Promise<string[]> => {
       return input
-        ? allCommandPaths.filter(p => p.includes(input))
+        ? allCommandPaths.filter((p) => p.includes(input))
         : allCommandPaths
     }
 
@@ -120,13 +120,13 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
   }
 
   printOutput = (output: StacksOperationOutput): StacksOperationOutput => {
-    const succeeded = output.results.filter(r => r.success)
-    const failed = output.results.filter(r => !r.success)
+    const succeeded = output.results.filter((r) => r.success)
+    const failed = output.results.filter((r) => !r.success)
     const all = [...succeeded, ...failed]
 
     const table = new Table()
 
-    all.forEach(r => {
+    all.forEach((r) => {
       table.cell("Stack path", r.stack.getPath())
       table.cell("Stack name", r.stack.getName())
       table.cell("Status", formatCommandStatus(r.status))
@@ -142,7 +142,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       this.message("Events for failed stacks", true)
       this.message("------------------------")
 
-      failed.forEach(r => {
+      failed.forEach((r) => {
         this.message(r.stack.getPath(), true, true)
 
         if (r.events.length === 0) {
@@ -172,7 +172,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
 
     this.message(`Changes to stack: ${path}`, true)
 
-    changes.forEach(change => {
+    changes.forEach((change) => {
       const {
         LogicalResourceId,
         Action,
@@ -194,7 +194,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       this.message(`      replacement:               ${Replacement}`)
       this.message(`      scope:                     ${Scope}`)
       this.message(`      details:`)
-      ;(Details || []).forEach(detail => {
+      ;(Details || []).forEach((detail) => {
         this.message(`        - causing entity:        ${detail.CausingEntity}`)
         this.message(`          evaluation:            ${detail.Evaluation}`)
         this.message(`          change source:         ${detail.ChangeSource}`)
@@ -265,7 +265,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       )
       const lines = diffLines(currentTemplateBody, templateBody)
       const diffOutput = lines
-        .map(line => {
+        .map((line) => {
           if (line.added) return green(line.value)
           else if (line.removed) return red(line.value)
           else return line.value
@@ -297,7 +297,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     ctx: CommandContext,
     depth: number,
   ) => {
-    stack.getDependencies().forEach(dependencyPath => {
+    stack.getDependencies().forEach((dependencyPath) => {
       const [dependency] = ctx.getStacksByPath(dependencyPath)
       const padding = " ".repeat(depth)
       const end = dependency.getDependencies().length > 0 ? ":" : ""

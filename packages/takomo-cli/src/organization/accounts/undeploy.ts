@@ -23,14 +23,14 @@ export const undeployAccountsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
         operation: DeploymentOperation.UNDEPLOY,
         configSetType: ConfigSetType.STANDARD,
       }),
-      input =>
+      (input) =>
         accountsOperationCommand(
           input,
           new CliUndeployAccountsIO(

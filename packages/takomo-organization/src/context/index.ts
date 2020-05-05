@@ -79,7 +79,7 @@ export class OrganizationContext {
     this.organizationConfigFile = props.organizationConfigFile
     this.organizationalUnits = collectFromHierarchy(
       props.organizationConfigFile.organizationalUnits.Root,
-      o => o.children,
+      (o) => o.children,
     )
   }
 
@@ -91,10 +91,10 @@ export class OrganizationContext {
     })
 
   hasOrganizationalUnit = (path: string): boolean =>
-    this.organizationalUnits.find(ou => ou.path === path) !== undefined
+    this.organizationalUnits.find((ou) => ou.path === path) !== undefined
 
   getOrganizationalUnit = (path: string): OrganizationalUnit => {
-    const ou = this.organizationalUnits.find(ou => ou.path === path)
+    const ou = this.organizationalUnits.find((ou) => ou.path === path)
     if (!ou) {
       throw new Error(`No such organizational unit: '${path}'`)
     }
@@ -112,7 +112,7 @@ export class OrganizationContext {
 
   getConfigSet = (name: string): ConfigSet => {
     const configSet = this.organizationConfigFile.configSets.find(
-      r => r.name === name,
+      (r) => r.name === name,
     )
     if (!configSet) {
       throw new Error(`No such config set: ${name}`)

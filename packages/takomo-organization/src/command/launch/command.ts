@@ -18,5 +18,5 @@ export const launchOrganizationCommand = async (
     .then(({ options, variables }) =>
       buildOrganizationContext(options, variables, io),
     )
-    .then(ctx => launchOrganization(ctx, io, input))
+    .then((ctx) => launchOrganization(ctx, io, input))
     .then(io.printOutput)

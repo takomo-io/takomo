@@ -85,7 +85,7 @@ export class CliLaunchOrganizationIO extends CliIO
       { ...basicConfigCleanResult, name: "Clean basic configuration" },
     ]
 
-    results.forEach(r => {
+    results.forEach((r) => {
       table.cell("Task", r.name)
       table.cell("Status", formatCommandStatus(r.status))
       table.cell("Message", r.message)
@@ -105,7 +105,7 @@ export class CliLaunchOrganizationIO extends CliIO
     const padding = " ".repeat(indent)
 
     const accounts = [
-      ...retain.map(account => ({
+      ...retain.map((account) => ({
         account,
         format: formatters.retain,
         nestedFormat: {
@@ -115,7 +115,7 @@ export class CliLaunchOrganizationIO extends CliIO
           retain: identity,
         },
       })),
-      ...remove.map(account => ({
+      ...remove.map((account) => ({
         account,
         format: formatters.remove,
         nestedFormat: {
@@ -125,7 +125,7 @@ export class CliLaunchOrganizationIO extends CliIO
           retain: deleteFormatter,
         },
       })),
-      ...add.map(account => ({
+      ...add.map((account) => ({
         account,
         format: formatters.add,
         nestedFormat: {
@@ -171,15 +171,15 @@ export class CliLaunchOrganizationIO extends CliIO
     const headerPadding = " ".repeat(indent)
 
     const policies = [
-      ...retain.map(name => ({
+      ...retain.map((name) => ({
         name,
         format: formatters.retain,
       })),
-      ...remove.map(name => ({
+      ...remove.map((name) => ({
         name,
         format: formatters.remove,
       })),
-      ...add.map(name => ({
+      ...add.map((name) => ({
         name,
         format: formatters.add,
       })),
@@ -215,7 +215,7 @@ export class CliLaunchOrganizationIO extends CliIO
 
     const ous = collectOus(plan.root)
 
-    ous.forEach(ou => {
+    ous.forEach((ou) => {
       switch (ou.operation) {
         case "delete":
           this.message(red(`-    ${ou.path}:`))
@@ -319,7 +319,7 @@ export class CliLaunchOrganizationIO extends CliIO
 
     this.message(`     ${type}:`)
 
-    policies.forEach(policy => {
+    policies.forEach((policy) => {
       switch (policy.operation) {
         case "add":
           this.message(green(`+      ${policy.name}:`))
@@ -355,18 +355,18 @@ export class CliLaunchOrganizationIO extends CliIO
     this.message("   enabled policy types:")
 
     const policies = [
-      ...plan.enabledPolicies.retain.map(name => ({
+      ...plan.enabledPolicies.retain.map((name) => ({
         name,
         operation: "retain",
       })),
-      ...plan.enabledPolicies.add.map(name => ({ name, operation: "add" })),
-      ...plan.enabledPolicies.remove.map(name => ({
+      ...plan.enabledPolicies.add.map((name) => ({ name, operation: "add" })),
+      ...plan.enabledPolicies.remove.map((name) => ({
         name,
         operation: "remove",
       })),
     ].sort((a, b) => a.name.localeCompare(b.name))
 
-    policies.forEach(s => {
+    policies.forEach((s) => {
       switch (s.operation) {
         case "add":
           this.message(green(`+    - ${s.name}`))
@@ -384,12 +384,12 @@ export class CliLaunchOrganizationIO extends CliIO
     plan: OrganizationBasicConfigDeploymentPlan,
   ): void => {
     const services = [
-      ...plan.trustedServices.retain.map(name => ({
+      ...plan.trustedServices.retain.map((name) => ({
         name,
         operation: "retain",
       })),
-      ...plan.trustedServices.add.map(name => ({ name, operation: "add" })),
-      ...plan.trustedServices.remove.map(name => ({
+      ...plan.trustedServices.add.map((name) => ({ name, operation: "add" })),
+      ...plan.trustedServices.remove.map((name) => ({
         name,
         operation: "remove",
       })),
@@ -402,7 +402,7 @@ export class CliLaunchOrganizationIO extends CliIO
 
     this.message("   trusted AWS services:", true)
 
-    services.forEach(s => {
+    services.forEach((s) => {
       switch (s.operation) {
         case "add":
           this.message(green(`+    - ${s.name}`))

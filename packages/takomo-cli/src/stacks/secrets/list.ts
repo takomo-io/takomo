@@ -14,10 +14,10 @@ export const listSecretsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         commandPath: argv.commandPath,
       }),
-      input => listSecretsCommand(input, new CliListSecretsIO(input.options)),
+      (input) => listSecretsCommand(input, new CliListSecretsIO(input.options)),
     ),
 }

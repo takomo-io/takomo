@@ -13,7 +13,7 @@ describe("timeout object validation", () => {
     expect(error.message).toBe(expectedMessage)
   })
 
-  test.each(valid)("succeeds when '%s' is given", value => {
+  test.each(valid)("succeeds when '%s' is given", (value) => {
     const { error } = timeoutObject.validate(value)
     expect(error).toBeUndefined()
   })

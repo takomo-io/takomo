@@ -24,7 +24,7 @@ const loadCustomResolvers = async (
       alwaysStat: true,
       depth: 100,
       type: "files",
-      fileFilter: e => e.basename.endsWith(".js"),
+      fileFilter: (e) => e.basename.endsWith(".js"),
     })
 
     for (const resolverFile of resolverFiles) {
@@ -69,7 +69,7 @@ const loadCustomHelpers = async (
       alwaysStat: true,
       depth: 100,
       type: "files",
-      fileFilter: e => e.basename.endsWith(".js"),
+      fileFilter: (e) => e.basename.endsWith(".js"),
     })
 
     for (const helperFile of helperFiles) {
@@ -105,7 +105,7 @@ const loadCustomHooks = async (
       alwaysStat: true,
       depth: 100,
       type: "files",
-      fileFilter: e => e.basename.endsWith(".js"),
+      fileFilter: (e) => e.basename.endsWith(".js"),
     })
 
     for (const hookFile of hookFiles) {

@@ -42,21 +42,21 @@ export const planAccountsLaunch = async (
   }
 
   const ousToLaunch: OrganizationalUnit[] = flatten(
-    organizationalUnitsToLaunch.map(ou =>
+    organizationalUnitsToLaunch.map((ou) =>
       flatten(
-        collectFromHierarchy(ou, o => o.children, {
+        collectFromHierarchy(ou, (o) => o.children, {
           sortSiblings: sortOus,
-          filter: o => o.status === OrganizationalUnitStatus.ACTIVE,
+          filter: (o) => o.status === OrganizationalUnitStatus.ACTIVE,
         }),
       ),
     ),
   )
 
-  const uniqueOusToLaunch = uniqBy(ousToLaunch, o => o.path).filter(
-    o => o.status === OrganizationalUnitStatus.ACTIVE,
+  const uniqueOusToLaunch = uniqBy(ousToLaunch, (o) => o.path).filter(
+    (o) => o.status === OrganizationalUnitStatus.ACTIVE,
   )
 
-  const accountsById = new Map(currentAccounts.map(a => [a.Id, a]))
+  const accountsById = new Map(currentAccounts.map((a) => [a.Id, a]))
 
   const hasConfigSets = (a: OrganizationAccount) => {
     switch (configSetType) {
@@ -70,7 +70,7 @@ export const planAccountsLaunch = async (
   }
 
   const ous = uniqueOusToLaunch
-    .map(ou => {
+    .map((ou) => {
       return {
         path: ou.path,
         accountAdminRoleName: ou.accountAdminRoleName,
@@ -79,16 +79,16 @@ export const planAccountsLaunch = async (
         bootstrapConfigSets: ou.bootstrapConfigSets,
         vars: ou.vars,
         accounts: ou.accounts.filter(
-          a =>
+          (a) =>
             a.status === OrganizationAccountStatus.ACTIVE &&
             hasConfigSets(a) &&
             (accountIds.length === 0 || accountIds.includes(a.id)),
         ),
       }
     })
-    .filter(ou => ou.accounts.length > 0)
-    .map(ou => {
-      const accounts = ou.accounts.map(config => {
+    .filter((ou) => ou.accounts.length > 0)
+    .map((ou) => {
+      const accounts = ou.accounts.map((config) => {
         const account = accountsById.get(config.id)!
         return {
           account,
@@ -104,7 +104,7 @@ export const planAccountsLaunch = async (
 
   logger.debugObject(
     `Organizational units to launch:`,
-    ous.map(o => o.path),
+    ous.map((o) => o.path),
   )
 
   return {

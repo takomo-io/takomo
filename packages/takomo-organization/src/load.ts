@@ -10,7 +10,7 @@ const collectPoliciesByTargetId = (
 ): Map<string, PolicyId[]> => {
   const map = new Map<string, PolicyName[]>()
   policies.forEach(({ policy, targets }) => {
-    targets.forEach(target => {
+    targets.forEach((target) => {
       const policyIds = map.get(target.TargetId!)
       if (policyIds) {
         policyIds.push(policy.PolicySummary!.Name!)
@@ -50,9 +50,9 @@ export const loadOrganizationData = async (
   ])
 
   const currentServiceControlPolicies = serviceControlPolicies.map(
-    p => p.policy,
+    (p) => p.policy,
   )
-  const currentTagPolicies = tagPolicies.map(p => p.policy)
+  const currentTagPolicies = tagPolicies.map((p) => p.policy)
 
   logger.debugObject(
     "Current service control policies:",
@@ -62,9 +62,9 @@ export const loadOrganizationData = async (
   logger.debugObject("Trusted AWS services:", awsServices)
 
   const currentRootOrganizationalUnit = existingRoots.find(
-    r => r.ou.Name === "Root",
+    (r) => r.ou.Name === "Root",
   )!
-  const currentTrustedAwsServices = awsServices.map(s => s.ServicePrincipal!)
+  const currentTrustedAwsServices = awsServices.map((s) => s.ServicePrincipal!)
 
   const currentServiceControlPoliciesByTarget = collectPoliciesByTargetId(
     serviceControlPolicies,
@@ -72,8 +72,8 @@ export const loadOrganizationData = async (
   const currentTagPoliciesByTarget = collectPoliciesByTargetId(tagPolicies)
 
   const currentEnabledPolicies = organizationRoots[0]
-    .PolicyTypes!.filter(p => p.Status === "ENABLED")
-    .map(p => p.Type!)
+    .PolicyTypes!.filter((p) => p.Status === "ENABLED")
+    .map((p) => p.Type!)
 
   const currentOrganizationHasAllFeaturesEnabled =
     currentOrganization.FeatureSet === "ALL"

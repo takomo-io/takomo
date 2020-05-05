@@ -15,10 +15,10 @@ export const diffSecretsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         commandPath: argv.commandPath,
       }),
-      input => diffSecretsCommand(input, new CliDiffSecretsIO(input.options)),
+      (input) => diffSecretsCommand(input, new CliDiffSecretsIO(input.options)),
     ),
 }

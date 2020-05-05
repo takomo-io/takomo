@@ -36,7 +36,7 @@ export const deployStacksCommand = async (
   credentialProvider: TakomoCredentialProvider | null = null,
 ): Promise<StacksOperationOutput> =>
   validateInput(schema, input)
-    .then(input =>
+    .then((input) =>
       buildConfigContext(
         input.options,
         input.variables,
@@ -44,12 +44,12 @@ export const deployStacksCommand = async (
         credentialProvider,
       ),
     )
-    .then(async ctx => {
+    .then(async (ctx) => {
       const modifiedInput = await modifyInput(input, ctx, io)
       return prepareLaunchContext(
         ctx,
         modifiedInput.commandPath,
         modifiedInput.ignoreDependencies,
-      ).then(ctx => executeLaunchContext(ctx, modifiedInput, io))
+      ).then((ctx) => executeLaunchContext(ctx, modifiedInput, io))
     })
     .then(io.printOutput)

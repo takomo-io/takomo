@@ -28,5 +28,5 @@ export const createAccountCommand = async (
     .then(({ options, variables }) =>
       buildOrganizationContext(options, variables, io),
     )
-    .then(ctx => createAccount(ctx, io, input))
+    .then((ctx) => createAccount(ctx, io, input))
     .then(io.printOutput)

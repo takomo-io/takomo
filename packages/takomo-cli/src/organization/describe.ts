@@ -9,8 +9,8 @@ export const describeOrganizationCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ov,
-      input =>
+      (ov) => ov,
+      (input) =>
         describeOrganizationCommand(
           input,
           new CliDescribeOrganizationIO(input.options),

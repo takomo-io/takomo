@@ -21,7 +21,7 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
   chooseCommandPath = async (
     rootStackGroup: StackGroup,
   ): Promise<CommandPath> => {
-    const allStackGroups = collectFromHierarchy(rootStackGroup, s =>
+    const allStackGroups = collectFromHierarchy(rootStackGroup, (s) =>
       s.getChildren(),
     )
 
@@ -29,7 +29,7 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
       (collected, stackGroup) => [
         ...collected,
         stackGroup.getPath(),
-        ...stackGroup.getStacks().map(s => s.getPath()),
+        ...stackGroup.getStacks().map((s) => s.getPath()),
       ],
       new Array<string>(),
     )
@@ -39,7 +39,7 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
       input: string,
     ): Promise<string[]> => {
       return input
-        ? allCommandPaths.filter(p => p.includes(input))
+        ? allCommandPaths.filter((p) => p.includes(input))
         : allCommandPaths
     }
 
@@ -95,13 +95,13 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
   ): void => this.info(stackPath + " - " + formatStackEvent(e))
 
   printOutput = (output: StacksOperationOutput): StacksOperationOutput => {
-    const succeeded = output.results.filter(r => r.success)
-    const failed = output.results.filter(r => !r.success)
+    const succeeded = output.results.filter((r) => r.success)
+    const failed = output.results.filter((r) => !r.success)
     const all = [...succeeded, ...failed]
 
     const table = new Table()
 
-    all.forEach(r => {
+    all.forEach((r) => {
       table.cell("Stack path", r.stack.getPath())
       table.cell("Stack name", r.stack.getName())
       table.cell("Status", formatCommandStatus(r.status))
@@ -117,7 +117,7 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
       this.message("Events for failed stacks", true)
       this.message("------------------------")
 
-      failed.forEach(r => {
+      failed.forEach((r) => {
         this.message(r.stack.getPath(), true, true)
 
         if (r.events.length === 0) {

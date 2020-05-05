@@ -31,7 +31,7 @@ describe("resolve stack launch type", () => {
     })
   })
 
-  describe.each(notSupported)("when %s is given", status => {
+  describe.each(notSupported)("when %s is given", (status) => {
     test("throws an error", () => {
       expect(() => resolveStackLaunchType(status)).toThrow(
         `Unsupported stack status: ${status}`,

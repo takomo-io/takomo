@@ -129,7 +129,7 @@ export const expectValidationErrors = (
 
   const expected = expectedMessages.slice().sort().join("\n")
   const actual = details
-    .map(d => d.message)
+    .map((d) => d.message)
     .sort()
     .join("\n")
 

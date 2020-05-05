@@ -19,7 +19,7 @@ export const describeAccountCommand = async (
     .then(({ options, variables }) =>
       buildOrganizationContext(options, variables, io),
     )
-    .then(ctx => describeAccount(ctx))
+    .then((ctx) => describeAccount(ctx))
     .then(() => {
       return {
         success: true,

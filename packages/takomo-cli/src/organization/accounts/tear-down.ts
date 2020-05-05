@@ -23,14 +23,14 @@ export const tearDownAccountsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
         operation: DeploymentOperation.UNDEPLOY,
         configSetType: ConfigSetType.BOOTSTRAP,
       }),
-      input =>
+      (input) =>
         accountsOperationCommand(
           input,
           new CliTearDownAccountsIO(

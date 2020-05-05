@@ -9,8 +9,8 @@ export default {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ov,
-      input =>
+      (ov) => ov,
+      (input) =>
         describeAccountCommand(input, new CliListAccountsIO(input.options)),
     ),
 }

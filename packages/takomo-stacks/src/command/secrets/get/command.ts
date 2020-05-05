@@ -16,10 +16,10 @@ export const getSecretCommand = async (
   io: GetSecretIO,
 ): Promise<GetSecretOutput> =>
   validateInput(schema, input)
-    .then(input => buildConfigContext(input.options, input.variables, io))
-    .then(ctx => prepareLaunchContext(ctx, input.stackPath, false))
-    .then(ctx => getSecretValue(ctx, input.stackPath, input.secretName))
-    .then(value => ({
+    .then((input) => buildConfigContext(input.options, input.variables, io))
+    .then((ctx) => prepareLaunchContext(ctx, input.stackPath, false))
+    .then((ctx) => getSecretValue(ctx, input.stackPath, input.secretName))
+    .then((value) => ({
       success: true,
       message: "Success",
       value,

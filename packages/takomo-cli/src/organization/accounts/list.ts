@@ -9,7 +9,8 @@ export const listAccountsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ov,
-      input => listAccountsCommand(input, new CliListAccountsIO(input.options)),
+      (ov) => ov,
+      (input) =>
+        listAccountsCommand(input, new CliListAccountsIO(input.options)),
     ),
 }

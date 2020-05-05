@@ -14,7 +14,7 @@ export const syncSecretsCommand = async (
   io: SyncSecretsIO,
 ): Promise<SyncSecretsOutput> =>
   validateInput(schema, input)
-    .then(input => buildConfigContext(input.options, input.variables, io))
-    .then(ctx => prepareLaunchContext(ctx, input.commandPath, false))
-    .then(ctx => syncSecrets(ctx, input, io))
+    .then((input) => buildConfigContext(input.options, input.variables, io))
+    .then((ctx) => prepareLaunchContext(ctx, input.commandPath, false))
+    .then((ctx) => syncSecrets(ctx, input, io))
     .then(io.printOutput)

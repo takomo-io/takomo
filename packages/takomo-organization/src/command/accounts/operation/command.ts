@@ -23,5 +23,5 @@ export const accountsOperationCommand = async (
     .then(({ options, variables }) =>
       buildOrganizationContext(options, variables, io),
     )
-    .then(ctx => deployAccounts(ctx, io, input))
+    .then((ctx) => deployAccounts(ctx, io, input))
     .then(io.printOutput)

@@ -9,11 +9,11 @@ export const setSecretCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         stackPath: argv.stackPath,
         secretName: argv.secretName,
       }),
-      input => setSecretCommand(input, new CliSetSecretIO(input.options)),
+      (input) => setSecretCommand(input, new CliSetSecretIO(input.options)),
     ),
 }

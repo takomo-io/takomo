@@ -11,7 +11,7 @@ export const validate = (
     errors: { label: false },
   })
   if (error) {
-    const details = error.details.map(d => `  - ${d.message}`).join("\n")
+    const details = error.details.map((d) => `  - ${d.message}`).join("\n")
     throw new TakomoError(`${errorMessage}:\n\n${details}`)
   }
 }

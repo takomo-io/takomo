@@ -35,12 +35,13 @@ export const deployStacksCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         ignoreDependencies: argv["ignore-dependencies"],
         commandPath: argv.commandPath,
         interactive: argv.interactive,
       }),
-      input => deployStacksCommand(input, new CliDeployStacksIO(input.options)),
+      (input) =>
+        deployStacksCommand(input, new CliDeployStacksIO(input.options)),
     ),
 }

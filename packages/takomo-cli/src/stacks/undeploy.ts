@@ -38,13 +38,13 @@ export const undeployStacksCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         ignoreDependencies: argv["ignore-dependencies"],
         commandPath: argv.commandPath,
         interactive: argv.interactive,
       }),
-      input =>
+      (input) =>
         undeployStacksCommand(input, new CliUndeployStacksIO(input.options)),
     ),
 }

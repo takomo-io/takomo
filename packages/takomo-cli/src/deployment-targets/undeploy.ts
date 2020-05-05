@@ -35,14 +35,14 @@ export const undeployTargetsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         targets: parseTargets(argv.target),
         groups: argv.groups || [],
         configFile: argv["config-file"] || null,
         operation: DeploymentOperation.UNDEPLOY,
       }),
-      input =>
+      (input) =>
         deploymentTargetsOperationCommand(
           input,
           new CliUndeployTargetsIO(

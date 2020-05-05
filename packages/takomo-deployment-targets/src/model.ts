@@ -71,8 +71,8 @@ export class DeploymentTargetsContext {
     this.rootDeploymentGroups = props.configFile.deploymentGroups
 
     this.deploymentGroups = flatten(
-      this.rootDeploymentGroups.map(group =>
-        collectFromHierarchy(group, o => o.children),
+      this.rootDeploymentGroups.map((group) =>
+        collectFromHierarchy(group, (o) => o.children),
       ),
     )
   }
@@ -91,7 +91,7 @@ export class DeploymentTargetsContext {
     this.credentialProvider
 
   getDeploymentGroup = (path: DeploymentGroupPath): DeploymentGroupConfig => {
-    const group = this.deploymentGroups.find(group => group.path === path)
+    const group = this.deploymentGroups.find((group) => group.path === path)
     if (!group) {
       throw new Error(`No such deployment group: '${path}'`)
     }
@@ -100,10 +100,10 @@ export class DeploymentTargetsContext {
   }
 
   hasDeploymentGroup = (path: DeploymentGroupPath): boolean =>
-    this.deploymentGroups.find(group => group.path === path) !== undefined
+    this.deploymentGroups.find((group) => group.path === path) !== undefined
 
   getConfigSet = (name: ConfigSetName): ConfigSet => {
-    const configSet = this.configFile.configSets.find(r => r.name === name)
+    const configSet = this.configFile.configSets.find((r) => r.name === name)
     if (!configSet) {
       throw new Error(`No such config set: ${name}`)
     }

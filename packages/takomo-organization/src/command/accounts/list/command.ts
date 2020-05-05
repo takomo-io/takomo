@@ -15,7 +15,7 @@ export const listAccountsCommand = async (
     .then(({ options, variables }) =>
       buildOrganizationContext(options, variables, io),
     )
-    .then(ctx => listAccounts(ctx))
+    .then((ctx) => listAccounts(ctx))
     .then(({ accounts, masterAccountId }) => {
       return {
         accounts,

@@ -35,9 +35,9 @@ export class CliDescribeOrganizationIO extends CliIO
     this.header("TRUSTED ACCESS FOR AWS SERVICES", true)
 
     const servicesTable = new Table()
-    Constants.ORGANIZATION_SERVICE_PRINCIPALS.forEach(sp => {
+    Constants.ORGANIZATION_SERVICE_PRINCIPALS.forEach((sp) => {
       const enabled =
-        services.find(s => s.ServicePrincipal === sp) !== undefined
+        services.find((s) => s.ServicePrincipal === sp) !== undefined
 
       servicesTable.cell("Service", sp)
       servicesTable.cell("Enabled", enabled)

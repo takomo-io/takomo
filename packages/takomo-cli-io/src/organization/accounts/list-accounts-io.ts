@@ -13,7 +13,7 @@ export class CliListAccountsIO extends CliIO implements ListAccountsIO {
   printOutput = (output: ListAccountsOutput): ListAccountsOutput => {
     const table = new Table()
 
-    output.accounts.forEach(a => {
+    output.accounts.forEach((a) => {
       table.cell("Id", a.Id)
       table.cell("Name", a.Name)
       table.cell("Email", a.Email)

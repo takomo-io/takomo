@@ -59,7 +59,7 @@ describe("#buildStackGroup", () => {
     test("returns correctly build hierarchy", async () => {
       const root = await build(`example`)
       const children = root.getChildren().sort(byName)
-      const childNames = children.map(c => c.getName())
+      const childNames = children.map((c) => c.getName())
 
       expect(childNames).toStrictEqual(["database", "logs", "network", "s3"])
 

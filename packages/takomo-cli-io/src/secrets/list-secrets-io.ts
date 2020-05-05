@@ -8,13 +8,13 @@ export class CliListSecretsIO extends CliSecretsIo implements ListSecretsIO {
   }
 
   printOutput = (output: ListSecretsOutput): ListSecretsOutput => {
-    output.stacks.forEach(stack => {
+    output.stacks.forEach((stack) => {
       if (stack.secrets.length === 0) {
         return
       }
 
       this.message(stack.stack.getPath(), true)
-      stack.secrets.forEach(s => this.printSecret(s))
+      stack.secrets.forEach((s) => this.printSecret(s))
     })
 
     return output

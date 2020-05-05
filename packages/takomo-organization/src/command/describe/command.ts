@@ -18,5 +18,5 @@ export const describeOrganizationCommand = async (
     .then(({ options, variables }) =>
       buildOrganizationContext(options, variables, io),
     )
-    .then(ctx => describeOrganization(ctx, io))
+    .then((ctx) => describeOrganization(ctx, io))
     .then(io.printOutput)

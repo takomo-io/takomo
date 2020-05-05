@@ -16,11 +16,11 @@ export const createOrganizationCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         featureSet: argv["feature-set"],
       }),
-      input =>
+      (input) =>
         createOrganizationCommand(
           input,
           new CliCreateOrganizationIO(input.options),

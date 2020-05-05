@@ -22,7 +22,7 @@ export const deploymentTargetsOperationCommand = async (
     .then(({ options, variables }) =>
       buildDeploymentTargetsContext(options, variables, input.configFile, io),
     )
-    .then(ctx =>
+    .then((ctx) =>
       planDeployment({
         ctx,
         input,

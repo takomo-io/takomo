@@ -5,7 +5,7 @@ export const parseConfigSets = (value: any): ConfigSet[] => {
     return []
   }
 
-  return Object.keys(value).map(name => {
+  return Object.keys(value).map((name) => {
     const { description, vars, commandPaths } = value[name]
     return {
       name,

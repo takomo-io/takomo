@@ -65,12 +65,12 @@ export abstract class CliDeploymentOperationIO extends CliIO
     }
 
     const targetsTable = new Table()
-    output.results.forEach(group => {
-      group.results.forEach(target => {
-        target.results.forEach(configSet => {
-          configSet.results.forEach(result => {
+    output.results.forEach((group) => {
+      group.results.forEach((target) => {
+        target.results.forEach((configSet) => {
+          configSet.results.forEach((result) => {
             if (result.result.results.length > 0) {
-              result.result.results.forEach(stackResult => {
+              result.result.results.forEach((stackResult) => {
                 targetsTable.cell("Deployment group", group.path)
                 targetsTable.cell("Target", target.name)
                 targetsTable.cell("Config set", configSet.configSetName)
@@ -118,13 +118,13 @@ export abstract class CliDeploymentOperationIO extends CliIO
   confirmOperation = async (plan: TargetsExecutionPlan): Promise<boolean> => {
     this.header(this.messages.confirmHeader, true)
 
-    plan.groups.forEach(group => {
+    plan.groups.forEach((group) => {
       this.message(`  ${group.path}:`, true)
-      group.targets.forEach(target => {
+      group.targets.forEach((target) => {
         this.message(`    - name: ${target.name}`, true)
         this.message(`      description: ${target.description || "-"}`)
         this.message("      config sets:")
-        target.configSets.forEach(configSet => {
+        target.configSets.forEach((configSet) => {
           this.message(`        - ${configSet}`)
         })
       })

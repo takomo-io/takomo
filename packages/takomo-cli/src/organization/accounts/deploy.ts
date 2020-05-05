@@ -23,14 +23,14 @@ export const deployAccountsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
         operation: DeploymentOperation.DEPLOY,
         configSetType: ConfigSetType.STANDARD,
       }),
-      input =>
+      (input) =>
         accountsOperationCommand(
           input,
           new CliDeployAccountsIO(

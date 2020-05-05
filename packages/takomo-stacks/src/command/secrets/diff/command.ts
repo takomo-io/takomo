@@ -14,10 +14,10 @@ export const diffSecretsCommand = async (
   io: DiffSecretsIO,
 ): Promise<DiffSecretsOutput> =>
   validateInput(schema, input)
-    .then(input => buildConfigContext(input.options, input.variables, io))
-    .then(ctx => prepareLaunchContext(ctx, input.commandPath, false))
+    .then((input) => buildConfigContext(input.options, input.variables, io))
+    .then((ctx) => prepareLaunchContext(ctx, input.commandPath, false))
     .then(diffSecrets)
-    .then(stacks => ({
+    .then((stacks) => ({
       success: true,
       message: "Success",
       stacks,

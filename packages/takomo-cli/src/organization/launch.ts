@@ -8,7 +8,7 @@ export const launchOrganizationCmd = {
   desc: "Launch organization",
   builder: {},
   handler: (argv: any) =>
-    handle(argv, identity, input =>
+    handle(argv, identity, (input) =>
       launchOrganizationCommand(
         input,
         new CliLaunchOrganizationIO(input.options),

@@ -14,10 +14,10 @@ export const listStacksCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         commandPath: argv.commandPath,
       }),
-      input => listStacksCommand(input, new CliListStacksIO(input.options)),
+      (input) => listStacksCommand(input, new CliListStacksIO(input.options)),
     ),
 }

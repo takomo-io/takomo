@@ -41,9 +41,9 @@ export const resolveCommandOutputBase = (
     }
   }
 
-  const success = items.every(i => i.success)
+  const success = items.every((i) => i.success)
 
-  if (items.every(i => i.status === CommandStatus.CANCELLED)) {
+  if (items.every((i) => i.status === CommandStatus.CANCELLED)) {
     return {
       status: CommandStatus.CANCELLED,
       message: "Cancelled",
@@ -51,7 +51,7 @@ export const resolveCommandOutputBase = (
     }
   }
 
-  if (items.every(i => i.status === CommandStatus.SKIPPED)) {
+  if (items.every((i) => i.status === CommandStatus.SKIPPED)) {
     return {
       status: CommandStatus.SKIPPED,
       message: "Skipped",

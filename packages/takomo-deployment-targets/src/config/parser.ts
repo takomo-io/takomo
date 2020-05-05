@@ -79,18 +79,18 @@ const parseDeploymentGroup = (
   const group = config[groupPath]
   const groupPathDepth = groupPath.split("/").length
 
-  const childPaths = Object.keys(config).filter(key =>
+  const childPaths = Object.keys(config).filter((key) =>
     key.startsWith(`${groupPath}/`),
   )
 
   const directChildPaths = childPaths.filter(
-    key => key.split("/").length === groupPathDepth + 1,
+    (key) => key.split("/").length === groupPathDepth + 1,
   )
 
   const missingDirectChildPaths = uniq(
     childPaths
-      .filter(key => key.split("/").length >= groupPathDepth + 2)
-      .map(key =>
+      .filter((key) => key.split("/").length >= groupPathDepth + 2)
+      .map((key) =>
         key
           .split("/")
           .slice(0, groupPathDepth + 1)
@@ -104,7 +104,7 @@ const parseDeploymentGroup = (
   const children = [
     ...missingDirectChildPaths,
     ...directChildPaths,
-  ].map(childPath => parseDeploymentGroup(childPath, config, configSets))
+  ].map((childPath) => parseDeploymentGroup(childPath, config, configSets))
 
   const targets = parseDeploymentTargets(group?.targets, configSets)
   const name = groupPath.split("/").reverse()[0]
@@ -128,7 +128,7 @@ const parseDeploymentGroups = (value: any): DeploymentGroupConfig[] => {
     return []
   }
 
-  return Object.keys(value).map(rootPath =>
+  return Object.keys(value).map((rootPath) =>
     parseDeploymentGroup(rootPath, value, []),
   )
 }
@@ -175,7 +175,7 @@ export const parseDeploymentConfigFile = async (
   })
 
   if (error) {
-    const details = error.details.map(d => `  - ${d.message}`).join("\n")
+    const details = error.details.map((d) => `  - ${d.message}`).join("\n")
     throw new TakomoError(
       `${error.details.length} validation error(s) in deployment groups config file ${path}:\n\n${details}`,
     )

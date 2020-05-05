@@ -79,7 +79,7 @@ export abstract class CliAccountsOperationIO extends CliIO
   confirmLaunch = async (plan: AccountsLaunchPlan): Promise<ConfirmResult> => {
     this.header(this.messages.confirmHeader, true)
 
-    plan.organizationalUnits.forEach(ou => {
+    plan.organizationalUnits.forEach((ou) => {
       this.message(`  ${ou.path}:`, true)
       ou.accounts.forEach(({ account, config }) => {
         this.message(`    - id:       ${config.id}`, true)
@@ -87,7 +87,7 @@ export abstract class CliAccountsOperationIO extends CliIO
         this.message(`      email:    ${account.Email}`)
         this.message(`      ${getConfigSetsName(plan.configSetType)}:`)
 
-        getConfigSets(plan.configSetType, config).forEach(configSet => {
+        getConfigSets(plan.configSetType, config).forEach((configSet) => {
           this.message(`        - ${configSet}`)
         })
       })
@@ -109,12 +109,12 @@ export abstract class CliAccountsOperationIO extends CliIO
     }
 
     const targetsTable = new Table()
-    output.results.forEach(ou => {
-      ou.results.forEach(account => {
-        account.results.forEach(configSet => {
-          configSet.results.forEach(result => {
+    output.results.forEach((ou) => {
+      ou.results.forEach((account) => {
+        account.results.forEach((configSet) => {
+          configSet.results.forEach((result) => {
             if (result.result.results.length > 0) {
-              result.result.results.forEach(stackResult => {
+              result.result.results.forEach((stackResult) => {
                 targetsTable.cell("Organizational unit", ou.path)
                 targetsTable.cell("Account", account.accountId)
                 targetsTable.cell("Config set", configSet.configSetName)

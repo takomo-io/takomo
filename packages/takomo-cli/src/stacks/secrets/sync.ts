@@ -14,10 +14,10 @@ export const syncSecretsCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         commandPath: argv.commandPath,
       }),
-      input => syncSecretsCommand(input, new CliSyncSecretsIO(input.options)),
+      (input) => syncSecretsCommand(input, new CliSyncSecretsIO(input.options)),
     ),
 }

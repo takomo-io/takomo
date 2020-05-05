@@ -16,7 +16,7 @@ export const setSecretCommand = async (
   io: SetSecretIO,
 ): Promise<SetSecretOutput> =>
   validateInput(schema, input)
-    .then(input => buildConfigContext(input.options, input.variables, io))
-    .then(ctx => prepareLaunchContext(ctx, input.stackPath, false))
-    .then(ctx => setSecretValue(ctx, input, io))
+    .then((input) => buildConfigContext(input.options, input.variables, io))
+    .then((ctx) => prepareLaunchContext(ctx, input.stackPath, false))
+    .then((ctx) => setSecretValue(ctx, input, io))
     .then(io.printOutput)

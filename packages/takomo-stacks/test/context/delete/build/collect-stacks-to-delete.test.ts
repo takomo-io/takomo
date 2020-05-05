@@ -12,14 +12,14 @@ import { createStack, createStackGroup } from "../../../helpers"
 import { mockTakomoCredentialProvider } from "../../../mocks"
 
 const configContext = (rootStackGroup: StackGroup): ConfigContext => {
-  const allStackGroups = collectFromHierarchy(rootStackGroup, n =>
+  const allStackGroups = collectFromHierarchy(rootStackGroup, (n) =>
     n.getChildren(),
   )
-  const stackGroups = new Map(allStackGroups.map(s => [s.getPath(), s]))
+  const stackGroups = new Map(allStackGroups.map((s) => [s.getPath(), s]))
   const stackConfigsByPath = new Map()
 
-  allStackGroups.forEach(sg => {
-    sg.getStacks().forEach(s => {
+  allStackGroups.forEach((sg) => {
+    sg.getStacks().forEach((s) => {
       stackConfigsByPath.set(s.getPath(), s)
     })
   })
@@ -52,7 +52,7 @@ const collectStackNamesToDelete = (
   ignoreDependencies?: boolean,
 ): StackName[] =>
   collectStacksToDelete(ctx, commandPath, ignoreDependencies || false)
-    .map(s => s.getName())
+    .map((s) => s.getName())
     .sort()
 
 describe("#collectStacksToDelete", () => {

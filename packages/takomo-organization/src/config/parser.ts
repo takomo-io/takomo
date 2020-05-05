@@ -169,7 +169,7 @@ const parsePolicies = (value: any): PolicyConfig[] => {
   if (!value) {
     return []
   }
-  return Object.keys(value).map(policyName => ({
+  return Object.keys(value).map((policyName) => ({
     name: policyName,
     description: value[policyName].description,
     awsManaged: value[policyName].awsManaged === true,
@@ -238,18 +238,18 @@ const parseOrganizationalUnit = (
   const ou = config[ouPath]
   const ouPathDepth = ouPath.split("/").length
 
-  const childPaths = Object.keys(config).filter(key =>
+  const childPaths = Object.keys(config).filter((key) =>
     key.startsWith(`${ouPath}/`),
   )
 
   const directChildPaths = childPaths.filter(
-    key => key.split("/").length === ouPathDepth + 1,
+    (key) => key.split("/").length === ouPathDepth + 1,
   )
 
   const missingDirectChildPaths = uniq(
     childPaths
-      .filter(key => key.split("/").length >= ouPathDepth + 2)
-      .map(key =>
+      .filter((key) => key.split("/").length >= ouPathDepth + 2)
+      .map((key) =>
         key
           .split("/")
           .slice(0, ouPathDepth + 1)
@@ -281,7 +281,7 @@ const parseOrganizationalUnit = (
   const children = [
     ...missingDirectChildPaths,
     ...directChildPaths,
-  ].map(childPath =>
+  ].map((childPath) =>
     parseOrganizationalUnit(
       childPath,
       config,
@@ -367,7 +367,7 @@ export const parseOrganizationConfigFile = async (
   })
 
   if (error) {
-    const details = error.details.map(d => `  - ${d.message}`).join("\n")
+    const details = error.details.map((d) => `  - ${d.message}`).join("\n")
     throw new TakomoError(
       `${error.details.length} validation error(s) in organization config file ${path}:\n\n${details}`,
     )

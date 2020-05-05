@@ -35,14 +35,14 @@ export const createAccountCmd = {
   handler: (argv: any) =>
     handle(
       argv,
-      ov => ({
+      (ov) => ({
         ...ov,
         email: argv.email,
         name: argv.name,
         iamUserAccessToBilling: argv["iam-user-access-to-billing"],
         roleName: argv["role-name"],
       }),
-      input =>
+      (input) =>
         createAccountCommand(input, new CliCreateAccountIO(input.options)),
     ),
 }

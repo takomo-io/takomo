@@ -29,16 +29,16 @@ export class CliSecretsIo extends CliIO {
   }
 
   printSecretsDiff = (stacks: StackSecretsDiff[]): void =>
-    stacks.forEach(diff => {
+    stacks.forEach((diff) => {
       if (diff.add.length === 0 && diff.remove.length === 0) {
         return
       }
 
       this.message(diff.stack.getPath(), true)
-      diff.add.forEach(s => {
+      diff.add.forEach((s) => {
         this.printSecret(s, SecretOperation.ADD)
       })
-      diff.remove.forEach(s => {
+      diff.remove.forEach((s) => {
         this.printSecret(s, SecretOperation.REMOVE)
       })
     })

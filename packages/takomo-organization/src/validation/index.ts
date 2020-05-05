@@ -17,10 +17,10 @@ import {
 } from "../model"
 
 const collectPolicyNames = (policies: PolicyConfig[] | undefined): string[] =>
-  policies ? policies.map(p => p.name) : []
+  policies ? policies.map((p) => p.name) : []
 
 const collectConfigSetNames = (configSets: ConfigSet[]): string[] =>
-  configSets.map(r => r.name)
+  configSets.map((r) => r.name)
 
 export const validateOrganizationConfigFile = (
   configFile: OrganizationConfigFile,
@@ -86,7 +86,7 @@ export const validateOrganizationConfigFile = (
   const configSetNames = collectConfigSetNames(configSets)
 
   const validateOu = (ou: OrganizationalUnit): void => {
-    ou.serviceControlPolicies.forEach(policyName => {
+    ou.serviceControlPolicies.forEach((policyName) => {
       if (!serviceControlPolicyNames.includes(policyName)) {
         throw new TakomoError(
           `Organizational unit '${ou.path}' refers to a non-existing service control policy '${policyName}'`,
@@ -94,7 +94,7 @@ export const validateOrganizationConfigFile = (
       }
     })
 
-    ou.tagPolicies.forEach(policyName => {
+    ou.tagPolicies.forEach((policyName) => {
       if (!tagPolicyNames.includes(policyName)) {
         throw new TakomoError(
           `Organizational unit '${ou.path}' refers to a non-existing tag policy '${policyName}'`,
@@ -102,7 +102,7 @@ export const validateOrganizationConfigFile = (
       }
     })
 
-    ou.configSets.forEach(configSetName => {
+    ou.configSets.forEach((configSetName) => {
       if (!configSetNames.includes(configSetName)) {
         throw new TakomoError(
           `Organizational unit '${ou.path}' refers to a non-existing config set '${configSetName}'`,
@@ -110,7 +110,7 @@ export const validateOrganizationConfigFile = (
       }
     })
 
-    ou.bootstrapConfigSets.forEach(configSetName => {
+    ou.bootstrapConfigSets.forEach((configSetName) => {
       if (!configSetNames.includes(configSetName)) {
         throw new TakomoError(
           `Organizational unit '${ou.path}' refers to a non-existing bootstrap config set '${configSetName}'`,
@@ -118,8 +118,8 @@ export const validateOrganizationConfigFile = (
       }
     })
 
-    ou.accounts.forEach(account => {
-      account.configSets.forEach(configSetName => {
+    ou.accounts.forEach((account) => {
+      account.configSets.forEach((configSetName) => {
         if (!configSetNames.includes(configSetName)) {
           throw new TakomoError(
             `Account '${account.id}' refers to a non-existing config set '${configSetName}'`,
@@ -127,7 +127,7 @@ export const validateOrganizationConfigFile = (
         }
       })
 
-      account.bootstrapConfigSets.forEach(configSetName => {
+      account.bootstrapConfigSets.forEach((configSetName) => {
         if (!configSetNames.includes(configSetName)) {
           throw new TakomoError(
             `Account '${account.id}' refers to a non-existing bootstrap config set '${configSetName}'`,
@@ -139,12 +139,12 @@ export const validateOrganizationConfigFile = (
     ou.children.forEach(validateOu)
   }
 
-  const ous = collectFromHierarchy(Root, o => o.children)
+  const ous = collectFromHierarchy(Root, (o) => o.children)
   ous.forEach(validateOu)
 
   ous.reduce((collected, ou) => {
-    const accountIds = ou.accounts.map(a => a.id)
-    accountIds.forEach(accountId => {
+    const accountIds = ou.accounts.map((a) => a.id)
+    accountIds.forEach((accountId) => {
       if (collected.includes(accountId)) {
         throw new TakomoError(`Account ${accountId} is defined more than once`)
       }
@@ -161,31 +161,31 @@ export const validateCommonLocalConfiguration = async (
   const allAccountsInConfig = flatten(
     collectFromHierarchy(
       ctx.getOrganizationalUnit("Root"),
-      node => node.children,
-    ).map(ou => ou.accounts),
+      (node) => node.children,
+    ).map((ou) => ou.accounts),
   )
 
-  const allAccountIdsInConfig = allAccountsInConfig.map(a => a.id)
+  const allAccountIdsInConfig = allAccountsInConfig.map((a) => a.id)
 
-  const currentAccountIds = currentAccounts.map(a => a.Id!)
+  const currentAccountIds = currentAccounts.map((a) => a.Id!)
   const invalidAccountIds = allAccountIdsInConfig.filter(
-    id => !currentAccountIds.includes(id),
+    (id) => !currentAccountIds.includes(id),
   )
   if (invalidAccountIds.length > 0) {
     throw new NonExistingAccountsInLocalConfigError(invalidAccountIds)
   }
 
   const suspendedAccountsIds = currentAccounts
-    .filter(a => a.Status === "SUSPENDED")
-    .map(a => a.Id!)
+    .filter((a) => a.Status === "SUSPENDED")
+    .map((a) => a.Id!)
 
   const suspendedAccountIdsInLocalConfig = allAccountsInConfig
     .filter(
-      a =>
+      (a) =>
         suspendedAccountsIds.includes(a.id) &&
         a.status !== OrganizationAccountStatus.SUSPENDED,
     )
-    .map(a => a.id)
+    .map((a) => a.id)
   if (suspendedAccountIdsInLocalConfig.length > 0) {
     throw new SuspendedAccountsInLocalConfigError(
       suspendedAccountIdsInLocalConfig,
@@ -193,7 +193,7 @@ export const validateCommonLocalConfiguration = async (
   }
 
   const accountIdsMissingFromLocalConfig = currentAccounts.filter(
-    a => !allAccountIdsInConfig.includes(a.Id!),
+    (a) => !allAccountIdsInConfig.includes(a.Id!),
   )
   if (accountIdsMissingFromLocalConfig.length > 0) {
     throw new AccountsMissingFromLocalConfigError(
@@ -201,9 +201,9 @@ export const validateCommonLocalConfiguration = async (
     )
   }
 
-  const currentAccountsMap = new Map(currentAccounts.map(a => [a.Id!, a]))
+  const currentAccountsMap = new Map(currentAccounts.map((a) => [a.Id!, a]))
 
-  allAccountsInConfig.forEach(localAccount => {
+  allAccountsInConfig.forEach((localAccount) => {
     const currentAccount = currentAccountsMap.get(localAccount.id)!
     if (localAccount.email && localAccount.email !== currentAccount.Email!) {
       throw new TakomoError(
