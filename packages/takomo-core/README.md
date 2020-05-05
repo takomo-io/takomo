@@ -1,5 +1,3 @@
-# Takomo 
+# Takomo Core
 
-Takomo helps you organize, configure and deploy your CloudFormation stacks.
-
-Read documentation at https://takomo.webscale.fi
+Core functionalities for https://takomo.io
