@@ -1,5 +1,6 @@
 import { commandPath } from "../../src/schema"
 import { expectNoValidationError, expectValidationErrors } from "../helpers"
+import { REGIONS } from "../../src/constants"
 
 const valid = [
   "/vpc.yml",
@@ -39,7 +40,7 @@ const invalid = [
   ],
   [
     "/my/group/stack.yml/moon-north-1",
-    '"value" with value "/my/group/stack.yml/moon-north-1" has invalid region "moon-north-1". The region must be one of [us-east-2,us-east-1,us-west-1,us-west-2,ap-east-1,ap-south-1,ap-northeast-3,ap-northeast-2,ap-southeast-1,ap-southeast-2,ap-northeast-1,ca-central-1,cn-north-1,cn-northwest-1,eu-central-1,eu-west-1,eu-west-2,eu-west-3,eu-north-1,me-south-1,sa-east-1,us-gov-east-1]',
+    `"value" with value "/my/group/stack.yml/moon-north-1" has invalid region "moon-north-1". The region must be one of [${REGIONS.join(", ")}]`,
   ],
   [
     "/my/group/stack.yml/moon-north-1/",
