@@ -3,8 +3,8 @@ import semver from "semver"
 import { TakomoProjectConfig } from "./model"
 import { takomoProjectConfigFileSchema } from "./schema"
 
-// TODO: Fix version loading
-const version = "x"
+const packageJson = require("../../package.json")
+const version = packageJson.version
 
 const validateRequiredVersion = (
   configFilePath: string,
