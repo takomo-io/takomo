@@ -34,7 +34,7 @@ export const commandPath = Joi.string()
     if (!REGIONS.includes(region)) {
       return helpers.error("invalidRegion", {
         region,
-        regions: REGIONS.join(","),
+        regions: REGIONS.join(", "),
       })
     }
 
@@ -71,7 +71,7 @@ export const stackPath = Joi.string()
     if (!REGIONS.includes(region)) {
       return helpers.error("invalidRegion", {
         region,
-        regions: REGIONS.join(","),
+        regions: REGIONS.join(", "),
       })
     }
 
