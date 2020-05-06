@@ -25,7 +25,7 @@
     "depcheck": "lerna run depcheck --parallel",
     "test": "lerna run test",
     "commit": "git-cz",
-    "publish-version": "lerna version",
+    "publish-version": "lerna version --exact",
     "publish-packages": "lerna publish from-package --create-release github --yes",
     "run-prettier": "prettier --write packages/**/*.ts"
   },
