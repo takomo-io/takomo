@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Takomo CLI",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,13 +28,13 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/cli-io": "^0.0.2",
-    "@takomo/config-sets": "^0.0.2",
-    "@takomo/core": "^0.0.2",
-    "@takomo/deployment-targets": "^0.0.2",
-    "@takomo/organization": "^0.0.2",
-    "@takomo/stacks": "^0.0.2",
-    "@takomo/util": "^0.0.2",
+    "@takomo/cli-io": "0.1.0",
+    "@takomo/config-sets": "0.1.0",
+    "@takomo/core": "0.1.0",
+    "@takomo/deployment-targets": "0.1.0",
+    "@takomo/organization": "0.1.0",
+    "@takomo/stacks": "0.1.0",
+    "@takomo/util": "0.1.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.1.1",
