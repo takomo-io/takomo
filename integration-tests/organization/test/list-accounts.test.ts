@@ -1,7 +1,7 @@
-import { listAccountsCommand } from "@takomo/organization"
 import { initOptionsAndVariables } from "@takomo/cli"
-import { CommandStatus } from "@takomo/core"
 import { CliListAccountsIO } from "@takomo/cli-io"
+import { CommandStatus } from "@takomo/core"
+import { listAccountsCommand } from "@takomo/organization"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,
@@ -42,7 +42,7 @@ describe("List accounts command", () => {
 
       expect(
         accounts
-          .map(a => a.Id)
+          .map((a) => a.Id)
           .slice()
           .sort(),
       ).toStrictEqual(

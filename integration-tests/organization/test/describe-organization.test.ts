@@ -60,19 +60,11 @@ describe("Describe organization command", () => {
         actualEnabledPolicies.slice().sort(),
       )
 
-      expect(services.map(s => s.ServicePrincipal)).toStrictEqual([
-        "aws-artifact-account-sync.amazonaws.com",
-        "cloudtrail.amazonaws.com",
-        "config.amazonaws.com",
-        "ds.amazonaws.com",
-        "fms.amazonaws.com",
-        "license-manager.amazonaws.com",
-        "ram.amazonaws.com",
-        "servicecatalog.amazonaws.com",
-        "ssm.amazonaws.com",
-        "sso.amazonaws.com",
-        "tagpolicies.tag.amazonaws.com",
-      ])
+      const actualTrustedServices = await aws.organizations.listAWSServiceAccessForOrganization()
+
+      expect(services.map((s) => s.ServicePrincipal).sort()).toStrictEqual(
+        actualTrustedServices.sort(),
+      )
     },
     TIMEOUT,
   )

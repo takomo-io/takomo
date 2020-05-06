@@ -146,9 +146,11 @@ export const organizationalUnits = Joi.object().pattern(
   },
 )
 
-export const trustedAwsServices = Joi.array()
-  .items(Joi.string().valid(...Constants.ORGANIZATION_SERVICE_PRINCIPALS))
-  .unique()
+export const trustedAwsService = Joi.string().valid(
+  ...Constants.ORGANIZATION_SERVICE_PRINCIPALS,
+)
+
+export const trustedAwsServices = Joi.array().items(trustedAwsService).unique()
 
 export const organizationConfigFileSchema = Joi.object({
   vars,
