@@ -18,7 +18,7 @@
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
     "depcheck": "depcheck --ignore-dirs=dist",
-    "integration-test": "jest test --passWithNoTests --maxWorkers=4 --ci --runInBand"
+    "integration-test": "jest test --passWithNoTests --maxWorkers=1 --ci"
   },
   "dependencies": {
     "@takomo/cli": "^0.0.2",
