@@ -46,10 +46,12 @@ export const REGIONS = [
 export const ORGANIZATION_SERVICE_PRINCIPALS = [
   "aws-artifact-account-sync.amazonaws.com",
   "cloudtrail.amazonaws.com",
+  "compute-optimizer.amazonaws.com",
   "config.amazonaws.com",
   "ds.amazonaws.com",
   "fms.amazonaws.com",
   "license-manager.amazonaws.com",
+  "member.org.stacksets.cloudformation.amazonaws.com",
   "ram.amazonaws.com",
   "servicecatalog.amazonaws.com",
   "ssm.amazonaws.com",
