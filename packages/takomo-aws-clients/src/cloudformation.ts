@@ -176,7 +176,7 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
     latestEventId: string | null = null,
     allEvents: CloudFormation.StackEvent[] = [],
   ): Promise<ChangeSetCompletionResponse> => {
-    await sleep(3000)
+    await sleep(1000)
 
     const cfStack = await this.describeStack(stackName)
     if (cfStack === null) {
@@ -185,8 +185,7 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
       )
     }
 
-    const events = await this.describeStackEvents(cfStack.StackId!)
-
+    const events = (await this.describeStackEvents(cfStack.StackId!)).reverse()
     const newEvents = takeRightWhile(
       events,
       (e) => e.EventId !== latestEventId,
@@ -206,11 +205,11 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
       case "DELETE_FAILED":
       case "UPDATE_ROLLBACK_COMPLETE":
       case "UPDATE_ROLLBACK_FAILED":
-        return Promise.resolve({
+        return {
           events: updatedEvents,
           stackStatus: cfStack.StackStatus,
           timeoutConfig,
-        })
+        }
       default:
         const latestEvent = last(events)
         const newLatestEventId = latestEvent
@@ -262,14 +261,14 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
     latestEventId: string | null = null,
     allEvents: CloudFormation.StackEvent[] = [],
   ): Promise<StackDeleteCompletionResponse> => {
-    await sleep(3000)
+    await sleep(1000)
 
     const cfStack = await this.describeStack(stackArn)
     if (cfStack === null) {
       throw new Error(`Stack ${stackName} with arn ${stackArn} does not exists`)
     }
 
-    const events = await this.describeStackEvents(stackArn)
+    const events = (await this.describeStackEvents(stackArn)).reverse()
 
     const newEvents = takeRightWhile(
       events,
