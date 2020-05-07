@@ -50,7 +50,7 @@ export const executeHooks = async (
 
       if (!output.success) {
         return {
-          message: output.message,
+          message: output.message || "Failed",
           success: false,
         }
       }
@@ -60,7 +60,7 @@ export const executeHooks = async (
         e,
       )
       return {
-        message: e.message,
+        message: e.message || "Error",
         success: false,
       }
     }

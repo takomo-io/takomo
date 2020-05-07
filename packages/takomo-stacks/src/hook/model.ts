@@ -81,11 +81,11 @@ export interface HookInput {
 /**
  * Output of a life-cycle hook action.
  */
-export interface HookOutput {
+export interface HookOutputObject {
   /**
-   * Message describing the outcome of the action.
+   * Optional message describing the outcome of the action.
    */
-  readonly message: string
+  readonly message?: string
 
   /**
    * Boolean describing if the action was successful.
@@ -93,10 +93,12 @@ export interface HookOutput {
   readonly success: boolean
 
   /**
-   * Return value of the action.
+   * Optional return value.
    */
-  readonly value: any | null
+  readonly value?: any
 }
+
+export type HookOutput = HookOutputObject | Error | boolean
 
 export interface HooksExecutionOutput {
   /**
@@ -160,8 +162,33 @@ export class HookExecutor implements Hook {
     )
   }
 
-  execute = async (input: HookInput): Promise<HookOutput> =>
-    this.hook.execute(input)
+  execute = async (input: HookInput): Promise<HookOutputObject> => {
+    try {
+      const result = await this.hook.execute(input)
+      if (typeof result === "boolean") {
+        return {
+          message: result ? "Success" : "Failed",
+          success: result,
+          value: result,
+        }
+      }
+
+      if (result instanceof Error) {
+        return {
+          message: result.message || "Error",
+          success: false,
+          value: result,
+        }
+      }
+
+      return result
+    } catch (e) {
+      return {
+        message: e.message || "Error",
+        success: false,
+      }
+    }
+  }
 }
 
 export type HookInitializer = (props: any) => Promise<Hook>
