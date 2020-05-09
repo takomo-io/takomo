@@ -1,30 +1,18 @@
-export * from "./command/secrets/diff"
-export * from "./command/secrets/get"
-export * from "./command/secrets/list"
-export * from "./command/secrets/set"
-export * from "./command/secrets/sync"
-export {
-  deployStacksCommand,
-  DeployStacksIO,
-  StacksOperationInput,
-  StacksOperationOutput,
-} from "./command/stacks/deploy"
-export {
-  listStacksCommand,
-  ListStacksInput,
-  ListStacksIO,
-  ListStacksOutput,
-} from "./command/stacks/list"
-export {
-  undeployStacksCommand,
-  UndeployStacksIO,
-} from "./command/stacks/undeploy"
 export { CommandContext } from "./context"
+export { buildConfigContext, ConfigContext } from "./context/config"
+export { prepareDeleteContext } from "./context/delete"
+export { prepareLaunchContext } from "./context/launch"
+export { executeHooks, HookOperation, HookStatus } from "./hook"
 export {
+  defaultCapabilities,
   Secret,
   SecretName,
   SecretValue,
+  SecretWithValue,
   Stack,
   StackGroup,
-  StackSecretsDiff,
+  StackOperationVariables,
+  StackResult,
+  StackResultReason,
 } from "./model"
+export { secretName } from "./schema"

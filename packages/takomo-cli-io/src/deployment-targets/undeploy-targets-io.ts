@@ -1,5 +1,5 @@
 import { Options } from "@takomo/core"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks"
+import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { CliDeploymentOperationIO } from "./deployment-operation-io"
 
 export class CliUndeployTargetsIO extends CliDeploymentOperationIO {

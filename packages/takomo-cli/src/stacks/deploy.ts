@@ -1,6 +1,6 @@
 import { CliDeployStacksIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { deployStacksCommand } from "@takomo/stacks"
+import { deployStacksCommand } from "@takomo/stacks-commands"
 import { handle } from "../common"
 
 export const deployStacksCmd = {

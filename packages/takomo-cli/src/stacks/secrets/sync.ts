@@ -1,6 +1,6 @@
 import { CliSyncSecretsIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { syncSecretsCommand } from "@takomo/stacks"
+import { syncSecretsCommand } from "@takomo/stacks-commands"
 import { handle } from "../../common"
 
 export const syncSecretsCmd = {

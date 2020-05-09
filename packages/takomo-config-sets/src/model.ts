@@ -1,5 +1,5 @@
 import { CommandOutputBase, CommandPath, Vars } from "@takomo/core"
-import { StacksOperationOutput } from "@takomo/stacks"
+import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { StopWatch } from "@takomo/util"
 
 export type ConfigSetName = string

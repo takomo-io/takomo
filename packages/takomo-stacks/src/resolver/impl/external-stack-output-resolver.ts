@@ -1,5 +1,5 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandRole, IamRoleArn, Region, StackPath } from "@takomo/core"
+import { CommandRole, IamRoleArn, Region } from "@takomo/core"
 import { Resolver, ResolverInput } from "../model"
 
 export class ExternalStackOutputResolver implements Resolver {
@@ -7,7 +7,6 @@ export class ExternalStackOutputResolver implements Resolver {
   private readonly output: string
   private readonly region: Region | null
   private readonly commandRole: CommandRole | null
-  private readonly iamRoleArns: IamRoleArn[] = []
 
   constructor(props: any) {
     this.stack = props.stack
@@ -16,14 +15,10 @@ export class ExternalStackOutputResolver implements Resolver {
     this.commandRole = props.commandRole
       ? { iamRoleArn: props.commandRole }
       : null
-    this.iamRoleArns = this.commandRole ? [this.commandRole.iamRoleArn] : []
   }
 
-  isConfidential = (): boolean => false
-
-  getDependencies = (): StackPath[] => []
-
-  getIamRoleArns = (): IamRoleArn[] => this.iamRoleArns
+  iamRoleArns = (): IamRoleArn[] =>
+    this.commandRole ? [this.commandRole.iamRoleArn] : []
 
   resolve = async ({
     ctx,

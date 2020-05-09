@@ -3,32 +3,46 @@ import { Logger } from "@takomo/util"
 import { CommandContext } from "../context"
 import { ParameterName, ResolverName, Stack } from "../model"
 
+type GetterOrConst<T> = () => T | T
+
+const getValue = <T>(defaultValue: T, value?: GetterOrConst<T>): T => {
+  if (value === undefined) {
+    return defaultValue
+  }
+
+  if (typeof value === "function") {
+    return value()
+  }
+
+  return value
+}
+
 /**
  * Parameter value resolver.
  */
 export interface Resolver {
   /**
-   * Resolve parameter name.
+   * Resolve parameter value.
    *
    * @param input Resolver input
    * @returns Resolver parameter value
    */
-  resolve(input: ResolverInput): Promise<any>
+  resolve: (input: ResolverInput) => Promise<any>
 
   /**
    * @returns Parameter resolver dependencies
    */
-  getDependencies(): StackPath[]
+  dependencies?: GetterOrConst<StackPath[]>
 
   /**
    * @returns IAM roles needed to resolve the parameter value
    */
-  getIamRoleArns(): IamRoleArn[]
+  iamRoleArns?: GetterOrConst<IamRoleArn[]>
 
   /**
    * @returns Is the parameter value confidential
    */
-  isConfidential(): boolean
+  confidential?: GetterOrConst<boolean>
 }
 
 export type ResolverInitializer = (props: any) => Promise<Resolver>
@@ -66,14 +80,12 @@ export class ResolverExecutor implements Resolver {
       return false
     }
 
-    return this.resolver.isConfidential ? this.resolver.isConfidential() : false
+    return getValue(false, this.resolver.confidential)
   }
 
-  getDependencies = (): StackPath[] =>
-    this.resolver.getDependencies ? this.resolver.getDependencies() : []
+  getDependencies = (): StackPath[] => getValue([], this.resolver.dependencies)
 
-  getIamRoleArns = (): IamRoleArn[] =>
-    this.resolver.getIamRoleArns ? this.resolver.getIamRoleArns() : []
+  getIamRoleArns = (): IamRoleArn[] => getValue([], this.resolver.iamRoleArns)
 
   /**
    * @returns Resolver name

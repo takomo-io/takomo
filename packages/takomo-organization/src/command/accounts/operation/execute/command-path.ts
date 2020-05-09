@@ -14,7 +14,7 @@ import {
   StacksOperationInput,
   StacksOperationOutput,
   undeployStacksCommand,
-} from "@takomo/stacks"
+} from "@takomo/stacks-commands"
 import { deepCopy, StopWatch } from "@takomo/util"
 import merge from "lodash.merge"
 import {

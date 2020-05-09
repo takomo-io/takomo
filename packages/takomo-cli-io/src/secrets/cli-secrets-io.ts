@@ -1,4 +1,5 @@
-import { Secret, StackSecretsDiff } from "@takomo/stacks"
+import { Secret } from "@takomo/stacks"
+import { StackSecretsDiff } from "@takomo/stacks-commands"
 import { green, red } from "@takomo/util"
 import CliIO from "../cli-io"
 

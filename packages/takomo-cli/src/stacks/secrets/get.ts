@@ -1,5 +1,5 @@
 import { CliGetSecretIO } from "@takomo/cli-io"
-import { getSecretCommand } from "@takomo/stacks"
+import { getSecretCommand } from "@takomo/stacks-commands"
 import { handle } from "../../common"
 
 export const getSecretCmd = {

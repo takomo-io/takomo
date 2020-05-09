@@ -1,6 +1,6 @@
 import { CliDiffSecretsIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { diffSecretsCommand } from "@takomo/stacks"
+import { diffSecretsCommand } from "@takomo/stacks-commands"
 import { handle } from "../../common"
 
 export const diffSecretsCmd = {

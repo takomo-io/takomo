@@ -9,12 +9,10 @@ export class ListResolver implements Resolver {
     this.resolvers = resolvers
   }
 
-  isConfidential = (): boolean => false
-
-  getDependencies = (): StackPath[] =>
+  dependencies = (): StackPath[] =>
     flatten(this.resolvers.map((r) => r.getDependencies()))
 
-  getIamRoleArns = (): IamRoleArn[] =>
+  iamRoleArns = (): IamRoleArn[] =>
     flatten(this.resolvers.map((r) => r.getIamRoleArns()))
 
   resolve = async (input: ResolverInput): Promise<any> =>

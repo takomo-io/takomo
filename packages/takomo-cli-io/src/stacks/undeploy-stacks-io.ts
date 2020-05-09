@@ -1,18 +1,15 @@
 import { CommandPath, ConfirmResult, Options, StackPath } from "@takomo/core"
+import { CommandContext, Stack, StackGroup } from "@takomo/stacks"
 import {
-  CommandContext,
-  Stack,
-  StackGroup,
   StacksOperationOutput,
   UndeployStacksIO,
-} from "@takomo/stacks"
+} from "@takomo/stacks-commands"
 import { collectFromHierarchy } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import CliIO from "../cli-io"
 import { formatCommandStatus, formatStackEvent } from "../formatters"
-
 export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
   constructor(options: Options, loggerName: string | null = null) {
     super(options, loggerName)

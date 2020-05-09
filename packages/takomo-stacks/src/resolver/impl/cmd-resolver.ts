@@ -1,4 +1,3 @@
-import { IamRoleArn, StackPath } from "@takomo/core"
 import { exec } from "child_process"
 import { promisify } from "util"
 import { Resolver, ResolverInput } from "../model"
@@ -15,12 +14,6 @@ export class CmdResolver implements Resolver {
 
     this.command = props.command
   }
-
-  isConfidential = (): boolean => false
-
-  getDependencies = (): StackPath[] => []
-
-  getIamRoleArns = (): IamRoleArn[] => []
 
   resolve = async ({ logger, parameterName }: ResolverInput): Promise<any> => {
     logger.debug(
