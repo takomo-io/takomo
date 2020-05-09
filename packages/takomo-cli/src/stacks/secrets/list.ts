@@ -1,6 +1,6 @@
 import { CliListSecretsIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { listSecretsCommand } from "@takomo/stacks"
+import { listSecretsCommand } from "@takomo/stacks-commands"
 import { handle } from "../../common"
 
 export const listSecretsCmd = {

@@ -5,7 +5,7 @@ import {
   listSecretsCommand,
   setSecretCommand,
   undeployStacksCommand,
-} from "@takomo/stacks"
+} from "@takomo/stacks-commands"
 import {
   TestDeployStacksIO,
   TestListSecretsIO,
@@ -58,12 +58,12 @@ describe("Secrets", () => {
       expect(output.stacks).toHaveLength(2)
 
       const first = output.stacks.find(
-        s => s.stack.getPath() === "/first-secret.yml/eu-central-1",
+        (s) => s.stack.getPath() === "/first-secret.yml/eu-central-1",
       )!
       expect(first).toBeDefined()
 
       const second = output.stacks.find(
-        s => s.stack.getPath() === "/second-secret.yml/eu-central-1",
+        (s) => s.stack.getPath() === "/second-secret.yml/eu-central-1",
       )!
       expect(second).toBeDefined()
 
@@ -73,7 +73,7 @@ describe("Secrets", () => {
       expect(second.stack.getPath()).toBe("/second-secret.yml/eu-central-1")
       expect(second.stack.getSecrets().size).toBe(0)
 
-      const queueNameSecret = first.secrets.find(s => s.name === "queueName")!
+      const queueNameSecret = first.secrets.find((s) => s.name === "queueName")!
 
       expect(queueNameSecret.ssmParameterName).toBe(
         "/examples-secrets/first-secret.yml/eu-central-1/queueName",
@@ -82,7 +82,7 @@ describe("Secrets", () => {
       expect(queueNameSecret.description).toBe("Name for queue")
       expect(queueNameSecret.value).toBeNull()
 
-      const topicNameSecret = first.secrets.find(s => s.name === "topicName")!
+      const topicNameSecret = first.secrets.find((s) => s.name === "topicName")!
 
       expect(topicNameSecret.ssmParameterName).toBe(
         "/examples-secrets/first-secret.yml/eu-central-1/topicName",
@@ -158,12 +158,12 @@ describe("Secrets", () => {
       expect(output.stacks).toHaveLength(2)
 
       const first = output.stacks.find(
-        s => s.stack.getPath() === "/first-secret.yml/eu-central-1",
+        (s) => s.stack.getPath() === "/first-secret.yml/eu-central-1",
       )!
       expect(first).toBeDefined()
 
       const second = output.stacks.find(
-        s => s.stack.getPath() === "/second-secret.yml/eu-central-1",
+        (s) => s.stack.getPath() === "/second-secret.yml/eu-central-1",
       )!
       expect(second).toBeDefined()
 
@@ -173,7 +173,7 @@ describe("Secrets", () => {
       expect(second.stack.getPath()).toBe("/second-secret.yml/eu-central-1")
       expect(second.stack.getSecrets().size).toBe(0)
 
-      const queueNameSecret = first.secrets.find(s => s.name === "queueName")!
+      const queueNameSecret = first.secrets.find((s) => s.name === "queueName")!
 
       expect(queueNameSecret.ssmParameterName).toBe(
         "/examples-secrets/first-secret.yml/eu-central-1/queueName",
@@ -182,7 +182,7 @@ describe("Secrets", () => {
       expect(queueNameSecret.description).toBe("Name for queue")
       expect(queueNameSecret.value).toBe("my-secret-queue")
 
-      const topicNameSecret = first.secrets.find(s => s.name === "topicName")!
+      const topicNameSecret = first.secrets.find((s) => s.name === "topicName")!
 
       expect(topicNameSecret.ssmParameterName).toBe(
         "/examples-secrets/first-secret.yml/eu-central-1/topicName",

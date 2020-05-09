@@ -1,5 +1,5 @@
 import { Options } from "@takomo/core"
-import { ListSecretsIO, ListSecretsOutput } from "@takomo/stacks"
+import { ListSecretsIO, ListSecretsOutput } from "@takomo/stacks-commands"
 import { CliSecretsIo } from "./cli-secrets-io"
 
 export class CliListSecretsIO extends CliSecretsIo implements ListSecretsIO {

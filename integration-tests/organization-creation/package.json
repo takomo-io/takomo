@@ -27,6 +27,7 @@
     "@takomo/deployment-targets": "0.2.0",
     "@takomo/organization": "0.2.0",
     "@takomo/stacks": "0.2.0",
+    "@takomo/stacks-commands": "0.2.0",
     "@takomo/util": "0.2.0",
     "aws-sdk": "2.656.0"
   },

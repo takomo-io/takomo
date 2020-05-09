@@ -4,7 +4,7 @@ import {
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks"
+import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import CliIO from "../cli-io"

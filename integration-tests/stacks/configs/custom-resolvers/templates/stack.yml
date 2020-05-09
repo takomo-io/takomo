@@ -1,0 +1,11 @@
+Description: IT - custom resolver
+Parameters:
+  MyParam:
+    Type: String
+  Timestamp:
+    Type: Number  
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub custom-resolver-${MyParam}-${Timestamp}

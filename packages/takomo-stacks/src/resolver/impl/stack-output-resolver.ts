@@ -1,23 +1,17 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { IamRoleArn, StackPath } from "@takomo/core"
+import { StackPath } from "@takomo/core"
 import { Resolver, ResolverInput } from "../model"
 
 export class StackOutputResolver implements Resolver {
   private readonly stack: StackPath
   private readonly output: string
-  private readonly dependencies: StackPath[]
 
   constructor(props: any) {
     this.stack = props.stack
     this.output = props.output
-    this.dependencies = [this.stack]
   }
 
-  isConfidential = (): boolean => false
-
-  getDependencies = (): StackPath[] => this.dependencies
-
-  getIamRoleArns = (): IamRoleArn[] => []
+  dependencies = (): StackPath[] => [this.stack]
 
   resolve = async ({
     ctx,

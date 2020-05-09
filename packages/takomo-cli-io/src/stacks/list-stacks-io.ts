@@ -1,10 +1,9 @@
 import { Options } from "@takomo/core"
-import { ListStacksIO, ListStacksOutput } from "@takomo/stacks"
+import { ListStacksIO, ListStacksOutput } from "@takomo/stacks-commands"
 import date from "date-and-time"
 import Table from "easy-table"
 import CliIO from "../cli-io"
 import { formatStackStatus } from "../formatters"
-
 const formatDate = (d: any): string =>
   d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
 

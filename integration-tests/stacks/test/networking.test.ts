@@ -5,7 +5,7 @@ import {
   deployStacksCommand,
   listStacksCommand,
   undeployStacksCommand,
-} from "@takomo/stacks"
+} from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
 import { TIMEOUT } from "./test-constants"
 

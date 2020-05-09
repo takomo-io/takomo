@@ -1,5 +1,5 @@
 import { Options } from "@takomo/core"
-import { GetSecretIO, GetSecretOutput } from "@takomo/stacks"
+import { GetSecretIO, GetSecretOutput } from "@takomo/stacks-commands"
 import { CliSecretsIo } from "./cli-secrets-io"
 
 export class CliGetSecretIO extends CliSecretsIo implements GetSecretIO {

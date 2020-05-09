@@ -1,0 +1,10 @@
+project: examples-custom-resolver
+commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-north-1
+parameters:
+  MyParam:
+    resolver: my-custom-resolver
+    value: HelloWorld
+  Timestamp:
+    resolver: my-timestamper
+    

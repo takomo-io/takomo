@@ -1,6 +1,9 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
-import { deployStacksCommand, undeployStacksCommand } from "@takomo/stacks"
+import {
+  deployStacksCommand,
+  undeployStacksCommand,
+} from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
 import { TIMEOUT } from "./test-constants"
 
@@ -48,7 +51,6 @@ describe("Cmd Resolver", () => {
       expect(output.results[0].success).toBeTruthy()
       expect(output.results[0].status).toBe(CommandStatus.SUCCESS)
       expect(output.results[0].reason).toBe("CREATE_SUCCESS")
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
@@ -70,7 +72,6 @@ describe("Cmd Resolver", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )

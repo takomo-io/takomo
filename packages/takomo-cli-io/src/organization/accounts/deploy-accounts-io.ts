@@ -1,5 +1,5 @@
 import { Options } from "@takomo/core"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks"
+import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { CliAccountsOperationIO } from "./accounts-operation-io"
 
 export class CliDeployAccountsIO extends CliAccountsOperationIO {

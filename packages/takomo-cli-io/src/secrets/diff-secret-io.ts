@@ -1,5 +1,5 @@
 import { Options } from "@takomo/core"
-import { DiffSecretsIO, DiffSecretsOutput } from "@takomo/stacks"
+import { DiffSecretsIO, DiffSecretsOutput } from "@takomo/stacks-commands"
 import { CliSecretsIo } from "./cli-secrets-io"
 
 export class CliDiffSecretsIO extends CliSecretsIo implements DiffSecretsIO {

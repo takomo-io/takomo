@@ -31,6 +31,7 @@
     "@hapi/joi": "16.1.8",
     "@takomo/core": "0.2.0",
     "@takomo/stacks": "0.2.0",
+    "@takomo/stacks-commands": "0.2.0",
     "@takomo/util": "0.2.0"
   },
   "devDependencies": {

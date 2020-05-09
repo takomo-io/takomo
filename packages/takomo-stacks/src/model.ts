@@ -1,8 +1,5 @@
 import {
   AccountId,
-  CommandInput,
-  CommandOutput,
-  CommandPath,
   CommandRole,
   CommandStatus,
   EnvVars,
@@ -568,17 +565,6 @@ export class Stack {
   })
 }
 
-export interface StackSecrets {
-  readonly stack: Stack
-  readonly secrets: SecretWithValue[]
-}
-
-export interface StackSecretsDiff {
-  readonly stack: Stack
-  readonly add: Secret[]
-  readonly remove: Secret[]
-}
-
 export interface StackResult {
   readonly stack: Stack
   readonly message: string
@@ -590,13 +576,3 @@ export interface StackResult {
 }
 
 export type StackResultReason = string
-
-export interface StacksOperationInput extends CommandInput {
-  readonly commandPath: CommandPath
-  readonly ignoreDependencies: boolean
-  readonly interactive: boolean
-}
-
-export interface StacksOperationOutput extends CommandOutput {
-  readonly results: StackResult[]
-}

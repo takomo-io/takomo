@@ -9,7 +9,7 @@ import {
   IO,
   Options,
 } from "@takomo/core"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks"
+import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { StopWatch } from "@takomo/util"
 import { OrganizationContext } from "../../../context"
 import { AccountsLaunchPlan, OrganizationData } from "../../../model"

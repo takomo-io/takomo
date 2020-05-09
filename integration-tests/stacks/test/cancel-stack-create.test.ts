@@ -1,6 +1,9 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
-import { deployStacksCommand, undeployStacksCommand } from "@takomo/stacks"
+import {
+  deployStacksCommand,
+  undeployStacksCommand,
+} from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
 import { TIMEOUT } from "./test-constants"
 
@@ -45,7 +48,6 @@ describe("Cancelling stack create", () => {
       )
 
       expect(output.status).toBe(CommandStatus.CANCELLED)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
@@ -67,7 +69,6 @@ describe("Cancelling stack create", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
@@ -89,7 +90,6 @@ describe("Cancelling stack create", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
