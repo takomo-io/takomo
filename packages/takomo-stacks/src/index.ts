@@ -1,4 +1,4 @@
-export { CommandContext } from "./context"
+export { CommandContext, resolveStackLaunchType } from "./context"
 export { buildConfigContext, ConfigContext } from "./context/config"
 export { prepareDeleteContext } from "./context/delete"
 export { prepareLaunchContext } from "./context/launch"
@@ -11,6 +11,7 @@ export {
   SecretWithValue,
   Stack,
   StackGroup,
+  StackLaunchType,
   StackOperationVariables,
   StackResult,
   StackResultReason,

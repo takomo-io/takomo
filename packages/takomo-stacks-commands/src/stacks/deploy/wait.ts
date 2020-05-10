@@ -1,18 +1,8 @@
 import { CommandStatus } from "@takomo/core"
-import { StackResult, StackResultReason } from "@takomo/stacks"
+import { StackLaunchType, StackResult, StackResultReason } from "@takomo/stacks"
 import CloudFormation from "aws-sdk/clients/cloudformation"
-import { describeExistingCloudFormationStack } from "./describe"
 import { executeAfterLaunchHooks, executeBeforeLaunchHooks } from "./hooks"
-import {
-  ClientTokenHolder,
-  DeleteStackClientTokenHolder,
-  InitialLaunchContext,
-  StackLaunchType,
-} from "./model"
-
-export const isStackDeletedSuccessfully = (
-  stackStatus: CloudFormation.StackStatus,
-): boolean => "DELETE_COMPLETE" === stackStatus
+import { ClientTokenHolder, InitialLaunchContext } from "./model"
 
 export const waitForDependenciesToComplete = async (
   initial: InitialLaunchContext,
@@ -44,7 +34,7 @@ export const waitForDependenciesToComplete = async (
     childWatch.stop()
 
     logger.debug("Dependencies completed successfully")
-    return describeExistingCloudFormationStack(initial)
+    return executeBeforeLaunchHooks(initial)
   } catch (e) {
     logger.error("An error occurred while waiting dependencies to complete", e)
 
@@ -52,67 +42,6 @@ export const waitForDependenciesToComplete = async (
       stack,
       message: e.message,
       reason: "DEPENDENCIES_FAILED",
-      status: CommandStatus.FAILED,
-      events: [],
-      success: false,
-      watch: watch.stop(),
-    }
-  }
-}
-
-export const waitStackDeletionToComplete = async (
-  holder: DeleteStackClientTokenHolder,
-): Promise<StackResult> => {
-  const {
-    stack,
-    current,
-    cloudFormationClient,
-    io,
-    watch,
-    clientToken,
-    logger,
-  } = holder
-
-  logger.debug("Wait for delete to complete")
-  const childWatch = watch.startChild("wait-stack-deletion")
-
-  try {
-    const {
-      events,
-      stackStatus,
-    } = await cloudFormationClient.waitUntilStackIsDeleted(
-      stack.getName(),
-      current.stackId,
-      clientToken,
-      (e: CloudFormation.StackEvent) => io.printStackEvent(stack.getPath(), e),
-    )
-
-    if (!isStackDeletedSuccessfully(stackStatus)) {
-      logger.debug("Failed to delete stack")
-      return {
-        stack,
-        message: "Stack deletion failed",
-        reason: "DELETE_STACK_FAILED",
-        status: CommandStatus.FAILED,
-        events,
-        success: false,
-        watch: watch.stop(),
-      }
-    }
-
-    childWatch.stop()
-    logger.debug("Stack deleted successfully")
-
-    return await executeBeforeLaunchHooks({
-      ...holder,
-      launchType: StackLaunchType.CREATE,
-    })
-  } catch (e) {
-    logger.error("Failed to delete stack", e)
-    return {
-      stack,
-      message: "Stack deletion failed",
-      reason: "DELETE_STACK_FAILED",
       status: CommandStatus.FAILED,
       events: [],
       success: false,
@@ -136,7 +65,7 @@ export const waitForStackCreateOrUpdateToComplete = async (
 
   const childWatch = watch.startChild("wait-update-completion")
 
-  logger.debug("Wait for stack launch to complete")
+  logger.debug("Wait for stack deploy to complete")
 
   const resolveReason = (success: boolean): StackResultReason => {
     if (launchType === StackLaunchType.UPDATE && success)
@@ -145,7 +74,16 @@ export const waitForStackCreateOrUpdateToComplete = async (
       return "UPDATE_FAILED"
     else if (launchType === StackLaunchType.CREATE && success)
       return "CREATE_SUCCESS"
-    else return "CREATE_FAILED"
+    else if (launchType === StackLaunchType.RECREATE && success)
+      return "CREATE_SUCCESS"
+    else if (launchType === StackLaunchType.CREATE && !success)
+      return "CREATE_FAILED"
+    else if (launchType === StackLaunchType.RECREATE && !success)
+      return "CREATE_FAILED"
+    else
+      throw new Error(
+        `Unsupported combination of launch type ${launchType} and success value ${success}`,
+      )
   }
 
   const timeout =
@@ -166,7 +104,7 @@ export const waitForStackCreateOrUpdateToComplete = async (
       },
     )
 
-    logger.info(`Stack launch completed with status: ${stackStatus}`)
+    logger.info(`Stack deploy completed with status: ${stackStatus}`)
 
     childWatch.stop()
 

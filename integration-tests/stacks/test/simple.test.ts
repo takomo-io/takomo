@@ -51,7 +51,6 @@ describe("Simple", () => {
       expect(output.results[0].success).toBeTruthy()
       expect(output.results[0].status).toBe(CommandStatus.SUCCESS)
       expect(output.results[0].reason).toBe("CREATE_SUCCESS")
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
@@ -76,7 +75,6 @@ describe("Simple", () => {
       expect(output.results[0].success).toBeTruthy()
       expect(output.results[0].status).toBe(CommandStatus.SKIPPED)
       expect(output.results[0].reason).toBe("SKIPPED")
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
@@ -98,7 +96,6 @@ describe("Simple", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )

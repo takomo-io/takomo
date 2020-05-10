@@ -1,8 +1,7 @@
 import { CommandStatus } from "@takomo/core"
 import { StackResult } from "@takomo/stacks"
 import { CloudFormation } from "aws-sdk"
-import { deleteSecrets } from "./delete"
-import { executeAfterDeleteHooks } from "./hooks"
+import { executeAfterDeleteHooks, executeBeforeDeleteHooks } from "./hooks"
 import { ClientTokenHolder, InitialDeleteContext } from "./model"
 
 export const waitForDependantsToComplete = async (
@@ -48,7 +47,7 @@ export const waitForDependantsToComplete = async (
   }
 
   childWatch.stop()
-  return deleteSecrets(initial)
+  return executeBeforeDeleteHooks(initial)
 }
 
 export const waitCloudFormationStackDeletionToComplete = async (
@@ -56,7 +55,7 @@ export const waitCloudFormationStackDeletionToComplete = async (
 ): Promise<StackResult> => {
   const {
     stack,
-    current,
+    existingStack,
     cloudFormationClient,
     io,
     watch,
@@ -72,7 +71,7 @@ export const waitCloudFormationStackDeletionToComplete = async (
       stackStatus,
     } = await cloudFormationClient.waitUntilStackIsDeleted(
       stack.getName(),
-      current.stackId,
+      existingStack!.StackId!,
       clientToken,
       (e: CloudFormation.StackEvent) => io.printStackEvent(stack.getPath(), e),
     )
@@ -91,7 +90,7 @@ export const waitCloudFormationStackDeletionToComplete = async (
       reason,
       events,
       success,
-      watch: watch,
+      watch: watch.stop(),
     }
 
     childWatch.stop()

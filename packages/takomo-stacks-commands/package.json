@@ -28,6 +28,7 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
+    "aws-sdk": "2.656.0",
     "@takomo/aws-clients": "0.2.0",
     "@takomo/core": "0.2.0",
     "@takomo/stacks": "0.2.0",

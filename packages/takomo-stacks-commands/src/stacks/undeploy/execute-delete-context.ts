@@ -24,7 +24,7 @@ export const executeDeleteContext = async (
   }
 
   if (!autoConfirm && (await io.confirmDelete(ctx)) !== ConfirmResult.YES) {
-    io.info("Delete cancelled")
+    io.info("Undeploy cancelled")
     return {
       success: true,
       status: CommandStatus.CANCELLED,
@@ -35,7 +35,7 @@ export const executeDeleteContext = async (
   }
 
   io.debugObject(
-    `Delete ${stacks.length} stack(s) in following order:`,
+    `Undeploy ${stacks.length} stack(s) in following order:`,
     stacks.map((s) => s.getPath()),
   )
 

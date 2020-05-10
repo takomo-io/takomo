@@ -282,10 +282,10 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
     switch (cfStack.StackStatus) {
       case "DELETE_COMPLETE":
       case "DELETE_FAILED":
-        return Promise.resolve({
+        return {
           events: updatedEvents,
           stackStatus: cfStack.StackStatus,
-        })
+        }
       default:
         const latestEvent = last(events)
         const newLatestEventId = latestEvent

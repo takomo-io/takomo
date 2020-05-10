@@ -1,10 +1,12 @@
 import {
   CommandPath,
   Options,
+  StackPath,
   TakomoCredentialProvider,
   Variables,
 } from "@takomo/core"
 import { deepCopy, Logger, TemplateEngine } from "@takomo/util"
+import { CloudFormation } from "aws-sdk"
 import { Stack } from "../model"
 
 export interface StdCommandContextProps {
@@ -15,6 +17,7 @@ export interface StdCommandContextProps {
   readonly logger: Logger
   readonly variables: Variables
   readonly templateEngine: TemplateEngine
+  readonly existingStacks: Map<StackPath, CloudFormation.Stack>
 }
 
 /**
@@ -60,6 +63,13 @@ export interface CommandContext {
    * @returns Template engine
    */
   getTemplateEngine(): TemplateEngine
+
+  /**
+   * Returns existing CloudFormation stack or null.
+   * @param stackPath Stack path
+   * @returns Existing CloudFormation stack of null
+   */
+  getExistingStack(stackPath: StackPath): Promise<CloudFormation.Stack | null>
 }
 
 export class StdCommandContext implements CommandContext {
@@ -71,6 +81,7 @@ export class StdCommandContext implements CommandContext {
   private readonly stacksMap: Map<CommandPath, Stack>
   private readonly credentialProvider: TakomoCredentialProvider
   private readonly templateEngine: TemplateEngine
+  private readonly existingStacks: Map<StackPath, CloudFormation.Stack>
 
   constructor(props: StdCommandContextProps) {
     this.credentialProvider = props.credentialProvider
@@ -80,6 +91,7 @@ export class StdCommandContext implements CommandContext {
     this.logger = props.logger
     this.variables = props.variables
     this.templateEngine = props.templateEngine
+    this.existingStacks = props.existingStacks
     this.stacksMap = new Map(props.allStacks.map((s) => [s.getPath(), s]))
   }
 
@@ -96,4 +108,9 @@ export class StdCommandContext implements CommandContext {
     this.getAllStacks().filter((s) => s.getPath().startsWith(path))
 
   getAllStacks = (): Stack[] => this.allStacks.slice()
+
+  getExistingStack = async (
+    stackPath: StackPath,
+  ): Promise<CloudFormation.Stack | null> =>
+    this.existingStacks.get(stackPath) || null
 }

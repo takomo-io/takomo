@@ -1,5 +1,11 @@
-import { Options, TakomoCredentialProvider, Variables } from "@takomo/core"
+import {
+  Options,
+  StackPath,
+  TakomoCredentialProvider,
+  Variables,
+} from "@takomo/core"
 import { ConsoleLogger, Logger, LogLevel, TemplateEngine } from "@takomo/util"
+import { CloudFormation } from "aws-sdk"
 import { CommandContext } from "../../src/context"
 import { executeHooks } from "../../src/hook"
 import {
@@ -62,6 +68,9 @@ const ctx: CommandContext = {
   getLogger: (): Logger => new ConsoleLogger(),
   getStacksByPath: (path: string): Stack[] => [],
   getTemplateEngine: (): TemplateEngine => new TemplateEngine(),
+  getExistingStack: (
+    stackPath: StackPath,
+  ): Promise<CloudFormation.Stack | null> => Promise.resolve(null),
   getVariables: (): Variables => ({
     context: { projectDir: "" },
     env: {},

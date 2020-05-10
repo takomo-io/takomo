@@ -1,9 +1,13 @@
 import { CommandStatus, ConfirmResult } from "@takomo/core"
-import { defaultCapabilities, StackResult } from "@takomo/stacks"
+import {
+  defaultCapabilities,
+  StackLaunchType,
+  StackResult,
+} from "@takomo/stacks"
 import { ChangeSetType } from "aws-sdk/clients/cloudformation"
 import uuid from "uuid"
 import { createOrUpdateStack } from "./execute"
-import { StackLaunchType, TagsHolder } from "./model"
+import { TagsHolder } from "./model"
 
 export const resolveChangeSetType = (
   launchType: StackLaunchType,

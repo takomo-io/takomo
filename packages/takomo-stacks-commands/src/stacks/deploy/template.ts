@@ -3,7 +3,7 @@ import { CommandStatus, Constants } from "@takomo/core"
 import { StackResult } from "@takomo/stacks"
 import { readFileContents, renderTemplate } from "@takomo/util"
 import path from "path"
-import { StackLaunchTypeHolder, TemplateBodyHolder } from "./model"
+import { InitialLaunchContext, TemplateBodyHolder } from "./model"
 import { validateTemplate } from "./validate"
 
 export const uploadTemplate = async (
@@ -57,7 +57,7 @@ export const uploadTemplate = async (
 }
 
 export const prepareCloudFormationTemplate = async (
-  holder: StackLaunchTypeHolder,
+  holder: InitialLaunchContext,
 ): Promise<StackResult> => {
   const { ctx, stack, watch, variables, logger } = holder
   logger.debug("Prepare CloudFormation template")

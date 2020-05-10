@@ -1,10 +1,9 @@
-import { resolveStackLaunchType } from "../../../src/stacks/deploy/describe"
-import { StackLaunchType } from "../../../src/stacks/deploy/model"
+import { resolveStackLaunchType, StackLaunchType } from "../src"
 
 const supported: Array<[string, StackLaunchType]> = [
-  ["CREATE_FAILED", StackLaunchType.CREATE],
+  ["CREATE_FAILED", StackLaunchType.RECREATE],
   ["CREATE_COMPLETE", StackLaunchType.UPDATE],
-  ["ROLLBACK_COMPLETE", StackLaunchType.CREATE],
+  ["ROLLBACK_COMPLETE", StackLaunchType.RECREATE],
   ["UPDATE_COMPLETE", StackLaunchType.UPDATE],
   ["UPDATE_ROLLBACK_COMPLETE", StackLaunchType.UPDATE],
   ["REVIEW_IN_PROGRESS", StackLaunchType.CREATE],

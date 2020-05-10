@@ -19,6 +19,12 @@ import { Capability } from "aws-sdk/clients/cloudformation"
 import { HookConfig, HookExecutor } from "./hook/model"
 import { ResolverExecutor } from "./resolver/model"
 
+export enum StackLaunchType {
+  CREATE = "CREATE",
+  RECREATE = "RECREATE",
+  UPDATE = "UPDATE",
+}
+
 interface HookOutputValues {
   [hookName: string]: any
 }

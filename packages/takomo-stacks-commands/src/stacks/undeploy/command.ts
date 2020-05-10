@@ -9,6 +9,7 @@ import { validateInput } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { executeDeleteContext } from "./execute-delete-context"
 import { UndeployStacksIO } from "./model"
+import { validateDeleteContext } from "./validate"
 
 const schema = Joi.object({
   commandPath: commandPath.required(),
@@ -50,7 +51,9 @@ export const undeployStacksCommand = async (
         ctx,
         modifiedInput.commandPath,
         modifiedInput.ignoreDependencies,
-      ).then((ctx) => executeDeleteContext(ctx, modifiedInput, io))
+      )
+        .then((ctx) => validateDeleteContext(ctx))
+        .then((ctx) => executeDeleteContext(ctx, modifiedInput, io))
     })
     .then(io.printOutput)
 }

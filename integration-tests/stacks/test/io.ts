@@ -23,12 +23,6 @@ export class TestDeployStacksIO extends CliDeployStacksIO {
       ? ConfirmResult.YES
       : ConfirmResult.NO
   }
-
-  confirmDeleteOfFailedStack = async (): Promise<ConfirmResult> => {
-    return this.options.isAutoConfirmEnabled()
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
-  }
 }
 
 export class TestUndeployStacksIO extends CliUndeployStacksIO {

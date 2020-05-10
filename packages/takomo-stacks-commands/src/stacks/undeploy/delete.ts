@@ -3,12 +3,7 @@ import { CommandStatus } from "@takomo/core"
 import { CommandContext, Stack, StackResult } from "@takomo/stacks"
 import { StopWatch } from "@takomo/util"
 import uuid from "uuid"
-import { describeExistingCloudFormationStack } from "./describe"
-import {
-  InitialDeleteContext,
-  TargetStackInfoHolder,
-  UndeployStacksIO,
-} from "./model"
+import { InitialDeleteContext, UndeployStacksIO } from "./model"
 import {
   waitCloudFormationStackDeletionToComplete,
   waitForDependantsToComplete,
@@ -24,6 +19,20 @@ export const deleteStack = async (
   const logger = io.childLogger(stack.getPath())
   logger.debugObject("Stack config:", stack)
 
+  const existingStack = await ctx.getExistingStack(stack.getPath())
+  if (!existingStack) {
+    logger.debug("No existing stack found")
+    return {
+      stack,
+      message: "Stack not found",
+      reason: "DELETE_SKIPPED",
+      status: CommandStatus.SKIPPED,
+      events: [],
+      success: true,
+      watch: watch.stop(),
+    }
+  }
+
   const cloudFormationClient = new CloudFormationClient({
     region: stack.getRegion(),
     credentialProvider: stack.getCredentialProvider(),
@@ -37,6 +46,7 @@ export const deleteStack = async (
 
   const initial = {
     ctx,
+    existingStack,
     stack,
     dependants,
     cloudFormationClient,
@@ -50,9 +60,9 @@ export const deleteStack = async (
 }
 
 export const initiateCloudFormationStackDeletion = async (
-  holder: TargetStackInfoHolder,
+  holder: InitialDeleteContext,
 ): Promise<StackResult> => {
-  const { stack, current, cloudFormationClient, watch, logger } = holder
+  const { stack, existingStack, cloudFormationClient, watch, logger } = holder
   const childWatch = watch.startChild("initiate-stack-deletion")
 
   const clientToken = uuid.v4()
@@ -60,7 +70,7 @@ export const initiateCloudFormationStackDeletion = async (
   try {
     logger.debug(`Initiate stack deletion with client token ${clientToken}`)
     await cloudFormationClient.initiateStackDeletion({
-      StackName: current.stackId,
+      StackName: existingStack!.StackId!,
       ClientRequestToken: clientToken,
     })
   } catch (e) {
@@ -128,5 +138,5 @@ export const deleteSecrets = async (
   }
 
   childWatch.stop()
-  return describeExistingCloudFormationStack(initial)
+  return initiateCloudFormationStackDeletion(initial)
 }

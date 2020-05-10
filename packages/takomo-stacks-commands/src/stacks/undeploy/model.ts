@@ -13,6 +13,7 @@ import { StacksOperationOutput } from "../../model"
 
 export interface InitialDeleteContext {
   readonly stack: Stack
+  readonly existingStack: CloudFormation.Stack | null
   readonly watch: StopWatch
   readonly ctx: CommandContext
   readonly logger: Logger
@@ -22,20 +23,11 @@ export interface InitialDeleteContext {
   readonly variables: StackOperationVariables
 }
 
-export interface StackInfo {
-  readonly status: CloudFormation.StackStatus
-  readonly stackId: CloudFormation.StackId
-}
-
-export interface TargetStackInfoHolder extends InitialDeleteContext {
-  readonly current: StackInfo
-}
-
-export interface ClientTokenHolder extends TargetStackInfoHolder {
+export interface ClientTokenHolder extends InitialDeleteContext {
   readonly clientToken: string
 }
 
-export interface ResultHolder extends TargetStackInfoHolder {
+export interface ResultHolder extends InitialDeleteContext {
   readonly result: StackResult
 }
 

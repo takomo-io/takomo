@@ -4,12 +4,16 @@ import {
   StacksOperationOutput,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
-import { collectFromHierarchy } from "@takomo/util"
+import { collectFromHierarchy, grey, red } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import CliIO from "../cli-io"
-import { formatCommandStatus, formatStackEvent } from "../formatters"
+import {
+  formatCommandStatus,
+  formatStackEvent,
+  formatStackStatus,
+} from "../formatters"
 export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
   constructor(options: Options, loggerName: string | null = null) {
     super(options, loggerName)
@@ -47,37 +51,53 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
     const identity = await ctx.getCredentialProvider().getCallerIdentity()
     this.debugObject("Default credentials:", identity)
 
+    const stacks = ctx.getStacksToProcess()
+
     this.subheader("Review stacks undeployment plan:", true)
     this.longMessage([
       "A stacks undeployment plan has been created and is shown below.",
+      "Stacks will be undeployed in the order they are listed, and in parallel",
+      "when possible.",
       "",
-      "Following stacks will be undeployed:",
+      "Stack operations are indicated with the following symbols:",
+      "",
+      `  ${red("- delete")}           Stack exists and will be deleted`,
+      `  ${grey("* skip")}             Stack does not exist and will skipped`,
+      "",
+      `Following ${stacks.length} stack(s) will be undeployed:`,
     ])
 
-    for (const stack of ctx.getStacksToProcess()) {
+    for (const stack of stacks) {
       const stackIdentity = await stack
         .getCredentialProvider()
         .getCallerIdentity()
 
+      const current = await ctx.getExistingStack(stack.getPath())
+      const status = current ? current.StackStatus : null
+      const stackOperation = current
+        ? red(`- ${stack.getPath()}:`)
+        : grey(`* ${stack.getPath()}:`)
+
       this.longMessage(
         [
-          `  ${stack.getPath()}:`,
-          `    name:          ${stack.getName()}`,
-          `    account id:    ${stackIdentity.accountId}`,
-          `    region:        ${stack.getRegion()}`,
-          "    credentials:",
-          `      user id:     ${stackIdentity.userId}`,
-          `      account id:  ${stackIdentity.accountId}`,
-          `      arn:         ${stackIdentity.arn}`,
+          `  ${stackOperation}`,
+          `      name:          ${stack.getName()}`,
+          `      status:        ${formatStackStatus(status)}`,
+          `      account id:    ${stackIdentity.accountId}`,
+          `      region:        ${stack.getRegion()}`,
+          "      credentials:",
+          `        user id:     ${stackIdentity.userId}`,
+          `        account id:  ${stackIdentity.accountId}`,
+          `        arn:         ${stackIdentity.arn}`,
         ],
         true,
       )
 
       if (stack.getDependants().length > 0) {
-        this.message("    dependants:")
-        this.printStackDependants(stack, ctx, 6)
+        this.message("      dependants:")
+        this.printStackDependants(stack, ctx, 8)
       } else {
-        this.message("    dependants:    []")
+        this.message("      dependants:    []")
       }
     }
 
