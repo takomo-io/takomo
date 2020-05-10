@@ -1,11 +1,11 @@
 import { CommandStatus } from "@takomo/core"
 import { DeploymentPlanHolder } from "../../../model"
-import { LaunchOrganizationOutput } from "../model"
+import { DeployOrganizationOutput } from "../model"
 import { deployPolicies } from "./policies"
 
 export const deployBasicConfiguration = async (
   holder: DeploymentPlanHolder,
-): Promise<LaunchOrganizationOutput> => {
+): Promise<DeployOrganizationOutput> => {
   const {
     ctx,
     watch,

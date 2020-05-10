@@ -1,11 +1,11 @@
 import { OrganizationDataHolder } from "../../model"
 import { validateCommonLocalConfiguration } from "../../validation"
-import { LaunchOrganizationOutput } from "./model"
+import { DeployOrganizationOutput } from "./model"
 import { planDeployment } from "./plan"
 
 export const validateLocalConfiguration = async (
   holder: OrganizationDataHolder,
-): Promise<LaunchOrganizationOutput> => {
+): Promise<DeployOrganizationOutput> => {
   const { ctx, io, watch, organizationData } = holder
   const childWatch = watch.startChild("validate-configuration")
   io.info("Validate configuration")

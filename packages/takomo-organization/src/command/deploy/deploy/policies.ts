@@ -1,11 +1,11 @@
 import { CommandStatus, Constants } from "@takomo/core"
 import { OrganizationBasicConfigDeploymentResultHolder } from "../../../model"
-import { LaunchOrganizationOutput } from "../model"
+import { DeployOrganizationOutput } from "../model"
 import { deployOrganizationalUnits } from "./organizational-units"
 
 export const deployPolicies = async (
   holder: OrganizationBasicConfigDeploymentResultHolder,
-): Promise<LaunchOrganizationOutput> => {
+): Promise<DeployOrganizationOutput> => {
   const {
     ctx,
     watch,

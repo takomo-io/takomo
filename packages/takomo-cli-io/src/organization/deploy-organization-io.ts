@@ -1,8 +1,8 @@
 import { Options } from "@takomo/core"
 import {
   DeploymentPlanHolder,
-  LaunchOrganizationIO,
-  LaunchOrganizationOutput,
+  DeployOrganizationIO,
+  DeployOrganizationOutput,
   OrganizationalUnitsDeploymentPlan,
   OrganizationBasicConfigDeploymentPlan,
   PlannedAccounts,
@@ -26,17 +26,17 @@ interface Formatters {
 const addFormatter = (s: string) => green("+" + s.slice(1))
 const deleteFormatter = (s: string) => red("-" + s.slice(1))
 
-export class CliLaunchOrganizationIO extends CliIO
-  implements LaunchOrganizationIO {
+export class CliDeployOrganizationIO extends CliIO
+  implements DeployOrganizationIO {
   constructor(options: Options) {
     super(options)
   }
 
   confirmLaunch = async (plan: DeploymentPlanHolder): Promise<boolean> => {
-    this.subheader("Review organization launch plan", true)
+    this.subheader("Review organization deployment plan", true)
     this.longMessage(
       [
-        "An organization launch plan has been created and is shown below.",
+        "An organization deployment plan has been created and is shown below.",
         "Changes are indicated with the following symbols:",
         "",
         `  ${green("+ add")}`,
@@ -46,6 +46,7 @@ export class CliLaunchOrganizationIO extends CliIO
         "Following changes will be executed:",
       ],
       false,
+
       true,
     )
 
@@ -54,12 +55,12 @@ export class CliLaunchOrganizationIO extends CliIO
     this.printPoliciesDeploymentPlan(plan.plan.policiesPlan)
     this.printOrganizationalUnits(plan.plan.organizationalUnitsPlan)
 
-    return await this.confirm("Continue to launch the organization?", true)
+    return await this.confirm("Continue to deploy the organization?", true)
   }
 
   printOutput = (
-    output: LaunchOrganizationOutput,
-  ): LaunchOrganizationOutput => {
+    output: DeployOrganizationOutput,
+  ): DeployOrganizationOutput => {
     const {
       policiesDeploymentResult,
       policiesCleanResult,

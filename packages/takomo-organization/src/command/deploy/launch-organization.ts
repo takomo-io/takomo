@@ -1,16 +1,16 @@
 import { OrganizationContext } from "../../context"
 import { loadData } from "./load"
 import {
-  LaunchOrganizationInput,
-  LaunchOrganizationIO,
-  LaunchOrganizationOutput,
+  DeployOrganizationInput,
+  DeployOrganizationIO,
+  DeployOrganizationOutput,
 } from "./model"
 
-export const launchOrganization = async (
+export const deployOrganization = async (
   ctx: OrganizationContext,
-  io: LaunchOrganizationIO,
-  input: LaunchOrganizationInput,
-): Promise<LaunchOrganizationOutput> => {
+  io: DeployOrganizationIO,
+  input: DeployOrganizationInput,
+): Promise<DeployOrganizationOutput> => {
   const { watch } = input
 
   return loadData({

@@ -1,11 +1,11 @@
 import { CommandStatus } from "@takomo/core"
 import { DeploymentPlanHolder } from "../../model"
 import { deployBasicConfiguration } from "./deploy/basic-config"
-import { LaunchOrganizationOutput } from "./model"
+import { DeployOrganizationOutput } from "./model"
 
 export const confirmDeployment = async (
   holder: DeploymentPlanHolder,
-): Promise<LaunchOrganizationOutput> => {
+): Promise<DeployOrganizationOutput> => {
   const { watch, io, ctx, result } = holder
   const childWatch = watch.startChild("confirm-deployment")
   const options = ctx.getOptions()

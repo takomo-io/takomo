@@ -19,7 +19,7 @@ import {
   PoliciesDeploymentResultHolder,
 } from "../../../model"
 import { cleanOrganizationalUnits } from "../clean/organizational-units"
-import { LaunchOrganizationOutput } from "../model"
+import { DeployOrganizationOutput } from "../model"
 
 export const addOrUpdateOrganizationalUnits = async (
   logger: Logger,
@@ -673,7 +673,7 @@ const skipOrganizationalUnit = async (
 
 export const deployOrganizationalUnits = async (
   holder: PoliciesDeploymentResultHolder,
-): Promise<LaunchOrganizationOutput> => {
+): Promise<DeployOrganizationOutput> => {
   const {
     ctx,
     watch,

@@ -6,8 +6,7 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "lib": ["es2018"],
-    "incremental": true
+    "lib": ["es2018"]
   },
   "exclude": ["**/*.test.*", "node_modules", "dist"]
 }

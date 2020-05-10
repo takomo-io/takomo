@@ -7,9 +7,9 @@ import {
   PoliciesDeploymentResult,
 } from "../../model"
 
-export type LaunchOrganizationInput = CommandInput
+export type DeployOrganizationInput = CommandInput
 
-export interface LaunchOrganizationOutput extends CommandOutput {
+export interface DeployOrganizationOutput extends CommandOutput {
   readonly policiesDeploymentResult: PoliciesDeploymentResult
   readonly policiesCleanResult: PoliciesDeploymentResult
   readonly organizationalUnitsDeploymentResult: OrganizationalUnitsDeploymentResult
@@ -19,8 +19,8 @@ export interface LaunchOrganizationOutput extends CommandOutput {
   readonly watch: StopWatch
 }
 
-export interface LaunchOrganizationIO extends IO {
-  printOutput(output: LaunchOrganizationOutput): LaunchOrganizationOutput
+export interface DeployOrganizationIO extends IO {
+  printOutput(output: DeployOrganizationOutput): DeployOrganizationOutput
 
   confirmLaunch(plan: DeploymentPlanHolder): Promise<boolean>
 }
