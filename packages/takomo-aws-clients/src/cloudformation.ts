@@ -218,7 +218,7 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
 
         if (timeoutConfig.timeout !== 0) {
           const elapsedTime = Date.now() - timeoutConfig.startTime
-          if (elapsedTime > timeoutConfig.timeout * 60 * 1000) {
+          if (elapsedTime > timeoutConfig.timeout * 1000) {
             if (cfStack.StackStatus === "UPDATE_IN_PROGRESS") {
               const cancelClientToken = await this.cancelStackUpdate(stackName)
               return this.waitUntilStackCreateOrUpdateCompletes(
