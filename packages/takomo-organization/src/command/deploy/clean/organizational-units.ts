@@ -6,7 +6,7 @@ import {
   OrganizationalUnitsDeploymentResultHolder,
   PlannedOrganizationalUnit,
 } from "../../../model"
-import { LaunchOrganizationOutput } from "../model"
+import { DeployOrganizationOutput } from "../model"
 import { cleanPolicies } from "./policies"
 
 export const removeOrganizationalUnits = async (
@@ -69,7 +69,7 @@ export const removeOrganizationalUnits = async (
 
 export const cleanOrganizationalUnits = async (
   holder: OrganizationalUnitsDeploymentResultHolder,
-): Promise<LaunchOrganizationOutput> => {
+): Promise<DeployOrganizationOutput> => {
   const {
     ctx,
     watch,

@@ -1,8 +1,8 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import {
   CliDeployAccountsIO,
+  CliDeployOrganizationIO,
   CliDeployStacksIO,
-  CliLaunchOrganizationIO,
   CliUndeployAccountsIO,
   CliUndeployStacksIO,
 } from "@takomo/cli-io"
@@ -10,8 +10,8 @@ import { ConfigSetType } from "@takomo/config-sets"
 import { CommandStatus, DeploymentOperation, Options } from "@takomo/core"
 import {
   accountsOperationCommand,
-  launchOrganizationCommand,
-  LaunchOrganizationOutput,
+  deployOrganizationCommand,
+  DeployOrganizationOutput,
 } from "@takomo/organization"
 import {
   ORG_A_ACCOUNT_1_ID,
@@ -32,15 +32,15 @@ const createOptions = async (version: string) =>
 
 const launchOrganization = async (
   version: string,
-): Promise<LaunchOrganizationOutput> =>
+): Promise<DeployOrganizationOutput> =>
   createOptions(version).then(({ options, variables, watch }) =>
-    launchOrganizationCommand(
+    deployOrganizationCommand(
       {
         watch,
         variables,
         options,
       },
-      new CliLaunchOrganizationIO(options),
+      new CliDeployOrganizationIO(options),
     ),
   )
 

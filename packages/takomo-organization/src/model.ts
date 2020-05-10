@@ -14,7 +14,7 @@ import {
   PolicyName,
   PolicyType,
 } from "aws-sdk/clients/organizations"
-import { LaunchOrganizationInput, LaunchOrganizationIO } from "./command/launch"
+import { DeployOrganizationInput, DeployOrganizationIO } from "./command/deploy"
 import { OrganizationContext } from "./context"
 
 export type OrganizationalUnitPath = string
@@ -229,8 +229,8 @@ export type OrganizationBasicConfigDeploymentResult = CommandOutputBase
 export interface InitialOrganizationDeployContext {
   readonly watch: StopWatch
   readonly ctx: OrganizationContext
-  readonly io: LaunchOrganizationIO
-  readonly input: LaunchOrganizationInput
+  readonly io: DeployOrganizationIO
+  readonly input: DeployOrganizationInput
   readonly result: CommandOutputBase | null
 }
 

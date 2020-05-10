@@ -1,10 +1,10 @@
 import { resolveCommandOutputBase } from "@takomo/core"
 import { OrganizationBasicConfigCleanResultHolder } from "../../model"
-import { LaunchOrganizationOutput } from "./model"
+import { DeployOrganizationOutput } from "./model"
 
 export const buildOutput = (
   holder: OrganizationBasicConfigCleanResultHolder,
-): LaunchOrganizationOutput => {
+): DeployOrganizationOutput => {
   const {
     watch,
     organizationalUnitsDeploymentResult,

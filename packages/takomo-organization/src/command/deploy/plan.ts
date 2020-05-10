@@ -2,11 +2,11 @@ import { CommandStatus } from "@takomo/core"
 import { OrganizationDataHolder } from "../../model"
 import { planOrganizationLaunch } from "../../plan"
 import { confirmDeployment } from "./confirm"
-import { LaunchOrganizationOutput } from "./model"
+import { DeployOrganizationOutput } from "./model"
 
 export const planDeployment = async (
   holder: OrganizationDataHolder,
-): Promise<LaunchOrganizationOutput> => {
+): Promise<DeployOrganizationOutput> => {
   const { io, watch, ctx, organizationData } = holder
   const childWatch = watch.startChild("plan-deployment")
 
