@@ -8,7 +8,6 @@ const execP = promisify(exec)
 export class CmdHook implements Hook {
   readonly config: HookConfig
   readonly command: string
-  readonly register: string | null
   readonly cwd: string | null
 
   constructor(config: any) {
@@ -20,12 +19,11 @@ export class CmdHook implements Hook {
 
     this.command = config.command
     this.cwd = config.cwd || null
-    this.register = config.register || null
   }
 
   async execute(input: HookInput): Promise<HookOutput> {
     try {
-      const { ctx, variables, status, operation, stage } = input
+      const { ctx, status, operation, stage } = input
       const cwd = this.cwd || ctx.getOptions().getProjectDir()
       const env = {
         ...deepCopy(process.env),
@@ -40,14 +38,6 @@ export class CmdHook implements Hook {
       const { stdout } = await execP(this.command, { cwd, env })
 
       console.log(stdout)
-
-      // TODO: Remove this option in Takomo 1.0.0 as the stdout is now exposed
-      // using output value
-      if (this.register) {
-        // eslint-disable-next-line
-        // @ts-ignore
-        variables[this.register] = stdout.trim()
-      }
 
       return {
         message: "Success",
