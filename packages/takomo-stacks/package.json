@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Takomo Stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,10 +28,10 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "aws-sdk": "2.656.0",
-    "@takomo/aws-clients": "0.2.0",
-    "@takomo/core": "0.2.0",
-    "@takomo/util": "0.2.0"
+    "@takomo/aws-clients": "1.0.0",
+    "@takomo/core": "1.0.0",
+    "@takomo/util": "1.0.0",
+    "aws-sdk": "2.656.0"
   },
   "devDependencies": {
     "@types/jest": "25.1.1",
