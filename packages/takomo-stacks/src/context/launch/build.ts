@@ -1,39 +1,14 @@
 import { CommandPath, StackPath, TakomoCredentialProvider } from "@takomo/core"
-import { TakomoError } from "@takomo/util"
 import uniq from "lodash.uniq"
 import { CommandPathMatchesNoStacksError } from "../../errors"
 import { Stack, StackGroup } from "../../model"
-import { isStackGroupPath } from "../common"
+import {
+  isStackGroupPath,
+  loadExistingStacks,
+  validateStackCredentialProvidersWithAllowedAccountIds,
+} from "../common"
 import { ConfigContext } from "../config"
 import { CommandContext, StdCommandContext } from "../model"
-
-export const validateStackCredentialProvidersWithAllowedAccountIds = async (
-  stacks: Stack[],
-): Promise<void> => {
-  const stacksWithIdentities = await Promise.all(
-    stacks.map(async (stack) => {
-      const identity = await stack.getCredentialProvider().getCallerIdentity()
-      return { stack, identity }
-    }),
-  )
-
-  stacksWithIdentities.forEach(({ stack, identity }) => {
-    if (
-      stack.getAccountIds().length > 0 &&
-      !stack.getAccountIds().includes(identity.accountId)
-    ) {
-      const allowedAccountIds = stack
-        .getAccountIds()
-        .map((a) => `- ${a}`)
-        .join("\n")
-      throw new TakomoError(
-        `Credentials associated with the stack ${stack.getPath()} point to an AWS account with id ${
-          identity.accountId
-        } which is not allowed in stack configuration.\n\nList of allowed account ids:\n\n${allowedAccountIds}`,
-      )
-    }
-  })
-}
 
 const collectStacksToLaunchFromStack = (
   stackPath: StackPath,
@@ -150,6 +125,10 @@ export const prepareLaunchContext = async (
     throw new CommandPathMatchesNoStacksError(commandPath, ctx.getStacks())
   }
 
+  logger.debug(
+    `Command path ${commandPath} matches ${stacksToLaunch.length} stack(s)`,
+  )
+
   const credentialProviders = stacksToLaunch.reduce((collected, stack) => {
     if (
       collected.find(
@@ -163,7 +142,7 @@ export const prepareLaunchContext = async (
   }, new Array<TakomoCredentialProvider>())
 
   logger.debugObject(
-    "Stacks to launch contain the following credential providers",
+    "Stacks chosen for deployment contain the following credential providers",
     credentialProviders.map((c) => c.getName()),
   )
 
@@ -173,7 +152,10 @@ export const prepareLaunchContext = async (
 
   await validateStackCredentialProvidersWithAllowedAccountIds(stacksToProcess)
 
+  const existingStacks = await loadExistingStacks(logger, stacksToProcess)
+
   return new StdCommandContext({
+    existingStacks,
     stacksToProcess,
     credentialProvider,
     options,

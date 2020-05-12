@@ -1,8 +1,14 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
 import { CommandPath, ConfirmResult, Options, StackPath } from "@takomo/core"
-import { CommandContext, Stack, StackGroup } from "@takomo/stacks"
+import {
+  CommandContext,
+  resolveStackLaunchType,
+  Stack,
+  StackGroup,
+  StackLaunchType,
+} from "@takomo/stacks"
 import { DeployStacksIO, StacksOperationOutput } from "@takomo/stacks-commands"
-import { collectFromHierarchy, green, red, yellow } from "@takomo/util"
+import { collectFromHierarchy, green, orange, red, yellow } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { DescribeChangeSetOutput } from "aws-sdk/clients/cloudformation"
 import { diffLines } from "diff"
@@ -13,7 +19,24 @@ import {
   formatCommandStatus,
   formatResourceChange,
   formatStackEvent,
+  formatStackStatus,
 } from "../formatters"
+
+const formatStackOperation = (
+  stackPath: StackPath,
+  launchType: StackLaunchType,
+): string => {
+  switch (launchType) {
+    case StackLaunchType.CREATE:
+      return green(`+ ${stackPath}:`)
+    case StackLaunchType.RECREATE:
+      return orange(`± ${stackPath}:`)
+    case StackLaunchType.UPDATE:
+      return yellow(`~ ${stackPath}:`)
+    default:
+      throw new Error(`Unsupported stack launch type: ${launchType}`)
+  }
+}
 
 export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
   private autoConfirm: boolean
@@ -59,57 +82,61 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     const identity = await ctx.getCredentialProvider().getCallerIdentity()
     this.debugObject("Default credentials:", identity)
 
+    const stacks = ctx.getStacksToProcess()
+
     this.subheader("Review stacks deployment plan:", true)
     this.longMessage([
       "A stacks deployment plan has been created and is shown below.",
+      "Stacks will be deployed in the order they are listed, and in parallel",
+      "when possible.",
       "",
-      "Following stacks will be deployed:",
+      "Stack operations are indicated with the following symbols:",
+      "",
+      `  ${green(
+        "+ create",
+      )}           Stack does not exist and will be created`,
+      `  ${yellow("~ update")}           Stack exists and will be updated`,
+      `  ${orange(
+        "± recreate",
+      )}         Previous attempt to create stack has failed, it will be first removed, then created`,
+      "",
+      `Following ${stacks.length} stack(s) will be deployed:`,
     ])
 
-    for (const stack of ctx.getStacksToProcess()) {
+    for (const stack of stacks) {
       const stackIdentity = await stack
         .getCredentialProvider()
         .getCallerIdentity()
 
+      const current = await ctx.getExistingStack(stack.getPath())
+      const status = current ? current.StackStatus : null
+      const launchType = resolveStackLaunchType(current?.StackStatus || null)
+      const stackOperation = formatStackOperation(stack.getPath(), launchType)
+
       this.longMessage(
         [
-          `  ${stack.getPath()}:`,
-          `    name:          ${stack.getName()}`,
-          `    account id:    ${stackIdentity.accountId}`,
-          `    region:        ${stack.getRegion()}`,
-          "    credentials:",
-          `      user id:     ${stackIdentity.userId}`,
-          `      account id:  ${stackIdentity.accountId}`,
-          `      arn:         ${stackIdentity.arn}`,
+          `  ${stackOperation}`,
+          `      name:          ${stack.getName()}`,
+          `      status:        ${formatStackStatus(status)}`,
+          `      account id:    ${stackIdentity.accountId}`,
+          `      region:        ${stack.getRegion()}`,
+          "      credentials:",
+          `        user id:     ${stackIdentity.userId}`,
+          `        account id:  ${stackIdentity.accountId}`,
+          `        arn:         ${stackIdentity.arn}`,
         ],
         true,
       )
 
       if (stack.getDependencies().length > 0) {
-        this.message("    dependencies:")
-        this.printStackDependencies(stack, ctx, 6)
+        this.message("      dependencies:")
+        this.printStackDependencies(stack, ctx, 8)
       } else {
-        this.message("    dependencies:  []")
+        this.message("      dependencies:  []")
       }
     }
 
     return (await this.confirm("Continue to deploy the stacks?", true))
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
-  }
-
-  confirmDeleteOfFailedStack = async (stack: Stack): Promise<ConfirmResult> => {
-    if (this.autoConfirm) {
-      return ConfirmResult.YES
-    }
-
-    this.message(
-      `The previous attempt to create stack ${stack.getName()} failed. The stack must be removed before it can be created`,
-      true,
-      true,
-    )
-
-    return (await this.confirm(`Remove stack ${stack.getName()}?`))
       ? ConfirmResult.YES
       : ConfirmResult.NO
   }

@@ -1,14 +1,9 @@
 import { CommandStatus } from "@takomo/core"
-import { StackResult } from "@takomo/stacks"
+import { CommandContext, StackResult } from "@takomo/stacks"
+import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
-import { initiateFailedCloudFormationStackDeletion } from "./delete"
-import { executeBeforeLaunchHooks } from "./hooks"
-import { TargetStackInfoHolder, TemplateLocationHolder } from "./model"
+import { TemplateLocationHolder } from "./model"
 import { prepareParameters } from "./parameters"
-
-export const hasPreviousStackCreateFailed = (
-  stackStatus: CloudFormation.StackStatus,
-): boolean => ["CREATE_FAILED", "ROLLBACK_COMPLETE"].includes(stackStatus)
 
 export const isStackReadyForLaunch = (
   stackStatus: CloudFormation.StackStatus,
@@ -18,36 +13,36 @@ export const isStackReadyForLaunch = (
     "UPDATE_COMPLETE",
     "UPDATE_ROLLBACK_COMPLETE",
     "REVIEW_IN_PROGRESS",
+    "CREATE_FAILED",
+    "ROLLBACK_COMPLETE",
   ].includes(stackStatus)
 
-export const validateCloudFormationStackStatus = async (
-  holder: TargetStackInfoHolder,
-): Promise<StackResult> => {
-  const { stack, current, watch, logger } = holder
-
-  logger.debug("Validate stack status")
-
-  if (isStackReadyForLaunch(current.status)) {
-    logger.debug(`Stack status ${current.status} is valid`)
-    return await executeBeforeLaunchHooks(holder)
+export const validateLaunchContext = async (
+  ctx: CommandContext,
+): Promise<CommandContext> => {
+  const stacksInInvalidStatus = []
+  for (const stack of ctx.getStacksToProcess()) {
+    const existing = await ctx.getExistingStack(stack.getPath())
+    if (existing && !isStackReadyForLaunch(existing.StackStatus!)) {
+      stacksInInvalidStatus.push({ stack, existing })
+    }
   }
 
-  if (hasPreviousStackCreateFailed(current.status)) {
-    logger.debug("Previous stack create has failed")
-    return await initiateFailedCloudFormationStackDeletion(holder)
+  if (stacksInInvalidStatus.length > 0) {
+    throw new TakomoError(
+      "Can't deploy stacks because following stacks are in invalid status:\n\n" +
+        stacksInInvalidStatus
+          .map(
+            (s) =>
+              `  - ${s.stack.getPath()} in invalid status: ${
+                s.existing.StackStatus
+              }`,
+          )
+          .join("\n"),
+    )
   }
 
-  logger.warn(`Stack status ${current.status} is not valid`)
-
-  return {
-    stack,
-    message: `Stack status '${current.status}' does not allow launch`,
-    reason: "CHECK_STACK_STATUS_FAILED",
-    status: CommandStatus.FAILED,
-    events: [],
-    success: false,
-    watch: watch.stop(),
-  }
+  return ctx
 }
 
 export const validateTemplate = async (

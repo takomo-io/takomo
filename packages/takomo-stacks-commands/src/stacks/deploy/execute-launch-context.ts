@@ -20,8 +20,6 @@ export const executeLaunchContext = async (
   const autoConfirm = ctx.getOptions().isAutoConfirmEnabled()
   const { watch } = input
 
-  io.info("Launch context")
-
   if (!autoConfirm && (await io.confirmLaunch(ctx)) !== ConfirmResult.YES) {
     return {
       success: false,

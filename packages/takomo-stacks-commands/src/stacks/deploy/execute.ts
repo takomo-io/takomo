@@ -1,7 +1,11 @@
 import { CommandStatus } from "@takomo/core"
-import { defaultCapabilities, StackResult } from "@takomo/stacks"
+import {
+  defaultCapabilities,
+  StackLaunchType,
+  StackResult,
+} from "@takomo/stacks"
 import uuid from "uuid"
-import { StackLaunchType, TagsHolder } from "./model"
+import { TagsHolder } from "./model"
 import { waitForStackCreateOrUpdateToComplete } from "./wait"
 
 export const createOrUpdateStack = async (
@@ -26,7 +30,6 @@ export const createOrUpdateStack = async (
 
   switch (launchType) {
     case StackLaunchType.UPDATE:
-      logger.info("Update stack")
       const updateWatch = watch.startChild("update-stack")
       try {
         const hasChanges = await cloudFormationClient.updateStack({
@@ -71,7 +74,7 @@ export const createOrUpdateStack = async (
       })
 
     case StackLaunchType.CREATE:
-      logger.info("Create stack")
+    case StackLaunchType.RECREATE:
       const createWatch = watch.startChild("create-stack")
 
       try {

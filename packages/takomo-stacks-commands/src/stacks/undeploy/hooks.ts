@@ -1,7 +1,7 @@
 import { CommandStatus } from "@takomo/core"
 import { executeHooks, HookStatus, StackResult } from "@takomo/stacks"
-import { initiateCloudFormationStackDeletion } from "./delete"
-import { ResultHolder, TargetStackInfoHolder } from "./model"
+import { deleteSecrets } from "./delete"
+import { InitialDeleteContext, ResultHolder } from "./model"
 
 const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
   switch (commandStatus) {
@@ -19,7 +19,7 @@ const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
 }
 
 export const executeBeforeDeleteHooks = async (
-  holder: TargetStackInfoHolder,
+  holder: InitialDeleteContext,
 ): Promise<StackResult> => {
   const { stack, watch, ctx, variables, logger } = holder
   const childWatch = watch.startChild("before-hooks")
@@ -50,7 +50,8 @@ export const executeBeforeDeleteHooks = async (
 
   logger.debug("Execute before delete hooks completed")
   childWatch.stop()
-  return initiateCloudFormationStackDeletion(holder)
+
+  return deleteSecrets(holder)
 }
 
 export const executeAfterDeleteHooks = async (

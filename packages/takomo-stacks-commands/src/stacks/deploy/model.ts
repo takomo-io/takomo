@@ -4,6 +4,7 @@ import {
   CommandContext,
   Stack,
   StackGroup,
+  StackLaunchType,
   StackOperationVariables,
   StackResult,
 } from "@takomo/stacks"
@@ -21,7 +22,6 @@ export interface DeployStacksIO extends IO {
     cloudFormationClient: CloudFormationClient,
   ) => Promise<ConfirmResult>
   confirmLaunch: (ctx: CommandContext) => Promise<ConfirmResult>
-  confirmDeleteOfFailedStack: (stack: Stack) => Promise<ConfirmResult>
   printOutput: (output: StacksOperationOutput) => StacksOperationOutput
   printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
 }
@@ -33,6 +33,8 @@ export interface StackInfo {
 
 export interface InitialLaunchContext {
   readonly stack: Stack
+  readonly existingStack: CloudFormation.Stack | null
+  readonly launchType: StackLaunchType
   readonly watch: StopWatch
   readonly logger: Logger
   readonly ctx: CommandContext
@@ -42,19 +44,11 @@ export interface InitialLaunchContext {
   readonly variables: StackOperationVariables
 }
 
-export interface StackLaunchTypeHolder extends InitialLaunchContext {
-  readonly launchType: StackLaunchType
-}
-
-export interface TargetStackInfoHolder extends StackLaunchTypeHolder {
-  readonly current: StackInfo
-}
-
-export interface DeleteStackClientTokenHolder extends TargetStackInfoHolder {
+export interface DeleteStackClientTokenHolder extends InitialLaunchContext {
   readonly clientToken: string
 }
 
-export interface TemplateBodyHolder extends StackLaunchTypeHolder {
+export interface TemplateBodyHolder extends InitialLaunchContext {
   readonly templateBody: string
 }
 
@@ -76,9 +70,4 @@ export interface ClientTokenHolder extends TagsHolder {
 
 export interface ResultHolder extends ClientTokenHolder {
   readonly result: StackResult
-}
-
-export enum StackLaunchType {
-  CREATE,
-  UPDATE,
 }

@@ -4,4 +4,5 @@ module.exports = {
   testRegex: "/test/.*\\.test\\.ts$",
   moduleFileExtensions: ["ts", "js", "json"],
   setupFiles: ["./jest.setup.js"],
+  verbose: true
 }

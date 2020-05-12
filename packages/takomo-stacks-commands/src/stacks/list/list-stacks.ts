@@ -1,4 +1,3 @@
-import { CloudFormationClient } from "@takomo/aws-clients"
 import { CommandStatus } from "@takomo/core"
 import { CommandContext } from "@takomo/stacks"
 import { ListStacksInput, ListStacksOutput } from "./model"
@@ -12,13 +11,7 @@ export const listStacks = async (
       .getStacksToProcess()
       .filter((stack) => stack.getPath().startsWith(input.commandPath))
       .map(async (stack) => {
-        const cf = new CloudFormationClient({
-          credentialProvider: stack.getCredentialProvider(),
-          logger: ctx.getLogger(),
-          region: stack.getRegion(),
-        })
-
-        const current = await cf.describeStack(stack.getName())
+        const current = await ctx.getExistingStack(stack.getPath())
         return { stack, current }
       }),
   )
@@ -31,3 +24,4 @@ export const listStacks = async (
     stacks,
   }
 }
+// s

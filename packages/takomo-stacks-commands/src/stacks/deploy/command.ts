@@ -7,8 +7,10 @@ import {
 } from "@takomo/stacks"
 import { validateInput } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
+import { cleanFailedStacks } from "./clean-failed-stacks"
 import { executeLaunchContext } from "./execute-launch-context"
 import { DeployStacksIO } from "./model"
+import { validateLaunchContext } from "./validate"
 
 const schema = Joi.object({
   commandPath: commandPath.required(),
@@ -50,6 +52,9 @@ export const deployStacksCommand = async (
         ctx,
         modifiedInput.commandPath,
         modifiedInput.ignoreDependencies,
-      ).then((ctx) => executeLaunchContext(ctx, modifiedInput, io))
+      )
+        .then((ctx) => validateLaunchContext(ctx))
+        .then((ctx) => cleanFailedStacks(ctx))
+        .then((ctx) => executeLaunchContext(ctx, modifiedInput, io))
     })
     .then(io.printOutput)

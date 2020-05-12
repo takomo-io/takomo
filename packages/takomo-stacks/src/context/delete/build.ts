@@ -1,40 +1,15 @@
 import { CommandPath, StackPath } from "@takomo/core"
-import { TakomoError } from "@takomo/util"
 import uniq from "lodash.uniq"
 import { CommandPathMatchesNoStacksError } from "../../errors"
 import { Stack, StackGroup } from "../../model"
-import { isStackGroupPath } from "../common"
+import {
+  isStackGroupPath,
+  loadExistingStacks,
+  validateStackCredentialProvidersWithAllowedAccountIds,
+} from "../common"
 import { ConfigContext } from "../config"
 import { collectAllDependants } from "../dependencies"
 import { CommandContext, StdCommandContext } from "../model"
-
-export const validateStackCredentialProvidersWithAllowedAccountIds = async (
-  stacks: Stack[],
-): Promise<void> => {
-  const stacksWithIdentities = await Promise.all(
-    stacks.map(async (stack) => {
-      const identity = await stack.getCredentialProvider().getCallerIdentity()
-      return { stack, identity }
-    }),
-  )
-
-  stacksWithIdentities.forEach(({ stack, identity }) => {
-    if (
-      stack.getAccountIds().length > 0 &&
-      !stack.getAccountIds().includes(identity.accountId)
-    ) {
-      const allowedAccountIds = stack
-        .getAccountIds()
-        .map((a) => `- ${a}`)
-        .join("\n")
-      throw new TakomoError(
-        `Credentials associated with the stack ${stack.getPath()} point to an AWS account with id ${
-          identity.accountId
-        } which is not allowed in stack configuration.\n\nList of allowed account ids:\n\n${allowedAccountIds}`,
-      )
-    }
-  })
-}
 
 const collectStacksToDeleteFromStack = (
   stackPath: StackPath,
@@ -132,6 +107,8 @@ export const prepareDeleteContext = async (
 ): Promise<CommandContext> => {
   const { credentialProvider, options, variables, logger, templateEngine } = ctx
 
+  logger.info("Prepare context")
+
   const stacksToDelete = collectStacksToDelete(
     ctx,
     commandPath,
@@ -142,11 +119,18 @@ export const prepareDeleteContext = async (
     throw new CommandPathMatchesNoStacksError(commandPath, ctx.getStacks())
   }
 
+  logger.debug(
+    `Command path ${commandPath} matches ${stacksToDelete.length} stack(s)`,
+  )
+
   const stacksToProcess = sortStacksForDeletion(stacksToDelete)
 
   await validateStackCredentialProvidersWithAllowedAccountIds(stacksToProcess)
 
+  const existingStacks = await loadExistingStacks(logger, stacksToProcess)
+
   return new StdCommandContext({
+    existingStacks,
     stacksToProcess,
     credentialProvider,
     options,

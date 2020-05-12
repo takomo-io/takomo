@@ -3,14 +3,16 @@ import {
   executeHooks,
   HookOperation,
   HookStatus,
+  StackLaunchType,
   StackResult,
 } from "@takomo/stacks"
-import { ResultHolder, StackLaunchType, StackLaunchTypeHolder } from "./model"
+import { InitialLaunchContext, ResultHolder } from "./model"
 import { prepareCloudFormationTemplate } from "./template"
 
-const toHookOperation = (launchType: StackLaunchType): HookOperation => {
+export const toHookOperation = (launchType: StackLaunchType): HookOperation => {
   switch (launchType) {
     case StackLaunchType.CREATE:
+    case StackLaunchType.RECREATE:
       return "create"
     case StackLaunchType.UPDATE:
       return "update"
@@ -19,7 +21,7 @@ const toHookOperation = (launchType: StackLaunchType): HookOperation => {
   }
 }
 
-const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
+export const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
   switch (commandStatus) {
     case CommandStatus.CANCELLED:
       return "cancelled"
@@ -35,12 +37,12 @@ const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
 }
 
 export const executeBeforeLaunchHooks = async (
-  holder: StackLaunchTypeHolder,
+  holder: InitialLaunchContext,
 ): Promise<StackResult> => {
   const { stack, watch, launchType, ctx, variables, logger } = holder
   const childWatch = watch.startChild("before-hooks")
 
-  logger.debug("Execute before launch hooks")
+  logger.debug("Execute before deploy hooks")
 
   const { success, message } = await executeHooks(
     ctx,
@@ -52,7 +54,7 @@ export const executeBeforeLaunchHooks = async (
   )
 
   if (!success) {
-    logger.error(`Before launch hooks failed with message: ${message}`)
+    logger.error(`Before deploy hooks failed with message: ${message}`)
     return {
       stack,
       message,
@@ -65,7 +67,7 @@ export const executeBeforeLaunchHooks = async (
   }
 
   childWatch.stop()
-  logger.debug("Execute before launch hooks completed")
+  logger.debug("Execute before deploy hooks completed")
 
   return prepareCloudFormationTemplate(holder)
 }
