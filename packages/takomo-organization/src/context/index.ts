@@ -24,7 +24,7 @@ import { parseOrganizationConfigFile } from "../config"
 import { OrganizationalUnit, OrganizationConfigFile } from "../model"
 import { validateOrganizationConfigFile } from "../validation"
 
-const loadCustomPartials = async (
+export const loadCustomPartials = async (
   organizationDir: string,
   logger: Logger,
   te: TemplateEngine,

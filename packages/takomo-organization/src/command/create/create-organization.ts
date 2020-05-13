@@ -1,6 +1,22 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { CommandStatus, initDefaultCredentialProvider } from "@takomo/core"
-import { StopWatch } from "@takomo/util"
+import {
+  CommandStatus,
+  Constants,
+  initDefaultCredentialProvider,
+} from "@takomo/core"
+import {
+  createDir,
+  createFile,
+  dirExists,
+  fileExists,
+  formatYaml,
+  StopWatch,
+  TakomoError,
+  TemplateEngine,
+} from "@takomo/util"
+import path from "path"
+import { parseOrganizationConfigFile } from "../../config"
+import { loadCustomPartials } from "../../context"
 import {
   CreateOrganizationInput,
   CreateOrganizationIO,
@@ -26,24 +42,112 @@ export const createOrganization = async (
       status: CommandStatus.CANCELLED,
       success: true,
       organization: null,
+      configurationFile: null,
       watch: watch.stop(),
+    }
+  }
+
+  const projectDir = input.options.getProjectDir()
+  const pathToOrganizationDir = path.join(
+    projectDir,
+    Constants.ORGANIZATION_DIR,
+  )
+
+  const pathToOrganizationFile = path.join(
+    pathToOrganizationDir,
+    Constants.ORGANIZATION_CONFIG_FILE,
+  )
+
+  const organizationConfigFileExists = await fileExists(pathToOrganizationFile)
+
+  if (organizationConfigFileExists) {
+    const templateEngine = new TemplateEngine()
+
+    await loadCustomPartials(pathToOrganizationDir, io, templateEngine)
+
+    const organizationConfigFile = await parseOrganizationConfigFile(
+      io,
+      options,
+      input.variables,
+      pathToOrganizationFile,
+      templateEngine,
+    )
+
+    const masterAccountId = organizationConfigFile.masterAccountId
+    if (!masterAccountId === undefined) {
+      throw new TakomoError(
+        "An exiting organization configuration file found but it does not have masterAccountId property",
+        {
+          instructions: [
+            `Either remove the existing organization configuration file or add masterAccountId property with value "${identity.accountId}" in it`,
+          ],
+        },
+      )
+    }
+
+    if (masterAccountId !== identity.accountId) {
+      throw new TakomoError(
+        "An exiting organization configuration file found but its masterAccountId property does not match with the account id of current credentials",
+        {
+          instructions: [
+            `Either remove the existing organization configuration file or set masterAccountId property value to "${identity.accountId}" in it`,
+          ],
+        },
+      )
     }
   }
 
   const client = new OrganizationsClient({
     logger: io,
-    credentialProvider: credentialProvider,
+    credentialProvider,
     region: "us-east-1",
   })
 
   try {
     const organization = await client.createOrganization(featureSet)
 
+    if (!organizationConfigFileExists) {
+      const organizationConfig = {
+        masterAccountId: identity.accountId,
+        organizationalUnits: {
+          Root: {
+            accounts: [identity.accountId],
+          },
+        },
+      }
+
+      if (!(await dirExists(pathToOrganizationDir))) {
+        try {
+          await createDir(pathToOrganizationDir)
+        } catch (e) {
+          io.error("Failed to create the organization configuration file", e)
+          io.warn(
+            "The organization was created successfully but organization configuration file could not be created. You can create it manually.",
+          )
+        }
+      }
+
+      try {
+        await createFile(pathToOrganizationFile, formatYaml(organizationConfig))
+        io.info(
+          `Created organization configuration file: ${pathToOrganizationFile}`,
+        )
+      } catch (e) {
+        io.error("Failed to create the organization configuration file", e)
+        io.warn(
+          "The organization was created successfully but organization configuration file could not be created. You can create it manually.",
+        )
+      }
+    }
+
     return {
       message: "Success",
       status: CommandStatus.SUCCESS,
       success: true,
       organization,
+      configurationFile: organizationConfigFileExists
+        ? null
+        : pathToOrganizationFile,
       watch: watch.stop(),
     }
   } catch (e) {
@@ -53,6 +157,7 @@ export const createOrganization = async (
       status: CommandStatus.FAILED,
       success: false,
       organization: null,
+      configurationFile: null,
       watch: watch.stop(),
     }
   }
