@@ -7,6 +7,7 @@ export interface CreateOrganizationInput extends CommandInput {
 
 export interface CreateOrganizationOutput extends CommandOutput {
   readonly organization: Organization | null
+  readonly configurationFile: string | null
 }
 
 export interface CreateOrganizationIO extends IO {

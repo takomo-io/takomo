@@ -1,0 +1,5 @@
+masterAccountId: "123456789012"
+organizationalUnits:
+  Root:
+    accounts:
+      - "123456789012"
