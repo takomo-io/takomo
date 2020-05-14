@@ -1,12 +1,16 @@
 import { CliDeployOrganizationIO } from "@takomo/cli-io"
-import { deployOrganizationCommand } from "@takomo/organization"
+import {
+  deployOrganizationCommand,
+  deployOrganizationCommandIamPolicy,
+} from "@takomo/organization"
 import { identity } from "@takomo/util"
-import { handle } from "../common"
+import { commonEpilog, handle } from "../common"
 
 export const deployOrganizationCmd = {
   command: "deploy",
   desc: "Deploy organization",
-  builder: {},
+  builder: (yargs: any) =>
+    yargs.epilog(commonEpilog(deployOrganizationCommandIamPolicy)),
   handler: (argv: any) =>
     handle(argv, identity, (input) =>
       deployOrganizationCommand(

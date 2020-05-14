@@ -1,13 +1,17 @@
 import { CliUndeployStacksIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { undeployStacksCommand } from "@takomo/stacks-commands"
-import { handle } from "../common"
+import {
+  undeployStacksCommand,
+  undeployStacksCommandIamPolicy,
+} from "@takomo/stacks-commands"
+import { commonEpilog, handle } from "../common"
 
 export const undeployStacksCmd = {
   command: "undeploy [commandPath]",
   desc: "Undeploy stacks within the given command path",
   builder: (yargs: any) =>
     yargs
+      .epilog(commonEpilog(undeployStacksCommandIamPolicy))
       .example(
         "$0 undeploy /networking",
         "Undeploy stacks within /networking path",

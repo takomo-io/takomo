@@ -1,11 +1,15 @@
 import { CliListAccountsIO } from "@takomo/cli-io"
-import { describeAccountCommand } from "@takomo/organization"
-import { handle } from "../../common"
+import {
+  describeAccountCommand,
+  describeAccountCommandIamPolicy,
+} from "@takomo/organization"
+import { commonEpilog, handle } from "../../common"
 
 export default {
   command: "describe <accountId>",
   desc: "Describe account",
-  builder: {},
+  builder: (yargs: any) =>
+    yargs.epilog(commonEpilog(describeAccountCommandIamPolicy)),
   handler: (argv: any) =>
     handle(
       argv,

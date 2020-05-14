@@ -4,8 +4,11 @@ import {
   CliUndeployTargetsIO,
 } from "@takomo/cli-io"
 import { DeploymentOperation, Options } from "@takomo/core"
-import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets"
-import { handle } from "../common"
+import {
+  deploymentTargetsOperationCommand,
+  undeployTargetsOperationCommandIamPolicy,
+} from "@takomo/deployment-targets"
+import { commonEpilog, handle } from "../common"
 
 const parseTargets = (value: any): string[] => {
   if (!value) {
@@ -20,6 +23,7 @@ export const undeployTargetsCmd = {
   desc: "Undeploy deployment targets",
   builder: (yargs: any) =>
     yargs
+      .epilog(commonEpilog(undeployTargetsOperationCommandIamPolicy))
       .option("target", {
         description: "Targets to undeploy",
         string: true,

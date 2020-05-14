@@ -1,11 +1,15 @@
 import { CliDescribeOrganizationIO } from "@takomo/cli-io"
-import { describeOrganizationCommand } from "@takomo/organization"
-import { handle } from "../common"
+import {
+  describeOrganizationCommand,
+  describeOrganizationCommandIamPolicy,
+} from "@takomo/organization"
+import { commonEpilog, handle } from "../common"
 
 export const describeOrganizationCmd = {
   command: "describe",
   desc: "Describe organization",
-  builder: {},
+  builder: (yargs: any) =>
+    yargs.epilog(commonEpilog(describeOrganizationCommandIamPolicy)),
   handler: (argv: any) =>
     handle(
       argv,

@@ -4,8 +4,11 @@ import {
   CliUndeployStacksIO,
 } from "@takomo/cli-io"
 import { DeploymentOperation, Options } from "@takomo/core"
-import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets"
-import { handle } from "../common"
+import {
+  deploymentTargetsOperationCommand,
+  deployTargetsOperationCommandIamPolicy,
+} from "@takomo/deployment-targets"
+import { commonEpilog, handle } from "../common"
 
 const parseTargets = (value: any): string[] => {
   if (!value) {
@@ -20,6 +23,7 @@ export const deployTargetsCmd = {
   desc: "Deploy deployment targets",
   builder: (yargs: any) =>
     yargs
+      .epilog(commonEpilog(deployTargetsOperationCommandIamPolicy))
       .option("target", {
         description: "Targets to deploy",
         string: true,

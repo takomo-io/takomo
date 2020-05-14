@@ -1,13 +1,17 @@
 import { CliCreateAccountIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { createAccountCommand } from "@takomo/organization"
-import { handle } from "../../common"
+import {
+  createAccountCommand,
+  createAccountCommandIamPolicy,
+} from "@takomo/organization"
+import { commonEpilog, handle } from "../../common"
 
 export const createAccountCmd = {
   command: "create",
   desc: "Create account",
   builder: (yargs: any) =>
     yargs
+      .epilog(commonEpilog(createAccountCommandIamPolicy))
       .option("name", {
         description: "Account name",
         string: true,

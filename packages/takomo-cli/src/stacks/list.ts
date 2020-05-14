@@ -1,16 +1,21 @@
 import { CliListStacksIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { listStacksCommand } from "@takomo/stacks-commands"
-import { handle } from "../common"
+import {
+  listStacksCommand,
+  listStacksCommandIamPolicy,
+} from "@takomo/stacks-commands"
+import { commonEpilog, handle } from "../common"
 
 export const listStacksCmd = {
   command: "list [commandPath]",
   desc: "List stack within the given command path",
-  builder: {
-    commandPath: {
-      default: Constants.ROOT_STACK_GROUP_PATH,
-    },
-  },
+  builder: (yargs: any) =>
+    yargs
+      .epilog(commonEpilog(listStacksCommandIamPolicy))
+      .positional("commandPath", {
+        describe: "List stacks within this path",
+        default: Constants.ROOT_STACK_GROUP_PATH,
+      }),
   handler: (argv: any) =>
     handle(
       argv,

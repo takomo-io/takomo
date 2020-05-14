@@ -1,11 +1,22 @@
 import { CliSetSecretIO } from "@takomo/cli-io"
-import { setSecretCommand } from "@takomo/stacks-commands"
-import { handle } from "../../common"
+import {
+  setSecretCommand,
+  setSecretCommandIamPolicy,
+} from "@takomo/stacks-commands"
+import { commonEpilog, handle } from "../../common"
 
 export const setSecretCmd = {
   command: "set <stackPath> <secretName>",
   desc: "Set stack secret value by name",
-  builder: {},
+  builder: (yargs: any) =>
+    yargs
+      .epilog(commonEpilog(setSecretCommandIamPolicy))
+      .positional("stackPath", {
+        describe: "Stack path",
+      })
+      .positional("secretName", {
+        describe: "Secret name",
+      }),
   handler: (argv: any) =>
     handle(
       argv,
