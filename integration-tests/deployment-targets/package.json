@@ -1,7 +1,7 @@
 {
   "name": "integration-test-deployment-targets",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -21,14 +21,14 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=4 --ci"
   },
   "dependencies": {
-    "@takomo/cli": "1.0.0",
-    "@takomo/cli-io": "1.0.0",
-    "@takomo/core": "1.0.0",
-    "@takomo/deployment-targets": "1.0.0",
-    "@takomo/organization": "1.0.0",
-    "@takomo/stacks": "1.0.0",
-    "@takomo/stacks-commands": "1.0.0",
-    "@takomo/util": "1.0.0",
+    "@takomo/cli": "1.1.0",
+    "@takomo/cli-io": "1.1.0",
+    "@takomo/core": "1.1.0",
+    "@takomo/deployment-targets": "1.1.0",
+    "@takomo/organization": "1.1.0",
+    "@takomo/stacks": "1.1.0",
+    "@takomo/stacks-commands": "1.1.0",
+    "@takomo/util": "1.1.0",
     "aws-sdk": "2.656.0"
   },
   "devDependencies": {
