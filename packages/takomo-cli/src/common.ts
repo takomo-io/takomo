@@ -337,3 +337,10 @@ export const handle = async <I extends CommandInput, O extends CommandOutput>(
     onError(e)
   }
 }
+
+export const commonEpilog = (
+  iamPolicyProvider: () => string,
+): string => `Required minimum IAM policy to run this command:
+${indentLines(iamPolicyProvider(), 2)}
+For more information, visit https://takomo.io
+`

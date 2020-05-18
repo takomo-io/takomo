@@ -203,7 +203,7 @@ export const buildOrganizationContext = async (
     variables,
     options,
     logger: io,
-    credentialProvider: credentialProvider,
+    credentialProvider,
     organizationAdminCredentialProvider,
     organizationConfigFile,
   })

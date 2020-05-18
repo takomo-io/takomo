@@ -8,11 +8,20 @@ export * from "./secrets/get"
 export * from "./secrets/list"
 export * from "./secrets/set"
 export * from "./secrets/sync"
-export { deployStacksCommand, DeployStacksIO } from "./stacks/deploy"
+export {
+  deployStacksCommand,
+  deployStacksCommandIamPolicy,
+  DeployStacksIO,
+} from "./stacks/deploy"
 export {
   listStacksCommand,
+  listStacksCommandIamPolicy,
   ListStacksInput,
   ListStacksIO,
   ListStacksOutput,
 } from "./stacks/list"
-export { undeployStacksCommand, UndeployStacksIO } from "./stacks/undeploy"
+export {
+  undeployStacksCommand,
+  undeployStacksCommandIamPolicy,
+  UndeployStacksIO,
+} from "./stacks/undeploy"

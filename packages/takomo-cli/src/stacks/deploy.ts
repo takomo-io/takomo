@@ -1,13 +1,17 @@
 import { CliDeployStacksIO } from "@takomo/cli-io"
 import { Constants } from "@takomo/core"
-import { deployStacksCommand } from "@takomo/stacks-commands"
-import { handle } from "../common"
+import {
+  deployStacksCommand,
+  deployStacksCommandIamPolicy,
+} from "@takomo/stacks-commands"
+import { commonEpilog, handle } from "../common"
 
 export const deployStacksCmd = {
   command: "deploy [commandPath]",
   desc: "Deploy stacks within the given command path",
   builder: (yargs: any) =>
     yargs
+      .epilog(commonEpilog(deployStacksCommandIamPolicy))
       .example("$0 deploy /networking", "Deploy stacks within /networking path")
       .example(
         "$0 deploy /networking/vpc.yml",

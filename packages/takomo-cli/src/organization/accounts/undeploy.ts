@@ -5,21 +5,26 @@ import {
 } from "@takomo/cli-io"
 import { ConfigSetType } from "@takomo/config-sets"
 import { DeploymentOperation, Options } from "@takomo/core"
-import { accountsOperationCommand } from "@takomo/organization"
-import { handle } from "../../common"
+import {
+  accountsOperationCommand,
+  accountsUndeployOperationCommandIamPolicy,
+} from "@takomo/organization"
+import { commonEpilog, handle } from "../../common"
 import { parseAccountIds } from "./fn"
 
 export const undeployAccountsCmd = {
   command: "undeploy [organizationalUnits..]",
   desc: "Undeploy accounts",
   builder: (yargs: any) =>
-    yargs.option("account-id", {
-      description: "Account id to undeploy",
-      alias: "a",
-      string: true,
-      global: false,
-      demandOption: false,
-    }),
+    yargs
+      .epilog(commonEpilog(accountsUndeployOperationCommandIamPolicy))
+      .option("account-id", {
+        description: "Account id to undeploy",
+        alias: "a",
+        string: true,
+        global: false,
+        demandOption: false,
+      }),
   handler: (argv: any) =>
     handle(
       argv,
