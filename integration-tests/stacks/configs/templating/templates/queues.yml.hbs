@@ -1,9 +1,9 @@
-Description: IT - templating
+Description: IT - templating {{ stack.tags.hello }}
 Resources:
 
   {{#each stack.data.queueNames}}
   Queue{{@index}}:
-    Type: AWS::SQS::Queue
+    Type: AWS::Logs::LogGroup
     Properties:
-      QueueName: {{this}}
+      LogGroupName: {{this}}
   {{/each}}

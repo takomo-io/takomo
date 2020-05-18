@@ -3,8 +3,8 @@ Resources:
 
   {{#each stack.data.topics}}
   Topic{{@index}}:
-    Type: AWS::SNS::Topic
+    Type: AWS::Logs::LogGroup
     Properties:
-      TopicName: TopicName{{@index}}
+      LogGroupName: TopicName{{@index}}
   {{/each}}
 

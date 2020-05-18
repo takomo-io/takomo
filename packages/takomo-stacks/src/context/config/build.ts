@@ -17,6 +17,7 @@ import {
   dirExists,
   fileExists,
   Logger,
+  mapToObject,
   TakomoError,
   TemplateEngine,
   validate,
@@ -121,6 +122,31 @@ const getCredentialProvider = async (
   return newCredentialProvider
 }
 
+export const createVariablesForStackConfigFile = (
+  variables: Variables,
+  stackGroup: StackGroup,
+): any => {
+  const stackGroupVariables = {
+    name: stackGroup.getName(),
+    project: stackGroup.getProject(),
+    regions: stackGroup.getRegions(),
+    commandRole: stackGroup.getCommandRole(),
+    path: stackGroup.getPath(),
+    isRoot: stackGroup.isRoot(),
+    templateBucket: stackGroup.getTemplateBucket(),
+    timeout: stackGroup.getTimeout(),
+    tags: mapToObject(stackGroup.getTags()),
+    data: stackGroup.getData(),
+    capabilities: stackGroup.getCapabilities(),
+    accountIds: stackGroup.getAccountIds(),
+  }
+
+  return {
+    ...variables,
+    stackGroup: stackGroupVariables,
+  }
+}
+
 const buildStack = async (
   logger: Logger,
   defaultCredentialProvider: TakomoCredentialProvider,
@@ -133,25 +159,12 @@ const buildStack = async (
   stackGroup: StackGroup,
   templateEngine: TemplateEngine,
 ): Promise<Stack[]> => {
-  const stackGroupVariables = {
-    project: stackGroup.getProject(),
-    regions: stackGroup.getRegions(),
-    commandRole: stackGroup.getCommandRole(),
-    path: stackGroup.getPath(),
-    isRoot: stackGroup.isRoot(),
-    templateBucket: stackGroup.getTemplateBucket(),
-    timeout: stackGroup.getTimeout(),
-    tags: stackGroup.getTags(),
-    data: stackGroup.getData(),
-    capabilities: stackGroup.getCapabilities(),
-  }
-
   const filename = path.basename(filePath)
   const stackPath = makeStackPath(filename, stackGroup)
-  const stackVariables = {
-    ...variables,
-    stackGroup: stackGroupVariables,
-  }
+  const stackVariables = createVariablesForStackConfigFile(
+    variables,
+    stackGroup,
+  )
 
   const stackConfig = await parseStackConfigFile(
     logger.childLogger(stackPath),

@@ -1,7 +1,7 @@
 import { S3Client } from "@takomo/aws-clients"
 import { CommandStatus, Constants } from "@takomo/core"
-import { StackResult } from "@takomo/stacks"
-import { readFileContents, renderTemplate } from "@takomo/util"
+import { Stack, StackOperationVariables, StackResult } from "@takomo/stacks"
+import { mapToObject, readFileContents, renderTemplate } from "@takomo/util"
 import path from "path"
 import { InitialLaunchContext, TemplateBodyHolder } from "./model"
 import { validateTemplate } from "./validate"
@@ -56,14 +56,11 @@ export const uploadTemplate = async (
   }
 }
 
-export const prepareCloudFormationTemplate = async (
-  holder: InitialLaunchContext,
-): Promise<StackResult> => {
-  const { ctx, stack, watch, variables, logger } = holder
-  logger.debug("Prepare CloudFormation template")
-  const childWatch = watch.startChild("prepare-template")
-
-  const stackVariables = {
+export const createVariablesForStackTemplate = (
+  variables: StackOperationVariables,
+  stack: Stack,
+): any => {
+  return {
     ...variables,
     stack: {
       project: stack.getProject(),
@@ -73,12 +70,22 @@ export const prepareCloudFormationTemplate = async (
       templateBucket: stack.getTemplateBucket(),
       commandRole: stack.getCommandRole(),
       region: stack.getRegion(),
-      tags: stack.getTags(),
+      tags: mapToObject(stack.getTags()),
       timeout: stack.getTimeout(),
       depends: stack.getDependencies(),
       data: stack.getData(),
     },
   }
+}
+
+export const prepareCloudFormationTemplate = async (
+  holder: InitialLaunchContext,
+): Promise<StackResult> => {
+  const { ctx, stack, watch, variables, logger } = holder
+  logger.debug("Prepare CloudFormation template")
+
+  const childWatch = watch.startChild("prepare-template")
+  const stackVariables = createVariablesForStackTemplate(variables, stack)
 
   const pathToTemplate = path.join(
     ctx.getOptions().getProjectDir(),

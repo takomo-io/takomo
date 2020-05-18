@@ -1,4 +1,6 @@
 template: queues.yml.hbs
+tags:
+  hello: World
 data:
   queueNames:
     {{#each var.queues}}
