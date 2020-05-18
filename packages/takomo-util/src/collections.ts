@@ -26,3 +26,9 @@ export const collectFromHierarchy = <T>(
     [root],
   )
 }
+
+export const mapToObject = (map: Map<string, any>): any =>
+  Array.from(map.entries()).reduce(
+    (collected, [key, value]) => ({ ...collected, [key]: value }),
+    {},
+  )

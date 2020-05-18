@@ -4,8 +4,12 @@ import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
+import { aws } from "./aws-api"
 import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
 import { TIMEOUT } from "./test-constants"
+import { ORG_A_ACCOUNT_1_ID } from "./env"
+
+const roleArn = `arn:aws:iam::${ORG_A_ACCOUNT_1_ID}:role/OrganizationAccountAccessRole`
 
 const createOptions = async (variables: any[]) =>
   initOptionsAndVariables({
@@ -33,7 +37,7 @@ beforeAll(async () => {
 
 describe("Templating", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions(["queues.yml"])
       const output = await deployStacksCommand(
@@ -49,13 +53,15 @@ describe("Templating", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
+
+      const stack = await aws.cloudFormation.describeStack(roleArn, "eu-north-1", "queues")
+      expect(stack.Description).toBe("IT - templating World")
     },
     TIMEOUT,
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions(["queues.yml"])
       const output = await undeployStacksCommand(
@@ -71,7 +77,6 @@ describe("Templating", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )

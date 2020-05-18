@@ -1,24 +1,32 @@
-import { Organizations } from "aws-sdk"
+import { initDefaultCredentialProvider } from "@takomo/core"
+import { CloudFormation, Credentials, Organizations } from "aws-sdk"
 import { Organization, PolicyType, Root } from "aws-sdk/clients/organizations"
 
 const organizationsClient = new Organizations({
   region: "us-east-1",
 })
 
+const cloudFormationClient = (
+  region: string,
+  credentials: Credentials,
+): CloudFormation => new CloudFormation({ region, credentials })
+
 const describeOrganization = async (): Promise<Organization> =>
   organizationsClient
     .describeOrganization()
     .promise()
-    .then(res => res.Organization!)
+    .then((res) => res.Organization!)
 
 const getRootOrganizationalUnit = async (): Promise<Root> =>
   organizationsClient
     .listRoots()
     .promise()
-    .then(res => res.Roots![0])
+    .then((res) => res.Roots![0])
 
 const getEnabledPolicyTypes = async (): Promise<PolicyType[]> =>
-  getRootOrganizationalUnit().then(root => root.PolicyTypes!.map(p => p.Type!))
+  getRootOrganizationalUnit().then((root) =>
+    root.PolicyTypes!.map((p) => p.Type!),
+  )
 
 const deleteOrganization = async (): Promise<boolean> =>
   organizationsClient
@@ -32,6 +40,19 @@ const deleteOrganizationIfPresent = async (): Promise<boolean> =>
     .then(() => true)
     .catch(() => false)
 
+const describeStack = async (
+  iamRoleArn: string,
+  region: string,
+  stackName: string,
+): Promise<CloudFormation.Stack> => {
+  const cp = await initDefaultCredentialProvider()
+  const roleCp = await cp.createCredentialProviderForRole(iamRoleArn)
+  return cloudFormationClient(region, await roleCp.getCredentials())
+    .describeStacks({ StackName: stackName })
+    .promise()
+    .then((res) => res.Stacks![0])
+}
+
 export const aws = {
   organizations: {
     describeOrganization,
@@ -39,5 +60,8 @@ export const aws = {
     getEnabledPolicyTypes,
     deleteOrganization,
     deleteOrganizationIfPresent,
+  },
+  cloudFormation: {
+    describeStack,
   },
 }
