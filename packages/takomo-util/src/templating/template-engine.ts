@@ -1,5 +1,6 @@
 import hb from "handlebars"
-import { TakomoError } from "./errors"
+import { TakomoError } from "../errors"
+import { buildErrorMessage } from "./internal"
 
 /**
  * Template engine.
@@ -58,11 +59,7 @@ export const renderTemplate = async (
   try {
     return templateEngine.renderTemplate(contents, variables)
   } catch (e) {
-    throw new TakomoError(
-      `An error occurred while rendering template: ${e.message}\n\n` +
-        `File:        ${filePath}\n` +
-        `Line number: ${e.lineNumber}\n` +
-        `Column:      ${e.column}`,
-    )
+    const errorMessage = buildErrorMessage(filePath, contents, e)
+    throw new TakomoError(errorMessage)
   }
 }
