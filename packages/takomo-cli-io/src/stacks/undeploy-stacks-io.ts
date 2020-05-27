@@ -1,9 +1,9 @@
 import { CommandPath, ConfirmResult, Options, StackPath } from "@takomo/core"
-import { CommandContext, Stack, StackGroup } from "@takomo/stacks"
 import {
   StacksOperationOutput,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
+import { CommandContext, Stack, StackGroup } from "@takomo/stacks-model"
 import { collectFromHierarchy, grey, red } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import Table from "easy-table"

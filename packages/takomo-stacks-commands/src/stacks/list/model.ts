@@ -1,5 +1,5 @@
 import { CommandInput, CommandOutput, CommandPath, IO } from "@takomo/core"
-import { Stack } from "@takomo/stacks"
+import { Stack } from "@takomo/stacks-model"
 import { CloudFormation } from "aws-sdk"
 
 export interface StackInfo {

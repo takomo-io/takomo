@@ -3,7 +3,7 @@ import {
   defaultCapabilities,
   StackLaunchType,
   StackResult,
-} from "@takomo/stacks"
+} from "@takomo/stacks-model"
 import { ChangeSetType } from "aws-sdk/clients/cloudformation"
 import uuid from "uuid"
 import { createOrUpdateStack } from "./execute"

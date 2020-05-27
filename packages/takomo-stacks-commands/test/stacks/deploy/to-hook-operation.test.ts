@@ -1,4 +1,4 @@
-import { StackLaunchType } from "@takomo/stacks"
+import { StackLaunchType } from "@takomo/stacks-model"
 import { toHookOperation } from "../../../src/stacks/deploy/hooks"
 
 describe("#toHookOperation", () => {

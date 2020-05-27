@@ -1,5 +1,5 @@
 import { CommandInput, CommandOutput, IO, StackPath } from "@takomo/core"
-import { SecretName } from "@takomo/stacks"
+import { SecretName } from "@takomo/stacks-model"
 
 export interface GetSecretInput extends CommandInput {
   stackPath: StackPath

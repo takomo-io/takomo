@@ -1,10 +1,10 @@
 import { Options } from "@takomo/core"
-import { Secret } from "@takomo/stacks"
 import {
   StackSecretsDiff,
   SyncSecretsIO,
   SyncSecretsOutput,
 } from "@takomo/stacks-commands"
+import { Secret } from "@takomo/stacks-model"
 import { CliSecretsIo, SecretOperation } from "./cli-secrets-io"
 export class CliSyncSecretsIO extends CliSecretsIo implements SyncSecretsIO {
   constructor(options: Options) {

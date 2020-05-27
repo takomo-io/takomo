@@ -1,5 +1,10 @@
 import { CommandInput, CommandOutput, CommandPath } from "@takomo/core"
-import { Secret, SecretWithValue, Stack, StackResult } from "@takomo/stacks"
+import {
+  Secret,
+  SecretWithValue,
+  Stack,
+  StackResult,
+} from "@takomo/stacks-model"
 
 export interface StackSecrets {
   readonly stack: Stack

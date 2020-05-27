@@ -36,7 +36,7 @@
     "ci-integration-test-organization-b": "jest integration-tests/organization-b --maxWorkers=1 --ci",
     "postversion": "git push --tags",
     "api-docs": "typedoc",
-    "depcheck": "depcheck --ignore-dirs=dist"
+    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest"
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
@@ -50,7 +50,6 @@
     "@types/node": "12.12.17",
     "@types/semver": "7.1.0",
     "jest": "25.5.3",
-    "jest-mock-extended": "1.0.8",
     "ts-jest": "25.2.1",
     "typescript": "3.8.3"
   }

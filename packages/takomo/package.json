@@ -37,7 +37,7 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignore-dirs=dist",
+    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
     "integration-test-stacks": "jest integration-tests/stacks",
     "integration-test-deployment-targets": "jest integration-tests/deployment-targets",
     "integration-test-organization-a": "jest integration-tests/organization-a",

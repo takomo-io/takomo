@@ -1,5 +1,5 @@
 import { CommandStatus } from "@takomo/core"
-import { StackResult } from "@takomo/stacks"
+import { StackResult } from "@takomo/stacks-model"
 import { TemplateLocationHolder } from "./model"
 import { prepareTags } from "./tags"
 

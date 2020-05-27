@@ -24,7 +24,7 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignore-dirs=dist",
+    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
@@ -43,7 +43,6 @@
     "@types/lodash.takerightwhile": "4.6.6",
     "@types/uuid": "3.4.6",
     "jest": "25.5.3",
-    "jest-mock-extended": "1.0.8",
     "ts-jest": "25.2.1",
     "typescript": "3.8.3"
   }

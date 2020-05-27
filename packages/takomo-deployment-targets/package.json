@@ -24,25 +24,29 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignore-dirs=dist",
+    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
     "@takomo/config-sets": "1.1.0",
     "@takomo/core": "1.1.0",
-    "@takomo/stacks": "1.1.0",
     "@takomo/stacks-commands": "1.1.0",
     "@takomo/util": "1.1.0",
-    "lodash.flatten": "4.4.0"
+    "lodash.flatten": "4.4.0",
+    "lodash.merge": "4.6.2",
+    "lodash.uniq": "4.5.0",
+    "lodash.uniqby": "4.7.0"
   },
   "devDependencies": {
     "@types/hapi__joi": "16.0.4",
     "@types/jest": "25.1.1",
     "@types/lodash.flatten": "4.4.6",
     "jest": "25.5.3",
-    "jest-mock-extended": "1.0.8",
     "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "typescript": "3.8.3",
+    "@types/lodash.merge": "4.6.6",
+    "@types/lodash.uniq": "4.5.6",
+    "@types/lodash.uniqby": "4.7.6"
   }
 }

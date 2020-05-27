@@ -1,5 +1,5 @@
 import { TakomoCredentialProvider } from "@takomo/core"
-import { Stack } from "@takomo/stacks"
+import { Stack } from "@takomo/stacks-model"
 import { mock } from "jest-mock-extended"
 import { createVariablesForStackTemplate } from "../../../src/stacks/deploy/template"
 

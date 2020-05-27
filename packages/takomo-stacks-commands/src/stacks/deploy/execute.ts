@@ -3,7 +3,7 @@ import {
   defaultCapabilities,
   StackLaunchType,
   StackResult,
-} from "@takomo/stacks"
+} from "@takomo/stacks-model"
 import uuid from "uuid"
 import { TagsHolder } from "./model"
 import { waitForStackCreateOrUpdateToComplete } from "./wait"

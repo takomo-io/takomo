@@ -4,7 +4,7 @@ import {
   resolveCommandOutputBase,
   StackPath,
 } from "@takomo/core"
-import { CommandContext, StackResult } from "@takomo/stacks"
+import { CommandContext, StackResult } from "@takomo/stacks-model"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { deleteStack } from "./delete"
 import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors"

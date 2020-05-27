@@ -6,7 +6,7 @@ import {
   StackGroup,
   StackOperationVariables,
   StackResult,
-} from "@takomo/stacks"
+} from "@takomo/stacks-model"
 import { Logger, StopWatch } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { StacksOperationOutput } from "../../model"

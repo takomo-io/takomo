@@ -24,21 +24,28 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignore-dirs=dist",
+    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
     "@takomo/aws-clients": "1.1.0",
     "@takomo/core": "1.1.0",
-    "@takomo/stacks": "1.1.0",
+    "@takomo/stacks-model": "1.1.0",
+    "@takomo/stacks-hooks": "1.1.0",
+    "@takomo/stacks-context": "1.1.0",
+    "@takomo/stacks-schema": "1.1.0",
     "@takomo/util": "1.1.0",
-    "aws-sdk": "2.656.0"
+    "aws-sdk": "2.656.0",
+    "@hapi/joi": "16.1.8",
+    "uuid": "3.3.3"
   },
   "devDependencies": {
+    "@types/hapi__joi": "16.0.4",
     "@types/jest": "25.1.1",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
     "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "typescript": "3.8.3",
+    "@types/uuid": "3.4.6"
   }
 }

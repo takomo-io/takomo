@@ -5,7 +5,7 @@ import {
   CliUndeployStacksIO,
 } from "@takomo/cli-io"
 import { ConfirmResult, Options } from "@takomo/core"
-import { Secret, SecretName, SecretValue } from "@takomo/stacks"
+import { Secret, SecretName, SecretValue } from "@takomo/stacks-model"
 
 export class TestDeployStacksIO extends CliDeployStacksIO {
   constructor(options: Options) {

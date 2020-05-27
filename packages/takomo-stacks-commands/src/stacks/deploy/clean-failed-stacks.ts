@@ -1,5 +1,5 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandContext, Stack } from "@takomo/stacks"
+import { CommandContext, Stack } from "@takomo/stacks-model"
 import { Logger, TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import uuid from "uuid"

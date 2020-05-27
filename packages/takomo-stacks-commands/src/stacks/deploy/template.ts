@@ -1,6 +1,10 @@
 import { S3Client } from "@takomo/aws-clients"
 import { CommandStatus, Constants } from "@takomo/core"
-import { Stack, StackOperationVariables, StackResult } from "@takomo/stacks"
+import {
+  Stack,
+  StackOperationVariables,
+  StackResult,
+} from "@takomo/stacks-model"
 import { mapToObject, readFileContents, renderTemplate } from "@takomo/util"
 import path from "path"
 import { InitialLaunchContext, TemplateBodyHolder } from "./model"

@@ -1,5 +1,5 @@
 import { CommandStatus } from "@takomo/core"
-import { CommandContext } from "@takomo/stacks"
+import { CommandContext } from "@takomo/stacks-model"
 import { ListStacksInput, ListStacksOutput } from "./model"
 
 export const listStacks = async (

@@ -1,5 +1,5 @@
 import { CommandStatus, ConfirmResult, StackPath } from "@takomo/core"
-import { CommandContext, StackResult } from "@takomo/stacks"
+import { CommandContext, StackResult } from "@takomo/stacks-model"
 import { StopWatch } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"

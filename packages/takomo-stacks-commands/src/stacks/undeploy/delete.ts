@@ -1,6 +1,6 @@
 import { CloudFormationClient, SSMClient } from "@takomo/aws-clients"
 import { CommandStatus } from "@takomo/core"
-import { CommandContext, Stack, StackResult } from "@takomo/stacks"
+import { CommandContext, Stack, StackResult } from "@takomo/stacks-model"
 import { StopWatch } from "@takomo/util"
 import uuid from "uuid"
 import { InitialDeleteContext, UndeployStacksIO } from "./model"

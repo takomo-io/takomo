@@ -1,5 +1,6 @@
 import { CommandStatus } from "@takomo/core"
-import { executeHooks, HookStatus, StackResult } from "@takomo/stacks"
+import { executeHooks } from "@takomo/stacks-hooks"
+import { HookStatus, StackResult } from "@takomo/stacks-model"
 import { deleteSecrets } from "./delete"
 import { InitialDeleteContext, ResultHolder } from "./model"
 

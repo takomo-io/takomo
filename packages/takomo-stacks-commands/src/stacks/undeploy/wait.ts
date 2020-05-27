@@ -1,5 +1,5 @@
 import { CommandStatus } from "@takomo/core"
-import { StackResult } from "@takomo/stacks"
+import { StackResult } from "@takomo/stacks-model"
 import { CloudFormation } from "aws-sdk"
 import { executeAfterDeleteHooks, executeBeforeDeleteHooks } from "./hooks"
 import { ClientTokenHolder, InitialDeleteContext } from "./model"

@@ -1,0 +1,41 @@
+{
+  "name": "@takomo/stacks-model",
+  "version": "1.1.0",
+  "description": "Takomo Stacks Model",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
+    "test": "jest test --passWithNoTests"
+  },
+  "dependencies": {
+    "@takomo/core": "1.1.0",
+    "@takomo/util": "1.1.0",
+    "aws-sdk": "2.656.0"
+  },
+  "devDependencies": {
+    "@types/jest": "25.1.1",
+    "jest": "25.5.3",
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
+  }
+}
