@@ -1,4 +1,4 @@
-import { Stack } from "@takomo/stacks"
+import { Stack } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 
 export class IncompatibleIgnoreDependenciesOptionOnDeleteError extends TakomoError {

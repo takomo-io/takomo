@@ -1,5 +1,5 @@
 import { CommandInput, CommandOutput, CommandPath, IO } from "@takomo/core"
-import { Secret } from "@takomo/stacks"
+import { Secret } from "@takomo/stacks-model"
 import { StackSecretsDiff } from "../../model"
 
 export interface SyncSecretsInput extends CommandInput {

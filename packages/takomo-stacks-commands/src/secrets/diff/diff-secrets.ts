@@ -1,5 +1,5 @@
 import { SSMClient } from "@takomo/aws-clients"
-import { CommandContext } from "@takomo/stacks"
+import { CommandContext } from "@takomo/stacks-model"
 import { StackSecretsDiff } from "../../model"
 
 export const diffSecrets = async (

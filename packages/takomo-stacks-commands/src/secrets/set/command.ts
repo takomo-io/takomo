@@ -3,8 +3,8 @@ import { stackPath } from "@takomo/core"
 import {
   buildConfigContext,
   prepareLaunchContext,
-  secretName,
-} from "@takomo/stacks"
+} from "@takomo/stacks-context"
+import { secretName } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
 import { SetSecretInput, SetSecretIO, SetSecretOutput } from "./model"
 import { setSecretValue } from "./set-secret-value"

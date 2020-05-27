@@ -1,13 +1,13 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
 import { CommandPath, ConfirmResult, Options, StackPath } from "@takomo/core"
+import { DeployStacksIO, StacksOperationOutput } from "@takomo/stacks-commands"
+import { resolveStackLaunchType } from "@takomo/stacks-context"
 import {
   CommandContext,
-  resolveStackLaunchType,
   Stack,
   StackGroup,
   StackLaunchType,
-} from "@takomo/stacks"
-import { DeployStacksIO, StacksOperationOutput } from "@takomo/stacks-commands"
+} from "@takomo/stacks-model"
 import { collectFromHierarchy, green, orange, red, yellow } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { DescribeChangeSetOutput } from "aws-sdk/clients/cloudformation"

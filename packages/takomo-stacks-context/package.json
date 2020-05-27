@@ -1,0 +1,54 @@
+{
+  "name": "@takomo/stacks-context",
+  "version": "1.1.0",
+  "description": "Takomo Stacks Context",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
+    "test": "jest test --passWithNoTests"
+  },
+  "dependencies": {
+    "@takomo/core": "1.1.0",
+    "@takomo/util": "1.1.0",
+    "@takomo/stacks-model": "1.1.0",
+    "@takomo/stacks-config": "1.1.0",
+    "@takomo/stacks-hooks": "1.1.0",
+    "@takomo/stacks-resolvers": "1.1.0",
+    "@takomo/aws-clients": "1.1.0",
+    "@hapi/joi": "16.1.8",
+    "lodash.flatten": "4.4.0",
+    "lodash.uniq": "4.5.0",
+    "aws-sdk": "2.656.0",
+    "readdirp": "3.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "25.1.1",
+    "jest": "25.5.3",
+    "jest-mock-extended": "1.0.8",
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3",
+    "@types/hapi__joi": "16.0.4",
+    "@types/lodash.flatten": "4.4.6",
+    "@types/lodash.uniq": "4.5.6"
+  }
+}

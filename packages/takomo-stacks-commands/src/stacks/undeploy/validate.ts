@@ -1,4 +1,4 @@
-import { CommandContext } from "@takomo/stacks"
+import { CommandContext } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 

@@ -1,6 +1,9 @@
 import Joi from "@hapi/joi"
 import { commandPath } from "@takomo/core"
-import { buildConfigContext, prepareLaunchContext } from "@takomo/stacks"
+import {
+  buildConfigContext,
+  prepareLaunchContext,
+} from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
 import { listStacks } from "./list-stacks"
 import { ListStacksInput, ListStacksIO, ListStacksOutput } from "./model"

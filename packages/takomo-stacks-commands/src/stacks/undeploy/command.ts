@@ -4,7 +4,7 @@ import {
   buildConfigContext,
   ConfigContext,
   prepareDeleteContext,
-} from "@takomo/stacks"
+} from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { executeDeleteContext } from "./execute-delete-context"

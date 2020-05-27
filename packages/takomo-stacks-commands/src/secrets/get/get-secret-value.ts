@@ -1,6 +1,6 @@
 import { SSMClient } from "@takomo/aws-clients"
 import { CommandPath } from "@takomo/core"
-import { CommandContext } from "@takomo/stacks"
+import { CommandContext } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 
 export const getSecretValue = async (

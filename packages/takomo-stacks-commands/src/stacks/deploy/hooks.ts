@@ -1,11 +1,11 @@
 import { CommandStatus } from "@takomo/core"
+import { executeHooks } from "@takomo/stacks-hooks"
 import {
-  executeHooks,
   HookOperation,
   HookStatus,
   StackLaunchType,
   StackResult,
-} from "@takomo/stacks"
+} from "@takomo/stacks-model"
 import { InitialLaunchContext, ResultHolder } from "./model"
 import { prepareCloudFormationTemplate } from "./template"
 

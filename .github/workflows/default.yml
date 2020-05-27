@@ -36,6 +36,8 @@ jobs:
         run: yarn
       - name: Build
         run: yarn build
+      - name: Dependency check
+        run: yarn depcheck  
       - name: Unit tests
         run: yarn test
       - name: Stacks integration tests

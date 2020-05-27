@@ -1,6 +1,6 @@
 import { Options } from "@takomo/core"
-import { Secret } from "@takomo/stacks"
 import { SetSecretIO, SetSecretOutput } from "@takomo/stacks-commands"
+import { Secret } from "@takomo/stacks-model"
 import { CliSecretsIo, SecretOperation } from "./cli-secrets-io"
 
 export class CliSetSecretIO extends CliSecretsIo implements SetSecretIO {

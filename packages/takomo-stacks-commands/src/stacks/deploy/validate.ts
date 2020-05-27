@@ -1,5 +1,5 @@
 import { CommandStatus } from "@takomo/core"
-import { CommandContext, StackResult } from "@takomo/stacks"
+import { CommandContext, StackResult } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { TemplateLocationHolder } from "./model"

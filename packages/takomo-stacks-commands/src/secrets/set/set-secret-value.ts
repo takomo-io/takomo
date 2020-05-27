@@ -1,6 +1,6 @@
 import { SSMClient } from "@takomo/aws-clients"
 import { CommandStatus } from "@takomo/core"
-import { CommandContext } from "@takomo/stacks"
+import { CommandContext } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import { SetSecretInput, SetSecretIO, SetSecretOutput } from "./model"
 

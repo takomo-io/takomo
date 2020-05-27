@@ -1,7 +1,12 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandContext, Stack, StackResult, StackLaunchType, resolveStackLaunchType } from "@takomo/stacks"
+import { resolveStackLaunchType } from "@takomo/stacks-context"
+import {
+  CommandContext,
+  Stack,
+  StackLaunchType,
+  StackResult,
+} from "@takomo/stacks-model"
 import { StopWatch } from "@takomo/util"
-
 import { DeployStacksIO } from "./model"
 import { waitForDependenciesToComplete } from "./wait"
 

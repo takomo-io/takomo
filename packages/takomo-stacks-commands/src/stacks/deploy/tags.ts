@@ -1,4 +1,4 @@
-import { StackResult } from "@takomo/stacks"
+import { StackResult } from "@takomo/stacks-model"
 import { createOrUpdateStack } from "./execute"
 import { ParameterHolder } from "./model"
 import { reviewChanges } from "./review"

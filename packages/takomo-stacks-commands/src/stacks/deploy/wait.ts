@@ -1,5 +1,9 @@
 import { CommandStatus } from "@takomo/core"
-import { StackLaunchType, StackResult, StackResultReason } from "@takomo/stacks"
+import {
+  StackLaunchType,
+  StackResult,
+  StackResultReason,
+} from "@takomo/stacks-model"
 import CloudFormation from "aws-sdk/clients/cloudformation"
 import { executeAfterLaunchHooks, executeBeforeLaunchHooks } from "./hooks"
 import { ClientTokenHolder, InitialLaunchContext } from "./model"
