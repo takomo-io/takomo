@@ -584,9 +584,6 @@ export interface StackResult {
 
 export type StackResultReason = string
 
-// import { CommandContext } from "../context"
-// import { StackOperationVariables } from "../model"
-
 export type HookType = string
 
 /**
@@ -779,11 +776,6 @@ export class HookExecutor implements Hook {
 
 export type HookInitializer = (props: any) => Promise<Hook>
 export type HookInitializersMap = Map<HookType, HookInitializer>
-
-// import { IamRoleArn, StackPath } from "@takomo/core"
-// import { Logger } from "@takomo/util"
-// import { CommandContext } from "../context"
-// import { ParameterName, ResolverName, Stack } from "../model"
 
 type GetterOrConst<T> = () => T | T
 
