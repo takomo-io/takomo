@@ -1,5 +1,6 @@
 import { Options } from "@takomo/core"
 import { Stack, StackGroup } from "@takomo/stacks-model"
+import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { ConsoleLogger, LogLevel, TemplateEngine } from "@takomo/util"
 import { buildStackGroup } from "../../../../src/config/build"
 import { mockTakomoCredentialProvider } from "../../../mocks"
@@ -23,12 +24,14 @@ const byStackPath = (a: Stack, b: Stack) =>
 const byRegion = (a: Stack, b: Stack) =>
   a.getRegion().localeCompare(b.getRegion())
 
+const logger = new ConsoleLogger(options.getLogLevel())
+
 const build = (dirPath: string): Promise<StackGroup> =>
   buildStackGroup(
-    new ConsoleLogger(options.getLogLevel()),
+    logger,
     mockTakomoCredentialProvider(),
     new Map(),
-    new Map(),
+    new ResolverRegistry(logger),
     new Map(),
     options,
     { var: {}, env: {}, context: { projectDir: "" } },
