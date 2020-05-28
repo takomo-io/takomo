@@ -1,7 +1,7 @@
 {
   "name": "takomo",
   "version": "1.2.0",
-  "description": "Organize, configure and deploy your CloudFormation stacks",
+  "description": "Organize, configure and deploy CloudFormation stacks. Manage AWS organization.",
   "author": "henri@takomo.io",
   "license": "MIT",
   "os": [
@@ -23,7 +23,12 @@
     "aws",
     "cloudformation",
     "cfn",
-    "deploy"
+    "deploy",
+    "aws organizations",
+    "cli",
+    "cloudformation templates",
+    "cloudformation stacks",
+    "cloudformation deployment"
   ],
   "repository": {
     "type": "git",
@@ -38,17 +43,7 @@
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
     "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
-    "integration-test-stacks": "jest integration-tests/stacks",
-    "integration-test-deployment-targets": "jest integration-tests/deployment-targets",
-    "integration-test-organization-a": "jest integration-tests/organization-a",
-    "integration-test-organization-b": "jest integration-tests/organization-b",
-    "ci-unit-test": "jest unit-tests --runInBand --ci",
-    "ci-integration-test-stacks": "jest integration-tests/stacks --maxWorkers=4 --ci",
-    "ci-integration-test-deployment-targets": "jest integration-tests/deployment-targets --maxWorkers=4 --ci",
-    "ci-integration-test-organization-a": "jest integration-tests/organization-a --maxWorkers=1 --ci",
-    "ci-integration-test-organization-b": "jest integration-tests/organization-b --maxWorkers=1 --ci",
-    "postversion": "git push --tags",
-    "api-docs": "typedoc"
+    "test": "jest test --passWithNoTests"
   },
   "bin": {
     "tkm": "./bin/tkm",
