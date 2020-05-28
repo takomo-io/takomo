@@ -17,7 +17,7 @@ export class StackOutputResolver implements Resolver {
     ctx,
     logger,
     parameterName,
-  }: ResolverInput): Promise<string> => {
+  }: ResolverInput): Promise<any> => {
     logger.debugObject(
       `Resolving value for parameter '${parameterName}' using stack-output resolver:`,
       { stack: this.stack, output: this.output },

@@ -1,8 +1,6 @@
 import { Constants } from "@takomo/core"
-import {
-  HookInitializersMap,
-  ResolverInitializersMap,
-} from "@takomo/stacks-model"
+import { HookInitializersMap } from "@takomo/stacks-model"
+import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   dirExists,
   Logger,
@@ -16,45 +14,25 @@ import readdirp from "readdirp"
 const loadCustomResolvers = async (
   projectDir: string,
   logger: Logger,
-  resolverInitializers: ResolverInitializersMap,
+  resolverRegistry: ResolverRegistry,
 ): Promise<void> => {
   const resolversDirPath = path.join(projectDir, Constants.RESOLVERS_DIR)
   if (await dirExists(resolversDirPath)) {
-    logger.debug(`Found resolvers dir: ${resolversDirPath}`)
+    logger.debug(`Resolvers dir not found: ${resolversDirPath}`)
+    return
+  }
 
-    const resolverFiles = await readdirp.promise(resolversDirPath, {
-      alwaysStat: true,
-      depth: 100,
-      type: "files",
-      fileFilter: (e) => e.basename.endsWith(".js"),
-    })
+  logger.debug(`Found resolvers dir: ${resolversDirPath}`)
 
-    for (const resolverFile of resolverFiles) {
-      // eslint-disable-next-line
-      const { name, init } = require(resolverFile.fullPath)
-      if (!name) {
-        throw new TakomoError(
-          `Resolver name not defined in ${resolverFile.fullPath}`,
-        )
-      }
+  const resolverFiles = await readdirp.promise(resolversDirPath, {
+    alwaysStat: true,
+    depth: 100,
+    type: "files",
+    fileFilter: (e) => e.basename.endsWith(".js"),
+  })
 
-      if (resolverInitializers.has(name)) {
-        throw new TakomoError(
-          `Resolver name '${name}' defined in ${resolverFile.fullPath} is already registered`,
-        )
-      }
-
-      if (!init) {
-        throw new TakomoError(
-          `Resolver init not defined in ${resolverFile.fullPath}`,
-        )
-      }
-
-      logger.debug(`Register resolver: ${name}`)
-      resolverInitializers.set(name, init)
-    }
-  } else {
-    logger.debug("Resolvers dir not found")
+  for (const resolverFile of resolverFiles) {
+    await resolverRegistry.registerProviderFromFile(resolverFile.fullPath)
   }
 }
 
@@ -163,12 +141,12 @@ const loadCustomPartials = async (
 export const loadExtensions = async (
   projectDir: string,
   logger: Logger,
-  resolverInitializers: ResolverInitializersMap,
+  resolverRegistry: ResolverRegistry,
   hookInitializers: HookInitializersMap,
   te: TemplateEngine,
 ): Promise<void> => {
   await Promise.all([
-    loadCustomResolvers(projectDir, logger, resolverInitializers),
+    loadCustomResolvers(projectDir, logger, resolverRegistry),
     loadCustomHelpers(projectDir, logger, te),
     loadCustomHooks(projectDir, logger, hookInitializers),
     loadCustomPartials(projectDir, logger, te),

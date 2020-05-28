@@ -1,8 +1,4 @@
-import {
-  ResolverInitializer,
-  ResolverInitializersMap,
-  ResolverName,
-} from "@takomo/stacks-model"
+import { Resolver, ResolverProvider } from "@takomo/stacks-model"
 import {
   CmdResolver,
   ExternalStackOutputResolver,
@@ -11,15 +7,28 @@ import {
   StaticResolver,
 } from "./impl"
 export { ListResolver } from "./impl"
+export { ResolverRegistry } from "./resolver-registry"
 
-export const coreResolverInitializers = (): ResolverInitializersMap =>
-  new Map<ResolverName, ResolverInitializer>([
-    ["stack-output", async (props: any) => new StackOutputResolver(props)],
-    [
-      "external-stack-output",
-      async (props: any) => new ExternalStackOutputResolver(props),
-    ],
-    ["cmd", async (props: any) => new CmdResolver(props)],
-    ["secret", async (props: any) => new SecretResolver(props)],
-    ["static", async (props: any) => new StaticResolver(props)],
-  ])
+export const coreResolverProviders = (): ResolverProvider[] => [
+  {
+    name: "stack-output",
+    init: async (props: any): Promise<Resolver> =>
+      new StackOutputResolver(props),
+  },
+  {
+    name: "external-stack-output",
+    init: async (props: any) => new ExternalStackOutputResolver(props),
+  },
+  {
+    name: "cmd",
+    init: async (props: any) => new CmdResolver(props),
+  },
+  {
+    name: "secret",
+    init: async (props: any) => new SecretResolver(props),
+  },
+  {
+    name: "static",
+    init: async (props: any) => new StaticResolver(props),
+  },
+]

@@ -819,8 +819,7 @@ export interface Resolver {
   confidential?: GetterOrConst<boolean>
 }
 
-export type ResolverInitializer = (props: any) => Promise<Resolver>
-export type ResolverInitializersMap = Map<ResolverName, ResolverInitializer>
+export type ResolverProvidersMap = Map<ResolverName, ResolverProvider>
 
 export interface ResolverInput {
   readonly stack: Stack
@@ -828,6 +827,12 @@ export interface ResolverInput {
   readonly parameterName: ParameterName
   readonly listParameterIndex: number
   readonly logger: Logger
+}
+
+export interface ResolverProvider {
+  name: ResolverName | (() => ResolverName)
+  init: (props: any) => Promise<Resolver>
+  validate?: (props: any) => Promise<void>
 }
 
 /**
