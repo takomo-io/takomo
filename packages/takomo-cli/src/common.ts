@@ -23,6 +23,7 @@ import dotenv from "dotenv"
 import dotenvExpand from "dotenv-expand"
 import Table from "easy-table"
 import merge from "lodash.merge"
+import os from "os"
 import path from "path"
 import prettyMs from "pretty-ms"
 
@@ -256,6 +257,20 @@ export const onError = (e: any): void => {
     console.log(red(e.stack))
   }
 
+  // eslint-disable-next-line
+  const packageJson = require("../package.json")
+  const version = packageJson.version
+
+  console.log()
+  console.log()
+  console.log(red("Your environment:"))
+  console.log(red(`  OS:              ${os.platform()}`))
+  console.log(red(`  Node version:    ${process.version}`))
+  console.log(red(`  Takomo version:  ${version}`))
+  console.log()
+  console.log(red("Get support:"))
+  console.log(red(`  Docs:  https://takomo.io`))
+  console.log(red(`  Bugs:  https://github.com/takomo-io/takomo/issues`))
   console.log()
   process.exit(1)
 }
