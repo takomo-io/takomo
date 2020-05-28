@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Takomo Organization",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -29,19 +29,19 @@
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
-    "@takomo/aws-clients": "1.1.0",
-    "@takomo/config-sets": "1.1.0",
-    "@takomo/core": "1.1.0",
-    "@takomo/stacks-commands": "1.1.0",
-    "@takomo/util": "1.1.0",
+    "@takomo/aws-clients": "1.2.0",
+    "@takomo/config-sets": "1.2.0",
+    "@takomo/core": "1.2.0",
+    "@takomo/stacks-commands": "1.2.0",
+    "@takomo/util": "1.2.0",
+    "aws-sdk": "2.656.0",
     "lodash.flatten": "4.4.0",
     "lodash.intersection": "4.4.0",
     "lodash.merge": "4.6.2",
     "lodash.uniq": "4.5.0",
     "lodash.uniqby": "4.7.0",
     "lodash.without": "4.4.0",
-    "readdirp": "3.3.0",
-    "aws-sdk": "2.656.0"
+    "readdirp": "3.3.0"
   },
   "devDependencies": {
     "@types/hapi__joi": "16.0.4",

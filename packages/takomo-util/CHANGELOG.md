@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/takomo-io/takomo/compare/v1.1.0...v1.2.0) (2020-05-28)
+
+
+### Features
+
+* improve Handlebars error messages ([#33](https://github.com/takomo-io/takomo/issues/33)) ([875c586](https://github.com/takomo-io/takomo/commit/875c58647e925350dce58052e1f0d93c68152ad4)), closes [#32](https://github.com/takomo-io/takomo/issues/32)
+
+
+
+
+
 # [1.1.0](https://github.com/takomo-io/takomo/compare/v1.0.0...v1.1.0) (2020-05-18)
 
 

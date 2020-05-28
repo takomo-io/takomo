@@ -1,6 +1,6 @@
 {
   "name": "@takomo/config-sets",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Takomo Config Sets",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
-    "@takomo/core": "1.1.0",
-    "@takomo/stacks-commands": "1.1.0",
-    "@takomo/util": "1.1.0"
+    "@takomo/core": "1.2.0",
+    "@takomo/stacks-commands": "1.2.0",
+    "@takomo/util": "1.2.0"
   },
   "devDependencies": {
     "@types/hapi__joi": "16.0.4",

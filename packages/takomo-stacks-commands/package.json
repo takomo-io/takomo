@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-commands",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Takomo Stacks Commands",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,24 +28,24 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/aws-clients": "1.1.0",
-    "@takomo/core": "1.1.0",
-    "@takomo/stacks-model": "1.1.0",
-    "@takomo/stacks-hooks": "1.1.0",
-    "@takomo/stacks-context": "1.1.0",
-    "@takomo/stacks-schema": "1.1.0",
-    "@takomo/util": "1.1.0",
-    "aws-sdk": "2.656.0",
     "@hapi/joi": "16.1.8",
+    "@takomo/aws-clients": "1.2.0",
+    "@takomo/core": "1.2.0",
+    "@takomo/stacks-context": "1.2.0",
+    "@takomo/stacks-hooks": "1.2.0",
+    "@takomo/stacks-model": "1.2.0",
+    "@takomo/stacks-schema": "1.2.0",
+    "@takomo/util": "1.2.0",
+    "aws-sdk": "2.656.0",
     "uuid": "3.3.3"
   },
   "devDependencies": {
     "@types/hapi__joi": "16.0.4",
     "@types/jest": "25.1.1",
+    "@types/uuid": "3.4.6",
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
     "ts-jest": "25.2.1",
-    "typescript": "3.8.3",
-    "@types/uuid": "3.4.6"
+    "typescript": "3.8.3"
   }
 }

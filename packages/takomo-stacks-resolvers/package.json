@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-resolvers",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Takomo Stacks Resolvers",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,18 +28,18 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/core": "1.1.0",
-    "@takomo/stacks-model": "1.1.0",
-    "@takomo/aws-clients": "1.1.0",
-    "@takomo/util": "1.1.0",
+    "@takomo/aws-clients": "1.2.0",
+    "@takomo/core": "1.2.0",
+    "@takomo/stacks-model": "1.2.0",
+    "@takomo/util": "1.2.0",
     "lodash.flatten": "4.4.0"
   },
   "devDependencies": {
     "@types/jest": "25.1.1",
-    "jest": "25.5.3",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3",
     "@types/lodash.flatten": "4.4.6",
-    "jest-mock-extended": "1.0.8"
+    "jest": "25.5.3",
+    "jest-mock-extended": "1.0.8",
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.3"
   }
 }
