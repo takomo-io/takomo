@@ -1,14 +1,14 @@
 import { Resolver, ResolverName, ResolverProvider } from "@takomo/stacks-model"
 import { Logger, TakomoError, TakomoErrorOptions } from "@takomo/util"
 
-class InvalidResolverProviderConfigurationFileError extends TakomoError {
+class InvalidResolverProviderConfigurationError extends TakomoError {
   constructor(
-    pathToResolverFile: string,
+    sourceDescription: string,
     details: string,
     options?: TakomoErrorOptions,
   ) {
     super(
-      `Invalid resolver provider configuration in file: ${pathToResolverFile}\n\n${details}`,
+      `Invalid resolver provider configuration in ${sourceDescription}:\n\n${details}`,
       options,
     )
   }
@@ -22,18 +22,46 @@ export class ResolverRegistry {
     this.logger = logger
   }
 
+  hasProvider = (name: ResolverName): boolean => this.providers.has(name)
+
+  initResolver = async (name: ResolverName, props: any): Promise<Resolver> => {
+    if (props.confidential === true) {
+      this.logger.debug(`Init resolver '${name}' with properties: <concealed>`)
+    } else {
+      this.logger.debugObject(`Init resolver '${name}' with properties:`, props)
+    }
+
+    const provider = this.getProvider(name)
+    if (provider.validate) {
+      await provider.validate(props)
+    }
+
+    return provider.init(props)
+  }
+
   registerProviderFromFile = async (
     pathToResolverFile: string,
   ): Promise<void> => {
-    this.logger.debug(
-      `Register resolver provider from file: ${pathToResolverFile}`,
-    )
-
     // eslint-disable-next-line
     const provider = require(pathToResolverFile)
+    return this.registerProvider(provider, `file: ${pathToResolverFile}`)
+  }
+
+  registerBuiltInProvider = async (
+    provider: ResolverProvider,
+  ): Promise<void> => {
+    return this.registerProvider(provider, "built-in providers")
+  }
+
+  private registerProvider = (
+    provider: any,
+    sourceDescription: string,
+  ): void => {
+    this.logger.debug(`Register resolver provider from ${sourceDescription}`)
+
     if (provider.name === undefined || provider.name === null) {
-      throw new InvalidResolverProviderConfigurationFileError(
-        pathToResolverFile,
+      throw new InvalidResolverProviderConfigurationError(
+        sourceDescription,
         "name property not defined",
         {
           info:
@@ -44,37 +72,37 @@ export class ResolverRegistry {
     }
 
     if (provider.init === undefined || provider.init === null) {
-      throw new InvalidResolverProviderConfigurationFileError(
-        pathToResolverFile,
+      throw new InvalidResolverProviderConfigurationError(
+        sourceDescription,
         "init function not defined",
       )
     }
 
     if (typeof provider.init !== "function") {
-      throw new InvalidResolverProviderConfigurationFileError(
-        pathToResolverFile,
+      throw new InvalidResolverProviderConfigurationError(
+        sourceDescription,
         "init is not a function",
       )
     }
 
     if (provider.validate && typeof provider.validate !== "function") {
-      throw new InvalidResolverProviderConfigurationFileError(
-        pathToResolverFile,
+      throw new InvalidResolverProviderConfigurationError(
+        sourceDescription,
         "validate is not a function",
       )
     }
 
     if (typeof provider.init !== "function") {
-      throw new InvalidResolverProviderConfigurationFileError(
-        pathToResolverFile,
+      throw new InvalidResolverProviderConfigurationError(
+        sourceDescription,
         "init function not defined",
       )
     }
 
     const nameType = typeof provider.name
     if (nameType !== "string" && nameType !== "function") {
-      throw new InvalidResolverProviderConfigurationFileError(
-        pathToResolverFile,
+      throw new InvalidResolverProviderConfigurationError(
+        sourceDescription,
         "name property has invalid type",
         {
           info:
@@ -84,31 +112,19 @@ export class ResolverRegistry {
       )
     }
 
-    this.registerProvider(provider)
-  }
-
-  registerProvider = (provider: ResolverProvider): void => {
     const name =
       typeof provider.name === "function" ? provider.name() : provider.name
     if (this.hasProvider(name)) {
-      throw new Error(
+      throw new InvalidResolverProviderConfigurationError(
+        sourceDescription,
         `Resolver provider already registered with name '${name}'`,
       )
     }
 
+    this.logger.debug(
+      `Registered resolver provider from ${sourceDescription} with name '${name}'`,
+    )
     this.providers.set(name, provider)
-  }
-
-  hasProvider = (name: ResolverName): boolean => this.providers.has(name)
-
-  initResolver = async (name: ResolverName, props: any): Promise<Resolver> => {
-    this.logger.debugObject(`Init resolver '${name}':`, props)
-    const provider = this.getProvider(name)
-    if (provider.validate) {
-      await provider.validate(props)
-    }
-
-    return provider.init(props)
   }
 
   private getProvider = (name: ResolverName): ResolverProvider => {

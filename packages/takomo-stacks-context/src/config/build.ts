@@ -507,7 +507,9 @@ export const buildConfigContext = async (
   const hookInitializers = coreHookInitializers()
 
   const resolverRegistry = new ResolverRegistry(logger)
-  coreResolverProviders().forEach((p) => resolverRegistry.registerProvider(p))
+  coreResolverProviders().forEach((p) =>
+    resolverRegistry.registerBuiltInProvider(p),
+  )
 
   await loadExtensions(
     projectDir,
