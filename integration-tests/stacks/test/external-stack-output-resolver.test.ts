@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("External stack output resolver", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -59,7 +59,7 @@ describe("External stack output resolver", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(

@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Cmd Resolver", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -56,7 +56,7 @@ describe("Cmd Resolver", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(

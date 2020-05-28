@@ -17,7 +17,7 @@ const loadCustomResolvers = async (
   resolverRegistry: ResolverRegistry,
 ): Promise<void> => {
   const resolversDirPath = path.join(projectDir, Constants.RESOLVERS_DIR)
-  if (await dirExists(resolversDirPath)) {
+  if (!(await dirExists(resolversDirPath))) {
     logger.debug(`Resolvers dir not found: ${resolversDirPath}`)
     return
   }

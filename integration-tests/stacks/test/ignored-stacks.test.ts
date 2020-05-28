@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Ignored stacks", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(

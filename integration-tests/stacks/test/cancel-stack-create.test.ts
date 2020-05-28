@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Cancelling stack create", () => {
   test(
-    "Cancel launch",
+    "Cancel deploy",
     async () => {
       const { options, variables, watch } = await createOptions(false)
       const output = await deployStacksCommand(
@@ -53,7 +53,7 @@ describe("Cancelling stack create", () => {
   )
 
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -74,7 +74,7 @@ describe("Cancelling stack create", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(

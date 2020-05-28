@@ -9,7 +9,7 @@ import { TIMEOUT } from "./test-constants"
 
 const createOptions = async () =>
   initOptionsAndVariables({
-    log: "info",
+    log: "debug",
     yes: true,
     dir: "configs/custom-resolvers",
   })
@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Custom resolvers", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -56,7 +56,7 @@ describe("Custom resolvers", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(

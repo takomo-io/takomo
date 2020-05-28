@@ -195,7 +195,7 @@ describe("Secrets", () => {
   )
 
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -211,13 +211,12 @@ describe("Secrets", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(
@@ -233,7 +232,6 @@ describe("Secrets", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )

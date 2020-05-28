@@ -34,7 +34,7 @@ beforeAll(async () => {
 
 describe("Networking", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -113,7 +113,7 @@ describe("Networking", () => {
   )
 
   test(
-    "Launch with ignore dependencies",
+    "Deploy with ignore dependencies",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -139,7 +139,7 @@ describe("Networking", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(
