@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Parameters", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -51,7 +51,6 @@ describe("Parameters", () => {
       expect(output.results[0].success).toBeTruthy()
       expect(output.results[0].status).toBe(CommandStatus.SUCCESS)
       expect(output.results[0].reason).toBe("CREATE_SUCCESS")
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )

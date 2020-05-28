@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Multi-account", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -60,7 +60,7 @@ describe("Multi-account", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(

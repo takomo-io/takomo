@@ -36,7 +36,7 @@ beforeAll(async () => {
 
 describe("Timeout", () => {
   test(
-    "Creating stack should fail due timeout",
+    "Deploy should fail due timeout",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=true",
@@ -63,7 +63,7 @@ describe("Timeout", () => {
   )
 
   test(
-    "Creating stack again should succeed when the failing resources are not created",
+    "Deploying again should succeed when the failing resources are not created",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=false",
@@ -89,7 +89,7 @@ describe("Timeout", () => {
   )
 
   test(
-    "Updating stack should fail due timeout",
+    "Deploying should fail due timeout",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=true",
@@ -116,7 +116,7 @@ describe("Timeout", () => {
   )
 
   test(
-    "Updating stack again should succeed when the failing resources are not created",
+    "Deploying stack again should succeed when the failing resources are not created",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=false",
@@ -142,7 +142,7 @@ describe("Timeout", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=false",

@@ -1,4 +1,4 @@
-interface TakomoErrorOptions {
+export interface TakomoErrorOptions {
   readonly info?: string
   readonly instructions?: string[]
 }

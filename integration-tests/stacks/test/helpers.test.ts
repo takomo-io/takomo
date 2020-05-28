@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Helpers", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -51,13 +51,12 @@ describe("Helpers", () => {
       expect(output.results[0].success).toBeTruthy()
       expect(output.results[0].status).toBe(CommandStatus.SUCCESS)
       expect(output.results[0].reason).toBe("CREATE_SUCCESS")
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(
@@ -73,7 +72,6 @@ describe("Helpers", () => {
       )
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
-      // TODO: Add more assertions
     },
     TIMEOUT,
   )

@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 describe("Simple", () => {
   test(
-    "Launch",
+    "Deploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -56,7 +56,7 @@ describe("Simple", () => {
   )
 
   test(
-    "Updating stack without changes",
+    "Deploying without changes",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
@@ -80,7 +80,7 @@ describe("Simple", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(

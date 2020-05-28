@@ -17,13 +17,11 @@ import {
   parseStackConfigFile,
   parseStackGroupConfigFile,
 } from "@takomo/stacks-config"
+import { HookInitializersMap, Stack, StackGroup } from "@takomo/stacks-model"
 import {
-  HookInitializersMap,
-  ResolverInitializersMap,
-  Stack,
-  StackGroup,
-} from "@takomo/stacks-model"
-import { coreResolverInitializers } from "@takomo/stacks-resolvers"
+  coreResolverProviders,
+  ResolverRegistry,
+} from "@takomo/stacks-resolvers"
 import {
   dirExists,
   fileExists,
@@ -157,7 +155,7 @@ const buildStack = async (
   logger: Logger,
   defaultCredentialProvider: TakomoCredentialProvider,
   credentialsProviders: Map<IamRoleArn, TakomoCredentialProvider>,
-  resolverInitializers: ResolverInitializersMap,
+  resolverRegistry: ResolverRegistry,
   hookInitializers: HookInitializersMap,
   options: Options,
   variables: Variables,
@@ -204,7 +202,7 @@ const buildStack = async (
 
   const parameters = await buildParameters(
     stackConfig.parameters,
-    resolverInitializers,
+    resolverRegistry,
   )
 
   uniq(
@@ -394,7 +392,7 @@ export const buildStackGroup = async (
   logger: Logger,
   credentialProvider: TakomoCredentialProvider,
   credentialsProviders: Map<IamRoleArn, TakomoCredentialProvider>,
-  resolverInitializers: ResolverInitializersMap,
+  resolverRegistry: ResolverRegistry,
   hookInitializers: HookInitializersMap,
   options: Options,
   variables: Variables,
@@ -441,7 +439,7 @@ export const buildStackGroup = async (
         logger,
         credentialProvider,
         credentialsProviders,
-        resolverInitializers,
+        resolverRegistry,
         hookInitializers,
         options,
         variables,
@@ -462,7 +460,7 @@ export const buildStackGroup = async (
         logger,
         credentialProvider,
         credentialsProviders,
-        resolverInitializers,
+        resolverRegistry,
         hookInitializers,
         options,
         variables,
@@ -507,12 +505,16 @@ export const buildConfigContext = async (
 
   const templateEngine = new TemplateEngine()
   const hookInitializers = coreHookInitializers()
-  const resolverInitializers = coreResolverInitializers()
+
+  const resolverRegistry = new ResolverRegistry(logger)
+  coreResolverProviders().forEach((p) =>
+    resolverRegistry.registerBuiltInProvider(p),
+  )
 
   await loadExtensions(
     projectDir,
     logger,
-    resolverInitializers,
+    resolverRegistry,
     hookInitializers,
     templateEngine,
   )
@@ -523,7 +525,7 @@ export const buildConfigContext = async (
     logger,
     credentialProvider,
     credentialProviders,
-    resolverInitializers,
+    resolverRegistry,
     hookInitializers,
     options,
     variables,
@@ -541,7 +543,7 @@ export const buildConfigContext = async (
 
   return new ConfigContext({
     rootStackGroup,
-    credentialProvider: credentialProvider,
+    credentialProvider,
     options,
     variables,
     logger,

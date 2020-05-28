@@ -1,14 +1,10 @@
-import {
-  ParameterName,
-  ResolverExecutor,
-  ResolverInitializersMap,
-} from "@takomo/stacks-model"
-import { ListResolver } from "@takomo/stacks-resolvers"
+import { ParameterName, ResolverExecutor } from "@takomo/stacks-model"
+import { ListResolver, ResolverRegistry } from "@takomo/stacks-resolvers"
 
 const initializeResolver = async (
   paramName: ParameterName,
   paramConfig: any,
-  initializers: ResolverInitializersMap,
+  resolverRegistry: ResolverRegistry,
 ): Promise<ResolverExecutor> => {
   const isStatic =
     typeof paramConfig === "string" ||
@@ -17,29 +13,26 @@ const initializeResolver = async (
   const resolverType = isStatic ? "static" : paramConfig.resolver
 
   if (!resolverType) {
-    throw new Error(`Parameter ${paramName} has no resolver property`)
+    throw new Error(`Parameter '${paramName}' has no resolver property`)
   }
 
   if (typeof resolverType !== "string") {
     throw new Error(
-      `Parameter ${paramName} has resolver property of invalid type, expected string`,
+      `Parameter '${paramName}' has resolver property of invalid type, expected string`,
     )
   }
 
-  const initializer = initializers.get(resolverType)
-  if (!initializer) {
-    throw new Error(
-      `Parameter ${paramName} has unknown resolver ${resolverType}`,
-    )
-  }
+  const resolver = await resolverRegistry.initResolver(
+    resolverType,
+    paramConfig,
+  )
 
-  const resolver = await initializer(paramConfig)
   return new ResolverExecutor(resolverType, resolver, paramConfig)
 }
 
 export const buildParameters = async (
   parameters: Map<ParameterName, any>,
-  initializers: ResolverInitializersMap,
+  resolverRegistry: ResolverRegistry,
 ): Promise<Map<ParameterName, ResolverExecutor>> => {
   const parametersMap = new Map<ParameterName, ResolverExecutor>()
 
@@ -47,7 +40,7 @@ export const buildParameters = async (
     if (Array.isArray(paramConfig)) {
       const resolvers = await Promise.all(
         paramConfig.map((item, index) =>
-          initializeResolver(`${paramName}[${index}]`, item, initializers),
+          initializeResolver(`${paramName}[${index}]`, item, resolverRegistry),
         ),
       )
 
@@ -59,7 +52,7 @@ export const buildParameters = async (
       const resolver = await initializeResolver(
         paramName,
         paramConfig,
-        initializers,
+        resolverRegistry,
       )
 
       parametersMap.set(paramName, resolver)

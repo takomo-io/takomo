@@ -35,7 +35,7 @@ beforeAll(async () => {
 
 describe("Failing stack", () => {
   test(
-    "Launch should fail",
+    "Deploy should fail",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=true",
@@ -61,7 +61,7 @@ describe("Failing stack", () => {
   )
 
   test(
-    "Launching again should succeed when the failing resources are not created",
+    "Deploying again should succeed when the failing resources are not created",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=false",
@@ -85,7 +85,7 @@ describe("Failing stack", () => {
   )
 
   test(
-    "Delete",
+    "Undeploy",
     async () => {
       const { options, variables, watch } = await createOptions([
         "create_wait_condition=false",

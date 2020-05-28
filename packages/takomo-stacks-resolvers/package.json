@@ -31,6 +31,7 @@
     "@takomo/core": "1.1.0",
     "@takomo/stacks-model": "1.1.0",
     "@takomo/aws-clients": "1.1.0",
+    "@takomo/util": "1.1.0",
     "lodash.flatten": "4.4.0"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "jest": "25.5.3",
     "ts-jest": "25.2.1",
     "typescript": "3.8.3",
-    "@types/lodash.flatten": "4.4.6"
+    "@types/lodash.flatten": "4.4.6",
+    "jest-mock-extended": "1.0.8"
   }
 }
