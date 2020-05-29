@@ -35,7 +35,7 @@
     "lodash.flatten": "4.4.0"
   },
   "devDependencies": {
-    "@types/jest": "25.1.1",
+    "@types/jest": "25.2.3",
     "@types/lodash.flatten": "4.4.6",
     "jest": "26.0.1",
     "jest-mock-extended": "1.0.8",

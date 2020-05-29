@@ -37,7 +37,7 @@
     "uuid": "3.3.3"
   },
   "devDependencies": {
-    "@types/jest": "25.1.1",
+    "@types/jest": "25.2.3",
     "@types/lodash.flatten": "4.4.6",
     "@types/lodash.last": "3.0.6",
     "@types/lodash.takerightwhile": "4.6.6",
