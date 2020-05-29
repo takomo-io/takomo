@@ -48,7 +48,7 @@
     "@types/lodash.merge": "4.6.6",
     "@types/yargs": "13.0.3",
     "jest": "25.5.3",
-    "ts-jest": "25.2.1",
+    "ts-jest": "26.0.0",
     "typescript": "3.9.3"
   }
 }

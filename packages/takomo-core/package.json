@@ -50,7 +50,7 @@
     "@types/node": "12.12.17",
     "@types/semver": "7.1.0",
     "jest": "25.5.3",
-    "ts-jest": "25.2.1",
+    "ts-jest": "26.0.0",
     "typescript": "3.9.3"
   }
 }
