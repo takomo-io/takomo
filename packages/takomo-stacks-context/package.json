@@ -36,7 +36,7 @@
     "@takomo/stacks-model": "1.2.1",
     "@takomo/stacks-resolvers": "1.2.1",
     "@takomo/util": "1.2.1",
-    "aws-sdk": "2.656.0",
+    "aws-sdk": "2.686.0",
     "lodash.flatten": "4.4.0",
     "lodash.uniq": "4.5.0",
     "readdirp": "3.3.0"

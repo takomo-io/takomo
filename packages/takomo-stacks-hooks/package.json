@@ -32,7 +32,7 @@
     "@takomo/core": "1.2.1",
     "@takomo/stacks-model": "1.2.1",
     "@takomo/util": "1.2.1",
-    "aws-sdk": "2.656.0"
+    "aws-sdk": "2.686.0"
   },
   "devDependencies": {
     "@types/hapi__joi": "16.0.4",

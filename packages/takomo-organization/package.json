@@ -34,7 +34,7 @@
     "@takomo/core": "1.2.1",
     "@takomo/stacks-commands": "1.2.1",
     "@takomo/util": "1.2.1",
-    "aws-sdk": "2.656.0",
+    "aws-sdk": "2.686.0",
     "lodash.flatten": "4.4.0",
     "lodash.intersection": "4.4.0",
     "lodash.merge": "4.6.2",
