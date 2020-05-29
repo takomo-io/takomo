@@ -40,6 +40,6 @@
     "jest": "25.5.3",
     "jest-mock-extended": "1.0.8",
     "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "typescript": "3.9.3"
   }
 }

@@ -44,6 +44,6 @@
     "@types/uuid": "3.4.6",
     "jest": "25.5.3",
     "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "typescript": "3.9.3"
   }
 }
