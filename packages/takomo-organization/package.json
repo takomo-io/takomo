@@ -34,7 +34,7 @@
     "@takomo/core": "1.2.1",
     "@takomo/stacks-commands": "1.2.1",
     "@takomo/util": "1.2.1",
-    "aws-sdk": "2.656.0",
+    "aws-sdk": "2.686.0",
     "lodash.flatten": "4.4.0",
     "lodash.intersection": "4.4.0",
     "lodash.merge": "4.6.2",
@@ -45,15 +45,15 @@
   },
   "devDependencies": {
     "@types/hapi__joi": "16.0.4",
-    "@types/jest": "25.1.1",
+    "@types/jest": "25.2.3",
     "@types/lodash.flatten": "4.4.6",
     "@types/lodash.intersection": "4.4.6",
     "@types/lodash.merge": "4.6.6",
     "@types/lodash.uniq": "4.5.6",
     "@types/lodash.uniqby": "4.7.6",
     "@types/lodash.without": "4.4.6",
-    "jest": "25.5.3",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "jest": "26.0.1",
+    "ts-jest": "26.0.0",
+    "typescript": "3.9.3"
   }
 }

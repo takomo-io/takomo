@@ -40,10 +40,10 @@
     "@types/date-and-time": "0.6.0",
     "@types/easy-table": "0.0.32",
     "@types/hapi__joi": "16.0.4",
-    "@types/jest": "25.1.1",
+    "@types/jest": "25.2.3",
     "@types/js-yaml": "3.12.1",
-    "jest": "25.5.3",
-    "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "jest": "26.0.1",
+    "ts-jest": "26.0.0",
+    "typescript": "3.9.3"
   }
 }
