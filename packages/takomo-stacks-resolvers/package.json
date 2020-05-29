@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-resolvers",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Takomo Stacks Resolvers",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -28,10 +28,10 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/aws-clients": "1.2.0",
-    "@takomo/core": "1.2.0",
-    "@takomo/stacks-model": "1.2.0",
-    "@takomo/util": "1.2.0",
+    "@takomo/aws-clients": "1.2.1",
+    "@takomo/core": "1.2.1",
+    "@takomo/stacks-model": "1.2.1",
+    "@takomo/util": "1.2.1",
     "lodash.flatten": "4.4.0"
   },
   "devDependencies": {
