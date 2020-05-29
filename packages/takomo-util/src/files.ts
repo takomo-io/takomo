@@ -5,7 +5,7 @@ const statP = promisify(fs.stat)
 const readFileP = promisify(readFile)
 
 export const readFileContents = async (pathToFile: string): Promise<string> =>
-  readFileP(pathToFile, { encoding: "UTF-8" }).then((contents) =>
+  readFileP(pathToFile, { encoding: "utf8" }).then((contents) =>
     contents.toString(),
   )
 
