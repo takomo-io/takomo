@@ -52,7 +52,7 @@
     "@types/lodash.uniq": "4.5.6",
     "@types/lodash.uniqby": "4.7.6",
     "@types/lodash.without": "4.4.6",
-    "jest": "25.5.3",
+    "jest": "26.0.1",
     "ts-jest": "26.0.0",
     "typescript": "3.9.3"
   }

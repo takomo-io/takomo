@@ -51,7 +51,7 @@
     "@types/easy-table": "0.0.32",
     "@types/inquirer": "6.5.0",
     "@types/jest": "25.1.1",
-    "jest": "25.5.3",
+    "jest": "26.0.1",
     "ts-jest": "26.0.0",
     "typescript": "3.9.3"
   }
