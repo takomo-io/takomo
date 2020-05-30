@@ -1,7 +1,11 @@
+import { StackPath } from "@takomo/core"
 import { ParameterName, ResolverExecutor } from "@takomo/stacks-model"
 import { ListResolver, ResolverRegistry } from "@takomo/stacks-resolvers"
+import { TakomoError } from "@takomo/util"
 
 const initializeResolver = async (
+  filePath: string,
+  stackPath: StackPath,
   paramName: ParameterName,
   paramConfig: any,
   resolverRegistry: ResolverRegistry,
@@ -10,27 +14,48 @@ const initializeResolver = async (
     typeof paramConfig === "string" ||
     typeof paramConfig === "number" ||
     typeof paramConfig === "boolean"
-  const resolverType = isStatic ? "static" : paramConfig.resolver
+  const resolverName = isStatic ? "static" : paramConfig.resolver
 
-  if (!resolverType) {
-    throw new Error(`Parameter '${paramName}' has no resolver property`)
+  if (!resolverName) {
+    throw new TakomoError(
+      `1 validation error(s) in stack config file ${filePath}:\n\n` +
+        `  - Expected 'resolver' property in parameter '${paramName}' but none was found`,
+    )
   }
 
-  if (typeof resolverType !== "string") {
-    throw new Error(
-      `Parameter '${paramName}' has resolver property of invalid type, expected string`,
+  const resolverType = typeof resolverName
+  if (resolverType !== "string") {
+    throw new TakomoError(
+      `1 validation error(s) in stack config file ${filePath}:\n\n` +
+        `  - Expected 'resolver' property in parameter '${paramName}' to be string but got ${resolverType}`,
+    )
+  }
+
+  if (!resolverRegistry.hasProvider(resolverName)) {
+    const availableResolvers = resolverRegistry
+      .getRegisteredResolverNames()
+      .map((r) => `  - ${r}`)
+      .join("\n")
+    throw new TakomoError(
+      `1 validation error(s) in stack config file ${filePath}:\n\n` +
+        `  - Unknown resolver '${resolverName}' in parameter '${paramName}'\n\n` +
+        `Available resolvers:\n${availableResolvers}`,
     )
   }
 
   const resolver = await resolverRegistry.initResolver(
-    resolverType,
-    paramConfig,
+    filePath,
+    paramName,
+    resolverName,
+    isStatic ? { resolver: "static", value: paramConfig } : paramConfig,
   )
 
-  return new ResolverExecutor(resolverType, resolver, paramConfig)
+  return new ResolverExecutor(resolverName, resolver, paramConfig)
 }
 
 export const buildParameters = async (
+  filePath: string,
+  stackPath: StackPath,
   parameters: Map<ParameterName, any>,
   resolverRegistry: ResolverRegistry,
 ): Promise<Map<ParameterName, ResolverExecutor>> => {
@@ -40,7 +65,13 @@ export const buildParameters = async (
     if (Array.isArray(paramConfig)) {
       const resolvers = await Promise.all(
         paramConfig.map((item, index) =>
-          initializeResolver(`${paramName}[${index}]`, item, resolverRegistry),
+          initializeResolver(
+            filePath,
+            stackPath,
+            `${paramName}[${index}]`,
+            item,
+            resolverRegistry,
+          ),
         ),
       )
 
@@ -50,6 +81,8 @@ export const buildParameters = async (
       )
     } else {
       const resolver = await initializeResolver(
+        filePath,
+        stackPath,
         paramName,
         paramConfig,
         resolverRegistry,

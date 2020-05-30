@@ -201,6 +201,8 @@ const buildStack = async (
   }
 
   const parameters = await buildParameters(
+    filePath,
+    stackPath,
     stackConfig.parameters,
     resolverRegistry,
   )

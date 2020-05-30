@@ -1,6 +1,8 @@
+import Joi from "@hapi/joi"
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { StackPath } from "@takomo/core"
-import { Resolver, ResolverInput } from "@takomo/stacks-model"
+import { StackPath, stackPath } from "@takomo/core"
+import { Resolver, ResolverInput, ResolverProvider } from "@takomo/stacks-model"
+import { stackOutputName } from "@takomo/stacks-schema"
 
 export class StackOutputResolver implements Resolver {
   private readonly stack: StackPath
@@ -57,4 +59,16 @@ export class StackOutputResolver implements Resolver {
 
     return value.OutputValue!
   }
+}
+
+export class StackOutputResolverProvider implements ResolverProvider {
+  readonly name = "stack-output"
+
+  init = async (props: any): Promise<Resolver> => new StackOutputResolver(props)
+
+  schema = (joi: Joi.Root, base: Joi.ObjectSchema): Joi.ObjectSchema =>
+    base.keys({
+      stack: stackPath.required(),
+      output: stackOutputName.required(),
+    })
 }

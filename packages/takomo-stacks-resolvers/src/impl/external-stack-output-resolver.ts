@@ -1,6 +1,15 @@
+import Joi from "@hapi/joi"
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandRole, IamRoleArn, Region } from "@takomo/core"
-import { Resolver, ResolverInput } from "@takomo/stacks-model"
+import {
+  CommandRole,
+  IamRoleArn,
+  iamRoleArn,
+  Region,
+  region,
+  stackName,
+} from "@takomo/core"
+import { Resolver, ResolverInput, ResolverProvider } from "@takomo/stacks-model"
+import { stackOutputName } from "@takomo/stacks-schema"
 
 export class ExternalStackOutputResolver implements Resolver {
   private readonly stack: string
@@ -58,4 +67,18 @@ export class ExternalStackOutputResolver implements Resolver {
 
     return value.OutputValue!
   }
+}
+
+export class ExternalStackOutputResolverProvider implements ResolverProvider {
+  readonly name = "external-stack-output"
+
+  init = async (props: any) => new ExternalStackOutputResolver(props)
+
+  schema = (joi: Joi.Root, base: Joi.ObjectSchema): Joi.ObjectSchema =>
+    base.keys({
+      stack: stackName.required(),
+      output: stackOutputName.required(),
+      region: region,
+      commandRole: iamRoleArn,
+    })
 }

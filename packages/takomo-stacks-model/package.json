@@ -30,12 +30,14 @@
   "dependencies": {
     "@takomo/core": "1.2.1",
     "@takomo/util": "1.2.1",
-    "aws-sdk": "2.686.0"
+    "aws-sdk": "2.686.0",
+    "@hapi/joi": "16.1.8"
   },
   "devDependencies": {
     "@types/jest": "25.2.3",
     "jest": "26.0.1",
     "ts-jest": "26.0.0",
-    "typescript": "3.9.3"
+    "typescript": "3.9.3",
+    "@types/hapi__joi": "16.0.4"
   }
 }

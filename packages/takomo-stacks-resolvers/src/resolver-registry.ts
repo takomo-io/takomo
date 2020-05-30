@@ -1,3 +1,4 @@
+import Joi from "@hapi/joi"
 import { Resolver, ResolverName, ResolverProvider } from "@takomo/stacks-model"
 import { Logger, TakomoError, TakomoErrorOptions } from "@takomo/util"
 
@@ -24,16 +25,44 @@ export class ResolverRegistry {
 
   hasProvider = (name: ResolverName): boolean => this.providers.has(name)
 
-  initResolver = async (name: ResolverName, props: any): Promise<Resolver> => {
+  initResolver = async (
+    filePath: string,
+    parameterName: string,
+    name: ResolverName,
+    props: any,
+  ): Promise<Resolver> => {
     if (props.confidential === true) {
-      this.logger.debug(`Init resolver '${name}' with properties: <concealed>`)
+      this.logger.debug(
+        `Init resolver '${name}' for parameter '${parameterName}' with properties: <concealed>`,
+      )
     } else {
-      this.logger.debugObject(`Init resolver '${name}' with properties:`, props)
+      this.logger.debugObject(
+        `Init resolver '${name}' for parameter '${parameterName}' with properties:`,
+        props,
+      )
     }
 
     const provider = this.getProvider(name)
-    if (provider.validate) {
-      await provider.validate(props)
+    if (provider.schema) {
+      const schema = provider.schema(
+        Joi.defaults((schema) => schema),
+        Joi.object({ resolver: Joi.string().valid(name) }),
+      )
+
+      if (!Joi.isSchema(schema)) {
+        throw new TakomoError(
+          `Error in parameter '${parameterName}' of stack config file ${filePath}:\n\n` +
+            `  - value returned from resolver schema function is not a Joi schema object`,
+        )
+      }
+
+      const { error } = schema.validate(props, { abortEarly: false })
+      if (error) {
+        const details = error.details.map((d) => `  - ${d.message}`).join("\n")
+        throw new TakomoError(
+          `${error.details.length} validation error(s) in parameter '${parameterName}' of stack config file ${filePath}:\n\n${details}`,
+        )
+      }
     }
 
     return provider.init(props)
@@ -52,6 +81,9 @@ export class ResolverRegistry {
   ): Promise<void> => {
     return this.registerProvider(provider, "built-in providers")
   }
+
+  getRegisteredResolverNames = (): ResolverName[] =>
+    Array.from(this.providers.keys()).sort()
 
   private registerProvider = (
     provider: any,
@@ -85,10 +117,10 @@ export class ResolverRegistry {
       )
     }
 
-    if (provider.validate && typeof provider.validate !== "function") {
+    if (provider.schema && typeof provider.schema !== "function") {
       throw new InvalidResolverProviderConfigurationError(
         sourceDescription,
-        "validate is not a function",
+        "schema is not a function",
       )
     }
 

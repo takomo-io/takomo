@@ -1,6 +1,13 @@
+import Joi from "@hapi/joi"
 import { SSMClient } from "@takomo/aws-clients"
-import { StackPath } from "@takomo/core"
-import { Resolver, ResolverInput, SecretName } from "@takomo/stacks-model"
+import { StackPath, stackPath } from "@takomo/core"
+import {
+  Resolver,
+  ResolverInput,
+  ResolverProvider,
+  SecretName,
+} from "@takomo/stacks-model"
+import { secretName } from "@takomo/stacks-schema"
 
 export class SecretResolver implements Resolver {
   private readonly stack: StackPath | null
@@ -45,4 +52,16 @@ export class SecretResolver implements Resolver {
 
     return ssm.getEncryptedParameter(secret.ssmParameterName)
   }
+}
+
+export class SecretResolverProvider implements ResolverProvider {
+  readonly name = "secret"
+
+  init = async (props: any) => new SecretResolver(props)
+
+  schema = (joi: Joi.Root, base: Joi.ObjectSchema): Joi.ObjectSchema =>
+    base.keys({
+      stack: stackPath,
+      secret: secretName.required(),
+    })
 }

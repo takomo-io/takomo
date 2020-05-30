@@ -263,6 +263,8 @@ export const onError = (e: any): void => {
 
   console.log()
   console.log()
+  console.log(red("OTHER INFO"))
+  console.log(red("----------"))
   console.log(red("Your environment:"))
   console.log(red(`  OS:              ${os.platform()}`))
   console.log(red(`  Node version:    ${process.version}`))
