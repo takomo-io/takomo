@@ -120,6 +120,11 @@ export const parameterName = Joi.string()
   .max(255)
   .regex(/^[a-zA-Z0-9]+$/)
 
+export const stackOutputName = Joi.string()
+  .min(1)
+  .max(255)
+  .regex(/^[a-zA-Z0-9]+$/)
+
 export const staticStringParameterValue = Joi.string().required()
 export const staticNumberParameterValue = Joi.number().required()
 export const staticBooleanParameterValue = Joi.boolean().required()

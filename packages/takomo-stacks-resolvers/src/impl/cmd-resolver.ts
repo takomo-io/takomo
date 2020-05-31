@@ -1,4 +1,5 @@
-import { Resolver, ResolverInput } from "@takomo/stacks-model"
+import Joi from "@hapi/joi"
+import { Resolver, ResolverInput, ResolverProvider } from "@takomo/stacks-model"
 import { exec } from "child_process"
 import { promisify } from "util"
 
@@ -22,4 +23,15 @@ export class CmdResolver implements Resolver {
     const { stdout, stderr } = await execP(this.command)
     return (stdout || "").trim()
   }
+}
+
+export class CmdResolverProvider implements ResolverProvider {
+  readonly name = "cmd"
+
+  init = async (props: any) => new CmdResolver(props)
+
+  schema = (joi: Joi.Root, base: Joi.ObjectSchema): Joi.ObjectSchema =>
+    base.keys({
+      command: joi.string().required(),
+    })
 }

@@ -1,3 +1,4 @@
+import Joi from "@hapi/joi"
 import {
   AccountId,
   CommandPath,
@@ -832,7 +833,7 @@ export interface ResolverInput {
 export interface ResolverProvider {
   name: ResolverName | (() => ResolverName)
   init: (props: any) => Promise<Resolver>
-  validate?: (props: any) => Promise<void>
+  schema?: (joi: Joi.Root, base: Joi.ObjectSchema) => Joi.ObjectSchema
 }
 
 /**
