@@ -7,6 +7,11 @@ export interface Choice {
   readonly value: string
 }
 
+interface QuestionOptions {
+  validate?: (input: any) => string | boolean
+  filter?: (input: any) => any
+}
+
 // eslint-disable-next-line
 inquirer.registerPrompt("autocomplete", require("inquirer-autocomplete-prompt"))
 
@@ -100,13 +105,18 @@ export default class CliIO extends ConsoleLogger implements IO {
     return answer
   }
 
-  question = async (message: string, marginTop = false): Promise<string> => {
+  question = async (
+    message: string,
+    marginTop = false,
+    options: QuestionOptions = {},
+  ): Promise<string> => {
     if (marginTop) {
       console.log()
     }
 
     const { answer } = await inquirer.prompt([
       {
+        ...options,
         message,
         type: "input",
         name: "answer",
@@ -131,6 +141,27 @@ export default class CliIO extends ConsoleLogger implements IO {
         message,
         name: "answer",
         type: "list",
+      },
+    ])
+
+    return answer
+  }
+
+  chooseMany = async (
+    message: string,
+    choices: Choice[],
+    marginTop = false,
+  ): Promise<string[]> => {
+    if (marginTop) {
+      console.log()
+    }
+
+    const { answer } = await inquirer.prompt([
+      {
+        choices,
+        message,
+        name: "answer",
+        type: "checkbox",
       },
     ])
 

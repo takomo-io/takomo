@@ -1,5 +1,6 @@
 import {
   CliDeployStacksIO,
+  CliInitProjectIO,
   CliListSecretsIO,
   CliSetSecretIO,
   CliUndeployStacksIO,
@@ -49,5 +50,11 @@ export class TestSetSecretIO extends CliSetSecretIO {
 
   promptSecretValue = async (secret: Secret): Promise<string> => {
     return this.answers.get(secret.name)!
+  }
+}
+
+export class TestInitProjectIO extends CliInitProjectIO {
+  constructor(options: Options) {
+    super(options)
   }
 }

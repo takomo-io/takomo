@@ -34,6 +34,7 @@
     "@takomo/deployment-targets": "1.2.1",
     "@takomo/organization": "1.2.1",
     "@takomo/stacks-commands": "1.2.1",
+    "@takomo/init-command": "1.2.1",
     "@takomo/util": "1.2.1",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",

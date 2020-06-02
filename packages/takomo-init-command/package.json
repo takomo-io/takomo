@@ -1,7 +1,7 @@
 {
-  "name": "@takomo/cli-io",
+  "name": "@takomo/init-command",
   "version": "1.2.1",
-  "description": "Takomo CLI IO",
+  "description": "Takomo Init Command",
   "author": "henri@takomo.io",
   "license": "MIT",
   "homepage": "https://takomo.io",
@@ -28,32 +28,13 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/aws-clients": "1.2.1",
-    "@takomo/config-sets": "1.2.1",
+    "@hapi/joi": "16.1.8",
     "@takomo/core": "1.2.1",
-    "@takomo/deployment-targets": "1.2.1",
-    "@takomo/organization": "1.2.1",
-    "@takomo/stacks-commands": "1.2.1",
-    "@takomo/init-command": "1.2.1",
-    "@takomo/stacks-context": "1.2.1",
-    "@takomo/stacks-model": "1.2.1",
-    "@takomo/util": "1.2.1",
-    "aws-sdk": "2.686.0",
-    "date-and-time": "0.11.1",
-    "diff": "4.0.1",
-    "easy-table": "1.1.1",
-    "inquirer": "7.0.6",
-    "inquirer-autocomplete-prompt": "1.0.2",
-    "pretty-ms": "5.1.0",
-    "@hapi/joi": "16.1.8"
+    "@takomo/util": "1.2.1"
   },
   "devDependencies": {
-    "@types/date-and-time": "0.6.0",
-    "@types/diff": "4.0.2",
-    "@types/easy-table": "0.0.32",
-    "@types/inquirer": "6.5.0",
-    "@types/jest": "25.2.3",
     "@types/hapi__joi": "16.0.4",
+    "@types/jest": "25.2.3",
     "jest": "26.0.1",
     "ts-jest": "26.0.0",
     "typescript": "3.9.3"
