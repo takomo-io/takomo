@@ -24,12 +24,18 @@
     "@takomo/cli": "1.2.1",
     "@takomo/cli-io": "1.2.1",
     "@takomo/core": "1.2.1",
+    "@takomo/util": "1.2.1",
     "@takomo/stacks-commands": "1.2.1",
+    "@takomo/init-command": "1.2.1",
     "@takomo/stacks-model": "1.2.1",
-    "aws-sdk": "2.686.0"
+    "aws-sdk": "2.686.0",
+    "mkdirp": "1.0.4",
+    "rimraf": "3.0.2",
+    "uuid": "3.3.3"
   },
   "devDependencies": {
     "@types/jest": "25.2.3",
+    "@types/mkdirp": "1.0.1",
     "dotenv": "8.2.0",
     "jest": "26.0.1",
     "ts-jest": "26.0.0",

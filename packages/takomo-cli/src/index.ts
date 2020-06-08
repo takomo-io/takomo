@@ -1,5 +1,6 @@
 import yargs from "yargs"
 import { deploymentTargetsCmd } from "./deployment-targets"
+import { initProjectCmd } from "./init"
 import { organizationCmd } from "./organization"
 import { stacksCmd } from "./stacks"
 
@@ -10,6 +11,7 @@ export const run = (): void => {
     .command(stacksCmd)
     .command(organizationCmd)
     .command(deploymentTargetsCmd)
+    .command(initProjectCmd)
     .option("profile", {
       alias: "p",
       description: "AWS profile",
