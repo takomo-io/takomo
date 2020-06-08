@@ -34,8 +34,8 @@ export const createAccount = async (
   if (
     !options.isAutoConfirmEnabled() &&
     (await io.confirmAccountCreation(
-      email,
       name,
+      email,
       iamUserAccessToBilling,
       roleName,
     )) !== ConfirmResult.YES
