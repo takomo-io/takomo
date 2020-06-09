@@ -25,7 +25,7 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignore-dirs=dist --ignores=@types/jest",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest",
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
@@ -59,7 +59,6 @@
     "@types/easy-table": "0.0.32",
     "@types/hapi__joi": "16.0.4",
     "@types/inquirer": "6.5.0",
-    "@types/jest": "25.2.3",
     "typescript": "3.9.3"
   }
 }
