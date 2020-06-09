@@ -1,4 +1,5 @@
-import chalk = require("chalk")
+// eslint-disable-next-line
+const chalk = require("chalk")
 
 export const green = chalk.green
 export const red = chalk.red

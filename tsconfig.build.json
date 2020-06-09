@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
+    "target": "ES2020",
+    "module": "ES2020",
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "lib": ["es2018"],
+    "lib": ["ES2020"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["**/*.test.*", "node_modules", "dist"]
 }

@@ -6,6 +6,7 @@
   "license": "MIT",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/takomo-io/takomo.git"
@@ -37,13 +38,16 @@
     "uuid": "3.3.3"
   },
   "devDependencies": {
+    "jest": "26.0.1",
+    "babel-jest": "26.0.1",
+    "@babel/core": "7.10.2",
+    "@babel/preset-env": "7.10.2",
+    "@babel/preset-typescript": "7.10.1",
     "@types/jest": "25.2.3",
     "@types/lodash.flatten": "4.4.6",
     "@types/lodash.last": "3.0.6",
     "@types/lodash.takerightwhile": "4.6.6",
     "@types/uuid": "3.4.6",
-    "jest": "26.0.1",
-    "ts-jest": "26.0.0",
     "typescript": "3.9.3"
   }
 }

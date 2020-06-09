@@ -9,7 +9,7 @@
     "linux"
   ],
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=14.4.0"
   },
   "main": "dist/index",
   "types": "dist/index",
@@ -30,6 +30,7 @@
     "cloudformation stacks",
     "cloudformation deployment"
   ],
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/takomo-io/takomo.git"
