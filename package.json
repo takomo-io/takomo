@@ -48,7 +48,7 @@
     "prettier-plugin-organize-imports": "1.0.3",
     "ts-node": "8.6.2",
     "typedoc": "0.17.4",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   },
   "husky": {
     "hooks": {

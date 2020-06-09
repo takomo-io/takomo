@@ -42,6 +42,6 @@
     "@babel/preset-typescript": "7.10.1",
     "@types/mkdirp": "1.0.1",
     "dotenv": "8.2.0",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }

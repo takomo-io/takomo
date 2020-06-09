@@ -36,6 +36,6 @@
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",
     "dotenv": "8.2.0",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }

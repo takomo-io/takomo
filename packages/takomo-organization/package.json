@@ -57,6 +57,6 @@
     "@types/lodash.uniq": "4.5.6",
     "@types/lodash.uniqby": "4.7.6",
     "@types/lodash.without": "4.4.6",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }

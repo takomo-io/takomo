@@ -39,6 +39,6 @@
     "@types/rimraf": "^3.0.0",
     "dotenv": "8.2.0",
     "rimraf": "3.0.2",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }

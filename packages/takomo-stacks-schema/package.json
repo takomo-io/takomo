@@ -41,6 +41,6 @@
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",
     "@types/hapi__joi": "16.0.4",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }

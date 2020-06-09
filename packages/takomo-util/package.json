@@ -47,6 +47,6 @@
     "@types/js-yaml": "3.12.1",
     "babel-jest": "26.0.1",
     "jest": "26.0.1",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }

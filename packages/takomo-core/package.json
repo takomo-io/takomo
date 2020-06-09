@@ -43,6 +43,6 @@
     "@types/hapi__joi": "16.0.4",
     "@types/node": "12.12.17",
     "@types/semver": "7.1.0",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }
