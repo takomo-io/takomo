@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Takomo Deployment Targets",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -29,10 +29,10 @@
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
-    "@takomo/config-sets": "1.2.1",
-    "@takomo/core": "1.2.1",
-    "@takomo/stacks-commands": "1.2.1",
-    "@takomo/util": "1.2.1",
+    "@takomo/config-sets": "1.3.0",
+    "@takomo/core": "1.3.0",
+    "@takomo/stacks-commands": "1.3.0",
+    "@takomo/util": "1.3.0",
     "lodash.flatten": "4.4.0",
     "lodash.merge": "4.6.2",
     "lodash.uniq": "4.5.0",
