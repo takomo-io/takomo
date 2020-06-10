@@ -43,12 +43,12 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest",
     "test": "jest test --passWithNoTests"
   },
   "bin": {
-    "tkm": "./bin/tkm",
-    "takomo": "./bin/tkm"
+    "tkm": "./bin/tkm.js",
+    "takomo": "./bin/tkm.js"
   },
   "dependencies": {
     "@takomo/cli": "1.3.0"

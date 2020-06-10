@@ -4,6 +4,13 @@
   "description": "Takomo Util",
   "author": "henri@takomo.io",
   "license": "MIT",
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "engines": {
+    "node": ">=14.4.0"
+  },
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "type": "module",
@@ -25,7 +32,7 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest",
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
@@ -35,7 +42,8 @@
     "easy-table": "1.1.1",
     "handlebars": "4.7.6",
     "js-yaml": "3.13.1",
-    "pretty-ms": "5.1.0"
+    "pretty-ms": "5.1.0",
+    "semver": "7.3.2"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",
@@ -44,7 +52,9 @@
     "@types/date-and-time": "0.6.0",
     "@types/easy-table": "0.0.32",
     "@types/hapi__joi": "16.0.4",
+    "@types/jest": "26.0.0",
     "@types/js-yaml": "3.12.1",
+    "@types/semver": "7.2.0",
     "babel-jest": "26.0.1",
     "jest": "26.0.1",
     "typescript": "3.9.5"
