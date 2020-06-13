@@ -50,7 +50,7 @@ describe("hooks validation fails", () => {
       },
     ])
     expect(error.message).toBe(
-      '"value[1]" has a non-unique name "another", which is used also by "hooks[0]"',
+      '"value"[1] has a non-unique name "another", which is used also by "hooks[0]"',
     )
   })
 })

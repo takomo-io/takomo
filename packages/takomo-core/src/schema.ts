@@ -42,7 +42,7 @@ export const commandPath = Joi.string()
   }, "command path")
   .messages({
     invalidRegion:
-      '"{{#label}}" with value "{{#value}}" has invalid region "{{#region}}". The region must be one of [{{#regions}}]',
+      '{{#label}} with value "{{#value}}" has invalid region "{{#region}}". The region must be one of [{{#regions}}]',
   })
 
 export const iamRoleArn = Joi.string().regex(/^arn:aws:iam::\d{12}:role\/.+$/)
@@ -79,7 +79,7 @@ export const stackPath = Joi.string()
   }, "stack path")
   .messages({
     invalidRegion:
-      '"{{#label}}" with value "{{#value}}" has invalid region "{{#region}}". The region must be one of [{{#regions}}]',
+      '{{#label}} with value "{{#value}}" has invalid region "{{#region}}". The region must be one of [{{#regions}}]',
   })
 
 export const stackPaths = Joi.array().items(stackPath).unique()

@@ -78,9 +78,9 @@ export const organizationalUnitName = Joi.string()
     return value
   })
   .messages({
-    startsWithWhitespace: '"{{#label}}" must not start with whitespace',
-    endsWithWhitespace: '"{{#label}}" must not end with whitespace',
-    subsequentWhitespace: '"{{#label}}" must not contain subsequent whitespace',
+    startsWithWhitespace: "{{#label}} must not start with whitespace",
+    endsWithWhitespace: "{{#label}} must not end with whitespace",
+    subsequentWhitespace: "{{#label}} must not contain subsequent whitespace",
   })
 
 export const organizationalUnitPath = Joi.string()
@@ -113,12 +113,12 @@ export const organizationalUnitPath = Joi.string()
     return value
   })
   .messages({
-    maxDepth: '"{{#label}}" hierarchy depth must not exceed 5',
-    endsWithWhitespace: '"{{#label}}" must not end with whitespace',
-    endsWithSeparator: '"{{#label}}" must not end with path separator (/)',
+    maxDepth: "{{#label}} hierarchy depth must not exceed 5",
+    endsWithWhitespace: "{{#label}} must not end with whitespace",
+    endsWithSeparator: "{{#label}} must not end with path separator (/)",
     subsequentSeparators:
-      '"{{#label}}" must not contain subsequent path separators (/)',
-    subsequentWhitespace: '"{{#label}}" must not contain subsequent whitespace',
+      "{{#label}} must not contain subsequent path separators (/)",
+    subsequentWhitespace: "{{#label}} must not contain subsequent whitespace",
   })
 
 const organizationalUnit = Joi.object({

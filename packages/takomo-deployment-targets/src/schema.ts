@@ -33,12 +33,12 @@ export const deploymentGroupPath = Joi.string()
     return value
   })
   .messages({
-    maxDepth: '"{{#label}}" hierarchy depth must not exceed 10',
-    endsWithWhitespace: '"{{#label}}" must not end with whitespace',
-    endsWithSeparator: '"{{#label}}" must not end with path separator (/)',
+    maxDepth: "{{#label}} hierarchy depth must not exceed 10",
+    endsWithWhitespace: "{{#label}} must not end with whitespace",
+    endsWithSeparator: "{{#label}} must not end with path separator (/)",
     subsequentSeparators:
-      '"{{#label}}" must not contain subsequent path separators (/)',
-    subsequentWhitespace: '"{{#label}}" must not contain subsequent whitespace',
+      "{{#label}} must not contain subsequent path separators (/)",
+    subsequentWhitespace: "{{#label}} must not contain subsequent whitespace",
   })
 
 export const deploymentTargetName = Joi.string()
