@@ -329,7 +329,7 @@ export const onComplete = (options: Options, output: CommandOutput): void => {
 export const loadProjectConfig = async (projectDir: string): Promise<void> => {
   const pathConfigFile = path.join(
     projectDir,
-    Constants.BAUBLE_PROJECT_CONFIG_FILE,
+    Constants.TAKOMO_PROJECT_CONFIG_FILE,
   )
 
   if (!(await fileExists(pathConfigFile))) {

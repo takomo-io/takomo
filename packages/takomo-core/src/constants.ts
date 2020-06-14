@@ -1,3 +1,4 @@
+export const TAKOMO_REQUIRED_NODEJS_VERSION = ">=14.4.0"
 export const CONFIG_FILE_EXTENSION = ".yml"
 export const TEMPLATES_DIR = "templates"
 export const STACKS_DIR = "stacks"
@@ -12,7 +13,7 @@ export const STACK_GROUP_CONFIG_FILE = "config.yml"
 export const ORGANIZATION_CONFIG_FILE = "organization.yml"
 export const ROOT_STACK_GROUP_PATH = "/"
 export const DEFAULT_ORGANIZATION_ROLE_NAME = "OrganizationAccountAccessRole"
-export const BAUBLE_PROJECT_CONFIG_FILE = "takomo.yml"
+export const TAKOMO_PROJECT_CONFIG_FILE = "takomo.yml"
 export const SERVICE_CONTROL_POLICY_MAX_SIZE_IN_BYTES = 5120
 export const TAG_POLICY_MAX_SIZE_IN_CHARACTERS = 2500
 

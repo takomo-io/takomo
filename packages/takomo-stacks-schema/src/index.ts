@@ -79,7 +79,7 @@ export const hooks = Joi.array()
   })
   .messages({
     duplicateName:
-      '"{{#label}}[{{#index}}]" has a non-unique name "{{#name}}", which is used also by "hooks[{{#other}}]"',
+      '{{#label}}[{{#index}}] has a non-unique name "{{#name}}", which is used also by "hooks[{{#other}}]"',
   })
 
 export const tagName = Joi.string().min(1).max(127)
@@ -98,16 +98,16 @@ export const tagValue = Joi.any()
 
     const limit = 255
     if (stringValue.length > limit) {
-      return helpers.error("maxLengrh", { limit })
+      return helpers.error("maxLength", { limit })
     }
 
     return stringValue
   })
   .messages({
-    invalidType: '"{{#label}}" must be a string, number or boolean',
-    empty: '"{{#label}}" is not allowed to be empty',
-    maxLengrh:
-      '"{{#label}}" length must be less than or equal to {{#limit}} characters long',
+    invalidType: "{{#label}} must be a string, number or boolean",
+    empty: "{{#label}} is not allowed to be empty",
+    maxLength:
+      "{{#label}} length must be less than or equal to {{#limit}} characters long",
   })
 
 export const tags = Joi.object().pattern(tagName, tagValue)
