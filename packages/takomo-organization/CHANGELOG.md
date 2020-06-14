@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/takomo-io/takomo/compare/v1.3.0...v1.3.1) (2020-06-14)
+
+
+### Bug Fixes
+
+* add missing quotation to master account id in organization config file that is created along wi ([#49](https://github.com/takomo-io/takomo/issues/49)) ([df1e115](https://github.com/takomo-io/takomo/commit/df1e115928e90b64c931f6ff846b8f73d3efb5bd)), closes [#48](https://github.com/takomo-io/takomo/issues/48)
+* fix bug in parsing organization config's organizational units ([#47](https://github.com/takomo-io/takomo/issues/47)) ([2b9ccf2](https://github.com/takomo-io/takomo/commit/2b9ccf2656b81d2d707cd401ce043804e94cef2e)), closes [#45](https://github.com/takomo-io/takomo/issues/45)
+
+
+
+
+
 # [1.3.0](https://github.com/takomo-io/takomo/compare/v1.2.1...v1.3.0) (2020-06-09)
 
 
