@@ -227,26 +227,11 @@ const parseConfigSetNames = (value: any): string[] => {
   return value
 }
 
-const parseOrganizationalUnit = (
-  ouPath: string,
-  config: any,
-  inheritedServiceControlPolicies: string[],
-  inheritedTagPolicies: string[],
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
-): OrganizationalUnit => {
-  const ou = config[ouPath]
-  const ouPathDepth = ouPath.split("/").length
-
-  const childPaths = Object.keys(config).filter((key) =>
-    key.startsWith(`${ouPath}/`),
-  )
-
-  const directChildPaths = childPaths.filter(
-    (key) => key.split("/").length === ouPathDepth + 1,
-  )
-
-  const missingDirectChildPaths = uniq(
+export const findMissingDirectChildrenPaths = (
+  childPaths: string[],
+  ouPathDepth: number,
+): string[] => {
+  return uniq(
     childPaths
       .filter((key) => key.split("/").length >= ouPathDepth + 2)
       .map((key) =>
@@ -254,9 +239,47 @@ const parseOrganizationalUnit = (
           .split("/")
           .slice(0, ouPathDepth + 1)
           .join("/"),
-      ),
+      )
+      .filter((key) => !childPaths.includes(key)),
+  )
+}
+
+const parseOrganizationalUnit = (
+  parentLogger: Logger,
+  ouPath: string,
+  config: any,
+  inheritedServiceControlPolicies: string[],
+  inheritedTagPolicies: string[],
+  inheritedConfigSets: ConfigSetName[],
+  inheritedBootstrapConfigSets: ConfigSetName[],
+): OrganizationalUnit => {
+  const name = ouPath.split("/").reverse()[0]
+  const ouPathDepth = ouPath.split("/").length
+
+  const logger = parentLogger.childLogger(name)
+
+  logger.debugObject("Parsing ou:", { path: ouPath, name, depth: ouPathDepth })
+
+  const childPaths = Object.keys(config).filter((key) =>
+    key.startsWith(`${ouPath}/`),
   )
 
+  logger.debugObject("Child paths:", childPaths)
+
+  const directChildPaths = childPaths.filter(
+    (key) => key.split("/").length === ouPathDepth + 1,
+  )
+
+  logger.debugObject("Direct child paths:", directChildPaths)
+
+  const missingDirectChildPaths = findMissingDirectChildrenPaths(
+    childPaths,
+    ouPathDepth,
+  )
+
+  logger.debugObject("Missing direct child paths:", missingDirectChildPaths)
+
+  const ou = config[ouPath]
   const configuredServiceControlPolicies = parsePolicyNames(
     ou?.serviceControlPolicies,
   )
@@ -283,6 +306,7 @@ const parseOrganizationalUnit = (
     ...directChildPaths,
   ].map((childPath) =>
     parseOrganizationalUnit(
+      logger,
       childPath,
       config,
       serviceControlPolicies,
@@ -299,7 +323,6 @@ const parseOrganizationalUnit = (
     serviceControlPolicies,
     tagPolicies,
   )
-  const name = ouPath.split("/").reverse()[0]
 
   return {
     name,
@@ -320,9 +343,10 @@ const parseOrganizationalUnit = (
 }
 
 const parseOrganizationalUnitsConfig = (
+  logger: Logger,
   value: any,
 ): OrganizationalUnitsConfig => ({
-  Root: parseOrganizationalUnit("Root", value, [], [], [], []),
+  Root: parseOrganizationalUnit(logger, "Root", value, [], [], [], []),
 })
 
 export const parseOrganizationConfigFile = async (
@@ -385,6 +409,7 @@ export const parseOrganizationConfigFile = async (
   )
   const vars = parseVars(parsedFile.vars)
   const organizationalUnits = parseOrganizationalUnitsConfig(
+    logger,
     parsedFile.organizationalUnits,
   )
 
