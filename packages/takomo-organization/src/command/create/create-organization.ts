@@ -9,7 +9,6 @@ import {
   createFile,
   dirExists,
   fileExists,
-  formatYaml,
   StopWatch,
   TakomoError,
   TemplateEngine,
@@ -107,14 +106,12 @@ export const createOrganization = async (
     const organization = await client.createOrganization(featureSet)
 
     if (!organizationConfigFileExists) {
-      const organizationConfig = {
-        masterAccountId: identity.accountId,
-        organizationalUnits: {
-          Root: {
-            accounts: [identity.accountId],
-          },
-        },
-      }
+      const organizationConfigContent =
+        `masterAccountId: "${identity.accountId}"\n` +
+        "organizationalUnits:\n" +
+        "  Root:\n" +
+        "    accounts:\n" +
+        `      - "${identity.accountId}"\n`
 
       if (!(await dirExists(pathToOrganizationDir))) {
         try {
@@ -128,7 +125,7 @@ export const createOrganization = async (
       }
 
       try {
-        await createFile(pathToOrganizationFile, formatYaml(organizationConfig))
+        await createFile(pathToOrganizationFile, organizationConfigContent)
         io.info(
           `Created organization configuration file: ${pathToOrganizationFile}`,
         )
