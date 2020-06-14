@@ -1,0 +1,32 @@
+masterAccountId: "888888888888"
+
+trustedAwsServices:
+  - cloudtrail.amazonaws.com
+  - config.amazonaws.com
+  - ram.amazonaws.com
+  - sso.amazonaws.com
+
+serviceControlPolicies:
+  FullAWSAccess:
+    description: AWS managed default policy
+    awsManaged: true
+  AllowedRegions:
+    description: Set allowed regions
+
+organizationalUnits:
+  Root:
+    serviceControlPolicies:
+      - FullAWSAccess
+    accounts:
+      - "888888888888"
+      - "111111111111"
+      - "222222222222"
+  Root/WebProject:
+    serviceControlPolicies:
+      - AllowedRegions
+  Root/WebProject/Development:
+    accounts:
+      - "333333333333"
+#    Root/WebProject/Production:
+#      accounts:
+#        - "444444444444"
