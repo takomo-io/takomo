@@ -1,7 +1,4 @@
-import { Constants } from "@takomo/core"
-import { TakomoError, versionSatisfies } from "@takomo/util"
 import yargs from "yargs"
-import { onError } from "./common.js"
 import { deploymentTargetsCmd } from "./deployment-targets/index.js"
 import { initProjectCmd } from "./init.js"
 import { organizationCmd } from "./organization/index.js"
@@ -10,21 +7,6 @@ import { stacksCmd } from "./stacks/index.js"
 export { initOptionsAndVariables } from "./common.js"
 
 export const run = (): void => {
-  if (
-    !versionSatisfies(process.version, Constants.TAKOMO_REQUIRED_NODEJS_VERSION)
-  ) {
-    onError(
-      new TakomoError(
-        `Required node version ${Constants.TAKOMO_REQUIRED_NODEJS_VERSION} not satisfied with current version ${process.version}.`,
-        {
-          instructions: [
-            `Upgrade your node to at least version ${Constants.TAKOMO_REQUIRED_NODEJS_VERSION}`,
-          ],
-        },
-      ),
-    )
-  }
-
   yargs
     .command(stacksCmd)
     .command(organizationCmd)

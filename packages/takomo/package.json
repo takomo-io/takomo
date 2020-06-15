@@ -51,7 +51,8 @@
     "takomo": "bin/tkm"
   },
   "dependencies": {
-    "@takomo/cli": "2.0.0-alpha.0"
+    "@takomo/cli": "2.0.0-alpha.0",
+    "semver": "7.3.2"
   },
   "devDependencies": {
     "typescript": "3.9.5"
