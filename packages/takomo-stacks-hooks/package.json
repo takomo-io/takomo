@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-hooks",
-  "version": "1.3.0",
+  "version": "2.0.0-alpha.0",
   "description": "Takomo Stacks Hooks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@takomo/core": "1.3.0",
-    "@takomo/stacks-model": "1.3.0",
-    "@takomo/util": "1.3.0",
+    "@takomo/core": "2.0.0-alpha.0",
+    "@takomo/stacks-model": "2.0.0-alpha.0",
+    "@takomo/util": "2.0.0-alpha.0",
     "aws-sdk": "2.693.0"
   },
   "devDependencies": {
