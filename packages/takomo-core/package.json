@@ -1,6 +1,6 @@
 {
   "name": "@takomo/core",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "description": "Takomo Core",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@takomo/util": "2.0.0-alpha.0",
+    "@takomo/util": "2.0.0-alpha.1",
     "aws-sdk": "2.693.0",
     "semver": "7.3.2"
   },
