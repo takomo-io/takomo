@@ -1,5 +1,9 @@
 # Takomo
 
+![GitHub](https://img.shields.io/github/license/takomo-io/takomo)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/takomo-io/takomo/Default)
+![npm](https://img.shields.io/npm/v/takomo)
+
 Takomo makes it easy to organize, parameterize and deploy your CloudFormation stacks across multiple regions and accounts. In addition to stacks, you can also manage accounts, organizational units and service control policies that belong to your AWS organization.
 
 # Quick Start
