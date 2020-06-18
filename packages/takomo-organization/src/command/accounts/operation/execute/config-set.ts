@@ -1,4 +1,5 @@
 import {
+  buildOptionsForConfigSet,
   ConfigSetCommandPathOperationResult,
   ConfigSetName,
   ConfigSetOperationResult,
@@ -28,12 +29,15 @@ export const processConfigSet = async (
   const configSet = ctx.getConfigSet(configSetName)
   const results = new Array<ConfigSetCommandPathOperationResult>()
 
+  const options = buildOptionsForConfigSet(ctx.getOptions(), configSet)
+
   for (const commandPath of configSet.commandPaths) {
     const result = await processCommandPath(
       holder,
       ou,
       plannedAccount,
       configSetName,
+      options,
       commandPath,
       configSetWatch.startChild(commandPath),
       state,

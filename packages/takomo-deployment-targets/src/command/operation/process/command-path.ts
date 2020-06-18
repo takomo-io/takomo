@@ -124,6 +124,7 @@ export const processCommandPath = async (
   group: DeploymentGroupConfig,
   target: DeploymentTargetConfig,
   configSet: ConfigSet,
+  options: Options,
   commandPath: CommandPath,
   watch: StopWatch,
   state: OperationState,
@@ -136,7 +137,6 @@ export const processCommandPath = async (
 
   const configFile = ctx.getConfigFile()
   const variables = ctx.getVariables()
-  const options = ctx.getOptions()
 
   io.info(`Execute command path: ${commandPath}`)
 

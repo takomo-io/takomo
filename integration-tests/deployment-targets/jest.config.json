@@ -1,5 +1,6 @@
 {
   "testEnvironment": "node",
   "testRegex": ["/test/.*\\.(test)?\\.(ts)$"],
-  "moduleFileExtensions": ["ts", "js", "json", "node"]
+  "moduleFileExtensions": ["ts", "js", "json", "node"],
+  "setupFiles": ["./jest.setup.js"]
 }

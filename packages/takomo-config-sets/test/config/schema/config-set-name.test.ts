@@ -1,5 +1,5 @@
-import { configSetName } from "../src/"
-import { expectNoValidationError, expectValidationErrors } from "./helpers"
+import { configSetName } from "../../../src/"
+import { expectNoValidationError, expectValidationErrors } from "../../helpers"
 
 const valid = ["basic", "Example", "my-group", "_with_underscores"]
 
