@@ -9,6 +9,7 @@ export interface ConfigSet {
   readonly name: ConfigSetName
   readonly vars: Vars
   readonly commandPaths: CommandPath[]
+  readonly projectDir: string | null
 }
 
 export enum ConfigSetType {

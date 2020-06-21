@@ -1,4 +1,5 @@
 import {
+  buildOptionsForConfigSet,
   ConfigSet,
   ConfigSetCommandPathOperationResult,
   ConfigSetOperationResult,
@@ -17,11 +18,12 @@ export const processConfigSet = async (
   watch: StopWatch,
   state: OperationState,
 ): Promise<ConfigSetOperationResult> => {
-  const { io } = holder
+  const { io, ctx } = holder
 
   io.info(`Execute config set: ${configSet.name}`)
 
   const results = new Array<ConfigSetCommandPathOperationResult>()
+  const options = buildOptionsForConfigSet(ctx.getOptions(), configSet)
 
   for (const commandPath of configSet.commandPaths) {
     const result = await processCommandPath(
@@ -29,6 +31,7 @@ export const processConfigSet = async (
       group,
       target,
       configSet,
+      options,
       commandPath,
       watch.startChild(commandPath),
       state,

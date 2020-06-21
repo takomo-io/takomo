@@ -346,4 +346,52 @@ describe("Organization commands", () => {
     },
     TIMEOUT,
   )
+
+  it(
+    "deploy organizational units that use config set with different project dir",
+    async () => {
+      const { options, watch, variables } = await createOptions("v08")
+      const {
+        success,
+        status,
+        message,
+        results,
+      } = await accountsOperationCommand(
+        {
+          variables,
+          watch,
+          options,
+          accountIds: [],
+          organizationalUnits: ["Root/sandbox accounts/sandbox-2"],
+          operation: DeploymentOperation.DEPLOY,
+          configSetType: ConfigSetType.STANDARD,
+        },
+        new CliDeployAccountsIO(
+          options,
+          (options: Options, accountId: string) =>
+            new CliDeployStacksIO(options, accountId),
+          (options: Options, accountId: string) =>
+            new CliUndeployStacksIO(options, accountId),
+        ),
+      )
+
+      expect(success).toBeTruthy()
+      expect(status).toBe(CommandStatus.SUCCESS)
+      expect(message).toBe("Success")
+
+      expect(results).toHaveLength(1)
+
+      const [sandbox2Ou] = results
+      expect(sandbox2Ou.results).toHaveLength(2)
+
+      const [a4, a5] = sandbox2Ou.results
+
+      expect(a4.accountId).toBe(ORG_A_ACCOUNT_4_ID)
+      expect(a4.success).toBeTruthy()
+
+      expect(a5.accountId).toBe(ORG_A_ACCOUNT_5_ID)
+      expect(a5.success).toBeTruthy()
+    },
+    TIMEOUT,
+  )
 })

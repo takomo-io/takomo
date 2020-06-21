@@ -7,6 +7,7 @@ import {
   CommandStatus,
   DeploymentOperation,
   OperationState,
+  Options,
   TakomoCredentialProvider,
 } from "@takomo/core"
 import {
@@ -83,6 +84,7 @@ export const processCommandPath = async (
   ou: PlannedAccountDeploymentOrganizationalUnit,
   plannedAccount: PlannedLaunchableAccount,
   configSetName: string,
+  options: Options,
   commandPath: CommandPath,
   commandPathWatch: StopWatch,
   state: OperationState,
@@ -91,7 +93,7 @@ export const processCommandPath = async (
   const {
     io,
     ctx,
-    input: { variables, options, operation },
+    input: { variables, operation },
   } = holder
   const account = plannedAccount.config
   const credentialProvider = ctx.getCredentialProvider()

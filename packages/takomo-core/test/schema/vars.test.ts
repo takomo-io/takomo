@@ -1,4 +1,5 @@
 import { vars } from "../../src/schema"
+import { expectValidationErrors } from "../helpers"
 
 describe("vars validation succeeds", () => {
   test("when an empty object is given", () => {
@@ -29,22 +30,18 @@ describe("vars validation succeeds", () => {
 
 describe("vars validation fails", () => {
   test("when an array is given", () => {
-    const { error } = vars.validate([])
-    expect(error.message).toBe('"value" must be of type object')
+    expectValidationErrors(vars)([], '"value" must be of type object')
   })
 
   test("when a string is given", () => {
-    const { error } = vars.validate("stringy")
-    expect(error.message).toBe('"value" must be of type object')
+    expectValidationErrors(vars)("stringy", '"value" must be of type object')
   })
 
   test("when a number is given", () => {
-    const { error } = vars.validate(100)
-    expect(error.message).toBe('"value" must be of type object')
+    expectValidationErrors(vars)(100, '"value" must be of type object')
   })
 
   test("when a boolean is given", () => {
-    const { error } = vars.validate(true)
-    expect(error.message).toBe('"value" must be of type object')
+    expectValidationErrors(vars)(true, '"value" must be of type object')
   })
 })

@@ -140,19 +140,25 @@ export class Options {
   /**
    * @returns Should confidential information be logged in plain text
    */
-
   isConfidentialInfoLoggingEnabled = (): boolean => this.logConfidentialInfo
 
   /**
    * @returns Is auto-confirm enabled
    */
-
   isAutoConfirmEnabled = (): boolean => this.autoConfirm
 
   /**
    * @returns Should statistics be collected
    */
   isStatsEnabled = (): boolean => this.stats
+
+  toProps = (): OptionsProps => ({
+    projectDir: this.projectDir,
+    autoConfirm: this.autoConfirm,
+    logLevel: this.logLevel,
+    logConfidentialInfo: this.logConfidentialInfo,
+    stats: this.stats,
+  })
 }
 
 export interface OperationState {
