@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/takomo-io/takomo/compare/v2.0.0...v2.1.0) (2020-06-21)
+
+
+### Features
+
+* add projectDir property to config sets ([#51](https://github.com/takomo-io/takomo/issues/51)) ([263bd17](https://github.com/takomo-io/takomo/commit/263bd175ae7748793953712da28a5d0bac7e25f0)), closes [#24](https://github.com/takomo-io/takomo/issues/24)
+
+
+
+
+
 # [2.0.0](https://github.com/takomo-io/takomo/compare/v2.0.0-alpha.1...v2.0.0) (2020-06-15)
 
 **Note:** Version bump only for package @takomo/core
