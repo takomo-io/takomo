@@ -23,7 +23,15 @@ jobs:
       - name: Build
         run: yarn build
       - name: Publish to NPM
-        run: yarn publish-packages 
+        run: yarn publish-packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+      - name: Build API docs
+        run: yarn api-docs
+      - run: echo ::set-env name=RELEASE_VERSION::$(node ci/get-current-version.js)
+      - run: echo ::set-env name=DOCS_BASE::$(echo /api-docs/release/v$RELEASE_VERSION/ | tr '.' '-')
+      - run: ./ci/publish-api-docs.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}

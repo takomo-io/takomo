@@ -27,7 +27,8 @@
     "commit": "git-cz",
     "publish-version": "lerna version --exact",
     "publish-packages": "lerna publish from-package --create-release github --yes",
-    "run-prettier": "prettier --write packages/**/*.ts"
+    "run-prettier": "prettier --write packages/**/*.ts",
+    "api-docs": "typedoc"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "2.22.0",
@@ -47,7 +48,7 @@
     "prettier": "2.0.5",
     "prettier-plugin-organize-imports": "1.0.3",
     "ts-node": "8.6.2",
-    "typedoc": "0.17.4",
+    "typedoc": "0.17.7",
     "typescript": "3.9.5"
   },
   "husky": {

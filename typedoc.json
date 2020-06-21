@@ -1,0 +1,12 @@
+{
+  "inputFiles": ["./packages"],
+  "exclude": "**/test/**",
+  "mode": "file",
+  "out": "api-docs",
+  "includeVersion": true,
+  "excludeNotExported": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeNotDocumented": true,
+  "name": "Takomo"
+}
