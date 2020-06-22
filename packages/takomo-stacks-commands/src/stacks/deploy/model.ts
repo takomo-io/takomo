@@ -15,13 +15,16 @@ import { StacksOperationOutput } from "../../model"
 
 export interface DeployStacksIO extends IO {
   chooseCommandPath(rootStackGroup: StackGroup): Promise<CommandPath>
-  confirmStackLaunch: (
+  confirmStackDeploy: (
     stack: Stack,
     changeSet: DescribeChangeSetOutput,
     templateBody: string,
+    templateSummary: CloudFormation.GetTemplateSummaryOutput,
     cloudFormationClient: CloudFormationClient,
+    existingStack: CloudFormation.Stack | null,
+    existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
   ) => Promise<ConfirmResult>
-  confirmLaunch: (ctx: CommandContext) => Promise<ConfirmResult>
+  confirmDeploy: (ctx: CommandContext) => Promise<ConfirmResult>
   printOutput: (output: StacksOperationOutput) => StacksOperationOutput
   printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
 }
@@ -34,6 +37,7 @@ export interface StackInfo {
 export interface InitialLaunchContext {
   readonly stack: Stack
   readonly existingStack: CloudFormation.Stack | null
+  readonly existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null
   readonly launchType: StackLaunchType
   readonly watch: StopWatch
   readonly logger: Logger
@@ -56,7 +60,11 @@ export interface TemplateLocationHolder extends TemplateBodyHolder {
   readonly templateS3Url: string | null
 }
 
-export interface ParameterHolder extends TemplateLocationHolder {
+export interface TemplateSummaryHolder extends TemplateLocationHolder {
+  readonly templateSummary: CloudFormation.GetTemplateSummaryOutput
+}
+
+export interface ParameterHolder extends TemplateSummaryHolder {
   readonly parameters: CloudFormation.Parameter[]
 }
 

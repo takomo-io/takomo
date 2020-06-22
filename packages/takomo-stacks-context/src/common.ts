@@ -30,6 +30,40 @@ export const resolveStackLaunchType = (
 export const isStackGroupPath = (commandPath: CommandPath): boolean =>
   !commandPath.includes(".yml")
 
+export const loadExistingTemplateSummaries = async (
+  logger: Logger,
+  stacks: Stack[],
+): Promise<Map<StackPath, CloudFormation.GetTemplateSummaryOutput>> => {
+  const map = new Map<StackPath, CloudFormation.GetTemplateSummaryOutput>()
+
+  await Promise.all(
+    stacks.map(async (stack) => {
+      logger.debug(
+        `Load existing template summary for stack with path: ${stack.getPath()}, name: ${stack.getName()}`,
+      )
+      const cf = new CloudFormationClient({
+        credentialProvider: stack.getCredentialProvider(),
+        region: stack.getRegion(),
+        logger,
+      })
+
+      const stackSummary = await cf.getTemplateSummaryForStack(stack.getName())
+      if (stackSummary) {
+        logger.debug(
+          `Existing template summary for stack found with path: ${stack.getPath()}, name: ${stack.getName()}`,
+        )
+        map.set(stack.getPath(), stackSummary)
+      } else {
+        logger.debug(
+          `No existing template summary for stack found with path: ${stack.getPath()}, name: ${stack.getName()}`,
+        )
+      }
+    }),
+  )
+
+  return map
+}
+
 export const loadExistingStacks = async (
   logger: Logger,
   stacks: Stack[],

@@ -8,7 +8,14 @@ import {
   StackGroup,
   StackLaunchType,
 } from "@takomo/stacks-model"
-import { collectFromHierarchy, green, orange, red, yellow } from "@takomo/util"
+import {
+  collectFromHierarchy,
+  green,
+  grey,
+  orange,
+  red,
+  yellow,
+} from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { DescribeChangeSetOutput } from "aws-sdk/clients/cloudformation"
 import { diffLines } from "diff"
@@ -21,6 +28,12 @@ import {
   formatStackEvent,
   formatStackStatus,
 } from "../formatters"
+
+export enum ParameterOperation {
+  UPDATE = "update",
+  ADD = "add",
+  DELETE = "delete",
+}
 
 const formatStackOperation = (
   stackPath: StackPath,
@@ -35,6 +48,208 @@ const formatStackOperation = (
       return yellow(`~ ${stackPath}:`)
     default:
       throw new Error(`Unsupported stack launch type: ${launchType}`)
+  }
+}
+
+const formatParameterOperation = (param: ParameterSpec): string => {
+  switch (param.operation) {
+    case ParameterOperation.ADD:
+      return green(`+ ${param.key}:`)
+    case ParameterOperation.DELETE:
+      return red(`- ${param.key}:`)
+    case ParameterOperation.UPDATE:
+      if (param.newNoEcho || param.currentNoEcho) {
+        return yellow(
+          `~ ${param.key}:    (possible update, but no way to be sure because no echo = true)`,
+        )
+      } else {
+        return yellow(`~ ${param.key}:`)
+      }
+
+    default:
+      throw new Error(`Unsupported parameter operation: ${param.operation}`)
+  }
+}
+
+const formatParameterValue = (value: string | null): string => {
+  if (value !== null) {
+    return value
+  } else {
+    return grey("<undefined>")
+  }
+}
+
+export interface ParameterSpec {
+  readonly key: string
+  readonly operation: ParameterOperation
+  readonly currentValue: string | null
+  readonly newValue: string | null
+  readonly newNoEcho: boolean
+  readonly currentNoEcho: boolean
+}
+
+export interface ParametersSpec {
+  readonly updated: ParameterSpec[]
+  readonly added: ParameterSpec[]
+  readonly removed: ParameterSpec[]
+}
+
+enum ResourceOperation {
+  UPDATE = "update",
+  ADD = "add",
+  DELETE = "delete",
+  REPLACE = "replace",
+}
+
+const resolveResourceOperation = (
+  action: CloudFormation.ChangeAction,
+  replacement: CloudFormation.Replacement,
+): ResourceOperation => {
+  switch (action) {
+    case "Add":
+      return ResourceOperation.ADD
+    case "Modify":
+      if (replacement === "True") {
+        return ResourceOperation.REPLACE
+      } else if (replacement === "Conditional") {
+        return ResourceOperation.REPLACE
+      } else {
+        return ResourceOperation.UPDATE
+      }
+    case "Remove":
+      return ResourceOperation.DELETE
+    default:
+      throw new Error(`Unsupported change action: ${action}`)
+  }
+}
+
+export const collectRemovedParameters = (
+  newParameterDeclarations: CloudFormation.ParameterDeclaration[],
+  newParameters: CloudFormation.Parameter[],
+  existingParameterDeclarations: CloudFormation.ParameterDeclaration[],
+  existingParameters: CloudFormation.Parameter[],
+): ParameterSpec[] => {
+  const newParameterNames = newParameters.map((p) => p.ParameterKey!)
+
+  return existingParameters
+    .filter((p) => !newParameterNames.includes(p.ParameterKey!))
+    .map(({ ParameterKey, ParameterValue }) => ({
+      key: ParameterKey!,
+      currentValue: ParameterValue || null,
+      newValue: null,
+      operation: ParameterOperation.DELETE,
+      currentNoEcho:
+        existingParameterDeclarations.find(
+          (d) => d.ParameterKey === ParameterKey,
+        )?.NoEcho || false,
+      newNoEcho: false,
+    }))
+}
+
+export const collectAddedParameters = (
+  newParameterDeclarations: CloudFormation.ParameterDeclaration[],
+  newParameters: CloudFormation.Parameter[],
+  existingParameterDeclarations: CloudFormation.ParameterDeclaration[],
+  existingParameters: CloudFormation.Parameter[],
+): ParameterSpec[] => {
+  const existingParameterNames = existingParameters.map((p) => p.ParameterKey!)
+  return newParameters
+    .filter((p) => !existingParameterNames.includes(p.ParameterKey!))
+    .map(({ ParameterKey, ParameterValue }) => ({
+      key: ParameterKey!,
+      currentValue: null,
+      newValue: ParameterValue || null,
+      operation: ParameterOperation.ADD,
+      newNoEcho:
+        newParameterDeclarations.find((d) => d.ParameterKey === ParameterKey)
+          ?.NoEcho || false,
+      currentNoEcho: false,
+    }))
+}
+
+export const collectUpdatedParameters = (
+  newParameterDeclarations: CloudFormation.ParameterDeclaration[],
+  newParameters: CloudFormation.Parameter[],
+  existingParameterDeclarations: CloudFormation.ParameterDeclaration[],
+  existingParameters: CloudFormation.Parameter[],
+): ParameterSpec[] => {
+  return newParameters
+    .map((p) => {
+      const existing = existingParameters.find(
+        (e) => e.ParameterKey === p.ParameterKey,
+      )
+      return [p, existing]
+    })
+    .filter(([p, e]) => {
+      if (!e) {
+        return false
+      }
+
+      const newNoEcho =
+        newParameterDeclarations.find(
+          (d) => d.ParameterKey === p?.ParameterKey!,
+        )?.NoEcho || false
+      const existingNoEcho =
+        existingParameterDeclarations.find(
+          (d) => d.ParameterKey === p?.ParameterKey!,
+        )?.NoEcho || false
+
+      if (newNoEcho || existingNoEcho) {
+        return true
+      }
+
+      return e.ParameterValue !== p?.ParameterValue
+    })
+    .map(([p, e]) => ({
+      key: p?.ParameterKey!,
+      currentValue: e?.ParameterValue || null,
+      newValue: p?.ParameterValue || null,
+      operation: ParameterOperation.UPDATE,
+      newNoEcho:
+        newParameterDeclarations.find((d) => d.ParameterKey === p?.ParameterKey)
+          ?.NoEcho || false,
+      currentNoEcho:
+        existingParameterDeclarations.find(
+          (d) => d.ParameterKey === p?.ParameterKey,
+        )?.NoEcho || false,
+    }))
+}
+
+const buildParametersSpec = (
+  changeSet: DescribeChangeSetOutput,
+  templateSummary: CloudFormation.GetTemplateSummaryOutput,
+  existingStack: CloudFormation.Stack | null,
+  existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
+): ParametersSpec => {
+  const newParameters = changeSet.Parameters || []
+  const newParameterDeclarations = templateSummary.Parameters || []
+  const existingParameters = existingStack?.Parameters || []
+  const existingParameterDeclarations =
+    existingTemplateSummary?.Parameters || []
+
+  const updated = collectUpdatedParameters(
+    newParameterDeclarations,
+    newParameters,
+    existingParameterDeclarations,
+    existingParameters,
+  )
+  const added = collectAddedParameters(
+    newParameterDeclarations,
+    newParameters,
+    existingParameterDeclarations,
+    existingParameters,
+  )
+  const removed = collectRemovedParameters(
+    newParameterDeclarations,
+    newParameters,
+    existingParameterDeclarations,
+    existingParameters,
+  )
+
+  return {
+    updated,
+    added,
+    removed,
   }
 }
 
@@ -74,7 +289,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     return this.autocomplete("Choose command path", source)
   }
 
-  confirmLaunch = async (ctx: CommandContext): Promise<ConfirmResult> => {
+  confirmDeploy = async (ctx: CommandContext): Promise<ConfirmResult> => {
     if (this.autoConfirm) {
       return ConfirmResult.YES
     }
@@ -92,13 +307,11 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       "",
       "Stack operations are indicated with the following symbols:",
       "",
-      `  ${green(
-        "+ create",
-      )}           Stack does not exist and will be created`,
-      `  ${yellow("~ update")}           Stack exists and will be updated`,
+      `  ${green("+ create")}           Stack will be created`,
+      `  ${yellow("~ update")}           Stack will be updated`,
       `  ${orange(
-        "± recreate",
-      )}         Previous attempt to create stack has failed, it will be first removed, then created`,
+        "± replace",
+      )}          Stack is in invalid state and will be first deleted and then created`,
       "",
       `Following ${stacks.length} stack(s) will be deployed:`,
     ])
@@ -186,13 +399,14 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
   ): void => {
     const changes = changeSet.Changes || []
 
-    const summary = new Map<string, number>([
-      ["Add", 0],
-      ["Modify", 0],
-      ["Remove", 0],
+    const summary = new Map<ResourceOperation, number>([
+      [ResourceOperation.ADD, 0],
+      [ResourceOperation.UPDATE, 0],
+      [ResourceOperation.DELETE, 0],
+      [ResourceOperation.REPLACE, 0],
     ])
 
-    this.message(`Changes to stack: ${path}`, true)
+    this.message(`${changes.length} stack resources to modify:`, true)
 
     changes.forEach((change) => {
       const {
@@ -205,7 +419,9 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
         Details,
       } = change.ResourceChange!
 
-      summary.set(Action!, summary.get(Action!)! + 1)
+      const operation = resolveResourceOperation(Action!, Replacement!)
+
+      summary.set(operation, summary.get(operation)! + 1)
 
       this.message(
         formatResourceChange(Action!, Replacement!, LogicalResourceId!),
@@ -233,28 +449,93 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       })
     })
 
-    const addCount = summary.get("Add")!.toString()
-    const modifyCount = summary.get("Modify")!.toString()
-    const removeCount = summary.get("Remove")!.toString()
+    const addCount = summary.get(ResourceOperation.ADD)!.toString()
+    const modifyCount = summary.get(ResourceOperation.UPDATE)!.toString()
+    const removeCount = summary.get(ResourceOperation.DELETE)!.toString()
+    const replaceCount = summary.get(ResourceOperation.REPLACE)!.toString()
 
     this.message(
-      `Add: ${green(addCount)}, Modify: ${yellow(modifyCount)}, Remove: ${red(
-        removeCount,
-      )}`,
+      `add: ${green(addCount)}, update: ${yellow(
+        modifyCount,
+      )}, replace: ${orange(replaceCount)}. delete: ${red(removeCount)}`,
       true,
       true,
     )
   }
 
-  confirmStackLaunch = async (
+  printParameters = (
+    changeSet: DescribeChangeSetOutput,
+    templateSummary: CloudFormation.GetTemplateSummaryOutput,
+    existingStack: CloudFormation.Stack | null,
+    existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
+  ): void => {
+    const { updated, added, removed } = buildParametersSpec(
+      changeSet,
+      templateSummary,
+      existingStack,
+      existingTemplateSummary,
+    )
+
+    const all = [...updated, ...added, ...removed].sort((a, b) =>
+      a.key.localeCompare(b.key),
+    )
+    if (all.length === 0) {
+      this.message("No stack parameters to modify")
+      return
+    }
+
+    this.message(`${all.length} stack parameters to modify:`)
+
+    all.forEach((param) => {
+      this.message(`  ${formatParameterOperation(param)}`, true)
+      this.message(`      no echo:   ${param.newNoEcho}`)
+      this.message(
+        `      current:   ${formatParameterValue(param.currentValue)}`,
+      )
+      this.message(`      new:       ${formatParameterValue(param.newValue)}`)
+    })
+  }
+
+  confirmStackDeploy = async (
     stack: Stack,
     changeSet: DescribeChangeSetOutput,
     templateBody: string,
+    templateSummary: CloudFormation.GetTemplateSummaryOutput,
     cloudFormationClient: CloudFormationClient,
+    existingStack: CloudFormation.Stack | null,
+    existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
   ): Promise<ConfirmResult> => {
     if (this.autoConfirm) {
       return ConfirmResult.YES
     }
+
+    this.subheader("Review deployment plan for a stack:", true)
+    this.longMessage([
+      "A stack deployment plan has been created and is shown below.",
+      "",
+      `  stack path:    ${stack.getPath()}`,
+      `  stack name:    ${stack.getName()}`,
+      `  stack region:  ${stack.getRegion()}`,
+      "",
+      "Operations targeting stack parameters or resources are indicated with the following symbols:",
+      "",
+      `  ${green("+ create")}       Resource/parameter will be created`,
+      `  ${yellow(
+        "~ update",
+      )}       Resource/parameter will be updated in-place`,
+      `  ${orange(
+        "± replace",
+      )}      Resource can't be updated in-place and will be replaced with a new resource`,
+      `  ${red("- delete")}       Resource/parameter will be deleted`,
+      "",
+    ])
+
+    this.printParameters(
+      changeSet,
+      templateSummary,
+      existingStack,
+      existingTemplateSummary,
+    )
 
     this.printChangeSet(stack.getPath(), changeSet)
 
@@ -262,12 +543,12 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       "Deploy stack?",
       [
         {
-          name: "yes",
-          value: "y",
-        },
-        {
           name: "no",
           value: "n",
+        },
+        {
+          name: "yes",
+          value: "y",
         },
         {
           name: "view template diff",
@@ -296,7 +577,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
 
       this.message(diffOutput, true, true)
 
-      return (await this.confirm("Launch stack"))
+      return (await this.confirm("Deploy stack"))
         ? ConfirmResult.YES
         : ConfirmResult.NO
     }

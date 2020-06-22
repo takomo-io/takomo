@@ -124,13 +124,6 @@ export class ResolverRegistry {
       )
     }
 
-    if (typeof provider.init !== "function") {
-      throw new InvalidResolverProviderConfigurationError(
-        sourceDescription,
-        "init function not defined",
-      )
-    }
-
     const nameType = typeof provider.name
     if (nameType !== "string" && nameType !== "function") {
       throw new InvalidResolverProviderConfigurationError(

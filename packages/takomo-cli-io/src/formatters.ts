@@ -93,19 +93,19 @@ export const formatResourceChange = (
 ): string => {
   switch (action) {
     case "Add":
-      return green(`  + ${resourceLogicalId}`)
+      return green(`  + ${resourceLogicalId}:`)
     case "Modify":
       if (replacement === "True") {
-        return orange(`  ± ${resourceLogicalId} (new resource required)`)
+        return orange(`  ± ${resourceLogicalId}:       (new resource required)`)
       } else if (replacement === "Conditional") {
         return orange(
-          `  ± ${resourceLogicalId} (new resource required conditionally)`,
+          `  ± ${resourceLogicalId}:       (new resource required conditionally)`,
         )
       } else {
-        return yellow(`  ~ ${resourceLogicalId}`)
+        return yellow(`  ~ ${resourceLogicalId}:`)
       }
     case "Remove":
-      return red(`  - ${resourceLogicalId}`)
+      return red(`  - ${resourceLogicalId}:`)
     default:
       throw new Error(`Unsupported change action: ${action}`)
   }

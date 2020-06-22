@@ -33,7 +33,7 @@ export interface ResultHolder extends InitialDeleteContext {
 
 export interface UndeployStacksIO extends IO {
   chooseCommandPath: (rootStackGroup: StackGroup) => Promise<CommandPath>
-  confirmDelete: (ctx: CommandContext) => Promise<ConfirmResult>
+  confirmUndeploy: (ctx: CommandContext) => Promise<ConfirmResult>
   printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
   printOutput: (output: StacksOperationOutput) => StacksOperationOutput
 }

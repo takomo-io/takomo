@@ -18,6 +18,10 @@ export interface StdCommandContextProps {
   readonly variables: Variables
   readonly templateEngine: TemplateEngine
   readonly existingStacks: Map<StackPath, CloudFormation.Stack>
+  readonly existingTemplateSummaries: Map<
+    StackPath,
+    CloudFormation.GetTemplateSummaryOutput
+  >
 }
 
 export class StdCommandContext implements CommandContext {
@@ -30,6 +34,10 @@ export class StdCommandContext implements CommandContext {
   private readonly credentialProvider: TakomoCredentialProvider
   private readonly templateEngine: TemplateEngine
   private readonly existingStacks: Map<StackPath, CloudFormation.Stack>
+  private readonly existingTemplateSummaries: Map<
+    StackPath,
+    CloudFormation.GetTemplateSummaryOutput
+  >
 
   constructor(props: StdCommandContextProps) {
     this.credentialProvider = props.credentialProvider
@@ -40,6 +48,7 @@ export class StdCommandContext implements CommandContext {
     this.variables = props.variables
     this.templateEngine = props.templateEngine
     this.existingStacks = props.existingStacks
+    this.existingTemplateSummaries = props.existingTemplateSummaries
     this.stacksMap = new Map(props.allStacks.map((s) => [s.getPath(), s]))
   }
 
@@ -61,4 +70,9 @@ export class StdCommandContext implements CommandContext {
     stackPath: StackPath,
   ): Promise<CloudFormation.Stack | null> =>
     this.existingStacks.get(stackPath) || null
+
+  getExistingTemplateSummary = async (
+    stackPath: StackPath,
+  ): Promise<CloudFormation.GetTemplateSummaryOutput | null> =>
+    this.existingTemplateSummaries.get(stackPath) || null
 }

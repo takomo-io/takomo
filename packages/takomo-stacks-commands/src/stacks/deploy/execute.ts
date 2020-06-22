@@ -30,6 +30,7 @@ export const createOrUpdateStack = async (
 
   switch (launchType) {
     case StackLaunchType.UPDATE:
+      logger.info("Update stack")
       const updateWatch = watch.startChild("update-stack")
       try {
         const hasChanges = await cloudFormationClient.updateStack({
@@ -75,6 +76,7 @@ export const createOrUpdateStack = async (
 
     case StackLaunchType.CREATE:
     case StackLaunchType.RECREATE:
+      logger.info("Create stack")
       const createWatch = watch.startChild("create-stack")
 
       try {
