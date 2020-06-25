@@ -31,12 +31,15 @@ export const reviewChanges = async (
     launchType,
     templateS3Url,
     templateBody,
+    templateSummary,
     parameters,
     tags,
     cloudFormationClient,
     io,
     watch,
     logger,
+    existingStack,
+    existingTemplateSummary,
   } = holder
 
   const childWatch = watch.startChild("review-changes")
@@ -46,7 +49,8 @@ export const reviewChanges = async (
   const templateLocation = templateS3Url || templateBody
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
 
-  logger.debugObject("Create change set:", {
+  logger.info("Create change set")
+  logger.debugObject("Change set data:", {
     clientToken,
     name: changeSetName,
     type: changeSetType,
@@ -87,11 +91,14 @@ export const reviewChanges = async (
 
     if (
       !ctx.getOptions().isAutoConfirmEnabled() &&
-      (await io.confirmStackLaunch(
+      (await io.confirmStackDeploy(
         stack,
         changeSet,
         templateBody,
+        templateSummary,
         cloudFormationClient,
+        existingStack,
+        existingTemplateSummary,
       )) !== ConfirmResult.YES
     ) {
       if (changeSetType === "CREATE") {
@@ -115,7 +122,7 @@ export const reviewChanges = async (
 
       return {
         stack,
-        message: "Launch cancelled",
+        message: "Deploy cancelled",
         reason: "CANCELLED",
         status: CommandStatus.CANCELLED,
         events: [],

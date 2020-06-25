@@ -16,6 +16,7 @@ Statement:
       - cloudformation:DeleteChangeSet
       - cloudformation:ValidateTemplate
       - cloudformation:DescribeStacks
+      - cloudformation:GetTemplateSummary
     Resource: "*"
   
   # S3 permissions needed only if template bucket is used.

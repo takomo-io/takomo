@@ -25,7 +25,7 @@ export const launchStack = async (
     credentialProvider: stack.getCredentialProvider(),
   })
 
-  logger.debug("Deploy stack")
+  logger.info("Preparing stack deployment")
   logger.debugObject("Stack config:", stack)
 
   const variables = {
@@ -34,19 +34,17 @@ export const launchStack = async (
   }
 
   const existingStack = await ctx.getExistingStack(stack.getPath())
+  const existingTemplateSummary = await ctx.getExistingTemplateSummary(
+    stack.getPath(),
+  )
   const launchType = existingStack
     ? resolveStackLaunchType(existingStack.StackStatus)
     : StackLaunchType.CREATE
 
-  if (existingStack) {
-    logger.info("Update stack")
-  } else {
-    logger.info("Create stack")
-  }
-
   const initial = {
     ctx,
     existingStack,
+    existingTemplateSummary,
     launchType,
     stack,
     dependencies,

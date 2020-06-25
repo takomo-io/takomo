@@ -47,7 +47,7 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
     return this.autocomplete("Choose command path", source)
   }
 
-  confirmDelete = async (ctx: CommandContext): Promise<ConfirmResult> => {
+  confirmUndeploy = async (ctx: CommandContext): Promise<ConfirmResult> => {
     const identity = await ctx.getCredentialProvider().getCallerIdentity()
     this.debugObject("Default credentials:", identity)
 

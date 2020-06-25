@@ -7,8 +7,52 @@ import {
 } from "@takomo/stacks-model"
 import { mapToObject, readFileContents, renderTemplate } from "@takomo/util"
 import path from "path"
-import { InitialLaunchContext, TemplateBodyHolder } from "./model"
+import {
+  InitialLaunchContext,
+  TemplateBodyHolder,
+  TemplateLocationHolder,
+} from "./model"
+import { prepareParameters } from "./parameters"
 import { validateTemplate } from "./validate"
+
+export const summarizeTemplate = async (
+  holder: TemplateLocationHolder,
+): Promise<StackResult> => {
+  const {
+    cloudFormationClient,
+    stack,
+    templateS3Url,
+    templateBody,
+    io,
+    watch,
+  } = holder
+  const childWatch = watch.startChild("summarize-template")
+  const input = templateS3Url || templateBody
+  const key = templateS3Url ? "TemplateURL" : "TemplateBody"
+
+  try {
+    const templateSummary = await cloudFormationClient.getTemplateSummary({
+      [key]: input,
+    })
+
+    childWatch.stop()
+    return prepareParameters({
+      ...holder,
+      templateSummary,
+    })
+  } catch (e) {
+    io.error(`${stack.getPath()} - Failed to summarize template`, e)
+    return {
+      stack,
+      message: e.message,
+      reason: "TEMPLATE_SUMMARY_FAILED",
+      status: CommandStatus.FAILED,
+      events: [],
+      success: false,
+      watch: watch.stop(),
+    }
+  }
+}
 
 export const uploadTemplate = async (
   holder: TemplateBodyHolder,

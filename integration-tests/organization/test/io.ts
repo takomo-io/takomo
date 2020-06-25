@@ -12,19 +12,13 @@ export class TestDeployStacksIO extends CliDeployStacksIO {
     super(options)
   }
 
-  confirmLaunch = async (): Promise<ConfirmResult> => {
+  confirmDeploy = async (): Promise<ConfirmResult> => {
     return this.options.isAutoConfirmEnabled()
       ? ConfirmResult.YES
       : ConfirmResult.NO
   }
 
-  confirmStackLaunch = async (): Promise<ConfirmResult> => {
-    return this.options.isAutoConfirmEnabled()
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
-  }
-
-  confirmDeleteOfFailedStack = async (): Promise<ConfirmResult> => {
+  confirmStackDeploy = async (): Promise<ConfirmResult> => {
     return this.options.isAutoConfirmEnabled()
       ? ConfirmResult.YES
       : ConfirmResult.NO
@@ -36,7 +30,7 @@ export class TestUndeployStacksIO extends CliUndeployStacksIO {
     super(options)
   }
 
-  confirmDelete = async (): Promise<ConfirmResult> => {
+  confirmUndeploy = async (): Promise<ConfirmResult> => {
     return this.options.isAutoConfirmEnabled()
       ? ConfirmResult.YES
       : ConfirmResult.NO

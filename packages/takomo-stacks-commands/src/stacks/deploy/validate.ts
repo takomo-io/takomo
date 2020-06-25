@@ -3,7 +3,7 @@ import { CommandContext, StackResult } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { TemplateLocationHolder } from "./model"
-import { prepareParameters } from "./parameters"
+import { summarizeTemplate } from "./template"
 
 export const isStackReadyForLaunch = (
   stackStatus: CloudFormation.StackStatus,
@@ -69,7 +69,7 @@ export const validateTemplate = async (
     })
 
     childWatch.stop()
-    return prepareParameters(holder)
+    return summarizeTemplate(holder)
   } catch (e) {
     io.error(`${stack.getPath()} - Failed to validate template`, e)
     return {

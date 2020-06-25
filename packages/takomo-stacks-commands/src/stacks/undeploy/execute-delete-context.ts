@@ -23,7 +23,7 @@ export const executeDeleteContext = async (
     throw new IncompatibleIgnoreDependenciesOptionOnDeleteError(stacks)
   }
 
-  if (!autoConfirm && (await io.confirmDelete(ctx)) !== ConfirmResult.YES) {
+  if (!autoConfirm && (await io.confirmUndeploy(ctx)) !== ConfirmResult.YES) {
     io.info("Undeploy cancelled")
     return {
       success: true,

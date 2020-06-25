@@ -52,6 +52,31 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
       },
     )
 
+  getTemplateSummaryForStack = async (
+    stackName: string,
+  ): Promise<CloudFormation.GetTemplateSummaryOutput | null> =>
+    this.withClientPromise(
+      (c) => c.getTemplateSummary({ StackName: stackName }),
+      (res) => res,
+      (e) => {
+        if (e.code === "ValidationError") {
+          if (e.message === `Stack with id ${stackName} does not exist`) {
+            return null
+          }
+        }
+
+        throw e
+      },
+    )
+
+  getTemplateSummary = async (
+    input: CloudFormation.GetTemplateSummaryInput,
+  ): Promise<CloudFormation.GetTemplateSummaryOutput> =>
+    this.withClientPromise(
+      (c) => c.getTemplateSummary(input),
+      (res) => res,
+    )
+
   getCurrentTemplate = async (stackName: string): Promise<string> =>
     this.withClientPromise(
       (c) => c.getTemplate({ StackName: stackName }),

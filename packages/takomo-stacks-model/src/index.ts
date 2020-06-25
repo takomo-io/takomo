@@ -918,9 +918,18 @@ export interface CommandContext {
   getTemplateEngine(): TemplateEngine
 
   /**
-   * Returns existing CloudFormation stack or null.
+   * Returns existing CloudFormation stack or null if the stack does not exists.
    * @param stackPath Stack path
-   * @returns Existing CloudFormation stack of null
+   * @returns Existing CloudFormation stack or null
    */
   getExistingStack(stackPath: StackPath): Promise<CloudFormation.Stack | null>
+
+  /**
+   * Return existing CloudFormation stack template symmary or null if the stack does not exists.
+   * @param stackPath Stack path
+   * @returns Existing CloudFormation template summary or null
+   */
+  getExistingTemplateSummary(
+    stackPath: StackPath,
+  ): Promise<CloudFormation.GetTemplateSummaryOutput | null>
 }

@@ -4,6 +4,7 @@ import uniq from "lodash.uniq"
 import {
   isStackGroupPath,
   loadExistingStacks,
+  loadExistingTemplateSummaries,
   validateStackCredentialProvidersWithAllowedAccountIds,
 } from "../common"
 import { ConfigContext } from "../config"
@@ -127,10 +128,14 @@ export const prepareDeleteContext = async (
 
   await validateStackCredentialProvidersWithAllowedAccountIds(stacksToProcess)
 
-  const existingStacks = await loadExistingStacks(logger, stacksToProcess)
+  const [existingStacks, existingTemplateSummaries] = await Promise.all([
+    loadExistingStacks(logger, stacksToProcess),
+    loadExistingTemplateSummaries(logger, stacksToProcess),
+  ])
 
   return new StdCommandContext({
     existingStacks,
+    existingTemplateSummaries,
     stacksToProcess,
     credentialProvider,
     options,
