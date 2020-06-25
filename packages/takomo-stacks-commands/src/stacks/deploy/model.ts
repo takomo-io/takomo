@@ -29,11 +29,6 @@ export interface DeployStacksIO extends IO {
   printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
 }
 
-export interface StackInfo {
-  readonly status: CloudFormation.StackStatus
-  readonly stackId: CloudFormation.StackId
-}
-
 export interface InitialLaunchContext {
   readonly stack: Stack
   readonly existingStack: CloudFormation.Stack | null

@@ -932,4 +932,16 @@ export interface CommandContext {
   getExistingTemplateSummary(
     stackPath: StackPath,
   ): Promise<CloudFormation.GetTemplateSummaryOutput | null>
+
+  /**
+   * Remove existing stack
+   * @param stackPath Stack path
+   */
+  removeExistingStack(stackPath: StackPath): void
+
+  /**
+   * Remove existing template summary
+   * @param stackPath Stack path
+   */
+  removeExistingTemplateSummary(stackPath: StackPath): void
 }

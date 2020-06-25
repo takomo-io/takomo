@@ -16,6 +16,7 @@ export const resolveChangeSetType = (
     case StackLaunchType.UPDATE:
       return "UPDATE"
     case StackLaunchType.CREATE:
+    case StackLaunchType.RECREATE:
       return "CREATE"
     default:
       throw new Error(`Unsupported stack launch type: ${launchType}`)

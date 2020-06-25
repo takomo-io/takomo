@@ -75,4 +75,12 @@ export class StdCommandContext implements CommandContext {
     stackPath: StackPath,
   ): Promise<CloudFormation.GetTemplateSummaryOutput | null> =>
     this.existingTemplateSummaries.get(stackPath) || null
+
+  removeExistingStack = (stackPath: StackPath): void => {
+    this.existingStacks.delete(stackPath)
+  }
+
+  removeExistingTemplateSummary = (stackPath: StackPath): void => {
+    this.existingTemplateSummaries.delete(stackPath)
+  }
 }
