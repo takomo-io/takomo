@@ -7,7 +7,6 @@ import {
 } from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
-import { cleanFailedStacks } from "./clean-failed-stacks"
 import { executeLaunchContext } from "./execute-launch-context"
 import { DeployStacksIO } from "./model"
 import { validateLaunchContext } from "./validate"
@@ -54,7 +53,6 @@ export const deployStacksCommand = async (
         modifiedInput.ignoreDependencies,
       )
         .then((ctx) => validateLaunchContext(ctx))
-        .then((ctx) => cleanFailedStacks(ctx))
         .then((ctx) => executeLaunchContext(ctx, modifiedInput, io))
     })
     .then(io.printOutput)

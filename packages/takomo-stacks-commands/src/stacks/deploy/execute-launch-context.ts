@@ -2,6 +2,7 @@ import { CommandStatus, ConfirmResult, StackPath } from "@takomo/core"
 import { CommandContext, StackResult } from "@takomo/stacks-model"
 import { StopWatch } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
+import { cleanFailedStacks } from "./clean-failed-stacks"
 import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"
 import { launchStack } from "./launch"
 import { DeployStacksIO } from "./model"
@@ -29,6 +30,8 @@ export const executeLaunchContext = async (
       watch: watch.stop(),
     }
   }
+
+  await cleanFailedStacks(ctx, io)
 
   // When change review is enabled, the stacks are not executed parallel
   if (!autoConfirm) {
