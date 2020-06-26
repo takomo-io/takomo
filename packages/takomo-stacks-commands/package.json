@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-commands",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Takomo Stacks Commands",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,12 +37,12 @@
   },
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@takomo/aws-clients": "2.1.0",
+    "@takomo/aws-clients": "2.2.0",
     "@takomo/core": "2.1.0",
-    "@takomo/stacks-context": "2.1.0",
-    "@takomo/stacks-hooks": "2.1.0",
-    "@takomo/stacks-model": "2.1.0",
-    "@takomo/stacks-schema": "2.1.0",
+    "@takomo/stacks-context": "2.2.0",
+    "@takomo/stacks-hooks": "2.2.0",
+    "@takomo/stacks-model": "2.2.0",
+    "@takomo/stacks-schema": "2.2.0",
     "@takomo/util": "2.0.0",
     "aws-sdk": "2.693.0",
     "uuid": "3.3.3"
