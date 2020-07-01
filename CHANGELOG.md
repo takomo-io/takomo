@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/takomo-io/takomo/compare/v2.2.0...v2.2.1) (2020-07-01)
+
+
+### Bug Fixes
+
+* fix invalid version range used to check current node.js version ([bcb54b4](https://github.com/takomo-io/takomo/commit/bcb54b46359243a9d18f43a4800908344ff8a09b))
+
+
+
+
+
 # [2.2.0](https://github.com/takomo-io/takomo/compare/v2.1.0...v2.2.0) (2020-06-26)
 
 

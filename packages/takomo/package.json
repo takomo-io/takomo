@@ -1,6 +1,6 @@
 {
   "name": "takomo",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Organize, configure and deploy CloudFormation stacks. Manage AWS organization.",
   "author": "henri@takomo.io",
   "license": "MIT",
