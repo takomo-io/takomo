@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/takomo-io/takomo/compare/v2.2.1...v2.3.0) (2020-07-02)
+
+
+### Features
+
+* add accountId property to deployment targets ([#59](https://github.com/takomo-io/takomo/issues/59)) ([ad0b367](https://github.com/takomo-io/takomo/commit/ad0b367b5d745e2b869ea907bd46ccf6247220aa)), closes [#58](https://github.com/takomo-io/takomo/issues/58)
+
+
+
+
+
 # [2.2.0](https://github.com/takomo-io/takomo/compare/v2.1.0...v2.2.0) (2020-06-26)
 
 
