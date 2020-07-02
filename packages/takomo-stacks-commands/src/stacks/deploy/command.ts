@@ -3,13 +3,13 @@ import { commandPath, TakomoCredentialProvider } from "@takomo/core"
 import {
   buildConfigContext,
   ConfigContext,
-  prepareLaunchContext,
+  prepareDeployContext,
 } from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
-import { executeLaunchContext } from "./execute-launch-context"
+import { executeDeployContext } from "./execute-deploy-context"
 import { DeployStacksIO } from "./model"
-import { validateLaunchContext } from "./validate"
+import { validateDeployContext } from "./validate"
 
 const schema = Joi.object({
   commandPath: commandPath.required(),
@@ -47,12 +47,12 @@ export const deployStacksCommand = async (
     )
     .then(async (ctx) => {
       const modifiedInput = await modifyInput(input, ctx, io)
-      return prepareLaunchContext(
+      return prepareDeployContext(
         ctx,
         modifiedInput.commandPath,
         modifiedInput.ignoreDependencies,
       )
-        .then((ctx) => validateLaunchContext(ctx))
-        .then((ctx) => executeLaunchContext(ctx, modifiedInput, io))
+        .then((ctx) => validateDeployContext(ctx))
+        .then((ctx) => executeDeployContext(ctx, modifiedInput, io))
     })
     .then(io.printOutput)

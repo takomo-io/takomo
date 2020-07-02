@@ -119,7 +119,7 @@ export const sortStacksForLaunch = (stacks: Stack[]): Stack[] =>
     return 0
   })
 
-export const prepareLaunchContext = async (
+export const prepareDeployContext = async (
   ctx: ConfigContext,
   commandPath: CommandPath,
   ignoreDependencies: boolean,

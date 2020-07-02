@@ -4,10 +4,10 @@ import { StopWatch } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { cleanFailedStacks } from "./clean-failed-stacks"
 import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"
-import { launchStack } from "./launch"
+import { deployStack } from "./launch"
 import { DeployStacksIO } from "./model"
 
-export const executeLaunchContext = async (
+export const executeDeployContext = async (
   ctx: CommandContext,
   input: StacksOperationInput,
   io: DeployStacksIO,
@@ -59,7 +59,7 @@ export const executeLaunchContext = async (
         continue
       }
 
-      const execution = await launchStack(watch, ctx, io, stack, dependencies)
+      const execution = await deployStack(watch, ctx, io, stack, dependencies)
       if (execution.status === CommandStatus.CANCELLED) {
         cancelled = true
       }
@@ -85,7 +85,7 @@ export const executeLaunchContext = async (
         ? []
         : stack.getDependencies().map((d) => executions.get(d)!)
 
-      const execution = launchStack(watch, ctx, io, stack, dependencies)
+      const execution = deployStack(watch, ctx, io, stack, dependencies)
       executions.set(stack.getPath(), execution)
 
       return executions

@@ -60,7 +60,7 @@ export const buildDeploymentTargetsContext = async (
 
   return new DeploymentTargetsContext({
     configFile,
-    credentialProvider: credentialProvider,
+    credentialProvider,
     options,
     variables,
     logger: io,

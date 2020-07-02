@@ -72,6 +72,23 @@ const parseDeploymentTargets = (
   )
 }
 
+const findMissingDirectChildrenPaths = (
+  childPaths: string[],
+  depth: number,
+): string[] => {
+  return uniq(
+    childPaths
+      .filter((key) => key.split("/").length >= depth + 2)
+      .map((key) =>
+        key
+          .split("/")
+          .slice(0, depth + 1)
+          .join("/"),
+      )
+      .filter((key) => !childPaths.includes(key)),
+  )
+}
+
 const parseDeploymentGroup = (
   groupPath: DeploymentGroupPath,
   config: any,
@@ -88,15 +105,9 @@ const parseDeploymentGroup = (
     (key) => key.split("/").length === groupPathDepth + 1,
   )
 
-  const missingDirectChildPaths = uniq(
-    childPaths
-      .filter((key) => key.split("/").length >= groupPathDepth + 2)
-      .map((key) =>
-        key
-          .split("/")
-          .slice(0, groupPathDepth + 1)
-          .join("/"),
-      ),
+  const missingDirectChildPaths = findMissingDirectChildrenPaths(
+    childPaths,
+    groupPathDepth,
   )
 
   const configuredConfigSets = parseConfigSetNames(group?.configSets)

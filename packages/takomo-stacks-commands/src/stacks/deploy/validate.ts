@@ -17,7 +17,7 @@ export const isStackReadyForLaunch = (
     "ROLLBACK_COMPLETE",
   ].includes(stackStatus)
 
-export const validateLaunchContext = async (
+export const validateDeployContext = async (
   ctx: CommandContext,
 ): Promise<CommandContext> => {
   const stacksInInvalidStatus = []

@@ -1,11 +1,11 @@
 import { resolveStackLaunchType } from "./common"
 import { buildConfigContext, ConfigContext } from "./config"
-import { prepareDeleteContext } from "./delete"
-import { prepareLaunchContext } from "./launch"
+import { prepareDeployContext } from "./deploy"
+import { prepareUndeployContext } from "./undeploy"
 
 export {
-  prepareDeleteContext,
-  prepareLaunchContext,
+  prepareUndeployContext,
+  prepareDeployContext,
   buildConfigContext,
   ConfigContext,
   resolveStackLaunchType,

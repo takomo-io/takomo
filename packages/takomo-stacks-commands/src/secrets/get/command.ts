@@ -2,7 +2,7 @@ import Joi from "@hapi/joi"
 import { CommandStatus, stackPath } from "@takomo/core"
 import {
   buildConfigContext,
-  prepareLaunchContext,
+  prepareDeployContext,
 } from "@takomo/stacks-context"
 import { secretName } from "@takomo/stacks-schema"
 import { StopWatch, validateInput } from "@takomo/util"
@@ -20,7 +20,7 @@ export const getSecretCommand = async (
 ): Promise<GetSecretOutput> =>
   validateInput(schema, input)
     .then((input) => buildConfigContext(input.options, input.variables, io))
-    .then((ctx) => prepareLaunchContext(ctx, input.stackPath, false))
+    .then((ctx) => prepareDeployContext(ctx, input.stackPath, false))
     .then((ctx) => getSecretValue(ctx, input.stackPath, input.secretName))
     .then((value) => ({
       success: true,

@@ -3,7 +3,7 @@ import { commandPath, TakomoCredentialProvider } from "@takomo/core"
 import {
   buildConfigContext,
   ConfigContext,
-  prepareDeleteContext,
+  prepareUndeployContext,
 } from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
@@ -47,7 +47,7 @@ export const undeployStacksCommand = async (
     )
     .then(async (ctx) => {
       const modifiedInput = await modifyInput(input, ctx, io)
-      return prepareDeleteContext(
+      return prepareUndeployContext(
         ctx,
         modifiedInput.commandPath,
         modifiedInput.ignoreDependencies,

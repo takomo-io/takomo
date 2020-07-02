@@ -2,7 +2,7 @@ import Joi from "@hapi/joi"
 import { commandPath } from "@takomo/core"
 import {
   buildConfigContext,
-  prepareLaunchContext,
+  prepareDeployContext,
 } from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
 import { SyncSecretsInput, SyncSecretsIO, SyncSecretsOutput } from "./model"
@@ -18,6 +18,6 @@ export const syncSecretsCommand = async (
 ): Promise<SyncSecretsOutput> =>
   validateInput(schema, input)
     .then((input) => buildConfigContext(input.options, input.variables, io))
-    .then((ctx) => prepareLaunchContext(ctx, input.commandPath, false))
+    .then((ctx) => prepareDeployContext(ctx, input.commandPath, false))
     .then((ctx) => syncSecrets(ctx, input, io))
     .then(io.printOutput)
