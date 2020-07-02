@@ -16,7 +16,7 @@ import {
   StacksOperationInput,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { deepCopy, StopWatch } from "@takomo/util"
+import { deepCopy, StopWatch, TakomoError } from "@takomo/util"
 import merge from "lodash.merge"
 import {
   DeploymentGroupConfig,
@@ -172,6 +172,15 @@ export const processCommandPath = async (
         .getCredentialProvider()
         .createCredentialProviderForRole(deploymentRole.iamRoleArn)
     : ctx.getCredentialProvider()
+
+  if (target.accountId) {
+    const identity = await credentialProvider.getCallerIdentity()
+    if (identity.accountId !== target.accountId) {
+      throw new TakomoError(
+        `Current credentials belong to AWS account ${identity.accountId}, but the deployment target can be deployed only to account: ${target.accountId}`,
+      )
+    }
+  }
 
   try {
     return deployOrUndeploy(

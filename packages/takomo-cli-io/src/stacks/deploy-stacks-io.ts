@@ -457,7 +457,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     this.message(
       `add: ${green(addCount)}, update: ${yellow(
         modifyCount,
-      )}, replace: ${orange(replaceCount)}. delete: ${red(removeCount)}`,
+      )}, replace: ${orange(replaceCount)}, delete: ${red(removeCount)}`,
       true,
       true,
     )
