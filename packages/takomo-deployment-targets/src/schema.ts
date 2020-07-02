@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi"
 import { configSetName } from "@takomo/config-sets"
-import { iamRoleArn, vars } from "@takomo/core"
+import { accountId, iamRoleArn, vars } from "@takomo/core"
 
 export const deploymentGroupPath = Joi.string()
   .min(1)
@@ -48,6 +48,7 @@ export const deploymentTargetName = Joi.string()
 
 const deploymentTarget = Joi.object({
   vars,
+  accountId,
   name: deploymentTargetName.required(),
   deploymentRole: iamRoleArn,
   description: Joi.string(),

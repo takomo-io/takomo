@@ -50,8 +50,9 @@ const parseDeploymentTarget = (
 
   return {
     configSets,
-    name: value.name,
-    description: value.description,
+    name: value.name || null,
+    description: value.description || null,
+    accountId: value.accountId || null,
     deploymentRole: parseCommandRole(value.deploymentRole),
     status: parseDeploymentStatus(value.status),
     vars: parseVars(value.vars),

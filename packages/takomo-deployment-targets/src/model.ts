@@ -1,5 +1,6 @@
 import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
 import {
+  AccountId,
   CommandRole,
   Options,
   TakomoCredentialProvider,
@@ -24,6 +25,7 @@ export interface DeploymentTargetConfig {
   readonly vars: Vars
   readonly configSets: ConfigSetName[]
   readonly deploymentRole: CommandRole | null
+  readonly accountId: AccountId | null
 }
 
 export interface DeploymentGroupConfig {
