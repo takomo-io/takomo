@@ -1,15 +1,15 @@
 import hb from "handlebars"
 import { TakomoError } from "../errors"
-import { buildErrorMessage } from "./internal"
+import { buildErrorMessage } from "../errors/build-error-message"
 
 /**
  * Template engine.
  */
 export class TemplateEngine {
-  private instance: any
+  #instance: any
 
   constructor() {
-    this.instance = hb.create()
+    this.#instance = hb.create()
   }
 
   /**
@@ -19,7 +19,7 @@ export class TemplateEngine {
    * @param fn Helper function
    */
   registerHelper = (name: string, fn: any): void => {
-    this.instance.registerHelper(name, fn)
+    this.#instance.registerHelper(name, fn)
   }
 
   /**
@@ -29,8 +29,8 @@ export class TemplateEngine {
    * @param partialString Partial string
    */
   registerPartial = (name: string, partialString: string): void => {
-    const partial = this.instance.compile(partialString)
-    this.instance.registerPartial(name, partial)
+    const partial = this.#instance.compile(partialString)
+    this.#instance.registerPartial(name, partial)
   }
 
   /**
@@ -41,7 +41,7 @@ export class TemplateEngine {
    * @returns Rendered template
    */
   renderTemplate = (string: string, variables: any): string => {
-    const template = this.instance.compile(string, {
+    const template = this.#instance.compile(string, {
       noEscape: false,
       strict: true,
     })
@@ -59,7 +59,11 @@ export const renderTemplate = async (
   try {
     return templateEngine.renderTemplate(contents, variables)
   } catch (e) {
-    const errorMessage = buildErrorMessage(filePath, contents, e)
+    const errorMessage = buildErrorMessage(
+      `An error occurred while rendering file: ${filePath}`,
+      contents,
+      e,
+    )
     throw new TakomoError(errorMessage)
   }
 }

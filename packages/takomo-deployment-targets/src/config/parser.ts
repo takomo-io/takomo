@@ -169,7 +169,7 @@ export const parseDeploymentConfigFile = async (
 
   logger.traceText(`Final rendered deployment groups config file:`, rendered)
 
-  const parsedFile = (await parseYaml(rendered)) || {}
+  const parsedFile = (await parseYaml(path, rendered)) || {}
 
   const { error } = deploymentGroupsConfigFileSchema.validate(parsedFile, {
     abortEarly: false,

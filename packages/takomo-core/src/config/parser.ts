@@ -3,6 +3,7 @@ import semver from "semver"
 import { TakomoProjectConfig } from "./model"
 import { takomoProjectConfigFileSchema } from "./schema"
 
+// eslint-disable-next-line
 const packageJson = require("../../package.json")
 const version = packageJson.version
 
@@ -29,7 +30,7 @@ export const parseProjectConfigFile = async (
   path: string,
 ): Promise<TakomoProjectConfig> => {
   const contents = await readFileContents(path)
-  const parsedFile = (await parseYaml(contents)) || {}
+  const parsedFile = (await parseYaml(path, contents)) || {}
 
   const { error } = takomoProjectConfigFileSchema.validate(parsedFile, {
     abortEarly: false,
