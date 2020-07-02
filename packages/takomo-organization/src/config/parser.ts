@@ -384,7 +384,7 @@ export const parseOrganizationConfigFile = async (
 
   logger.traceText(`Final rendered organization config file:`, rendered)
 
-  const parsedFile = (await parseYaml(rendered)) || {}
+  const parsedFile = (await parseYaml(path, rendered)) || {}
 
   const { error } = organizationConfigFileSchema.validate(parsedFile, {
     abortEarly: false,

@@ -56,7 +56,7 @@ export const parseStackConfigFile = async (
 
   logger.traceText(`Final rendered stack config file:`, rendered)
 
-  const parsedFile = (await parseYaml(rendered)) || {}
+  const parsedFile = (await parseYaml(path, rendered)) || {}
 
   const { error } = stackConfigFileSchema.validate(parsedFile, {
     abortEarly: false,
@@ -132,7 +132,7 @@ export const parseStackGroupConfigFile = async (
   )
   logger.traceText(`Final rendered stack group config file:`, rendered)
 
-  const parsedFile = (await parseYaml(rendered)) || {}
+  const parsedFile = (await parseYaml(path, rendered)) || {}
 
   const { error } = stackGroupConfigFileSchema.validate(parsedFile, {
     abortEarly: false,
