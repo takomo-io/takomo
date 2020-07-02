@@ -2,7 +2,7 @@ import Joi from "@hapi/joi"
 import { stackPath } from "@takomo/core"
 import {
   buildConfigContext,
-  prepareLaunchContext,
+  prepareDeployContext,
 } from "@takomo/stacks-context"
 import { secretName } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
@@ -20,6 +20,6 @@ export const setSecretCommand = async (
 ): Promise<SetSecretOutput> =>
   validateInput(schema, input)
     .then((input) => buildConfigContext(input.options, input.variables, io))
-    .then((ctx) => prepareLaunchContext(ctx, input.stackPath, false))
+    .then((ctx) => prepareDeployContext(ctx, input.stackPath, false))
     .then((ctx) => setSecretValue(ctx, input, io))
     .then(io.printOutput)

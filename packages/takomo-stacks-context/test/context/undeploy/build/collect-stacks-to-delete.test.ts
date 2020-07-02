@@ -7,7 +7,7 @@ import {
   TemplateEngine,
 } from "@takomo/util"
 import { ConfigContext } from "../../../../src/config"
-import { collectStacksToDelete } from "../../../../src/delete/build"
+import { collectStacksToDelete } from "../../../../src/undeploy/build"
 import { createStack, createStackGroup } from "../../../helpers"
 import { mockTakomoCredentialProvider } from "../../../mocks"
 

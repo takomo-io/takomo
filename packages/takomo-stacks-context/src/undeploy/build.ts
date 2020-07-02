@@ -9,7 +9,7 @@ import {
 } from "../common"
 import { ConfigContext } from "../config"
 import { collectAllDependants } from "../dependencies"
-import { CommandPathMatchesNoStacksError } from "../launch/build"
+import { CommandPathMatchesNoStacksError } from "../deploy/build"
 import { StdCommandContext } from "../model"
 
 const collectStacksToDeleteFromStack = (
@@ -101,7 +101,7 @@ export const collectStacksToDelete = (
   ).map(ctx.getStackByExactPath)
 }
 
-export const prepareDeleteContext = async (
+export const prepareUndeployContext = async (
   ctx: ConfigContext,
   commandPath: CommandPath,
   ignoreDependencies: boolean,

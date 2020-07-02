@@ -10,7 +10,7 @@ import { StopWatch } from "@takomo/util"
 import { DeployStacksIO } from "./model"
 import { waitForDependenciesToComplete } from "./wait"
 
-export const launchStack = async (
+export const deployStack = async (
   watch: StopWatch,
   ctx: CommandContext,
   io: DeployStacksIO,

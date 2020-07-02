@@ -2,7 +2,7 @@ import Joi from "@hapi/joi"
 import { commandPath, CommandStatus } from "@takomo/core"
 import {
   buildConfigContext,
-  prepareLaunchContext,
+  prepareDeployContext,
 } from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
 import { listSecrets } from "./list-secrets"
@@ -18,7 +18,7 @@ export const listSecretsCommand = async (
 ): Promise<ListSecretsOutput> =>
   validateInput(schema, input)
     .then((input) => buildConfigContext(input.options, input.variables, io))
-    .then((ctx) => prepareLaunchContext(ctx, input.commandPath, false))
+    .then((ctx) => prepareDeployContext(ctx, input.commandPath, false))
     .then(listSecrets)
     .then((stacks) => ({
       success: true,

@@ -1,4 +1,4 @@
-import { sortStacksForDeletion } from "../../../../src/delete/build"
+import { sortStacksForDeletion } from "../../../../src/undeploy/build"
 import { createStack } from "../../../helpers"
 
 describe("sort stacks for deletion", () => {

@@ -43,7 +43,7 @@ export const createOrUpdateStack = async (
         })
 
         if (!hasChanges) {
-          logger.info("No changes")
+          logger.info("No updates to perform")
           return {
             stack,
             message: "No changes",
