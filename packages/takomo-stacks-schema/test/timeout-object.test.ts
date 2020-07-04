@@ -10,7 +10,7 @@ const invalid = [
 describe("timeout object validation", () => {
   test.each(invalid)("fails when '%s' is given", (value, expectedMessage) => {
     const { error } = timeoutObject.validate(value)
-    expect(error.message).toBe(expectedMessage)
+    expect(error!.message).toBe(expectedMessage)
   })
 
   test.each(valid)("succeeds when '%s' is given", (value) => {

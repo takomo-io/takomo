@@ -3,7 +3,7 @@ import { CommandStatus } from "@takomo/core"
 import { CommandContext, Stack, StackResult } from "@takomo/stacks-model"
 import { StopWatch } from "@takomo/util"
 import uuid from "uuid"
-import { InitialDeleteContext, UndeployStacksIO } from "./model"
+import { InitialUndeployContext, UndeployStacksIO } from "./model"
 import {
   waitCloudFormationStackDeletionToComplete,
   waitForDependantsToComplete,
@@ -60,7 +60,7 @@ export const deleteStack = async (
 }
 
 export const initiateCloudFormationStackDeletion = async (
-  holder: InitialDeleteContext,
+  holder: InitialUndeployContext,
 ): Promise<StackResult> => {
   const { stack, existingStack, cloudFormationClient, watch, logger } = holder
   const childWatch = watch.startChild("initiate-stack-deletion")
@@ -95,7 +95,7 @@ export const initiateCloudFormationStackDeletion = async (
 }
 
 export const deleteSecrets = async (
-  initial: InitialDeleteContext,
+  initial: InitialUndeployContext,
 ): Promise<StackResult> => {
   const { stack, watch, logger } = initial
   const childWatch = watch.startChild("delete-secrets")

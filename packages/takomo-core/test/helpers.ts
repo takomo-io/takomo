@@ -13,12 +13,13 @@ export const expectValidationErrors = (
   value: any,
   ...expectedMessages: string[]
 ) => {
-  const {
-    error: { details },
-  } = validator.validate(value, { abortEarly: false })
+  const { error } = validator.validate(value, { abortEarly: false })
+  if (error === undefined) {
+    fail("Expected error to be defined")
+  }
 
   const expected = expectedMessages.slice().sort().join("\n")
-  const actual = details
+  const actual = error.details
     .map((d) => d.message)
     .sort()
     .join("\n")

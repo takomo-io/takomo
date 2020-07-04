@@ -1,5 +1,6 @@
-import { CommandPath, ConfirmResult, Options, StackPath } from "@takomo/core"
+import { CommandPath, Options, StackPath } from "@takomo/core"
 import {
+  ConfirmUndeployAnswer,
   StacksOperationOutput,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
@@ -14,6 +15,17 @@ import {
   formatStackEvent,
   formatStackStatus,
 } from "../formatters"
+
+const CONFIRM_UNDEPLOY_ANSWER_CANCEL = {
+  name: "no",
+  value: ConfirmUndeployAnswer.CANCEL,
+}
+
+const CONFIRM_UNDEPLOY_ANSWER_CONTINUE = {
+  name: "yes",
+  value: ConfirmUndeployAnswer.CONTINUE,
+}
+
 export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
   constructor(options: Options, loggerName: string | null = null) {
     super(options, loggerName)
@@ -47,7 +59,9 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
     return this.autocomplete("Choose command path", source)
   }
 
-  confirmUndeploy = async (ctx: CommandContext): Promise<ConfirmResult> => {
+  confirmUndeploy = async (
+    ctx: CommandContext,
+  ): Promise<ConfirmUndeployAnswer> => {
     const identity = await ctx.getCredentialProvider().getCallerIdentity()
     this.debugObject("Default credentials:", identity)
 
@@ -101,9 +115,11 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
       }
     }
 
-    return (await this.confirm("Continue to undeploy the stacks?", true))
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
+    return await this.choose(
+      "Continue to undeploy the stacks?",
+      [CONFIRM_UNDEPLOY_ANSWER_CANCEL, CONFIRM_UNDEPLOY_ANSWER_CONTINUE],
+      true,
+    )
   }
 
   printStackEvent = (

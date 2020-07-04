@@ -1,13 +1,19 @@
-import { CommandStatus, ConfirmResult } from "@takomo/core"
+import { CloudFormationClient } from "@takomo/aws-clients"
+import { CommandStatus } from "@takomo/core"
 import {
   defaultCapabilities,
+  Stack,
   StackLaunchType,
   StackResult,
 } from "@takomo/stacks-model"
-import { ChangeSetType } from "aws-sdk/clients/cloudformation"
+import { CloudFormation } from "aws-sdk"
+import {
+  ChangeSetType,
+  DescribeChangeSetOutput,
+} from "aws-sdk/clients/cloudformation"
 import uuid from "uuid"
 import { createOrUpdateStack } from "./execute"
-import { TagsHolder } from "./model"
+import { ConfirmStackDeployAnswer, DeployStacksIO, TagsHolder } from "./model"
 
 export const resolveChangeSetType = (
   launchType: StackLaunchType,
@@ -21,6 +27,32 @@ export const resolveChangeSetType = (
     default:
       throw new Error(`Unsupported stack launch type: ${launchType}`)
   }
+}
+
+const confirmStackDeploy = async (
+  autoConfirm: boolean,
+  io: DeployStacksIO,
+  stack: Stack,
+  changeSet: DescribeChangeSetOutput,
+  templateBody: string,
+  templateSummary: CloudFormation.GetTemplateSummaryOutput,
+  cloudFormationClient: CloudFormationClient,
+  existingStack: CloudFormation.Stack | null,
+  existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
+): Promise<ConfirmStackDeployAnswer> => {
+  if (autoConfirm) {
+    return ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS
+  }
+
+  return io.confirmStackDeploy(
+    stack,
+    changeSet,
+    templateBody,
+    templateSummary,
+    cloudFormationClient,
+    existingStack,
+    existingTemplateSummary,
+  )
 }
 
 export const reviewChanges = async (
@@ -41,6 +73,7 @@ export const reviewChanges = async (
     logger,
     existingStack,
     existingTemplateSummary,
+    state,
   } = holder
 
   const childWatch = watch.startChild("review-changes")
@@ -90,20 +123,22 @@ export const reviewChanges = async (
 
     logger.debug("Change set contains changes")
 
-    if (
-      !ctx.getOptions().isAutoConfirmEnabled() &&
-      (await io.confirmStackDeploy(
-        stack,
-        changeSet,
-        templateBody,
-        templateSummary,
-        cloudFormationClient,
-        existingStack,
-        existingTemplateSummary,
-      )) !== ConfirmResult.YES
-    ) {
+    const autoConfirm = ctx.getOptions().isAutoConfirmEnabled()
+    const answer = await confirmStackDeploy(
+      autoConfirm,
+      io,
+      stack,
+      changeSet,
+      templateBody,
+      templateSummary,
+      cloudFormationClient,
+      existingStack,
+      existingTemplateSummary,
+    )
+
+    if (answer === ConfirmStackDeployAnswer.CANCEL) {
       if (changeSetType === "CREATE") {
-        logger.debug("Initiate deletion of the created temporary stack")
+        logger.info("Clean up temporary stack")
         await cloudFormationClient.initiateStackDeletion({
           StackName: stack.getName(),
         })
@@ -130,6 +165,12 @@ export const reviewChanges = async (
         success: false,
         watch: watch.stop(),
       }
+    }
+
+    if (
+      answer === ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS
+    ) {
+      state.autoConfirm = true
     }
 
     if (changeSetType === "CREATE") {

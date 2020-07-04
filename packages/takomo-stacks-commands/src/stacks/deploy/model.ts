@@ -1,5 +1,5 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandPath, ConfirmResult, IO, StackPath } from "@takomo/core"
+import { CommandPath, IO, StackPath } from "@takomo/core"
 import {
   CommandContext,
   Stack,
@@ -13,8 +13,21 @@ import { CloudFormation } from "aws-sdk"
 import { DescribeChangeSetOutput } from "aws-sdk/clients/cloudformation"
 import { StacksOperationOutput } from "../../model"
 
+export enum ConfirmDeployAnswer {
+  CANCEL,
+  CONTINUE_AND_REVIEW,
+  CONTINUE_NO_REVIEW,
+}
+
+export enum ConfirmStackDeployAnswer {
+  CANCEL,
+  REVIEW_TEMPLATE,
+  CONTINUE,
+  CONTINUE_AND_SKIP_REMAINING_REVIEWS,
+}
+
 export interface DeployStacksIO extends IO {
-  chooseCommandPath(rootStackGroup: StackGroup): Promise<CommandPath>
+  chooseCommandPath: (rootStackGroup: StackGroup) => Promise<CommandPath>
   confirmStackDeploy: (
     stack: Stack,
     changeSet: DescribeChangeSetOutput,
@@ -23,10 +36,15 @@ export interface DeployStacksIO extends IO {
     cloudFormationClient: CloudFormationClient,
     existingStack: CloudFormation.Stack | null,
     existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
-  ) => Promise<ConfirmResult>
-  confirmDeploy: (ctx: CommandContext) => Promise<ConfirmResult>
+  ) => Promise<ConfirmStackDeployAnswer>
+  confirmDeploy: (ctx: CommandContext) => Promise<ConfirmDeployAnswer>
   printOutput: (output: StacksOperationOutput) => StacksOperationOutput
   printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
+}
+
+export interface DeployState {
+  cancelled: boolean
+  autoConfirm: boolean
 }
 
 export interface InitialLaunchContext {
@@ -41,10 +59,7 @@ export interface InitialLaunchContext {
   readonly cloudFormationClient: CloudFormationClient
   readonly io: DeployStacksIO
   readonly variables: StackOperationVariables
-}
-
-export interface DeleteStackClientTokenHolder extends InitialLaunchContext {
-  readonly clientToken: string
+  readonly state: DeployState
 }
 
 export interface TemplateBodyHolder extends InitialLaunchContext {

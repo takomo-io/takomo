@@ -1,5 +1,5 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandPath, ConfirmResult, IO, StackPath } from "@takomo/core"
+import { CommandPath, IO, StackPath } from "@takomo/core"
 import {
   CommandContext,
   Stack,
@@ -11,7 +11,7 @@ import { Logger, StopWatch } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { StacksOperationOutput } from "../../model"
 
-export interface InitialDeleteContext {
+export interface InitialUndeployContext {
   readonly stack: Stack
   readonly existingStack: CloudFormation.Stack | null
   readonly watch: StopWatch
@@ -23,17 +23,22 @@ export interface InitialDeleteContext {
   readonly variables: StackOperationVariables
 }
 
-export interface ClientTokenHolder extends InitialDeleteContext {
+export interface ClientTokenHolder extends InitialUndeployContext {
   readonly clientToken: string
 }
 
-export interface ResultHolder extends InitialDeleteContext {
+export interface ResultHolder extends InitialUndeployContext {
   readonly result: StackResult
+}
+
+export enum ConfirmUndeployAnswer {
+  CANCEL,
+  CONTINUE,
 }
 
 export interface UndeployStacksIO extends IO {
   chooseCommandPath: (rootStackGroup: StackGroup) => Promise<CommandPath>
-  confirmUndeploy: (ctx: CommandContext) => Promise<ConfirmResult>
+  confirmUndeploy: (ctx: CommandContext) => Promise<ConfirmUndeployAnswer>
   printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
   printOutput: (output: StacksOperationOutput) => StacksOperationOutput
 }

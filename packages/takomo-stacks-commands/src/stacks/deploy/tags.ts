@@ -6,7 +6,7 @@ import { reviewChanges } from "./review"
 export const prepareTags = async (
   holder: ParameterHolder,
 ): Promise<StackResult> => {
-  const { stack, watch, ctx, logger } = holder
+  const { stack, watch, logger, state } = holder
   const childWatch = watch.startChild("prepare-tags")
 
   logger.debug("Prepare tags")
@@ -25,7 +25,7 @@ export const prepareTags = async (
 
   childWatch.stop()
 
-  if (ctx.getOptions().isAutoConfirmEnabled()) {
+  if (state.autoConfirm) {
     return createOrUpdateStack({ ...holder, tags })
   }
 

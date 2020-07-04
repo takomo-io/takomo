@@ -2,10 +2,10 @@ import { CommandStatus } from "@takomo/core"
 import { StackResult } from "@takomo/stacks-model"
 import { CloudFormation } from "aws-sdk"
 import { executeAfterDeleteHooks, executeBeforeDeleteHooks } from "./hooks"
-import { ClientTokenHolder, InitialDeleteContext } from "./model"
+import { ClientTokenHolder, InitialUndeployContext } from "./model"
 
 export const waitForDependantsToComplete = async (
-  initial: InitialDeleteContext,
+  initial: InitialUndeployContext,
 ): Promise<StackResult> => {
   const { stack, dependants, watch, logger } = initial
   const childWatch = watch.startChild("wait-dependants")

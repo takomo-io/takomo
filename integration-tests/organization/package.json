@@ -13,12 +13,10 @@
     "url": "https://github.com/takomo-io/takomo.git"
   },
   "scripts": {
-    "buildx": "tsc -p tsconfig.build.json",
     "clean:dist": "rm -rf dist",
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
-    "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript",
     "integration-test": "jest test --passWithNoTests --maxWorkers=1 --ci"
   },
   "dependencies": {
@@ -27,8 +25,7 @@
     "@takomo/config-sets": "2.3.0",
     "@takomo/core": "2.3.0",
     "@takomo/organization": "2.3.0",
-    "@takomo/stacks-model": "2.3.0",
-    "aws-sdk": "2.693.0"
+    "@takomo/test": "2.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",

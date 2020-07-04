@@ -4,8 +4,7 @@ import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TestUndeployStacksIO } from "../../io"
-import { TIMEOUT } from "../../test-constants"
+import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
 
 const createOptions = async () =>
   initOptionsAndVariables({
@@ -19,7 +18,7 @@ beforeAll(async () => {
   const { options, variables, watch } = await createOptions()
   return await undeployStacksCommand(
     {
-      commandPath: "/delete/before/error",
+      commandPath: "/delete/before/failure",
       ignoreDependencies: false,
       interactive: false,
       options,
@@ -30,14 +29,14 @@ beforeAll(async () => {
   )
 }, TIMEOUT)
 
-describe("Example: Before hook that fails on error ", () => {
+describe("Example: Before hook that fails ", () => {
   test(
     "Launch",
     async () => {
       const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
         {
-          commandPath: "/delete/before/error",
+          commandPath: "/delete/before/failure",
           ignoreDependencies: false,
           interactive: false,
           options,
@@ -58,7 +57,7 @@ describe("Example: Before hook that fails on error ", () => {
       const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(
         {
-          commandPath: "/delete/before/error",
+          commandPath: "/delete/before/failure",
           ignoreDependencies: false,
           interactive: false,
           options,
@@ -73,21 +72,21 @@ describe("Example: Before hook that fails on error ", () => {
       const [res1, res2, res3] = output.results
 
       expect(res1.stack.getPath()).toBe(
-        "/delete/before/error/stack-3.yml/eu-west-1",
+        "/delete/before/failure/stack-3.yml/eu-west-1",
       )
       expect(res1.status).toBe(CommandStatus.SUCCESS)
       expect(res1.success).toBe(true)
 
       expect(res2.stack.getPath()).toBe(
-        "/delete/before/error/stack-2.yml/eu-west-1",
+        "/delete/before/failure/stack-2.yml/eu-west-1",
       )
       expect(res2.status).toBe(CommandStatus.FAILED)
       expect(res2.success).toBe(false)
-      expect(res2.message).toBe("Oh no!")
+      expect(res2.message).toBe("Not ok")
       expect(res2.reason).toBe("BEFORE_HOOKS_FAILED")
 
       expect(res3.stack.getPath()).toBe(
-        "/delete/before/error/stack-1.yml/eu-west-1",
+        "/delete/before/failure/stack-1.yml/eu-west-1",
       )
       expect(res3.status).toBe(CommandStatus.CANCELLED)
       expect(res3.success).toBe(false)

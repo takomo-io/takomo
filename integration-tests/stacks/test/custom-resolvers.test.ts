@@ -4,8 +4,7 @@ import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
-import { TIMEOUT } from "./test-constants"
+import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
 
 const createOptions = async () =>
   initOptionsAndVariables({

@@ -9,6 +9,8 @@ export * from "./secrets/list"
 export * from "./secrets/set"
 export * from "./secrets/sync"
 export {
+  ConfirmDeployAnswer,
+  ConfirmStackDeployAnswer,
   deployStacksCommand,
   deployStacksCommandIamPolicy,
   DeployStacksIO,
@@ -21,6 +23,7 @@ export {
   ListStacksOutput,
 } from "./stacks/list"
 export {
+  ConfirmUndeployAnswer,
   undeployStacksCommand,
   undeployStacksCommandIamPolicy,
   UndeployStacksIO,

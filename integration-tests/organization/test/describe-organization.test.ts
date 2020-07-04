@@ -2,13 +2,12 @@ import { initOptionsAndVariables } from "@takomo/cli"
 import { CliDescribeOrganizationIO } from "@takomo/cli-io"
 import { CommandStatus } from "@takomo/core"
 import { describeOrganizationCommand } from "@takomo/organization"
-import { aws } from "./aws-api"
+import { aws, TIMEOUT } from "@takomo/test"
 import {
   ORG_A_ID,
   ORG_A_MASTER_ACCOUNT_ID,
   ORG_A_MASTER_ACCOUNT_NAME,
 } from "./env"
-import { TIMEOUT } from "./test-constants"
 
 const createOptions = async (version: string) =>
   initOptionsAndVariables({
