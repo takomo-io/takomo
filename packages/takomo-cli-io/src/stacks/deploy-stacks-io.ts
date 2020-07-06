@@ -1,6 +1,11 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandPath, ConfirmResult, Options, StackPath } from "@takomo/core"
-import { DeployStacksIO, StacksOperationOutput } from "@takomo/stacks-commands"
+import { CommandPath, Options, StackPath } from "@takomo/core"
+import {
+  ConfirmDeployAnswer,
+  ConfirmStackDeployAnswer,
+  DeployStacksIO,
+  StacksOperationOutput,
+} from "@takomo/stacks-commands"
 import { resolveStackLaunchType } from "@takomo/stacks-context"
 import {
   CommandContext,
@@ -28,6 +33,42 @@ import {
   formatStackEvent,
   formatStackStatus,
 } from "../formatters"
+
+const CONFIRM_STACK_DEPLOY_ANSWER_CANCEL = {
+  name: "cancel deploy of this stack and all remaining stacks",
+  value: ConfirmStackDeployAnswer.CANCEL,
+}
+
+const CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE = {
+  name: "review changes in the stack template",
+  value: ConfirmStackDeployAnswer.REVIEW_TEMPLATE,
+}
+
+const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE = {
+  name: "continue to deploy the stack, then let me review the remaining stacks",
+  value: ConfirmStackDeployAnswer.CONTINUE,
+}
+
+const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS = {
+  name:
+    "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
+  value: ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS,
+}
+
+const CONFIRM_DEPLOY_ANSWER_CANCEL = {
+  name: "cancel deployment",
+  value: ConfirmDeployAnswer.CANCEL,
+}
+
+const CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW = {
+  name: "continue, but let me review changes to each stack",
+  value: ConfirmDeployAnswer.CONTINUE_AND_REVIEW,
+}
+
+const CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW = {
+  name: "continue, deploy all stacks without reviewing changes",
+  value: ConfirmDeployAnswer.CONTINUE_NO_REVIEW,
+}
 
 export enum ParameterOperation {
   UPDATE = "update",
@@ -289,9 +330,9 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     return this.autocomplete("Choose command path", source)
   }
 
-  confirmDeploy = async (ctx: CommandContext): Promise<ConfirmResult> => {
+  confirmDeploy = async (ctx: CommandContext): Promise<ConfirmDeployAnswer> => {
     if (this.autoConfirm) {
-      return ConfirmResult.YES
+      return ConfirmDeployAnswer.CONTINUE_NO_REVIEW
     }
 
     const identity = await ctx.getCredentialProvider().getCallerIdentity()
@@ -349,9 +390,15 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       }
     }
 
-    return (await this.confirm("Continue to deploy the stacks?", true))
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
+    return this.choose(
+      "How do you want to continue?",
+      [
+        CONFIRM_DEPLOY_ANSWER_CANCEL,
+        CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW,
+        CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW,
+      ],
+      true,
+    )
   }
 
   printOutput = (output: StacksOperationOutput): StacksOperationOutput => {
@@ -480,7 +527,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       a.key.localeCompare(b.key),
     )
     if (all.length === 0) {
-      this.message("No stack parameters to modify")
+      this.message("No stack parameters to modify.")
       return
     }
 
@@ -504,9 +551,9 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     cloudFormationClient: CloudFormationClient,
     existingStack: CloudFormation.Stack | null,
     existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
-  ): Promise<ConfirmResult> => {
+  ): Promise<ConfirmStackDeployAnswer> => {
     if (this.autoConfirm) {
-      return ConfirmResult.YES
+      return ConfirmStackDeployAnswer.CONTINUE
     }
 
     this.subheader("Review deployment plan for a stack:", true)
@@ -540,29 +587,17 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     this.printChangeSet(stack.getPath(), changeSet)
 
     const answer = await this.choose(
-      "Deploy stack?",
+      "How do you want to continue the deployment?",
       [
-        {
-          name: "no",
-          value: "n",
-        },
-        {
-          name: "yes",
-          value: "y",
-        },
-        {
-          name: "view template diff",
-          value: "d",
-        },
-        {
-          name: "yes to all",
-          value: "a",
-        },
+        CONFIRM_STACK_DEPLOY_ANSWER_CANCEL,
+        CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE,
+        CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE,
+        CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS,
       ],
       true,
     )
 
-    if (answer === "d") {
+    if (answer === ConfirmStackDeployAnswer.REVIEW_TEMPLATE) {
       const currentTemplateBody = await cloudFormationClient.getCurrentTemplate(
         stack.getName(),
       )
@@ -575,19 +610,35 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
         })
         .join("")
 
-      this.message(diffOutput, true, true)
+      this.message(diffOutput, true)
 
-      return (await this.confirm("Deploy stack"))
-        ? ConfirmResult.YES
-        : ConfirmResult.NO
+      const reviewAnswer = await this.choose(
+        "How do you want to continue the deployment?",
+        [
+          CONFIRM_STACK_DEPLOY_ANSWER_CANCEL,
+          CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE,
+          CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS,
+        ],
+        true,
+      )
+
+      if (
+        reviewAnswer ===
+        ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS
+      ) {
+        this.autoConfirm = true
+      }
+
+      return reviewAnswer
     }
 
-    if (answer === "a") {
+    if (
+      answer === ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS
+    ) {
       this.autoConfirm = true
-      return ConfirmResult.YES
     }
 
-    return answer === "y" ? ConfirmResult.YES : ConfirmResult.NO
+    return answer
   }
 
   printStackEvent = (

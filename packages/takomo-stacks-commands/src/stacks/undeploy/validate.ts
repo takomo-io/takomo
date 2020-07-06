@@ -16,7 +16,7 @@ export const isStackReadyForDelete = (
     "REVIEW_IN_PROGRESS",
   ].includes(stackStatus)
 
-export const validateDeleteContext = async (
+export const validateUndeployContext = async (
   ctx: CommandContext,
 ): Promise<CommandContext> => {
   const stacksInInvalidStatus = []

@@ -2,9 +2,9 @@ import { IO, Options } from "@takomo/core"
 import { bold, ConsoleLogger, indentLines } from "@takomo/util"
 import inquirer from "inquirer"
 
-export interface Choice {
+export interface Choice<T> {
   readonly name: string
-  readonly value: string
+  readonly value: T
 }
 
 interface QuestionOptions {
@@ -126,11 +126,11 @@ export default class CliIO extends ConsoleLogger implements IO {
     return answer
   }
 
-  choose = async (
+  choose = async <T>(
     message: string,
-    choices: Choice[],
+    choices: Choice<T>[],
     marginTop = false,
-  ): Promise<string> => {
+  ): Promise<T> => {
     if (marginTop) {
       console.log()
     }
@@ -147,11 +147,11 @@ export default class CliIO extends ConsoleLogger implements IO {
     return answer
   }
 
-  chooseMany = async (
+  chooseMany = async <T>(
     message: string,
-    choices: Choice[],
+    choices: Choice<T>[],
     marginTop = false,
-  ): Promise<string[]> => {
+  ): Promise<T[]> => {
     if (marginTop) {
       console.log()
     }

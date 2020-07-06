@@ -2,6 +2,7 @@ import { initOptionsAndVariables } from "@takomo/cli"
 import { CliListAccountsIO } from "@takomo/cli-io"
 import { CommandStatus } from "@takomo/core"
 import { listAccountsCommand } from "@takomo/organization"
+import { TIMEOUT } from "@takomo/test"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,
@@ -10,7 +11,6 @@ import {
   ORG_A_ACCOUNT_5_ID,
   ORG_A_MASTER_ACCOUNT_ID,
 } from "./env"
-import { TIMEOUT } from "./test-constants"
 
 const createOptions = async (version: string) =>
   initOptionsAndVariables({

@@ -4,8 +4,7 @@ import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
-import { TIMEOUT } from "./test-constants"
+import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
 
 const createOptions = async () =>
   initOptionsAndVariables({
@@ -71,7 +70,7 @@ describe("Simple", () => {
         new TestDeployStacksIO(options),
       )
 
-      expect(output.status).toBe(CommandStatus.SUCCESS)
+      expect(output.status).toBe(CommandStatus.SKIPPED)
       expect(output.results[0].success).toBeTruthy()
       expect(output.results[0].status).toBe(CommandStatus.SKIPPED)
       expect(output.results[0].reason).toBe("SKIPPED")

@@ -13,6 +13,7 @@ import {
   deployOrganizationCommand,
   DeployOrganizationOutput,
 } from "@takomo/organization"
+import { TIMEOUT } from "@takomo/test"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,
@@ -20,7 +21,6 @@ import {
   ORG_A_ACCOUNT_4_ID,
   ORG_A_ACCOUNT_5_ID,
 } from "./env"
-import { TIMEOUT } from "./test-constants"
 
 const createOptions = async (version: string) =>
   initOptionsAndVariables({
@@ -325,9 +325,6 @@ describe("Organization commands", () => {
       )
 
       expect(success).toBeTruthy()
-      expect(status).toBe(CommandStatus.SUCCESS)
-      expect(message).toBe("Success")
-
       expect(results).toHaveLength(1)
 
       const [testOu] = results
@@ -376,9 +373,6 @@ describe("Organization commands", () => {
       )
 
       expect(success).toBeTruthy()
-      expect(status).toBe(CommandStatus.SUCCESS)
-      expect(message).toBe("Success")
-
       expect(results).toHaveLength(1)
 
       const [sandbox2Ou] = results

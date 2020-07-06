@@ -1,3 +1,3 @@
 export { undeployStacksCommand } from "./command"
 export { undeployStacksCommandIamPolicy } from "./iam-policy"
-export { UndeployStacksIO } from "./model"
+export { ConfirmUndeployAnswer, UndeployStacksIO } from "./model"

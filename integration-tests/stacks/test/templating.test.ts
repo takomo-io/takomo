@@ -4,9 +4,12 @@ import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { aws } from "./aws-api"
-import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
-import { TIMEOUT } from "./test-constants"
+import {
+  aws,
+  TestDeployStacksIO,
+  TestUndeployStacksIO,
+  TIMEOUT,
+} from "@takomo/test"
 import { ORG_A_ACCOUNT_1_ID } from "./env"
 
 const roleArn = `arn:aws:iam::${ORG_A_ACCOUNT_1_ID}:role/OrganizationAccountAccessRole`
@@ -54,7 +57,11 @@ describe("Templating", () => {
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
 
-      const stack = await aws.cloudFormation.describeStack(roleArn, "eu-north-1", "queues")
+      const stack = await aws.cloudFormation.describeStack(
+        roleArn,
+        "eu-north-1",
+        "queues",
+      )
       expect(stack.Description).toBe("IT - templating World")
     },
     TIMEOUT,

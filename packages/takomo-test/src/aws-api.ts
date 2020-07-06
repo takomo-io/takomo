@@ -11,6 +11,14 @@ const cloudFormationClient = (
   credentials: Credentials,
 ): CloudFormation => new CloudFormation({ region, credentials })
 
+const listAWSServiceAccessForOrganization = async (): Promise<string[]> =>
+  organizationsClient
+    .listAWSServiceAccessForOrganization()
+    .promise()
+    .then((res) =>
+      res.EnabledServicePrincipals!.map((s) => s.ServicePrincipal!),
+    )
+
 const describeOrganization = async (): Promise<Organization> =>
   organizationsClient
     .describeOrganization()
@@ -60,6 +68,7 @@ export const aws = {
     getEnabledPolicyTypes,
     deleteOrganization,
     deleteOrganizationIfPresent,
+    listAWSServiceAccessForOrganization,
   },
   cloudFormation: {
     describeStack,

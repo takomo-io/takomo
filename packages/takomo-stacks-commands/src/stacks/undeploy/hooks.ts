@@ -2,7 +2,7 @@ import { CommandStatus } from "@takomo/core"
 import { executeHooks } from "@takomo/stacks-hooks"
 import { HookStatus, StackResult } from "@takomo/stacks-model"
 import { deleteSecrets } from "./delete"
-import { InitialDeleteContext, ResultHolder } from "./model"
+import { InitialUndeployContext, ResultHolder } from "./model"
 
 const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
   switch (commandStatus) {
@@ -20,7 +20,7 @@ const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
 }
 
 export const executeBeforeDeleteHooks = async (
-  holder: InitialDeleteContext,
+  holder: InitialUndeployContext,
 ): Promise<StackResult> => {
   const { stack, watch, ctx, variables, logger } = holder
   const childWatch = watch.startChild("before-hooks")

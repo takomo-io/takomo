@@ -1,6 +1,5 @@
 import {
   CommandStatus,
-  ConfirmResult,
   resolveCommandOutputBase,
   StackPath,
 } from "@takomo/core"
@@ -8,9 +7,9 @@ import { CommandContext, StackResult } from "@takomo/stacks-model"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { deleteStack } from "./delete"
 import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors"
-import { UndeployStacksIO } from "./model"
+import { ConfirmUndeployAnswer, UndeployStacksIO } from "./model"
 
-export const executeDeleteContext = async (
+export const executeUndeployContext = async (
   ctx: CommandContext,
   input: StacksOperationInput,
   io: UndeployStacksIO,
@@ -23,7 +22,10 @@ export const executeDeleteContext = async (
     throw new IncompatibleIgnoreDependenciesOptionOnDeleteError(stacks)
   }
 
-  if (!autoConfirm && (await io.confirmUndeploy(ctx)) !== ConfirmResult.YES) {
+  if (
+    !autoConfirm &&
+    (await io.confirmUndeploy(ctx)) !== ConfirmUndeployAnswer.CONTINUE
+  ) {
     io.info("Undeploy cancelled")
     return {
       success: true,

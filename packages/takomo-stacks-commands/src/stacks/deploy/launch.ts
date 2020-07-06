@@ -7,13 +7,14 @@ import {
   StackResult,
 } from "@takomo/stacks-model"
 import { StopWatch } from "@takomo/util"
-import { DeployStacksIO } from "./model"
+import { DeployStacksIO, DeployState } from "./model"
 import { waitForDependenciesToComplete } from "./wait"
 
 export const deployStack = async (
   watch: StopWatch,
   ctx: CommandContext,
   io: DeployStacksIO,
+  state: DeployState,
   stack: Stack,
   dependencies: Promise<StackResult>[],
 ): Promise<StackResult> => {
@@ -43,6 +44,7 @@ export const deployStack = async (
 
   const initial = {
     ctx,
+    state,
     existingStack,
     existingTemplateSummary,
     launchType,

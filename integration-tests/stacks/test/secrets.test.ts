@@ -11,8 +11,8 @@ import {
   TestListSecretsIO,
   TestSetSecretIO,
   TestUndeployStacksIO,
-} from "./io"
-import { TIMEOUT } from "./test-constants"
+  TIMEOUT,
+} from "@takomo/test"
 
 const createOptions = async () =>
   initOptionsAndVariables({

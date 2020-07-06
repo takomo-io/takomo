@@ -1,6 +1,7 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
 import { initProjectCommand } from "@takomo/init-command"
+import { TestInitProjectIO } from "@takomo/test"
 import {
   dirExists,
   fileExists,
@@ -10,7 +11,6 @@ import {
 import mkdirp from "mkdirp"
 import rimfaf from "rimraf"
 import uuid from "uuid"
-import { TestInitProjectIO } from "./io"
 
 const tmpPath = `/tmp/takomo-tests/${uuid.v4()}`
 

@@ -2,11 +2,10 @@ import { initOptionsAndVariables } from "@takomo/cli"
 import { CliCreateOrganizationIO } from "@takomo/cli-io"
 import { CommandStatus, Options } from "@takomo/core"
 import { createOrganizationCommand } from "@takomo/organization"
+import { aws, TIMEOUT } from "@takomo/test"
 import { fileExists, parseYamlFile } from "@takomo/util"
 import rimfaf from "rimraf"
-import { aws } from "./aws-api"
 import { ORG_B_MASTER_ACCOUNT_ID } from "./env"
-import { TIMEOUT } from "./test-constants"
 
 class TestCreateOrganizationIO extends CliCreateOrganizationIO {
   constructor(options: Options) {

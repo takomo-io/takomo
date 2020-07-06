@@ -2,8 +2,7 @@ import { initOptionsAndVariables } from "@takomo/cli"
 import { CliUndeployTargetsIO } from "@takomo/cli-io"
 import { CommandStatus, DeploymentOperation, Options } from "@takomo/core"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets"
-import { TestDeployStacksIO, TestUndeployStacksIO } from "./io"
-import { TIMEOUT } from "./test-constants"
+import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
 
 const createOptions = async () =>
   initOptionsAndVariables({

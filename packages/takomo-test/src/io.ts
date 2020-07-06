@@ -5,7 +5,12 @@ import {
   CliSetSecretIO,
   CliUndeployStacksIO,
 } from "@takomo/cli-io"
-import { ConfirmResult, Options } from "@takomo/core"
+import { Options } from "@takomo/core"
+import {
+  ConfirmDeployAnswer,
+  ConfirmStackDeployAnswer,
+  ConfirmUndeployAnswer,
+} from "@takomo/stacks-commands"
 import { Secret, SecretName, SecretValue } from "@takomo/stacks-model"
 
 export class TestDeployStacksIO extends CliDeployStacksIO {
@@ -13,17 +18,15 @@ export class TestDeployStacksIO extends CliDeployStacksIO {
     super(options)
   }
 
-  confirmDeploy = async (): Promise<ConfirmResult> => {
-    return this.options.isAutoConfirmEnabled()
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
-  }
+  confirmDeploy = async (): Promise<ConfirmDeployAnswer> =>
+    this.options.isAutoConfirmEnabled()
+      ? ConfirmDeployAnswer.CONTINUE_NO_REVIEW
+      : ConfirmDeployAnswer.CANCEL
 
-  confirmStackDeploy = async (): Promise<ConfirmResult> => {
-    return this.options.isAutoConfirmEnabled()
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
-  }
+  confirmStackDeploy = async (): Promise<ConfirmStackDeployAnswer> =>
+    this.options.isAutoConfirmEnabled()
+      ? ConfirmStackDeployAnswer.CONTINUE
+      : ConfirmStackDeployAnswer.CANCEL
 }
 
 export class TestUndeployStacksIO extends CliUndeployStacksIO {
@@ -31,11 +34,10 @@ export class TestUndeployStacksIO extends CliUndeployStacksIO {
     super(options)
   }
 
-  confirmUndeploy = async (): Promise<ConfirmResult> => {
-    return this.options.isAutoConfirmEnabled()
-      ? ConfirmResult.YES
-      : ConfirmResult.NO
-  }
+  confirmUndeploy = async (): Promise<ConfirmUndeployAnswer> =>
+    this.options.isAutoConfirmEnabled()
+      ? ConfirmUndeployAnswer.CONTINUE
+      : ConfirmUndeployAnswer.CANCEL
 }
 
 export class TestListSecretsIO extends CliListSecretsIO {}
@@ -48,9 +50,8 @@ export class TestSetSecretIO extends CliSetSecretIO {
     this.answers = answers
   }
 
-  promptSecretValue = async (secret: Secret): Promise<string> => {
-    return this.answers.get(secret.name)!
-  }
+  promptSecretValue = async (secret: Secret): Promise<string> =>
+    this.answers.get(secret.name)!
 }
 
 export class TestInitProjectIO extends CliInitProjectIO {
