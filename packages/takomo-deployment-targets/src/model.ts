@@ -24,7 +24,9 @@ export interface DeploymentTargetConfig {
   readonly description: string
   readonly vars: Vars
   readonly configSets: ConfigSetName[]
+  readonly bootstrapConfigSets: ConfigSetName[]
   readonly deploymentRole: CommandRole | null
+  readonly bootstrapRole: CommandRole | null
   readonly accountId: AccountId | null
 }
 
@@ -37,8 +39,10 @@ export interface DeploymentGroupConfig {
   readonly status: DeploymentStatus
   readonly vars: Vars
   readonly configSets: ConfigSetName[]
+  readonly bootstrapConfigSets: ConfigSetName[]
   readonly children: DeploymentGroupConfig[]
   readonly deploymentRole: CommandRole | null
+  readonly bootstrapRole: CommandRole | null
 }
 
 export interface DeploymentConfigFile {

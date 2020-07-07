@@ -1,8 +1,13 @@
+import { ConfigSetType } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
 import flatten from "lodash.flatten"
 import uniqBy from "lodash.uniqby"
-import { DeploymentGroupConfig, DeploymentStatus } from "../../model"
+import {
+  DeploymentGroupConfig,
+  DeploymentStatus,
+  DeploymentTargetConfig,
+} from "../../model"
 import { confirmOperation } from "./confirm"
 import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"
 
@@ -13,7 +18,7 @@ export const planDeployment = async (
     ctx,
     io,
     watch,
-    input: { groups, targets },
+    input: { groups, targets, configSetType },
   } = holder
 
   if (groups.length > 0) {
@@ -54,6 +59,17 @@ export const planDeployment = async (
     (o) => o.status === DeploymentStatus.ACTIVE,
   )
 
+  const hasConfigSets = (target: DeploymentTargetConfig): boolean => {
+    switch (configSetType) {
+      case ConfigSetType.STANDARD:
+        return target.configSets.length > 0
+      case ConfigSetType.BOOTSTRAP:
+        return target.bootstrapConfigSets.length > 0
+      default:
+        throw new Error(`Unsupported config set type: ${configSetType}`)
+    }
+  }
+
   const grs = uniqueGroupsToLaunch
     .map((ou) => {
       return {
@@ -61,7 +77,7 @@ export const planDeployment = async (
         targets: ou.targets.filter(
           (a) =>
             a.status === DeploymentStatus.ACTIVE &&
-            a.configSets.length > 0 &&
+            hasConfigSets(a) &&
             (targets.length === 0 || targets.includes(a.name)),
         ),
       }

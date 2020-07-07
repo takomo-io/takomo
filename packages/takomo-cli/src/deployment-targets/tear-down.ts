@@ -1,13 +1,13 @@
 import {
   CliDeployStacksIO,
-  CliDeployTargetsIO,
+  CliTearDownTargetsIO,
   CliUndeployStacksIO,
 } from "@takomo/cli-io"
 import { ConfigSetType } from "@takomo/config-sets"
 import { DeploymentOperation, Options } from "@takomo/core"
 import {
   deploymentTargetsOperationCommand,
-  deployTargetsOperationCommandIamPolicy,
+  undeployTargetsOperationCommandIamPolicy,
 } from "@takomo/deployment-targets"
 import { commonEpilog, handle } from "../common"
 
@@ -19,14 +19,14 @@ const parseTargets = (value: any): string[] => {
   return Array.isArray(value) ? value : [value]
 }
 
-export const deployTargetsCmd = {
-  command: "deploy [groups..]",
-  desc: "Deploy deployment targets",
+export const tearDownTargetsCmd = {
+  command: "tear-down [groups..]",
+  desc: "Tear down deployment targets",
   builder: (yargs: any) =>
     yargs
-      .epilog(commonEpilog(deployTargetsOperationCommandIamPolicy))
+      .epilog(commonEpilog(undeployTargetsOperationCommandIamPolicy))
       .option("target", {
-        description: "Targets to deploy",
+        description: "Targets to tear down",
         string: true,
         global: false,
         demandOption: false,
@@ -45,13 +45,13 @@ export const deployTargetsCmd = {
         targets: parseTargets(argv.target),
         groups: argv.groups || [],
         configFile: argv["config-file"] || null,
-        operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.STANDARD,
+        operation: DeploymentOperation.UNDEPLOY,
+        configSetType: ConfigSetType.BOOTSTRAP,
       }),
       (input) =>
         deploymentTargetsOperationCommand(
           input,
-          new CliDeployTargetsIO(
+          new CliTearDownTargetsIO(
             input.options,
             (options: Options, loggerName: string) =>
               new CliDeployStacksIO(options, loggerName),

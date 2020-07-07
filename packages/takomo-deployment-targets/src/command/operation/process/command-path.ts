@@ -1,9 +1,11 @@
 import {
   ConfigSet,
   ConfigSetCommandPathOperationResult,
+  ConfigSetType,
 } from "@takomo/config-sets"
 import {
   CommandPath,
+  CommandRole,
   CommandStatus,
   DeploymentOperation,
   OperationState,
@@ -24,6 +26,21 @@ import {
   DeploymentTargetName,
 } from "../../../model"
 import { DeploymentTargetsOperationIO, PlanHolder } from "../model"
+
+const getRoleName = (
+  configSetType: ConfigSetType,
+  group: DeploymentGroupConfig,
+  target: DeploymentTargetConfig,
+): CommandRole | null => {
+  switch (configSetType) {
+    case ConfigSetType.BOOTSTRAP:
+      return target.bootstrapRole || group.bootstrapRole
+    case ConfigSetType.STANDARD:
+      return target.deploymentRole || group.deploymentRole
+    default:
+      throw new Error(`Unsupported config set type: ${configSetType}`)
+  }
+}
 
 const deploy = async (
   options: Options,
@@ -132,7 +149,7 @@ export const processCommandPath = async (
   const {
     io,
     ctx,
-    input: { operation },
+    input: { operation, configSetType },
   } = holder
 
   const configFile = ctx.getConfigFile()
@@ -165,7 +182,7 @@ export const processCommandPath = async (
     context: variables.context,
   }
 
-  const deploymentRole = target.deploymentRole || group.deploymentRole
+  const deploymentRole = getRoleName(configSetType, group, target)
 
   const credentialProvider = deploymentRole
     ? await ctx

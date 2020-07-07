@@ -1,5 +1,5 @@
 import { initOptionsAndVariables } from "@takomo/cli"
-import { CliUndeployTargetsIO } from "@takomo/cli-io"
+import { CliBootstrapTargetsIO, CliTearDownTargetsIO } from "@takomo/cli-io"
 import { ConfigSetType } from "@takomo/config-sets"
 import { CommandStatus, DeploymentOperation, Options } from "@takomo/core"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets"
@@ -12,9 +12,9 @@ const createOptions = async () =>
     dir: "configs",
   })
 
-describe("Deployment with project dir", () => {
-  it(
-    "undeploy all",
+describe("Bootstrapping", () => {
+  test(
+    "tear down all",
     async () => {
       const { options, variables, watch } = await createOptions()
 
@@ -25,15 +25,15 @@ describe("Deployment with project dir", () => {
       } = await deploymentTargetsOperationCommand(
         {
           operation: DeploymentOperation.UNDEPLOY,
-          configSetType: ConfigSetType.STANDARD,
+          configSetType: ConfigSetType.BOOTSTRAP,
           targets: [],
           groups: [],
-          configFile: "targets-3.yml",
+          configFile: "targets-4.yml",
           options,
           variables,
           watch,
         },
-        new CliUndeployTargetsIO(
+        new CliTearDownTargetsIO(
           options,
           (options: Options, loggerName: string) =>
             new TestDeployStacksIO(options),
@@ -45,21 +45,21 @@ describe("Deployment with project dir", () => {
       expect(results).toHaveLength(1)
       expect(success).toBeTruthy()
 
-      const [group] = results
+      const [exampleGroup] = results
 
-      expect(group.path).toBe("GroupA/Child")
-      expect(group.results).toHaveLength(2)
-      expect(group.success).toBeTruthy()
+      expect(exampleGroup.path).toBe("Example")
+      expect(exampleGroup.results).toHaveLength(1)
+      expect(exampleGroup.success).toBeTruthy()
+      expect(exampleGroup.status).toBe(CommandStatus.SUCCESS)
 
-      const [t1, t2] = group.results
-      expect(t1.name).toBe("one")
-      expect(t2.name).toBe("two")
+      const [target] = exampleGroup.results
+      expect(target.name).toBe("two")
     },
     TIMEOUT,
   )
 
-  it(
-    "deploy all",
+  test(
+    "bootstrap all",
     async () => {
       const { options, variables, watch } = await createOptions()
 
@@ -70,15 +70,15 @@ describe("Deployment with project dir", () => {
       } = await deploymentTargetsOperationCommand(
         {
           operation: DeploymentOperation.DEPLOY,
-          configSetType: ConfigSetType.STANDARD,
+          configSetType: ConfigSetType.BOOTSTRAP,
           targets: [],
           groups: [],
-          configFile: "targets-3.yml",
+          configFile: "targets-4.yml",
           options,
           variables,
           watch,
         },
-        new CliUndeployTargetsIO(
+        new CliBootstrapTargetsIO(
           options,
           (options: Options, loggerName: string) =>
             new TestDeployStacksIO(options),
@@ -91,16 +91,15 @@ describe("Deployment with project dir", () => {
       expect(results).toHaveLength(1)
       expect(success).toBeTruthy()
 
-      const [group] = results
+      const [exampleGroup] = results
 
-      expect(group.path).toBe("GroupA/Child")
-      expect(group.results).toHaveLength(2)
-      expect(group.success).toBeTruthy()
-      expect(group.status).toBe(CommandStatus.SUCCESS)
+      expect(exampleGroup.path).toBe("Example")
+      expect(exampleGroup.results).toHaveLength(1)
+      expect(exampleGroup.success).toBeTruthy()
+      expect(exampleGroup.status).toBe(CommandStatus.SUCCESS)
 
-      const [t1, t2] = group.results
-      expect(t1.name).toBe("one")
-      expect(t2.name).toBe("two")
+      const [target] = exampleGroup.results
+      expect(target.name).toBe("two")
     },
     TIMEOUT,
   )

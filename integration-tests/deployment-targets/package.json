@@ -24,6 +24,7 @@
     "@takomo/cli-io": "2.3.0",
     "@takomo/core": "2.3.0",
     "@takomo/deployment-targets": "2.3.0",
+    "@takomo/config-sets": "2.3.0",
     "@takomo/test": "2.3.0"
   },
   "devDependencies": {

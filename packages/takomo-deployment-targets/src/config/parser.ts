@@ -44,16 +44,27 @@ const parseConfigSetNames = (value: any): ConfigSetName[] => {
 const parseDeploymentTarget = (
   value: any,
   inheritedConfigSets: ConfigSetName[],
+  inheritedBootstrapConfigSets: ConfigSetName[],
 ): DeploymentTargetConfig => {
-  const configuredConfigSets = value.configSets || []
+  const configuredConfigSets = parseConfigSetNames(value.configSets)
   const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
+
+  const configuredBootstrapConfigSets = parseConfigSetNames(
+    value.bootstrapConfigSets,
+  )
+  const bootstrapConfigSets = uniq([
+    ...inheritedBootstrapConfigSets,
+    ...configuredBootstrapConfigSets,
+  ])
 
   return {
     configSets,
+    bootstrapConfigSets,
     name: value.name || null,
     description: value.description || null,
     accountId: value.accountId || null,
     deploymentRole: parseCommandRole(value.deploymentRole),
+    bootstrapRole: parseCommandRole(value.bootstrapRole),
     status: parseDeploymentStatus(value.status),
     vars: parseVars(value.vars),
   }
@@ -62,13 +73,18 @@ const parseDeploymentTarget = (
 const parseDeploymentTargets = (
   value: any,
   inheritedConfigSets: ConfigSetName[],
+  inheritedBootstrapConfigSets: ConfigSetName[],
 ): DeploymentTargetConfig[] => {
   if (value === null || value === undefined) {
     return []
   }
 
   return value.map((target: any) =>
-    parseDeploymentTarget(target, inheritedConfigSets),
+    parseDeploymentTarget(
+      target,
+      inheritedConfigSets,
+      inheritedBootstrapConfigSets,
+    ),
   )
 }
 
@@ -93,6 +109,7 @@ const parseDeploymentGroup = (
   groupPath: DeploymentGroupPath,
   config: any,
   inheritedConfigSets: ConfigSetName[],
+  inheritedBootstrapConfigSets: ConfigSetName[],
 ): DeploymentGroupConfig => {
   const group = config[groupPath]
   const groupPathDepth = groupPath.split("/").length
@@ -113,12 +130,26 @@ const parseDeploymentGroup = (
   const configuredConfigSets = parseConfigSetNames(group?.configSets)
   const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
 
+  const configuredBootstrapConfigSets = parseConfigSetNames(
+    group?.bootstrapConfigSets,
+  )
+  const bootstrapConfigSets = uniq([
+    ...inheritedBootstrapConfigSets,
+    ...configuredBootstrapConfigSets,
+  ])
+
   const children = [
     ...missingDirectChildPaths,
     ...directChildPaths,
-  ].map((childPath) => parseDeploymentGroup(childPath, config, configSets))
+  ].map((childPath) =>
+    parseDeploymentGroup(childPath, config, configSets, bootstrapConfigSets),
+  )
 
-  const targets = parseDeploymentTargets(group?.targets, configSets)
+  const targets = parseDeploymentTargets(
+    group?.targets,
+    configSets,
+    bootstrapConfigSets,
+  )
   const name = groupPath.split("/").reverse()[0]
 
   return {
@@ -126,7 +157,9 @@ const parseDeploymentGroup = (
     children,
     targets,
     configSets,
+    bootstrapConfigSets,
     deploymentRole: parseCommandRole(group?.deploymentRole || null),
+    bootstrapRole: parseCommandRole(group?.bootstrapRole || null),
     path: groupPath,
     description: group?.description || null,
     priority: group?.priority || 0,
@@ -141,7 +174,7 @@ const parseDeploymentGroups = (value: any): DeploymentGroupConfig[] => {
   }
 
   return Object.keys(value).map((rootPath) =>
-    parseDeploymentGroup(rootPath, value, []),
+    parseDeploymentGroup(rootPath, value, [], []),
   )
 }
 
