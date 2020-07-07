@@ -6,8 +6,20 @@ import {
   Variables,
 } from "@takomo/core"
 import { CommandContext, Stack } from "@takomo/stacks-model"
-import { deepCopy, Logger, TemplateEngine } from "@takomo/util"
+import { deepCopy, Logger, TakomoError, TemplateEngine } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
+
+export class CommandPathMatchesNoStacksError extends TakomoError {
+  constructor(commandPath: CommandPath, availableStacks: Stack[]) {
+    const stackPaths = availableStacks
+      .map((s) => `  - ${s.getPath()}`)
+      .join("\n")
+
+    super(
+      `No stacks found within the given command path: ${commandPath}\n\nAvailable stack paths:\n\n${stackPaths}`,
+    )
+  }
+}
 
 export interface StdCommandContextProps {
   readonly stacksToProcess: Stack[]

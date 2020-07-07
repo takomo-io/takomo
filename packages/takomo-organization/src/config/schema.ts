@@ -141,9 +141,6 @@ export const policies = Joi.object().pattern(policyName, policy)
 export const organizationalUnits = Joi.object().pattern(
   organizationalUnitPath,
   organizationalUnit,
-  {
-    matches: Joi.array().has(Joi.string().valid("Root")),
-  },
 )
 
 export const trustedAwsService = Joi.string().valid(

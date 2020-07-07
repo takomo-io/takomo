@@ -230,4 +230,94 @@ describe("#parseOrganizationConfigFile", () => {
       })
     })
   })
+
+  describe("when parsing a organization config with nested organizational units", () => {
+    test("returns correct configuration", async () => {
+      const o = await parse("./test/config/org-config-01.yml")
+
+      expect(o).toStrictEqual({
+        masterAccountId: "123456789012",
+        accountCreation: {
+          constraints: {
+            emailPattern: null,
+            namePattern: null,
+          },
+          defaults: {
+            iamUserAccessToBilling: true,
+            roleName: "OrganizationAccountAccessRole",
+          },
+        },
+        configSets: [],
+        vars: {},
+        serviceControlPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "SERVICE_CONTROL_POLICY",
+        },
+        tagPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "TAG_POLICY",
+        },
+        organizationalUnits: {
+          Root: {
+            accountAdminRoleName: null,
+            accountBootstrapRoleName: null,
+            bootstrapConfigSets: [],
+            children: [
+              {
+                accountAdminRoleName: null,
+                accountBootstrapRoleName: null,
+                bootstrapConfigSets: [],
+                children: [],
+                configSets: [],
+                description: null,
+                name: "Example",
+                path: "Root/Example",
+                priority: 0,
+                serviceControlPolicies: [],
+                status: "active",
+                tagPolicies: [],
+                vars: {},
+                accounts: [
+                  account({ id: "123456789012" }),
+                  account({ id: "987654532101" }),
+                ],
+              },
+              {
+                accountAdminRoleName: null,
+                accountBootstrapRoleName: null,
+                bootstrapConfigSets: [],
+                children: [],
+                configSets: [],
+                description: null,
+                name: "Another",
+                path: "Root/Another",
+                priority: 0,
+                serviceControlPolicies: [],
+                status: "active",
+                tagPolicies: [],
+                vars: {},
+                accounts: [],
+              },
+            ],
+            configSets: [],
+            description: null,
+            name: "Root",
+            path: "Root",
+            priority: 0,
+            serviceControlPolicies: [],
+            status: "active",
+            tagPolicies: [],
+            vars: {},
+            accounts: [],
+          },
+        },
+        trustedAwsServices: null,
+        organizationAdminRoleName: null,
+        accountAdminRoleName: null,
+        accountBootstrapRoleName: null,
+      })
+    })
+  })
 })

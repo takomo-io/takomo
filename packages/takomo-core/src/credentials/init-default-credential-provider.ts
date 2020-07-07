@@ -7,11 +7,7 @@ import {
   SharedIniFileCredentials,
 } from "aws-sdk"
 import http from "http"
-import {
-  CredentialsError,
-  StdTakomoCredentialProvider,
-  TakomoCredentialProvider,
-} from "./model"
+import { StdTakomoCredentialProvider, TakomoCredentialProvider } from "./model"
 
 const isAwsMetaEndpointAvailable = (): Promise<boolean> => {
   return new Promise((resolve, reject) => {
@@ -20,7 +16,7 @@ const isAwsMetaEndpointAvailable = (): Promise<boolean> => {
       host: "169.254.169.254",
       port: 80,
       path: "/latest/meta-data/",
-      timeout: 200,
+      timeout: 50,
     }
 
     const req = http.request(options, (r) => {
@@ -72,6 +68,3 @@ export const initDefaultCredentialProvider = async (): Promise<
         }),
     )
     .then((cp) => cp.getCallerIdentity().then(() => cp))
-    .catch((e) => {
-      throw new CredentialsError(e)
-    })

@@ -47,7 +47,7 @@ export interface StackOperationVariables extends Variables {
 }
 
 /**
- * Name of stack paramater
+ * Name of stack parameter
  */
 export type ParameterName = string
 

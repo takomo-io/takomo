@@ -7,6 +7,14 @@ import {
 } from "aws-sdk"
 import { AccountId, IamRoleArn } from "../model"
 
+class CredentialsError extends TakomoError {
+  constructor(e: Error) {
+    super(
+      "AWS credentials error.\n\n" + indentLines(formatYaml(deepCopy(e)), 2),
+    )
+  }
+}
+
 /**
  * Identity used to invoke AWS APIs.
  */
@@ -127,15 +135,10 @@ export class StdTakomoCredentialProvider implements TakomoCredentialProvider {
 
         return this.callerIdentity
       })
+      .catch((e) => {
+        throw new CredentialsError(e)
+      })
   }
 
   toString = (): string => this.getName()
-}
-
-export class CredentialsError extends TakomoError {
-  constructor(e: Error) {
-    super(
-      `AWS credentials error:\n\n${indentLines(formatYaml(deepCopy(e)), 2)}`,
-    )
-  }
 }

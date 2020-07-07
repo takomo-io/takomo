@@ -1,0 +1,8 @@
+masterAccountId: "123456789012"
+
+organizationalUnits:
+  Root/Example:
+    accounts:
+      - "123456789012"
+      - "987654532101"
+  Root/Another: {}

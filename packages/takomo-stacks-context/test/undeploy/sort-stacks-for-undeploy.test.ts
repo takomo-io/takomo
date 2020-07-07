@@ -1,21 +1,21 @@
-import { sortStacksForDeletion } from "../../../../src/undeploy/build"
-import { createStack } from "../../../helpers"
+import { sortStacksForUndeploy } from "../../src/undeploy/sort-stacks-for-undeploy"
+import { createStack } from "../helpers"
 
-describe("sort stacks for deletion", () => {
+describe("#sortStacksForUndeploy", () => {
   test("when no stacks are given", () => {
-    expect(sortStacksForDeletion([])).toHaveLength(0)
+    expect(sortStacksForUndeploy([])).toHaveLength(0)
   })
 
   test("when one stack is given", () => {
     const a = createStack({ name: "a", path: "/a.yml" })
-    expect(sortStacksForDeletion([a])).toHaveLength(1)
+    expect(sortStacksForUndeploy([a])).toHaveLength(1)
   })
 
   test("when two stacks with no dependants are given", () => {
     const a = createStack({ name: "a", path: "/a.yml" })
     const b = createStack({ name: "b", path: "/b.yml" })
 
-    const sorted = sortStacksForDeletion([a, b])
+    const sorted = sortStacksForUndeploy([a, b])
 
     expect(sorted[0].getPath()).toBe(a.getPath())
     expect(sorted[1].getPath()).toBe(b.getPath())
@@ -29,7 +29,7 @@ describe("sort stacks for deletion", () => {
     })
     const b = createStack({ name: "b", path: "/b.yml" })
 
-    const sorted = sortStacksForDeletion([a, b])
+    const sorted = sortStacksForUndeploy([a, b])
 
     expect(sorted[0].getPath()).toBe(b.getPath())
     expect(sorted[1].getPath()).toBe(a.getPath())
@@ -52,7 +52,7 @@ describe("sort stacks for deletion", () => {
       dependants: ["/b.yml"],
     })
 
-    const sorted = sortStacksForDeletion([a, b, c])
+    const sorted = sortStacksForUndeploy([a, b, c])
 
     expect(sorted[0].getPath()).toBe(b.getPath())
     expect(sorted[1].getPath()).toBe(c.getPath())
@@ -101,7 +101,7 @@ describe("sort stacks for deletion", () => {
       dependants: [],
     })
 
-    const sorted = sortStacksForDeletion([a, b, c, d, e, f, g, h])
+    const sorted = sortStacksForUndeploy([a, b, c, d, e, f, g, h])
 
     expect(sorted[0].getPath()).toBe(b.getPath())
     expect(sorted[1].getPath()).toBe(g.getPath())
