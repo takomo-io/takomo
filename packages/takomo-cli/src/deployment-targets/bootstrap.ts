@@ -1,6 +1,6 @@
 import {
+  CliBootstrapTargetsIO,
   CliDeployStacksIO,
-  CliDeployTargetsIO,
   CliUndeployStacksIO,
 } from "@takomo/cli-io"
 import { ConfigSetType } from "@takomo/config-sets"
@@ -19,14 +19,14 @@ const parseTargets = (value: any): string[] => {
   return Array.isArray(value) ? value : [value]
 }
 
-export const deployTargetsCmd = {
-  command: "deploy [groups..]",
-  desc: "Deploy deployment targets",
+export const bootstrapTargetsCmd = {
+  command: "bootstrap [groups..]",
+  desc: "Bootstrap deployment targets",
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(deployTargetsOperationCommandIamPolicy))
       .option("target", {
-        description: "Targets to deploy",
+        description: "Targets to bootstrap",
         string: true,
         global: false,
         demandOption: false,
@@ -46,12 +46,12 @@ export const deployTargetsCmd = {
         groups: argv.groups || [],
         configFile: argv["config-file"] || null,
         operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.STANDARD,
+        configSetType: ConfigSetType.BOOTSTRAP,
       }),
       (input) =>
         deploymentTargetsOperationCommand(
           input,
-          new CliDeployTargetsIO(
+          new CliBootstrapTargetsIO(
             input.options,
             (options: Options, loggerName: string) =>
               new CliDeployStacksIO(options, loggerName),

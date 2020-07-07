@@ -1,5 +1,6 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import { CliUndeployTargetsIO } from "@takomo/cli-io"
+import { ConfigSetType } from "@takomo/config-sets"
 import { CommandStatus, DeploymentOperation, Options } from "@takomo/core"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets"
 import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
@@ -24,6 +25,7 @@ describe("Deployment with deployment role", () => {
       } = await deploymentTargetsOperationCommand(
         {
           operation: DeploymentOperation.UNDEPLOY,
+          configSetType: ConfigSetType.STANDARD,
           targets: [],
           groups: [],
           configFile: "targets-2.yml",
@@ -70,6 +72,7 @@ describe("Deployment with deployment role", () => {
       } = await deploymentTargetsOperationCommand(
         {
           operation: DeploymentOperation.DEPLOY,
+          configSetType: ConfigSetType.STANDARD,
           targets: [],
           groups: [],
           configFile: "targets-2.yml",

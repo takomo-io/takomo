@@ -3,6 +3,7 @@ import {
   CliUndeployStacksIO,
   CliUndeployTargetsIO,
 } from "@takomo/cli-io"
+import { ConfigSetType } from "@takomo/config-sets"
 import { DeploymentOperation, Options } from "@takomo/core"
 import {
   deploymentTargetsOperationCommand,
@@ -45,6 +46,7 @@ export const undeployTargetsCmd = {
         groups: argv.groups || [],
         configFile: argv["config-file"] || null,
         operation: DeploymentOperation.UNDEPLOY,
+        configSetType: ConfigSetType.STANDARD,
       }),
       (input) =>
         deploymentTargetsOperationCommand(

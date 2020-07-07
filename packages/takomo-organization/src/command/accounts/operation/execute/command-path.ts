@@ -38,14 +38,12 @@ const executeOperation = async (
       return deployStacksCommand(
         input,
         io.createStackDeployIO(input.options, account.id),
-        //new CliDeployStacksIO(input.options, account.id),
         credentialProvider,
       )
     case DeploymentOperation.UNDEPLOY:
       return undeployStacksCommand(
         input,
         io.createStackUndeployIO(input.options, account.id),
-        //new CliUndeployStacksIO(input.options, account.id),
         credentialProvider,
       )
     default:

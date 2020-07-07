@@ -1,4 +1,4 @@
-import { ConfigSetOperationResult } from "@takomo/config-sets"
+import { ConfigSetOperationResult, ConfigSetType } from "@takomo/config-sets"
 import {
   CommandInput,
   CommandOutput,
@@ -21,6 +21,7 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly targets: string[]
   readonly configFile: string | null
   readonly operation: DeploymentOperation
+  readonly configSetType: ConfigSetType
 }
 
 export interface DeploymentTargetsOperationOutput extends CommandOutput {

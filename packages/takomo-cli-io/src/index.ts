@@ -1,5 +1,4 @@
-export * from "./deployment-targets/deploy-targets-io"
-export * from "./deployment-targets/undeploy-targets-io"
+export * from "./deployment-targets"
 export { formatCommandStatus } from "./formatters"
 export * from "./init-project-io"
 export * from "./organization"

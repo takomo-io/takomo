@@ -51,9 +51,14 @@ const deploymentTarget = Joi.object({
   accountId,
   name: deploymentTargetName.required(),
   deploymentRole: iamRoleArn,
+  bootstrapRole: iamRoleArn,
   description: Joi.string(),
   status: Joi.string().valid("active", "disabled"),
   configSets: [Joi.array().items(configSetName).unique(), configSetName],
+  bootstrapConfigSets: [
+    Joi.array().items(configSetName).unique(),
+    configSetName,
+  ],
 })
 
 const targets = Joi.array().items(deploymentTarget)
@@ -63,9 +68,14 @@ const deploymentGroup = Joi.object({
   targets,
   description: Joi.string(),
   deploymentRole: iamRoleArn,
+  bootstrapRole: iamRoleArn,
   status: Joi.string().valid("active", "disabled"),
   priority: Joi.number().integer().min(0),
   configSets: [Joi.array().items(configSetName).unique(), configSetName],
+  bootstrapConfigSets: [
+    Joi.array().items(configSetName).unique(),
+    configSetName,
+  ],
 })
 
 export const deploymentGroups = Joi.object()
