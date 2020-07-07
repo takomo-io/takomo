@@ -6,10 +6,10 @@ import {
   LogLevel,
   TemplateEngine,
 } from "@takomo/util"
-import { ConfigContext } from "../../../../src/config"
-import { collectStacksToDelete } from "../../../../src/undeploy/build"
-import { createStack, createStackGroup } from "../../../helpers"
-import { mockTakomoCredentialProvider } from "../../../mocks"
+import { ConfigContext } from "../../src/config"
+import { collectStacksToUndeploy } from "../../src/undeploy/collect-stacks-to-undeploy"
+import { createStack, createStackGroup } from "../helpers"
+import { mockTakomoCredentialProvider } from "../mocks"
 
 const configContext = (rootStackGroup: StackGroup): ConfigContext => {
   const allStackGroups = collectFromHierarchy(rootStackGroup, (n) =>
@@ -51,11 +51,11 @@ const collectStackNamesToDelete = (
   commandPath: CommandPath,
   ignoreDependencies?: boolean,
 ): StackName[] =>
-  collectStacksToDelete(ctx, commandPath, ignoreDependencies || false)
+  collectStacksToUndeploy(ctx, commandPath, ignoreDependencies || false)
     .map((s) => s.getName())
     .sort()
 
-describe("#collectStacksToDelete", () => {
+describe("#collectStacksToUndeploy", () => {
   describe("when context contains no stacks", () => {
     const root = createStackGroup({ path: "/", name: "/" })
     const ctx = configContext(root)

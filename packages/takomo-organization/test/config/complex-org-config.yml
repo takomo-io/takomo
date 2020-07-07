@@ -27,6 +27,3 @@ organizationalUnits:
   Root/WebProject/Development:
     accounts:
       - "333333333333"
-#    Root/WebProject/Production:
-#      accounts:
-#        - "444444444444"
