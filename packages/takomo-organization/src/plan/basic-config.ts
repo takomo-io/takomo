@@ -50,6 +50,9 @@ export const planOrganizationBasicConfigDeployment = async (
   if (configFile.tagPolicies.enabled) {
     localEnabledPolicies.push(Constants.TAG_POLICY_TYPE)
   }
+  if (configFile.aiServicesOptOutPolicies.enabled) {
+    localEnabledPolicies.push(Constants.AISERVICES_OPT_OUT_POLICY_TYPE)
+  }
 
   const trustedServicesToAdd = without(
     localTrustedAwsServices,

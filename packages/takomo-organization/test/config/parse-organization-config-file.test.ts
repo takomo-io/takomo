@@ -46,6 +46,7 @@ const account = ({
   email: null,
   name: null,
   serviceControlPolicies: serviceControlPolicies || [],
+  aiServicesOptOutPolicies: [],
   status: OrganizationAccountStatus.ACTIVE,
   tagPolicies: [],
   vars: {},
@@ -80,6 +81,11 @@ describe("#parseOrganizationConfigFile", () => {
           policies: [],
           policyType: "TAG_POLICY",
         },
+        aiServicesOptOutPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "AISERVICES_OPT_OUT_POLICY",
+        },
         organizationalUnits: {
           Root: {
             accountAdminRoleName: null,
@@ -94,6 +100,7 @@ describe("#parseOrganizationConfigFile", () => {
             serviceControlPolicies: [],
             status: "active",
             tagPolicies: [],
+            aiServicesOptOutPolicies: [],
             vars: {},
             accounts: [account({ id: "123456789012" })],
           },
@@ -145,6 +152,11 @@ describe("#parseOrganizationConfigFile", () => {
           policies: [],
           policyType: "TAG_POLICY",
         },
+        aiServicesOptOutPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "AISERVICES_OPT_OUT_POLICY",
+        },
         organizationalUnits: {
           Root: {
             accountAdminRoleName: null,
@@ -161,6 +173,7 @@ describe("#parseOrganizationConfigFile", () => {
                 path: "Root/WebProject",
                 priority: 0,
                 serviceControlPolicies: ["FullAWSAccess", "AllowedRegions"],
+                aiServicesOptOutPolicies: [],
                 status: "active",
                 tagPolicies: [],
                 vars: {},
@@ -179,6 +192,7 @@ describe("#parseOrganizationConfigFile", () => {
                     serviceControlPolicies: ["FullAWSAccess", "AllowedRegions"],
                     status: "active",
                     tagPolicies: [],
+                    aiServicesOptOutPolicies: [],
                     vars: {},
                     accounts: [
                       account({
@@ -199,6 +213,7 @@ describe("#parseOrganizationConfigFile", () => {
             path: "Root",
             priority: 0,
             serviceControlPolicies: ["FullAWSAccess"],
+            aiServicesOptOutPolicies: [],
             status: "active",
             tagPolicies: [],
             vars: {},
@@ -259,6 +274,11 @@ describe("#parseOrganizationConfigFile", () => {
           policies: [],
           policyType: "TAG_POLICY",
         },
+        aiServicesOptOutPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "AISERVICES_OPT_OUT_POLICY",
+        },
         organizationalUnits: {
           Root: {
             accountAdminRoleName: null,
@@ -276,6 +296,7 @@ describe("#parseOrganizationConfigFile", () => {
                 path: "Root/Example",
                 priority: 0,
                 serviceControlPolicies: [],
+                aiServicesOptOutPolicies: [],
                 status: "active",
                 tagPolicies: [],
                 vars: {},
@@ -295,6 +316,7 @@ describe("#parseOrganizationConfigFile", () => {
                 path: "Root/Another",
                 priority: 0,
                 serviceControlPolicies: [],
+                aiServicesOptOutPolicies: [],
                 status: "active",
                 tagPolicies: [],
                 vars: {},
@@ -307,6 +329,7 @@ describe("#parseOrganizationConfigFile", () => {
             path: "Root",
             priority: 0,
             serviceControlPolicies: [],
+            aiServicesOptOutPolicies: [],
             status: "active",
             tagPolicies: [],
             vars: {},

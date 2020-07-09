@@ -30,7 +30,7 @@ const createOptions = async (version: string) =>
     var: `configVersion=${version}.yml`,
   })
 
-const launchOrganization = async (
+const deployOrganization = async (
   version: string,
 ): Promise<DeployOrganizationOutput> =>
   createOptions(version).then(({ options, variables, watch }) =>
@@ -45,10 +45,10 @@ const launchOrganization = async (
   )
 
 describe("Organization commands", () => {
-  it(
+  test(
     "initial configuration",
     async () => {
-      const { success, status, message } = await launchOrganization("v01")
+      const { success, status, message } = await deployOrganization("v01")
 
       expect(success).toBeTruthy()
       expect(status).toBe(CommandStatus.SUCCESS)
@@ -57,10 +57,10 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "add new service control policy",
     async () => {
-      const { success, status, message } = await launchOrganization("v02")
+      const { success, status, message } = await deployOrganization("v02")
 
       expect(success).toBeTruthy()
       expect(status).toBe(CommandStatus.SUCCESS)
@@ -69,10 +69,10 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "add new organization units and move some accounts to them",
     async () => {
-      const { success, status, message } = await launchOrganization("v03")
+      const { success, status, message } = await deployOrganization("v03")
 
       expect(success).toBeTruthy()
       expect(status).toBe(CommandStatus.SUCCESS)
@@ -81,10 +81,10 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "add new tag policy",
     async () => {
-      const { success, status, message } = await launchOrganization("v04")
+      const { success, status, message } = await deployOrganization("v04")
 
       expect(success).toBeTruthy()
       expect(status).toBe(CommandStatus.SUCCESS)
@@ -93,10 +93,10 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "disable service control policies",
     async () => {
-      const { success, status, message } = await launchOrganization("v05")
+      const { success, status, message } = await deployOrganization("v05")
 
       expect(success).toBeTruthy()
       expect(status).toBe(CommandStatus.SUCCESS)
@@ -105,10 +105,10 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "disable tag policies",
     async () => {
-      const { success, status, message } = await launchOrganization("v06")
+      const { success, status, message } = await deployOrganization("v06")
 
       expect(success).toBeTruthy()
       expect(status).toBe(CommandStatus.SUCCESS)
@@ -117,10 +117,10 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "enabled tag policies",
     async () => {
-      const { success, status, message } = await launchOrganization("v07")
+      const { success, status, message } = await deployOrganization("v07")
 
       expect(success).toBeTruthy()
       expect(status).toBe(CommandStatus.SUCCESS)
@@ -130,7 +130,7 @@ describe("Organization commands", () => {
   )
 
   // Undeploy all accounts
-  it(
+  test(
     "undeploy accounts",
     async () => {
       const { options, watch, variables } = await createOptions("v07")
@@ -198,7 +198,7 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "deploy accounts from Root/test-accounts",
     async () => {
       const { options, watch, variables } = await createOptions("v07")
@@ -248,7 +248,7 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "deploy single accounts",
     async () => {
       const { options, watch, variables } = await createOptions("v07")
@@ -296,7 +296,7 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "bootstrap accounts",
     async () => {
       const { options, watch, variables } = await createOptions("v07")
@@ -344,7 +344,7 @@ describe("Organization commands", () => {
     TIMEOUT,
   )
 
-  it(
+  test(
     "deploy organizational units that use config set with different project dir",
     async () => {
       const { options, watch, variables } = await createOptions("v08")
@@ -385,6 +385,18 @@ describe("Organization commands", () => {
 
       expect(a5.accountId).toBe(ORG_A_ACCOUNT_5_ID)
       expect(a5.success).toBeTruthy()
+    },
+    TIMEOUT,
+  )
+
+  test(
+    "enabled AI services opt-out policies",
+    async () => {
+      const { success, status, message } = await deployOrganization("v09")
+
+      expect(success).toBeTruthy()
+      expect(status).toBe(CommandStatus.SUCCESS)
+      expect(message).toBe("Success")
     },
     TIMEOUT,
   )

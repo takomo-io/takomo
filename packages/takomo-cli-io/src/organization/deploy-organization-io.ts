@@ -160,6 +160,12 @@ export class CliDeployOrganizationIO extends CliIO
         nestedFormat,
         indent + 4,
       )
+      this.printPlannedPolicies(
+        "ai services opt-out policies",
+        account.aiServicesOptOutPolicies,
+        nestedFormat,
+        indent + 4,
+      )
     })
   }
 
@@ -305,11 +311,16 @@ export class CliDeployOrganizationIO extends CliIO
   }
 
   printPoliciesDeploymentPlan = (plan: PolicyDeploymentPlan): void => {
-    const { serviceControlPolicies, tagPolicies } = plan
+    const {
+      serviceControlPolicies,
+      tagPolicies,
+      aiServicesOptOutPolicies,
+    } = plan
 
     this.message("   policies:", true)
     this.printPolicies("service control policies", serviceControlPolicies)
     this.printPolicies("tag policies", tagPolicies)
+    this.printPolicies("ai services opt-out policies", aiServicesOptOutPolicies)
   }
 
   private printPolicies = (type: string, policies: PlannedPolicy[]): void => {
@@ -324,7 +335,7 @@ export class CliDeployOrganizationIO extends CliIO
       switch (policy.operation) {
         case "add":
           this.message(green(`+      ${policy.name}:`))
-          this.message(green(`+        id: <known after launch>`))
+          this.message(green(`+        id: <known after deploy>`))
           this.message(green(`+        description: ${policy.newDescription}`))
           break
         case "update":

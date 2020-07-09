@@ -16,7 +16,11 @@ export const deployPolicies = async (
   } = holder
   const childWatch = watch.startChild("deploy-policies")
 
-  const { currentTagPolicies, currentServiceControlPolicies } = organizationData
+  const {
+    currentTagPolicies,
+    currentServiceControlPolicies,
+    currentAiServicesOptOutPolicies,
+  } = organizationData
 
   if (result) {
     io.debug("Launch already completed, cancel policies deployment")
@@ -51,6 +55,7 @@ export const deployPolicies = async (
   const allPolicies = [
     ...policiesPlan.serviceControlPolicies,
     ...policiesPlan.tagPolicies,
+    ...policiesPlan.aiServicesOptOutPolicies,
   ]
 
   const policiesToAdd = allPolicies.filter((p) => p.operation === "add")
@@ -149,6 +154,10 @@ export const deployPolicies = async (
     .filter((p) => p.type === Constants.TAG_POLICY_TYPE)
     .map((p) => p.policy!)
 
+  const addedAiServicesOptOutPolicies = addedPolicies
+    .filter((p) => p.type === Constants.AISERVICES_OPT_OUT_POLICY_TYPE)
+    .map((p) => p.policy!)
+
   const results = [...skippedPolicies, ...addedPolicies, ...updatedPolicies]
 
   const failedPolicies = results.filter((r) => !r.success)
@@ -171,6 +180,10 @@ export const deployPolicies = async (
         ...addedServiceControlPolicies,
       ],
       currentTagPolicies: [...currentTagPolicies, ...addedTagPolicies],
+      currentAiServicesOptOutPolicies: [
+        ...currentAiServicesOptOutPolicies,
+        ...addedAiServicesOptOutPolicies,
+      ],
     },
     policiesDeploymentResult: {
       message,

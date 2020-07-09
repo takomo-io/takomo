@@ -98,8 +98,10 @@ export const planPoliciesByType = async (
 export const createPoliciesDeploymentPlan = async (
   localServiceControlPoliciesConfig: PoliciesConfig,
   localTagPoliciesConfig: PoliciesConfig,
+  localAiServicesOptOutConfig: PoliciesConfig,
   currentServiceControlPolicies: Policy[],
   currentTagPolicies: Policy[],
+  currentAiServicesOptOutPolicies: Policy[],
   organizationDir: string,
 ): Promise<PolicyDeploymentPlan> => {
   const currentServiceControlPoliciesMap = new Map(
@@ -108,8 +110,15 @@ export const createPoliciesDeploymentPlan = async (
   const currentTagPoliciesMap = new Map(
     currentTagPolicies.map((p) => [p.PolicySummary!.Name!, p]),
   )
+  const currentAiServicesOptOutPoliciesMap = new Map(
+    currentAiServicesOptOutPolicies.map((p) => [p.PolicySummary!.Name!, p]),
+  )
 
-  const [servicePolicies, tagPolicies] = await Promise.all([
+  const [
+    servicePolicies,
+    tagPolicies,
+    aiServicesOptOutPolicies,
+  ] = await Promise.all([
     planPoliciesByType(
       Constants.SERVICE_CONTROL_POLICY_TYPE,
       localServiceControlPoliciesConfig.policies,
@@ -122,9 +131,19 @@ export const createPoliciesDeploymentPlan = async (
       currentTagPoliciesMap,
       path.join(organizationDir, "tag-policies"),
     ),
+    planPoliciesByType(
+      Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
+      localAiServicesOptOutConfig.policies,
+      currentAiServicesOptOutPoliciesMap,
+      path.join(organizationDir, "ai-services-opt-out-policies"),
+    ),
   ])
 
-  const localPolicies = [...servicePolicies, ...tagPolicies]
+  const localPolicies = [
+    ...servicePolicies,
+    ...tagPolicies,
+    ...aiServicesOptOutPolicies,
+  ]
   const localPolicyNames = localPolicies.map((p) => p.name)
 
   const serviceControlPoliciesToDelete = currentServiceControlPolicies
@@ -161,10 +180,28 @@ export const createPoliciesDeploymentPlan = async (
       }
     })
 
+  const aiServicesOptOutPoliciesToDelete = currentAiServicesOptOutPolicies
+    .filter((p) => !p.PolicySummary?.AwsManaged)
+    .filter((p) => !localPolicyNames.includes(p.PolicySummary!.Name!))
+    .map((p) => {
+      return {
+        currentContent: p.Content!,
+        currentDescription: p.PolicySummary!.Description!,
+        id: p.PolicySummary!.Id!,
+        name: p.PolicySummary!.Name!,
+        awsManaged: p.PolicySummary?.AwsManaged!,
+        newContent: null,
+        newDescription: null,
+        operation: "delete",
+        type: p.PolicySummary!.Type!,
+      }
+    })
+
   const policies = [
     ...localPolicies,
     ...serviceControlPoliciesToDelete,
     ...tagPoliciesToDelete,
+    ...aiServicesOptOutPoliciesToDelete,
   ]
   const hasChanges =
     policies.filter((p) => p.operation === "skip").length !== policies.length
@@ -177,6 +214,10 @@ export const createPoliciesDeploymentPlan = async (
       ...serviceControlPoliciesToDelete,
     ],
     tagPolicies: [...tagPolicies, ...tagPoliciesToDelete],
+    aiServicesOptOutPolicies: [
+      ...aiServicesOptOutPolicies,
+      ...aiServicesOptOutPoliciesToDelete,
+    ],
   }
 }
 
@@ -188,6 +229,7 @@ export const planPoliciesDeployment = async (
     currentOrganizationHasAllFeaturesEnabled,
     currentServiceControlPolicies,
     currentTagPolicies,
+    currentAiServicesOptOutPolicies,
   } = data
 
   const logger = ctx.getLogger()
@@ -201,19 +243,26 @@ export const planPoliciesDeployment = async (
       hasChanges: false,
       tagPolicies: [],
       serviceControlPolicies: [],
+      aiServicesOptOutPolicies: [],
     }
   }
 
   const organizationConfigFile = ctx.getOrganizationConfigFile()
   const options = ctx.getOptions()
   const organizationDir = path.join(options.getProjectDir(), "organization")
-  const { serviceControlPolicies, tagPolicies } = organizationConfigFile
+  const {
+    serviceControlPolicies,
+    tagPolicies,
+    aiServicesOptOutPolicies,
+  } = organizationConfigFile
 
   return createPoliciesDeploymentPlan(
     serviceControlPolicies,
     tagPolicies,
+    aiServicesOptOutPolicies,
     currentServiceControlPolicies,
     currentTagPolicies,
+    currentAiServicesOptOutPolicies,
     organizationDir,
   )
 }
