@@ -20,10 +20,11 @@ export const deployPolicies = async (
     currentTagPolicies,
     currentServiceControlPolicies,
     currentAiServicesOptOutPolicies,
+    currentBackupPolicies,
   } = organizationData
 
   if (result) {
-    io.debug("Launch already completed, cancel policies deployment")
+    io.debug("Deploy already completed, cancel policies deployment")
     childWatch.stop()
     return deployOrganizationalUnits({
       ...holder,
@@ -56,6 +57,7 @@ export const deployPolicies = async (
     ...policiesPlan.serviceControlPolicies,
     ...policiesPlan.tagPolicies,
     ...policiesPlan.aiServicesOptOutPolicies,
+    ...policiesPlan.backupPolicies,
   ]
 
   const policiesToAdd = allPolicies.filter((p) => p.operation === "add")
@@ -158,6 +160,10 @@ export const deployPolicies = async (
     .filter((p) => p.type === Constants.AISERVICES_OPT_OUT_POLICY_TYPE)
     .map((p) => p.policy!)
 
+  const addedBackupPolicies = addedPolicies
+    .filter((p) => p.type === Constants.BACKUP_POLICY_TYPE)
+    .map((p) => p.policy!)
+
   const results = [...skippedPolicies, ...addedPolicies, ...updatedPolicies]
 
   const failedPolicies = results.filter((r) => !r.success)
@@ -184,6 +190,7 @@ export const deployPolicies = async (
         ...currentAiServicesOptOutPolicies,
         ...addedAiServicesOptOutPolicies,
       ],
+      currentBackupPolicies: [...currentBackupPolicies, ...addedBackupPolicies],
     },
     policiesDeploymentResult: {
       message,

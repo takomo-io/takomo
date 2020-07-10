@@ -16,7 +16,7 @@ export const cleanPolicies = async (
   const childWatch = watch.startChild("clean-policies")
 
   if (result) {
-    io.debug("Launch already completed, cancel policies clean")
+    io.debug("Deploy already completed, cancel policies clean")
     childWatch.stop()
     return cleanBasicConfiguration({
       ...holder,
@@ -49,6 +49,7 @@ export const cleanPolicies = async (
     ...policiesPlan.serviceControlPolicies,
     ...policiesPlan.tagPolicies,
     ...policiesPlan.aiServicesOptOutPolicies,
+    ...policiesPlan.backupPolicies,
   ]
 
   const policiesToDelete = allPolicies

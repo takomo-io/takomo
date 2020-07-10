@@ -82,7 +82,7 @@ export const cleanOrganizationalUnits = async (
   const client = ctx.getClient()
 
   if (result) {
-    io.debug("Launch already completed, cancel organizational units clean")
+    io.debug("Deploy already completed, cancel organizational units clean")
     childWatch.stop()
     return cleanPolicies({
       ...holder,

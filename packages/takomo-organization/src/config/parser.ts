@@ -116,6 +116,7 @@ const parseAccount = (
   inheritedServiceControlPolicies: PolicyName[],
   inheritedTagPolicies: PolicyName[],
   inheritedAiServicesOptOutPolicies: PolicyName[],
+  inheritedBackupPolicies: PolicyName[],
 ): OrganizationAccount => {
   if (typeof value === "string") {
     return {
@@ -132,6 +133,7 @@ const parseAccount = (
       tagPolicies: inheritedTagPolicies,
       serviceControlPolicies: inheritedServiceControlPolicies,
       aiServicesOptOutPolicies: inheritedAiServicesOptOutPolicies,
+      backupPolicies: inheritedBackupPolicies,
     }
   }
 
@@ -165,12 +167,19 @@ const parseAccount = (
     ...configuredAiServicesOptOutPolicies,
   ])
 
+  const configuredBackupPolicies = parsePolicyNames(value.backupPolicies)
+  const backupPolicies = uniq([
+    ...inheritedBackupPolicies,
+    ...configuredBackupPolicies,
+  ])
+
   return {
     configSets,
     bootstrapConfigSets,
     tagPolicies,
     serviceControlPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
     id: `${value.id}`,
     name: value.name || null,
     email: value.email || null,
@@ -189,6 +198,7 @@ const parseAccounts = (
   inheritedServiceControlPolicies: PolicyName[],
   inheritedTagPolicies: PolicyName[],
   inheritedAiServicesOptOutPolicies: PolicyName[],
+  inheritedBackupPolicies: PolicyName[],
 ): OrganizationAccount[] => {
   if (value === null || value === undefined) {
     return []
@@ -202,6 +212,7 @@ const parseAccounts = (
       inheritedServiceControlPolicies,
       inheritedTagPolicies,
       inheritedAiServicesOptOutPolicies,
+      inheritedBackupPolicies,
     ),
   )
 }
@@ -265,9 +276,10 @@ const parseOrganizationalUnit = (
   parentLogger: Logger,
   ouPath: string,
   config: any,
-  inheritedServiceControlPolicies: string[],
-  inheritedTagPolicies: string[],
-  inheritedAiServicesOptOutPolicies: string[],
+  inheritedServiceControlPolicies: PolicyName[],
+  inheritedTagPolicies: PolicyName[],
+  inheritedAiServicesOptOutPolicies: PolicyName[],
+  inheritedBackupPolicies: PolicyName[],
   inheritedConfigSets: ConfigSetName[],
   inheritedBootstrapConfigSets: ConfigSetName[],
 ): OrganizationalUnit => {
@@ -305,6 +317,7 @@ const parseOrganizationalUnit = (
   const configuredAiServicesOptOutPolicies = parsePolicyNames(
     ou?.aiServicesOptOutPolicies,
   )
+  const configuredBackupPolicies = parsePolicyNames(ou?.backupPolicies)
 
   const serviceControlPolicies = uniq([
     ...inheritedServiceControlPolicies,
@@ -314,6 +327,11 @@ const parseOrganizationalUnit = (
   const aiServicesOptOutPolicies = uniq([
     ...inheritedAiServicesOptOutPolicies,
     ...configuredAiServicesOptOutPolicies,
+  ])
+
+  const backupPolicies = uniq([
+    ...inheritedBackupPolicies,
+    ...configuredBackupPolicies,
   ])
 
   const configuredConfigSets = parseConfigSetNames(ou?.configSets)
@@ -338,6 +356,7 @@ const parseOrganizationalUnit = (
       serviceControlPolicies,
       tagPolicies,
       aiServicesOptOutPolicies,
+      backupPolicies,
       configSets,
       bootstrapConfigSets,
     ),
@@ -350,6 +369,7 @@ const parseOrganizationalUnit = (
     serviceControlPolicies,
     tagPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
   )
 
   return {
@@ -359,6 +379,7 @@ const parseOrganizationalUnit = (
     serviceControlPolicies,
     tagPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
     configSets,
     bootstrapConfigSets,
     path: ouPath,
@@ -375,7 +396,7 @@ const parseOrganizationalUnitsConfig = (
   logger: Logger,
   value: any,
 ): OrganizationalUnitsConfig => ({
-  Root: parseOrganizationalUnit(logger, "Root", value, [], [], [], [], []),
+  Root: parseOrganizationalUnit(logger, "Root", value, [], [], [], [], [], []),
 })
 
 export const parseOrganizationConfigFile = async (
@@ -440,6 +461,10 @@ export const parseOrganizationConfigFile = async (
     Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
     parsedFile.aiServicesOptOutPolicies,
   )
+  const backupPolicies = parsePoliciesConfig(
+    Constants.BACKUP_POLICY_TYPE,
+    parsedFile.backupPolicies,
+  )
   const vars = parseVars(parsedFile.vars)
   const organizationalUnits = parseOrganizationalUnitsConfig(
     logger,
@@ -452,6 +477,7 @@ export const parseOrganizationConfigFile = async (
     serviceControlPolicies,
     tagPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
     organizationalUnits,
     vars,
     trustedAwsServices: parsedFile.trustedAwsServices || null,

@@ -400,4 +400,16 @@ describe("Organization commands", () => {
     },
     TIMEOUT,
   )
+
+  test(
+    "enabled backup policies",
+    async () => {
+      const { success, status, message } = await deployOrganization("v10")
+
+      expect(success).toBeTruthy()
+      expect(status).toBe(CommandStatus.SUCCESS)
+      expect(message).toBe("Success")
+    },
+    TIMEOUT,
+  )
 })

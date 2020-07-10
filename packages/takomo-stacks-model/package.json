@@ -39,7 +39,7 @@
     "@hapi/joi": "17.1.1",
     "@takomo/core": "2.4.0",
     "@takomo/util": "2.3.0",
-    "aws-sdk": "2.693.0"
+    "aws-sdk": "2.713.0"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",
