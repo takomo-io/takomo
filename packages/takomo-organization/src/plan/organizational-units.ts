@@ -24,8 +24,10 @@ const planAccountUpdate = (
   localAccount: OrganizationAccount,
   currentServiceControlPoliciesByTarget: Map<string, PolicyName[]>,
   currentTagPoliciesByTarget: Map<string, PolicyName[]>,
+  currentAiServicesOptOutPoliciesByTarget: Map<string, PolicyName[]>,
   inheritedServiceControlPolicies: PolicyName[],
   inheritedTagPolicies: PolicyName[],
+  inheritedAiServicesOptOutPolicies: PolicyName[],
 ): PlannedAccount => {
   const id = account.Id!
 
@@ -37,10 +39,16 @@ const planAccountUpdate = (
     ...inheritedTagPolicies,
     ...localAccount.tagPolicies,
   ])
+  const localAiServicesOptOutPolicies = uniq([
+    ...inheritedAiServicesOptOutPolicies,
+    ...localAccount.aiServicesOptOutPolicies,
+  ])
 
   const currentServiceControlPolicyNames =
     currentServiceControlPoliciesByTarget.get(id) || []
   const currentTagPolicyNames = currentTagPoliciesByTarget.get(id) || []
+  const currentAiServicesOptOutPolicyNames =
+    currentAiServicesOptOutPoliciesByTarget.get(id) || []
 
   const serviceControlPoliciesToRemove = without(
     currentServiceControlPolicyNames,
@@ -52,12 +60,22 @@ const planAccountUpdate = (
     ...localTagPolicies,
   )
 
+  const aiServicesOptOutPoliciesToRemove = without(
+    currentAiServicesOptOutPolicyNames,
+    ...localAiServicesOptOutPolicies,
+  )
+
   const serviceControlPoliciesToAdd = without(
     localServiceControlPolicies,
     ...currentServiceControlPolicyNames,
   )
 
   const tagPoliciesToAdd = without(localTagPolicies, ...currentTagPolicyNames)
+
+  const aiServicesOptOutPoliciesToAdd = without(
+    localAiServicesOptOutPolicies,
+    ...currentAiServicesOptOutPolicyNames,
+  )
 
   const tagPoliciesToRetain = intersection(
     currentTagPolicyNames,
@@ -69,11 +87,18 @@ const planAccountUpdate = (
     localServiceControlPolicies,
   )
 
+  const aiServicesOptOutPoliciesToRetain = intersection(
+    currentAiServicesOptOutPolicyNames,
+    localAiServicesOptOutPolicies,
+  )
+
   const operation =
     serviceControlPoliciesToAdd.length > 0 ||
     serviceControlPoliciesToRemove.length > 0 ||
     tagPoliciesToAdd.length > 0 ||
-    tagPoliciesToRemove.length > 0
+    tagPoliciesToRemove.length > 0 ||
+    aiServicesOptOutPoliciesToAdd.length > 0 ||
+    aiServicesOptOutPoliciesToRemove.length > 0
       ? "update"
       : "skip"
 
@@ -90,6 +115,11 @@ const planAccountUpdate = (
       retain: tagPoliciesToRetain,
       remove: tagPoliciesToRemove,
     },
+    aiServicesOptOutPolicies: {
+      add: aiServicesOptOutPoliciesToAdd,
+      retain: aiServicesOptOutPoliciesToRetain,
+      remove: aiServicesOptOutPoliciesToRemove,
+    },
   }
 }
 
@@ -101,9 +131,11 @@ export const createOrganizationalUnitsDeploymentPlan = (
   currentAccounts: Account[],
   currentServiceControlPoliciesByTarget: Map<string, PolicyName[]>,
   currentTagPoliciesByTarget: Map<string, PolicyName[]>,
+  currentAiServicesOptOutPoliciesByTarget: Map<string, PolicyName[]>,
   parentId: OrganizationalUnitId | null,
   inheritedServiceControlPolicies: PolicyName[],
   inheritedTagPolicies: PolicyName[],
+  inheritedAiServicesOptOutPolicies: PolicyName[],
 ): PlannedOrganizationalUnit => {
   // Delete
   if (!localOu && currentOu) {
@@ -115,6 +147,7 @@ export const createOrganizationalUnitsDeploymentPlan = (
       currentAccounts,
       currentServiceControlPoliciesByTarget,
       currentTagPoliciesByTarget,
+      currentAiServicesOptOutPoliciesByTarget,
       parentId,
     )
     // Add
@@ -127,9 +160,11 @@ export const createOrganizationalUnitsDeploymentPlan = (
       currentAccounts,
       currentServiceControlPoliciesByTarget,
       currentTagPoliciesByTarget,
+      currentAiServicesOptOutPoliciesByTarget,
       parentId,
       inheritedServiceControlPolicies,
       inheritedTagPolicies,
+      inheritedAiServicesOptOutPolicies,
     )
 
     // Update or skip
@@ -143,9 +178,11 @@ export const createOrganizationalUnitsDeploymentPlan = (
       currentAccounts,
       currentServiceControlPoliciesByTarget,
       currentTagPoliciesByTarget,
+      currentAiServicesOptOutPoliciesByTarget,
       parentId,
       inheritedServiceControlPolicies,
       inheritedTagPolicies,
+      inheritedAiServicesOptOutPolicies,
     )
   } else {
     throw new Error(`Assertion error`)
@@ -159,6 +196,7 @@ const planOrganizationalUnitDelete = (
   currentAccounts: Account[],
   currentServiceControlPoliciesByTarget: Map<string, PolicyName[]>,
   currentTagPoliciesByTarget: Map<string, PolicyName[]>,
+  currentAiServicesOptOutPoliciesByTarget: Map<string, PolicyName[]>,
   parentId: string | null,
 ): PlannedOrganizationalUnit => {
   const children = currentOu.children.map((child) =>
@@ -170,7 +208,9 @@ const planOrganizationalUnitDelete = (
       currentAccounts,
       currentServiceControlPoliciesByTarget,
       currentTagPoliciesByTarget,
+      currentAiServicesOptOutPoliciesByTarget,
       currentOu.ou.Id!,
+      [],
       [],
       [],
     ),
@@ -195,6 +235,11 @@ const planOrganizationalUnitDelete = (
       retain: [],
       remove: [],
     },
+    aiServicesOptOutPolicies: {
+      add: [],
+      retain: [],
+      remove: [],
+    },
     accounts: {
       add: [],
       retain: [],
@@ -211,6 +256,11 @@ const planOrganizationalUnitDelete = (
           retain: [],
           remove: [],
         },
+        aiServicesOptOutPolicies: {
+          add: [],
+          retain: [],
+          remove: [],
+        },
       })),
     },
   }
@@ -223,9 +273,11 @@ const planOrganizationalUnitAdd = (
   currentAccounts: Account[],
   currentServiceControlPoliciesByTarget: Map<string, PolicyName[]>,
   currentTagPoliciesByTarget: Map<string, PolicyName[]>,
+  currentAiServicesOptOutPoliciesByTarget: Map<string, PolicyName[]>,
   parentId: OrganizationalUnitId | null,
   inheritedServiceControlPolicies: PolicyName[],
   inheritedTagPolicies: PolicyName[],
+  inheritedAiServicesOptOutPolicies: PolicyName[],
 ): PlannedOrganizationalUnit => {
   logger.debug(`Plan creation of organizational unit: '${ouPath}'`)
 
@@ -241,12 +293,17 @@ const planOrganizationalUnitAdd = (
         currentAccounts,
         currentServiceControlPoliciesByTarget,
         currentTagPoliciesByTarget,
+        currentAiServicesOptOutPoliciesByTarget,
         null,
         uniq([
           ...inheritedServiceControlPolicies,
           ...localOu.serviceControlPolicies,
         ]),
         uniq([...inheritedTagPolicies, ...localOu.tagPolicies]),
+        uniq([
+          ...inheritedAiServicesOptOutPolicies,
+          ...localOu.aiServicesOptOutPolicies,
+        ]),
       ),
     )
 
@@ -272,6 +329,14 @@ const planOrganizationalUnitAdd = (
       retain: [],
       remove: [],
     },
+    aiServicesOptOutPolicies: {
+      add: uniq([
+        ...localOu.aiServicesOptOutPolicies,
+        ...inheritedAiServicesOptOutPolicies,
+      ]),
+      retain: [],
+      remove: [],
+    },
     accounts: {
       add: localOu.accounts.map((account) =>
         planAccountUpdate(
@@ -279,8 +344,10 @@ const planOrganizationalUnitAdd = (
           account,
           currentServiceControlPoliciesByTarget,
           currentTagPoliciesByTarget,
+          currentAiServicesOptOutPoliciesByTarget,
           inheritedServiceControlPolicies,
           inheritedTagPolicies,
+          inheritedAiServicesOptOutPolicies,
         ),
       ),
       retain: [],
@@ -297,9 +364,11 @@ const planOrganizationalUnitUpdate = (
   currentAccounts: Account[],
   currentServiceControlPoliciesByTarget: Map<string, PolicyName[]>,
   currentTagPoliciesByTarget: Map<string, PolicyName[]>,
+  currentAiServicesOptOutPoliciesByTarget: Map<string, PolicyName[]>,
   parentId: OrganizationalUnitId | null,
   inheritedServiceControlPolicies: PolicyName[],
   inheritedTagPolicies: PolicyName[],
+  inheritedAiServicesOptOutPolicies: PolicyName[],
 ): PlannedOrganizationalUnit => {
   logger.debug(`Plan update for organizational unit: '${ouPath}'`)
 
@@ -309,19 +378,24 @@ const planOrganizationalUnitUpdate = (
     currentServiceControlPoliciesByTarget.get(currentOu.ou.Id!) || []
   const currentTagPolicyNames =
     currentTagPoliciesByTarget.get(currentOu.ou.Id!) || []
+  const currentAiServicesOptOutPolicyNames =
+    currentAiServicesOptOutPoliciesByTarget.get(currentOu.ou.Id!) || []
 
   logger.debugObject(`Organizational unit '${ouPath}' policy configuration:`, {
     current: {
       tagPolicies: currentTagPolicyNames,
       serviceControlPolicies: currentServiceControlPolicyNames,
+      aiServicesOptOutPolicies: currentAiServicesOptOutPolicyNames,
     },
     inherited: {
       tagPolicies: inheritedTagPolicies,
       serviceControlPolicies: inheritedServiceControlPolicies,
+      aiServicesOptOutPolicies: inheritedAiServicesOptOutPolicies,
     },
     local: {
       tagPolicies: localOu.tagPolicies,
       serviceControlPolicies: localOu.serviceControlPolicies,
+      aiServicesOptOutPolicies: localOu.aiServicesOptOutPolicies,
     },
   })
 
@@ -332,6 +406,10 @@ const planOrganizationalUnitUpdate = (
   const localTagPolicies = uniq([
     ...inheritedTagPolicies,
     ...localOu.tagPolicies,
+  ])
+  const localAiServicesOptOutPolicies = uniq([
+    ...inheritedAiServicesOptOutPolicies,
+    ...localOu.aiServicesOptOutPolicies,
   ])
 
   const serviceControlPoliciesToRemove = without(
@@ -344,12 +422,22 @@ const planOrganizationalUnitUpdate = (
     ...localTagPolicies,
   )
 
+  const aiServicesOptOutPoliciesToRemove = without(
+    currentAiServicesOptOutPolicyNames,
+    ...localAiServicesOptOutPolicies,
+  )
+
   const serviceControlPoliciesToAdd = without(
     localServiceControlPolicies,
     ...currentServiceControlPolicyNames,
   )
 
   const tagPoliciesToAdd = without(localTagPolicies, ...currentTagPolicyNames)
+
+  const aiServicesOptOutPoliciesToAdd = without(
+    localAiServicesOptOutPolicies,
+    ...currentAiServicesOptOutPolicyNames,
+  )
 
   const tagPoliciesToRetain = intersection(
     currentTagPolicyNames,
@@ -361,18 +449,26 @@ const planOrganizationalUnitUpdate = (
     localServiceControlPolicies,
   )
 
+  const aiServicesOptOutPoliciesToRetain = intersection(
+    currentAiServicesOptOutPolicyNames,
+    localAiServicesOptOutPolicies,
+  )
+
   logger.debugObject(`Organizational unit '${ouPath}' policy operations:`, {
     add: {
       tagPolicies: tagPoliciesToAdd,
       serviceControlPolicies: serviceControlPoliciesToAdd,
+      aiServicesOptOutPolicies: aiServicesOptOutPoliciesToAdd,
     },
     retain: {
       tagPolicies: tagPoliciesToRetain,
       serviceControlPolicies: serviceControlPoliciesToRetain,
+      aiServicesOptOutPolicies: aiServicesOptOutPoliciesToRetain,
     },
     remove: {
       tagPolicies: tagPoliciesToRemove,
       serviceControlPolicies: serviceControlPoliciesToRemove,
+      aiServicesOptOutPolicies: aiServicesOptOutPoliciesToRemove,
     },
   })
 
@@ -382,6 +478,8 @@ const planOrganizationalUnitUpdate = (
       tagPoliciesToRemove,
       serviceControlPoliciesToAdd,
       tagPoliciesToAdd,
+      aiServicesOptOutPoliciesToRemove,
+      aiServicesOptOutPoliciesToAdd,
     ].reduce((sum, policies) => sum + policies.length, 0) > 0
 
   const accountIdsToAdd = without(localAccountIds, ...currentAccountIds)
@@ -394,8 +492,10 @@ const planOrganizationalUnitUpdate = (
       localOu.accounts.find((a) => a.id === id)!,
       currentServiceControlPoliciesByTarget,
       currentTagPoliciesByTarget,
+      currentAiServicesOptOutPoliciesByTarget,
       inheritedServiceControlPolicies,
       inheritedTagPolicies,
+      inheritedAiServicesOptOutPolicies,
     )
   })
 
@@ -405,8 +505,10 @@ const planOrganizationalUnitUpdate = (
       localOu.accounts.find((a) => a.id === id)!,
       currentServiceControlPoliciesByTarget,
       currentTagPoliciesByTarget,
+      currentAiServicesOptOutPoliciesByTarget,
       inheritedServiceControlPolicies,
       inheritedTagPolicies,
+      inheritedAiServicesOptOutPolicies,
     )
   })
 
@@ -420,6 +522,11 @@ const planOrganizationalUnitUpdate = (
         remove: [],
       },
       tagPolicies: {
+        add: [],
+        retain: [],
+        remove: [],
+      },
+      aiServicesOptOutPolicies: {
         add: [],
         retain: [],
         remove: [],
@@ -463,9 +570,11 @@ const planOrganizationalUnitUpdate = (
           currentAccounts,
           currentServiceControlPoliciesByTarget,
           currentTagPoliciesByTarget,
+          currentAiServicesOptOutPoliciesByTarget,
           currentOu.ou.Id!,
           localServiceControlPolicies,
           localTagPolicies,
+          localAiServicesOptOutPolicies,
         )
       }) || []
 
@@ -485,7 +594,9 @@ const planOrganizationalUnitUpdate = (
           currentAccounts,
           currentServiceControlPoliciesByTarget,
           currentTagPoliciesByTarget,
+          currentAiServicesOptOutPoliciesByTarget,
           currentOu?.ou.Id!,
+          [],
           [],
           [],
         ),
@@ -517,6 +628,11 @@ const planOrganizationalUnitUpdate = (
       retain: tagPoliciesToRetain,
       remove: tagPoliciesToRemove,
     },
+    aiServicesOptOutPolicies: {
+      add: aiServicesOptOutPoliciesToAdd,
+      retain: aiServicesOptOutPoliciesToRetain,
+      remove: aiServicesOptOutPoliciesToRemove,
+    },
     accounts: {
       add: accountsToAdd,
       retain: accountsToRetain,
@@ -534,6 +650,7 @@ export const planOrganizationUnitsDeployment = async (
     currentAccounts,
     currentServiceControlPoliciesByTarget,
     currentTagPoliciesByTarget,
+    currentAiServicesOptOutPoliciesByTarget,
   } = data
 
   const configFile = ctx.getOrganizationConfigFile()
@@ -549,7 +666,9 @@ export const planOrganizationUnitsDeployment = async (
     currentAccounts,
     currentServiceControlPoliciesByTarget,
     currentTagPoliciesByTarget,
+    currentAiServicesOptOutPoliciesByTarget,
     null,
+    [],
     [],
     [],
   )

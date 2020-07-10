@@ -36,6 +36,7 @@ export const loadOrganizationData = async (
   const [
     tagPolicies,
     serviceControlPolicies,
+    aiServicesOptOutPolicies,
     existingRoots,
     currentAccounts,
     awsServices,
@@ -43,6 +44,7 @@ export const loadOrganizationData = async (
   ] = await Promise.all([
     client.listDetailedPolicies(Constants.TAG_POLICY_TYPE),
     client.listDetailedPolicies(Constants.SERVICE_CONTROL_POLICY_TYPE),
+    client.listDetailedPolicies(Constants.AISERVICES_OPT_OUT_POLICY_TYPE),
     client.listAllOrganizationUnitsWithDetails(),
     client.listAccounts(),
     allFeaturesEnabled ? client.listAWSServiceAccessForOrganization() : [],
@@ -53,12 +55,19 @@ export const loadOrganizationData = async (
     (p) => p.policy,
   )
   const currentTagPolicies = tagPolicies.map((p) => p.policy)
+  const currentAiServicesOptOutPolicies = aiServicesOptOutPolicies.map(
+    (p) => p.policy,
+  )
 
   logger.debugObject(
     "Current service control policies:",
     currentServiceControlPolicies,
   )
   logger.debugObject("Current tag policies:", currentTagPolicies)
+  logger.debugObject(
+    "Current AI services opt-out policies:",
+    currentAiServicesOptOutPolicies,
+  )
   logger.debugObject("Trusted AWS services:", awsServices)
 
   const currentRootOrganizationalUnit = existingRoots.find(
@@ -70,6 +79,9 @@ export const loadOrganizationData = async (
     serviceControlPolicies,
   )
   const currentTagPoliciesByTarget = collectPoliciesByTargetId(tagPolicies)
+  const currentAiServicesOptOutPoliciesByTarget = collectPoliciesByTargetId(
+    aiServicesOptOutPolicies,
+  )
 
   const currentEnabledPolicies = organizationRoots[0]
     .PolicyTypes!.filter((p) => p.Status === "ENABLED")
@@ -81,8 +93,10 @@ export const loadOrganizationData = async (
   return {
     currentServiceControlPolicies,
     currentTagPolicies,
+    currentAiServicesOptOutPolicies,
     currentServiceControlPoliciesByTarget,
     currentTagPoliciesByTarget,
+    currentAiServicesOptOutPoliciesByTarget,
     currentRootOrganizationalUnit,
     currentAccounts,
     currentTrustedAwsServices,

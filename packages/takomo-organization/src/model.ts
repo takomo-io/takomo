@@ -43,6 +43,7 @@ export interface OrganizationAccount {
   readonly bootstrapConfigSets: ConfigSetName[]
   readonly serviceControlPolicies: PolicyName[]
   readonly tagPolicies: PolicyName[]
+  readonly aiServicesOptOutPolicies: PolicyName[]
 }
 
 export interface NewAccountDefaults {
@@ -69,6 +70,7 @@ export interface PolicyConfig {
 export interface OrganizationalUnit {
   readonly serviceControlPolicies: PolicyName[]
   readonly tagPolicies: PolicyName[]
+  readonly aiServicesOptOutPolicies: PolicyName[]
   readonly name: OrganizationalUnitName
   readonly path: OrganizationalUnitPath
   readonly priority: number
@@ -100,6 +102,7 @@ export interface OrganizationConfigFile {
   readonly vars: any
   readonly serviceControlPolicies: PoliciesConfig
   readonly tagPolicies: PoliciesConfig
+  readonly aiServicesOptOutPolicies: PoliciesConfig
   readonly organizationalUnits: OrganizationalUnitsConfig
   readonly trustedAwsServices: string[]
   readonly organizationAdminRoleName: string | null
@@ -118,6 +121,7 @@ export interface PlannedAccount {
   readonly operation: string
   readonly serviceControlPolicies: PlannedPolicies
   readonly tagPolicies: PlannedPolicies
+  readonly aiServicesOptOutPolicies: PlannedPolicies
 }
 
 export interface PlannedAccounts {
@@ -137,6 +141,7 @@ export interface PlannedOrganizationalUnit {
   readonly children: PlannedOrganizationalUnit[]
   readonly serviceControlPolicies: PlannedPolicies
   readonly tagPolicies: PlannedPolicies
+  readonly aiServicesOptOutPolicies: PlannedPolicies
   readonly accounts: PlannedAccounts
 }
 
@@ -157,6 +162,7 @@ export interface PolicyDeploymentPlan {
   readonly hasChanges: boolean
   readonly serviceControlPolicies: PlannedPolicy[]
   readonly tagPolicies: PlannedPolicy[]
+  readonly aiServicesOptOutPolicies: PlannedPolicy[]
 }
 
 export interface OrganizationalUnitsDeploymentPlan {
@@ -242,8 +248,10 @@ export interface OrganizationDataHolder
 export interface OrganizationData {
   readonly currentTagPolicies: Policy[]
   readonly currentServiceControlPolicies: Policy[]
+  readonly currentAiServicesOptOutPolicies: Policy[]
   readonly currentServiceControlPoliciesByTarget: Map<string, PolicyName[]>
   readonly currentTagPoliciesByTarget: Map<string, PolicyName[]>
+  readonly currentAiServicesOptOutPoliciesByTarget: Map<string, PolicyName[]>
   readonly currentRootOrganizationalUnit: DetailedOrganizationalUnit
   readonly currentAccounts: Account[]
   readonly currentTrustedAwsServices: string[]

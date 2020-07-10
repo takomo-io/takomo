@@ -30,6 +30,7 @@ export const validateOrganizationConfigFile = (
   const {
     serviceControlPolicies,
     tagPolicies,
+    aiServicesOptOutPolicies,
     configSets,
     organizationalUnits: { Root },
   } = configFile
@@ -50,6 +51,12 @@ export const validateOrganizationConfigFile = (
     if (configFile.tagPolicies.enabled) {
       throw new TakomoError(
         "Local configuration must not contain 'tagPolicies' configuration when the organization does not have all features enabled",
+      )
+    }
+
+    if (configFile.aiServicesOptOutPolicies.enabled) {
+      throw new TakomoError(
+        "Local configuration must not contain 'aiServicesOptOutPolicies' configuration when the organization does not have all features enabled",
       )
     }
 
@@ -83,6 +90,9 @@ export const validateOrganizationConfigFile = (
     serviceControlPolicies.policies,
   )
   const tagPolicyNames = collectPolicyNames(tagPolicies.policies)
+  const aiServicesOptOutPolicyNames = collectPolicyNames(
+    aiServicesOptOutPolicies.policies,
+  )
   const configSetNames = collectConfigSetNames(configSets)
 
   const validateOu = (ou: OrganizationalUnit): void => {
@@ -98,6 +108,14 @@ export const validateOrganizationConfigFile = (
       if (!tagPolicyNames.includes(policyName)) {
         throw new TakomoError(
           `Organizational unit '${ou.path}' refers to a non-existing tag policy '${policyName}'`,
+        )
+      }
+    })
+
+    ou.aiServicesOptOutPolicies.forEach((policyName) => {
+      if (!aiServicesOptOutPolicyNames.includes(policyName)) {
+        throw new TakomoError(
+          `Organizational unit '${ou.path}' refers to a non-existing AI services opt-out policy '${policyName}'`,
         )
       }
     })
@@ -131,6 +149,30 @@ export const validateOrganizationConfigFile = (
         if (!configSetNames.includes(configSetName)) {
           throw new TakomoError(
             `Account '${account.id}' refers to a non-existing bootstrap config set '${configSetName}'`,
+          )
+        }
+      })
+
+      account.serviceControlPolicies.forEach((policyName) => {
+        if (!serviceControlPolicyNames.includes(policyName)) {
+          throw new TakomoError(
+            `Account '${account.id}' refers to a non-existing service control policy '${policyName}'`,
+          )
+        }
+      })
+
+      account.tagPolicies.forEach((policyName) => {
+        if (!tagPolicyNames.includes(policyName)) {
+          throw new TakomoError(
+            `Account '${account.id}' refers to a non-existing tag policy '${policyName}'`,
+          )
+        }
+      })
+
+      account.aiServicesOptOutPolicies.forEach((policyName) => {
+        if (!aiServicesOptOutPolicyNames.includes(policyName)) {
+          throw new TakomoError(
+            `Account '${account.id}' refers to a non-existing AI services opt-out policy '${policyName}'`,
           )
         }
       })

@@ -48,6 +48,7 @@ export const cleanPolicies = async (
   const allPolicies = [
     ...policiesPlan.serviceControlPolicies,
     ...policiesPlan.tagPolicies,
+    ...policiesPlan.aiServicesOptOutPolicies,
   ]
 
   const policiesToDelete = allPolicies
