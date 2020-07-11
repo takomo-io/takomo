@@ -31,6 +31,7 @@ export const validateOrganizationConfigFile = (
     serviceControlPolicies,
     tagPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
     configSets,
     organizationalUnits: { Root },
   } = configFile
@@ -57,6 +58,12 @@ export const validateOrganizationConfigFile = (
     if (configFile.aiServicesOptOutPolicies.enabled) {
       throw new TakomoError(
         "Local configuration must not contain 'aiServicesOptOutPolicies' configuration when the organization does not have all features enabled",
+      )
+    }
+
+    if (configFile.backupPolicies.enabled) {
+      throw new TakomoError(
+        "Local configuration must not contain 'backupPolicies' configuration when the organization does not have all features enabled",
       )
     }
 
@@ -93,6 +100,7 @@ export const validateOrganizationConfigFile = (
   const aiServicesOptOutPolicyNames = collectPolicyNames(
     aiServicesOptOutPolicies.policies,
   )
+  const backupPolicyNames = collectPolicyNames(backupPolicies.policies)
   const configSetNames = collectConfigSetNames(configSets)
 
   const validateOu = (ou: OrganizationalUnit): void => {
@@ -116,6 +124,14 @@ export const validateOrganizationConfigFile = (
       if (!aiServicesOptOutPolicyNames.includes(policyName)) {
         throw new TakomoError(
           `Organizational unit '${ou.path}' refers to a non-existing AI services opt-out policy '${policyName}'`,
+        )
+      }
+    })
+
+    ou.backupPolicies.forEach((policyName) => {
+      if (!backupPolicyNames.includes(policyName)) {
+        throw new TakomoError(
+          `Organizational unit '${ou.path}' refers to a non-existing backup policy '${policyName}'`,
         )
       }
     })
@@ -173,6 +189,14 @@ export const validateOrganizationConfigFile = (
         if (!aiServicesOptOutPolicyNames.includes(policyName)) {
           throw new TakomoError(
             `Account '${account.id}' refers to a non-existing AI services opt-out policy '${policyName}'`,
+          )
+        }
+      })
+
+      account.backupPolicies.forEach((policyName) => {
+        if (!backupPolicyNames.includes(policyName)) {
+          throw new TakomoError(
+            `Account '${account.id}' refers to a non-existing backup policy '${policyName}'`,
           )
         }
       })

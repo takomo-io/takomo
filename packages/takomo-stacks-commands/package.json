@@ -44,7 +44,7 @@
     "@takomo/stacks-model": "2.4.0",
     "@takomo/stacks-schema": "2.4.0",
     "@takomo/util": "2.3.0",
-    "aws-sdk": "2.693.0",
+    "aws-sdk": "2.713.0",
     "uuid": "3.3.3"
   },
   "devDependencies": {

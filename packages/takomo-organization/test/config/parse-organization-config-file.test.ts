@@ -49,6 +49,7 @@ const account = ({
   aiServicesOptOutPolicies: [],
   status: OrganizationAccountStatus.ACTIVE,
   tagPolicies: [],
+  backupPolicies: [],
   vars: {},
 })
 
@@ -86,6 +87,11 @@ describe("#parseOrganizationConfigFile", () => {
           policies: [],
           policyType: "AISERVICES_OPT_OUT_POLICY",
         },
+        backupPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "BACKUP_POLICY",
+        },
         organizationalUnits: {
           Root: {
             accountAdminRoleName: null,
@@ -101,6 +107,7 @@ describe("#parseOrganizationConfigFile", () => {
             status: "active",
             tagPolicies: [],
             aiServicesOptOutPolicies: [],
+            backupPolicies: [],
             vars: {},
             accounts: [account({ id: "123456789012" })],
           },
@@ -157,6 +164,11 @@ describe("#parseOrganizationConfigFile", () => {
           policies: [],
           policyType: "AISERVICES_OPT_OUT_POLICY",
         },
+        backupPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "BACKUP_POLICY",
+        },
         organizationalUnits: {
           Root: {
             accountAdminRoleName: null,
@@ -176,6 +188,7 @@ describe("#parseOrganizationConfigFile", () => {
                 aiServicesOptOutPolicies: [],
                 status: "active",
                 tagPolicies: [],
+                backupPolicies: [],
                 vars: {},
                 accounts: [],
                 children: [
@@ -193,6 +206,7 @@ describe("#parseOrganizationConfigFile", () => {
                     status: "active",
                     tagPolicies: [],
                     aiServicesOptOutPolicies: [],
+                    backupPolicies: [],
                     vars: {},
                     accounts: [
                       account({
@@ -216,6 +230,7 @@ describe("#parseOrganizationConfigFile", () => {
             aiServicesOptOutPolicies: [],
             status: "active",
             tagPolicies: [],
+            backupPolicies: [],
             vars: {},
             accounts: [
               account({
@@ -279,6 +294,11 @@ describe("#parseOrganizationConfigFile", () => {
           policies: [],
           policyType: "AISERVICES_OPT_OUT_POLICY",
         },
+        backupPolicies: {
+          enabled: false,
+          policies: [],
+          policyType: "BACKUP_POLICY",
+        },
         organizationalUnits: {
           Root: {
             accountAdminRoleName: null,
@@ -299,6 +319,7 @@ describe("#parseOrganizationConfigFile", () => {
                 aiServicesOptOutPolicies: [],
                 status: "active",
                 tagPolicies: [],
+                backupPolicies: [],
                 vars: {},
                 accounts: [
                   account({ id: "123456789012" }),
@@ -319,6 +340,7 @@ describe("#parseOrganizationConfigFile", () => {
                 aiServicesOptOutPolicies: [],
                 status: "active",
                 tagPolicies: [],
+                backupPolicies: [],
                 vars: {},
                 accounts: [],
               },
@@ -330,6 +352,7 @@ describe("#parseOrganizationConfigFile", () => {
             priority: 0,
             serviceControlPolicies: [],
             aiServicesOptOutPolicies: [],
+            backupPolicies: [],
             status: "active",
             tagPolicies: [],
             vars: {},

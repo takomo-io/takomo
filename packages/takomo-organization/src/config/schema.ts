@@ -55,6 +55,7 @@ const organizationAccount = Joi.object({
   ],
   serviceControlPolicies: [policyName, Joi.array().items(policyName).unique()],
   tagPolicies: [policyName, Joi.array().items(policyName).unique()],
+  backupPolicies: [policyName, Joi.array().items(policyName).unique()],
   aiServicesOptOutPolicies: [
     policyName,
     Joi.array().items(policyName).unique(),
@@ -138,6 +139,7 @@ const organizationalUnit = Joi.object({
   accounts: Joi.array().items(organizationAccount, accountId),
   serviceControlPolicies: [policyName, Joi.array().items(policyName).unique()],
   tagPolicies: [policyName, Joi.array().items(policyName).unique()],
+  backupPolicies: [policyName, Joi.array().items(policyName).unique()],
   aiServicesOptOutPolicies: [
     policyName,
     Joi.array().items(policyName).unique(),
@@ -163,6 +165,7 @@ export const organizationConfigFileSchema = Joi.object({
   serviceControlPolicies: [policies, Joi.boolean()],
   tagPolicies: [policies, Joi.boolean()],
   aiServicesOptOutPolicies: [policies, Joi.boolean()],
+  backupPolicies: [policies, Joi.boolean()],
   organizationalUnits: organizationalUnits.required(),
   configSets,
   trustedAwsServices,

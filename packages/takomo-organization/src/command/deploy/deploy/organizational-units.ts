@@ -29,6 +29,7 @@ export const addOrUpdateOrganizationalUnits = async (
   currentServiceControlPolicies: Map<PolicyName, PolicyId>,
   currentTagPolicies: Map<PolicyName, PolicyId>,
   currentAiServicesOptOutPolicies: Map<PolicyName, PolicyId>,
+  currentBackupPolicies: Map<PolicyName, PolicyId>,
   currentAccounts: Map<AccountId, OrganizationalUnitId>,
   planned: PlannedOrganizationalUnit,
   parentId: OrganizationalUnitId | null,
@@ -44,6 +45,7 @@ export const addOrUpdateOrganizationalUnits = async (
         currentServiceControlPolicies,
         currentTagPolicies,
         currentAiServicesOptOutPolicies,
+        currentBackupPolicies,
         currentAccounts,
         planned,
         parentId!,
@@ -58,6 +60,7 @@ export const addOrUpdateOrganizationalUnits = async (
         currentServiceControlPolicies,
         currentTagPolicies,
         currentAiServicesOptOutPolicies,
+        currentBackupPolicies,
         currentAccounts,
         planned,
       )
@@ -71,6 +74,7 @@ export const addOrUpdateOrganizationalUnits = async (
         currentServiceControlPolicies,
         currentTagPolicies,
         currentAiServicesOptOutPolicies,
+        currentBackupPolicies,
         currentAccounts,
         planned,
       )
@@ -230,6 +234,7 @@ const attachAndDetachPolicies = async (
   currentServiceControlPolicies: Map<PolicyName, PolicyId>,
   currentTagPolicies: Map<PolicyName, PolicyId>,
   currentAiServicesOptOutPolicies: Map<PolicyName, PolicyId>,
+  currentBackupPolicies: Map<PolicyName, PolicyId>,
   targetType: string,
   targetId: string,
   servicePoliciesToAttach: PolicyName[],
@@ -238,6 +243,8 @@ const attachAndDetachPolicies = async (
   tagPoliciesToDetach: PolicyName[],
   aiServicesOptOutPoliciesToAttach: PolicyName[],
   aiServicesOptOutPoliciesToDetach: PolicyName[],
+  backupPoliciesToAttach: PolicyName[],
+  backupPoliciesToDetach: PolicyName[],
 ): Promise<boolean> => {
   if (enabledPolicyTypes.includes(Constants.SERVICE_CONTROL_POLICY_TYPE)) {
     // If service control policies were just enabled in organization,
@@ -296,6 +303,22 @@ const attachAndDetachPolicies = async (
     }
   }
 
+  if (enabledPolicyTypes.includes(Constants.BACKUP_POLICY_TYPE)) {
+    if (
+      !(await attachPolicies(
+        logger,
+        Constants.BACKUP_POLICY_TYPE,
+        client,
+        targetType,
+        targetId,
+        backupPoliciesToAttach,
+        currentBackupPolicies,
+      ))
+    ) {
+      return false
+    }
+  }
+
   if (enabledPolicyTypes.includes(Constants.SERVICE_CONTROL_POLICY_TYPE)) {
     if (
       !(await detachPolicies(
@@ -344,6 +367,22 @@ const attachAndDetachPolicies = async (
     }
   }
 
+  if (enabledPolicyTypes.includes(Constants.BACKUP_POLICY_TYPE)) {
+    if (
+      !(await detachPolicies(
+        logger,
+        Constants.BACKUP_POLICY_TYPE,
+        client,
+        targetType,
+        targetId,
+        backupPoliciesToDetach,
+        currentBackupPolicies,
+      ))
+    ) {
+      return false
+    }
+  }
+
   return true
 }
 
@@ -355,6 +394,7 @@ const addOrganizationalUnit = async (
   currentServiceControlPolicies: Map<PolicyName, PolicyId>,
   currentTagPolicies: Map<PolicyName, PolicyId>,
   currentAiServicesOptOutPolicies: Map<PolicyName, PolicyId>,
+  currentBackupPolicies: Map<PolicyName, PolicyId>,
   currentAccounts: Map<AccountId, OrganizationalUnitId>,
   planned: PlannedOrganizationalUnit,
   parentId: OrganizationalUnitId,
@@ -402,15 +442,16 @@ const addOrganizationalUnit = async (
     (p) => p.Type === Constants.TAG_POLICY_TYPE,
   )
   const initialTagPolicyNames = initialTagPolicies.map((p) => p.Name!)
-
   const initialAiServicesOptOutPolicies = initialPolicies.filter(
     (p) => p.Type === Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
   )
-
   const initialAiServicesOptOutPolicyNames = initialAiServicesOptOutPolicies.map(
     (p) => p.Name!,
   )
-
+  const initialBackupPolicies = initialPolicies.filter(
+    (p) => p.Type === Constants.BACKUP_POLICY_TYPE,
+  )
+  const initialBackupPolicyNames = initialBackupPolicies.map((p) => p.Name!)
   const serviceControlPoliciesToAttach = planned.serviceControlPolicies.add.filter(
     (p) => !initialServiceControlPolicyNames.includes(p),
   )
@@ -420,7 +461,7 @@ const addOrganizationalUnit = async (
   const tagPoliciesToAttach = planned.tagPolicies.add.filter(
     (p) => !initialTagPolicyNames.includes(p),
   )
-  const tagPoliciestToDetach = initialTagPolicyNames.filter(
+  const tagPoliciesToDetach = initialTagPolicyNames.filter(
     (p) => !planned.tagPolicies.add.includes(p),
   )
   const aiServicesOptOutPoliciesToAttach = planned.aiServicesOptOutPolicies.add.filter(
@@ -428,6 +469,12 @@ const addOrganizationalUnit = async (
   )
   const aiServicesOptOutPoliciesToDetach = initialAiServicesOptOutPolicyNames.filter(
     (p) => !planned.aiServicesOptOutPolicies.add.includes(p),
+  )
+  const backupPoliciesToAttach = planned.backupPolicies.add.filter(
+    (p) => !initialAiServicesOptOutPolicyNames.includes(p),
+  )
+  const backupPoliciesToDetach = initialBackupPolicyNames.filter(
+    (p) => !planned.backupPolicies.add.includes(p),
   )
 
   if (
@@ -439,14 +486,17 @@ const addOrganizationalUnit = async (
       currentServiceControlPolicies,
       currentTagPolicies,
       currentAiServicesOptOutPolicies,
+      currentBackupPolicies,
       "organizational unit",
       addedOu.id!,
       serviceControlPoliciesToAttach,
       serviceControlPoliciesToDetach,
       tagPoliciesToAttach,
-      tagPoliciestToDetach,
+      tagPoliciesToDetach,
       aiServicesOptOutPoliciesToAttach,
       aiServicesOptOutPoliciesToDetach,
+      backupPoliciesToAttach,
+      backupPoliciesToDetach,
     ))
   ) {
     logger.warn(
@@ -503,6 +553,7 @@ const addOrganizationalUnit = async (
         currentServiceControlPolicies,
         currentTagPolicies,
         currentAiServicesOptOutPolicies,
+        currentBackupPolicies,
         "account",
         accountId,
         account.serviceControlPolicies.add,
@@ -511,6 +562,8 @@ const addOrganizationalUnit = async (
         account.tagPolicies.remove,
         account.aiServicesOptOutPolicies.add,
         account.aiServicesOptOutPolicies.remove,
+        account.backupPolicies.add,
+        account.backupPolicies.remove,
       ))
     ) {
       logger.warn(
@@ -540,6 +593,7 @@ const addOrganizationalUnit = async (
       currentServiceControlPolicies,
       currentTagPolicies,
       currentAiServicesOptOutPolicies,
+      currentBackupPolicies,
       currentAccounts,
       child,
       addedOu.id,
@@ -558,6 +612,7 @@ const updateOrganizationalUnit = async (
   currentServiceControlPolicies: Map<PolicyName, PolicyId>,
   currentTagPolicies: Map<PolicyName, PolicyId>,
   currentAiServicesOptOutPolicies: Map<PolicyName, PolicyId>,
+  currentBackupPolicies: Map<PolicyName, PolicyId>,
   currentAccounts: Map<AccountId, OrganizationalUnitId>,
   planned: PlannedOrganizationalUnit,
 ): Promise<OrganizationalUnitDeploymentResult[]> => {
@@ -574,6 +629,7 @@ const updateOrganizationalUnit = async (
       currentServiceControlPolicies,
       currentTagPolicies,
       currentAiServicesOptOutPolicies,
+      currentBackupPolicies,
       "organizational unit",
       planned.id!,
       planned.serviceControlPolicies.add,
@@ -582,6 +638,8 @@ const updateOrganizationalUnit = async (
       planned.tagPolicies.remove,
       planned.aiServicesOptOutPolicies.add,
       planned.aiServicesOptOutPolicies.remove,
+      planned.backupPolicies.add,
+      planned.backupPolicies.remove,
     ))
   ) {
     logger.warn(
@@ -645,6 +703,7 @@ const updateOrganizationalUnit = async (
         currentServiceControlPolicies,
         currentTagPolicies,
         currentAiServicesOptOutPolicies,
+        currentBackupPolicies,
         "account",
         accountId,
         account.serviceControlPolicies.add,
@@ -653,6 +712,8 @@ const updateOrganizationalUnit = async (
         account.tagPolicies.remove,
         account.aiServicesOptOutPolicies.add,
         account.aiServicesOptOutPolicies.remove,
+        account.backupPolicies.add,
+        account.backupPolicies.remove,
       ))
     ) {
       logger.warn(
@@ -689,6 +750,7 @@ const updateOrganizationalUnit = async (
       currentServiceControlPolicies,
       currentTagPolicies,
       currentAiServicesOptOutPolicies,
+      currentBackupPolicies,
       currentAccounts,
       child,
       planned.id,
@@ -708,6 +770,7 @@ const skipOrganizationalUnit = async (
   currentServiceControlPolicies: Map<PolicyName, PolicyId>,
   currentTagPolicies: Map<PolicyName, PolicyId>,
   currentAiServicesOptOutPolicies: Map<PolicyName, PolicyId>,
+  currentBackupPolicies: Map<PolicyName, PolicyId>,
   currentAccounts: Map<AccountId, OrganizationalUnitId>,
   planned: PlannedOrganizationalUnit,
 ): Promise<OrganizationalUnitDeploymentResult[]> => {
@@ -732,6 +795,7 @@ const skipOrganizationalUnit = async (
       currentServiceControlPolicies,
       currentTagPolicies,
       currentAiServicesOptOutPolicies,
+      currentBackupPolicies,
       currentAccounts,
       child,
       planned.id!,
@@ -755,6 +819,7 @@ export const deployOrganizationalUnits = async (
       currentTagPolicies,
       currentServiceControlPolicies,
       currentAiServicesOptOutPolicies,
+      currentBackupPolicies,
     },
     plan: { organizationalUnitsPlan, organizationBasicConfigPlan },
   } = holder
@@ -814,6 +879,13 @@ export const deployOrganizationalUnits = async (
     ]),
   )
 
+  const backupPoliciesMap = new Map(
+    currentBackupPolicies.map((p) => [
+      p.PolicySummary!.Name!,
+      p.PolicySummary!.Id!,
+    ]),
+  )
+
   const currentOus = flatten(
     collectFromHierarchy(currentRootOrganizationalUnit, (o) => o.children),
   )
@@ -834,6 +906,7 @@ export const deployOrganizationalUnits = async (
     serviceControlPoliciesMap,
     tagPoliciesMap,
     aiServicesOptOutPoliciesMap,
+    backupPoliciesMap,
     accountsMap,
     organizationalUnitsPlan.root,
     null,

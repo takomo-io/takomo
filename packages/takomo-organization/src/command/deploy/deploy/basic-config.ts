@@ -17,7 +17,7 @@ export const deployBasicConfiguration = async (
   const childWatch = watch.startChild("deploy-basic-config")
 
   if (result) {
-    io.debug("Launch already completed, cancel basic config deployment")
+    io.debug("Deploy already completed, cancel basic config deployment")
     childWatch.stop()
     return deployPolicies({
       ...holder,

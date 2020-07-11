@@ -166,6 +166,12 @@ export class CliDeployOrganizationIO extends CliIO
         nestedFormat,
         indent + 4,
       )
+      this.printPlannedPolicies(
+        "backup policies",
+        account.backupPolicies,
+        nestedFormat,
+        indent + 4,
+      )
     })
   }
 
@@ -248,6 +254,20 @@ export class CliDeployOrganizationIO extends CliIO
             7,
           )
 
+          this.printPlannedPolicies(
+            "ai services opt-out policies",
+            ou.aiServicesOptOutPolicies,
+            deleteFormatters,
+            7,
+          )
+
+          this.printPlannedPolicies(
+            "backup policies",
+            ou.backupPolicies,
+            deleteFormatters,
+            7,
+          )
+
           this.printPlannedAccounts(ou.accounts, deleteFormatters, 7)
 
           break
@@ -272,6 +292,20 @@ export class CliDeployOrganizationIO extends CliIO
           this.printPlannedPolicies(
             "tag policies",
             ou.tagPolicies,
+            addFormatters,
+            7,
+          )
+
+          this.printPlannedPolicies(
+            "ai services opt-out polcies",
+            ou.aiServicesOptOutPolicies,
+            addFormatters,
+            7,
+          )
+
+          this.printPlannedPolicies(
+            "backup policies",
+            ou.backupPolicies,
             addFormatters,
             7,
           )
@@ -303,6 +337,20 @@ export class CliDeployOrganizationIO extends CliIO
             7,
           )
 
+          this.printPlannedPolicies(
+            "ai services opt-out policies",
+            ou.aiServicesOptOutPolicies,
+            updateFormatters,
+            7,
+          )
+
+          this.printPlannedPolicies(
+            "backup policies",
+            ou.backupPolicies,
+            updateFormatters,
+            7,
+          )
+
           this.printPlannedAccounts(ou.accounts, updateFormatters, 7)
 
           break
@@ -315,12 +363,14 @@ export class CliDeployOrganizationIO extends CliIO
       serviceControlPolicies,
       tagPolicies,
       aiServicesOptOutPolicies,
+      backupPolicies,
     } = plan
 
     this.message("   policies:", true)
     this.printPolicies("service control policies", serviceControlPolicies)
     this.printPolicies("tag policies", tagPolicies)
     this.printPolicies("ai services opt-out policies", aiServicesOptOutPolicies)
+    this.printPolicies("backup policies", backupPolicies)
   }
 
   private printPolicies = (type: string, policies: PlannedPolicy[]): void => {

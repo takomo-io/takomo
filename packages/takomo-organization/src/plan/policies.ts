@@ -99,9 +99,11 @@ export const createPoliciesDeploymentPlan = async (
   localServiceControlPoliciesConfig: PoliciesConfig,
   localTagPoliciesConfig: PoliciesConfig,
   localAiServicesOptOutConfig: PoliciesConfig,
+  localBackupConfig: PoliciesConfig,
   currentServiceControlPolicies: Policy[],
   currentTagPolicies: Policy[],
   currentAiServicesOptOutPolicies: Policy[],
+  currentBackupPolicies: Policy[],
   organizationDir: string,
 ): Promise<PolicyDeploymentPlan> => {
   const currentServiceControlPoliciesMap = new Map(
@@ -113,11 +115,15 @@ export const createPoliciesDeploymentPlan = async (
   const currentAiServicesOptOutPoliciesMap = new Map(
     currentAiServicesOptOutPolicies.map((p) => [p.PolicySummary!.Name!, p]),
   )
+  const currentBackupPoliciesMap = new Map(
+    currentBackupPolicies.map((p) => [p.PolicySummary!.Name!, p]),
+  )
 
   const [
     servicePolicies,
     tagPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
   ] = await Promise.all([
     planPoliciesByType(
       Constants.SERVICE_CONTROL_POLICY_TYPE,
@@ -137,12 +143,19 @@ export const createPoliciesDeploymentPlan = async (
       currentAiServicesOptOutPoliciesMap,
       path.join(organizationDir, "ai-services-opt-out-policies"),
     ),
+    planPoliciesByType(
+      Constants.BACKUP_POLICY_TYPE,
+      localBackupConfig.policies,
+      currentBackupPoliciesMap,
+      path.join(organizationDir, "backup-policies"),
+    ),
   ])
 
   const localPolicies = [
     ...servicePolicies,
     ...tagPolicies,
     ...aiServicesOptOutPolicies,
+    ...backupPolicies,
   ]
   const localPolicyNames = localPolicies.map((p) => p.name)
 
@@ -197,11 +210,29 @@ export const createPoliciesDeploymentPlan = async (
       }
     })
 
+  const backupPoliciesToDelete = currentBackupPolicies
+    .filter((p) => !p.PolicySummary?.AwsManaged)
+    .filter((p) => !localPolicyNames.includes(p.PolicySummary!.Name!))
+    .map((p) => {
+      return {
+        currentContent: p.Content!,
+        currentDescription: p.PolicySummary!.Description!,
+        id: p.PolicySummary!.Id!,
+        name: p.PolicySummary!.Name!,
+        awsManaged: p.PolicySummary?.AwsManaged!,
+        newContent: null,
+        newDescription: null,
+        operation: "delete",
+        type: p.PolicySummary!.Type!,
+      }
+    })
+
   const policies = [
     ...localPolicies,
     ...serviceControlPoliciesToDelete,
     ...tagPoliciesToDelete,
     ...aiServicesOptOutPoliciesToDelete,
+    ...backupPoliciesToDelete,
   ]
   const hasChanges =
     policies.filter((p) => p.operation === "skip").length !== policies.length
@@ -218,6 +249,7 @@ export const createPoliciesDeploymentPlan = async (
       ...aiServicesOptOutPolicies,
       ...aiServicesOptOutPoliciesToDelete,
     ],
+    backupPolicies: [...backupPolicies, ...backupPoliciesToDelete],
   }
 }
 
@@ -230,6 +262,7 @@ export const planPoliciesDeployment = async (
     currentServiceControlPolicies,
     currentTagPolicies,
     currentAiServicesOptOutPolicies,
+    currentBackupPolicies,
   } = data
 
   const logger = ctx.getLogger()
@@ -244,6 +277,7 @@ export const planPoliciesDeployment = async (
       tagPolicies: [],
       serviceControlPolicies: [],
       aiServicesOptOutPolicies: [],
+      backupPolicies: [],
     }
   }
 
@@ -254,15 +288,18 @@ export const planPoliciesDeployment = async (
     serviceControlPolicies,
     tagPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
   } = organizationConfigFile
 
   return createPoliciesDeploymentPlan(
     serviceControlPolicies,
     tagPolicies,
     aiServicesOptOutPolicies,
+    backupPolicies,
     currentServiceControlPolicies,
     currentTagPolicies,
     currentAiServicesOptOutPolicies,
+    currentBackupPolicies,
     organizationDir,
   )
 }
