@@ -1,7 +1,7 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import { CliDescribeOrganizationIO } from "@takomo/cli-io"
 import { CommandStatus } from "@takomo/core"
-import { describeOrganizationCommand } from "@takomo/organization"
+import { describeOrganizationCommand } from "@takomo/organization-commands"
 import { aws, TIMEOUT } from "@takomo/test"
 import {
   ORG_A_ID,
