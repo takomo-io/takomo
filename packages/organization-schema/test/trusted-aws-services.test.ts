@@ -31,7 +31,7 @@ describe("trusted aws services validation fails", () => {
   test("when a list of single invalid trusted aws service is given", () => {
     const { error } = trustedAwsServices.validate(["nogood"])
     expect(error!.message).toBe(
-      '"[0]" must be one of [aws-artifact-account-sync.amazonaws.com, cloudtrail.amazonaws.com, compute-optimizer.amazonaws.com, config.amazonaws.com, ds.amazonaws.com, fms.amazonaws.com, license-manager.amazonaws.com, member.org.stacksets.cloudformation.amazonaws.com, ram.amazonaws.com, servicecatalog.amazonaws.com, ssm.amazonaws.com, sso.amazonaws.com, tagpolicies.tag.amazonaws.com]',
+      '"[0]" must be one of [aws-artifact-account-sync.amazonaws.com, backup.amazonaws.com, cloudtrail.amazonaws.com, compute-optimizer.amazonaws.com, config.amazonaws.com, ds.amazonaws.com, fms.amazonaws.com, license-manager.amazonaws.com, member.org.stacksets.cloudformation.amazonaws.com, ram.amazonaws.com, servicecatalog.amazonaws.com, ssm.amazonaws.com, sso.amazonaws.com, tagpolicies.tag.amazonaws.com]',
     )
   })
   test("when a list of trusted aws services with one invalid is given", () => {
@@ -41,7 +41,7 @@ describe("trusted aws services validation fails", () => {
       "ram.amazonaws.com",
     ])
     expect(error!.message).toBe(
-      '"[1]" must be one of [aws-artifact-account-sync.amazonaws.com, cloudtrail.amazonaws.com, compute-optimizer.amazonaws.com, config.amazonaws.com, ds.amazonaws.com, fms.amazonaws.com, license-manager.amazonaws.com, member.org.stacksets.cloudformation.amazonaws.com, ram.amazonaws.com, servicecatalog.amazonaws.com, ssm.amazonaws.com, sso.amazonaws.com, tagpolicies.tag.amazonaws.com]',
+      '"[1]" must be one of [aws-artifact-account-sync.amazonaws.com, backup.amazonaws.com, cloudtrail.amazonaws.com, compute-optimizer.amazonaws.com, config.amazonaws.com, ds.amazonaws.com, fms.amazonaws.com, license-manager.amazonaws.com, member.org.stacksets.cloudformation.amazonaws.com, ram.amazonaws.com, servicecatalog.amazonaws.com, ssm.amazonaws.com, sso.amazonaws.com, tagpolicies.tag.amazonaws.com]',
     )
   })
 })
