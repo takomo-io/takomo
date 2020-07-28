@@ -12,7 +12,7 @@ import {
   accountsOperationCommand,
   deployOrganizationCommand,
   DeployOrganizationOutput,
-} from "@takomo/organization"
+} from "@takomo/organization-commands"
 import { TIMEOUT } from "@takomo/test"
 import {
   ORG_A_ACCOUNT_1_ID,

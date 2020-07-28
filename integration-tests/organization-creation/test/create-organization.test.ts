@@ -1,7 +1,7 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import { CliCreateOrganizationIO } from "@takomo/cli-io"
 import { CommandStatus, Options } from "@takomo/core"
-import { createOrganizationCommand } from "@takomo/organization"
+import { createOrganizationCommand } from "@takomo/organization-commands"
 import { aws, TIMEOUT } from "@takomo/test"
 import { fileExists, parseYamlFile } from "@takomo/util"
 import rimfaf from "rimraf"

@@ -23,7 +23,7 @@
     "@takomo/cli": "2.4.0",
     "@takomo/cli-io": "2.4.0",
     "@takomo/core": "2.4.0",
-    "@takomo/organization": "2.4.0",
+    "@takomo/organization-commands": "2.4.0",
     "@takomo/test": "2.4.0",
     "@takomo/util": "2.3.0"
   },
@@ -37,6 +37,6 @@
     "dotenv": "8.2.0",
     "jest": "26.0.1",
     "rimraf": "3.0.2",
-    "typescript": "3.9.5"
+    "typescript": "3.9.6"
   }
 }

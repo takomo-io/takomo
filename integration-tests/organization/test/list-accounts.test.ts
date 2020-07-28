@@ -1,7 +1,7 @@
 import { initOptionsAndVariables } from "@takomo/cli"
 import { CliListAccountsIO } from "@takomo/cli-io"
 import { CommandStatus } from "@takomo/core"
-import { listAccountsCommand } from "@takomo/organization"
+import { listAccountsCommand } from "@takomo/organization-commands"
 import { TIMEOUT } from "@takomo/test"
 import {
   ORG_A_ACCOUNT_1_ID,
