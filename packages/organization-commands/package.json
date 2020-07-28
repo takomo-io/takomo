@@ -45,7 +45,7 @@
     "@takomo/organization-schema": "2.4.0",
     "@takomo/organization-config": "2.4.0",
     "@takomo/util": "2.3.0",
-    "aws-sdk": "2.713.0",
+    "aws-sdk": "2.721.0",
     "lodash.flatten": "4.4.0",
     "lodash.intersection": "4.4.0",
     "lodash.merge": "4.6.2",

@@ -48,7 +48,7 @@
     "@takomo/stacks-context": "2.4.0",
     "@takomo/stacks-model": "2.4.0",
     "@takomo/util": "2.3.0",
-    "aws-sdk": "2.713.0",
+    "aws-sdk": "2.721.0",
     "date-and-time": "0.11.1",
     "diff": "4.0.1",
     "easy-table": "1.1.1",
