@@ -1,6 +1,6 @@
 {
   "name": "@takomo/test",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Takomo test utils",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,10 +36,10 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/cli-io": "2.4.0",
-    "@takomo/core": "2.4.0",
-    "@takomo/stacks-commands": "2.4.0",
-    "@takomo/stacks-model": "2.4.0",
+    "@takomo/cli-io": "2.5.0",
+    "@takomo/core": "2.5.0",
+    "@takomo/stacks-commands": "2.5.0",
+    "@takomo/stacks-model": "2.5.0",
     "aws-sdk": "2.721.0"
   },
   "devDependencies": {
