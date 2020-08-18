@@ -126,25 +126,39 @@ const getCredentialProvider = async (
   return newCredentialProvider
 }
 
+export const getVariablesForStackGroup = (stackGroup: StackGroup): any => ({
+  name: stackGroup.getName(),
+  project: stackGroup.getProject(),
+  regions: stackGroup.getRegions(),
+  commandRole: stackGroup.getCommandRole(),
+  path: stackGroup.getPath(),
+  pathSegments: stackGroup.getPath().substr(1).split("/"),
+  isRoot: stackGroup.isRoot(),
+  templateBucket: stackGroup.getTemplateBucket(),
+  timeout: stackGroup.getTimeout(),
+  tags: mapToObject(stackGroup.getTags()),
+  data: stackGroup.getData(),
+  capabilities: stackGroup.getCapabilities(),
+  accountIds: stackGroup.getAccountIds(),
+})
+
+export const createVariablesForStackGroupConfigFile = (
+  variables: Variables,
+  stackGroup: StackGroup,
+): any => ({
+  ...variables,
+  stackGroup: {
+    path: stackGroup.getPath(),
+    pathSegments: stackGroup.getPath().substr(1).split("/"),
+    name: stackGroup.getName(),
+  },
+})
+
 export const createVariablesForStackConfigFile = (
   variables: Variables,
   stackGroup: StackGroup,
 ): any => {
-  const stackGroupVariables = {
-    name: stackGroup.getName(),
-    project: stackGroup.getProject(),
-    regions: stackGroup.getRegions(),
-    commandRole: stackGroup.getCommandRole(),
-    path: stackGroup.getPath(),
-    isRoot: stackGroup.isRoot(),
-    templateBucket: stackGroup.getTemplateBucket(),
-    timeout: stackGroup.getTimeout(),
-    tags: mapToObject(stackGroup.getTags()),
-    data: stackGroup.getData(),
-    capabilities: stackGroup.getCapabilities(),
-    accountIds: stackGroup.getAccountIds(),
-  }
-
+  const stackGroupVariables = getVariablesForStackGroup(stackGroup)
   return {
     ...variables,
     stackGroup: stackGroupVariables,
@@ -283,7 +297,7 @@ const buildStack = async (
 const populatePropertiesFromConfigFile = async (
   logger: Logger,
   options: Options,
-  variables: Variables,
+  variables: any,
   stackGroup: StackGroup,
   dirPath: string,
   templateEngine: TemplateEngine,
@@ -380,10 +394,15 @@ const createStackGroup = async (
     ? createStackGroupFromParent(dirPath, parent)
     : createRootStackGroup()
 
+  const stackGroupVariables = createVariablesForStackGroupConfigFile(
+    variables,
+    stackGroupConfig,
+  )
+
   return populatePropertiesFromConfigFile(
     logger,
     options,
-    variables,
+    stackGroupVariables,
     stackGroupConfig,
     dirPath,
     templateEngine,

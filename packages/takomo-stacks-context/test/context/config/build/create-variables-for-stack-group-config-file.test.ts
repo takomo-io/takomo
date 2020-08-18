@@ -1,7 +1,7 @@
 import { StackGroup } from "@takomo/stacks-model"
-import { createVariablesForStackConfigFile } from "../../../../src/config/build"
+import { createVariablesForStackGroupConfigFile } from "../../../../src/config/build"
 
-describe("#createVariablesForStackConfigFile", () => {
+describe("#createVariablesForStackGroupConfigFile", () => {
   test("returns correct variables", () => {
     const variables = {
       env: {
@@ -33,8 +33,8 @@ describe("#createVariablesForStackConfigFile", () => {
       hooks: [],
       ignore: false,
       isRoot: true,
-      name: "",
-      path: "/",
+      name: "cool",
+      path: "/dev/apps/cool",
       project: "my project",
       regions: ["eu-west-1", "eu-north-1"],
       stacks: [],
@@ -52,12 +52,12 @@ describe("#createVariablesForStackConfigFile", () => {
       },
     })
 
-    const stackVariables = createVariablesForStackConfigFile(
+    const stackGroupVariables = createVariablesForStackGroupConfigFile(
       variables,
       stackGroup,
     )
 
-    expect(stackVariables).toStrictEqual({
+    expect(stackGroupVariables).toStrictEqual({
       env: {
         PASSWORD: "abc",
       },
@@ -68,37 +68,9 @@ describe("#createVariablesForStackConfigFile", () => {
         projectDir: "/tmp",
       },
       stackGroup: {
-        name: "",
-        accountIds: ["123456789012", "222222222222"],
-        project: "my project",
-        regions: ["eu-west-1", "eu-north-1"],
-        commandRole: {
-          iamRoleArn: "arn:aws:iam::123456789012:role/admin",
-        },
-        path: "/",
-        pathSegments: [""],
-        isRoot: true,
-        templateBucket: {
-          keyPrefix: "mytemplates/",
-          name: "mybucket",
-        },
-        timeout: {
-          create: 10,
-          update: 20,
-        },
-        capabilities: ["CAPABILITY_IAM"],
-        tags: {
-          key: "value",
-          foo: "bar",
-        },
-        data: {
-          age: 12,
-          code: "en",
-          box: {
-            key: "a",
-          },
-          list: [1, 2, 3],
-        },
+        path: "/dev/apps/cool",
+        name: "cool",
+        pathSegments: ["dev", "apps", "cool"],
       },
     })
   })
