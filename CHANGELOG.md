@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/takomo-io/takomo/compare/v1.3.1...v1.4.0) (2020-08-18)
+
+
+### Features
+
+* expose stack group name, path and path segments as Handlebars variables into stack group confi ([c9aef69](https://github.com/takomo-io/takomo/commit/c9aef698373233a311dfa7d124f415f37e567908)), closes [#76](https://github.com/takomo-io/takomo/issues/76)
+
+
+
+
+
 ## [1.3.1](https://github.com/takomo-io/takomo/compare/v1.3.0...v1.3.1) (2020-06-14)
 
 
