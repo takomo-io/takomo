@@ -41,7 +41,7 @@
     "@takomo/core": "2.5.0",
     "@takomo/organization-config": "2.6.0",
     "@takomo/util": "2.5.0",
-    "aws-sdk": "2.721.0",
+    "aws-sdk": "2.736.0",
     "lodash.flatten": "4.4.0",
     "lodash.uniq": "4.5.0",
     "readdirp": "3.3.0"

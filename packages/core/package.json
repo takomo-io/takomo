@@ -38,7 +38,7 @@
   "dependencies": {
     "@hapi/joi": "17.1.1",
     "@takomo/util": "2.5.0",
-    "aws-sdk": "2.721.0",
+    "aws-sdk": "2.736.0",
     "semver": "7.3.2"
   },
   "devDependencies": {
