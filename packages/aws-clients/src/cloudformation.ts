@@ -201,7 +201,7 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
     latestEventId: string | null = null,
     allEvents: CloudFormation.StackEvent[] = [],
   ): Promise<ChangeSetCompletionResponse> => {
-    await sleep(1000)
+    await sleep(2000)
 
     const cfStack = await this.describeStack(stackName)
     if (cfStack === null) {
@@ -286,7 +286,7 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
     latestEventId: string | null = null,
     allEvents: CloudFormation.StackEvent[] = [],
   ): Promise<StackDeleteCompletionResponse> => {
-    await sleep(1000)
+    await sleep(2000)
 
     const cfStack = await this.describeStack(stackArn)
     if (cfStack === null) {

@@ -16,6 +16,14 @@ interface PagedResponse {
   readonly NextToken?: string
 }
 
+const maxRetries = 30
+
+const randomInt = (min: number, max: number): number => {
+  const minC = Math.ceil(min)
+  const maxF = Math.floor(max)
+  return Math.floor(Math.random() * (maxF - minC + 1) + minC)
+}
+
 export abstract class AwsClient<C> {
   private readonly credentialProvider: TakomoCredentialProvider
   private readonly region: Region
@@ -34,9 +42,24 @@ export abstract class AwsClient<C> {
 
     return {
       retryDelayOptions: {
-        base: 200,
+        customBackoff: (retryCount: number, err?: Error): number => {
+          if (retryCount >= maxRetries) {
+            this.logger.error(`Reached max retries ${maxRetries}, aborting`)
+            return -1
+          }
+
+          const expBackoff = Math.pow(2, retryCount)
+          const maxJitter = Math.ceil(expBackoff * 200)
+          const backoff = Math.round(expBackoff + randomInt(0, maxJitter))
+          const maxBackoff = randomInt(15000, 20000)
+          const finalBackoff = Math.min(maxBackoff, backoff)
+          this.logger.debug(
+            `Request limit exceeded, retry count: ${retryCount}, pausing: ${finalBackoff}ms`,
+          )
+          return finalBackoff
+        },
       },
-      maxRetries: 7,
+      maxRetries: 30,
       httpOptions: {
         agent,
       },
