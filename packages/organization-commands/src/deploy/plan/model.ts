@@ -94,9 +94,9 @@ export interface OrganizationTrustedServicesPlan {
 }
 
 export interface EnabledPoliciesPlan {
-  readonly add: string[]
-  readonly retain: string[]
-  readonly remove: string[]
+  readonly add: PolicyType[]
+  readonly retain: PolicyType[]
+  readonly remove: PolicyType[]
 }
 
 export interface OrganizationBasicConfigDeploymentPlan {

@@ -55,7 +55,7 @@ const policyTypes = [
   Constants.BACKUP_POLICY_TYPE,
 ]
 
-const createOrgEntityPoliciesPlanForExistingEntity = (
+export const createOrgEntityPoliciesPlanForExistingEntity = (
   logger: Logger,
   id: OrgEntityId,
   localPolicies: OrgEntityPoliciesConfig,
@@ -168,10 +168,9 @@ const createOrgEntityPoliciesPlanForExistingEntity = (
   }
 }
 
-const createOrgEntityPoliciesPlanForNewEntity = (
+export const createOrgEntityPoliciesPlanForNewEntity = (
   logger: Logger,
   localPolicies: OrgEntityPoliciesConfig,
-  organizationState: OrganizationState,
   enabledPoliciesPlan: EnabledPoliciesPlan,
 ): OrgEntityPoliciesPlan => {
   const { serviceControl, aiServicesOptOut, backup, tag } = localPolicies
@@ -278,6 +277,5 @@ export const createOrgEntityPoliciesPlan = (
     : createOrgEntityPoliciesPlanForNewEntity(
         logger,
         localPolicies,
-        organizationState,
         enabledPoliciesPlan,
       )

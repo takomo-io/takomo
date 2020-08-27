@@ -202,31 +202,74 @@ export class CliDeployOrganizationIO extends CliIO
     inclusions: PolicyOperationsToInclude,
     depth: number,
   ): void => {
-    const retain = uniq(
-      inclusions.retain ? attached.retain.concat(inherited.retain) : [],
-    ).map((name) => ({
-      name,
-      operation: "retain",
-      formatter: formatters.retain,
-    }))
-
-    const add = uniq(inclusions.add ? attached.add.concat(inherited.add) : [])
-      .filter((name) => !retain.map((r) => r.name).includes(name))
-      .map((name) => ({
+    const attachedAdd = uniq(inclusions.add ? attached.add : []).map(
+      (name) => ({
         name,
         operation: "add",
         formatter: formatters.add,
-      }))
+        type: "attached",
+      }),
+    )
 
-    const remove = uniq(
-      inclusions.remove ? attached.remove.concat(inherited.remove) : [],
-    ).map((name) => ({
-      name,
-      operation: "remove",
-      formatter: formatters.remove,
-    }))
+    const attachedRetain = uniq(inclusions.retain ? attached.retain : []).map(
+      (name) => ({
+        name,
+        operation: "retain",
+        formatter: formatters.retain,
+        type: "attached",
+      }),
+    )
 
-    const all = [...retain, ...add, ...remove]
+    const attachedRemove = uniq(inclusions.remove ? attached.remove : []).map(
+      (name) => ({
+        name,
+        operation: "remove",
+        formatter: formatters.remove,
+        type: "attached",
+      }),
+    )
+
+    const attachedNames = [
+      ...attachedAdd,
+      ...attachedRemove,
+      ...attachedRetain,
+    ].map((a) => a.name)
+
+    const inheritedAdd = uniq(inclusions.add ? inherited.add : []).map(
+      (name) => ({
+        name,
+        operation: "add",
+        formatter: formatters.add,
+        type: "inherited",
+      }),
+    )
+
+    const inheritedRetain = uniq(inclusions.retain ? inherited.retain : []).map(
+      (name) => ({
+        name,
+        operation: "retain",
+        formatter: formatters.retain,
+        type: "inherited",
+      }),
+    )
+
+    const inheritedRemove = uniq(inclusions.remove ? inherited.remove : []).map(
+      (name) => ({
+        name,
+        operation: "remove",
+        formatter: formatters.remove,
+        type: "inherited",
+      }),
+    )
+
+    const all = [
+      ...attachedRetain,
+      ...attachedRemove,
+      ...attachedAdd,
+      ...inheritedRetain,
+      ...inheritedRemove,
+      ...inheritedAdd,
+    ]
 
     if (all.length === 0) {
       return
@@ -240,9 +283,11 @@ export class CliDeployOrganizationIO extends CliIO
       this.message(formatters.header(`${" ".repeat(depth)}${name}:`))
     }
 
-    all.forEach(({ name, formatter }) => {
-      this.message(formatter(`${" ".repeat(depth + 2)}- ${name}`))
-    })
+    all
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(({ name, formatter, type }) => {
+        this.message(formatter(`${" ".repeat(depth + 2)}- ${name}   (${type})`))
+      })
   }
 
   private printPolicies = (
