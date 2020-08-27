@@ -5,6 +5,7 @@ import { OrgEntityId } from "@takomo/organization-context/src/model"
 import { Logger } from "@takomo/util"
 import { PolicyName, PolicyType } from "aws-sdk/clients/organizations"
 import intersection from "lodash.intersection"
+import uniq from "lodash.uniq"
 import without from "lodash.without"
 import {
   EnabledPoliciesPlan,
@@ -54,7 +55,7 @@ const policyTypes = [
   Constants.BACKUP_POLICY_TYPE,
 ]
 
-const createOrgEntityPoliciesPlanForExistingEntity = (
+export const createOrgEntityPoliciesPlanForExistingEntity = (
   logger: Logger,
   id: OrgEntityId,
   localPolicies: OrgEntityPoliciesConfig,
@@ -79,7 +80,7 @@ const createOrgEntityPoliciesPlanForExistingEntity = (
 
   const attachedServiceControlPolicies = createOrgEntityPolicyOperations(
     currentAttachedServiceControlPolicyNames,
-    serviceControl.attached,
+    uniq([...serviceControl.attached, ...serviceControl.inherited]),
     isPolicyTypeEnabled(Constants.SERVICE_CONTROL_POLICY_TYPE),
   )
 
@@ -167,10 +168,9 @@ const createOrgEntityPoliciesPlanForExistingEntity = (
   }
 }
 
-const createOrgEntityPoliciesPlanForNewEntity = (
+export const createOrgEntityPoliciesPlanForNewEntity = (
   logger: Logger,
   localPolicies: OrgEntityPoliciesConfig,
-  organizationState: OrganizationState,
   enabledPoliciesPlan: EnabledPoliciesPlan,
 ): OrgEntityPoliciesPlan => {
   const { serviceControl, aiServicesOptOut, backup, tag } = localPolicies
@@ -181,7 +181,7 @@ const createOrgEntityPoliciesPlanForNewEntity = (
 
   const attachedServiceControlPolicies = createOrgEntityPolicyOperations(
     [],
-    serviceControl.attached,
+    uniq([...serviceControl.attached, ...serviceControl.inherited]),
     isPolicyTypeEnabled(Constants.SERVICE_CONTROL_POLICY_TYPE),
   )
 
@@ -277,6 +277,5 @@ export const createOrgEntityPoliciesPlan = (
     : createOrgEntityPoliciesPlanForNewEntity(
         logger,
         localPolicies,
-        organizationState,
         enabledPoliciesPlan,
       )

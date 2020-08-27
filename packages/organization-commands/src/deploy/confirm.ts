@@ -22,6 +22,8 @@ export const confirmDeployment = async (
     return deployBasicConfiguration(holder)
   }
 
+  io.debugObject("Organization deploy plan:", holder.plan)
+
   const confirmed = await io.confirmLaunch(holder)
   const newResult = confirmed
     ? null
