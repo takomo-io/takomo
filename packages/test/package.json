@@ -1,6 +1,6 @@
 {
   "name": "@takomo/test",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Takomo test utils",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,7 +36,7 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/cli-io": "2.6.1",
+    "@takomo/cli-io": "2.6.2",
     "@takomo/core": "2.6.1",
     "@takomo/stacks-commands": "2.6.1",
     "@takomo/stacks-model": "2.6.1",

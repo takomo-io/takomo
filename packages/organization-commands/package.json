@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-commands",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Takomo Organization Commands",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -49,9 +49,9 @@
     "lodash.flatten": "4.4.0",
     "lodash.intersection": "4.4.0",
     "lodash.merge": "4.6.2",
+    "lodash.uniq": "4.5.0",
     "lodash.uniqby": "4.7.0",
-    "lodash.without": "4.4.0",
-    "lodash.uniq": "4.5.0"
+    "lodash.without": "4.4.0"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",
@@ -62,9 +62,9 @@
     "@types/lodash.flatten": "4.4.6",
     "@types/lodash.intersection": "4.4.6",
     "@types/lodash.merge": "4.6.6",
+    "@types/lodash.uniq": "4.5.6",
     "@types/lodash.uniqby": "4.7.6",
     "@types/lodash.without": "4.4.6",
-    "@types/lodash.uniq": "4.5.6",
     "babel-jest": "26.0.1",
     "jest": "26.0.1",
     "jest-mock-extended": "1.0.8",

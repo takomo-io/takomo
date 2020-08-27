@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli-io",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Takomo CLI IO",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -42,7 +42,7 @@
     "@takomo/core": "2.6.1",
     "@takomo/deployment-targets": "2.6.1",
     "@takomo/init-command": "2.6.1",
-    "@takomo/organization-commands": "2.6.1",
+    "@takomo/organization-commands": "2.6.2",
     "@takomo/organization-config": "2.6.1",
     "@takomo/stacks-commands": "2.6.1",
     "@takomo/stacks-context": "2.6.1",
