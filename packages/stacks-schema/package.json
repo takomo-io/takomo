@@ -50,6 +50,6 @@
     "babel-jest": "26.0.1",
     "jest": "26.0.1",
     "jest-mock-extended": "1.0.8",
-    "typescript": "3.9.6"
+    "typescript": "4.0.2"
   }
 }

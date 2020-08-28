@@ -37,6 +37,6 @@
     "dotenv": "8.2.0",
     "jest": "26.0.1",
     "rimraf": "3.0.2",
-    "typescript": "3.9.6"
+    "typescript": "4.0.2"
   }
 }
