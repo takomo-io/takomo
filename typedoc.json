@@ -3,10 +3,12 @@
   "exclude": "**/test/**",
   "mode": "file",
   "out": "api-docs",
-  "includeVersion": true,
+  "includeVersion": false,
   "excludeNotExported": true,
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeNotDocumented": true,
-  "name": "Takomo"
+  "name": "Takomo",
+  "readme": "none",
+  "gaID": "UA-165592316-1"
 }

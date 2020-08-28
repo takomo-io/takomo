@@ -1,11 +1,9 @@
-name: Default
+name: Master
 
 on:
   push:
     branches:
-      - feature/**
-      - release/**
-      - fix/**
+      - master
 
 env:
   TKM_ORG_A_ID: ${{ secrets.TKM_ORG_A_ID }}
@@ -59,3 +57,10 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
+      - name: Build API docs
+        run: yarn api-docs
+      - run: ./ci/publish-api-docs.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+          DOCS_BASE: /api-docs/release/master/
