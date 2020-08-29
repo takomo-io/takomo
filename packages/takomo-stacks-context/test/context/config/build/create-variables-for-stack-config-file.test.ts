@@ -33,8 +33,8 @@ describe("#createVariablesForStackConfigFile", () => {
       hooks: [],
       ignore: false,
       isRoot: true,
-      name: "",
-      path: "/",
+      name: "regionName",
+      path: "/applicationName/regionName",
       project: "my project",
       regions: ["eu-west-1", "eu-north-1"],
       stacks: [],
@@ -55,6 +55,7 @@ describe("#createVariablesForStackConfigFile", () => {
     const stackVariables = createVariablesForStackConfigFile(
       variables,
       stackGroup,
+      "/applicationName/regionName/stackName.yml",
     )
 
     expect(stackVariables).toStrictEqual({
@@ -68,15 +69,15 @@ describe("#createVariablesForStackConfigFile", () => {
         projectDir: "/tmp",
       },
       stackGroup: {
-        name: "",
+        name: "regionName",
         accountIds: ["123456789012", "222222222222"],
         project: "my project",
         regions: ["eu-west-1", "eu-north-1"],
         commandRole: {
           iamRoleArn: "arn:aws:iam::123456789012:role/admin",
         },
-        path: "/",
-        pathSegments: [""],
+        path: "/applicationName/regionName",
+        pathSegments: ["applicationName", "regionName"],
         isRoot: true,
         templateBucket: {
           keyPrefix: "mytemplates/",
@@ -98,6 +99,16 @@ describe("#createVariablesForStackConfigFile", () => {
             key: "a",
           },
           list: [1, 2, 3],
+        },
+      },
+      stack: {
+        path: "/applicationName/regionName/stackName.yml",
+        pathSegments: ["applicationName", "regionName", "stackName.yml"],
+        configFile: {
+          name: "stackName",
+          basename: "stackName.yml",
+          filePath: "applicationName/regionName/stackName.yml",
+          dirPath: "applicationName/regionName",
         },
       },
     })
