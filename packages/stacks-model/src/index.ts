@@ -161,6 +161,7 @@ export interface StackGroupConfigFile {
   readonly hooks: HookConfig[]
   readonly data: Vars
   readonly ignore: boolean | null
+  readonly terminationProtection: boolean | null
   readonly capabilities: Capability[] | null
 }
 
@@ -181,6 +182,7 @@ export interface StackGroupProps {
   data: Vars
   capabilities: Capability[] | null
   ignore: boolean
+  terminationProtection: boolean
 }
 
 export class StackGroup {
@@ -200,6 +202,7 @@ export class StackGroup {
   private readonly data: Vars
   private readonly capabilities: Capability[] | null
   private readonly ignore: boolean
+  private readonly terminationProtection: boolean
 
   constructor(props: StackGroupProps) {
     this.name = props.name
@@ -218,6 +221,7 @@ export class StackGroup {
     this.data = props.data
     this.capabilities = props.capabilities
     this.ignore = props.ignore
+    this.terminationProtection = props.terminationProtection
   }
 
   getName = (): string => this.name
@@ -236,6 +240,7 @@ export class StackGroup {
   getData = (): any => this.data
   getCapabilities = (): CloudFormation.Capability[] | null => this.capabilities
   isIgnored = (): boolean => this.ignore
+  isTerminationProtectionEnabled = (): boolean => this.terminationProtection
 
   toProps = (): StackGroupProps => ({
     name: this.getName(),
@@ -254,6 +259,7 @@ export class StackGroup {
     data: this.getData(),
     capabilities: this.getCapabilities(),
     ignore: this.isIgnored(),
+    terminationProtection: this.isTerminationProtectionEnabled(),
   })
 }
 
@@ -274,6 +280,7 @@ export interface StackConfigFile {
   readonly secrets: Map<SecretName, SecretConfig>
   readonly capabilities: Capability[] | null
   readonly ignore: boolean | null
+  readonly terminationProtection: boolean | null
 }
 
 /**
@@ -377,6 +384,11 @@ export interface StackProps {
    * Is the stack ignored
    */
   ignore: boolean
+
+  /**
+   * Is stack termination protection enabled
+   */
+  terminationProtection: boolean
 }
 
 /**
@@ -401,6 +413,7 @@ export class Stack {
   private readonly secrets: Map<SecretName, Secret>
   private readonly secretsPath: SecretsPath
   private readonly ignore: boolean
+  private readonly terminationProtection: boolean
   private readonly credentialProvider: TakomoCredentialProvider
   private readonly capabilities: Capability[] | null
 
@@ -428,6 +441,7 @@ export class Stack {
     this.credentialProvider = props.credentialProvider
     this.capabilities = props.capabilities
     this.ignore = props.ignore
+    this.terminationProtection = props.terminationProtection
   }
 
   /**
@@ -547,6 +561,11 @@ export class Stack {
   isIgnored = (): boolean => this.ignore
 
   /**
+   * @returns Is termination protection enabled
+   */
+  isTerminationProtectionEnabled = (): boolean => this.terminationProtection
+
+  /**
    * @returns Stack properties
    */
   toProps = (): StackProps => ({
@@ -570,6 +589,7 @@ export class Stack {
     secretsPath: this.getSecretsPath(),
     credentialProvider: this.getCredentialProvider(),
     capabilities: this.getCapabilities(),
+    terminationProtection: this.isTerminationProtectionEnabled(),
   })
 }
 

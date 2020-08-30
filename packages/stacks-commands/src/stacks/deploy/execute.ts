@@ -5,6 +5,7 @@ import {
   StackResult,
 } from "@takomo/stacks-model"
 import uuid from "uuid"
+import { executeAfterLaunchHooks } from "./hooks"
 import { TagsHolder } from "./model"
 import { waitForStackCreateOrUpdateToComplete } from "./wait"
 
@@ -21,17 +22,49 @@ export const createOrUpdateStack = async (
     templateBody,
     watch,
     logger,
+    existingStack,
   } = holder
 
   const clientToken = uuid.v4()
   const templateLocation = templateS3Url || templateBody
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
   const capabilities = stack.getCapabilities() || defaultCapabilities
+  const localTerminationProtection = stack.isTerminationProtectionEnabled()
 
   switch (launchType) {
     case StackLaunchType.UPDATE:
       logger.info("Update stack")
       const updateWatch = watch.startChild("update-stack")
+      const terminationProtectionUpdated =
+        localTerminationProtection !==
+        existingStack?.EnableTerminationProtection
+
+      if (terminationProtectionUpdated) {
+        logger.info(
+          localTerminationProtection
+            ? "Enable termination protection"
+            : "Disable termination protection",
+        )
+
+        try {
+          await cloudFormationClient.updateTerminationProtection(
+            stack.getName(),
+            localTerminationProtection,
+          )
+        } catch (e) {
+          logger.error("Failed to update termination protection", e)
+          return {
+            stack,
+            message: e.message,
+            reason: "UPDATE_TERMINATION_PROTECTION_FAILED",
+            status: CommandStatus.FAILED,
+            events: [],
+            success: false,
+            watch: watch.stop(),
+          }
+        }
+      }
+
       try {
         const hasChanges = await cloudFormationClient.updateStack({
           Capabilities: capabilities,
@@ -43,15 +76,34 @@ export const createOrUpdateStack = async (
         })
 
         if (!hasChanges) {
-          logger.info("No updates to perform")
-          return {
-            stack,
-            message: "No changes",
-            reason: "SKIPPED",
-            status: CommandStatus.SKIPPED,
-            events: [],
-            success: true,
-            watch: watch.stop(),
+          if (terminationProtectionUpdated) {
+            logger.info("No updates to perform")
+            const result = {
+              stack,
+              message: "Success",
+              reason: "UPDATE_SUCCESS",
+              status: CommandStatus.SUCCESS,
+              events: [],
+              success: true,
+              watch: watch.stop(),
+            }
+
+            return executeAfterLaunchHooks({
+              ...holder,
+              result,
+              clientToken: "",
+            })
+          } else {
+            logger.info("No updates to perform")
+            return {
+              stack,
+              message: "No changes",
+              reason: "SKIPPED",
+              status: CommandStatus.SKIPPED,
+              events: [],
+              success: true,
+              watch: watch.stop(),
+            }
           }
         }
       } catch (e) {
@@ -84,7 +136,7 @@ export const createOrUpdateStack = async (
           Capabilities: capabilities,
           ClientRequestToken: clientToken,
           DisableRollback: false,
-          EnableTerminationProtection: false,
+          EnableTerminationProtection: stack.isTerminationProtectionEnabled(),
           Parameters: parameters,
           Tags: tags,
           StackName: stack.getName(),

@@ -112,3 +112,11 @@ export const parseIgnore = (value: any): boolean | null => {
 
   return value === true
 }
+
+export const parseTerminationProtection = (value: any): boolean | null => {
+  if (value === null || value === undefined) {
+    return null
+  }
+
+  return value === true
+}

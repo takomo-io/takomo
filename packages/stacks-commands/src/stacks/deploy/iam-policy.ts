@@ -17,6 +17,7 @@ Statement:
       - cloudformation:ValidateTemplate
       - cloudformation:DescribeStacks
       - cloudformation:GetTemplateSummary
+      - cloudformation:UpdateTerminationProtection
     Resource: "*"
   
   # S3 permissions needed only if template bucket is used.

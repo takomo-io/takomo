@@ -30,7 +30,7 @@ export interface DeployStacksIO extends IO {
   chooseCommandPath: (rootStackGroup: StackGroup) => Promise<CommandPath>
   confirmStackDeploy: (
     stack: Stack,
-    changeSet: DescribeChangeSetOutput,
+    changeSet: DescribeChangeSetOutput | null,
     templateBody: string,
     templateSummary: CloudFormation.GetTemplateSummaryOutput,
     cloudFormationClient: CloudFormationClient,
