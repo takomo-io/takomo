@@ -19,6 +19,7 @@ const emptyStackConfig = {
   timeout: null,
   capabilities: null,
   ignore: null,
+  terminationProtection: null,
 }
 
 describe("parse stack config file", () => {

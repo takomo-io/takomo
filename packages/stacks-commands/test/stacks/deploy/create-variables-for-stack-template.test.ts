@@ -36,6 +36,7 @@ describe("#createVariablesForStackTemplate", () => {
       dependencies: ["/vpc.yml"],
       hooks: [],
       ignore: false,
+      terminationProtection: false,
       name: "stack-x",
       parameters: new Map(),
       path: "/stack-x.yml/eu-west-1",
@@ -100,6 +101,7 @@ describe("#createVariablesForStackTemplate", () => {
           c: "d",
         },
         depends: ["/vpc.yml"],
+        terminationProtection: false,
       },
     })
   })

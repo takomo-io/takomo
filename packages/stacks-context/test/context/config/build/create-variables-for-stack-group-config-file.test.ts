@@ -32,6 +32,7 @@ describe("#createVariablesForStackGroupConfigFile", () => {
       },
       hooks: [],
       ignore: false,
+      terminationProtection: false,
       isRoot: true,
       name: "cool",
       path: "/dev/apps/cool",
