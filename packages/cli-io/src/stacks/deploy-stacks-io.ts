@@ -442,8 +442,13 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
 
   printChangeSet = (
     path: StackPath,
-    changeSet: DescribeChangeSetOutput,
+    changeSet: DescribeChangeSetOutput | null,
   ): void => {
+    if (!changeSet) {
+      this.message(`0 stack resources to modify:`, true)
+      return
+    }
+
     const changes = changeSet.Changes || []
 
     const summary = new Map<ResourceOperation, number>([
@@ -475,25 +480,44 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
         true,
       )
       this.message(`      type:                      ${ResourceType}`)
-      this.message(`      physical id:               ${PhysicalResourceId}`)
-      this.message(`      replacement:               ${Replacement}`)
-      this.message(`      scope:                     ${Scope}`)
-      this.message(`      details:`)
-      ;(Details || []).forEach((detail) => {
-        this.message(`        - causing entity:        ${detail.CausingEntity}`)
-        this.message(`          evaluation:            ${detail.Evaluation}`)
-        this.message(`          change source:         ${detail.ChangeSource}`)
-        this.message(`          target:`)
-        this.message(
-          `            attribute:           ${detail.Target!.Attribute}`,
-        )
-        this.message(`            name:                ${detail.Target!.Name}`)
-        this.message(
-          `            require recreation:  ${
-            detail.Target!.RequiresRecreation
-          }`,
-        )
-      })
+      this.message(
+        `      physical id:               ${
+          PhysicalResourceId || "<known after deploy>"
+        }`,
+      )
+
+      if (Replacement) {
+        this.message(`      replacement:               ${Replacement}`)
+      }
+
+      if (Scope && Scope.length > 0) {
+        this.message(`      scope:                     ${Scope}`)
+      }
+
+      if (Details && Details.length > 0) {
+        this.message(`      details:`)
+        Details.forEach((detail) => {
+          this.message(
+            `        - causing entity:        ${detail.CausingEntity}`,
+          )
+          this.message(`          evaluation:            ${detail.Evaluation}`)
+          this.message(
+            `          change source:         ${detail.ChangeSource}`,
+          )
+          this.message(`          target:`)
+          this.message(
+            `            attribute:           ${detail.Target!.Attribute}`,
+          )
+          this.message(
+            `            name:                ${detail.Target!.Name}`,
+          )
+          this.message(
+            `            require recreation:  ${
+              detail.Target!.RequiresRecreation
+            }`,
+          )
+        })
+      }
     })
 
     const addCount = summary.get(ResourceOperation.ADD)!.toString()
@@ -511,11 +535,16 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
   }
 
   printParameters = (
-    changeSet: DescribeChangeSetOutput,
+    changeSet: DescribeChangeSetOutput | null,
     templateSummary: CloudFormation.GetTemplateSummaryOutput,
     existingStack: CloudFormation.Stack | null,
     existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
   ): void => {
+    if (!changeSet) {
+      this.message("No stack parameters to modify.")
+      return
+    }
+
     const { updated, added, removed } = buildParametersSpec(
       changeSet,
       templateSummary,
@@ -543,9 +572,31 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     })
   }
 
+  #printTerminationProtection = (
+    stack: Stack,
+    existingStack: CloudFormation.Stack | null,
+  ): void => {
+    const protection = stack.isTerminationProtectionEnabled()
+      ? green("enabled")
+      : red("disabled")
+    if (!existingStack) {
+      this.message(`Termination protection will be ${protection}`, true)
+      return
+    }
+
+    if (
+      existingStack.EnableTerminationProtection !==
+      stack.isTerminationProtectionEnabled()
+    ) {
+      this.message(`Termination protection will be ${protection}`, true)
+    } else {
+      this.message("No changes to termination protection")
+    }
+  }
+
   confirmStackDeploy = async (
     stack: Stack,
-    changeSet: DescribeChangeSetOutput,
+    changeSet: DescribeChangeSetOutput | null,
     templateBody: string,
     templateSummary: CloudFormation.GetTemplateSummaryOutput,
     cloudFormationClient: CloudFormationClient,
@@ -583,6 +634,8 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       existingStack,
       existingTemplateSummary,
     )
+
+    this.#printTerminationProtection(stack, existingStack)
 
     this.printChangeSet(stack.getPath(), changeSet)
 

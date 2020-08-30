@@ -19,6 +19,7 @@ import {
   tags,
   template,
   templateBucket,
+  terminationProtection,
   timeout,
 } from "@takomo/stacks-schema"
 
@@ -30,6 +31,7 @@ export const stackGroupConfigFileSchema = Joi.object({
   data,
   regions,
   ignore,
+  terminationProtection,
   accountIds: [accountId, accountIds],
   timeout,
   commandRole: iamRoleArn,
@@ -40,6 +42,7 @@ export const stackConfigFileSchema = Joi.object({
   project,
   regions,
   ignore,
+  terminationProtection,
   accountIds: [accountId, accountIds],
   commandRole: iamRoleArn,
   templateBucket,

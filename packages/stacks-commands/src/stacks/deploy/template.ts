@@ -121,6 +121,7 @@ export const createVariablesForStackTemplate = (
       tags: mapToObject(stack.getTags()),
       timeout: stack.getTimeout(),
       depends: stack.getDependencies(),
+      terminationProtection: stack.isTerminationProtectionEnabled(),
       data: stack.getData(),
     },
   }

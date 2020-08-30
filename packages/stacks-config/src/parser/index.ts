@@ -18,6 +18,7 @@ import {
   parseSecrets,
   parseTags,
   parseTemplateBucket,
+  parseTerminationProtection,
   parseTimeout,
 } from "./internal"
 
@@ -77,6 +78,9 @@ export const parseStackConfigFile = async (
   const capabilities = parseCapabilities(parsedFile.capabilities)
   const accountIds = parseAccountIds(parsedFile.accountIds)
   const ignore = parseIgnore(parsedFile.ignore)
+  const terminationProtection = parseTerminationProtection(
+    parsedFile.terminationProtection,
+  )
 
   return {
     project: parsedFile.project || null,
@@ -91,6 +95,7 @@ export const parseStackConfigFile = async (
     secrets: parseSecrets(parsedFile.secrets),
     hooks: parsedFile.hooks || [],
     ignore,
+    terminationProtection,
     accountIds,
     capabilities,
     parameters,
@@ -148,6 +153,9 @@ export const parseStackGroupConfigFile = async (
   const capabilities = parseCapabilities(parsedFile.capabilities)
   const accountIds = parseAccountIds(parsedFile.accountIds)
   const ignore = parseIgnore(parsedFile.ignore)
+  const terminationProtection = parseTerminationProtection(
+    parsedFile.terminationProtection,
+  )
 
   return {
     project: parsedFile.project || null,
@@ -157,6 +165,7 @@ export const parseStackGroupConfigFile = async (
     tags: parseTags(parsedFile.tags),
     timeout: parseTimeout(parsedFile.timeout),
     hooks: parsedFile.hooks || [],
+    terminationProtection,
     ignore,
     accountIds,
     capabilities,

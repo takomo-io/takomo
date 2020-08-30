@@ -166,3 +166,4 @@ export const secret = Joi.object({
 export const secrets = Joi.object().pattern(secretName, secret)
 
 export const ignore = Joi.boolean()
+export const terminationProtection = Joi.boolean()

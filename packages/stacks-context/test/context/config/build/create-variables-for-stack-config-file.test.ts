@@ -32,6 +32,7 @@ describe("#createVariablesForStackConfigFile", () => {
       },
       hooks: [],
       ignore: false,
+      terminationProtection: false,
       isRoot: true,
       name: "regionName",
       path: "/applicationName/regionName",
@@ -79,6 +80,7 @@ describe("#createVariablesForStackConfigFile", () => {
         path: "/applicationName/regionName",
         pathSegments: ["applicationName", "regionName"],
         isRoot: true,
+        terminationProtection: false,
         templateBucket: {
           keyPrefix: "mytemplates/",
           name: "mybucket",

@@ -193,6 +193,19 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
       },
     )
 
+  updateTerminationProtection = async (
+    stackName: string,
+    enable: boolean,
+  ): Promise<boolean> =>
+    this.withClientPromise(
+      (c) =>
+        c.updateTerminationProtection({
+          EnableTerminationProtection: enable,
+          StackName: stackName,
+        }),
+      () => true,
+    )
+
   waitUntilStackCreateOrUpdateCompletes = async (
     stackName: string,
     clientRequestToken: string,

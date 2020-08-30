@@ -33,7 +33,7 @@ const confirmStackDeploy = async (
   autoConfirm: boolean,
   io: DeployStacksIO,
   stack: Stack,
-  changeSet: DescribeChangeSetOutput,
+  changeSet: DescribeChangeSetOutput | null,
   templateBody: string,
   templateSummary: CloudFormation.GetTemplateSummaryOutput,
   cloudFormationClient: CloudFormationClient,
@@ -108,7 +108,12 @@ export const reviewChanges = async (
       changeSetName,
     )
 
-    if (!changeSet) {
+    const terminationProtectionChanged = existingStack
+      ? existingStack.EnableTerminationProtection !==
+        stack.isTerminationProtectionEnabled()
+      : false
+
+    if (!changeSet && !terminationProtectionChanged) {
       logger.debug("Change set contains no changes")
       return {
         stack,
@@ -137,7 +142,7 @@ export const reviewChanges = async (
     )
 
     if (answer === ConfirmStackDeployAnswer.CANCEL) {
-      if (changeSetType === "CREATE") {
+      if (changeSet && changeSetType === "CREATE") {
         logger.info("Clean up temporary stack")
         await cloudFormationClient.initiateStackDeletion({
           StackName: stack.getName(),
@@ -173,7 +178,7 @@ export const reviewChanges = async (
       state.autoConfirm = true
     }
 
-    if (changeSetType === "CREATE") {
+    if (changeSet && changeSetType === "CREATE") {
       logger.debug("Initiate deletion of the created temporary stack")
       await cloudFormationClient.initiateStackDeletion({
         StackName: stack.getName(),

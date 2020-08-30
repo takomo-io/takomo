@@ -63,6 +63,7 @@ export const createRootStackGroup = (): StackGroup =>
     capabilities: null,
     accountIds: [],
     ignore: false,
+    terminationProtection: false,
   })
 
 export const makeStackGroupPath = (
@@ -140,6 +141,7 @@ export const getVariablesForStackGroup = (stackGroup: StackGroup): any => ({
   data: stackGroup.getData(),
   capabilities: stackGroup.getCapabilities(),
   accountIds: stackGroup.getAccountIds(),
+  terminationProtection: stackGroup.isTerminationProtectionEnabled(),
 })
 
 export const createVariablesForStackGroupConfigFile = (
@@ -265,6 +267,11 @@ const buildStack = async (
   const ignore =
     stackConfig.ignore !== null ? stackConfig.ignore : stackGroup.isIgnored()
 
+  const terminationProtection =
+    stackConfig.terminationProtection !== null
+      ? stackConfig.terminationProtection
+      : stackGroup.isTerminationProtectionEnabled()
+
   return regions.map((region) => {
     const exactPath = `${stackPath}/${region}`
     const secretsPath = makeSecretsPath(
@@ -282,6 +289,7 @@ const buildStack = async (
       credentialProvider,
       hooks,
       ignore,
+      terminationProtection,
       path: exactPath,
       project: stackConfig.project || stackGroup.getProject(),
       tags: stackGroup.getTags(),
@@ -358,6 +366,10 @@ const populatePropertiesFromConfigFile = async (
     props.ignore = configFile.ignore
   }
 
+  if (configFile.terminationProtection !== null) {
+    props.terminationProtection = configFile.terminationProtection
+  }
+
   if (configFile.timeout !== null) {
     props.timeout = configFile.timeout
   }
@@ -393,6 +405,7 @@ export const createStackGroupFromParent = (
     capabilities: parent.getCapabilities(),
     accountIds: parent.getAccountIds(),
     ignore: parent.isIgnored(),
+    terminationProtection: parent.isTerminationProtectionEnabled(),
   })
 
 const createStackGroup = async (

@@ -14,6 +14,7 @@ const emptyStackGroupConfig = {
   timeout: null,
   capabilities: null,
   ignore: null,
+  terminationProtection: null,
 }
 
 describe("#parseStackGroupConfigFile", () => {
@@ -62,6 +63,7 @@ describe("#parseStackGroupConfigFile", () => {
         ["second", "b"],
       ]),
       templateBucket: null,
+      terminationProtection: null,
       timeout: {
         update: 10,
         create: 5,
