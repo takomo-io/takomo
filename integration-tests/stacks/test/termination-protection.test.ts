@@ -10,6 +10,7 @@ import {
   TestUndeployStacksIO,
   TIMEOUT,
 } from "@takomo/test"
+import { TakomoError } from "@takomo/util/src"
 
 const createOptions = async (terminationProtection: boolean) =>
   initOptionsAndVariables({
@@ -62,6 +63,33 @@ describe("Termination protection", () => {
         region: "eu-north-1",
       })
       expect(stack.EnableTerminationProtection).toBeTruthy()
+    },
+    TIMEOUT,
+  )
+
+  test(
+    "Try to undeploy",
+    async () => {
+      const { options, variables, watch } = await createOptions(false)
+
+      await expect(
+        undeployStacksCommand(
+          {
+            commandPath: Constants.ROOT_STACK_GROUP_PATH,
+            ignoreDependencies: false,
+            interactive: false,
+            options,
+            variables,
+            watch,
+          },
+          new TestUndeployStacksIO(options),
+        ),
+      ).rejects.toEqual(
+        new TakomoError(
+          "Can't undeploy stacks because following stacks have termination protection enabled:\n\n" +
+            "  - /a.yml/eu-north-1",
+        ),
+      )
     },
     TIMEOUT,
   )

@@ -16,21 +16,19 @@ export const isStackReadyForDelete = (
     "REVIEW_IN_PROGRESS",
   ].includes(stackStatus)
 
-export const validateUndeployContext = async (
-  ctx: CommandContext,
-): Promise<CommandContext> => {
-  const stacksInInvalidStatus = []
+const validateStackStatus = async (ctx: CommandContext): Promise<void> => {
+  const stacks = []
   for (const stack of ctx.getStacksToProcess()) {
     const existing = await ctx.getExistingStack(stack.getPath())
     if (existing && !isStackReadyForDelete(existing.StackStatus!)) {
-      stacksInInvalidStatus.push({ stack, existing })
+      stacks.push({ stack, existing })
     }
   }
 
-  if (stacksInInvalidStatus.length > 0) {
+  if (stacks.length > 0) {
     throw new TakomoError(
       "Can't undeploy stacks because following stacks are in invalid status:\n\n" +
-        stacksInInvalidStatus
+        stacks
           .map(
             (s) =>
               `  - ${s.stack.getPath()} in invalid status: ${
@@ -40,6 +38,31 @@ export const validateUndeployContext = async (
           .join("\n"),
     )
   }
+}
 
+const validateTerminationProtection = async (
+  ctx: CommandContext,
+): Promise<void> => {
+  const stacks = []
+  for (const stack of ctx.getStacksToProcess()) {
+    const existing = await ctx.getExistingStack(stack.getPath())
+    if (existing && existing.EnableTerminationProtection === true) {
+      stacks.push({ stack, existing })
+    }
+  }
+
+  if (stacks.length > 0) {
+    throw new TakomoError(
+      "Can't undeploy stacks because following stacks have termination protection enabled:\n\n" +
+        stacks.map((s) => `  - ${s.stack.getPath()}`).join("\n"),
+    )
+  }
+}
+
+export const validateUndeployContext = async (
+  ctx: CommandContext,
+): Promise<CommandContext> => {
+  await validateStackStatus(ctx)
+  await validateTerminationProtection(ctx)
   return ctx
 }
