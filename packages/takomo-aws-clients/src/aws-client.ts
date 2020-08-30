@@ -1,5 +1,5 @@
 import { Region, TakomoCredentialProvider } from "@takomo/core"
-import { Logger } from "@takomo/util"
+import { Logger, randomInt } from "@takomo/util"
 import { Credentials } from "aws-sdk"
 import { ConfigurationOptions } from "aws-sdk/lib/config"
 import { AWSError } from "aws-sdk/lib/error"
@@ -17,12 +17,6 @@ interface PagedResponse {
 }
 
 const maxRetries = 30
-
-const randomInt = (min: number, max: number): number => {
-  const minC = Math.ceil(min)
-  const maxF = Math.floor(max)
-  return Math.floor(Math.random() * (maxF - minC + 1) + minC)
-}
 
 export abstract class AwsClient<C> {
   private readonly credentialProvider: TakomoCredentialProvider

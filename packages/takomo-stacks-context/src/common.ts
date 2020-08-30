@@ -1,9 +1,10 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
 import { CommandPath, StackPath } from "@takomo/core"
 import { Stack, StackLaunchType } from "@takomo/stacks-model"
-import { Logger, TakomoError } from "@takomo/util"
+import { Logger, randomInt, sleep, TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { StackStatus } from "aws-sdk/clients/cloudformation"
+import { Policy } from "cockatiel"
 
 export const resolveStackLaunchType = (
   status: StackStatus | null,
@@ -35,10 +36,13 @@ export const loadExistingStacks = async (
   stacks: Stack[],
 ): Promise<Map<StackPath, CloudFormation.Stack>> => {
   logger.info("Load existing stacks")
+
+  const bulkhead = Policy.bulkhead(2, 10000)
+
   const map = new Map<StackPath, CloudFormation.Stack>()
 
   await Promise.all(
-    stacks.map(async (stack) => {
+    stacks.map(async (stack, i) => {
       logger.debug(
         `Load existing stack with path: ${stack.getPath()}, name: ${stack.getName()}`,
       )
@@ -48,17 +52,22 @@ export const loadExistingStacks = async (
         logger,
       })
 
-      const existingStack = await cf.describeStack(stack.getName())
-      if (existingStack) {
-        logger.debug(
-          `Existing stack found with path: ${stack.getPath()}, name: ${stack.getName()}`,
-        )
-        map.set(stack.getPath(), existingStack)
-      } else {
-        logger.debug(
-          `No existing stack found with path: ${stack.getPath()}, name: ${stack.getName()}`,
-        )
-      }
+      const minSleep = i * 50
+      await sleep(randomInt(minSleep, minSleep + 50))
+
+      await bulkhead.execute(async () => {
+        const existingStack = await cf.describeStack(stack.getName())
+        if (existingStack) {
+          logger.debug(
+            `Existing stack found with path: ${stack.getPath()}, name: ${stack.getName()}`,
+          )
+          map.set(stack.getPath(), existingStack)
+        } else {
+          logger.debug(
+            `No existing stack found with path: ${stack.getPath()}, name: ${stack.getName()}`,
+          )
+        }
+      })
     }),
   )
 
