@@ -108,11 +108,15 @@ export const createVariablesForStackTemplate = (
   variables: StackOperationVariables,
   stack: Stack,
 ): any => {
+  const stackPath = stack.getPath()
+  const pathSegments = stackPath.substr(1).split("/")
+  const filePath = pathSegments.slice(0, -1).join("/")
   return {
     ...variables,
     stack: {
+      pathSegments,
       project: stack.getProject(),
-      path: stack.getPath(),
+      path: stackPath,
       name: stack.getName(),
       template: stack.getTemplate(),
       templateBucket: stack.getTemplateBucket(),
@@ -123,6 +127,13 @@ export const createVariablesForStackTemplate = (
       depends: stack.getDependencies(),
       terminationProtection: stack.isTerminationProtectionEnabled(),
       data: stack.getData(),
+      configFile: {
+        filePath,
+        basename: path.basename(filePath),
+        name: path.basename(filePath, ".yml"),
+        dirPath:
+          pathSegments.length === 2 ? "" : pathSegments.slice(0, -2).join("/"),
+      },
     },
   }
 }
