@@ -57,11 +57,11 @@ describe("Templating", () => {
 
       expect(output.status).toBe(CommandStatus.SUCCESS)
 
-      const stack = await aws.cloudFormation.describeStack(
-        roleArn,
-        "eu-north-1",
-        "queues",
-      )
+      const stack = await aws.cloudFormation.describeStack({
+        iamRoleArn: roleArn,
+        region: "eu-north-1",
+        stackName: "queues",
+      })
       expect(stack.Description).toBe("IT - templating World")
     },
     TIMEOUT,
