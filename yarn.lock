@@ -3304,6 +3304,11 @@ co@^4.6.0:
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
 
+cockatiel@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/cockatiel/-/cockatiel-1.1.1.tgz#851fcee67df9a824c7946cb0927c9351b552d26b"
+  integrity sha512-YO02ZhTcK2HOZodksWfg4tS1GYYt1j7R6U1unAkwcQf1uoIYKSBqPrfqXlLNbsyMvkDXMwa2nuwZDHbUkB1VbQ==
+
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
