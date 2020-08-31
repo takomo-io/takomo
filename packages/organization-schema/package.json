@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-schema",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "description": "Takomo Organization Schema",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,14 +37,14 @@
   },
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@takomo/config-sets": "2.6.1",
-    "@takomo/core": "2.6.1"
+    "@takomo/config-sets": "2.7.0",
+    "@takomo/core": "2.7.0"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",
-    "@takomo/unit-test": "2.5.0",
+    "@takomo/unit-test": "2.7.0",
     "@types/hapi__joi": "17.1.2",
     "@types/jest": "26.0.0",
     "babel-jest": "26.0.1",
