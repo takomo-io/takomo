@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/takomo-io/takomo/compare/v1.4.1...v1.5.0) (2020-08-31)
+
+
+### Features
+
+* optimize AWS API calls to minimize throttling ([#93](https://github.com/takomo-io/takomo/issues/93)) ([ea3308e](https://github.com/takomo-io/takomo/commit/ea3308ef5cb7c3d9244e509aa6da841a3070c96e)), closes [#79](https://github.com/takomo-io/takomo/issues/79)
+
+
+
+
+
 ## [1.4.1](https://github.com/takomo-io/takomo/compare/v1.4.0...v1.4.1) (2020-08-20)
 
 

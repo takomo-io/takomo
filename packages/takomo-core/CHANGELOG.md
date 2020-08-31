@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/takomo-io/takomo/compare/v1.4.1...v1.5.0) (2020-08-31)
+
+**Note:** Version bump only for package @takomo/core
+
+
+
+
+
 # [1.3.0](https://github.com/takomo-io/takomo/compare/v1.2.1...v1.3.0) (2020-06-09)
 
 **Note:** Version bump only for package @takomo/core
