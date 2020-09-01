@@ -32,6 +32,7 @@ export const createStackGroup = (props: TestStackGroupProps): StackGroup =>
     data: {},
     capabilities: [],
     ignore: false,
+    terminationProtection: false,
   })
 
 export interface TestStackProps {
@@ -71,6 +72,7 @@ export const createStack = (props: TestStackProps): Stack => {
     },
     capabilities: [],
     ignore: false,
+    terminationProtection: false,
   })
 }
 
@@ -107,4 +109,5 @@ export const createStackConfig = (
     },
     capabilities: null,
     ignore: false,
+    terminationProtection: false,
   })

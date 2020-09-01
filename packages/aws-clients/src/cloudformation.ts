@@ -63,6 +63,12 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
           if (e.message === `Stack with id ${stackName} does not exist`) {
             return null
           }
+          if (
+            e.message ===
+            "GetTemplateSummary cannot be called on REVIEW_IN_PROGRESS stacks."
+          ) {
+            return null
+          }
         }
 
         throw e
@@ -142,7 +148,18 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
         await sleep(1000)
         return this.waitUntilChangeSetIsReady(stackName, changeSetName)
       case "FAILED":
-        return null
+        this.logger.debug(
+          `Change set creation failed with reason: ${response.StatusReason}`,
+        )
+        if (
+          response.StatusReason?.startsWith(
+            "The submitted information didn't contain changes",
+          )
+        ) {
+          return null
+        }
+
+        throw new Error(response.StatusReason)
       default:
         throw new Error(`Unsupported change set status: ${response.Status}`)
     }

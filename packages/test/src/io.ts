@@ -13,31 +13,49 @@ import {
 } from "@takomo/stacks-commands"
 import { Secret, SecretName, SecretValue } from "@takomo/stacks-model"
 
+interface TestDeployStacksIOAnswers {
+  confirmDeploy: ConfirmDeployAnswer
+  confirmStackDeploy: ConfirmStackDeployAnswer
+}
+
 export class TestDeployStacksIO extends CliDeployStacksIO {
-  constructor(options: Options) {
+  readonly #answers: TestDeployStacksIOAnswers
+  constructor(options: Options, answers?: TestDeployStacksIOAnswers) {
     super(options)
+    this.#answers = answers || {
+      confirmDeploy: ConfirmDeployAnswer.CANCEL,
+      confirmStackDeploy: ConfirmStackDeployAnswer.CANCEL,
+    }
   }
 
   confirmDeploy = async (): Promise<ConfirmDeployAnswer> =>
     this.options.isAutoConfirmEnabled()
       ? ConfirmDeployAnswer.CONTINUE_NO_REVIEW
-      : ConfirmDeployAnswer.CANCEL
+      : this.#answers.confirmDeploy
 
   confirmStackDeploy = async (): Promise<ConfirmStackDeployAnswer> =>
     this.options.isAutoConfirmEnabled()
       ? ConfirmStackDeployAnswer.CONTINUE
-      : ConfirmStackDeployAnswer.CANCEL
+      : this.#answers.confirmStackDeploy
+}
+
+interface TestUndeployStacksIOAnswers {
+  confirmUndeploy: ConfirmUndeployAnswer
 }
 
 export class TestUndeployStacksIO extends CliUndeployStacksIO {
-  constructor(options: Options) {
+  readonly #answers: TestUndeployStacksIOAnswers
+  constructor(options: Options, answers?: TestUndeployStacksIOAnswers) {
     super(options)
+    this.#answers = answers || {
+      confirmUndeploy: ConfirmUndeployAnswer.CANCEL,
+    }
   }
 
   confirmUndeploy = async (): Promise<ConfirmUndeployAnswer> =>
     this.options.isAutoConfirmEnabled()
       ? ConfirmUndeployAnswer.CONTINUE
-      : ConfirmUndeployAnswer.CANCEL
+      : this.#answers.confirmUndeploy
 }
 
 export class TestListSecretsIO extends CliListSecretsIO {}
