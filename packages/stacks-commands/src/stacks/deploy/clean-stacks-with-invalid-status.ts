@@ -1,14 +1,15 @@
 import { CloudFormationClient } from "@takomo/aws-clients"
+import { StackPath } from "@takomo/core"
 import { CommandContext, Stack } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import uuid from "uuid"
 import { DeployStacksIO } from "./model"
 
-const hasStackCreateFailed = (status: CloudFormation.StackStatus): boolean =>
-  ["CREATE_FAILED", "ROLLBACK_COMPLETE"].includes(status)
+const isStackStatusInvalid = (status: CloudFormation.StackStatus): boolean =>
+  ["CREATE_FAILED", "ROLLBACK_COMPLETE", "REVIEW_IN_PROGRESS"].includes(status)
 
-const cleanFailedStack = async (
+const cleanStack = async (
   io: DeployStacksIO,
   stack: Stack,
   existing: CloudFormation.Stack,
@@ -20,7 +21,7 @@ const cleanFailedStack = async (
   })
 
   const token = uuid.v4()
-  io.debugObject("Delete failed stack:", {
+  io.debugObject("Delete stack with invalid status:", {
     path: stack.getPath(),
     name: stack.getName(),
   })
@@ -42,30 +43,30 @@ const cleanFailedStack = async (
     .then(() => true)
 }
 
-export const cleanFailedStacks = async (
+export const cleanStacksWithInvalidStatus = async (
   ctx: CommandContext,
   io: DeployStacksIO,
 ): Promise<CommandContext> => {
-  const failed = new Array<string>()
-  const success = new Array<string>()
-  io.debug("Delete failed stacks")
+  const failed = new Array<StackPath>()
+  const success = new Array<StackPath>()
+  io.debug("Delete stacks with invalid status")
 
   await Promise.all(
     ctx.getStacksToProcess().map(async (stack) => {
       const existing = await ctx.getExistingStack(stack.getPath())
-      if (existing && hasStackCreateFailed(existing.StackStatus!)) {
+      if (existing && isStackStatusInvalid(existing.StackStatus!)) {
         try {
-          io.info(`Delete stack in failed status: ${stack.getPath()}`)
-          await cleanFailedStack(io, stack, existing)
+          io.info(`Delete stack with invalid status: ${stack.getPath()}`)
+          await cleanStack(io, stack, existing)
           io.info(
-            `Stack in failed status deleted successfully: ${stack.getPath()}`,
+            `Stack with invalid status deleted successfully: ${stack.getPath()}`,
           )
           success.push(stack.getPath())
           ctx.removeExistingStack(stack.getPath())
           ctx.removeExistingTemplateSummary(stack.getPath())
         } catch (e) {
           io.error(
-            `Failed to delete stack in failed status: ${stack.getPath()}`,
+            `Failed to delete stack with invalid status: ${stack.getPath()}`,
             e,
           )
           failed.push(stack.getPath())
@@ -80,14 +81,16 @@ export const cleanFailedStacks = async (
   if (failed.length > 0) {
     const failedString = failed.map((s) => `  - ${s}`).join("\n")
     throw new TakomoError(
-      `Failed to clean following stacks that were in failed state:\n\n${failedString}`,
+      `Failed to clean following stacks with invalid status:\n\n${failedString}`,
     )
   }
 
   if (success.length > 0) {
-    io.debug(`Successfully cleaned ${success.length} failed stacks`)
+    io.debug(
+      `Successfully cleaned ${success.length} stacks with invalid status`,
+    )
   } else {
-    io.debug("No failed stacks to clean")
+    io.debug("No stacks with invalid status to clean")
   }
 
   return ctx

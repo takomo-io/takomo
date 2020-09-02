@@ -20,9 +20,8 @@ export const resolveStackLaunchType = (
       return StackLaunchType.UPDATE
     case "CREATE_FAILED":
     case "ROLLBACK_COMPLETE":
-      return StackLaunchType.RECREATE
     case "REVIEW_IN_PROGRESS":
-      return StackLaunchType.CREATE
+      return StackLaunchType.RECREATE
     default:
       throw new Error(`Unsupported stack status: ${status}`)
   }

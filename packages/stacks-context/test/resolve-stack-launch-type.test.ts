@@ -1,15 +1,6 @@
 import { StackLaunchType } from "@takomo/stacks-model"
 import { resolveStackLaunchType } from "../src"
 
-const supported: Array<[string, StackLaunchType]> = [
-  ["CREATE_FAILED", StackLaunchType.RECREATE],
-  ["CREATE_COMPLETE", StackLaunchType.UPDATE],
-  ["ROLLBACK_COMPLETE", StackLaunchType.RECREATE],
-  ["UPDATE_COMPLETE", StackLaunchType.UPDATE],
-  ["UPDATE_ROLLBACK_COMPLETE", StackLaunchType.UPDATE],
-  ["REVIEW_IN_PROGRESS", StackLaunchType.CREATE],
-]
-
 const notSupported: Array<string> = [
   "CREATE_IN_PROGRESS",
   "ROLLBACK_IN_PROGRESS",
@@ -24,18 +15,48 @@ const notSupported: Array<string> = [
   "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS",
 ]
 
-describe("resolve stack launch type", () => {
-  describe.each(supported)("when %s is given", (status, expected) => {
-    test(`returns ${expected}`, () => {
-      expect(resolveStackLaunchType(status)).toBe(expected)
-    })
-  })
-
+describe("#resolveStackLaunchType", () => {
   describe.each(notSupported)("when %s is given", (status) => {
     test("throws an error", () => {
       expect(() => resolveStackLaunchType(status)).toThrow(
         `Unsupported stack status: ${status}`,
       )
     })
+  })
+
+  test("when CREATE_FAILED is given returns RECREATE", () => {
+    expect(resolveStackLaunchType("CREATE_FAILED")).toBe(
+      StackLaunchType.RECREATE,
+    )
+  })
+
+  test("when CREATE_COMPLETE is given returns UPDATE", () => {
+    expect(resolveStackLaunchType("CREATE_COMPLETE")).toBe(
+      StackLaunchType.UPDATE,
+    )
+  })
+
+  test("when ROLLBACK_COMPLETE is given returns RECREATE", () => {
+    expect(resolveStackLaunchType("ROLLBACK_COMPLETE")).toBe(
+      StackLaunchType.RECREATE,
+    )
+  })
+
+  test("when UPDATE_COMPLETE is given returns UPDATE", () => {
+    expect(resolveStackLaunchType("UPDATE_COMPLETE")).toBe(
+      StackLaunchType.UPDATE,
+    )
+  })
+
+  test("when UPDATE_ROLLBACK_COMPLETE is given returns UPDATE", () => {
+    expect(resolveStackLaunchType("UPDATE_ROLLBACK_COMPLETE")).toBe(
+      StackLaunchType.UPDATE,
+    )
+  })
+
+  test("when REVIEW_IN_PROGRESS is given returns RECREATE", () => {
+    expect(resolveStackLaunchType("REVIEW_IN_PROGRESS")).toBe(
+      StackLaunchType.RECREATE,
+    )
   })
 })

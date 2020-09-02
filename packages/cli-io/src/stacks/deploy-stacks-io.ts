@@ -352,7 +352,7 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       `  ${yellow("~ update")}           Stack will be updated`,
       `  ${orange(
         "± replace",
-      )}          Stack is in invalid state and will be first deleted and then created`,
+      )}          Stack has an invalid status and will be first deleted and then created`,
       "",
       `Following ${stacks.length} stack(s) will be deployed:`,
     ])

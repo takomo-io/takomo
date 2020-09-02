@@ -201,7 +201,7 @@ export const reviewChanges = async (
     logger.error("Failed to create change set", e)
     return {
       stack,
-      message: "Create change set failed",
+      message: e.message,
       reason: "CREATE_CHANGE_SET_FAILED",
       status: CommandStatus.FAILED,
       events: [],

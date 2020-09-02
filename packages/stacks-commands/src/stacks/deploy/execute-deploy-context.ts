@@ -6,7 +6,7 @@ import {
 import { CommandContext, Stack, StackResult } from "@takomo/stacks-model"
 import { StopWatch } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
-import { cleanFailedStacks } from "./clean-failed-stacks"
+import { cleanStacksWithInvalidStatus } from "./clean-stacks-with-invalid-status"
 import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"
 import { deployStack } from "./launch"
 import { ConfirmDeployAnswer, DeployStacksIO, DeployState } from "./model"
@@ -82,7 +82,7 @@ export const executeDeployContext = async (
     state.autoConfirm = true
   }
 
-  await cleanFailedStacks(ctx, io)
+  await cleanStacksWithInvalidStatus(ctx, io)
 
   if (state.autoConfirm) {
     return executeStacksInParallel(
