@@ -1,7 +1,7 @@
 import { Region, TakomoCredentialProvider } from "@takomo/core"
 import { Logger, randomInt } from "@takomo/util"
 import { Credentials } from "aws-sdk"
-import { ConfigurationOptions } from "aws-sdk/lib/config"
+import { ConfigurationOptions } from "aws-sdk/lib/config-base"
 import { AWSError } from "aws-sdk/lib/error"
 import { Request } from "aws-sdk/lib/request"
 import https from "https"
