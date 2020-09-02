@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-resolvers",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Takomo Stacks Resolvers",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,10 +37,10 @@
   },
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@takomo/aws-clients": "2.7.0",
-    "@takomo/core": "2.7.0",
-    "@takomo/stacks-model": "2.7.0",
-    "@takomo/stacks-schema": "2.7.0",
+    "@takomo/aws-clients": "2.7.1",
+    "@takomo/core": "2.7.1",
+    "@takomo/stacks-model": "2.7.1",
+    "@takomo/stacks-schema": "2.7.1",
     "@takomo/util": "2.7.0",
     "lodash.flatten": "4.4.0"
   },
