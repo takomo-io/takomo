@@ -48,7 +48,7 @@ export type AccountId = string
 export type IamRoleArn = string
 
 /**
- * Variables.
+ * A collection of variables where variable name must be string..
  */
 export interface Vars {
   [key: string]: any

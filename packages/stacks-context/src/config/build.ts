@@ -301,6 +301,7 @@ const buildStack = async (
         stackConfig.templateBucket || stackGroup.getTemplateBucket(),
       data: stackGroup.getData(),
       secrets: buildSecrets(secretsPath, stackConfig.secrets),
+      logger: logger.childLogger(stackPath),
       capabilities,
       accountIds,
     }

@@ -29,6 +29,11 @@ export abstract class AwsClient<C> {
     this.logger = props.logger
   }
 
+  getAwsClient = (): Promise<C> =>
+    this.credentialProvider
+      .getCredentials()
+      .then((credentials) => this.getClient(credentials, this.region))
+
   protected clientOptions = (): ConfigurationOptions => {
     const agent = new https.Agent({
       keepAlive: true,

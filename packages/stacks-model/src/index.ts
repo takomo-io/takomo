@@ -1,4 +1,5 @@
 import Joi from "@hapi/joi"
+import { CloudFormationClient } from "@takomo/aws-clients"
 import {
   AccountId,
   CommandPath,
@@ -186,61 +187,61 @@ export interface StackGroupProps {
 }
 
 export class StackGroup {
-  private readonly name: StackGroupName
-  private readonly project: Project | null
-  private readonly regions: Region[]
-  private readonly accountIds: AccountId[]
-  private readonly commandRole: CommandRole | null
-  private readonly path: StackGroupPath
-  private readonly root: boolean
-  private readonly templateBucket: TemplateBucketConfig | null
-  private readonly children: StackGroup[]
-  private readonly stacks: Stack[]
-  private readonly timeout: TimeoutConfig | null
-  private readonly tags: Map<TagName, TagValue>
-  private readonly hooks: HookConfig[]
-  private readonly data: Vars
-  private readonly capabilities: Capability[] | null
-  private readonly ignore: boolean
-  private readonly terminationProtection: boolean
+  readonly #name: StackGroupName
+  readonly #project: Project | null
+  readonly #regions: Region[]
+  readonly #accountIds: AccountId[]
+  readonly #commandRole: CommandRole | null
+  readonly #path: StackGroupPath
+  readonly #root: boolean
+  readonly #templateBucket: TemplateBucketConfig | null
+  readonly #children: StackGroup[]
+  readonly #stacks: Stack[]
+  readonly #timeout: TimeoutConfig | null
+  readonly #tags: Map<TagName, TagValue>
+  readonly #hooks: HookConfig[]
+  readonly #data: Vars
+  readonly #capabilities: Capability[] | null
+  readonly #ignore: boolean
+  readonly #terminationProtection: boolean
 
   constructor(props: StackGroupProps) {
-    this.name = props.name
-    this.project = props.project
-    this.regions = props.regions
-    this.accountIds = props.accountIds
-    this.commandRole = props.commandRole
-    this.path = props.path
-    this.root = props.isRoot
-    this.templateBucket = props.templateBucket
-    this.children = props.children
-    this.stacks = props.stacks
-    this.timeout = props.timeout
-    this.tags = props.tags
-    this.hooks = props.hooks
-    this.data = props.data
-    this.capabilities = props.capabilities
-    this.ignore = props.ignore
-    this.terminationProtection = props.terminationProtection
+    this.#name = props.name
+    this.#project = props.project
+    this.#regions = props.regions
+    this.#accountIds = props.accountIds
+    this.#commandRole = props.commandRole
+    this.#path = props.path
+    this.#root = props.isRoot
+    this.#templateBucket = props.templateBucket
+    this.#children = props.children
+    this.#stacks = props.stacks
+    this.#timeout = props.timeout
+    this.#tags = props.tags
+    this.#hooks = props.hooks
+    this.#data = props.data
+    this.#capabilities = props.capabilities
+    this.#ignore = props.ignore
+    this.#terminationProtection = props.terminationProtection
   }
 
-  getName = (): string => this.name
-  getProject = (): string | null => this.project
-  getRegions = (): Region[] => [...this.regions]
-  getAccountIds = (): AccountId[] => [...this.accountIds]
-  getCommandRole = (): CommandRole | null => this.commandRole
-  getPath = (): string => this.path
-  isRoot = (): boolean => this.root
-  getTemplateBucket = (): TemplateBucketConfig | null => this.templateBucket
-  getChildren = (): StackGroup[] => [...this.children]
-  getStacks = (): Stack[] => [...this.stacks]
-  getTimeout = (): TimeoutConfig | null => this.timeout
-  getTags = (): Map<TagName, TagValue> => new Map(this.tags)
-  getHooks = (): HookConfig[] => [...this.hooks]
-  getData = (): any => this.data
-  getCapabilities = (): CloudFormation.Capability[] | null => this.capabilities
-  isIgnored = (): boolean => this.ignore
-  isTerminationProtectionEnabled = (): boolean => this.terminationProtection
+  getName = (): string => this.#name
+  getProject = (): string | null => this.#project
+  getRegions = (): Region[] => [...this.#regions]
+  getAccountIds = (): AccountId[] => [...this.#accountIds]
+  getCommandRole = (): CommandRole | null => this.#commandRole
+  getPath = (): string => this.#path
+  isRoot = (): boolean => this.#root
+  getTemplateBucket = (): TemplateBucketConfig | null => this.#templateBucket
+  getChildren = (): StackGroup[] => [...this.#children]
+  getStacks = (): Stack[] => [...this.#stacks]
+  getTimeout = (): TimeoutConfig | null => this.#timeout
+  getTags = (): Map<TagName, TagValue> => new Map(this.#tags)
+  getHooks = (): HookConfig[] => [...this.#hooks]
+  getData = (): any => this.#data
+  getCapabilities = (): CloudFormation.Capability[] | null => this.#capabilities
+  isIgnored = (): boolean => this.#ignore
+  isTerminationProtectionEnabled = (): boolean => this.#terminationProtection
 
   toProps = (): StackGroupProps => ({
     name: this.getName(),
@@ -389,158 +390,165 @@ export interface StackProps {
    * Is stack termination protection enabled
    */
   terminationProtection: boolean
+
+  /**
+   * Logger instance
+   */
+  logger: Logger
 }
 
 /**
- * Stack represents a concrete CloudFormation stack.
+ * Stack representing a CloudFormation stack.
  */
 export class Stack {
-  private readonly project: Project | null
-  private readonly path: StackPath
-  private readonly name: StackName
-  private readonly template: string
-  private readonly templateBucket: TemplateBucketConfig | null
-  private readonly region: Region
-  private readonly accountIds: AccountId[]
-  private readonly commandRole: CommandRole | null
-  private readonly tags: Map<TagName, TagValue>
-  private readonly timeout: TimeoutConfig
-  private readonly parameters: Map<ParameterName, ResolverExecutor>
-  private readonly dependencies: StackPath[]
-  private readonly dependants: StackPath[]
-  private readonly data: any
-  private readonly hooks: HookExecutor[]
-  private readonly secrets: Map<SecretName, Secret>
-  private readonly secretsPath: SecretsPath
-  private readonly ignore: boolean
-  private readonly terminationProtection: boolean
-  private readonly credentialProvider: TakomoCredentialProvider
-  private readonly capabilities: Capability[] | null
+  readonly #project: Project | null
+  readonly #path: StackPath
+  readonly #name: StackName
+  readonly #template: string
+  readonly #templateBucket: TemplateBucketConfig | null
+  readonly #region: Region
+  readonly #accountIds: AccountId[]
+  readonly #commandRole: CommandRole | null
+  readonly #tags: Map<TagName, TagValue>
+  readonly #timeout: TimeoutConfig
+  readonly #parameters: Map<ParameterName, ResolverExecutor>
+  readonly #dependencies: StackPath[]
+  readonly #dependants: StackPath[]
+  readonly #data: any
+  readonly #hooks: HookExecutor[]
+  readonly #secrets: Map<SecretName, Secret>
+  readonly #secretsPath: SecretsPath
+  readonly #ignore: boolean
+  readonly #terminationProtection: boolean
+  readonly #credentialProvider: TakomoCredentialProvider
+  readonly #capabilities: Capability[] | null
+  readonly #logger: Logger
 
   /**
    * @param props Stack properties
    */
   constructor(props: StackProps) {
-    this.project = props.project
-    this.path = props.path
-    this.name = props.name
-    this.template = props.template
-    this.templateBucket = props.templateBucket
-    this.region = props.region
-    this.accountIds = props.accountIds
-    this.commandRole = props.commandRole
-    this.tags = props.tags
-    this.timeout = props.timeout
-    this.parameters = props.parameters
-    this.dependencies = props.dependencies
-    this.dependants = props.dependants
-    this.data = props.data
-    this.hooks = props.hooks
-    this.secrets = props.secrets
-    this.secretsPath = props.secretsPath
-    this.credentialProvider = props.credentialProvider
-    this.capabilities = props.capabilities
-    this.ignore = props.ignore
-    this.terminationProtection = props.terminationProtection
+    this.#project = props.project
+    this.#path = props.path
+    this.#name = props.name
+    this.#template = props.template
+    this.#templateBucket = props.templateBucket
+    this.#region = props.region
+    this.#accountIds = props.accountIds
+    this.#commandRole = props.commandRole
+    this.#tags = props.tags
+    this.#timeout = props.timeout
+    this.#parameters = props.parameters
+    this.#dependencies = props.dependencies
+    this.#dependants = props.dependants
+    this.#data = props.data
+    this.#hooks = props.hooks
+    this.#secrets = props.secrets
+    this.#secretsPath = props.secretsPath
+    this.#credentialProvider = props.credentialProvider
+    this.#capabilities = props.capabilities
+    this.#ignore = props.ignore
+    this.#terminationProtection = props.terminationProtection
+    this.#logger = props.logger
   }
 
   /**
    * @returns Project
    */
-  getProject = (): Project | null => this.project
+  getProject = (): Project | null => this.#project
 
   /**
    * @returns Stack path
    */
-  getPath = (): StackPath => this.path
+  getPath = (): StackPath => this.#path
 
   /**
    * @returns Stack name
    */
 
-  getName = (): StackName => this.name
+  getName = (): StackName => this.#name
 
   /**
    * @returns Stack template
    */
-  getTemplate = (): string => this.template
+  getTemplate = (): string => this.#template
   /**
    * @returns Template bucket configuration
    */
-  getTemplateBucket = (): TemplateBucketConfig | null => this.templateBucket
+  getTemplateBucket = (): TemplateBucketConfig | null => this.#templateBucket
 
   /**
    * @returns Region
    */
-  getRegion = (): Region => this.region
+  getRegion = (): Region => this.#region
 
   /**
    * Returns list of accounts where this stack can be deployed
    *
    * @returns List accounts ids
    */
-  getAccountIds = (): AccountId[] => [...this.accountIds]
+  getAccountIds = (): AccountId[] => [...this.#accountIds]
 
   /**
    * Returns command role used to deploy this stack
    *
    * @returns Command role
    */
-  getCommandRole = (): CommandRole | null => this.commandRole
+  getCommandRole = (): CommandRole | null => this.#commandRole
 
   /**
    * @returns Stack tags
    */
-  getTags = (): Map<TagName, TagValue> => new Map(this.tags)
+  getTags = (): Map<TagName, TagValue> => new Map(this.#tags)
 
   /**
    * @returns Timeout configuration
    */
-  getTimeout = (): TimeoutConfig => this.timeout
+  getTimeout = (): TimeoutConfig => this.#timeout
 
   /**
    * @returns Stack input parameters
    */
   getParameters = (): Map<ParameterName, ResolverExecutor> =>
-    new Map(this.parameters)
+    new Map(this.#parameters)
 
   /**
    * Returns stack paths of the stacks that this stack depends on.
    *
    * @returns Stacks dependencies
    */
-  getDependencies = (): StackPath[] => [...this.dependencies]
+  getDependencies = (): StackPath[] => [...this.#dependencies]
 
   /**
    * Returns stack paths of the stacks that depend on this stack.
    *
    * @returns Stack dependants
    */
-  getDependants = (): StackPath[] => [...this.dependants]
+  getDependants = (): StackPath[] => [...this.#dependants]
 
   /**
    * Returns arbitrary data attached to this stack.
    *
    * @returns Data
    */
-  getData = (): any => this.data
+  getData = (): any => this.#data
 
   /**
    * Returns hook executors that execute the hooks attached to this stack.
    *
    * @returns List of hook executors
    */
-  getHooks = (): HookExecutor[] => [...this.hooks]
+  getHooks = (): HookExecutor[] => [...this.#hooks]
 
   /**
    * @returns Secret configuration
    */
-  getSecrets = (): Map<SecretName, Secret> => new Map(this.secrets)
+  getSecrets = (): Map<SecretName, Secret> => new Map(this.#secrets)
 
   /**
    * @returns The path under which secrets of this stack are stored in Parameter Store
    */
-  getSecretsPath = (): SecretsPath => this.secretsPath
+  getSecretsPath = (): SecretsPath => this.#secretsPath
 
   /**
    * Returns credential provider that provides credentials used to manage this stack.
@@ -548,22 +556,37 @@ export class Stack {
    * @returns Credential provider
    */
   getCredentialProvider = (): TakomoCredentialProvider =>
-    this.credentialProvider
+    this.#credentialProvider
 
   /**
    * @returns Stack capabilities
    */
-  getCapabilities = (): Capability[] | null => this.capabilities
+  getCapabilities = (): Capability[] | null => this.#capabilities
 
   /**
    * @returns Is this stack ignored
    */
-  isIgnored = (): boolean => this.ignore
+  isIgnored = (): boolean => this.#ignore
 
   /**
    * @returns Is termination protection enabled
    */
-  isTerminationProtectionEnabled = (): boolean => this.terminationProtection
+  isTerminationProtectionEnabled = (): boolean => this.#terminationProtection
+
+  /**
+   * @returns Logger instance
+   */
+  getLogger = (): Logger => this.#logger
+
+  /**
+   * @returns CloudFormation client that can be used to access this stack.
+   */
+  getCloudFormationClient = (): CloudFormationClient =>
+    new CloudFormationClient({
+      credentialProvider: this.getCredentialProvider(),
+      region: this.getRegion(),
+      logger: this.getLogger(),
+    })
 
   /**
    * @returns Stack properties
@@ -590,6 +613,7 @@ export class Stack {
     credentialProvider: this.getCredentialProvider(),
     capabilities: this.getCapabilities(),
     terminationProtection: this.isTerminationProtectionEnabled(),
+    logger: this.getLogger(),
   })
 }
 
@@ -798,6 +822,10 @@ export class HookExecutor implements Hook {
 export type HookInitializer = (props: any) => Promise<Hook>
 export type HookInitializersMap = Map<HookType, HookInitializer>
 
+/**
+ * Type representing either a function that returns a value
+ * or a constant value.
+ */
 type GetterOrConst<T> = () => T | T
 
 const getValue = <T>(defaultValue: T, value?: GetterOrConst<T>): T => {
@@ -813,11 +841,11 @@ const getValue = <T>(defaultValue: T, value?: GetterOrConst<T>): T => {
 }
 
 /**
- * Parameter value resolver.
+ * Parameter resolver used to resolve value for stack input parameters.
  */
 export interface Resolver {
   /**
-   * Resolve parameter value.
+   * Resolve the parameter value.
    *
    * @param input Resolver input
    * @returns Resolver parameter value
@@ -825,28 +853,53 @@ export interface Resolver {
   resolve: (input: ResolverInput) => Promise<any>
 
   /**
-   * @returns Parameter resolver dependencies
+   * A list of stack paths of the stacks this resolver depends on.
+   * The stacks will be added to the list of stacks that the stack
+   * where this resolver is used depends on.
    */
   dependencies?: GetterOrConst<StackPath[]>
 
   /**
-   * @returns IAM roles needed to resolve the parameter value
+   * A list of IAM roles needed to resolve the parameter value.
    */
   iamRoleArns?: GetterOrConst<IamRoleArn[]>
 
   /**
-   * @returns Is the parameter value confidential
+   * A boolean indicating whether the resolved parameter value is confidential and
+   * should be concealed from logs.
    */
   confidential?: GetterOrConst<boolean>
 }
 
-export type ResolverProvidersMap = Map<ResolverName, ResolverProvider>
-
+/**
+ * Input for resolve stack input parameter value operation.
+ */
 export interface ResolverInput {
+  /**
+   * The stack where the parameter whose value is being resolved belongs to.
+   */
   readonly stack: Stack
+
+  /**
+   * Command context object providing access to configuration and stacks.
+   */
   readonly ctx: CommandContext
+
+  /**
+   * Name of the parameter whose value is being resolved.
+   */
   readonly parameterName: ParameterName
+
+  /**
+   * If the parameter whose value is being resolved is of type list,
+   * this will hold the index of the value in the list. The index begins
+   * from 0. This will be 0 if the parameter being resolved os not list.
+   */
   readonly listParameterIndex: number
+
+  /**
+   * Logger instance.
+   */
   readonly logger: Logger
 }
 
@@ -860,37 +913,37 @@ export interface ResolverProvider {
  * Wrapper that executes parameter resolver.
  */
 export class ResolverExecutor implements Resolver {
-  private readonly name: ResolverName
-  private readonly resolver: Resolver
-  private readonly overrideConfidential: boolean | undefined
+  readonly #name: ResolverName
+  readonly #resolver: Resolver
+  readonly #overrideConfidential: boolean | undefined
 
   constructor(name: ResolverName, resolver: Resolver, paramConfig: any) {
-    this.name = name
-    this.resolver = resolver
-    this.overrideConfidential = paramConfig.confidential
+    this.#name = name
+    this.#resolver = resolver
+    this.#overrideConfidential = paramConfig.confidential
   }
 
   resolve = async (input: ResolverInput): Promise<any> =>
-    this.resolver.resolve(input)
+    this.#resolver.resolve(input)
 
   isConfidential = (): boolean => {
-    if (this.overrideConfidential === true) {
+    if (this.#overrideConfidential === true) {
       return true
-    } else if (this.overrideConfidential === false) {
+    } else if (this.#overrideConfidential === false) {
       return false
     }
 
-    return getValue(false, this.resolver.confidential)
+    return getValue(false, this.#resolver.confidential)
   }
 
-  getDependencies = (): StackPath[] => getValue([], this.resolver.dependencies)
+  getDependencies = (): StackPath[] => getValue([], this.#resolver.dependencies)
 
-  getIamRoleArns = (): IamRoleArn[] => getValue([], this.resolver.iamRoleArns)
+  getIamRoleArns = (): IamRoleArn[] => getValue([], this.#resolver.iamRoleArns)
 
   /**
    * @returns Resolver name
    */
-  getName = (): ResolverName => this.name
+  getName = (): ResolverName => this.#name
 }
 
 /**
