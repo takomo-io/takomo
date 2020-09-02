@@ -41,7 +41,7 @@
     "@takomo/stacks-model": "2.7.0",
     "@takomo/stacks-schema": "2.7.0",
     "@takomo/util": "2.7.0",
-    "aws-sdk": "2.736.0"
+    "aws-sdk": "2.745.0"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",

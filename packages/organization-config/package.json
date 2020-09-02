@@ -41,7 +41,7 @@
     "@takomo/core": "2.7.0",
     "@takomo/organization-schema": "2.7.0",
     "@takomo/util": "2.7.0",
-    "aws-sdk": "2.736.0",
+    "aws-sdk": "2.745.0",
     "lodash.uniq": "4.5.0"
   },
   "devDependencies": {
