@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-config",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Takomo Organization Config",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@takomo/config-sets": "2.7.1",
+    "@takomo/config-sets": "2.7.2",
     "@takomo/core": "2.7.1",
-    "@takomo/organization-schema": "2.7.1",
+    "@takomo/organization-schema": "2.7.2",
     "@takomo/util": "2.7.0",
     "aws-sdk": "2.745.0",
     "lodash.uniq": "4.5.0"

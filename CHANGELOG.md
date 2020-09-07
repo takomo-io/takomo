@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.2](https://github.com/takomo-io/takomo/compare/v2.7.1...v2.7.2) (2020-09-07)
+
+
+### Bug Fixes
+
+* fix retrying of requests to AWS APIs ([#98](https://github.com/takomo-io/takomo/issues/98)) ([7c22d27](https://github.com/takomo-io/takomo/commit/7c22d27477eca873ff195e71a6c07245c97d4fe7)), closes [#89](https://github.com/takomo-io/takomo/issues/89)
+
+
+
+
+
 ## [2.7.1](https://github.com/takomo-io/takomo/compare/v2.7.0...v2.7.1) (2020-09-02)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-schema",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Takomo Stacks Schema",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -38,7 +38,7 @@
   "dependencies": {
     "@hapi/joi": "17.1.1",
     "@takomo/core": "2.7.1",
-    "@takomo/stacks-model": "2.7.1"
+    "@takomo/stacks-model": "2.7.2"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",
