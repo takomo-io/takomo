@@ -17,6 +17,11 @@ interface PagedResponse {
 }
 
 const maxRetries = 30
+const retryableErrorCodes = [
+  "UnknownEndpoint",
+  "Throttling",
+  "TooManyRequestsException",
+]
 
 export abstract class AwsClient<C> {
   private readonly credentialProvider: TakomoCredentialProvider
@@ -36,9 +41,18 @@ export abstract class AwsClient<C> {
 
     return {
       retryDelayOptions: {
-        customBackoff: (retryCount: number, err?: Error): number => {
+        customBackoff: (retryCount: number, err?: any): number => {
+          if (!retryableErrorCodes.includes(err?.code)) {
+            this.logger.error(
+              `Request failed with error code '${err.code}', aborting`,
+            )
+            return -1
+          }
+
           if (retryCount >= maxRetries) {
-            this.logger.error(`Reached max retries ${maxRetries}, aborting`)
+            this.logger.error(
+              `Request failed with error code '${err.code}', max retries ${maxRetries} reached, aborting`,
+            )
             return -1
           }
 
@@ -48,7 +62,7 @@ export abstract class AwsClient<C> {
           const maxBackoff = randomInt(15000, 20000)
           const finalBackoff = Math.min(maxBackoff, backoff)
           this.logger.debug(
-            `Request limit exceeded, retry count: ${retryCount}, pausing: ${finalBackoff}ms`,
+            `Request failed with error code '${err?.code}', pause for ${finalBackoff}ms and try again (retry count: ${retryCount})`,
           )
           return finalBackoff
         },
