@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/takomo-io/takomo/compare/v1.5.0...v1.5.1) (2020-09-08)
+
+**Note:** Version bump only for package integration-test-organization-creation
+
+
+
+
+
 # [1.5.0](https://github.com/takomo-io/takomo/compare/v1.4.1...v1.5.0) (2020-08-31)
 
 **Note:** Version bump only for package integration-test-organization-creation

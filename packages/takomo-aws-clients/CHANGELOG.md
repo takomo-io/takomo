@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/takomo-io/takomo/compare/v1.5.0...v1.5.1) (2020-09-08)
+
+
+### Bug Fixes
+
+* fix retrying of requests to AWS APIs ([660232d](https://github.com/takomo-io/takomo/commit/660232d09f67462fea930f5f43027acfa6dcadaf)), closes [#89](https://github.com/takomo-io/takomo/issues/89)
+
+
+
+
+
 # [1.5.0](https://github.com/takomo-io/takomo/compare/v1.4.1...v1.5.0) (2020-08-31)
 
 

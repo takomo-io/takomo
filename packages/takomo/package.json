@@ -1,6 +1,6 @@
 {
   "name": "takomo",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Organize, configure and deploy CloudFormation stacks. Manage AWS organization.",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -50,7 +50,7 @@
     "takomo": "./bin/tkm"
   },
   "dependencies": {
-    "@takomo/cli": "1.5.0"
+    "@takomo/cli": "1.5.1"
   },
   "devDependencies": {
     "typescript": "3.9.3"

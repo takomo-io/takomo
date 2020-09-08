@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-commands",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Takomo Stacks Commands",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
-    "@takomo/aws-clients": "1.5.0",
+    "@takomo/aws-clients": "1.5.1",
     "@takomo/core": "1.5.0",
-    "@takomo/stacks-context": "1.5.0",
+    "@takomo/stacks-context": "1.5.1",
     "@takomo/stacks-hooks": "1.5.0",
     "@takomo/stacks-model": "1.5.0",
     "@takomo/stacks-schema": "1.5.0",

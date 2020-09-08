@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-context",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Takomo Stacks Context",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -29,12 +29,12 @@
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
-    "@takomo/aws-clients": "1.5.0",
+    "@takomo/aws-clients": "1.5.1",
     "@takomo/core": "1.5.0",
     "@takomo/stacks-config": "1.5.0",
     "@takomo/stacks-hooks": "1.5.0",
     "@takomo/stacks-model": "1.5.0",
-    "@takomo/stacks-resolvers": "1.5.0",
+    "@takomo/stacks-resolvers": "1.5.1",
     "@takomo/util": "1.5.0",
     "aws-sdk": "2.686.0",
     "cockatiel": "1.1.1",
