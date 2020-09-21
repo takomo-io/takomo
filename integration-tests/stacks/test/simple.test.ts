@@ -1,47 +1,71 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
 import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { Credentials } from "aws-sdk"
+import { basename } from "path"
+import { Recycler, Reservation } from "testenv-recycler"
 
-const createOptions = async () =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/simple",
-  })
+const createOptions = async (
+  reservation: Reservation | null,
+): Promise<OptionsAndVariables> => {
+  if (!reservation) {
+    throw new Error("Reservation is null")
+  }
 
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions()
-  return await undeployStacksCommand(
+  const account1Id = reservation.accounts[0].accountId
+
+  return initOptionsAndVariables(
     {
-      commandPath: Constants.ROOT_STACK_GROUP_PATH,
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/simple",
+      var: `ACCOUNT_1_ID=${account1Id}`,
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(reservation.credentials),
   )
+}
+
+const recycler = new Recycler({
+  hostname: process.env.RECYCLER_HOSTNAME!,
+  basePath: process.env.RECYCLER_BASEPATH!,
+  username: process.env.RECYCLER_USERNAME!,
+  password: process.env.RECYCLER_PASSWORD!,
+})
+
+let reservation: Reservation | null = null
+
+beforeAll(async () => {
+  await recycler.login()
+  reservation = await recycler.createReservation({
+    count: 1,
+    name: basename(__filename),
+  })
 }, TIMEOUT)
+
+afterAll(async () => {
+  if (!reservation) {
+    return
+  }
+  await recycler.releaseReservation(reservation.id)
+})
 
 describe("Simple", () => {
   test(
     "Deploy",
     async () => {
-      const { options, variables, watch } = await createOptions()
+      const { options, variables, watch } = await createOptions(reservation)
       const output = await deployStacksCommand(
         {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
           options,
           variables,
+          watch,
+          commandPath: Constants.ROOT_STACK_GROUP_PATH,
           ignoreDependencies: false,
           interactive: false,
-          watch,
         },
         new TestDeployStacksIO(options),
       )
@@ -57,15 +81,15 @@ describe("Simple", () => {
   test(
     "Deploying without changes",
     async () => {
-      const { options, variables, watch } = await createOptions()
+      const { options, variables, watch } = await createOptions(reservation)
       const output = await deployStacksCommand(
         {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
           options,
           variables,
+          watch,
+          commandPath: Constants.ROOT_STACK_GROUP_PATH,
           ignoreDependencies: false,
           interactive: false,
-          watch,
         },
         new TestDeployStacksIO(options),
       )
@@ -81,15 +105,15 @@ describe("Simple", () => {
   test(
     "Undeploy",
     async () => {
-      const { options, variables, watch } = await createOptions()
+      const { options, variables, watch } = await createOptions(reservation)
       const output = await undeployStacksCommand(
         {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-          ignoreDependencies: false,
-          interactive: false,
           options,
           variables,
           watch,
+          commandPath: Constants.ROOT_STACK_GROUP_PATH,
+          ignoreDependencies: false,
+          interactive: false,
         },
         new TestUndeployStacksIO(options),
       )

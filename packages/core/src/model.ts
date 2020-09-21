@@ -1,4 +1,5 @@
 import { LogLevel } from "@takomo/util"
+import { Credentials } from "aws-sdk"
 
 /**
  * Stack group path.
@@ -107,6 +108,7 @@ export interface OptionsProps {
   readonly logLevel: LogLevel
   readonly logConfidentialInfo: boolean
   readonly stats: boolean
+  readonly credentials?: Credentials
 }
 
 /**
@@ -118,6 +120,7 @@ export class Options {
   private readonly logLevel: LogLevel
   private readonly logConfidentialInfo: boolean
   private readonly stats: boolean
+  readonly #credentials?: Credentials
 
   constructor(props: OptionsProps) {
     this.projectDir = props.projectDir
@@ -125,6 +128,7 @@ export class Options {
     this.logLevel = props.logLevel
     this.logConfidentialInfo = props.logConfidentialInfo
     this.stats = props.stats
+    this.#credentials = props.credentials
   }
 
   /**
@@ -152,12 +156,18 @@ export class Options {
    */
   isStatsEnabled = (): boolean => this.stats
 
+  /**
+   * @returns Default credentials
+   */
+  getCredentials = (): Credentials | undefined => this.#credentials
+
   toProps = (): OptionsProps => ({
     projectDir: this.projectDir,
     autoConfirm: this.autoConfirm,
     logLevel: this.logLevel,
     logConfidentialInfo: this.logConfidentialInfo,
     stats: this.stats,
+    credentials: this.#credentials,
   })
 }
 

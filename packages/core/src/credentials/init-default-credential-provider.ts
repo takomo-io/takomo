@@ -1,5 +1,6 @@
 import {
   CredentialProviderChain,
+  Credentials,
   EC2MetadataCredentials,
   ECSCredentials,
   EnvironmentCredentials,
@@ -35,15 +36,12 @@ const isAwsMetaEndpointAvailable = (): Promise<boolean> => {
   })
 }
 
-// See: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CredentialProviderChain.html#defaultProviders-property
-const initDefaultCredentialProviderChain = async (): Promise<
-  CredentialProviderChain
-> => {
+const initDefaultCredentialProviderChain = async (
+  credentials?: Credentials,
+): Promise<CredentialProviderChain> => {
   const providers = [
     () => new EnvironmentCredentials("AWS"),
     () => new EnvironmentCredentials("AMAZON"),
-    // TODO: Should we support MFA too?
-    // see: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SharedIniFileCredentials.html
     () => new ECSCredentials(),
     () => new SharedIniFileCredentials(),
     () => new ProcessCredentials(),
@@ -53,13 +51,15 @@ const initDefaultCredentialProviderChain = async (): Promise<
     providers.push(() => new EC2MetadataCredentials())
   }
 
-  return new CredentialProviderChain(providers)
+  return credentials
+    ? new CredentialProviderChain([() => credentials, ...providers])
+    : new CredentialProviderChain(providers)
 }
 
-export const initDefaultCredentialProvider = async (): Promise<
-  TakomoCredentialProvider
-> =>
-  initDefaultCredentialProviderChain()
+export const initDefaultCredentialProvider = async (
+  credentials?: Credentials,
+): Promise<TakomoCredentialProvider> =>
+  initDefaultCredentialProviderChain(credentials)
     .then(
       (credentialProviderChain) =>
         new StdTakomoCredentialProvider({

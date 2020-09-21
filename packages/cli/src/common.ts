@@ -19,6 +19,7 @@ import {
   StopWatch,
   TakomoError,
 } from "@takomo/util"
+import { Credentials } from "aws-sdk"
 import dotenv from "dotenv"
 import dotenvExpand from "dotenv-expand"
 import Table from "easy-table"
@@ -196,6 +197,7 @@ export interface OptionsAndVariables {
 
 export const initOptionsAndVariables = async (
   argv: any,
+  credentials?: Credentials,
 ): Promise<OptionsAndVariables> => {
   if (argv.profile) {
     process.env.AWS_PROFILE = argv.profile
@@ -214,6 +216,7 @@ export const initOptionsAndVariables = async (
     autoConfirm: argv.yes === true,
     stats: argv.stats === true,
     logConfidentialInfo: argv["log-confidential-info"] === true,
+    credentials,
   })
 
   const variables = await parseVariables(

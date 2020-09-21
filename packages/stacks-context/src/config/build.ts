@@ -531,7 +531,8 @@ export const buildConfigContext = async (
   overrideDefaultCredentialProvider: TakomoCredentialProvider | null = null,
 ): Promise<ConfigContext> => {
   const credentialProvider =
-    overrideDefaultCredentialProvider || (await initDefaultCredentialProvider())
+    overrideDefaultCredentialProvider ||
+    (await initDefaultCredentialProvider(options.getCredentials()))
 
   logger.info("Build configuration")
   const projectDir = options.getProjectDir()
