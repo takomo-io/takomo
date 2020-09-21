@@ -390,7 +390,7 @@ describe("Organization commands", () => {
   )
 
   test(
-    "enabled AI services opt-out policies",
+    "enable AI services opt-out policies",
     async () => {
       const { success, status, message } = await deployOrganization("v09")
 
@@ -402,7 +402,7 @@ describe("Organization commands", () => {
   )
 
   test(
-    "enabled backup policies",
+    "enable backup policies",
     async () => {
       const { success, status, message } = await deployOrganization("v10")
 

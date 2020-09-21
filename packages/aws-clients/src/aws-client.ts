@@ -48,9 +48,10 @@ export abstract class AwsClient<C> {
       retryDelayOptions: {
         customBackoff: (retryCount: number, err?: any): number => {
           if (!retryableErrorCodes.includes(err?.code)) {
-            this.logger.error(
+            this.logger.debug(
               `Request failed with error code '${err.code}', aborting`,
             )
+
             return -1
           }
 
