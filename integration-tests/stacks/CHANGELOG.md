@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.3](https://github.com/takomo-io/takomo/compare/v2.7.2...v2.7.3) (2020-09-21)
+
+
+### Bug Fixes
+
+* fix failing tests ([#100](https://github.com/takomo-io/takomo/issues/100)) ([6f8dba4](https://github.com/takomo-io/takomo/commit/6f8dba4b1464d7b84c257e03b5796479bf26a708))
+
+
+
+
+
 ## [2.7.2](https://github.com/takomo-io/takomo/compare/v2.7.1...v2.7.2) (2020-09-07)
 
 **Note:** Version bump only for package integration-test-stacks
