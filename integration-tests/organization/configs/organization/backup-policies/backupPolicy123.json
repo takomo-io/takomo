@@ -11,15 +11,7 @@
             "move_to_cold_storage_after_days": { "@@assign": "180" },
             "delete_after_days": { "@@assign": "270" }
           },
-          "target_backup_vault_name": { "@@assign": "FortKnox" },
-          "copy_actions": {
-            "arn:aws:backup:us-east-1:$account:backup-vault:secondary_vault": {
-              "lifecycle": {
-                "delete_after_days": { "@@assign": "100" },
-                "move_to_cold_storage_after_days": { "@@assign": "10" }
-              }
-            }
-          }
+          "target_backup_vault_name": { "@@assign": "FortKnox" }
         }
       },
       "selections": {

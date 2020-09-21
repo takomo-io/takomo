@@ -1,3 +1,0 @@
-regions: eu-west-1
-name: stack-creation-with-review-fails
-template: {{ var.template }}

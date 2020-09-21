@@ -1,6 +1,0 @@
-Conditions:
-  IncludeGlobalResources: !Equals [!Ref AWS::Region, eu-west-1]
-
-Resources:
-  LogGroup:
-    Type: AWS::Logs::LogGroup
