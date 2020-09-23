@@ -1,21 +1,21 @@
-import { sortStacksForUndeploy } from "../../src/undeploy/sort-stacks-for-undeploy"
+import { sortStacksForDeploy } from "../../src/dependencies"
 import { createStack } from "../helpers"
 
-describe("#sortStacksForUndeploy", () => {
+describe("#sortStacksForDeploy", () => {
   test("when no stacks are given", () => {
-    expect(sortStacksForUndeploy([])).toHaveLength(0)
+    expect(sortStacksForDeploy([])).toHaveLength(0)
   })
 
   test("when one stack is given", () => {
     const a = createStack({ name: "a", path: "/a.yml" })
-    expect(sortStacksForUndeploy([a])).toHaveLength(1)
+    expect(sortStacksForDeploy([a])).toHaveLength(1)
   })
 
-  test("when two stacks with no dependants are given", () => {
+  test("when two stacks with no dependencies are given", () => {
     const a = createStack({ name: "a", path: "/a.yml" })
     const b = createStack({ name: "b", path: "/b.yml" })
 
-    const sorted = sortStacksForUndeploy([a, b])
+    const sorted = sortStacksForDeploy([a, b])
 
     expect(sorted[0].getPath()).toBe(a.getPath())
     expect(sorted[1].getPath()).toBe(b.getPath())
@@ -25,11 +25,11 @@ describe("#sortStacksForUndeploy", () => {
     const a = createStack({
       name: "a",
       path: "/a.yml",
-      dependants: ["/b.yml"],
+      dependencies: ["/b.yml"],
     })
     const b = createStack({ name: "b", path: "/b.yml" })
 
-    const sorted = sortStacksForUndeploy([a, b])
+    const sorted = sortStacksForDeploy([a, b])
 
     expect(sorted[0].getPath()).toBe(b.getPath())
     expect(sorted[1].getPath()).toBe(a.getPath())
@@ -39,20 +39,20 @@ describe("#sortStacksForUndeploy", () => {
     const a = createStack({
       name: "a",
       path: "/a.yml",
-      dependants: ["/c.yml"],
+      dependencies: ["/c.yml"],
     })
     const b = createStack({
       name: "b",
       path: "/b.yml",
-      dependants: [],
+      dependencies: [],
     })
     const c = createStack({
       name: "c",
       path: "/c.yml",
-      dependants: ["/b.yml"],
+      dependencies: ["/b.yml"],
     })
 
-    const sorted = sortStacksForUndeploy([a, b, c])
+    const sorted = sortStacksForDeploy([a, b, c])
 
     expect(sorted[0].getPath()).toBe(b.getPath())
     expect(sorted[1].getPath()).toBe(c.getPath())
@@ -63,45 +63,45 @@ describe("#sortStacksForUndeploy", () => {
     const a = createStack({
       name: "a",
       path: "/a.yml",
-      dependants: ["/c.yml", "/h.yml"],
+      dependencies: ["/c.yml", "/h.yml"],
     })
     const b = createStack({
       name: "b",
       path: "/b.yml",
-      dependants: [],
+      dependencies: [],
     })
     const c = createStack({
       name: "c",
       path: "/c.yml",
-      dependants: ["/d.yml", "/e.yml"],
+      dependencies: ["/d.yml", "/e.yml"],
     })
     const d = createStack({
       name: "d",
       path: "/d.yml",
-      dependants: ["/f.yml"],
+      dependencies: ["/f.yml"],
     })
     const e = createStack({
       name: "e",
       path: "/e.yml",
-      dependants: ["/f.yml"],
+      dependencies: ["/f.yml"],
     })
     const f = createStack({
       name: "f",
       path: "/f.yml",
-      dependants: ["/g.yml"],
+      dependencies: ["/g.yml"],
     })
     const g = createStack({
       name: "g",
       path: "/g.yml",
-      dependants: [],
+      dependencies: [],
     })
     const h = createStack({
       name: "h",
       path: "/h.yml",
-      dependants: [],
+      dependencies: [],
     })
 
-    const sorted = sortStacksForUndeploy([a, b, c, d, e, f, g, h])
+    const sorted = sortStacksForDeploy([a, b, c, d, e, f, g, h])
 
     expect(sorted[0].getPath()).toBe(b.getPath())
     expect(sorted[1].getPath()).toBe(g.getPath())

@@ -6,10 +6,10 @@ import {
   validateStackCredentialProvidersWithAllowedAccountIds,
 } from "../common"
 import { ConfigContext } from "../config"
+import { sortStacksForDeploy } from "../dependencies"
 import { CommandPathMatchesNoStacksError, StdCommandContext } from "../model"
 import { collectCredentialProviders } from "./collect-credential-providers"
 import { collectStacksToDeploy } from "./collect-stacks-to-deploy"
-import { sortStacksForDeploy } from "./sort-stacks-for-deploy"
 
 export const prepareDeployContext = async (
   ctx: ConfigContext,
@@ -43,7 +43,9 @@ export const prepareDeployContext = async (
 
   await Promise.all(credentialProviders.map(async (c) => c.getCallerIdentity()))
 
-  const stacksToProcess = sortStacksForDeploy(stacksToDeploy)
+  const stacksToProcess = ignoreDependencies
+    ? stacksToDeploy
+    : sortStacksForDeploy(stacksToDeploy)
 
   await validateStackCredentialProvidersWithAllowedAccountIds(stacksToProcess)
 
