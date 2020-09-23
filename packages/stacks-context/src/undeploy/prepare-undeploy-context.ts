@@ -6,9 +6,9 @@ import {
   validateStackCredentialProvidersWithAllowedAccountIds,
 } from "../common"
 import { ConfigContext } from "../config"
+import { sortStacksForUndeploy } from "../dependencies"
 import { CommandPathMatchesNoStacksError, StdCommandContext } from "../model"
 import { collectStacksToUndeploy } from "./collect-stacks-to-undeploy"
-import { sortStacksForUndeploy } from "./sort-stacks-for-undeploy"
 
 export const prepareUndeployContext = async (
   ctx: ConfigContext,
@@ -33,7 +33,9 @@ export const prepareUndeployContext = async (
     `Command path ${commandPath} matches ${stacksToUndeploy.length} stack(s)`,
   )
 
-  const stacksToProcess = sortStacksForUndeploy(stacksToUndeploy)
+  const stacksToProcess = ignoreDependencies
+    ? stacksToUndeploy
+    : sortStacksForUndeploy(stacksToUndeploy)
 
   await validateStackCredentialProvidersWithAllowedAccountIds(stacksToProcess)
 
