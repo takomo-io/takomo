@@ -1,4 +1,4 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
 import {
   deployStacksCommand,
@@ -11,36 +11,66 @@ import {
   TIMEOUT,
 } from "@takomo/test"
 import { TakomoError } from "@takomo/util/src"
+import { Credentials } from "aws-sdk"
+import { basename } from "path"
+import { Recycler, Reservation } from "testenv-recycler"
 
-const createOptions = async (terminationProtection: boolean) =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/termination-protection",
-    var: [`terminationProtection=${terminationProtection}`],
-  })
+const createOptions = async (
+  reservation: Reservation | null,
+  terminationProtection: boolean,
+): Promise<OptionsAndVariables> => {
+  if (!reservation) {
+    throw new Error("Reservation is null")
+  }
 
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions(false)
-  return await undeployStacksCommand(
+  const account1Id = reservation.accounts[0].accountId
+
+  return initOptionsAndVariables(
     {
-      commandPath: Constants.ROOT_STACK_GROUP_PATH,
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/termination-protection",
+      var: [
+        `ACCOUNT_1_ID=${account1Id}`,
+        `terminationProtection=${terminationProtection}`,
+      ],
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(reservation.credentials),
   )
+}
+
+const recycler = new Recycler({
+  hostname: process.env.RECYCLER_HOSTNAME!,
+  basePath: process.env.RECYCLER_BASEPATH!,
+  username: process.env.RECYCLER_USERNAME!,
+  password: process.env.RECYCLER_PASSWORD!,
+})
+
+let reservation: Reservation | null = null
+
+beforeAll(async () => {
+  await recycler.login()
+  reservation = await recycler.createReservation({
+    count: 1,
+    name: basename(__filename),
+  })
 }, TIMEOUT)
+
+afterAll(async () => {
+  if (!reservation) {
+    return
+  }
+  await recycler.releaseReservation(reservation.id)
+})
 
 describe("Termination protection", () => {
   test(
     "Create a stack with termination protection enabled",
     async () => {
-      const { options, variables, watch } = await createOptions(true)
+      const { options, variables, watch } = await createOptions(
+        reservation,
+        true,
+      )
       const output = await deployStacksCommand(
         {
           commandPath: Constants.ROOT_STACK_GROUP_PATH,
@@ -59,6 +89,10 @@ describe("Termination protection", () => {
       expect(output.results[0].reason).toBe("CREATE_SUCCESS")
 
       const stack = await aws.cloudFormation.describeStack({
+        credentials: new Credentials(reservation!.credentials),
+        iamRoleArn: `arn:aws:iam::${
+          reservation!.accounts[0].accountId
+        }:role/OrganizationAccountAccessRole`,
         stackName: "termination-protection",
         region: "eu-north-1",
       })
@@ -70,7 +104,10 @@ describe("Termination protection", () => {
   test(
     "Try to undeploy",
     async () => {
-      const { options, variables, watch } = await createOptions(false)
+      const { options, variables, watch } = await createOptions(
+        reservation,
+        false,
+      )
 
       await expect(
         undeployStacksCommand(
@@ -97,7 +134,10 @@ describe("Termination protection", () => {
   test(
     "Disable termination protection",
     async () => {
-      const { options, variables, watch } = await createOptions(false)
+      const { options, variables, watch } = await createOptions(
+        reservation,
+        false,
+      )
       const output = await deployStacksCommand(
         {
           commandPath: Constants.ROOT_STACK_GROUP_PATH,
@@ -116,6 +156,10 @@ describe("Termination protection", () => {
       expect(output.results[0].reason).toBe("UPDATE_SUCCESS")
 
       const stack = await aws.cloudFormation.describeStack({
+        credentials: new Credentials(reservation!.credentials),
+        iamRoleArn: `arn:aws:iam::${
+          reservation!.accounts[0].accountId
+        }:role/OrganizationAccountAccessRole`,
         stackName: "termination-protection",
         region: "eu-north-1",
       })
@@ -127,7 +171,10 @@ describe("Termination protection", () => {
   test(
     "Undeploy",
     async () => {
-      const { options, variables, watch } = await createOptions(false)
+      const { options, variables, watch } = await createOptions(
+        reservation,
+        false,
+      )
       const output = await undeployStacksCommand(
         {
           commandPath: Constants.ROOT_STACK_GROUP_PATH,
