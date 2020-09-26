@@ -8,7 +8,7 @@ import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
 import { Credentials } from "aws-sdk"
 
 const createOptions = async (
-  variables: unknown[],
+  variables: string[],
 ): Promise<OptionsAndVariables> => {
   const account1Id = global.reservation.accounts[0].accountId
 
