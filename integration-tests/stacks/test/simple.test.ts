@@ -6,17 +6,9 @@ import {
 } from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
 import { Credentials } from "aws-sdk"
-import { basename } from "path"
-import { Recycler, Reservation } from "testenv-recycler"
 
-const createOptions = async (
-  reservation: Reservation | null,
-): Promise<OptionsAndVariables> => {
-  if (!reservation) {
-    throw new Error("Reservation is null")
-  }
-
-  const account1Id = reservation.accounts[0].accountId
+const createOptions = async (): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
 
   return initOptionsAndVariables(
     {
@@ -25,39 +17,15 @@ const createOptions = async (
       dir: "configs/simple",
       var: `ACCOUNT_1_ID=${account1Id}`,
     },
-    new Credentials(reservation.credentials),
+    new Credentials(global.reservation.credentials),
   )
 }
-
-const recycler = new Recycler({
-  hostname: process.env.RECYCLER_HOSTNAME!,
-  basePath: process.env.RECYCLER_BASEPATH!,
-  username: process.env.RECYCLER_USERNAME!,
-  password: process.env.RECYCLER_PASSWORD!,
-})
-
-let reservation: Reservation | null = null
-
-beforeAll(async () => {
-  await recycler.login()
-  reservation = await recycler.createReservation({
-    count: 1,
-    name: basename(__filename),
-  })
-}, TIMEOUT)
-
-afterAll(async () => {
-  if (!reservation) {
-    return
-  }
-  await recycler.releaseReservation(reservation.id)
-})
 
 describe("Simple", () => {
   test(
     "Deploy",
     async () => {
-      const { options, variables, watch } = await createOptions(reservation)
+      const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
         {
           options,
@@ -81,7 +49,7 @@ describe("Simple", () => {
   test(
     "Deploying without changes",
     async () => {
-      const { options, variables, watch } = await createOptions(reservation)
+      const { options, variables, watch } = await createOptions()
       const output = await deployStacksCommand(
         {
           options,
@@ -105,7 +73,7 @@ describe("Simple", () => {
   test(
     "Undeploy",
     async () => {
-      const { options, variables, watch } = await createOptions(reservation)
+      const { options, variables, watch } = await createOptions()
       const output = await undeployStacksCommand(
         {
           options,

@@ -1,4 +1,4 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
 import {
   deployStacksCommand,
@@ -10,33 +10,24 @@ import {
   TestUndeployStacksIO,
   TIMEOUT,
 } from "@takomo/test"
-import { ORG_A_ACCOUNT_1_ID } from "./env"
+import { Credentials } from "aws-sdk"
 
-const roleArn = `arn:aws:iam::${ORG_A_ACCOUNT_1_ID}:role/OrganizationAccountAccessRole`
+const createOptions = async (
+  variables: unknown[],
+): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
 
-const createOptions = async (variables: any[]) =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/templating",
-    "var-file": variables,
-  })
-
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions(["queues.yml"])
-  return await undeployStacksCommand(
+  return initOptionsAndVariables(
     {
-      commandPath: Constants.ROOT_STACK_GROUP_PATH,
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/templating",
+      "var-file": variables,
+      var: `ACCOUNT_1_ID=${account1Id}`,
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(global.reservation.credentials),
   )
-}, TIMEOUT)
+}
 
 describe("Templating", () => {
   test(
@@ -58,7 +49,8 @@ describe("Templating", () => {
       expect(output.status).toBe(CommandStatus.SUCCESS)
 
       const stack = await aws.cloudFormation.describeStack({
-        iamRoleArn: roleArn,
+        credentials: new Credentials(global.reservation.credentials),
+        iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
         region: "eu-north-1",
         stackName: "queues",
       })

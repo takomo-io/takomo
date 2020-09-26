@@ -1,2 +1,2 @@
 regions: eu-north-1
-commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole

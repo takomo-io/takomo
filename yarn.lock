@@ -6055,7 +6055,7 @@ jest-environment-jsdom@^26.3.0:
     jest-util "^26.3.0"
     jsdom "^16.2.2"
 
-jest-environment-node@^26.3.0:
+jest-environment-node@26.3.0, jest-environment-node@^26.3.0:
   version "26.3.0"
   resolved "https://registry.yarnpkg.com/jest-environment-node/-/jest-environment-node-26.3.0.tgz#56c6cfb506d1597f94ee8d717072bda7228df849"
   integrity sha512-c9BvYoo+FGcMj5FunbBgtBnbR5qk3uky8PKyRVpSfe2/8+LrNQMiXX53z6q2kY+j15SkjQCOSL/6LHnCPLVHNw==
@@ -6066,6 +6066,14 @@ jest-environment-node@^26.3.0:
     "@types/node" "*"
     jest-mock "^26.3.0"
     jest-util "^26.3.0"
+
+jest-environment-testenv-recycler@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/jest-environment-testenv-recycler/-/jest-environment-testenv-recycler-0.0.8.tgz#245ec6bc1151d5dc5e41f0652603603a2117c7da"
+  integrity sha512-tS+TJY7oLiAdU+4IWg42fKptKWb5Mk7NQ5MDyxM4LsXU/AP9D2o/LiCR3U/z75Q2vTGP48DVJCTJO4/2WRnyog==
+  dependencies:
+    jest-environment-node "26.3.0"
+    testenv-recycler "0.0.9"
 
 jest-get-type@^25.2.6:
   version "25.2.6"
