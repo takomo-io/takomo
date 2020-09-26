@@ -30,8 +30,7 @@
     "mkdirp": "1.0.4",
     "rimraf": "3.0.2",
     "uuid": "3.3.3",
-    "aws-sdk": "2.745.0",
-    "testenv-recycler": "0.0.9"
+    "aws-sdk": "2.745.0"
   },
   "devDependencies": {
     "jest-environment-testenv-recycler": "0.0.9",
