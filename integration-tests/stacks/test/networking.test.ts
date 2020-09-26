@@ -1,4 +1,4 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CliListStacksIO } from "@takomo/cli-io"
 import { CommandStatus, Constants } from "@takomo/core"
 import {
@@ -7,29 +7,20 @@ import {
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { Credentials } from "aws-sdk"
 
-const createOptions = async () =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/networking",
-  })
-
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions()
-  return await undeployStacksCommand(
+const createOptions = async (): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
+  return initOptionsAndVariables(
     {
-      commandPath: Constants.ROOT_STACK_GROUP_PATH,
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/networking",
+      var: `ACCOUNT_1_ID=${account1Id}`,
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(global.reservation.credentials),
   )
-}, TIMEOUT)
+}
 
 describe("Networking", () => {
   test(

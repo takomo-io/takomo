@@ -1,4 +1,4 @@
-commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
+commandRole: arn:aws:iam::{{ var.ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
 regions: eu-west-1
 parameters:
   RetentionInDays:

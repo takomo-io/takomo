@@ -34,7 +34,7 @@
     "testenv-recycler": "0.0.9"
   },
   "devDependencies": {
-    "jest-environment-testenv-recycler": "0.0.8",
+    "jest-environment-testenv-recycler": "0.0.9",
     "@babel/core": "7.10.2",
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",
