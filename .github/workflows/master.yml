@@ -17,6 +17,11 @@ env:
 
   TKM_ORG_B_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_B_MASTER_ACCOUNT_ID }}
 
+  RECYCLER_HOSTNAME: ${{ secrets.RECYCLER_HOSTNAME }}
+  RECYCLER_BASEPATH: ${{ secrets.RECYCLER_BASEPATH }}
+  RECYCLER_USERNAME: ${{ secrets.RECYCLER_USERNAME }}
+  RECYCLER_PASSWORD: ${{ secrets.RECYCLER_PASSWORD }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
