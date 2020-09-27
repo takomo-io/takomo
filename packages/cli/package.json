@@ -44,6 +44,7 @@
     "@takomo/organization-commands": "2.7.3",
     "@takomo/stacks-commands": "2.7.3",
     "@takomo/util": "2.7.0",
+    "aws-sdk": "2.745.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.1.1",

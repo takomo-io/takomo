@@ -1,33 +1,21 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus } from "@takomo/core"
-import {
-  deployStacksCommand,
-  undeployStacksCommand,
-} from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { deployStacksCommand } from "@takomo/stacks-commands"
+import { TestDeployStacksIO, TIMEOUT } from "@takomo/test"
+import { Credentials } from "aws-sdk"
 
-const createOptions = async () =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/hooks",
-  })
-
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions()
-  return await undeployStacksCommand(
+const createOptions = async (): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
+  return initOptionsAndVariables(
     {
-      commandPath: "/launch/before/failure",
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/hooks",
+      var: `ACCOUNT_1_ID=${account1Id}`,
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(global.reservation.credentials),
   )
-}, TIMEOUT)
+}
 
 describe("Example: Before hook that fails ", () => {
   test(

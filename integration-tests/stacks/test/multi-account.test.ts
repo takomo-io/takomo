@@ -1,33 +1,33 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+/**
+ * @testenv-recycler-count 3
+ */
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
 import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { Credentials } from "aws-sdk"
 
-const createOptions = async () =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/multi-account",
-  })
-
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions()
-  return await undeployStacksCommand(
+const createOptions = async (): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
+  const account2Id = global.reservation.accounts[1].accountId
+  const account3Id = global.reservation.accounts[2].accountId
+  return initOptionsAndVariables(
     {
-      commandPath: Constants.ROOT_STACK_GROUP_PATH,
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/multi-account",
+      var: [
+        `ACCOUNT_1_ID=${account1Id}`,
+        `ACCOUNT_2_ID=${account2Id}`,
+        `ACCOUNT_3_ID=${account3Id}`,
+      ],
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(global.reservation.credentials),
   )
-}, TIMEOUT)
+}
 
 describe("Multi-account", () => {
   test(

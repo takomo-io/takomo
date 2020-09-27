@@ -6055,7 +6055,7 @@ jest-environment-jsdom@^26.3.0:
     jest-util "^26.3.0"
     jsdom "^16.2.2"
 
-jest-environment-node@^26.3.0:
+jest-environment-node@26.3.0, jest-environment-node@^26.3.0:
   version "26.3.0"
   resolved "https://registry.yarnpkg.com/jest-environment-node/-/jest-environment-node-26.3.0.tgz#56c6cfb506d1597f94ee8d717072bda7228df849"
   integrity sha512-c9BvYoo+FGcMj5FunbBgtBnbR5qk3uky8PKyRVpSfe2/8+LrNQMiXX53z6q2kY+j15SkjQCOSL/6LHnCPLVHNw==
@@ -6066,6 +6066,14 @@ jest-environment-node@^26.3.0:
     "@types/node" "*"
     jest-mock "^26.3.0"
     jest-util "^26.3.0"
+
+jest-environment-testenv-recycler@0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/jest-environment-testenv-recycler/-/jest-environment-testenv-recycler-0.0.12.tgz#502a24cbb5c0c25c5971a2486c73a7a7d0d03a04"
+  integrity sha512-gdac0cmJxs2KnbyViTpfNwgdKWtvHb/ullFli+HrHn0H9HZOrGy8lSsX5yAATwvOkRVJzX4SrPoHsl9s5hFZZA==
+  dependencies:
+    jest-environment-node "26.3.0"
+    testenv-recycler "0.0.10"
 
 jest-get-type@^25.2.6:
   version "25.2.6"
@@ -9292,6 +9300,11 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
+
+testenv-recycler@0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/testenv-recycler/-/testenv-recycler-0.0.10.tgz#794e817946fd5e596010da0577831d5e610b0fc1"
+  integrity sha512-G+ygOREr2Cr+Teq3IyKL8Pw+S6/H/a4UXc0EmndMva7bNrhw2mnDguj+pWiZktjPd6DjSpUyavijIyqZkDJeRQ==
 
 text-extensions@^1.0.0:
   version "1.9.0"

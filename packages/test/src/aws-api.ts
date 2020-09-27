@@ -49,17 +49,19 @@ const deleteOrganizationIfPresent = async (): Promise<boolean> =>
     .catch(() => false)
 
 export type DescribeStackArgs = {
+  credentials: Credentials
   iamRoleArn?: string
   region: string
   stackName: string
 }
 
 const describeStack = async ({
+  credentials,
   stackName,
   iamRoleArn,
   region,
 }: DescribeStackArgs): Promise<CloudFormation.Stack> => {
-  const cp = await initDefaultCredentialProvider()
+  const cp = await initDefaultCredentialProvider(credentials)
   const stackCp = iamRoleArn
     ? await cp.createCredentialProviderForRole(iamRoleArn)
     : cp

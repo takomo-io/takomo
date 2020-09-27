@@ -17,7 +17,7 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript",
-    "integration-test": "jest test --passWithNoTests --runInBand --ci"
+    "integration-test": "jest test --passWithNoTests --maxWorkers=4 --ci"
   },
   "dependencies": {
     "@takomo/cli": "2.7.3",
@@ -29,9 +29,11 @@
     "@takomo/util": "2.7.0",
     "mkdirp": "1.0.4",
     "rimraf": "3.0.2",
-    "uuid": "3.3.3"
+    "uuid": "3.3.3",
+    "aws-sdk": "2.745.0"
   },
   "devDependencies": {
+    "jest-environment-testenv-recycler": "0.0.12",
     "@babel/core": "7.10.2",
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",

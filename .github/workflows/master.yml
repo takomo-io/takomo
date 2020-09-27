@@ -17,6 +17,11 @@ env:
 
   TKM_ORG_B_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_B_MASTER_ACCOUNT_ID }}
 
+  RECYCLER_HOSTNAME: ${{ secrets.RECYCLER_HOSTNAME }}
+  RECYCLER_BASEPATH: ${{ secrets.RECYCLER_BASEPATH }}
+  RECYCLER_USERNAME: ${{ secrets.RECYCLER_USERNAME }}
+  RECYCLER_PASSWORD: ${{ secrets.RECYCLER_PASSWORD }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,14 +44,8 @@ jobs:
         run: yarn test
       - name: Stacks integration tests
         run: yarn workspace integration-test-stacks integration-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
       - name: Deployment targets integration tests
         run: yarn workspace integration-test-deployment-targets integration-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
       - name: Organization creation integration tests
         run: yarn workspace integration-test-organization-creation integration-test
         env:

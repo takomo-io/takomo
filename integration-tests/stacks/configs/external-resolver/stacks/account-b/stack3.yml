@@ -5,5 +5,5 @@ parameters:
     resolver: external-stack-output
     stack: examples-external-parameter-resolver-account-a-stack1
     output: MyCode
-    commandRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+    commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
 depends: /account-a/stack1.yml

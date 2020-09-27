@@ -41,7 +41,7 @@ const assertCreatedFiles = async (
   dir: string,
   project: string,
   regions: string | string[],
-  createSamples: boolean = false,
+  createSamples = false,
 ): Promise<string> => {
   expect(await dirExists(dir)).toBeTruthy()
 

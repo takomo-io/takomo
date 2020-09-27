@@ -4,7 +4,7 @@ import { initProjectCmd } from "./init.js"
 import { organizationCmd } from "./organization/index.js"
 import { stacksCmd } from "./stacks/index.js"
 
-export { initOptionsAndVariables } from "./common.js"
+export { initOptionsAndVariables, OptionsAndVariables } from "./common.js"
 
 export const run = (): void => {
   yargs

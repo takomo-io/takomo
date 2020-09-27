@@ -1,33 +1,28 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+/**
+ * @testenv-recycler-count 2
+ */
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
 import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
 import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { Credentials } from "aws-sdk"
 
-const createOptions = async () =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/external-resolver",
-  })
-
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions()
-  return await undeployStacksCommand(
+const createOptions = async (): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
+  const account2Id = global.reservation.accounts[1].accountId
+  return initOptionsAndVariables(
     {
-      commandPath: Constants.ROOT_STACK_GROUP_PATH,
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/external-resolver",
+      var: [`ACCOUNT_1_ID=${account1Id}`, `ACCOUNT_2_ID=${account2Id}`],
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(global.reservation.credentials),
   )
-}, TIMEOUT)
+}
 
 describe("External stack output resolver", () => {
   test(

@@ -25,9 +25,11 @@
     "@takomo/config-sets": "2.7.3",
     "@takomo/core": "2.7.1",
     "@takomo/deployment-targets": "2.7.3",
-    "@takomo/test": "2.7.3"
+    "@takomo/test": "2.7.3",
+    "aws-sdk": "2.745.0"
   },
   "devDependencies": {
+    "jest-environment-testenv-recycler": "0.0.12",
     "@babel/core": "7.10.2",
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",

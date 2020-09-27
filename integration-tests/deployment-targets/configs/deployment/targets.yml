@@ -4,23 +4,23 @@ deploymentGroups:
     targets:
       - name: one
         vars:
-          accountId: "{{ env.TKM_ORG_A_ACCOUNT_1_ID }}"
+          accountId: "{{ var.ACCOUNT_1_ID }}"
       - name: two
         vars:
-          accountId: "{{ env.TKM_ORG_A_ACCOUNT_2_ID }}"
+          accountId: "{{ var.ACCOUNT_2_ID }}"
 
   Environments/Test:
     configSets: logs
     targets:
       - name: three
         vars:
-          accountId: "{{ env.TKM_ORG_A_ACCOUNT_3_ID }}"
+          accountId: "{{ var.ACCOUNT_3_ID }}"
       - name: four
         vars:
-          accountId: "{{ env.TKM_ORG_A_ACCOUNT_4_ID }}"
+          accountId: "{{ var.ACCOUNT_4_ID }}"
       - name: five
         vars:
-          accountId: "{{ env.TKM_ORG_A_ACCOUNT_5_ID }}"
+          accountId: "{{ var.ACCOUNT_5_ID }}"
 
 configSets:
   logs:

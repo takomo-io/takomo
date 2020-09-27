@@ -1,5 +1,5 @@
 {
-  "testEnvironment": "node",
+  "testEnvironment": "jest-environment-testenv-recycler",
   "testRegex": ["/test/.*\\.(test)?\\.(ts)$"],
   "moduleFileExtensions": ["ts", "js", "json", "node"],
   "setupFiles": ["./jest.setup.js"]

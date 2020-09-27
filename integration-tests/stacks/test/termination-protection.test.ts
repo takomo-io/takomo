@@ -1,4 +1,4 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus, Constants } from "@takomo/core"
 import {
   deployStacksCommand,
@@ -11,30 +11,26 @@ import {
   TIMEOUT,
 } from "@takomo/test"
 import { TakomoError } from "@takomo/util/src"
+import { Credentials } from "aws-sdk"
 
-const createOptions = async (terminationProtection: boolean) =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs/termination-protection",
-    var: [`terminationProtection=${terminationProtection}`],
-  })
+const createOptions = async (
+  terminationProtection: boolean,
+): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
 
-// First, make sure that there are no existing stacks left from previous test runs
-beforeAll(async () => {
-  const { options, variables, watch } = await createOptions(false)
-  return await undeployStacksCommand(
+  return initOptionsAndVariables(
     {
-      commandPath: Constants.ROOT_STACK_GROUP_PATH,
-      ignoreDependencies: false,
-      interactive: false,
-      options,
-      variables,
-      watch,
+      log: "info",
+      yes: true,
+      dir: "configs/termination-protection",
+      var: [
+        `ACCOUNT_1_ID=${account1Id}`,
+        `terminationProtection=${terminationProtection}`,
+      ],
     },
-    new TestUndeployStacksIO(options),
+    new Credentials(global.reservation.credentials),
   )
-}, TIMEOUT)
+}
 
 describe("Termination protection", () => {
   test(
@@ -59,6 +55,8 @@ describe("Termination protection", () => {
       expect(output.results[0].reason).toBe("CREATE_SUCCESS")
 
       const stack = await aws.cloudFormation.describeStack({
+        credentials: new Credentials(global.reservation.credentials),
+        iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
         stackName: "termination-protection",
         region: "eu-north-1",
       })
@@ -116,6 +114,8 @@ describe("Termination protection", () => {
       expect(output.results[0].reason).toBe("UPDATE_SUCCESS")
 
       const stack = await aws.cloudFormation.describeStack({
+        credentials: new Credentials(global.reservation.credentials),
+        iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
         stackName: "termination-protection",
         region: "eu-north-1",
       })
