@@ -6067,10 +6067,10 @@ jest-environment-node@26.3.0, jest-environment-node@^26.3.0:
     jest-mock "^26.3.0"
     jest-util "^26.3.0"
 
-jest-environment-testenv-recycler@0.0.11:
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/jest-environment-testenv-recycler/-/jest-environment-testenv-recycler-0.0.11.tgz#33149c082e410cf8f9e74f343abebb63943a7040"
-  integrity sha512-1AfzmwlYtMzLIaMj2L0AWPKbEF60shp4BGfgpQFl2dLBiO9KIezKIg54wU2DupsTP2RF3iFasBJlG4n/kTJzDA==
+jest-environment-testenv-recycler@0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/jest-environment-testenv-recycler/-/jest-environment-testenv-recycler-0.0.12.tgz#502a24cbb5c0c25c5971a2486c73a7a7d0d03a04"
+  integrity sha512-gdac0cmJxs2KnbyViTpfNwgdKWtvHb/ullFli+HrHn0H9HZOrGy8lSsX5yAATwvOkRVJzX4SrPoHsl9s5hFZZA==
   dependencies:
     jest-environment-node "26.3.0"
     testenv-recycler "0.0.10"
