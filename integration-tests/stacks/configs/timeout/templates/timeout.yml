@@ -47,5 +47,5 @@ Resources:
     Condition: WaitConditionEnabled
     Properties:
       Handle: !Ref WaitHandle
-      Timeout: 300
+      Timeout: 120
       Count: 1
