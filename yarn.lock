@@ -6067,13 +6067,13 @@ jest-environment-node@26.3.0, jest-environment-node@^26.3.0:
     jest-mock "^26.3.0"
     jest-util "^26.3.0"
 
-jest-environment-testenv-recycler@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/jest-environment-testenv-recycler/-/jest-environment-testenv-recycler-0.0.9.tgz#7ef5c1cd8b9a6cff808b6b8742d20160067ad2dc"
-  integrity sha512-QEzp0g99cDqF5ndD6ovWB2joFUoeoUHmbhifbL6yw7cucEYvorpSW056m2erTKOpXR8o7qnt5mqYxFFFFu/SeA==
+jest-environment-testenv-recycler@0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/jest-environment-testenv-recycler/-/jest-environment-testenv-recycler-0.0.11.tgz#33149c082e410cf8f9e74f343abebb63943a7040"
+  integrity sha512-1AfzmwlYtMzLIaMj2L0AWPKbEF60shp4BGfgpQFl2dLBiO9KIezKIg54wU2DupsTP2RF3iFasBJlG4n/kTJzDA==
   dependencies:
     jest-environment-node "26.3.0"
-    testenv-recycler "0.0.9"
+    testenv-recycler "0.0.10"
 
 jest-get-type@^25.2.6:
   version "25.2.6"
@@ -9301,10 +9301,10 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-testenv-recycler@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/testenv-recycler/-/testenv-recycler-0.0.9.tgz#2b8b3c1df4f81e23f71779a9d7b1c2ea949fd81b"
-  integrity sha512-UPN2pqfOGz9fJ7spbLt1hFYIz2UuQG7is0uvqGDtDnffQjyDSGj9fVCYGr+h2WyByDHw5ImvFmuyPTmlH4iNaw==
+testenv-recycler@0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/testenv-recycler/-/testenv-recycler-0.0.10.tgz#794e817946fd5e596010da0577831d5e610b0fc1"
+  integrity sha512-G+ygOREr2Cr+Teq3IyKL8Pw+S6/H/a4UXc0EmndMva7bNrhw2mnDguj+pWiZktjPd6DjSpUyavijIyqZkDJeRQ==
 
 text-extensions@^1.0.0:
   version "1.9.0"
