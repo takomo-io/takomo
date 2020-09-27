@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.4](https://github.com/takomo-io/takomo/compare/v2.7.3...v2.7.4) (2020-09-27)
+
+
+### Bug Fixes
+
+* fix sorting of stacks ([#101](https://github.com/takomo-io/takomo/issues/101)) ([f7edc91](https://github.com/takomo-io/takomo/commit/f7edc918c49e04128e960aef816084f939273bfb))
+
+
+
+
+
 ## [2.7.3](https://github.com/takomo-io/takomo/compare/v2.7.2...v2.7.3) (2020-09-21)
 
 

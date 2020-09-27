@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-model",
-  "version": "2.7.3",
+  "version": "2.7.4",
   "description": "Takomo Stacks Model",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,8 +37,8 @@
   },
   "dependencies": {
     "@hapi/joi": "17.1.1",
-    "@takomo/aws-clients": "2.7.3",
-    "@takomo/core": "2.7.1",
+    "@takomo/aws-clients": "2.7.4",
+    "@takomo/core": "2.7.4",
     "@takomo/util": "2.7.0",
     "aws-sdk": "2.745.0"
   },

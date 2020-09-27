@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-context",
-  "version": "2.7.3",
+  "version": "2.7.4",
   "description": "Takomo Organization Context",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,10 +36,10 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.7.3",
-    "@takomo/config-sets": "2.7.3",
-    "@takomo/core": "2.7.1",
-    "@takomo/organization-config": "2.7.3",
+    "@takomo/aws-clients": "2.7.4",
+    "@takomo/config-sets": "2.7.4",
+    "@takomo/core": "2.7.4",
+    "@takomo/organization-config": "2.7.4",
     "@takomo/util": "2.7.0",
     "aws-sdk": "2.745.0",
     "lodash.flatten": "4.4.0",
