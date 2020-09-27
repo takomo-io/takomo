@@ -46,14 +46,8 @@ jobs:
         run: yarn test
       - name: Stacks integration tests
         run: yarn workspace integration-test-stacks integration-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
       - name: Deployment targets integration tests
         run: yarn workspace integration-test-deployment-targets integration-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
       - name: Organization creation integration tests
         run: yarn workspace integration-test-organization-creation integration-test
         env:

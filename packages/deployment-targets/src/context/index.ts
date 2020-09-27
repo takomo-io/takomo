@@ -21,7 +21,9 @@ export const buildDeploymentTargetsContext = async (
   configFileName: string | null,
   io: IO,
 ): Promise<DeploymentTargetsContext> => {
-  const credentialProvider = await initDefaultCredentialProvider()
+  const credentialProvider = await initDefaultCredentialProvider(
+    options.getCredentials(),
+  )
 
   const projectDir = options.getProjectDir()
   io.debug(`Current project dir: ${projectDir}`)

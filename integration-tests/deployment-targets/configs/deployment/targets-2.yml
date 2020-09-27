@@ -3,13 +3,13 @@ deploymentGroups:
     configSets: logs2
     targets:
       - name: foo
-        deploymentRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+        deploymentRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
         vars:
-          accountId: "{{ env.TKM_ORG_A_ACCOUNT_1_ID }}"
+          accountId: "{{ var.ACCOUNT_1_ID }}"
       - name: bar
-        deploymentRole: arn:aws:iam::{{ env.TKM_ORG_A_ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
+        deploymentRole: arn:aws:iam::{{ var.ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
         vars:
-          accountId: "{{ env.TKM_ORG_A_ACCOUNT_2_ID }}"
+          accountId: "{{ var.ACCOUNT_2_ID }}"
 
 configSets:
   logs2:

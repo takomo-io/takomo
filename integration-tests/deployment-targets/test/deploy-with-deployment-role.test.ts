@@ -1,20 +1,32 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+/**
+ * @testenv-recycler-count 2
+ */
+
+import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CliUndeployTargetsIO } from "@takomo/cli-io"
 import { ConfigSetType } from "@takomo/config-sets"
 import { CommandStatus, DeploymentOperation, Options } from "@takomo/core"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets"
 import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { Credentials } from "aws-sdk"
 
-const createOptions = async () =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs",
-  })
+const createOptions = async (): Promise<OptionsAndVariables> => {
+  const account1Id = global.reservation.accounts[0].accountId
+  const account2Id = global.reservation.accounts[1].accountId
+  return initOptionsAndVariables(
+    {
+      log: "info",
+      yes: true,
+      dir: "configs",
+      var: [`ACCOUNT_1_ID=${account1Id}`, `ACCOUNT_2_ID=${account2Id}`],
+    },
+    new Credentials(global.reservation.credentials),
+  )
+}
 
 describe("Deployment with deployment role", () => {
-  it(
-    "undeploy all",
+  test(
+    "deploy all",
     async () => {
       const { options, variables, watch } = await createOptions()
 
@@ -24,7 +36,7 @@ describe("Deployment with deployment role", () => {
         success,
       } = await deploymentTargetsOperationCommand(
         {
-          operation: DeploymentOperation.UNDEPLOY,
+          operation: DeploymentOperation.DEPLOY,
           configSetType: ConfigSetType.STANDARD,
           targets: [],
           groups: [],
@@ -60,8 +72,8 @@ describe("Deployment with deployment role", () => {
     TIMEOUT,
   )
 
-  it(
-    "deploy all",
+  test(
+    "undeploy all",
     async () => {
       const { options, variables, watch } = await createOptions()
 
@@ -71,7 +83,7 @@ describe("Deployment with deployment role", () => {
         success,
       } = await deploymentTargetsOperationCommand(
         {
-          operation: DeploymentOperation.DEPLOY,
+          operation: DeploymentOperation.UNDEPLOY,
           configSetType: ConfigSetType.STANDARD,
           targets: [],
           groups: [],
