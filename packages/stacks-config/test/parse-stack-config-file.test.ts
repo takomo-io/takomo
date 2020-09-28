@@ -1,6 +1,6 @@
 import { Options } from "@takomo/core"
 import { ConsoleLogger, LogLevel, TemplateEngine } from "@takomo/util"
-import { parseStackConfigFile } from "../../src"
+import { parseStackConfigFile } from "../src"
 
 const emptyStackConfig = {
   commandRole: null,
@@ -35,7 +35,7 @@ describe("parse stack config file", () => {
           stats: false,
         }),
         {},
-        "./test/parsers/empty.yml",
+        "./test/empty.yml",
         new TemplateEngine(),
       ),
     ).resolves.toStrictEqual(emptyStackConfig)
