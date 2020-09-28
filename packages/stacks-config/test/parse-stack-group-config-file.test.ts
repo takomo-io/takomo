@@ -1,6 +1,6 @@
 import { Options } from "@takomo/core"
 import { ConsoleLogger, LogLevel, TemplateEngine } from "@takomo/util"
-import { parseStackGroupConfigFile } from "../../src"
+import { parseStackGroupConfigFile } from "../src"
 
 const emptyStackGroupConfig = {
   commandRole: null,
@@ -30,7 +30,7 @@ describe("#parseStackGroupConfigFile", () => {
           stats: false,
         }),
         {},
-        "./test/parsers/empty.yml",
+        "./test/empty.yml",
         new TemplateEngine(),
       ),
     ).resolves.toStrictEqual(emptyStackGroupConfig)
@@ -48,7 +48,7 @@ describe("#parseStackGroupConfigFile", () => {
           stats: false,
         }),
         {},
-        "./test/parsers/stack-group-config-1.yml",
+        "./test/stack-group-config-1.yml",
         new TemplateEngine(),
       ),
     ).resolves.toStrictEqual({
