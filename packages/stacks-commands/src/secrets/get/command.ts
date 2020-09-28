@@ -19,7 +19,12 @@ export const getSecretCommand = async (
   io: GetSecretIO,
 ): Promise<GetSecretOutput> =>
   validateInput(schema, input)
-    .then((input) => buildConfigContext(input.options, input.variables, io))
+    .then((input) =>
+      buildConfigContext({
+        ...input,
+        logger: io,
+      }),
+    )
     .then((ctx) => prepareDeployContext(ctx, input.stackPath, false))
     .then((ctx) => getSecretValue(ctx, input.stackPath, input.secretName))
     .then((value) => ({

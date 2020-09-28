@@ -3,6 +3,7 @@ import { HookInitializersMap } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   dirExists,
+  FilePath,
   Logger,
   readFileContents,
   TakomoError,
@@ -12,7 +13,7 @@ import path from "path"
 import readdirp from "readdirp"
 
 const loadCustomResolvers = async (
-  projectDir: string,
+  projectDir: FilePath,
   logger: Logger,
   resolverRegistry: ResolverRegistry,
 ): Promise<void> => {

@@ -34,16 +34,15 @@ const modifyInput = async (
 export const deployStacksCommand = async (
   input: StacksOperationInput,
   io: DeployStacksIO,
-  credentialProvider: TakomoCredentialProvider | null = null,
+  credentialProvider?: TakomoCredentialProvider,
 ): Promise<StacksOperationOutput> =>
   validateInput(schema, input)
     .then((input) =>
-      buildConfigContext(
-        input.options,
-        input.variables,
-        io,
-        credentialProvider,
-      ),
+      buildConfigContext({
+        ...input,
+        logger: io,
+        overrideCredentialProvider: credentialProvider,
+      }),
     )
     .then(async (ctx) => {
       const modifiedInput = await modifyInput(input, ctx, io)

@@ -1,0 +1,6 @@
+template: sg.yml
+parameters:
+  VpcId:
+    resolver: stack-output
+    output: VpcId
+    stack: /test/vpc.yml

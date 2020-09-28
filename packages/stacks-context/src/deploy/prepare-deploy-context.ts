@@ -5,7 +5,7 @@ import {
   loadExistingTemplateSummaries,
   validateStackCredentialProvidersWithAllowedAccountIds,
 } from "../common"
-import { ConfigContext } from "../config"
+import { ConfigContext } from "../config/config-context"
 import { sortStacksForDeploy } from "../dependencies"
 import { CommandPathMatchesNoStacksError, StdCommandContext } from "../model"
 import { collectCredentialProviders } from "./collect-credential-providers"

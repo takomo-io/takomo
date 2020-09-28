@@ -6,7 +6,7 @@ import {
   LogLevel,
   TemplateEngine,
 } from "@takomo/util"
-import { ConfigContext } from "../../src/config"
+import { ConfigContext } from "../../src"
 import { collectStacksToUndeploy } from "../../src/undeploy/collect-stacks-to-undeploy"
 import { createStack, createStackGroup } from "../helpers"
 import { mockTakomoCredentialProvider } from "../mocks"
@@ -27,7 +27,7 @@ const configContext = (rootStackGroup: StackGroup): ConfigContext => {
   return new ConfigContext({
     rootStackGroup,
     stackGroups,
-    stackConfigsByPath,
+    stacksByPath: stackConfigsByPath,
     variables: {
       context: { projectDir: "" },
       var: {},

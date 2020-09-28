@@ -1,0 +1,3 @@
+template: logs.yml
+parameters:
+  LogGroupName: {{ var.devLogGroupName }}

@@ -13,7 +13,7 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
   const account1Id = global.reservation.accounts[0].accountId
   return initOptionsAndVariables(
     {
-      log: "info",
+      log: "debug",
       yes: true,
       dir: "configs/networking",
       var: `ACCOUNT_1_ID=${account1Id}`,

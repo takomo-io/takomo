@@ -1,12 +1,19 @@
-import {
-  createRootStackGroup,
-  createStackGroupFromParent,
-} from "../../../../src/config/build"
+import { createRootStackGroup } from "../../../../src/config/create-root-stack-group"
+import { createStackGroupFromParent } from "../../../../src/config/create-stack-group-from-parent"
 
 describe("create stack group config from parent", () => {
   test("using root as parent", () => {
     const root = createRootStackGroup()
-    const group = createStackGroupFromParent("/tmp/projects/config/dev", root)
+    const group = createStackGroupFromParent(
+      {
+        dir: { fullPath: "/tmp/projects/stacks/dev", basename: "dev" },
+        path: "/dev",
+        parentPath: "/",
+        children: [],
+        stacks: [],
+      },
+      root,
+    )
 
     expect(group.getPath()).toEqual("/dev")
     expect(group.isRoot()).toEqual(false)
@@ -22,9 +29,27 @@ describe("create stack group config from parent", () => {
 
   test("using a non-root parent", () => {
     const root = createRootStackGroup()
-    const parent = createStackGroupFromParent("/tmp/projects/config/prod", root)
+    const parent = createStackGroupFromParent(
+      {
+        dir: { fullPath: "/tmp/projects/stacks/prod", basename: "prod" },
+        path: "/prod",
+        parentPath: "/",
+        children: [],
+        stacks: [],
+      },
+      root,
+    )
     const group = createStackGroupFromParent(
-      "/tmp/projects/config/prod/eu-central-1",
+      {
+        dir: {
+          fullPath: "/tmp/projects/stacks/prod/eu-central-1",
+          basename: "eu-central-1",
+        },
+        path: "/prod/eu-central-1",
+        parentPath: "/prod",
+        children: [],
+        stacks: [],
+      },
       parent,
     )
 
