@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-context",
-  "version": "2.7.4",
+  "version": "2.8.0",
   "description": "Takomo Stacks Context",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,13 +36,13 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.7.4",
-    "@takomo/core": "2.7.4",
-    "@takomo/stacks-config": "2.7.4",
-    "@takomo/stacks-hooks": "2.7.4",
-    "@takomo/stacks-model": "2.7.4",
-    "@takomo/stacks-resolvers": "2.7.4",
-    "@takomo/util": "2.7.0",
+    "@takomo/aws-clients": "2.8.0",
+    "@takomo/core": "2.8.0",
+    "@takomo/stacks-config": "2.8.0",
+    "@takomo/stacks-hooks": "2.8.0",
+    "@takomo/stacks-model": "2.8.0",
+    "@takomo/stacks-resolvers": "2.8.0",
+    "@takomo/util": "2.8.0",
     "aws-sdk": "2.745.0",
     "cockatiel": "1.1.1",
     "lodash.flatten": "4.4.0",

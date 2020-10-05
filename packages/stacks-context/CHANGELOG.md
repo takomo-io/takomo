@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/takomo-io/takomo/compare/v2.7.4...v2.8.0) (2020-10-05)
+
+
+### Features
+
+* improve loading of configuration files ([#105](https://github.com/takomo-io/takomo/issues/105)) ([574dd64](https://github.com/takomo-io/takomo/commit/574dd64b7ca6a216d57fc426467eb6570cc2f2a3)), closes [#104](https://github.com/takomo-io/takomo/issues/104)
+* validate command path using new configuration tree ([#106](https://github.com/takomo-io/takomo/issues/106)) ([c8d60a8](https://github.com/takomo-io/takomo/commit/c8d60a84c8b357346db6f18a8648d64ec20f2187))
+
+
+
+
+
 ## [2.7.4](https://github.com/takomo-io/takomo/compare/v2.7.3...v2.7.4) (2020-09-27)
 
 
