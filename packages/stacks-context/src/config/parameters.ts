@@ -1,10 +1,10 @@
 import { StackPath } from "@takomo/core"
 import { ParameterName, ResolverExecutor } from "@takomo/stacks-model"
 import { ListResolver, ResolverRegistry } from "@takomo/stacks-resolvers"
-import { TakomoError } from "@takomo/util"
+import { FilePath, TakomoError } from "@takomo/util"
 
 const initializeResolver = async (
-  filePath: string,
+  filePath: FilePath,
   stackPath: StackPath,
   paramName: ParameterName,
   paramConfig: any,
@@ -54,7 +54,7 @@ const initializeResolver = async (
 }
 
 export const buildParameters = async (
-  filePath: string,
+  filePath: FilePath,
   stackPath: StackPath,
   parameters: Map<ParameterName, any>,
   resolverRegistry: ResolverRegistry,

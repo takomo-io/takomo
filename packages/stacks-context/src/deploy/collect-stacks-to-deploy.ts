@@ -2,7 +2,7 @@ import { CommandPath, StackPath } from "@takomo/core"
 import { Stack, StackGroup } from "@takomo/stacks-model"
 import uniq from "lodash.uniq"
 import { isStackGroupPath } from "../common"
-import { ConfigContext } from "../config"
+import { ConfigContext } from "../config/config-context"
 
 const collectStacksToDeployFromStack = (
   stackPath: StackPath,

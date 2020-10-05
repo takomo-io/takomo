@@ -5,7 +5,7 @@ import {
   loadExistingTemplateSummaries,
   validateStackCredentialProvidersWithAllowedAccountIds,
 } from "../common"
-import { ConfigContext } from "../config"
+import { ConfigContext } from "../config/config-context"
 import { sortStacksForUndeploy } from "../dependencies"
 import { CommandPathMatchesNoStacksError, StdCommandContext } from "../model"
 import { collectStacksToUndeploy } from "./collect-stacks-to-undeploy"

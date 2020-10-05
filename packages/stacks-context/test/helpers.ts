@@ -19,6 +19,7 @@ export const createStackGroup = (props: TestStackGroupProps): StackGroup =>
   new StackGroup({
     name: props.name,
     path: props.path,
+    parentPath: null,
     isRoot: props.path === Constants.ROOT_STACK_GROUP_PATH,
     stacks: props.stacks || [],
     children: props.children || [],
@@ -47,6 +48,7 @@ export const createStack = (props: TestStackProps): Stack => {
   return new Stack({
     logger: new ConsoleLogger(),
     path: props.path,
+    stackGroupPath: "",
     name: props.name,
     dependencies: props.dependencies || [],
     dependants: props.dependants || [],
@@ -86,6 +88,7 @@ export const createStackConfig = (
     logger: new ConsoleLogger(),
     project: null,
     path: stackPath,
+    stackGroupPath: "",
     name: "",
     template: "",
     templateBucket: null,

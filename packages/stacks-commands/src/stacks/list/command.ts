@@ -17,7 +17,12 @@ export const listStacksCommand = async (
   io: ListStacksIO,
 ): Promise<ListStacksOutput> =>
   validateInput(schema, input)
-    .then((input) => buildConfigContext(input.options, input.variables, io))
+    .then((input) =>
+      buildConfigContext({
+        ...input,
+        logger: io,
+      }),
+    )
     .then((ctx) => prepareDeployContext(ctx, input.commandPath, false))
     .then((ctx) => listStacks(ctx, input))
     .then(io.printOutput)

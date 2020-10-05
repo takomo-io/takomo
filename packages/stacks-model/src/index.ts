@@ -173,6 +173,7 @@ export interface StackGroupProps {
   accountIds: AccountId[]
   commandRole: CommandRole | null
   path: StackGroupPath
+  parentPath: StackGroupPath | null
   isRoot: boolean
   templateBucket: TemplateBucketConfig | null
   children: StackGroup[]
@@ -193,6 +194,7 @@ export class StackGroup {
   readonly #accountIds: AccountId[]
   readonly #commandRole: CommandRole | null
   readonly #path: StackGroupPath
+  readonly #parentPath: StackGroupPath | null
   readonly #root: boolean
   readonly #templateBucket: TemplateBucketConfig | null
   readonly #children: StackGroup[]
@@ -212,6 +214,7 @@ export class StackGroup {
     this.#accountIds = props.accountIds
     this.#commandRole = props.commandRole
     this.#path = props.path
+    this.#parentPath = props.parentPath
     this.#root = props.isRoot
     this.#templateBucket = props.templateBucket
     this.#children = props.children
@@ -231,6 +234,7 @@ export class StackGroup {
   getAccountIds = (): AccountId[] => [...this.#accountIds]
   getCommandRole = (): CommandRole | null => this.#commandRole
   getPath = (): string => this.#path
+  getParentPath = (): string | null => this.#parentPath
   isRoot = (): boolean => this.#root
   getTemplateBucket = (): TemplateBucketConfig | null => this.#templateBucket
   getChildren = (): StackGroup[] => [...this.#children]
@@ -250,6 +254,7 @@ export class StackGroup {
     accountIds: this.getAccountIds(),
     commandRole: this.getCommandRole(),
     path: this.getPath(),
+    parentPath: this.getParentPath(),
     isRoot: this.isRoot(),
     templateBucket: this.getTemplateBucket(),
     children: this.getChildren(),
@@ -292,10 +297,16 @@ export interface StackProps {
    * Project
    */
   project: Project | null
+
   /**
    * Stack path
    */
   path: StackPath
+
+  /**
+   * Stack group path
+   */
+  stackGroupPath: StackGroupPath
 
   /**
    * Stack name
@@ -403,6 +414,7 @@ export interface StackProps {
 export class Stack {
   readonly #project: Project | null
   readonly #path: StackPath
+  readonly #stackGroupPath: StackGroupPath
   readonly #name: StackName
   readonly #template: string
   readonly #templateBucket: TemplateBucketConfig | null
@@ -430,6 +442,7 @@ export class Stack {
   constructor(props: StackProps) {
     this.#project = props.project
     this.#path = props.path
+    this.#stackGroupPath = props.stackGroupPath
     this.#name = props.name
     this.#template = props.template
     this.#templateBucket = props.templateBucket
@@ -463,9 +476,13 @@ export class Stack {
   getPath = (): StackPath => this.#path
 
   /**
+   * @returns Stack group path
+   */
+  getStackGroupPath = (): StackGroupPath => this.#stackGroupPath
+
+  /**
    * @returns Stack name
    */
-
   getName = (): StackName => this.#name
 
   /**
@@ -594,6 +611,7 @@ export class Stack {
   toProps = (): StackProps => ({
     project: this.getProject(),
     path: this.getPath(),
+    stackGroupPath: this.getStackGroupPath(),
     name: this.getName(),
     ignore: this.isIgnored(),
     template: this.getTemplate(),
