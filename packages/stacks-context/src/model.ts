@@ -10,10 +10,8 @@ import { deepCopy, Logger, TakomoError, TemplateEngine } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 
 export class CommandPathMatchesNoStacksError extends TakomoError {
-  constructor(commandPath: CommandPath, availableStacks: Stack[]) {
-    const stackPaths = availableStacks
-      .map((s) => `  - ${s.getPath()}`)
-      .join("\n")
+  constructor(commandPath: CommandPath, availableStackPaths: StackPath[]) {
+    const stackPaths = availableStackPaths.map((s) => `  - ${s}`).join("\n")
 
     super(
       `No stacks found within the given command path: ${commandPath}\n\nAvailable stack paths:\n\n${stackPaths}`,
