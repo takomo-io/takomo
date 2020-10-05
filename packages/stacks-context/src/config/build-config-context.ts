@@ -12,13 +12,17 @@ import {
   ResolverRegistry,
 } from "@takomo/stacks-resolvers"
 import {
+  collectFromHierarchy,
   dirExists,
   FilePath,
   Logger,
   TakomoError,
   TemplateEngine,
 } from "@takomo/util"
+import flatten from "lodash.flatten"
 import path from "path"
+import { isStackGroupPath } from "../common"
+import { CommandPathMatchesNoStacksError } from "../model"
 import { collectStackGroups } from "./collect-stack-groups"
 import { collectStacks } from "./collect-stacks"
 import { ConfigContext } from "./config-context"
@@ -26,6 +30,7 @@ import { loadExtensions } from "./extensions"
 import { coreHookInitializers } from "./hooks"
 import { processConfigTree } from "./process-config-tree"
 import { buildConfigTree } from "./tree/build-config-tree"
+import { ConfigTree } from "./tree/config-tree"
 
 export interface BuildConfigContextInput {
   options: Options
@@ -61,6 +66,35 @@ const resolveTemplatesDirPath = async (
   return templatesDirPath
 }
 
+export const validateCommandPath = (
+  configTree: ConfigTree,
+  commandPath?: CommandPath,
+): void => {
+  if (!commandPath || commandPath === Constants.ROOT_STACK_GROUP_PATH) {
+    return
+  }
+
+  const stackGroups = collectFromHierarchy(
+    configTree.rootStackGroup,
+    (node) => node.children,
+  )
+
+  const stackGroupPaths = stackGroups.map((s) => s.path)
+  const stackPaths = flatten(stackGroups.map((s) => s.stacks)).map(
+    (s) => s.path,
+  )
+
+  if (isStackGroupPath(commandPath)) {
+    if (!stackGroupPaths.some((s) => s === commandPath)) {
+      throw new CommandPathMatchesNoStacksError(commandPath, stackPaths)
+    }
+  } else if (!stackGroupPaths.some((s) => s === commandPath)) {
+    if (!stackPaths.some((s) => commandPath.startsWith(s))) {
+      throw new CommandPathMatchesNoStacksError(commandPath, stackPaths)
+    }
+  }
+}
+
 export const buildConfigContext = async ({
   options,
   variables,
@@ -68,16 +102,22 @@ export const buildConfigContext = async ({
   overrideCredentialProvider,
   commandPath,
 }: BuildConfigContextInput): Promise<ConfigContext> => {
-  const credentialProvider =
-    overrideCredentialProvider ||
-    (await initDefaultCredentialProvider(options.getCredentials()))
-
   logger.info("Build configuration")
   const projectDir = options.getProjectDir()
   logger.debug(`Current project dir: ${projectDir}`)
 
-  const stacksDirPath = await resolveStacksDirPath(projectDir)
-  const templatesDirPath = await resolveTemplatesDirPath(projectDir)
+  const [stacksDirPath, templatesDirPath] = await Promise.all([
+    resolveStacksDirPath(projectDir),
+    resolveTemplatesDirPath(projectDir),
+  ])
+
+  const configTree = await buildConfigTree(
+    logger,
+    stacksDirPath,
+    Constants.ROOT_STACK_GROUP_PATH,
+  )
+
+  validateCommandPath(configTree, commandPath)
 
   const templateEngine = new TemplateEngine()
   const hookInitializers = coreHookInitializers()
@@ -95,13 +135,11 @@ export const buildConfigContext = async ({
     templateEngine,
   )
 
-  const configTree = await buildConfigTree(
-    logger,
-    stacksDirPath,
-    Constants.ROOT_STACK_GROUP_PATH,
-  )
-
   const credentialProviders = new Map<IamRoleArn, TakomoCredentialProvider>()
+
+  const credentialProvider =
+    overrideCredentialProvider ||
+    (await initDefaultCredentialProvider(options.getCredentials()))
 
   const rootStackGroup = await processConfigTree(
     logger,

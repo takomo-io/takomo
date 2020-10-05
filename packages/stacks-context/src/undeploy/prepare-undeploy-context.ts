@@ -26,7 +26,10 @@ export const prepareUndeployContext = async (
   )
 
   if (stacksToUndeploy.length === 0) {
-    throw new CommandPathMatchesNoStacksError(commandPath, ctx.getStacks())
+    throw new CommandPathMatchesNoStacksError(
+      commandPath,
+      ctx.getStacks().map((s) => s.getPath()),
+    )
   }
 
   logger.debug(
