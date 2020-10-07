@@ -1,4 +1,4 @@
-import { isStackReadyForLaunch } from "../../../src/stacks/deploy/validate"
+import { isStackReadyForDeploy } from "../../../src/stacks/deploy/validate"
 
 const data: Array<[string, boolean]> = [
   ["CREATE_IN_PROGRESS", false],
@@ -18,12 +18,15 @@ const data: Array<[string, boolean]> = [
   ["UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS", false],
   ["UPDATE_ROLLBACK_COMPLETE", true],
   ["REVIEW_IN_PROGRESS", true],
+  ["IMPORT_COMPLETE", true],
+  ["IMPORT_ROLLBACK_COMPLETE", true],
+  ["IMPORT_ROLLBACK_IN_PROGRESS", false],
+  ["IMPORT_IN_PROGRESS", false],
+  ["IMPORT_ROLLBACK_FAILED", false],
 ]
 
-describe("is stack status valid for launch", () => {
-  describe.each(data)("when %s is given", (status, expected) => {
-    test(`returns ${expected}`, () => {
-      expect(isStackReadyForLaunch(status)).toBe(expected)
-    })
+describe("#isStackReadyForDeploy", () => {
+  test.each(data)("when %s is given returns %s", (status, expected) => {
+    expect(isStackReadyForDeploy(status)).toBe(expected)
   })
 })
