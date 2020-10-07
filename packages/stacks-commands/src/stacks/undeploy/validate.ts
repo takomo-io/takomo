@@ -2,7 +2,7 @@ import { CommandContext } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 
-export const isStackReadyForDelete = (
+export const isStackReadyForUndeploy = (
   stackStatus: CloudFormation.StackStatus,
 ): boolean =>
   [
@@ -14,13 +14,16 @@ export const isStackReadyForDelete = (
     "UPDATE_COMPLETE",
     "UPDATE_ROLLBACK_COMPLETE",
     "REVIEW_IN_PROGRESS",
+    "IMPORT_ROLLBACK_FAILED",
+    "IMPORT_COMPLETE",
+    "IMPORT_ROLLBACK_COMPLETE",
   ].includes(stackStatus)
 
 const validateStackStatus = async (ctx: CommandContext): Promise<void> => {
   const stacks = []
   for (const stack of ctx.getStacksToProcess()) {
     const existing = await ctx.getExistingStack(stack.getPath())
-    if (existing && !isStackReadyForDelete(existing.StackStatus!)) {
+    if (existing && !isStackReadyForUndeploy(existing.StackStatus!)) {
       stacks.push({ stack, existing })
     }
   }

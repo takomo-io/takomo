@@ -5,7 +5,7 @@ import { CloudFormation } from "aws-sdk"
 import { TemplateLocationHolder } from "./model"
 import { summarizeTemplate } from "./template"
 
-export const isStackReadyForLaunch = (
+export const isStackReadyForDeploy = (
   stackStatus: CloudFormation.StackStatus,
 ): boolean =>
   [
@@ -15,6 +15,8 @@ export const isStackReadyForLaunch = (
     "REVIEW_IN_PROGRESS",
     "CREATE_FAILED",
     "ROLLBACK_COMPLETE",
+    "IMPORT_COMPLETE",
+    "IMPORT_ROLLBACK_COMPLETE",
   ].includes(stackStatus)
 
 export const validateDeployContext = async (
@@ -23,7 +25,7 @@ export const validateDeployContext = async (
   const stacksInInvalidStatus = []
   for (const stack of ctx.getStacksToProcess()) {
     const existing = await ctx.getExistingStack(stack.getPath())
-    if (existing && !isStackReadyForLaunch(existing.StackStatus!)) {
+    if (existing && !isStackReadyForDeploy(existing.StackStatus!)) {
       stacksInInvalidStatus.push({ stack, existing })
     }
   }
