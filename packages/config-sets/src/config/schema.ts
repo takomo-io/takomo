@@ -1,5 +1,5 @@
-import Joi from "@hapi/joi"
 import { commandPath, vars } from "@takomo/core"
+import Joi from "joi"
 
 export const configSetName = Joi.string()
   .min(1)

@@ -44,7 +44,8 @@ const getConfigSetsName = (configSetType: ConfigSetType): string => {
   }
 }
 
-export abstract class CliAccountsOperationIO extends CliIO
+export abstract class CliAccountsOperationIO
+  extends CliIO
   implements AccountsOperationIO {
   private messages: Messages
   private readonly stacksDeployIO: (

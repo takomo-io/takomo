@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { commandPath, TakomoCredentialProvider } from "@takomo/core"
 import {
   buildConfigContext,
@@ -6,6 +5,7 @@ import {
   prepareUndeployContext,
 } from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
+import Joi from "joi"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { executeUndeployContext } from "./execute-undeploy-context"
 import { UndeployStacksIO } from "./model"

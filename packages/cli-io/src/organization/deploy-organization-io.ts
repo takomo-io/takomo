@@ -34,7 +34,8 @@ interface PolicyOperationsToInclude {
 const addFormatter = (s: string) => green(s)
 const deleteFormatter = (s: string) => red(s)
 
-export class CliDeployOrganizationIO extends CliIO
+export class CliDeployOrganizationIO
+  extends CliIO
   implements DeployOrganizationIO {
   constructor(options: Options) {
     super(options)

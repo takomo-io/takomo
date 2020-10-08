@@ -1,8 +1,8 @@
-import Joi from "@hapi/joi"
 import {
   expectNoValidationError,
   expectValidationErrors,
 } from "@takomo/unit-test"
+import Joi from "joi"
 import { CmdResolverProvider } from "../src/impl/cmd-resolver"
 
 const provider = new CmdResolverProvider()

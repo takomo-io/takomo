@@ -1,8 +1,8 @@
-import Joi from "@hapi/joi"
 import {
   expectNoValidationError,
   expectValidationErrors,
 } from "@takomo/unit-test"
+import Joi from "joi"
 import { StaticResolverProvider } from "../src/impl/static-resolver"
 
 const provider = new StaticResolverProvider()

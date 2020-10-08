@@ -3,7 +3,7 @@ import { timeoutInMinutes } from "../src"
 const valid = [10, "6", 0]
 
 const invalid = [
-  [-1, '"value" must be larger than or equal to 0'],
+  [-1, '"value" must be greater than or equal to 0'],
   ["a", '"value" must be a number'],
   [1.1, '"value" must be an integer'],
 ]

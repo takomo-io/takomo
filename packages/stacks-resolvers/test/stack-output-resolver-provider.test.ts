@@ -1,8 +1,8 @@
-import Joi from "@hapi/joi"
 import {
   expectNoValidationError,
   expectValidationErrors,
 } from "@takomo/unit-test"
+import Joi from "joi"
 import { StackOutputResolverProvider } from "../src/impl/stack-output-resolver"
 
 const provider = new StackOutputResolverProvider()

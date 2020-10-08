@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import {
   accountId,
   accountIds,
@@ -22,6 +21,7 @@ import {
   terminationProtection,
   timeout,
 } from "@takomo/stacks-schema"
+import Joi from "joi"
 
 export const stackGroupConfigFileSchema = Joi.object({
   project,

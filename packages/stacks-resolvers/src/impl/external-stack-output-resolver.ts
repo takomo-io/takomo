@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { CloudFormationClient } from "@takomo/aws-clients"
 import {
   CommandRole,
@@ -10,6 +9,7 @@ import {
 } from "@takomo/core"
 import { Resolver, ResolverInput, ResolverProvider } from "@takomo/stacks-model"
 import { stackOutputName } from "@takomo/stacks-schema"
+import Joi from "joi"
 
 export class ExternalStackOutputResolver implements Resolver {
   private readonly stack: string

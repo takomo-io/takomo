@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { SSMClient } from "@takomo/aws-clients"
 import { StackPath, stackPath } from "@takomo/core"
 import {
@@ -8,6 +7,7 @@ import {
   SecretName,
 } from "@takomo/stacks-model"
 import { secretName } from "@takomo/stacks-schema"
+import Joi from "joi"
 
 export class SecretResolver implements Resolver {
   private readonly stack: StackPath | null

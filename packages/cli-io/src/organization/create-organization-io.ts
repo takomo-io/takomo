@@ -5,7 +5,8 @@ import {
 } from "@takomo/organization-commands"
 import CliIO from "../cli-io"
 
-export class CliCreateOrganizationIO extends CliIO
+export class CliCreateOrganizationIO
+  extends CliIO
   implements CreateOrganizationIO {
   constructor(options: Options) {
     super(options)

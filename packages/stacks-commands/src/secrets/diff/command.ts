@@ -1,10 +1,10 @@
-import Joi from "@hapi/joi"
 import { commandPath, CommandStatus } from "@takomo/core"
 import {
   buildConfigContext,
   prepareDeployContext,
 } from "@takomo/stacks-context"
 import { validateInput } from "@takomo/util"
+import Joi from "joi"
 import { diffSecrets } from "./diff-secrets"
 import { DiffSecretsInput, DiffSecretsIO, DiffSecretsOutput } from "./model"
 

@@ -36,7 +36,7 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@hapi/joi": "17.1.1",
+    "joi": "17.2.1",
     "@takomo/aws-clients": "2.8.0",
     "@takomo/config-sets": "2.8.0",
     "@takomo/core": "2.8.0",
@@ -57,7 +57,6 @@
     "@babel/core": "7.10.2",
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",
-    "@types/hapi__joi": "17.1.2",
     "@types/jest": "26.0.0",
     "@types/lodash.flatten": "4.4.6",
     "@types/lodash.intersection": "4.4.6",

@@ -1,6 +1,6 @@
-import Joi from "@hapi/joi"
 import { configSetName } from "@takomo/config-sets"
 import { accountId, iamRoleArn, vars } from "@takomo/core"
+import Joi from "joi"
 
 export const deploymentGroupPath = Joi.string()
   .min(1)

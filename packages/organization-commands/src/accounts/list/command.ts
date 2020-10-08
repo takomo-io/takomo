@@ -1,7 +1,7 @@
-import Joi from "@hapi/joi"
 import { CommandStatus } from "@takomo/core"
 import { buildOrganizationContext } from "@takomo/organization-context"
 import { StopWatch, validateInput } from "@takomo/util"
+import Joi from "joi"
 import { listAccounts } from "./list-accounts"
 import { ListAccountsInput, ListAccountsIO, ListAccountsOutput } from "./model"
 

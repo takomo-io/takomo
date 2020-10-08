@@ -17,7 +17,8 @@ export interface Messages {
   outputNoTargets: string
 }
 
-export abstract class CliDeploymentOperationIO extends CliIO
+export abstract class CliDeploymentOperationIO
+  extends CliIO
   implements DeploymentTargetsOperationIO {
   private readonly messages: Messages
   private readonly stacksDeployIO: (

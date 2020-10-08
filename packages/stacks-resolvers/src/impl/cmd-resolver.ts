@@ -1,6 +1,6 @@
-import Joi from "@hapi/joi"
 import { Resolver, ResolverInput, ResolverProvider } from "@takomo/stacks-model"
 import { exec } from "child_process"
+import Joi from "joi"
 import { promisify } from "util"
 
 const execP = promisify(exec)

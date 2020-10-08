@@ -6,7 +6,8 @@ import {
 import Table from "easy-table"
 import CliIO from "../cli-io"
 
-export class CliDescribeOrganizationIO extends CliIO
+export class CliDescribeOrganizationIO
+  extends CliIO
   implements DescribeOrganizationIO {
   constructor(options: Options) {
     super(options)

@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { buildOrganizationContext } from "@takomo/organization-context"
 import {
   accountEmail,
@@ -6,6 +5,7 @@ import {
   organizationRoleName,
 } from "@takomo/organization-schema"
 import { validateInput } from "@takomo/util"
+import Joi from "joi"
 import { createAccount } from "./create-account"
 import {
   CreateAccountInput,

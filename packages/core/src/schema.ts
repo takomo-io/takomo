@@ -1,4 +1,4 @@
-import Joi from "@hapi/joi"
+import Joi from "joi"
 import { REGIONS } from "./constants"
 
 export const accountId = Joi.string().regex(/^\d{12}$/)

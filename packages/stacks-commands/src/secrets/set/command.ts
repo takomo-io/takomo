@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { stackPath } from "@takomo/core"
 import {
   buildConfigContext,
@@ -6,6 +5,7 @@ import {
 } from "@takomo/stacks-context"
 import { secretName } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
+import Joi from "joi"
 import { SetSecretInput, SetSecretIO, SetSecretOutput } from "./model"
 import { setSecretValue } from "./set-secret-value"
 

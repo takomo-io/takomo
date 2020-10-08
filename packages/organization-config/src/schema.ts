@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { configSets } from "@takomo/config-sets"
 import { accountId, vars } from "@takomo/core"
 import {
@@ -8,6 +7,7 @@ import {
   policies,
   trustedAwsServices,
 } from "@takomo/organization-schema"
+import Joi from "joi"
 
 export const organizationConfigFileSchema = Joi.object({
   vars,

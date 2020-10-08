@@ -6,6 +6,7 @@ on:
       - feature/**
       - release/**
       - fix/**
+      - chore/**
 
 env:
   TKM_ORG_A_ID: ${{ secrets.TKM_ORG_A_ID }}
