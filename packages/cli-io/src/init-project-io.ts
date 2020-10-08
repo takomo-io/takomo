@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { Constants, Options, project } from "@takomo/core"
 import {
   InitProjectInput,
@@ -7,6 +6,7 @@ import {
   ProjectInformation,
 } from "@takomo/init-command"
 import { indentLines } from "@takomo/util"
+import Joi from "joi"
 import CliIO from "./cli-io"
 
 const regionChoices = Constants.REGIONS.map((r) => ({ name: r, value: r }))

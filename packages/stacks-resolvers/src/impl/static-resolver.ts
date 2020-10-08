@@ -1,5 +1,5 @@
-import Joi from "@hapi/joi"
 import { Resolver, ResolverInput, ResolverProvider } from "@takomo/stacks-model"
+import Joi from "joi"
 
 export class StaticResolver implements Resolver {
   private readonly value: string

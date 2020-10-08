@@ -1,8 +1,8 @@
-import Joi from "@hapi/joi"
 import { accountId } from "@takomo/core"
 import { buildOrganizationContext } from "@takomo/organization-context"
 import { organizationalUnitPath } from "@takomo/organization-schema"
 import { validateInput } from "@takomo/util"
+import Joi from "joi"
 import { deployAccounts } from "./deploy-accounts"
 import {
   AccountsOperationInput,

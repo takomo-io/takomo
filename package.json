@@ -20,7 +20,7 @@
     "build": "lerna run build",
     "clean:dist": "lerna run 'clean:dist' --parallel",
     "clean:deps": "lerna run 'clean:deps' --parallel && rm -rf node_modules",
-    "clean:all": "lerna run 'clean:all' --parallel && rm -rf node_modules",
+    "clean:all": "lerna run 'clean:all' --parallel && rm -rf node_modules && rm -f yarn.lock",
     "watch": "lerna run watch --parallel",
     "depcheck": "lerna run depcheck --parallel",
     "test": "lerna run test",

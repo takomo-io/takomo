@@ -36,7 +36,7 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@hapi/joi": "17.1.1",
+    "joi": "17.2.1",
     "@takomo/core": "2.8.0",
     "@takomo/stacks-model": "2.8.0"
   },
@@ -45,7 +45,6 @@
     "@babel/preset-env": "7.10.2",
     "@babel/preset-typescript": "7.10.1",
     "@takomo/unit-test": "2.7.0",
-    "@types/hapi__joi": "17.1.2",
     "@types/jest": "26.0.0",
     "babel-jest": "26.0.1",
     "jest": "26.0.1",

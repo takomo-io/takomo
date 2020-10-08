@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { CommandStatus, Constants, project, region } from "@takomo/core"
 import {
   createDir,
@@ -7,6 +6,7 @@ import {
   TakomoError,
   validateInput,
 } from "@takomo/util"
+import Joi from "joi"
 import path from "path"
 import {
   InitProjectInput,

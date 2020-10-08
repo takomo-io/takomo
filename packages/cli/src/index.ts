@@ -1,8 +1,8 @@
 import yargs from "yargs"
-import { deploymentTargetsCmd } from "./deployment-targets/index.js"
+import { deploymentTargetsCmd } from "./deployment-targets"
 import { initProjectCmd } from "./init.js"
-import { organizationCmd } from "./organization/index.js"
-import { stacksCmd } from "./stacks/index.js"
+import { organizationCmd } from "./organization"
+import { stacksCmd } from "./stacks"
 
 export { initOptionsAndVariables, OptionsAndVariables } from "./common.js"
 

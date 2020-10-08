@@ -36,10 +36,9 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@hapi/joi": "17.1.1"
+    "joi": "17.2.1"
   },
   "devDependencies": {
-    "@types/hapi__joi": "17.1.2",
     "@types/jest": "26.0.0",
     "babel-jest": "26.0.1",
     "dotenv": "8.2.0",

@@ -1,7 +1,7 @@
-import Joi from "@hapi/joi"
 import { ResolverInput } from "@takomo/stacks-model"
 import { ConsoleLogger, LogLevel } from "@takomo/util"
 import { mock } from "jest-mock-extended"
+import Joi from "joi"
 import { ResolverRegistry } from "../src"
 import { StaticResolver } from "../src/impl/static-resolver"
 

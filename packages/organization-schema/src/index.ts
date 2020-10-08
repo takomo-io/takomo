@@ -1,6 +1,6 @@
-import Joi from "@hapi/joi"
 import { configSetName } from "@takomo/config-sets"
 import { accountId, Constants, vars } from "@takomo/core"
+import Joi from "joi"
 
 export const accountName = Joi.string().min(1).max(50)
 

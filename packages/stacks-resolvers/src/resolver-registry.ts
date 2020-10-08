@@ -1,6 +1,6 @@
-import Joi from "@hapi/joi"
 import { Resolver, ResolverName, ResolverProvider } from "@takomo/stacks-model"
 import { Logger, TakomoError, TakomoErrorOptions } from "@takomo/util"
+import Joi from "joi"
 
 class InvalidResolverProviderConfigurationError extends TakomoError {
   constructor(

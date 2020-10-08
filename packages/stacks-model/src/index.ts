@@ -1,4 +1,3 @@
-import Joi from "@hapi/joi"
 import { CloudFormationClient } from "@takomo/aws-clients"
 import {
   AccountId,
@@ -21,6 +20,7 @@ import {
 import { Logger, StopWatch, TemplateEngine } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { Capability } from "aws-sdk/clients/cloudformation"
+import Joi from "joi"
 
 export enum StackLaunchType {
   CREATE = "CREATE",

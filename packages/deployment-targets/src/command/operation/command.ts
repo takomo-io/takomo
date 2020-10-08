@@ -1,5 +1,5 @@
-import Joi from "@hapi/joi"
 import { validateInput } from "@takomo/util"
+import Joi from "joi"
 import { buildDeploymentTargetsContext } from "../../context"
 import { deploymentGroupPath, deploymentTargetName } from "../../schema"
 import {

@@ -1,6 +1,6 @@
-import Joi from "@hapi/joi"
 import { buildOrganizationContext } from "@takomo/organization-context"
 import { validateInput } from "@takomo/util"
+import Joi from "joi"
 import { describeOrganization } from "./describe-organization"
 import {
   DescribeOrganizationInput,
