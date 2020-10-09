@@ -41,9 +41,9 @@ export const bootstrapAccountsCmd = {
           new CliBootstrapAccountsIO(
             input.options,
             (options: Options, accountId: string) =>
-              new CliDeployStacksIO(options, accountId),
+              new CliDeployStacksIO(options, console.log, accountId),
             (options: Options, accountId: string) =>
-              new CliUndeployStacksIO(options, accountId),
+              new CliUndeployStacksIO(options, console.log, accountId),
           ),
         ),
     ),

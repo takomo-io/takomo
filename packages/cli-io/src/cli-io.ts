@@ -30,7 +30,7 @@ export default class CliIO extends BaseLogger implements IO {
   }
 
   print(message?: any, ...optionalParams: any[]): void {
-    this.logWriter(message, ...optionalParams)
+    this.logWriter(message || "", ...optionalParams)
   }
 
   subheader = (
