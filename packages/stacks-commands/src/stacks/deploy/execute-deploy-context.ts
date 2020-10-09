@@ -69,7 +69,10 @@ export const executeDeployContext = async (
   const { ignoreDependencies } = input
   const stacksToDeploy = ctx.getStacksToProcess()
 
-  io.debugObject("Deploy stacks in the following order:", stacksToDeploy)
+  io.debugObject(
+    "Deploy stacks in the following order:",
+    stacksToDeploy.map((s) => s.getPath()),
+  )
 
   if (ignoreDependencies && stacksToDeploy.length > 1) {
     throw new IncompatibleIgnoreDependenciesOptionOnLaunchError(stacksToDeploy)
