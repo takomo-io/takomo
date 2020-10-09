@@ -5,7 +5,7 @@ import {
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
 import { CommandContext, Stack, StackGroup } from "@takomo/stacks-model"
-import { collectFromHierarchy, grey, red } from "@takomo/util"
+import { collectFromHierarchy, grey, LogWriter, red } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
@@ -27,8 +27,12 @@ const CONFIRM_UNDEPLOY_ANSWER_CONTINUE = {
 }
 
 export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
-  constructor(options: Options, loggerName: string | null = null) {
-    super(options, loggerName)
+  constructor(
+    options: Options,
+    logWriter: LogWriter = console.log,
+    loggerName: string | null = null,
+  ) {
+    super(logWriter, options, loggerName)
   }
 
   chooseCommandPath = async (

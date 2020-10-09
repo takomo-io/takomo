@@ -4,10 +4,11 @@ import {
   CreateAccountOutput,
 } from "@takomo/organization-commands"
 import CliIO from "../../cli-io"
+import { LogWriter } from "@takomo/util"
 
 export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   confirmAccountCreation = async (
@@ -15,6 +16,7 @@ export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
     email: string,
     iamUserAccessToBilling: boolean,
     roleName: string,
+    alias?: string,
   ): Promise<ConfirmResult> => {
     this.longMessage(
       [
@@ -24,6 +26,7 @@ export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
         `  email:                       ${email}`,
         `  role name:                   ${roleName}`,
         `  iam user access to billing:  ${iamUserAccessToBilling}`,
+        `  alias:                       ${alias || "<undefined>"}`,
       ],
       true,
     )

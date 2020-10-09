@@ -1,5 +1,5 @@
 import { Constants, Region } from "@takomo/core"
-import { sleep } from "@takomo/util"
+import { Failure, Result, sleep, Success } from "@takomo/util"
 import { Credentials, Organizations } from "aws-sdk"
 import {
   Account,
@@ -163,7 +163,7 @@ export class OrganizationsClient extends AwsClient<Organizations> {
   createAccount = async (request: CreateAccountRequest): Promise<string> =>
     this.withClientPromise(
       (c) => c.createAccount(request),
-      (res) => res.CreateAccountStatus?.Id!,
+      (res) => res.CreateAccountStatus!.Id!,
     )
 
   describeOrganization = async (): Promise<Organization> =>

@@ -1,5 +1,5 @@
 import { IO, Options } from "@takomo/core"
-import { bold, ConsoleLogger, indentLines } from "@takomo/util"
+import { BaseLogger, bold, indentLines, LogWriter } from "@takomo/util"
 import inquirer from "inquirer"
 
 export interface Choice<T> {
@@ -15,12 +15,22 @@ interface QuestionOptions {
 // eslint-disable-next-line
 inquirer.registerPrompt("autocomplete", require("inquirer-autocomplete-prompt"))
 
-export default class CliIO extends ConsoleLogger implements IO {
+export default class CliIO extends BaseLogger implements IO {
   protected readonly options: Options
+  private readonly logWriter: LogWriter
 
-  constructor(options: Options, loggerName: string | null = null) {
-    super(options.getLogLevel(), loggerName)
+  constructor(
+    logWriter: LogWriter,
+    options: Options,
+    loggerName: string | null = null,
+  ) {
+    super(logWriter, options.getLogLevel(), loggerName)
     this.options = options
+    this.logWriter = logWriter
+  }
+
+  print(message?: any, ...optionalParams: any[]): void {
+    this.logWriter(message || "", ...optionalParams)
   }
 
   subheader = (
@@ -49,11 +59,11 @@ export default class CliIO extends ConsoleLogger implements IO {
     marginBottom = false,
   ): void => {
     if (marginTop) {
-      console.log()
+      this.print()
     }
-    console.log(message)
+    this.print(message)
     if (marginBottom) {
-      console.log()
+      this.print()
     }
   }
 
@@ -64,12 +74,12 @@ export default class CliIO extends ConsoleLogger implements IO {
     indent = 0,
   ): void => {
     if (marginTop) {
-      console.log()
+      this.print()
     }
 
-    console.log(indentLines(lines.join("\n"), indent))
+    this.print(indentLines(lines.join("\n"), indent))
     if (marginBottom) {
-      console.log()
+      this.print()
     }
   }
 
@@ -80,18 +90,18 @@ export default class CliIO extends ConsoleLogger implements IO {
     indent = 0,
   ): void => {
     if (marginTop) {
-      console.log()
+      this.print()
     }
 
-    console.log(indentLines(message, indent))
+    this.print(indentLines(message, indent))
     if (marginBottom) {
-      console.log()
+      this.print()
     }
   }
 
   confirm = async (message: string, marginTop = false): Promise<boolean> => {
     if (marginTop) {
-      console.log()
+      this.print()
     }
 
     const { answer } = await inquirer.prompt([
@@ -111,7 +121,7 @@ export default class CliIO extends ConsoleLogger implements IO {
     options: QuestionOptions = {},
   ): Promise<string> => {
     if (marginTop) {
-      console.log()
+      this.print()
     }
 
     const { answer } = await inquirer.prompt([
@@ -132,7 +142,7 @@ export default class CliIO extends ConsoleLogger implements IO {
     marginTop = false,
   ): Promise<T> => {
     if (marginTop) {
-      console.log()
+      this.print()
     }
 
     const { answer } = await inquirer.prompt([
@@ -153,7 +163,7 @@ export default class CliIO extends ConsoleLogger implements IO {
     marginTop = false,
   ): Promise<T[]> => {
     if (marginTop) {
-      console.log()
+      this.print()
     }
 
     const { answer } = await inquirer.prompt([

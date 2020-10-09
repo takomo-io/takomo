@@ -10,7 +10,13 @@ import {
   PlannedOrganizationalUnit,
   PolicyDeploymentPlan,
 } from "@takomo/organization-commands"
-import { collectFromHierarchy, green, red, yellow } from "@takomo/util"
+import {
+  collectFromHierarchy,
+  green,
+  LogWriter,
+  red,
+  yellow,
+} from "@takomo/util"
 import Table from "easy-table"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
@@ -37,8 +43,8 @@ const deleteFormatter = (s: string) => red(s)
 export class CliDeployOrganizationIO
   extends CliIO
   implements DeployOrganizationIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   private printTrustedServicesPlan = (

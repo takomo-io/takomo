@@ -36,7 +36,6 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "joi": "17.2.1",
     "@takomo/aws-clients": "2.8.0",
     "@takomo/config-sets": "2.8.0",
     "@takomo/core": "2.8.0",
@@ -54,9 +53,11 @@
     "easy-table": "1.1.1",
     "inquirer": "7.0.6",
     "inquirer-autocomplete-prompt": "1.0.2",
+    "joi": "17.2.1",
     "lodash.flatten": "4.4.0",
     "lodash.uniq": "4.5.0",
-    "pretty-ms": "5.1.0"
+    "pretty-ms": "5.1.0",
+    "ts-dedent": "2.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",

@@ -1,6 +1,7 @@
 import { Options } from "@takomo/core"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { CliDeploymentOperationIO } from "./deployment-operation-io"
+import { LogWriter } from "@takomo/util"
 
 export class CliBootstrapTargetsIO extends CliDeploymentOperationIO {
   constructor(
@@ -10,8 +11,10 @@ export class CliBootstrapTargetsIO extends CliDeploymentOperationIO {
       options: Options,
       loggerName: string,
     ) => UndeployStacksIO,
+    logWriter: LogWriter = console.log,
   ) {
     super(
+      logWriter,
       options,
       {
         confirmHeader: "Targets bootstrap plan",

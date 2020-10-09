@@ -4,12 +4,13 @@ import {
   CreateOrganizationOutput,
 } from "@takomo/organization-commands"
 import CliIO from "../cli-io"
+import { LogWriter } from "@takomo/util"
 
 export class CliCreateOrganizationIO
   extends CliIO
   implements CreateOrganizationIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   printOutput = (

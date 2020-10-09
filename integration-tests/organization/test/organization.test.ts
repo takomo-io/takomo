@@ -152,9 +152,9 @@ describe("Organization commands", () => {
         new CliUndeployAccountsIO(
           options,
           (options: Options, accountId: string) =>
-            new CliDeployStacksIO(options, accountId),
+            new CliDeployStacksIO(options, console.log, accountId),
           (options: Options, accountId: string) =>
-            new CliUndeployStacksIO(options, accountId),
+            new CliUndeployStacksIO(options, console.log, accountId),
         ),
       )
 
@@ -220,9 +220,9 @@ describe("Organization commands", () => {
         new CliDeployAccountsIO(
           options,
           (options: Options, accountId: string) =>
-            new CliDeployStacksIO(options, accountId),
+            new CliDeployStacksIO(options, console.log, accountId),
           (options: Options, accountId: string) =>
-            new CliUndeployStacksIO(options, accountId),
+            new CliUndeployStacksIO(options, console.log, accountId),
         ),
       )
 
@@ -270,9 +270,9 @@ describe("Organization commands", () => {
         new CliDeployAccountsIO(
           options,
           (options: Options, accountId: string) =>
-            new CliDeployStacksIO(options, accountId),
+            new CliDeployStacksIO(options, console.log, accountId),
           (options: Options, accountId: string) =>
-            new CliUndeployStacksIO(options, accountId),
+            new CliUndeployStacksIO(options, console.log, accountId),
         ),
       )
 
@@ -318,9 +318,9 @@ describe("Organization commands", () => {
         new CliDeployAccountsIO(
           options,
           (options: Options, accountId: string) =>
-            new CliDeployStacksIO(options, accountId),
+            new CliDeployStacksIO(options, console.log, accountId),
           (options: Options, accountId: string) =>
-            new CliUndeployStacksIO(options, accountId),
+            new CliUndeployStacksIO(options, console.log, accountId),
         ),
       )
 
@@ -366,9 +366,9 @@ describe("Organization commands", () => {
         new CliDeployAccountsIO(
           options,
           (options: Options, accountId: string) =>
-            new CliDeployStacksIO(options, accountId),
+            new CliDeployStacksIO(options, console.log, accountId),
           (options: Options, accountId: string) =>
-            new CliUndeployStacksIO(options, accountId),
+            new CliUndeployStacksIO(options, console.log, accountId),
         ),
       )
 

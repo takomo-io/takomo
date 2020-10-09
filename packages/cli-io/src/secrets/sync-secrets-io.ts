@@ -6,9 +6,10 @@ import {
 } from "@takomo/stacks-commands"
 import { Secret } from "@takomo/stacks-model"
 import { CliSecretsIo, SecretOperation } from "./cli-secrets-io"
+import { LogWriter } from "@takomo/util"
 export class CliSyncSecretsIO extends CliSecretsIo implements SyncSecretsIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   printOutput = (output: SyncSecretsOutput): SyncSecretsOutput => {

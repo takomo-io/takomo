@@ -1,5 +1,6 @@
 import { buildOrganizationContext } from "@takomo/organization-context"
 import {
+  accountAlias,
   accountEmail,
   accountName,
   organizationRoleName,
@@ -14,10 +15,11 @@ import {
 } from "./model"
 
 const schema = Joi.object({
-  name: accountName,
-  email: accountEmail,
-  roleName: organizationRoleName,
+  name: accountName.required(),
+  email: accountEmail.required(),
+  roleName: organizationRoleName.required(),
   iamUserAccessToBilling: Joi.boolean(),
+  alias: accountAlias,
 }).unknown(true)
 
 export const createAccountCommand = async (

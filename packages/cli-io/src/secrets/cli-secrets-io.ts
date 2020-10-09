@@ -1,7 +1,8 @@
 import { StackSecretsDiff } from "@takomo/stacks-commands"
 import { Secret } from "@takomo/stacks-model"
-import { green, red } from "@takomo/util"
+import { green, LogWriter, red } from "@takomo/util"
 import CliIO from "../cli-io"
+import { Options } from "@takomo/core"
 
 export enum SecretOperation {
   ADD,
@@ -20,6 +21,10 @@ const operationSymbol = (operation: SecretOperation | undefined): string => {
 }
 
 export class CliSecretsIo extends CliIO {
+  constructor(logWriter: LogWriter, options: Options) {
+    super(logWriter, options)
+  }
+
   printSecret = (
     secret: Secret,
     operation: SecretOperation | undefined = undefined,

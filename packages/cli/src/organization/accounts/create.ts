@@ -35,6 +35,11 @@ export const createAccountCmd = {
         string: true,
         global: false,
         default: Constants.DEFAULT_ORGANIZATION_ROLE_NAME,
+      })
+      .option("alias", {
+        description: "Account alias",
+        string: true,
+        global: false,
       }),
   handler: (argv: any) =>
     handle(
@@ -45,6 +50,7 @@ export const createAccountCmd = {
         name: argv.name,
         iamUserAccessToBilling: argv["iam-user-access-to-billing"],
         roleName: argv["role-name"],
+        alias: argv.alias,
       }),
       (input) =>
         createAccountCommand(input, new CliCreateAccountIO(input.options)),

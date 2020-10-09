@@ -6,3 +6,4 @@ export {
 } from "./organizations"
 export { S3Client } from "./s3"
 export { SSMClient } from "./ssm"
+export { IamClient } from "./iam"

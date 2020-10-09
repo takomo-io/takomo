@@ -199,15 +199,23 @@ const formatLogLevel = (logLevel: LogLevel): string => {
   }
 }
 
-export class ConsoleLogger implements Logger {
-  private readonly logLevel: LogLevel
-  private readonly logLevelNumber: number
-  private readonly name: string | null
+export type LogWriter = (message?: any, ...optionalParams: any[]) => void
 
-  constructor(logLevel: LogLevel = LogLevel.INFO, name: string | null = null) {
-    this.logLevel = logLevel
-    this.logLevelNumber = getNumericLogLevel(logLevel)
-    this.name = name
+export class BaseLogger implements Logger {
+  readonly #logLevel: LogLevel
+  readonly #logLevelNumber: number
+  readonly #name: string | null
+  readonly #log: LogWriter
+
+  constructor(
+    log: LogWriter,
+    logLevel: LogLevel = LogLevel.INFO,
+    name: string | null = null,
+  ) {
+    this.#logLevel = logLevel
+    this.#logLevelNumber = getNumericLogLevel(logLevel)
+    this.#name = name
+    this.#log = log
   }
 
   private meta(level: LogLevel): string {
@@ -215,13 +223,13 @@ export class ConsoleLogger implements Logger {
       timestamp() +
       " " +
       formatLogLevel(level) +
-      (this.name ? ` - ${this.name}` : "")
+      (this.#name ? ` - ${this.#name}` : "")
     )
   }
 
   private log(level: LogLevel, ...message: any[]) {
-    if (this.logLevelNumber <= getNumericLogLevel(level)) {
-      console.log(`${this.meta(level)} -`, ...message)
+    if (this.#logLevelNumber <= getNumericLogLevel(level)) {
+      this.#log(`${this.meta(level)} -`, ...message)
     }
   }
 
@@ -231,9 +239,9 @@ export class ConsoleLogger implements Logger {
     obj: any,
     filterFn: (obj: any) => any,
   ) {
-    if (this.logLevelNumber <= getNumericLogLevel(level)) {
+    if (this.#logLevelNumber <= getNumericLogLevel(level)) {
       const filteredObj = filterFn(obj)
-      console.log(
+      this.#log(
         `${this.meta(level)} - ${message}\n\n${indentLines(
           formatYaml(filteredObj),
         )}`,
@@ -242,11 +250,11 @@ export class ConsoleLogger implements Logger {
   }
 
   private logText(level: LogLevel, message: string, text: string) {
-    if (this.logLevelNumber <= getNumericLogLevel(level)) {
+    if (this.#logLevelNumber <= getNumericLogLevel(level)) {
       if (text === "") {
-        console.log(`${this.meta(level)} - ${message} <empty>`)
+        this.#log(`${this.meta(level)} - ${message} <empty>`)
       } else {
-        console.log(`${this.meta(level)} - ${message}\n\n${indentLines(text)}`)
+        this.#log(`${this.meta(level)} - ${message}\n\n${indentLines(text)}`)
       }
     }
   }
@@ -320,7 +328,13 @@ export class ConsoleLogger implements Logger {
   }
 
   childLogger(name: string): Logger {
-    const childName = this.name ? `${this.name} - ${name}` : name
-    return new ConsoleLogger(this.logLevel, childName)
+    const childName = this.#name ? `${this.#name} - ${name}` : name
+    return new ConsoleLogger(this.#logLevel, childName)
+  }
+}
+
+export class ConsoleLogger extends BaseLogger {
+  constructor(logLevel: LogLevel = LogLevel.INFO, name: string | null = null) {
+    super(console.log, logLevel, name)
   }
 }

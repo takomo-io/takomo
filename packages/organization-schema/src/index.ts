@@ -6,6 +6,12 @@ export const accountName = Joi.string().min(1).max(50)
 
 export const accountEmail = Joi.string().email()
 
+// For account alias requirements, see https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccountAlias.html
+export const accountAlias = Joi.string()
+  .min(3)
+  .max(63)
+  .regex(/^[a-z0-9](([a-z0-9]|-(?!-))*[a-z0-9])?$/)
+
 export const organizationRoleName = Joi.string()
   .min(1)
   .max(64)
