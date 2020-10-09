@@ -28,14 +28,24 @@ const executeStacksInParallel = async (
   io: DeployStacksIO,
   state: DeployState,
   watch: StopWatch,
-  stacksToLaunch: Stack[],
+  stacksToDeploy: Stack[],
   ignoreDependencies: boolean,
   map: Map<StackPath, Promise<StackResult>>,
 ): Promise<StacksOperationOutput> => {
-  const executions = stacksToLaunch.reduce((executions, stack) => {
+  const executions = stacksToDeploy.reduce((executions, stack) => {
     const dependencies = ignoreDependencies
       ? []
-      : stack.getDependencies().map((d) => executions.get(d)!)
+      : stack.getDependencies().map((d) => {
+          const dependency = executions.get(d)
+          if (!dependency) {
+            io.error(
+              `Dependency '${d}' in stack ${stack.getPath()} does not exists`,
+            )
+          }
+
+          // TODO: Throw an error if dependency doesn't exists
+          return dependency!
+        })
 
     const execution = deployStack(watch, ctx, io, state, stack, dependencies)
     executions.set(stack.getPath(), execution)
@@ -57,9 +67,12 @@ export const executeDeployContext = async (
   io: DeployStacksIO,
 ): Promise<StacksOperationOutput> => {
   const { ignoreDependencies } = input
-  const stacksToLaunch = ctx.getStacksToProcess()
-  if (ignoreDependencies && stacksToLaunch.length > 1) {
-    throw new IncompatibleIgnoreDependenciesOptionOnLaunchError(stacksToLaunch)
+  const stacksToDeploy = ctx.getStacksToProcess()
+
+  io.debugObject("Deploy stacks in the following order:", stacksToDeploy)
+
+  if (ignoreDependencies && stacksToDeploy.length > 1) {
+    throw new IncompatibleIgnoreDependenciesOptionOnLaunchError(stacksToDeploy)
   }
 
   const autoConfirm = ctx.getOptions().isAutoConfirmEnabled()
@@ -90,15 +103,15 @@ export const executeDeployContext = async (
       io,
       state,
       watch,
-      stacksToLaunch,
+      stacksToDeploy,
       ignoreDependencies,
       new Map(),
     )
   }
 
   const executions = new Map<StackPath, StackResult>()
-  for (let i = 0; i < stacksToLaunch.length; i++) {
-    const stack = stacksToLaunch[i]
+  for (let i = 0; i < stacksToDeploy.length; i++) {
+    const stack = stacksToDeploy[i]
     const dependencies = ignoreDependencies
       ? []
       : stack.getDependencies().map((d) => Promise.resolve(executions.get(d)!))
@@ -146,7 +159,7 @@ export const executeDeployContext = async (
         io,
         state,
         watch,
-        stacksToLaunch.slice(i + 1),
+        stacksToDeploy.slice(i + 1),
         ignoreDependencies,
         promisedExecutions,
       )

@@ -1,4 +1,3 @@
-import { CloudFormationClient } from "@takomo/aws-clients"
 import { resolveStackLaunchType } from "@takomo/stacks-context"
 import {
   CommandContext,
@@ -19,12 +18,7 @@ export const deployStack = async (
   dependencies: Promise<StackResult>[],
 ): Promise<StackResult> => {
   const logger = io.childLogger(stack.getPath())
-
-  const cloudFormationClient = new CloudFormationClient({
-    logger,
-    region: stack.getRegion(),
-    credentialProvider: stack.getCredentialProvider(),
-  })
+  const cloudFormationClient = stack.getCloudFormationClient()
 
   logger.info("Preparing stack deployment")
   logger.debugObject("Stack config:", stack)

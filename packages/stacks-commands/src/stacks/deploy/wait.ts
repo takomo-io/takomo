@@ -18,9 +18,7 @@ export const waitForDependenciesToComplete = async (
 
   try {
     const dependencyResults = await Promise.all(dependencies)
-
-    const allDependenciesSucceeded =
-      dependencyResults.find((r) => !r.success) === undefined
+    const allDependenciesSucceeded = dependencyResults.some((r) => !r.success)
 
     if (!allDependenciesSucceeded) {
       logger.debug("Some dependencies failed")
