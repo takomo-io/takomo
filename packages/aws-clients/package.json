@@ -1,6 +1,6 @@
 {
   "name": "@takomo/aws-clients",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Takomo AWS Clients",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,8 +36,8 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/core": "2.8.0",
-    "@takomo/util": "2.8.0",
+    "@takomo/core": "2.9.0",
+    "@takomo/util": "2.9.0",
     "aws-sdk": "2.745.0",
     "lodash.flatten": "4.4.0",
     "lodash.last": "3.0.0",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/takomo-io/takomo/compare/v2.8.0...v2.9.0) (2020-10-09)
+
+
+### Features
+
+* add stack statuses related to importing of resources to stacks to stack status validation ([#108](https://github.com/takomo-io/takomo/issues/108)) ([27d95ae](https://github.com/takomo-io/takomo/commit/27d95ae977d7270703befab0809925cb69f37cdd)), closes [#107](https://github.com/takomo-io/takomo/issues/107)
+
+
+
+
+
 # [2.8.0](https://github.com/takomo-io/takomo/compare/v2.7.4...v2.8.0) (2020-10-05)
 
 

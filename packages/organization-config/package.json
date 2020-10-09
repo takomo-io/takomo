@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-config",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Takomo Organization Config",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,12 +36,12 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "joi": "17.2.1",
-    "@takomo/config-sets": "2.8.0",
-    "@takomo/core": "2.8.0",
-    "@takomo/organization-schema": "2.8.0",
-    "@takomo/util": "2.8.0",
+    "@takomo/config-sets": "2.9.0",
+    "@takomo/core": "2.9.0",
+    "@takomo/organization-schema": "2.9.0",
+    "@takomo/util": "2.9.0",
     "aws-sdk": "2.745.0",
+    "joi": "17.2.1",
     "lodash.uniq": "4.5.0"
   },
   "devDependencies": {
