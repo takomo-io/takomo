@@ -1,12 +1,17 @@
-import { CommandStatus, ConfirmResult } from "@takomo/core"
+import { IamClient, OrganizationsClient } from "@takomo/aws-clients"
+import {
+  CommandStatus,
+  ConfirmResult,
+  TakomoCredentialProvider,
+} from "@takomo/core"
 import { OrganizationContext } from "@takomo/organization-context"
-import { Failure, Result, Success, Logger, TakomoError } from "@takomo/util"
+import { Failure, Logger, Result, Success, TakomoError } from "@takomo/util"
+import { Policy } from "cockatiel"
 import {
   CreateAccountInput,
   CreateAccountIO,
   CreateAccountOutput,
 } from "./model"
-import { IamClient, OrganizationsClient } from "@takomo/aws-clients"
 
 const initiateAccountCreation = async (
   client: OrganizationsClient,
@@ -22,6 +27,17 @@ const initiateAccountCreation = async (
     .then(Success.of)
     .catch(Failure.of)
 
+const createCredentialProvider = async (
+  ctx: OrganizationContext,
+  logger: Logger,
+  role: string,
+): Promise<TakomoCredentialProvider> => {
+  const retry = Policy.handleAll().retry().delay([2000, 4000, 8000, 16000])
+  return retry.execute(() =>
+    ctx.getCredentialProvider().createCredentialProviderForRole(role),
+  )
+}
+
 const createAccountAlias = async (
   ctx: OrganizationContext,
   logger: Logger,
@@ -34,17 +50,15 @@ const createAccountAlias = async (
     `Assume role ${role} from the new account to set the account alias`,
   )
 
-  const credentialProvider = await ctx
-    .getCredentialProvider()
-    .createCredentialProviderForRole(role)
-
-  const iam = new IamClient({
-    logger,
-    credentialProvider,
-    region: "us-east-1",
-  })
-
   try {
+    const credentialProvider = await createCredentialProvider(ctx, logger, role)
+
+    const iam = new IamClient({
+      logger,
+      credentialProvider,
+      region: "us-east-1",
+    })
+
     return Success.of(await iam.createAccountAlias(alias))
   } catch (e) {
     return Failure.of(e)
