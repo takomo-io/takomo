@@ -4,12 +4,13 @@ import date from "date-and-time"
 import Table from "easy-table"
 import CliIO from "../cli-io"
 import { formatStackStatus } from "../formatters"
+import { LogWriter } from "@takomo/util"
 const formatDate = (d: any): string =>
   d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
 
 export class CliListStacksIO extends CliIO implements ListStacksIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
   printOutput = (output: ListStacksOutput): ListStacksOutput => {
     const table = new Table()

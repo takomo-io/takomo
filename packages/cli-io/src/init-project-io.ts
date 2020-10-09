@@ -5,7 +5,7 @@ import {
   InitProjectOutput,
   ProjectInformation,
 } from "@takomo/init-command"
-import { indentLines } from "@takomo/util"
+import { indentLines, LogWriter } from "@takomo/util"
 import Joi from "joi"
 import CliIO from "./cli-io"
 
@@ -29,8 +29,8 @@ const validateProject = (input: string): string | boolean => {
 }
 
 export class CliInitProjectIO extends CliIO implements InitProjectIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   private promptProject = async (

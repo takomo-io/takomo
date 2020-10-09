@@ -27,8 +27,7 @@ export interface CommandInput {
   readonly watch: StopWatch
 }
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix, @typescript-eslint/no-empty-interface
-export interface IO extends Logger {}
+export type IO = Logger
 
 export const resolveCommandOutputBase = (
   items: CommandOutputBase[],

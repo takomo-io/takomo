@@ -1,10 +1,11 @@
 import { Options } from "@takomo/core"
 import { ListSecretsIO, ListSecretsOutput } from "@takomo/stacks-commands"
 import { CliSecretsIo } from "./cli-secrets-io"
+import { LogWriter } from "@takomo/util"
 
 export class CliListSecretsIO extends CliSecretsIo implements ListSecretsIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   printOutput = (output: ListSecretsOutput): ListSecretsOutput => {

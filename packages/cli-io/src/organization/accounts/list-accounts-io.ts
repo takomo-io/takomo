@@ -7,10 +7,11 @@ import date from "date-and-time"
 import Table from "easy-table"
 import CliIO from "../../cli-io"
 import { formatAccountStatus } from "../../formatters"
+import { LogWriter } from "@takomo/util"
 
 export class CliListAccountsIO extends CliIO implements ListAccountsIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   printOutput = (output: ListAccountsOutput): ListAccountsOutput => {

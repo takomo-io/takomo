@@ -1,10 +1,11 @@
 import { Options } from "@takomo/core"
 import { DiffSecretsIO, DiffSecretsOutput } from "@takomo/stacks-commands"
 import { CliSecretsIo } from "./cli-secrets-io"
+import { LogWriter } from "@takomo/util"
 
 export class CliDiffSecretsIO extends CliSecretsIo implements DiffSecretsIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   printOutput = (output: DiffSecretsOutput): DiffSecretsOutput => {

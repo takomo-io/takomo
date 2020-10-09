@@ -5,12 +5,13 @@ import {
 } from "@takomo/organization-commands"
 import Table from "easy-table"
 import CliIO from "../cli-io"
+import { LogWriter } from "@takomo/util"
 
 export class CliDescribeOrganizationIO
   extends CliIO
   implements DescribeOrganizationIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   printOutput = (

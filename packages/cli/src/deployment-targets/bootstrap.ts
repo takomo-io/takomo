@@ -54,9 +54,9 @@ export const bootstrapTargetsCmd = {
           new CliBootstrapTargetsIO(
             input.options,
             (options: Options, loggerName: string) =>
-              new CliDeployStacksIO(options, loggerName),
+              new CliDeployStacksIO(options, console.log, loggerName),
             (options: Options, loggerName: string) =>
-              new CliUndeployStacksIO(options, loggerName),
+              new CliUndeployStacksIO(options, console.log, loggerName),
           ),
         ),
     ),

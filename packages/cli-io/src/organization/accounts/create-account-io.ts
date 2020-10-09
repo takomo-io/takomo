@@ -4,10 +4,11 @@ import {
   CreateAccountOutput,
 } from "@takomo/organization-commands"
 import CliIO from "../../cli-io"
+import { LogWriter } from "@takomo/util"
 
 export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
-  constructor(options: Options) {
-    super(options)
+  constructor(options: Options, logWriter: LogWriter = console.log) {
+    super(logWriter, options)
   }
 
   confirmAccountCreation = async (

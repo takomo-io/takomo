@@ -17,6 +17,7 @@ import {
   collectFromHierarchy,
   green,
   grey,
+  LogWriter,
   orange,
   red,
   yellow,
@@ -228,11 +229,11 @@ export const collectUpdatedParameters = (
 
       const newNoEcho =
         newParameterDeclarations.find(
-          (d) => d.ParameterKey === p?.ParameterKey!,
+          (d) => d.ParameterKey === p!.ParameterKey!,
         )?.NoEcho || false
       const existingNoEcho =
         existingParameterDeclarations.find(
-          (d) => d.ParameterKey === p?.ParameterKey!,
+          (d) => d.ParameterKey === p!.ParameterKey!,
         )?.NoEcho || false
 
       if (newNoEcho || existingNoEcho) {
@@ -242,7 +243,7 @@ export const collectUpdatedParameters = (
       return e.ParameterValue !== p?.ParameterValue
     })
     .map(([p, e]) => ({
-      key: p?.ParameterKey!,
+      key: p!.ParameterKey!,
       currentValue: e?.ParameterValue || null,
       newValue: p?.ParameterValue || null,
       operation: ParameterOperation.UPDATE,
@@ -297,8 +298,12 @@ const buildParametersSpec = (
 export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
   private autoConfirm: boolean
 
-  constructor(options: Options, loggerName: string | null = null) {
-    super(options, loggerName)
+  constructor(
+    options: Options,
+    logWriter: LogWriter = console.log,
+    loggerName: string | null = null,
+  ) {
+    super(logWriter, options, loggerName)
     this.autoConfirm = options.isAutoConfirmEnabled()
   }
 

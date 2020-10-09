@@ -11,6 +11,7 @@ import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import CliIO from "../../cli-io"
 import { formatCommandStatus } from "../../formatters"
+import { LogWriter } from "@takomo/util"
 
 export interface Messages {
   confirmHeader: string
@@ -58,12 +59,13 @@ export abstract class CliAccountsOperationIO
   ) => UndeployStacksIO
 
   protected constructor(
+    logWriter: LogWriter,
     options: Options,
     messages: Messages,
     stacksDeployIO: (options: Options, accountId: string) => DeployStacksIO,
     stacksUndeployIO: (options: Options, accountId: string) => UndeployStacksIO,
   ) {
-    super(options)
+    super(logWriter, options)
     this.messages = messages
     this.stacksDeployIO = stacksDeployIO
     this.stacksUndeployIO = stacksUndeployIO
