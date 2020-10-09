@@ -15,6 +15,7 @@ export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
     email: string,
     iamUserAccessToBilling: boolean,
     roleName: string,
+    alias?: string,
   ): Promise<ConfirmResult> => {
     this.longMessage(
       [
@@ -24,6 +25,7 @@ export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
         `  email:                       ${email}`,
         `  role name:                   ${roleName}`,
         `  iam user access to billing:  ${iamUserAccessToBilling}`,
+        `  alias:                       ${alias || "<undefined>"}`,
       ],
       true,
     )

@@ -1,5 +1,5 @@
 import { Region, TakomoCredentialProvider } from "@takomo/core"
-import { Logger, randomInt } from "@takomo/util"
+import { Failure, Logger, randomInt, Result, Success } from "@takomo/util"
 import { Credentials } from "aws-sdk"
 import { ConfigurationOptions } from "aws-sdk/lib/config-base"
 import { AWSError } from "aws-sdk/lib/error"
@@ -108,6 +108,19 @@ export abstract class AwsClient<C> {
         }
         throw e
       })
+
+  protected withClientPromiseResult = async <T, R, E>(
+    fn: (client: C) => Request<R, AWSError>,
+    onSuccess: (result: R) => T,
+    onError: (e: Error) => E,
+  ): Promise<Result<E, T>> =>
+    this.credentialProvider
+      .getCredentials()
+      .then((credentials) => this.getClient(credentials, this.region))
+      .then((client) => fn(client).promise())
+      .then(onSuccess)
+      .then(Success.of)
+      .catch((e) => Failure.of(onError(e)))
 
   protected pagedOperation = async <T, P, R extends PagedResponse>(
     operation: (params: P) => Request<R, AWSError>,

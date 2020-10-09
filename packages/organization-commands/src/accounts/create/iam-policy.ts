@@ -5,5 +5,6 @@ Statement:
       - organizations:DescribeOrganization
       - organizations:CreateAccount
       - organizations:DescribeCreateAccountStatus
+      - iam:CreateAccountAlias
     Resource: "*"
 `

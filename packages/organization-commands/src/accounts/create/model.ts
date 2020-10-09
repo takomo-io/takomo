@@ -6,6 +6,7 @@ export interface CreateAccountInput extends CommandInput {
   readonly name: string
   readonly iamUserAccessToBilling: boolean
   readonly roleName: string
+  readonly alias?: string
 }
 
 export interface CreateAccountOutput extends CommandOutput {
@@ -18,6 +19,7 @@ export interface CreateAccountIO extends IO {
     email: string,
     iamUserAccessToBilling: boolean,
     roleName: string,
+    alias?: string,
   ) => Promise<ConfirmResult>
 
   printOutput(output: CreateAccountOutput): CreateAccountOutput
