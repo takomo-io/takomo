@@ -12,7 +12,8 @@ import {
 import last from "lodash.last"
 import takeRightWhile from "lodash.takerightwhile"
 import uuid from "uuid"
-import { AwsClient, AwsClientClientProps } from "./aws-client"
+import { AwsClient, AwsClientClientProps } from "../aws-client"
+import { evaluateDescribeChangeSet } from "./rules/describe-change-set-rule"
 
 export class CloudFormationClient extends AwsClient<CloudFormation> {
   constructor(props: AwsClientClientProps) {
@@ -138,31 +139,48 @@ export class CloudFormationClient extends AwsClient<CloudFormation> {
     changeSetName: string,
   ): Promise<DescribeChangeSetOutput | null> {
     const response = await this.describeChangeSet(stackName, changeSetName)
-    switch (response.Status) {
-      case "CREATE_COMPLETE":
-        return response
-      case "DELETE_COMPLETE":
-        throw new Error(`Unexpected change set status: ${response.Status}`)
-      case "CREATE_IN_PROGRESS":
-      case "CREATE_PENDING":
+    const result = evaluateDescribeChangeSet(response)
+    switch (result) {
+      case "ERROR":
+        throw new Error(
+          `Could not evaluate change set with status: ${response.Status}, reason: ${response.StatusReason}`,
+        )
+      case "NO_CHANGES":
+        return null
+      case "FAILED":
+        throw new Error(response.StatusReason)
+      case "PENDING":
         await sleep(1000)
         return this.waitUntilChangeSetIsReady(stackName, changeSetName)
-      case "FAILED":
-        this.logger.debug(
-          `Change set creation failed with reason: ${response.StatusReason}`,
-        )
-        if (
-          response.StatusReason?.startsWith(
-            "The submitted information didn't contain changes",
-          )
-        ) {
-          return null
-        }
-
-        throw new Error(response.StatusReason)
-      default:
-        throw new Error(`Unsupported change set status: ${response.Status}`)
+      case "READY":
+        return response
     }
+
+    // switch (response.Status) {
+    //   case "CREATE_COMPLETE":
+    //     return response
+    //   case "DELETE_COMPLETE":
+    //     throw new Error(`Unexpected change set status: ${response.Status}`)
+    //   case "CREATE_IN_PROGRESS":
+    //   case "CREATE_PENDING":
+    //     await sleep(1000)
+    //     return this.waitUntilChangeSetIsReady(stackName, changeSetName)
+    //   case "FAILED":
+    //     this.logger.debug(
+    //       `Change set creation failed with reason: ${response.StatusReason}`,
+    //     )
+    //     if (
+    //       response.StatusReason?.startsWith(
+    //         "The submitted information didn't contain changes",
+    //       )
+    //     ) {
+    //       return null
+    //     }
+    //
+    //     throw new Error(response.StatusReason)
+    //   default:
+    //     throw new Error(`Unsupported change set status: ${response.Status}`)
+    // }
   }
 
   describeStackEvents = async (

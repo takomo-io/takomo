@@ -1,4 +1,4 @@
-import * as constants from "./constants.js"
+import * as constants from "./constants"
 
 export const Constants = constants
 export * from "./command"

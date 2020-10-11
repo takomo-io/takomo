@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#
+# Use this script to test locally built Takomo.
+#
+# You need to build the project before you can use this script.
+#
+# To build the project, go to the project root dir and run:
+#
+#   yarn build
+#
+# After you have built the project once using 'yarn build' you can
+# use watch mode to build only changed files. You can watch all project
+# files but this is too heavy operation. Instead, you should watch
+# only the packages you are currently working with.
+#
+# To watch a package, run:
+#
+#   yarn watch --scope <package name>
+#
+# For example, to watch changes in @takomo/cli package, run:
+#
+#   yarn watch --scope @takomo/cli
+#
+# You can watch multiple packages by repeating the --scope option:
+#
+#   yarn watch --scope @takomo/cli --scope @takomo/aws-clients
+#
+
+./packages/takomo/bin/tkm "$@"
