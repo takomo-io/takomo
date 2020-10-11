@@ -1,10 +1,21 @@
-import { CommandPath, Constants, Options } from "@takomo/core"
+import {
+  CommandPath,
+  Constants,
+  Options,
+  StackGroupPath,
+  StackPath,
+} from "@takomo/core"
 import { Stack, StackGroup } from "@takomo/stacks-model"
 import {
   coreResolverProviders,
   ResolverRegistry,
 } from "@takomo/stacks-resolvers"
-import { ConsoleLogger, LogLevel, TemplateEngine } from "@takomo/util"
+import {
+  collectFromHierarchy,
+  ConsoleLogger,
+  LogLevel,
+  TemplateEngine,
+} from "@takomo/util"
 import * as path from "path"
 import { processConfigTree } from "../../src/config/process-config-tree"
 import { buildConfigTree } from "../../src/config/tree/build-config-tree"
@@ -37,6 +48,54 @@ const resolverRegistry = new ResolverRegistry(logger)
 coreResolverProviders().forEach((p) =>
   resolverRegistry.registerBuiltInProvider(p),
 )
+
+const collectStacksToMap = (root: StackGroup): Map<StackPath, Stack> => {
+  const stackGroups = collectFromHierarchy(root, (n) => n.getChildren())
+  return new Map(
+    stackGroups
+      .reduce(
+        (collected, stackGroup) => [...collected, ...stackGroup.getStacks()],
+        new Array<Stack>(),
+      )
+      .map((stack) => [stack.getPath(), stack]),
+  )
+}
+
+const assertChildren = (
+  stackGroup: StackGroup,
+  ...expectedChildStackGroupPaths: StackGroupPath[]
+): void => {
+  const childPaths = stackGroup
+    .getChildren()
+    .slice()
+    .sort(byName)
+    .map((s) => s.getPath())
+  expect(childPaths).toStrictEqual(expectedChildStackGroupPaths.slice().sort())
+}
+
+const assertStacks = (
+  stackGroup: StackGroup,
+  ...expectedStackPaths: StackPath[]
+): void => {
+  const stackPaths = stackGroup
+    .getStacks()
+    .slice()
+    .sort(byStackPath)
+    .map((s) => s.getPath())
+  expect(stackPaths).toStrictEqual(expectedStackPaths.slice().sort())
+}
+
+const assertStackDependencies = (
+  stack: Stack | undefined,
+  ...expectedDependencies: StackPath[]
+): void => {
+  if (!stack) {
+    fail("Expected stack to be defined")
+  }
+
+  const dependencies = stack.getDependencies().slice().sort()
+  expect(dependencies).toStrictEqual(expectedDependencies.slice().sort())
+}
 
 const doProcessConfigTree = async (
   configsDir: string,
@@ -221,6 +280,88 @@ describe("#processConfigTree", () => {
         const [vpc] = stacks
 
         expect(vpc.getPath()).toBe("/vpc.yml/eu-west-1")
+      })
+    })
+
+    describe("when a hierarchy with complex dependencies is given", () => {
+      test("and default command path is used", async () => {
+        const root = await doProcessConfigTree("complex-dependencies")
+
+        assertChildren(root, "/group1", "/group2")
+        assertStacks(root, "/c.yml/eu-central-1")
+
+        const [group1, group2] = root.getChildren().slice().sort(byName)
+
+        assertChildren(group1)
+        assertStacks(
+          group1,
+          "/group1/a.yml/eu-central-1",
+          "/group1/d.yml/eu-central-1",
+          "/group1/e.yml/eu-central-1",
+          "/group1/i.yml/eu-central-1",
+          "/group1/j.yml/eu-central-1",
+          "/group1/k.yml/eu-central-1",
+          "/group1/l.yml/eu-central-1",
+        )
+
+        assertChildren(group2)
+        assertStacks(
+          group2,
+          "/group2/b.yml/eu-central-1",
+          "/group2/f.yml/eu-central-1",
+          "/group2/g.yml/eu-central-1",
+          "/group2/h.yml/eu-central-1",
+        )
+
+        const stacksByPath = collectStacksToMap(root)
+        assertStackDependencies(
+          stacksByPath.get("/c.yml/eu-central-1"),
+          "/group2/b.yml/eu-central-1",
+          "/group2/g.yml/eu-central-1",
+        )
+
+        assertStackDependencies(
+          stacksByPath.get("/group1/a.yml/eu-central-1"),
+          "/group1/d.yml/eu-central-1",
+        )
+
+        assertStackDependencies(
+          stacksByPath.get("/group1/d.yml/eu-central-1"),
+          "/group1/i.yml/eu-central-1",
+          "/group1/j.yml/eu-central-1",
+          "/group1/k.yml/eu-central-1",
+          "/group1/l.yml/eu-central-1",
+          "/group1/e.yml/eu-central-1",
+        )
+
+        assertStackDependencies(stacksByPath.get("/group1/e.yml/eu-central-1"))
+
+        assertStackDependencies(stacksByPath.get("/group1/i.yml/eu-central-1"))
+
+        assertStackDependencies(stacksByPath.get("/group1/j.yml/eu-central-1"))
+
+        assertStackDependencies(stacksByPath.get("/group1/k.yml/eu-central-1"))
+
+        assertStackDependencies(
+          stacksByPath.get("/group1/l.yml/eu-central-1"),
+          "/group1/k.yml/eu-central-1",
+        )
+
+        assertStackDependencies(
+          stacksByPath.get("/group2/b.yml/eu-central-1"),
+          "/group2/f.yml/eu-central-1",
+        )
+        assertStackDependencies(
+          stacksByPath.get("/group2/f.yml/eu-central-1"),
+          "/group2/g.yml/eu-central-1",
+          "/group2/h.yml/eu-central-1",
+          "/group1/d.yml/eu-central-1",
+        )
+        assertStackDependencies(
+          stacksByPath.get("/group2/g.yml/eu-central-1"),
+          "/group1/e.yml/eu-central-1",
+        )
+        assertStackDependencies(stacksByPath.get("/group2/h.yml/eu-central-1"))
       })
     })
   })

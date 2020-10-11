@@ -1,0 +1,6 @@
+depends:
+  - /group1/i.yml
+  - /group1/j.yml
+  - /group1/k.yml
+  - /group1/l.yml
+  - /group1/e.yml
