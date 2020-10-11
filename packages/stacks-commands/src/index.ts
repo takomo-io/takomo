@@ -15,6 +15,7 @@ export {
   deployStacksCommandIamPolicy,
   DeployStacksIO,
 } from "./stacks/deploy"
+export * from "./stacks/inspect/dependency-graph"
 export {
   listStacksCommand,
   listStacksCommandIamPolicy,
