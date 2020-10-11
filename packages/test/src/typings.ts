@@ -23,4 +23,12 @@ declare global {
       reservation: Reservation
     }
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace jest {
+    interface Matchers<R> {
+      stacksOperationOutputToBeSuccess(): R
+      stacksOperationOutputToBeSkipped(): R
+    }
+  }
 }

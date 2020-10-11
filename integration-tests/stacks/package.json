@@ -25,6 +25,7 @@
     "@takomo/core": "2.9.0",
     "@takomo/init-command": "2.9.0",
     "@takomo/stacks-commands": "2.9.0",
+    "@takomo/stacks-model": "2.9.0",
     "@takomo/test": "2.9.0",
     "@takomo/util": "2.9.0",
     "aws-sdk": "2.745.0",

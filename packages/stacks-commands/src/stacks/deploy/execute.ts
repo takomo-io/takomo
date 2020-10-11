@@ -76,8 +76,8 @@ export const createOrUpdateStack = async (
         })
 
         if (!hasChanges) {
+          logger.info("No updates to perform")
           if (terminationProtectionUpdated) {
-            logger.info("No updates to perform")
             const result = {
               stack,
               message: "Success",
@@ -94,7 +94,6 @@ export const createOrUpdateStack = async (
               clientToken: "",
             })
           } else {
-            logger.info("No updates to perform")
             return {
               stack,
               message: "No changes",

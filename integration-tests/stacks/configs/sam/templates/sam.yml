@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+  Timeout:
+    Type: String
+Resources:
+  TestLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs12.x
+      InlineCode: |
+        console.log('hello')
+      Description: Test
+      MemorySize: 128
+      Timeout: !Ref Timeout

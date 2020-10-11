@@ -1,10 +1,10 @@
 import yargs from "yargs"
 import { deploymentTargetsCmd } from "./deployment-targets"
-import { initProjectCmd } from "./init.js"
+import { initProjectCmd } from "./init"
 import { organizationCmd } from "./organization"
 import { stacksCmd } from "./stacks"
 
-export { initOptionsAndVariables, OptionsAndVariables } from "./common.js"
+export { initOptionsAndVariables, OptionsAndVariables } from "./common"
 
 export const run = (): void => {
   yargs

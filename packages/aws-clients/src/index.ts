@@ -1,4 +1,5 @@
-export { CloudFormationClient } from "./cloudformation"
+export { CloudFormationClient } from "./cloudformation/cloudformation-client"
+export { IamClient } from "./iam"
 export {
   DetailedOrganizationalUnit,
   DetailedPolicy,
@@ -6,4 +7,3 @@ export {
 } from "./organizations"
 export { S3Client } from "./s3"
 export { SSMClient } from "./ssm"
-export { IamClient } from "./iam"
