@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-schema",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "Takomo Stacks Schema",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,8 +36,8 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/core": "2.9.0",
-    "@takomo/stacks-model": "2.9.0",
+    "@takomo/core": "2.10.0",
+    "@takomo/stacks-model": "2.10.0",
     "joi": "17.2.1"
   },
   "devDependencies": {

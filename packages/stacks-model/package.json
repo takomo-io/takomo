@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-model",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "Takomo Stacks Model",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,9 +36,9 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.9.0",
-    "@takomo/core": "2.9.0",
-    "@takomo/util": "2.9.0",
+    "@takomo/aws-clients": "2.10.0",
+    "@takomo/core": "2.10.0",
+    "@takomo/util": "2.10.0",
     "aws-sdk": "2.745.0",
     "joi": "17.2.1"
   },
