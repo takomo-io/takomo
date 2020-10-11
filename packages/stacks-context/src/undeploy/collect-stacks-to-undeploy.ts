@@ -9,9 +9,9 @@ const collectStacksToUndeployFromStack = (
   ctx: ConfigContext,
   ignoreDependencies: boolean,
 ): StackPath[] => {
-  const stacksToDelete = []
+  const collected = []
   for (const stack of ctx.getStacksByPath(stackPath)) {
-    stacksToDelete.push(stack.getPath())
+    collected.push(stack.getPath())
     if (!ignoreDependencies) {
       for (const dependant of stack.getDependants()) {
         for (const dependantPath of collectStacksToUndeployFromStack(
@@ -19,13 +19,13 @@ const collectStacksToUndeployFromStack = (
           ctx,
           ignoreDependencies,
         )) {
-          stacksToDelete.push(dependantPath)
+          collected.push(dependantPath)
         }
       }
     }
   }
 
-  return uniq(stacksToDelete)
+  return uniq(collected)
 }
 
 const collectStacksToUndeployFromStackGroup = (
@@ -33,7 +33,7 @@ const collectStacksToUndeployFromStackGroup = (
   ctx: ConfigContext,
   ignoreDependencies: boolean,
 ): StackPath[] => {
-  const stacksToUndeploy = stackGroup.getStacks().reduce((all, s) => {
+  const collected = stackGroup.getStacks().reduce((all, s) => {
     return [
       ...all,
       ...collectStacksToUndeployFromStack(s.getPath(), ctx, ignoreDependencies),
@@ -47,7 +47,7 @@ const collectStacksToUndeployFromStackGroup = (
     ]
   }, new Array<StackPath>())
 
-  return uniq([...stacksToUndeploy, ...childStacksToUndeploy])
+  return uniq([...collected, ...childStacksToUndeploy])
 }
 
 export const collectStacksToUndeploy = (
