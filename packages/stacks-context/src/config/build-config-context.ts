@@ -33,11 +33,11 @@ import { buildConfigTree } from "./tree/build-config-tree"
 import { ConfigTree } from "./tree/config-tree"
 
 export interface BuildConfigContextInput {
-  options: Options
-  variables: Variables
-  logger: Logger
-  overrideCredentialProvider?: TakomoCredentialProvider
-  commandPath?: CommandPath
+  readonly options: Options
+  readonly variables: Variables
+  readonly logger: Logger
+  readonly overrideCredentialProvider?: TakomoCredentialProvider
+  readonly commandPath?: CommandPath
 }
 
 const resolveStacksDirPath = async (
@@ -156,7 +156,7 @@ export const buildConfigContext = async ({
 
   const stackGroups = collectStackGroups(rootStackGroup)
   const stacks = collectStacks(stackGroups)
-  const stackConfigsByPath = new Map(stacks.map((s) => [s.getPath(), s]))
+  const stacksByPath = new Map(stacks.map((s) => [s.getPath(), s]))
 
   return new ConfigContext({
     rootStackGroup,
@@ -164,7 +164,7 @@ export const buildConfigContext = async ({
     options,
     variables,
     logger,
-    stacksByPath: stackConfigsByPath,
+    stacksByPath,
     templateEngine,
     stackGroups,
   })

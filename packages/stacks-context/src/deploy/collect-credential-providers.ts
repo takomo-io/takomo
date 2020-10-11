@@ -2,11 +2,11 @@ import { TakomoCredentialProvider } from "@takomo/core"
 import { Stack } from "@takomo/stacks-model"
 
 export const collectCredentialProviders = (
-  stacksToLaunch: Stack[],
+  stacks: Stack[],
 ): TakomoCredentialProvider[] =>
-  stacksToLaunch.reduce((collected, stack) => {
+  stacks.reduce((collected, stack) => {
     const cp = stack.getCredentialProvider()
-    if (collected.find((c) => c.getName() === cp.getName())) {
+    if (collected.some((c) => c.getName() === cp.getName())) {
       return collected
     }
 

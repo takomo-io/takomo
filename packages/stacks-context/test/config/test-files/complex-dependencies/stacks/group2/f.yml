@@ -1,0 +1,8 @@
+depends:
+  - /group2/g.yml
+  - /group2/h.yml
+parameters:
+  Foo:
+    resolver: stack-output
+    stack: /group1/d.yml
+    output: bar

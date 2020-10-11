@@ -9,9 +9,9 @@ const collectStacksToDeployFromStack = (
   ctx: ConfigContext,
   ignoreDependencies: boolean,
 ): StackPath[] => {
-  const stacksToLaunch = []
+  const stacksToDeploy = []
   for (const stack of ctx.getStacksByPath(stackPath)) {
-    stacksToLaunch.push(stack.getPath())
+    stacksToDeploy.push(stack.getPath())
 
     if (!ignoreDependencies) {
       for (const dependency of stack.getDependencies()) {
@@ -20,13 +20,13 @@ const collectStacksToDeployFromStack = (
           ctx,
           ignoreDependencies,
         )) {
-          stacksToLaunch.push(dependencyPath)
+          stacksToDeploy.push(dependencyPath)
         }
       }
     }
   }
 
-  return uniq(stacksToLaunch)
+  return uniq(stacksToDeploy)
 }
 
 const collectStacksToDeployFromStackGroup = (
@@ -34,7 +34,7 @@ const collectStacksToDeployFromStackGroup = (
   ctx: ConfigContext,
   ignoreDependencies: boolean,
 ): StackPath[] => {
-  const stacksToLaunch = stackGroup
+  const stacksToDeploy = stackGroup
     .getStacks()
     .reduce(
       (all, s) => [
@@ -54,7 +54,7 @@ const collectStacksToDeployFromStackGroup = (
       new Array<StackPath>(),
     )
 
-  return uniq([...stacksToLaunch, ...childStacksToDeploy])
+  return uniq([...stacksToDeploy, ...childStacksToDeploy])
 }
 
 export const collectStacksToDeploy = (
