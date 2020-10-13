@@ -130,64 +130,27 @@ export const processStackDependencies = (stacks: Stack[]): Stack[] => {
   return populateDependants(processed).map((props) => new Stack(props))
 }
 
-interface SortItem {
-  readonly stack: Stack
-  readonly stackPath: StackPath
-  readonly deps: string[]
-}
-
-const compare = (a: SortItem, b: SortItem): number => {
-  if (a.deps.length + b.deps.length === 0) {
-    return a.stackPath.localeCompare(b.stackPath)
-  }
-  if (a.deps.length === 0) {
-    return -1
-  }
-  if (b.deps.length === 0) {
-    return 1
-  }
-  if (a.deps.includes(b.stackPath)) {
-    return 1
-  }
-  if (b.deps.includes(a.stackPath)) {
-    return -1
-  }
-
-  return a.stackPath.localeCompare(b.stackPath)
-}
-
 const sortStacks = (
   stacks: Stack[],
-  depsCollector: (stackPath: StackPath, stacks: Stack[]) => StackPath[],
+  selector: (stack: Stack) => StackPath[],
 ): Stack[] => {
-  const items = stacks.map((stack) => ({
-    stack,
-    stackPath: stack.getPath(),
-    deps: depsCollector(stack.getPath(), stacks),
-  }))
-
-  const sorted = new Array<SortItem>()
-
-  while (items.length > 0) {
-    let candidateIndex = 0
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i]
-      const candidate = items[candidateIndex]
-      const result = compare(item, candidate)
-      if (result === -1) {
-        candidateIndex = i
-      }
-    }
-
-    sorted.push(items[candidateIndex])
-    items.splice(candidateIndex, 1)
+  const unsorted = new Map(stacks.map((s) => [s.getPath(), s]))
+  const sorted = new Array<Stack>()
+  while (unsorted.size > 0) {
+    Array.from(unsorted.values())
+      .filter((s) => selector(s).filter((d) => unsorted.has(d)).length === 0)
+      .sort((a, b) => a.getPath().localeCompare(b.getPath()))
+      .forEach((s) => {
+        sorted.push(s)
+        unsorted.delete(s.getPath())
+      })
   }
 
-  return sorted.map(({ stack }) => stack)
+  return sorted
 }
 
 export const sortStacksForUndeploy = (stacks: Stack[]): Stack[] =>
-  sortStacks(stacks, collectAllDependants)
+  sortStacks(stacks, (s) => s.getDependants())
 
 export const sortStacksForDeploy = (stacks: Stack[]): Stack[] =>
-  sortStacks(stacks, collectAllDependencies)
+  sortStacks(stacks, (s) => s.getDependencies())
