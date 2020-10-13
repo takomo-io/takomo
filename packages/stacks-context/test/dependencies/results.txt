@@ -1,0 +1,202 @@
+  console.log
+    ----------------------
+
+      /h/us-east-1/h/h.yml/us-east-1
+      /h/us-east-1/g/g.yml/us-east-1
+      /h/eu-west-1/q/q.yml/eu-west-1
+      /h/eu-west-1/l/l.yml/eu-west-1
+      /h/eu-west-1/g/g.yml/eu-west-1
+      /h/eu-west-1/b/b.yml/eu-west-1
+    ----------------------
+
+      /h/eu-north-1/a/a.yml/eu-north-1
+      /h/us-east-1/s/s.yml/us-east-1
+      /h/eu-west-1/s/s.yml/eu-west-1
+    ----------------------
+
+      /h/eu-west-1/e/e.yml/eu-west-1
+      /h/eu-west-1/c/c.yml/eu-west-1
+    ----------------------
+
+      /h/us-east-1/i/i.yml/us-east-1
+      /h/eu-west-1/r/r.yml/eu-west-1
+      /h/eu-west-1/p/p.yml/eu-west-1
+      /h/eu-west-1/k/k.yml/eu-west-1
+      /h/eu-west-1/h/h.yml/eu-west-1
+      /h/eu-west-1/d/d.yml/eu-west-1
+    ----------------------
+
+      /h/eu-west-1/o/o.yml/eu-west-1
+      /h/eu-west-1/m/m.yml/eu-west-1
+      /h/eu-west-1/j/j.yml/eu-west-1
+      /h/eu-west-1/i/i.yml/eu-west-1
+    ----------------------
+
+      /h/eu-west-1/n/n.yml/eu-west-1
+
+
+------------------------------
+------------------------------
+
+
+
+
+
+------------------------------
+------------------------------
+
+
+
+
+    const euNorthA = createStack({
+      name: "eu-north-1-a",
+      path: "/h/eu-north-1/a/a.yml/eu-north-1",
+    })
+
+
+
+    const euWestC = createStack({
+      name: "eu-west-1-c",
+      path: "/h/eu-west-1/c/c.yml/eu-west-1",
+      dependencies: [
+        "/h/us-east-1/h/h.yml/us-east-1",
+        "/h/eu-west-1/s/s.yml/eu-west-1",
+      ],
+    })
+
+    const euWestD = createStack({
+      name: "eu-west-1-d",
+      path: "/h/eu-west-1/d/d.yml/eu-west-1",
+      dependencies: ["/h/eu-west-1/e/e.yml/eu-west-1"],
+    })
+
+    const euWestE = createStack({
+      name: "eu-west-1-e",
+      path: "/h/eu-west-1/e/e.yml/eu-west-1",
+      dependencies: ["/h/us-east-1/s/s.yml/us-east-1"],
+    })
+
+
+    const euWestH = createStack({
+      name: "eu-west-1-h",
+      path: "/h/eu-west-1/h/h.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/l/l.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+      ],
+    })
+
+    const euWestI = createStack({
+      name: "eu-west-1-i",
+      path: "/h/eu-west-1/i/i.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+        "/h/eu-west-1/e/e.yml/eu-west-1",
+        "/h/us-east-1/i/i.yml/us-east-1",
+        "/h/eu-west-1/r/r.yml/eu-west-1",
+        "/h/eu-west-1/k/k.yml/eu-west-1",
+      ],
+    })
+
+    const euWestJ = createStack({
+      name: "eu-west-1-j",
+      path: "/h/eu-west-1/j/j.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/e/e.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+        "/h/eu-west-1/h/h.yml/eu-west-1",
+        "/h/eu-west-1/l/l.yml/eu-west-1",
+        "/h/eu-west-1/r/r.yml/eu-west-1",
+        "/h/eu-west-1/k/k.yml/eu-west-1",
+      ],
+    })
+
+    const euWestK = createStack({
+      name: "eu-west-1-k",
+      path: "/h/eu-west-1/k/k.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/e/e.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+      ],
+    })
+
+
+
+    const euWestM = createStack({
+      name: "eu-west-1-m",
+      path: "/h/eu-west-1/m/m.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/e/e.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+        "/h/eu-west-1/k/k.yml/eu-west-1",
+      ],
+    })
+
+    const euWestN = createStack({
+      name: "eu-west-1-n",
+      path: "/h/eu-west-1/n/n.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/l/l.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+        "/h/eu-west-1/b/b.yml/eu-west-1",
+        "/h/eu-west-1/i/i.yml/eu-west-1",
+        "/h/eu-west-1/h/h.yml/eu-west-1",
+      ],
+    })
+
+    const euWestO = createStack({
+      name: "eu-west-1-o",
+      path: "/h/eu-west-1/o/o.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/e/e.yml/eu-west-1",
+        "/h/us-east-1/i/i.yml/us-east-1",
+        "/h/eu-west-1/h/h.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+        "/h/eu-west-1/b/b.yml/eu-west-1",
+        "/h/eu-west-1/r/r.yml/eu-west-1",
+        "/h/eu-west-1/k/k.yml/eu-west-1",
+      ],
+    })
+
+    const euWestP = createStack({
+      name: "eu-west-1-p",
+      path: "/h/eu-west-1/p/p.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/l/l.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+      ],
+    })
+
+
+
+    const euWestR = createStack({
+      name: "eu-west-1-r",
+      path: "/h/eu-west-1/r/r.yml/eu-west-1",
+      dependencies: [
+        "/h/eu-west-1/e/e.yml/eu-west-1",
+        "/h/eu-west-1/c/c.yml/eu-west-1",
+      ],
+    })
+
+    const euWestS = createStack({
+      name: "eu-west-1-s",
+      path: "/h/eu-west-1/s/s.yml/eu-west-1",
+      dependencies: ["/h/us-east-1/h/h.yml/us-east-1"],
+    })
+
+
+
+    const usEastI = createStack({
+      name: "us-east-1-i",
+      path: "/h/us-east-1/i/i.yml/us-east-1",
+      dependencies: [
+        "/h/eu-west-1/l/l.yml/eu-west-1",
+        "/h/eu-west-1/e/e.yml/eu-west-1",
+      ],
+    })
+
+    const usEastS = createStack({
+      name: "us-east-1-s",
+      path: "/h/us-east-1/s/s.yml/us-east-1",
+      dependencies: ["/h/us-east-1/h/h.yml/us-east-1"],
+    })
