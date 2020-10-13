@@ -1,6 +1,6 @@
 {
   "name": "@takomo/config-sets",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "description": "Takomo Config Sets",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@takomo/core": "2.10.0",
-    "@takomo/stacks-commands": "2.10.0",
+    "@takomo/stacks-commands": "2.10.1",
     "@takomo/util": "2.10.0",
     "joi": "17.2.1"
   },

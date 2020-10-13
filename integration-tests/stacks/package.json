@@ -1,7 +1,7 @@
 {
   "name": "integration-test-stacks",
   "private": true,
-  "version": "2.10.0",
+  "version": "2.10.1",
   "description": "Takomo integration tests for stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -20,13 +20,13 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=6 --ci"
   },
   "dependencies": {
-    "@takomo/cli": "2.10.0",
-    "@takomo/cli-io": "2.10.0",
+    "@takomo/cli": "2.10.1",
+    "@takomo/cli-io": "2.10.1",
     "@takomo/core": "2.10.0",
     "@takomo/init-command": "2.10.0",
-    "@takomo/stacks-commands": "2.10.0",
+    "@takomo/stacks-commands": "2.10.1",
     "@takomo/stacks-model": "2.10.0",
-    "@takomo/test": "2.10.0",
+    "@takomo/test": "2.10.1",
     "@takomo/util": "2.10.0",
     "aws-sdk": "2.745.0",
     "mkdirp": "1.0.4",

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "description": "Takomo Deployment Targets",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -36,9 +36,9 @@
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
-    "@takomo/config-sets": "2.10.0",
+    "@takomo/config-sets": "2.10.1",
     "@takomo/core": "2.10.0",
-    "@takomo/stacks-commands": "2.10.0",
+    "@takomo/stacks-commands": "2.10.1",
     "@takomo/util": "2.10.0",
     "joi": "17.2.1",
     "lodash.flatten": "4.4.0",

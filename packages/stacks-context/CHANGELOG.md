@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.1](https://github.com/takomo-io/takomo/compare/v2.10.0...v2.10.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* fix a bug in sorting of stacks for deploy and undeploy ([#117](https://github.com/takomo-io/takomo/issues/117)) ([338ef09](https://github.com/takomo-io/takomo/commit/338ef0917f66cf7df1241dd4a8bce418e3acb615)), closes [#110](https://github.com/takomo-io/takomo/issues/110)
+
+
+
+
+
 # [2.10.0](https://github.com/takomo-io/takomo/compare/v2.9.0...v2.10.0) (2020-10-11)
 
 **Note:** Version bump only for package @takomo/stacks-context
