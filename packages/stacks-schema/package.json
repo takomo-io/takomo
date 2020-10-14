@@ -2,38 +2,28 @@
   "name": "@takomo/stacks-schema",
   "version": "2.10.0",
   "description": "Takomo Stacks Schema",
-  "author": "henri@takomo.io",
-  "license": "MIT",
-  "os": [
-    "darwin",
-    "linux"
-  ],
-  "engines": {
-    "node": ">=14.4.0"
-  },
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
-  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/takomo-io/takomo.git"
   },
+  "license": "MIT",
+  "author": "henri@takomo.io",
+  "type": "commonjs",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "clean:dist": "rm -rf dist",
-    "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
-    "watch": "tsc -p tsconfig.build.json --watch",
+    "clean:deps": "rm -rf node_modules",
+    "clean:dist": "rm -rf dist",
     "depcheck": "depcheck --config=../../.depcheckrc",
-    "test": "jest test --passWithNoTests"
+    "test": "jest test --passWithNoTests",
+    "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@takomo/core": "2.10.0",
@@ -42,5 +32,15 @@
   },
   "devDependencies": {
     "@takomo/unit-test": "2.9.0"
+  },
+  "engines": {
+    "node": ">=14.4.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
