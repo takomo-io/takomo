@@ -2,23 +2,6 @@
   "name": "takomo",
   "version": "2.10.1",
   "description": "Organize, configure and deploy CloudFormation stacks. Manage AWS organization.",
-  "author": "henri@takomo.io",
-  "license": "MIT",
-  "os": [
-    "darwin",
-    "linux"
-  ],
-  "engines": {
-    "node": ">=14.4.0"
-  },
-  "main": "dist/index",
-  "types": "dist/index",
-  "files": [
-    "dist"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "aws",
     "cloudformation",
@@ -30,31 +13,45 @@
     "cloudformation stacks",
     "cloudformation deployment"
   ],
-  "type": "commonjs",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/takomo-io/takomo.git"
   },
-  "homepage": "https://takomo.io",
-  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "license": "MIT",
+  "author": "henri@takomo.io",
+  "type": "commonjs",
+  "main": "dist/index",
+  "types": "dist/index",
+  "bin": {
+    "takomo": "bin/tkm",
+    "tkm": "bin/tkm"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "clean:dist": "rm -rf dist",
-    "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
-    "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,semver",
-    "test": "jest test --passWithNoTests"
-  },
-  "bin": {
-    "tkm": "bin/tkm",
-    "takomo": "bin/tkm"
+    "clean:deps": "rm -rf node_modules",
+    "clean:dist": "rm -rf dist",
+    "depcheck": "depcheck --config=../../.depcheckrc --ignores=semver",
+    "test": "jest test --passWithNoTests",
+    "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@takomo/cli": "2.10.1",
     "semver": "7.3.2"
   },
-  "devDependencies": {
-    "typescript": "4.0.2"
+  "engines": {
+    "node": ">=14.4.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

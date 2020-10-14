@@ -1,0 +1,9 @@
+ignores: [
+  "@babel/core",
+  "@babel/preset-env",
+  "@babel/preset-typescript",
+  "babel-jest",
+  "@types/jest",
+  "jest-mock-extended",
+  "dotenv"
+]
