@@ -32,7 +32,7 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest",
+    "depcheck": "depcheck --config=../../.depcheckrc",
     "test": "jest test --passWithNoTests"
   },
   "dependencies": {
@@ -43,17 +43,5 @@
     "joi": "17.2.1",
     "js-yaml": "3.14.0",
     "pretty-ms": "5.1.0"
-  },
-  "devDependencies": {
-    "@babel/core": "7.10.2",
-    "@babel/preset-env": "7.10.2",
-    "@babel/preset-typescript": "7.10.1",
-    "@types/date-and-time": "0.6.0",
-    "@types/easy-table": "0.0.32",
-    "@types/jest": "26.0.0",
-    "@types/js-yaml": "3.12.4",
-    "babel-jest": "26.0.1",
-    "jest": "26.0.1",
-    "typescript": "4.0.2"
   }
 }

@@ -1,5 +1,6 @@
 import { StackName, StackPath } from "@takomo/core"
 import { Stack } from "@takomo/stacks-model"
+import { ConsoleLogger } from "@takomo/util"
 
 export interface TestStackProps {
   path: StackPath
@@ -38,5 +39,8 @@ export const createStack = (props: TestStackProps): Stack => {
     },
     capabilities: [],
     ignore: false,
+    terminationProtection: false,
+    stackGroupPath: "",
+    logger: new ConsoleLogger(),
   })
 }
