@@ -2,7 +2,7 @@ import { initOptionsAndVariables } from "@takomo/cli"
 import { CliDescribeOrganizationIO } from "@takomo/cli-io"
 import { CommandStatus } from "@takomo/core"
 import { describeOrganizationCommand } from "@takomo/organization-commands"
-import { aws, TIMEOUT } from "@takomo/test"
+import { aws } from "@takomo/test"
 import {
   ORG_A_ID,
   ORG_A_MASTER_ACCOUNT_ID,
@@ -18,53 +18,49 @@ const createOptions = async (version: string) =>
   })
 
 describe("Describe organization command", () => {
-  it(
-    "returns correct output",
-    async () => {
-      const { options, variables, watch } = await createOptions("v01")
-      const output = await describeOrganizationCommand(
-        {
-          watch,
-          variables,
-          options,
-        },
-        new CliDescribeOrganizationIO(options),
-      )
+  it("returns correct output", async () => {
+    const { options, variables, watch } = await createOptions("v01")
+    const output = await describeOrganizationCommand(
+      {
+        watch,
+        variables,
+        options,
+      },
+      new CliDescribeOrganizationIO(options),
+    )
 
-      const {
-        organization,
-        success,
-        status,
-        message,
-        masterAccount,
-        enabledPolicies,
-        services,
-      } = output
+    const {
+      organization,
+      success,
+      status,
+      message,
+      masterAccount,
+      enabledPolicies,
+      services,
+    } = output
 
-      expect(success).toBeTruthy()
-      expect(status).toBe(CommandStatus.SUCCESS)
-      expect(message).toBe("Success")
+    expect(success).toBeTruthy()
+    expect(status).toBe(CommandStatus.SUCCESS)
+    expect(message).toBe("Success")
 
-      expect(masterAccount.Name).toBe(ORG_A_MASTER_ACCOUNT_NAME)
-      expect(masterAccount.Status).toBe("ACTIVE")
-      expect(masterAccount.Id).toBe(ORG_A_MASTER_ACCOUNT_ID)
+    expect(masterAccount.Name).toBe(ORG_A_MASTER_ACCOUNT_NAME)
+    expect(masterAccount.Status).toBe("ACTIVE")
+    expect(masterAccount.Id).toBe(ORG_A_MASTER_ACCOUNT_ID)
 
-      expect(organization.FeatureSet).toBe("ALL")
-      expect(organization.MasterAccountId).toBe(ORG_A_MASTER_ACCOUNT_ID)
-      expect(organization.Id).toBe(ORG_A_ID)
+    expect(organization.FeatureSet).toBe("ALL")
+    expect(organization.MasterAccountId).toBe(ORG_A_MASTER_ACCOUNT_ID)
+    expect(organization.Id).toBe(ORG_A_ID)
 
-      const actualEnabledPolicies = await aws.organizations.getEnabledPolicyTypes()
+    const actualEnabledPolicies = await aws.organizations.getEnabledPolicyTypes()
 
-      expect(enabledPolicies.slice().sort()).toStrictEqual(
-        actualEnabledPolicies.slice().sort(),
-      )
+    expect(enabledPolicies.slice().sort()).toStrictEqual(
+      actualEnabledPolicies.slice().sort(),
+    )
 
-      const actualTrustedServices = await aws.organizations.listAWSServiceAccessForOrganization()
+    const actualTrustedServices = await aws.organizations.listAWSServiceAccessForOrganization()
 
-      expect(services.map((s) => s.ServicePrincipal).sort()).toStrictEqual(
-        actualTrustedServices.sort(),
-      )
-    },
-    TIMEOUT,
-  )
+    expect(services.map((s) => s.ServicePrincipal).sort()).toStrictEqual(
+      actualTrustedServices.sort(),
+    )
+  })
 })

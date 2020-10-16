@@ -1,5 +1,7 @@
 import { bootstrapAccountsCmd } from "./bootstrap"
 import { createAccountCmd } from "./create"
+import { createAliasCmd } from "./create-alias"
+import { deleteAliasCmd } from "./delete-alias"
 import { deployAccountsCmd } from "./deploy"
 import { listAccountsCmd } from "./list"
 import { tearDownAccountsCmd } from "./tear-down"
@@ -15,7 +17,9 @@ export const accountsCmd = {
       .command(deployAccountsCmd)
       .command(undeployAccountsCmd)
       .command(bootstrapAccountsCmd)
-      .command(tearDownAccountsCmd),
+      .command(tearDownAccountsCmd)
+      .command(createAliasCmd)
+      .command(deleteAliasCmd),
   // eslint-disable-next-line
   handler: (argv: any) => {},
 }
