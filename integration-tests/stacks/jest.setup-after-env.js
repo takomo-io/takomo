@@ -1,5 +1,3 @@
-// Set timeout in millis for all tests
-
 jest.setTimeout(1000 * 60 * 10)
 
 expect.extend({

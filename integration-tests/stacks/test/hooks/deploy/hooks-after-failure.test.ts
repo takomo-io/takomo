@@ -1,7 +1,7 @@
 import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
 import { CommandStatus } from "@takomo/core"
 import { deployStacksCommand } from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TIMEOUT } from "@takomo/test"
+import { TestDeployStacksIO } from "@takomo/test"
 import { Credentials } from "aws-sdk"
 
 const createOptions = async (): Promise<OptionsAndVariables> => {
@@ -17,48 +17,44 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
   )
 }
 
-describe("Example: After hook that fails", () => {
-  test(
-    "Launch",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await deployStacksCommand(
-        {
-          commandPath: "/launch/after/failure",
-          ignoreDependencies: false,
-          interactive: false,
-          options,
-          variables,
-          watch,
-        },
-        new TestDeployStacksIO(options),
-      )
+describe("After hook that fails", () => {
+  test("Deploy", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await deployStacksCommand(
+      {
+        commandPath: "/launch/after/failure",
+        ignoreDependencies: false,
+        interactive: false,
+        options,
+        variables,
+        watch,
+      },
+      new TestDeployStacksIO(options),
+    )
 
-      expect(output.status).toBe(CommandStatus.FAILED)
+    expect(output.status).toBe(CommandStatus.FAILED)
 
-      const [res1, res2, res3] = output.results
+    const [res1, res2, res3] = output.results
 
-      expect(res1.stack.getPath()).toBe(
-        "/launch/after/failure/stack-1.yml/eu-west-1",
-      )
-      expect(res1.status).toBe(CommandStatus.SUCCESS)
-      expect(res1.success).toBe(true)
+    expect(res1.stack.getPath()).toBe(
+      "/launch/after/failure/stack-1.yml/eu-west-1",
+    )
+    expect(res1.status).toBe(CommandStatus.SUCCESS)
+    expect(res1.success).toBe(true)
 
-      expect(res2.stack.getPath()).toBe(
-        "/launch/after/failure/stack-2.yml/eu-west-1",
-      )
-      expect(res2.status).toBe(CommandStatus.FAILED)
-      expect(res2.success).toBe(false)
-      expect(res2.message).toBe("Not ok")
-      expect(res2.reason).toBe("AFTER_HOOKS_FAILED")
+    expect(res2.stack.getPath()).toBe(
+      "/launch/after/failure/stack-2.yml/eu-west-1",
+    )
+    expect(res2.status).toBe(CommandStatus.FAILED)
+    expect(res2.success).toBe(false)
+    expect(res2.message).toBe("Not ok")
+    expect(res2.reason).toBe("AFTER_HOOKS_FAILED")
 
-      expect(res3.stack.getPath()).toBe(
-        "/launch/after/failure/stack-3.yml/eu-west-1",
-      )
-      expect(res3.status).toBe(CommandStatus.CANCELLED)
-      expect(res3.success).toBe(false)
-      expect(res3.reason).toBe("DEPENDENCIES_FAILED")
-    },
-    TIMEOUT,
-  )
+    expect(res3.stack.getPath()).toBe(
+      "/launch/after/failure/stack-3.yml/eu-west-1",
+    )
+    expect(res3.status).toBe(CommandStatus.CANCELLED)
+    expect(res3.success).toBe(false)
+    expect(res3.reason).toBe("DEPENDENCIES_FAILED")
+  })
 })

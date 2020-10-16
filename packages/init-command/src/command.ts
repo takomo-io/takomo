@@ -106,17 +106,17 @@ const createDescription = (
       "├─ templates         # dir for CloudFormation template files\n" +
       "│  └─ vpc.yml        # CloudFormation template for sample vpc stack\n" +
       "├─ helpers           # dir for custom Handlebars helpers\n" +
-      "├- partials          # dir for custom Handlebars partials\n" +
-      "├- resolvers         # dir for custom resolvers\n" +
-      "└- hooks             # dir for custom hooks\n"
+      "├─ partials          # dir for custom Handlebars partials\n" +
+      "├─ resolvers         # dir for custom resolvers\n" +
+      "└─ hooks             # dir for custom hooks\n"
     : ".\n" +
       "├─ stacks            # dir for stack configuration files\n" +
       "│  └─ config.yml     # root stack group configuration file\n" +
       "├─ templates         # dir for CloudFormation template files\n" +
       "├─ helpers           # dir for custom Handlebars helpers\n" +
-      "├- partials          # dir for custom Handlebars partials\n" +
-      "├- resolvers         # dir for custom resolvers\n" +
-      "└- hooks             # dir for custom hooks\n"
+      "├─ partials          # dir for custom Handlebars partials\n" +
+      "├─ resolvers         # dir for custom resolvers\n" +
+      "└─ hooks             # dir for custom hooks\n"
 
 const initProject = async (
   input: InitProjectInput,

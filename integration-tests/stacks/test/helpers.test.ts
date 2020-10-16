@@ -4,7 +4,7 @@ import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { TestDeployStacksIO, TestUndeployStacksIO } from "@takomo/test"
 import { Credentials } from "aws-sdk"
 
 const createOptions = async (): Promise<OptionsAndVariables> => {
@@ -21,48 +21,40 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
 }
 
 describe("Helpers", () => {
-  test(
-    "Deploy",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await deployStacksCommand(
-        {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-          options,
-          variables,
-          watch,
-          ignoreDependencies: false,
-          interactive: false,
-        },
-        new TestDeployStacksIO(options),
-      )
+  test("Deploy", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await deployStacksCommand(
+      {
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
+        options,
+        variables,
+        watch,
+        ignoreDependencies: false,
+        interactive: false,
+      },
+      new TestDeployStacksIO(options),
+    )
 
-      expect(output.status).toBe(CommandStatus.SUCCESS)
-      expect(output.results[0].success).toBeTruthy()
-      expect(output.results[0].status).toBe(CommandStatus.SUCCESS)
-      expect(output.results[0].reason).toBe("CREATE_SUCCESS")
-    },
-    TIMEOUT,
-  )
+    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output.results[0].success).toBeTruthy()
+    expect(output.results[0].status).toBe(CommandStatus.SUCCESS)
+    expect(output.results[0].reason).toBe("CREATE_SUCCESS")
+  })
 
-  test(
-    "Undeploy",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await undeployStacksCommand(
-        {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-          ignoreDependencies: false,
-          interactive: false,
-          options,
-          variables,
-          watch,
-        },
-        new TestUndeployStacksIO(options),
-      )
+  test("Undeploy", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await undeployStacksCommand(
+      {
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
+        ignoreDependencies: false,
+        interactive: false,
+        options,
+        variables,
+        watch,
+      },
+      new TestUndeployStacksIO(options),
+    )
 
-      expect(output.status).toBe(CommandStatus.SUCCESS)
-    },
-    TIMEOUT,
-  )
+    expect(output.status).toBe(CommandStatus.SUCCESS)
+  })
 })

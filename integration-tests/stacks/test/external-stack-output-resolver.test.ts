@@ -7,7 +7,7 @@ import {
   deployStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TestUndeployStacksIO, TIMEOUT } from "@takomo/test"
+import { TestDeployStacksIO, TestUndeployStacksIO } from "@takomo/test"
 import { Credentials } from "aws-sdk"
 
 const createOptions = async (): Promise<OptionsAndVariables> => {
@@ -25,51 +25,43 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
 }
 
 describe("External stack output resolver", () => {
-  test(
-    "Deploy",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await deployStacksCommand(
-        {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-          options,
-          variables,
-          ignoreDependencies: false,
-          interactive: false,
-          watch,
-        },
-        new TestDeployStacksIO(options),
-      )
+  test("Deploy", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await deployStacksCommand(
+      {
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
+        options,
+        variables,
+        ignoreDependencies: false,
+        interactive: false,
+        watch,
+      },
+      new TestDeployStacksIO(options),
+    )
 
-      expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output.status).toBe(CommandStatus.SUCCESS)
 
-      const [res1, res2, res3] = output.results
+    const [res1, res2, res3] = output.results
 
-      expect(res1.status).toBe(CommandStatus.SUCCESS)
-      expect(res2.status).toBe(CommandStatus.SUCCESS)
-      expect(res3.status).toBe(CommandStatus.SUCCESS)
-    },
-    TIMEOUT,
-  )
+    expect(res1.status).toBe(CommandStatus.SUCCESS)
+    expect(res2.status).toBe(CommandStatus.SUCCESS)
+    expect(res3.status).toBe(CommandStatus.SUCCESS)
+  })
 
-  test(
-    "Undeploy",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await undeployStacksCommand(
-        {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-          ignoreDependencies: false,
-          interactive: false,
-          options,
-          variables,
-          watch,
-        },
-        new TestUndeployStacksIO(options),
-      )
+  test("Undeploy", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await undeployStacksCommand(
+      {
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
+        ignoreDependencies: false,
+        interactive: false,
+        options,
+        variables,
+        watch,
+      },
+      new TestUndeployStacksIO(options),
+    )
 
-      expect(output.status).toBe(CommandStatus.SUCCESS)
-    },
-    TIMEOUT,
-  )
+    expect(output.status).toBe(CommandStatus.SUCCESS)
+  })
 })

@@ -11,7 +11,6 @@ import {
   TestListSecretsIO,
   TestSetSecretIO,
   TestUndeployStacksIO,
-  TIMEOUT,
 } from "@takomo/test"
 import { Credentials } from "aws-sdk"
 
@@ -29,201 +28,181 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
 }
 
 describe("Secrets", () => {
-  test(
-    "List secrets",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await listSecretsCommand(
-        {
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-          options,
-          variables,
-          watch,
-        },
-        new TestListSecretsIO(options),
-      )
-
-      expect(output.success).toBeTruthy()
-      expect(output.message).toBe("Success")
-
-      expect(output.stacks).toHaveLength(2)
-
-      const first = output.stacks.find(
-        (s) => s.stack.getPath() === "/first-secret.yml/eu-central-1",
-      )!
-      expect(first).toBeDefined()
-
-      const second = output.stacks.find(
-        (s) => s.stack.getPath() === "/second-secret.yml/eu-central-1",
-      )!
-      expect(second).toBeDefined()
-
-      expect(first.stack.getPath()).toBe("/first-secret.yml/eu-central-1")
-      expect(first.stack.getSecrets().size).toBe(2)
-
-      expect(second.stack.getPath()).toBe("/second-secret.yml/eu-central-1")
-      expect(second.stack.getSecrets().size).toBe(0)
-
-      const queueNameSecret = first.secrets.find((s) => s.name === "queueName")!
-
-      expect(queueNameSecret.ssmParameterName).toBe(
-        "/examples-secrets/first-secret.yml/eu-central-1/queueName",
-      )
-      expect(queueNameSecret.name).toBe("queueName")
-      expect(queueNameSecret.description).toBe("Name for queue")
-      expect(queueNameSecret.value).toBeNull()
-
-      const topicNameSecret = first.secrets.find((s) => s.name === "topicName")!
-
-      expect(topicNameSecret.ssmParameterName).toBe(
-        "/examples-secrets/first-secret.yml/eu-central-1/topicName",
-      )
-      expect(topicNameSecret.name).toBe("topicName")
-      expect(topicNameSecret.description).toBe("Name for topic")
-      expect(topicNameSecret.value).toBeNull()
-    },
-    TIMEOUT,
-  )
-
-  test(
-    "Set secrets",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-
-      const io = new TestSetSecretIO(
+  test("List secrets", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await listSecretsCommand(
+      {
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
         options,
-        new Map([
-          ["queueName", "my-secret-queue"],
-          ["topicName", "topic-of-the-day"],
-        ]),
-      )
+        variables,
+        watch,
+      },
+      new TestListSecretsIO(options),
+    )
 
-      const output1 = await setSecretCommand(
-        {
-          options,
-          variables,
-          watch,
-          stackPath: "/first-secret.yml/eu-central-1",
-          secretName: "queueName",
-        },
-        io,
-      )
+    expect(output.success).toBeTruthy()
+    expect(output.message).toBe("Success")
 
-      expect(output1.success).toBe(true)
-      expect(output1.message).toBe("Success")
+    expect(output.stacks).toHaveLength(2)
 
-      const output2 = await setSecretCommand(
-        {
-          options,
-          variables,
-          watch,
-          stackPath: "/first-secret.yml/eu-central-1",
-          secretName: "topicName",
-        },
-        io,
-      )
+    const first = output.stacks.find(
+      (s) => s.stack.getPath() === "/first-secret.yml/eu-central-1",
+    )!
+    expect(first).toBeDefined()
 
-      expect(output2.success).toBeTruthy()
-      expect(output2.message).toBe("Success")
-    },
-    TIMEOUT,
-  )
+    const second = output.stacks.find(
+      (s) => s.stack.getPath() === "/second-secret.yml/eu-central-1",
+    )!
+    expect(second).toBeDefined()
 
-  test(
-    "List secrets again",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await listSecretsCommand(
-        {
-          options,
-          variables,
-          watch,
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-        },
-        new TestListSecretsIO(options),
-      )
+    expect(first.stack.getPath()).toBe("/first-secret.yml/eu-central-1")
+    expect(first.stack.getSecrets().size).toBe(2)
 
-      expect(output.success).toBeTruthy()
-      expect(output.message).toBe("Success")
+    expect(second.stack.getPath()).toBe("/second-secret.yml/eu-central-1")
+    expect(second.stack.getSecrets().size).toBe(0)
 
-      expect(output.stacks).toHaveLength(2)
+    const queueNameSecret = first.secrets.find((s) => s.name === "queueName")!
 
-      const first = output.stacks.find(
-        (s) => s.stack.getPath() === "/first-secret.yml/eu-central-1",
-      )!
-      expect(first).toBeDefined()
+    expect(queueNameSecret.ssmParameterName).toBe(
+      "/examples-secrets/first-secret.yml/eu-central-1/queueName",
+    )
+    expect(queueNameSecret.name).toBe("queueName")
+    expect(queueNameSecret.description).toBe("Name for queue")
+    expect(queueNameSecret.value).toBeNull()
 
-      const second = output.stacks.find(
-        (s) => s.stack.getPath() === "/second-secret.yml/eu-central-1",
-      )!
-      expect(second).toBeDefined()
+    const topicNameSecret = first.secrets.find((s) => s.name === "topicName")!
 
-      expect(first.stack.getPath()).toBe("/first-secret.yml/eu-central-1")
-      expect(first.stack.getSecrets().size).toBe(2)
+    expect(topicNameSecret.ssmParameterName).toBe(
+      "/examples-secrets/first-secret.yml/eu-central-1/topicName",
+    )
+    expect(topicNameSecret.name).toBe("topicName")
+    expect(topicNameSecret.description).toBe("Name for topic")
+    expect(topicNameSecret.value).toBeNull()
+  })
 
-      expect(second.stack.getPath()).toBe("/second-secret.yml/eu-central-1")
-      expect(second.stack.getSecrets().size).toBe(0)
+  test("Set secrets", async () => {
+    const { options, variables, watch } = await createOptions()
 
-      const queueNameSecret = first.secrets.find((s) => s.name === "queueName")!
+    const io = new TestSetSecretIO(
+      options,
+      new Map([
+        ["queueName", "my-secret-queue"],
+        ["topicName", "topic-of-the-day"],
+      ]),
+    )
 
-      expect(queueNameSecret.ssmParameterName).toBe(
-        "/examples-secrets/first-secret.yml/eu-central-1/queueName",
-      )
-      expect(queueNameSecret.name).toBe("queueName")
-      expect(queueNameSecret.description).toBe("Name for queue")
-      expect(queueNameSecret.value).toBe("my-secret-queue")
+    const output1 = await setSecretCommand(
+      {
+        options,
+        variables,
+        watch,
+        stackPath: "/first-secret.yml/eu-central-1",
+        secretName: "queueName",
+      },
+      io,
+    )
 
-      const topicNameSecret = first.secrets.find((s) => s.name === "topicName")!
+    expect(output1.success).toBe(true)
+    expect(output1.message).toBe("Success")
 
-      expect(topicNameSecret.ssmParameterName).toBe(
-        "/examples-secrets/first-secret.yml/eu-central-1/topicName",
-      )
-      expect(topicNameSecret.name).toBe("topicName")
-      expect(topicNameSecret.description).toBe("Name for topic")
-      expect(topicNameSecret.value).toBe("topic-of-the-day")
-    },
-    TIMEOUT,
-  )
+    const output2 = await setSecretCommand(
+      {
+        options,
+        variables,
+        watch,
+        stackPath: "/first-secret.yml/eu-central-1",
+        secretName: "topicName",
+      },
+      io,
+    )
 
-  test(
-    "Deploy",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await deployStacksCommand(
-        {
-          options,
-          variables,
-          watch,
-          ignoreDependencies: false,
-          interactive: false,
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-        },
-        new TestDeployStacksIO(options),
-      )
+    expect(output2.success).toBeTruthy()
+    expect(output2.message).toBe("Success")
+  })
 
-      expect(output.status).toBe(CommandStatus.SUCCESS)
-    },
-    TIMEOUT,
-  )
+  test("List secrets again", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await listSecretsCommand(
+      {
+        options,
+        variables,
+        watch,
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
+      },
+      new TestListSecretsIO(options),
+    )
 
-  test(
-    "Undeploy",
-    async () => {
-      const { options, variables, watch } = await createOptions()
-      const output = await undeployStacksCommand(
-        {
-          options,
-          variables,
-          watch,
-          ignoreDependencies: false,
-          interactive: false,
-          commandPath: Constants.ROOT_STACK_GROUP_PATH,
-        },
-        new TestUndeployStacksIO(options),
-      )
+    expect(output.success).toBeTruthy()
+    expect(output.message).toBe("Success")
 
-      expect(output.status).toBe(CommandStatus.SUCCESS)
-    },
-    TIMEOUT,
-  )
+    expect(output.stacks).toHaveLength(2)
+
+    const first = output.stacks.find(
+      (s) => s.stack.getPath() === "/first-secret.yml/eu-central-1",
+    )!
+    expect(first).toBeDefined()
+
+    const second = output.stacks.find(
+      (s) => s.stack.getPath() === "/second-secret.yml/eu-central-1",
+    )!
+    expect(second).toBeDefined()
+
+    expect(first.stack.getPath()).toBe("/first-secret.yml/eu-central-1")
+    expect(first.stack.getSecrets().size).toBe(2)
+
+    expect(second.stack.getPath()).toBe("/second-secret.yml/eu-central-1")
+    expect(second.stack.getSecrets().size).toBe(0)
+
+    const queueNameSecret = first.secrets.find((s) => s.name === "queueName")!
+
+    expect(queueNameSecret.ssmParameterName).toBe(
+      "/examples-secrets/first-secret.yml/eu-central-1/queueName",
+    )
+    expect(queueNameSecret.name).toBe("queueName")
+    expect(queueNameSecret.description).toBe("Name for queue")
+    expect(queueNameSecret.value).toBe("my-secret-queue")
+
+    const topicNameSecret = first.secrets.find((s) => s.name === "topicName")!
+
+    expect(topicNameSecret.ssmParameterName).toBe(
+      "/examples-secrets/first-secret.yml/eu-central-1/topicName",
+    )
+    expect(topicNameSecret.name).toBe("topicName")
+    expect(topicNameSecret.description).toBe("Name for topic")
+    expect(topicNameSecret.value).toBe("topic-of-the-day")
+  })
+
+  test("Deploy", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await deployStacksCommand(
+      {
+        options,
+        variables,
+        watch,
+        ignoreDependencies: false,
+        interactive: false,
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
+      },
+      new TestDeployStacksIO(options),
+    )
+
+    expect(output.status).toBe(CommandStatus.SUCCESS)
+  })
+
+  test("Undeploy", async () => {
+    const { options, variables, watch } = await createOptions()
+    const output = await undeployStacksCommand(
+      {
+        options,
+        variables,
+        watch,
+        ignoreDependencies: false,
+        interactive: false,
+        commandPath: Constants.ROOT_STACK_GROUP_PATH,
+      },
+      new TestUndeployStacksIO(options),
+    )
+
+    expect(output.status).toBe(CommandStatus.SUCCESS)
+  })
 })
