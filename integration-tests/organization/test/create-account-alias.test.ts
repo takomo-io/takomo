@@ -1,9 +1,12 @@
-import { CliCreateAliasIO, CliDeleteAliasIO } from "@takomo/cli-io"
+import {
+  CliCreateAccountAliasIO,
+  CliDeleteAccountAliasIO,
+} from "@takomo/cli-io"
 import { initOptionsAndVariables } from "@takomo/cli/src"
 import { CommandStatus } from "@takomo/core"
 import {
-  createAliasCommand,
-  deleteAliasCommand,
+  createAccountAliasCommand,
+  deleteAccountAliasCommand,
 } from "@takomo/organization-commands"
 import { ORG_A_ACCOUNT_2_ID } from "./env"
 
@@ -20,7 +23,7 @@ describe("Account alias", () => {
     const { options, variables, watch } = await createOptions("v01")
     const alias1 = `takomo-testing1-${Date.now()}`
     const alias2 = `takomo-testing2-${Date.now()}`
-    const result1 = await createAliasCommand(
+    const result1 = await createAccountAliasCommand(
       {
         accountId: ORG_A_ACCOUNT_2_ID,
         alias: alias1,
@@ -28,11 +31,11 @@ describe("Account alias", () => {
         watch,
         variables,
       },
-      new CliCreateAliasIO(options),
+      new CliCreateAccountAliasIO(options),
     )
     expect(result1.status).toBe(CommandStatus.SUCCESS)
 
-    const result2 = await createAliasCommand(
+    const result2 = await createAccountAliasCommand(
       {
         accountId: ORG_A_ACCOUNT_2_ID,
         alias: alias2,
@@ -40,21 +43,21 @@ describe("Account alias", () => {
         watch,
         variables,
       },
-      new CliCreateAliasIO(options),
+      new CliCreateAccountAliasIO(options),
     )
 
     expect(result2.status).toBe(CommandStatus.SUCCESS)
   })
   test("delete account alias", async () => {
     const { options, variables, watch } = await createOptions("v01")
-    const result = await deleteAliasCommand(
+    const result = await deleteAccountAliasCommand(
       {
         accountId: ORG_A_ACCOUNT_2_ID,
         options,
         watch,
         variables,
       },
-      new CliDeleteAliasIO(options),
+      new CliDeleteAccountAliasIO(options),
     )
 
     expect(result.status).toBe(CommandStatus.SUCCESS)

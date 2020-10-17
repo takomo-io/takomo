@@ -15,7 +15,7 @@ const createCredentialProvider = async (
   )
 }
 
-export const createAccountAlias = async (
+export const createAccountAliasInternal = async (
   ctx: OrganizationContext,
   logger: Logger,
   accountId: AccountId,
@@ -39,7 +39,7 @@ export const createAccountAlias = async (
   }
 }
 
-export const deleteAccountAlias = async (
+export const deleteAccountAliasInternal = async (
   ctx: OrganizationContext,
   logger: Logger,
   accountId: AccountId,

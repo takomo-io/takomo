@@ -3,24 +3,30 @@ import {
   buildOrganizationContext,
   OrganizationContext,
 } from "@takomo/organization-context"
+import { accountAlias } from "@takomo/organization-schema"
 import { validateInput } from "@takomo/util"
 import Joi from "joi"
-import { deleteAccountAlias } from "../common"
-import { DeleteAliasInput, DeleteAliasIO, DeleteAliasOutput } from "./model"
+import { createAccountAliasInternal } from "../common"
+import {
+  CreateAccountAliasInput,
+  CreateAccountAliasIO,
+  CreateAccountAliasOutput,
+} from "./model"
 
 const schema = Joi.object({
   accountId: accountId.required(),
+  alias: accountAlias,
 }).unknown(true)
 
-const deleteAlias = async (
+const createAccountAlias = async (
   ctx: OrganizationContext,
-  io: DeleteAliasIO,
-  input: DeleteAliasInput,
-): Promise<DeleteAliasOutput> => {
-  const { options, watch, accountId } = input
+  io: CreateAccountAliasIO,
+  input: CreateAccountAliasInput,
+): Promise<CreateAccountAliasOutput> => {
+  const { options, watch, accountId, alias } = input
 
   if (!options.isAutoConfirmEnabled()) {
-    if ((await io.confirmDeleteAlias(accountId)) !== ConfirmResult.YES) {
+    if ((await io.confirmCreateAlias(accountId, alias)) !== ConfirmResult.YES) {
       return {
         message: "Cancelled",
         success: false,
@@ -31,10 +37,16 @@ const deleteAlias = async (
   }
 
   const roleName = ctx.getAdminRoleNameForAccount(accountId)
-  const result = await deleteAccountAlias(ctx, io, accountId, roleName)
+  const result = await createAccountAliasInternal(
+    ctx,
+    io,
+    accountId,
+    roleName,
+    alias,
+  )
 
   if (!result.success) {
-    io.error("Failed to delete account alias", result.error)
+    io.error("Failed to create account alias", result.error)
     return {
       message: "Failed",
       success: false,
@@ -51,13 +63,13 @@ const deleteAlias = async (
   }
 }
 
-export const deleteAliasCommand = async (
-  input: DeleteAliasInput,
-  io: DeleteAliasIO,
-): Promise<DeleteAliasOutput> =>
+export const createAccountAliasCommand = async (
+  input: CreateAccountAliasInput,
+  io: CreateAccountAliasIO,
+): Promise<CreateAccountAliasOutput> =>
   validateInput(schema, input)
     .then(({ options, variables }) =>
       buildOrganizationContext(options, variables, io),
     )
-    .then((ctx) => deleteAlias(ctx, io, input))
+    .then((ctx) => createAccountAlias(ctx, io, input))
     .then(io.printOutput)

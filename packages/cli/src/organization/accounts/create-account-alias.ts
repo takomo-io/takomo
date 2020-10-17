@@ -1,16 +1,16 @@
-import { CliCreateAliasIO } from "@takomo/cli-io"
+import { CliCreateAccountAliasIO } from "@takomo/cli-io"
 import {
-  createAliasCommand,
-  createAliasCommandIamPolicy,
+  createAccountAliasCommand,
+  createAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../../common"
 
-export const createAliasCmd = {
+export const createAccountAliasCmd = {
   command: "create-alias",
   desc: "Create account alias",
   builder: (yargs: any) =>
     yargs
-      .epilog(commonEpilog(createAliasCommandIamPolicy))
+      .epilog(commonEpilog(createAccountAliasCommandIamPolicy))
       .option("alias", {
         description: "Account alias",
         string: true,
@@ -25,6 +25,10 @@ export const createAliasCmd = {
     handle(
       argv,
       (ov) => ({ ...ov, accountId: argv["account-id"], alias: argv.alias }),
-      (input) => createAliasCommand(input, new CliCreateAliasIO(input.options)),
+      (input) =>
+        createAccountAliasCommand(
+          input,
+          new CliCreateAccountAliasIO(input.options),
+        ),
     ),
 }

@@ -2,7 +2,7 @@ import { OrganizationsClient } from "@takomo/aws-clients"
 import { CommandStatus, ConfirmResult } from "@takomo/core"
 import { OrganizationContext } from "@takomo/organization-context"
 import { Failure, Result, Success, TakomoError } from "@takomo/util"
-import { createAccountAlias } from "../common"
+import { createAccountAliasInternal } from "../common"
 import {
   CreateAccountInput,
   CreateAccountIO,
@@ -90,7 +90,7 @@ export const createAccount = async (
   const success = createAccountStatus.State === "SUCCEEDED"
   if (success && alias) {
     io.info("Account created successfully, set account alias...")
-    const createAliasResult = await createAccountAlias(
+    const createAliasResult = await createAccountAliasInternal(
       ctx,
       io,
       createAccountStatus.AccountId!,

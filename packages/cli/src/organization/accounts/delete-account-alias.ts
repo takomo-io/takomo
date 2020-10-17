@@ -1,16 +1,16 @@
-import { CliDeleteAliasIO } from "@takomo/cli-io"
+import { CliDeleteAccountAliasIO } from "@takomo/cli-io"
 import {
-  deleteAliasCommand,
-  deleteAliasCommandIamPolicy,
+  deleteAccountAliasCommand,
+  deleteAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../../common"
 
-export const deleteAliasCmd = {
+export const deleteAccountAliasCmd = {
   command: "delete-alias",
   desc: "Delete account alias",
   builder: (yargs: any) =>
     yargs
-      .epilog(commonEpilog(deleteAliasCommandIamPolicy))
+      .epilog(commonEpilog(deleteAccountAliasCommandIamPolicy))
       .option("account-id", {
         description: "Account id",
         string: true,
@@ -20,6 +20,10 @@ export const deleteAliasCmd = {
     handle(
       argv,
       (ov) => ({ ...ov, accountId: argv["account-id"] }),
-      (input) => deleteAliasCommand(input, new CliDeleteAliasIO(input.options)),
+      (input) =>
+        deleteAccountAliasCommand(
+          input,
+          new CliDeleteAccountAliasIO(input.options),
+        ),
     ),
 }

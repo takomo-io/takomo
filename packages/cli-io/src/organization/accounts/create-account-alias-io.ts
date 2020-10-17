@@ -1,14 +1,21 @@
 import { AccountId, ConfirmResult, Options } from "@takomo/core"
-import { CreateAliasIO, CreateAliasOutput } from "@takomo/organization-commands"
+import {
+  CreateAccountAliasIO,
+  CreateAccountAliasOutput,
+} from "@takomo/organization-commands"
 import { LogWriter } from "@takomo/util"
 import CliIO from "../../cli-io"
 
-export class CliCreateAliasIO extends CliIO implements CreateAliasIO {
+export class CliCreateAccountAliasIO
+  extends CliIO
+  implements CreateAccountAliasIO {
   constructor(options: Options, logWriter: LogWriter = console.log) {
     super(logWriter, options)
   }
 
-  printOutput = (output: CreateAliasOutput): CreateAliasOutput => {
+  printOutput = (
+    output: CreateAccountAliasOutput,
+  ): CreateAccountAliasOutput => {
     return output
   }
 
