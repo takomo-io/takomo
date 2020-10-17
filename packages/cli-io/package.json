@@ -49,6 +49,9 @@
     "pretty-ms": "5.1.0",
     "ts-dedent": "2.0.0"
   },
+  "devDependencies": {
+    "@takomo/unit-test": "2.9.0"
+  },
   "engines": {
     "node": ">=14.4.0"
   },

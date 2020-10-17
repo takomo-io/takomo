@@ -1,20 +1,8 @@
-import { CliCreateAccountIO } from "../../../src/organization"
 import { Options } from "@takomo/core"
-import { LogLevel, LogWriter } from "@takomo/util/src"
+import { CapturingLogWriter } from "@takomo/unit-test"
+import { LogLevel, LogWriter } from "@takomo/util"
 import dedent from "ts-dedent"
-
-class CapturingLogWriter {
-  output = ""
-
-  write = (message?: any, ...optionalParams: any[]): void => {
-    if (message) {
-      this.output += message + "\n"
-    } else {
-      this.output += "\n"
-    }
-    console.log(message, ...optionalParams)
-  }
-}
+import { CliCreateAccountIO } from "../../../src/organization"
 
 const options = new Options({
   autoConfirm: false,
@@ -60,7 +48,7 @@ const expectedOutput = (
 
 describe("CliCreateAccountIO#confirmAccountCreation", () => {
   describe("should print correct output", () => {
-    test("when no alias is given", async () => {
+    test.concurrent("when no alias is given", async () => {
       const capturing = new CapturingLogWriter()
       const io = new TestCliCreateAccountIO(options, capturing.write)
 
@@ -82,7 +70,7 @@ describe("CliCreateAccountIO#confirmAccountCreation", () => {
       )
     })
 
-    test("when alias is given", async () => {
+    test.concurrent("when alias is given", async () => {
       const capturing = new CapturingLogWriter()
       const io = new TestCliCreateAccountIO(options, capturing.write)
 

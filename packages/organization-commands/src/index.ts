@@ -1,3 +1,10 @@
+export { createAliasCommand } from "./accounts/create-alias/command"
+export { createAliasCommandIamPolicy } from "./accounts/create-alias/iam-policy"
+export {
+  CreateAliasInput,
+  CreateAliasIO,
+  CreateAliasOutput,
+} from "./accounts/create-alias/model"
 export { createAccountCommand } from "./accounts/create/command"
 export { createAccountCommandIamPolicy } from "./accounts/create/iam-policy"
 export {
@@ -5,6 +12,13 @@ export {
   CreateAccountIO,
   CreateAccountOutput,
 } from "./accounts/create/model"
+export { deleteAliasCommand } from "./accounts/delete-alias/command"
+export { deleteAliasCommandIamPolicy } from "./accounts/delete-alias/iam-policy"
+export {
+  DeleteAliasInput,
+  DeleteAliasIO,
+  DeleteAliasOutput,
+} from "./accounts/delete-alias/model"
 export { describeAccountCommand } from "./accounts/describe/command"
 export { describeAccountCommandIamPolicy } from "./accounts/describe/iam-policy"
 export {

@@ -1,16 +1,19 @@
 import { evaluateRules } from "../src"
 
 describe("#evaluateRules", () => {
-  test.concurrent("returns the default value when no rules are given", () => {
-    const result = evaluateRules([], "string", (input: string) =>
-      input.toUpperCase(),
-    )
-    expect(result).toBe("STRING")
-  })
+  test.concurrent(
+    "returns the default value when no rules are given",
+    async () => {
+      const result = evaluateRules([], "string", (input: string) =>
+        input.toUpperCase(),
+      )
+      expect(result).toBe("STRING")
+    },
+  )
 
   test.concurrent(
     "returns the default value when no rule matches with the input",
-    () => {
+    async () => {
       const rule1 = (input: string) => (input === "COOL" ? 40 : undefined)
       const rule2 = (input: string) => undefined
       const rules = [rule1, rule2]
@@ -20,7 +23,7 @@ describe("#evaluateRules", () => {
     },
   )
 
-  test.concurrent("returns the value from the matching rule", () => {
+  test.concurrent("returns the value from the matching rule", async () => {
     const rule1 = (input: string) => undefined
     const rule2 = (input: string) => (input === "COOL" ? 40 : undefined)
     const rule3 = (input: string) => (input === "NOT_COOL" ? 123 : undefined)

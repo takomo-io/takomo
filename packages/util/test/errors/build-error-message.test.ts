@@ -27,7 +27,7 @@ describe("#buildErrorMessage", () => {
   describe("when a plain error without detailed information is given", () => {
     test.concurrent(
       "returns an error message containing just the original error message",
-      () => {
+      async () => {
         const description =
           "An error occurred while rendering file: /tmp/file.hbs"
         const contents = "template contents"
@@ -43,7 +43,7 @@ describe("#buildErrorMessage", () => {
   describe("when an error with detailed information with different start and end line numbers is given", () => {
     test.concurrent(
       "returns an error message without the code snippet of surrounding template contents",
-      () => {
+      async () => {
         const description =
           "An error occurred while rendering file: /tmp/file.hbs"
         const contents = "line1\nline2\nline3"
@@ -69,7 +69,7 @@ describe("#buildErrorMessage", () => {
   describe("when an error that occurred in the first line with detailed information with is given", () => {
     test.concurrent(
       "returns an error message with the code snippet of surrounding template contents",
-      () => {
+      async () => {
         const description =
           "An error occurred while rendering file: /tmp/file.hbs"
         const contents =
@@ -101,7 +101,7 @@ describe("#buildErrorMessage", () => {
   describe("when an error that occurred in the second line with detailed information is given", () => {
     test.concurrent(
       "returns an error message with the code snippet of surrounding template contents",
-      () => {
+      async () => {
         const description =
           "An error occurred while rendering file: /tmp/file.hbs"
         const contents = "line1\nline2"
@@ -130,7 +130,7 @@ describe("#buildErrorMessage", () => {
   describe("when an error that occurred in the last line with detailed information with is given", () => {
     test.concurrent(
       "returns an error message with the code snippet of surrounding template contents",
-      () => {
+      async () => {
         const description =
           "An error occurred while rendering file: /tmp/file.hbs"
         const contents =
@@ -162,7 +162,7 @@ describe("#buildErrorMessage", () => {
   describe("when an error that occurred in line 4 with detailed information with is given", () => {
     test.concurrent(
       "returns an error message with the code snippet of surrounding template contents",
-      () => {
+      async () => {
         const description =
           "An error occurred while rendering file: /tmp/file.hbs"
         const contents =

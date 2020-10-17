@@ -3,8 +3,8 @@ import {
   CreateAccountIO,
   CreateAccountOutput,
 } from "@takomo/organization-commands"
-import CliIO from "../../cli-io"
 import { LogWriter } from "@takomo/util"
+import CliIO from "../../cli-io"
 
 export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
   constructor(options: Options, logWriter: LogWriter = console.log) {

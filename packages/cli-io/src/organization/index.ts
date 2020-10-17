@@ -1,5 +1,7 @@
 export { CliBootstrapAccountsIO } from "./accounts/bootstrap-accounts-io"
 export { CliCreateAccountIO } from "./accounts/create-account-io"
+export { CliCreateAliasIO } from "./accounts/create-alias-io"
+export { CliDeleteAliasIO } from "./accounts/delete-alias-io"
 export { CliDeployAccountsIO } from "./accounts/deploy-accounts-io"
 export { CliListAccountsIO } from "./accounts/list-accounts-io"
 export { CliTearDownAccountsIO } from "./accounts/tear-down-accounts-io"

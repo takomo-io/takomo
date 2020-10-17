@@ -1,6 +1,6 @@
-import { AwsClient, AwsClientClientProps } from "./aws-client"
-import { Credentials, IAM } from "aws-sdk"
 import { Region } from "@takomo/core"
+import { Credentials, IAM } from "aws-sdk"
+import { AwsClient, AwsClientClientProps } from "./aws-client"
 
 export class IamClient extends AwsClient<IAM> {
   constructor(props: AwsClientClientProps) {
@@ -23,4 +23,11 @@ export class IamClient extends AwsClient<IAM> {
     this.getAwsClient()
       .then((c) => c.deleteAccountAlias({ AccountAlias: alias }).promise())
       .then(() => true)
+
+  describeAccountAlias = async (): Promise<string | null> =>
+    this.getAwsClient()
+      .then((c) => c.listAccountAliases({}).promise())
+      .then((res) =>
+        res.AccountAliases.length > 0 ? res.AccountAliases[0] : null,
+      )
 }
