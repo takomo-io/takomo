@@ -1,7 +1,7 @@
 import { Options } from "@takomo/core/src"
 import { CapturingLogWriter } from "@takomo/unit-test"
 import { LogLevel, LogWriter } from "@takomo/util"
-import { CliCreateAliasIO } from "../../../src/organization"
+import { CliCreateAccountAliasIO } from "../../../src/organization"
 
 const options = new Options({
   autoConfirm: false,
@@ -11,7 +11,7 @@ const options = new Options({
   projectDir: "",
 })
 
-class TestCliCreateAliasIO extends CliCreateAliasIO {
+class TestCliCreateAccountAliasIO extends CliCreateAccountAliasIO {
   constructor(options: Options, logWriter: LogWriter) {
     super(options, logWriter)
   }
@@ -25,10 +25,10 @@ class TestCliCreateAliasIO extends CliCreateAliasIO {
   }
 }
 
-describe("CliCreateAliasIO#confirmCreateAlias", () => {
+describe("CliCreateAccountAliasIO#confirmCreateAlias", () => {
   test("should print correct output", async () => {
     const capturing = new CapturingLogWriter()
-    const io = new TestCliCreateAliasIO(options, capturing.write)
+    const io = new TestCliCreateAccountAliasIO(options, capturing.write)
     await io.confirmCreateAlias("123456789012", "myAlias")
     expect(capturing.output).toBe(
       "\nContinue to create alias 'myAlias' to account 123456789012?\n",

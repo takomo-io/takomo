@@ -1,7 +1,7 @@
 import { Options } from "@takomo/core/src"
 import { CapturingLogWriter } from "@takomo/unit-test"
 import { LogLevel, LogWriter } from "@takomo/util"
-import { CliDeleteAliasIO } from "../../../src/organization"
+import { CliDeleteAccountAliasIO } from "../../../src/organization"
 
 const options = new Options({
   autoConfirm: false,
@@ -11,7 +11,7 @@ const options = new Options({
   projectDir: "",
 })
 
-class TestCliDeleteAliasIO extends CliDeleteAliasIO {
+class TestCliDeleteAccountAliasIO extends CliDeleteAccountAliasIO {
   constructor(options: Options, logWriter: LogWriter) {
     super(options, logWriter)
   }
@@ -25,10 +25,10 @@ class TestCliDeleteAliasIO extends CliDeleteAliasIO {
   }
 }
 
-describe("CliDeleteAliasIO#confirmDeleteAlias", () => {
+describe("CliDeleteAccountAliasIO#confirmDeleteAlias", () => {
   test("should print correct output", async () => {
     const capturing = new CapturingLogWriter()
-    const io = new TestCliDeleteAliasIO(options, capturing.write)
+    const io = new TestCliDeleteAccountAliasIO(options, capturing.write)
     await io.confirmDeleteAlias("210987654321")
     expect(capturing.output).toBe(
       "\nContinue to delete alias from account 210987654321?\n",
