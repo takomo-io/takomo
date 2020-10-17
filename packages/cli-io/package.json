@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli-io",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "description": "Takomo CLI IO",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,17 +26,17 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.10.0",
-    "@takomo/config-sets": "2.10.1",
-    "@takomo/core": "2.10.0",
-    "@takomo/deployment-targets": "2.10.1",
-    "@takomo/init-command": "2.10.0",
-    "@takomo/organization-commands": "2.10.1",
-    "@takomo/organization-config": "2.10.1",
-    "@takomo/stacks-commands": "2.10.1",
-    "@takomo/stacks-context": "2.10.1",
-    "@takomo/stacks-model": "2.10.0",
-    "@takomo/util": "2.10.0",
+    "@takomo/aws-clients": "2.11.0",
+    "@takomo/config-sets": "2.11.0",
+    "@takomo/core": "2.11.0",
+    "@takomo/deployment-targets": "2.11.0",
+    "@takomo/init-command": "2.11.0",
+    "@takomo/organization-commands": "2.11.0",
+    "@takomo/organization-config": "2.11.0",
+    "@takomo/stacks-commands": "2.11.0",
+    "@takomo/stacks-context": "2.11.0",
+    "@takomo/stacks-model": "2.11.0",
+    "@takomo/util": "2.11.0",
     "aws-sdk": "2.745.0",
     "date-and-time": "0.11.1",
     "diff": "4.0.1",
@@ -50,7 +50,7 @@
     "ts-dedent": "2.0.0"
   },
   "devDependencies": {
-    "@takomo/unit-test": "2.9.0"
+    "@takomo/unit-test": "2.11.0"
   },
   "engines": {
     "node": ">=14.4.0"

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.11.0](https://github.com/takomo-io/takomo/compare/v2.10.1...v2.11.0) (2020-10-17)
+
+
+### Bug Fixes
+
+* fix tests ([69940fa](https://github.com/takomo-io/takomo/commit/69940fa4b012b006d367a19e5e762a75c283fed3))
+
+
+### Features
+
+* add CLI commands to create and delete account aliases ([#119](https://github.com/takomo-io/takomo/issues/119)) ([56571e4](https://github.com/takomo-io/takomo/commit/56571e45e8e6b52976c5f4323c20e9e3a8280b2f)), closes [#75](https://github.com/takomo-io/takomo/issues/75)
+
+
+
+
+
 ## [2.10.1](https://github.com/takomo-io/takomo/compare/v2.10.0...v2.10.1) (2020-10-13)
 
 **Note:** Version bump only for package @takomo/cli-io

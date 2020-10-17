@@ -1,6 +1,6 @@
 {
   "name": "@takomo/test",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "description": "Takomo test utils",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,10 +26,10 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/cli-io": "2.10.1",
-    "@takomo/core": "2.10.0",
-    "@takomo/stacks-commands": "2.10.1",
-    "@takomo/stacks-model": "2.10.0",
+    "@takomo/cli-io": "2.11.0",
+    "@takomo/core": "2.11.0",
+    "@takomo/stacks-commands": "2.11.0",
+    "@takomo/stacks-model": "2.11.0",
     "aws-sdk": "2.745.0"
   },
   "engines": {
