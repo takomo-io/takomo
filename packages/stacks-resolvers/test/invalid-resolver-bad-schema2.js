@@ -2,8 +2,8 @@ module.exports = {
   name: "invalid-resolver-bad-schema2",
   init: (props) => {
     return {
-      resolve: () => true
+      resolve: () => true,
     }
   },
-  schema: () => "no good" 
+  schema: () => "no good",
 }

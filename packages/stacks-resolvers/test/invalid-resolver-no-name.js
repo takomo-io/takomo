@@ -1,7 +1,7 @@
 module.exports = {
   init: (props) => {
     return {
-      resolve: () => true 
+      resolve: () => true,
     }
-  }
+  },
 }

@@ -4,6 +4,7 @@ import {
 } from "@takomo/unit-test"
 import Joi from "joi"
 import { CmdResolverProvider } from "../src/impl/cmd-resolver"
+import { defaultSchema } from "../src/resolver-registry"
 
 const provider = new CmdResolverProvider()
 
@@ -14,7 +15,7 @@ describe("CmdResolverProvider", () => {
   describe("#schema validation", () => {
     const schema = provider.schema(
       Joi.defaults((schema) => schema),
-      Joi.object(),
+      defaultSchema("cmd"),
     )
 
     test("should succeed when a valid configuration is given", () => {
@@ -32,6 +33,13 @@ describe("CmdResolverProvider", () => {
         { command: 100 },
         '"command" must be a string',
       )
+    })
+
+    test("should succeed when confidential property is given", () => {
+      expectNoValidationError(schema)({
+        command: "echo cool",
+        confidential: true,
+      })
     })
   })
 })

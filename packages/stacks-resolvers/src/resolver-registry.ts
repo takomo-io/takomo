@@ -15,6 +15,12 @@ class InvalidResolverProviderConfigurationError extends TakomoError {
   }
 }
 
+export const defaultSchema = (resolverName: string): Joi.ObjectSchema =>
+  Joi.object({
+    resolver: Joi.string().valid(resolverName),
+    confidential: Joi.boolean(),
+  })
+
 export class ResolverRegistry {
   private readonly providers: Map<ResolverName, ResolverProvider> = new Map()
   private readonly logger: Logger
@@ -46,7 +52,7 @@ export class ResolverRegistry {
     if (provider.schema) {
       const schema = provider.schema(
         Joi.defaults((schema) => schema),
-        Joi.object({ resolver: Joi.string().valid(name) }),
+        defaultSchema(name),
       )
 
       if (!Joi.isSchema(schema)) {

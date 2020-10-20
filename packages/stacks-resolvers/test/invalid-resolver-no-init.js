@@ -1,3 +1,3 @@
 module.exports = {
-  name: "invalid-resolver-no-init"
+  name: "invalid-resolver-no-init",
 }
