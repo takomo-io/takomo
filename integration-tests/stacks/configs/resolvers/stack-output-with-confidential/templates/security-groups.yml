@@ -1,4 +1,4 @@
-Description: IT - networking
+Description: resolvers/stack-output-with-confidential/security-groups
 Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
@@ -9,6 +9,3 @@ Resources:
     Properties:
       GroupDescription: Example security group
       VpcId: !Ref VpcId
-      Tags:
-        - Key: Name
-          Value: Example security group

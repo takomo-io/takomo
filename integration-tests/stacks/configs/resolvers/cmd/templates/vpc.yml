@@ -1,4 +1,4 @@
-Description: cmd-resolver
+Description: resolvers/cmd/vpc
 Parameters:
   CidrBlock:
     Type: String

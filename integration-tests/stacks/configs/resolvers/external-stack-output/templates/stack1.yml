@@ -1,4 +1,4 @@
-Description: IT - external resolver
+Description: resolvers/external-stack-output/stack1
 Resources:
   LogGroup:
     Type: AWS::Logs::LogGroup

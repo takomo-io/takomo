@@ -1,0 +1,6 @@
+parameters:
+  VpcId:
+    resolver: stack-output
+    stack: /vpc.yml
+    output: MyVpcId
+    confidential: true

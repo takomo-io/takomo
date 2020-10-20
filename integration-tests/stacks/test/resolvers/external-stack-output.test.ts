@@ -17,14 +17,14 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
     {
       log: "info",
       yes: true,
-      dir: "configs/external-resolver",
+      dir: "configs/resolvers/external-stack-output",
       var: [`ACCOUNT_1_ID=${account1Id}`, `ACCOUNT_2_ID=${account2Id}`],
     },
     new Credentials(global.reservation.credentials),
   )
 }
 
-describe("External stack output resolver", () => {
+describe("resolvers/external-stack-output", () => {
   test("Deploy", async () => {
     const { options, variables, watch } = await createOptions()
     const output = await deployStacksCommand(
@@ -39,7 +39,7 @@ describe("External stack output resolver", () => {
       new TestDeployStacksIO(options),
     )
 
-    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output).stacksOperationOutputToBeSuccess()
 
     const [res1, res2, res3] = output.results
 
@@ -62,6 +62,6 @@ describe("External stack output resolver", () => {
       new TestUndeployStacksIO(options),
     )
 
-    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output).stacksOperationOutputToBeSuccess()
   })
 })

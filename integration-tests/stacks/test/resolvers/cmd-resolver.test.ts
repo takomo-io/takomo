@@ -13,14 +13,14 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
     {
       log: "info",
       yes: true,
-      dir: "configs/resolvers/cmd-resolver",
+      dir: "configs/resolvers/cmd",
       var: `ACCOUNT_1_ID=${account1Id}`,
     },
     new Credentials(global.reservation.credentials),
   )
 }
 
-describe("Cmd Resolver", () => {
+describe("resolvers/cmd", () => {
   test("Deploy", async () => {
     const { options, variables, watch } = await createOptions()
     const output = await deployStacksCommand(

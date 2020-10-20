@@ -1,4 +1,4 @@
-Description: IT - networking
+Description: resolvers/stack-output/vpc
 Parameters:
   CidrBlock:
     Type: String
@@ -8,9 +8,6 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref CidrBlock
-      Tags:
-        - Key: Name
-          Value: Example VPC
 Outputs:
   MyVpcId:
     Description: VPC id

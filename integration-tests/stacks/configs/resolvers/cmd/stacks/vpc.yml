@@ -1,4 +1,3 @@
-project: examples-cmd-resolver
 commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
 regions: eu-west-1
 parameters:

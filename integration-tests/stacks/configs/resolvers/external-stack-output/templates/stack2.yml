@@ -1,4 +1,4 @@
-Description: IT - external resolver
+Description: resolvers/external-stack-output/stack2
 Parameters:
   Code:
     Type: String

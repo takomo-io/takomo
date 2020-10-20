@@ -15,14 +15,14 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
     {
       log: "debug",
       yes: true,
-      dir: "configs/networking",
+      dir: "configs/resolvers/stack-output-with-confidential",
       var: `ACCOUNT_1_ID=${account1Id}`,
     },
     new Credentials(global.reservation.credentials),
   )
 }
 
-describe("Networking", () => {
+describe("resolvers/stack-output-with-confidential", () => {
   test("Deploy", async () => {
     const { options, variables, watch } = await createOptions()
     const output = await deployStacksCommand(
@@ -57,7 +57,7 @@ describe("Networking", () => {
       new CliListStacksIO(options),
     )
 
-    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output).stacksOperationOutputToBeSuccess()
     expect(output.stacks).toHaveLength(2)
 
     const [stack1, stack2] = output.stacks
@@ -81,7 +81,7 @@ describe("Networking", () => {
       new CliListStacksIO(options),
     )
 
-    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output).stacksOperationOutputToBeSuccess()
     expect(output.stacks).toHaveLength(1)
 
     const [stack1] = output.stacks
@@ -126,7 +126,7 @@ describe("Networking", () => {
       new TestUndeployStacksIO(options),
     )
 
-    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output).stacksOperationOutputToBeSuccess()
     expect(output.results).toHaveLength(2)
 
     const [a, b] = output.results
