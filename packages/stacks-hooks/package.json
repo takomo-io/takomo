@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-hooks",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Takomo Stacks Hooks",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@takomo/core": "2.11.0",
-    "@takomo/stacks-model": "2.11.0",
+    "@takomo/stacks-model": "2.11.1",
     "@takomo/util": "2.11.0",
     "aws-sdk": "2.745.0"
   },

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.1](https://github.com/takomo-io/takomo/compare/v2.11.0...v2.11.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* add NetworkingError to the list of retryable errors ([#124](https://github.com/takomo-io/takomo/issues/124)) ([cc830b4](https://github.com/takomo-io/takomo/commit/cc830b42253cd3d23c91215e2cf5a49ff94f1b74)), closes [#121](https://github.com/takomo-io/takomo/issues/121)
+
+
+
+
+
 # [2.11.0](https://github.com/takomo-io/takomo/compare/v2.10.1...v2.11.0) (2020-10-17)
 
 

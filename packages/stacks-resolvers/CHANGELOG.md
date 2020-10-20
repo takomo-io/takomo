@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.1](https://github.com/takomo-io/takomo/compare/v2.11.0...v2.11.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* fix schema validation of resolvers ([#123](https://github.com/takomo-io/takomo/issues/123)) ([c035cc1](https://github.com/takomo-io/takomo/commit/c035cc1c55b92d5112fa566d362140cd2aa70c77)), closes [#122](https://github.com/takomo-io/takomo/issues/122)
+
+
+
+
+
 # [2.11.0](https://github.com/takomo-io/takomo/compare/v2.10.1...v2.11.0) (2020-10-17)
 
 **Note:** Version bump only for package @takomo/stacks-resolvers

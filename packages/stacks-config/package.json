@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-config",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Takomo Stacks Config",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,8 +27,8 @@
   },
   "dependencies": {
     "@takomo/core": "2.11.0",
-    "@takomo/stacks-model": "2.11.0",
-    "@takomo/stacks-schema": "2.11.0",
+    "@takomo/stacks-model": "2.11.1",
+    "@takomo/stacks-schema": "2.11.1",
     "@takomo/util": "2.11.0",
     "aws-sdk": "2.745.0",
     "joi": "17.2.1"

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-model",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Takomo Stacks Model",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,7 +26,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.11.0",
+    "@takomo/aws-clients": "2.11.1",
     "@takomo/core": "2.11.0",
     "@takomo/util": "2.11.0",
     "aws-sdk": "2.745.0",

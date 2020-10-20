@@ -1,6 +1,6 @@
 {
   "name": "takomo",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Organize, configure and deploy CloudFormation stacks. Manage AWS organization.",
   "keywords": [
     "aws",
@@ -41,7 +41,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/cli": "2.11.0",
+    "@takomo/cli": "2.11.1",
     "semver": "7.3.2"
   },
   "engines": {

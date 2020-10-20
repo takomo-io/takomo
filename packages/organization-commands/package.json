@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-commands",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Takomo Organization Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,13 +26,13 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.11.0",
-    "@takomo/config-sets": "2.11.0",
+    "@takomo/aws-clients": "2.11.1",
+    "@takomo/config-sets": "2.11.1",
     "@takomo/core": "2.11.0",
-    "@takomo/organization-config": "2.11.0",
-    "@takomo/organization-context": "2.11.0",
-    "@takomo/organization-schema": "2.11.0",
-    "@takomo/stacks-commands": "2.11.0",
+    "@takomo/organization-config": "2.11.1",
+    "@takomo/organization-context": "2.11.1",
+    "@takomo/organization-schema": "2.11.1",
+    "@takomo/stacks-commands": "2.11.1",
     "@takomo/util": "2.11.0",
     "aws-sdk": "2.745.0",
     "cockatiel": "2.0.0",
