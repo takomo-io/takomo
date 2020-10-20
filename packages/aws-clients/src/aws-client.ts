@@ -21,6 +21,7 @@ const retryableErrorCodes = [
   "UnknownEndpoint",
   "Throttling",
   "TooManyRequestsException",
+  "NetworkingError",
 ]
 
 export abstract class AwsClient<C> {
