@@ -13,7 +13,7 @@ const createOptions = async (): Promise<OptionsAndVariables> => {
     {
       log: "info",
       yes: true,
-      dir: "configs/cmd-resolver",
+      dir: "configs/resolvers/cmd-resolver",
       var: `ACCOUNT_1_ID=${account1Id}`,
     },
     new Credentials(global.reservation.credentials),
@@ -35,7 +35,8 @@ describe("Cmd Resolver", () => {
       new TestDeployStacksIO(options),
     )
 
-    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output).stacksOperationOutputToBeSuccess()
+
     expect(output.results[0].success).toBeTruthy()
     expect(output.results[0].status).toBe(CommandStatus.SUCCESS)
     expect(output.results[0].reason).toBe("CREATE_SUCCESS")
@@ -55,6 +56,6 @@ describe("Cmd Resolver", () => {
       new TestUndeployStacksIO(options),
     )
 
-    expect(output.status).toBe(CommandStatus.SUCCESS)
+    expect(output).stacksOperationOutputToBeSuccess()
   })
 })

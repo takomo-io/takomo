@@ -1,0 +1,23 @@
+Description: cmd-resolver
+Parameters:
+  CidrBlock:
+    Type: String
+    Description: VPC CIDR block
+  ConfidentialParam:
+    Type: String
+    Description: Confidential parameter
+  NonConfidentialParam:
+    Type: String
+    Description: Non-confidential parameter
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref CidrBlock
+      Tags:
+        - Key: Name
+          Value: Example Cmd Resolver VPC
+        - Key: ConfidentialParamValue
+          Value: !Ref ConfidentialParam
+        - Key: NonConfidentialParamValue
+          Value: !Ref NonConfidentialParam

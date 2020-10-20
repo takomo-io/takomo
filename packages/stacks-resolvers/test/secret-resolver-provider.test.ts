@@ -4,6 +4,7 @@ import {
 } from "@takomo/unit-test"
 import Joi from "joi"
 import { SecretResolverProvider } from "../src/impl/secret-resolver"
+import { defaultSchema } from "../src/resolver-registry"
 
 const provider = new SecretResolverProvider()
 
@@ -14,13 +15,21 @@ describe("SecretResolverProvider", () => {
   describe("#schema validation", () => {
     const schema = provider.schema(
       Joi.defaults((schema) => schema),
-      Joi.object(),
+      defaultSchema("secret"),
     )
 
     test("should succeed when a valid configuration is given", () => {
       expectNoValidationError(schema)({
         stack: "/dev.yml",
         secret: "mySecret",
+      })
+    })
+
+    test("should succeed when a valid configuration and confidential is given", () => {
+      expectNoValidationError(schema)({
+        stack: "/dev.yml",
+        secret: "mySecret",
+        confidential: true,
       })
     })
 

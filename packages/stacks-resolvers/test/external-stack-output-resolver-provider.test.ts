@@ -4,6 +4,7 @@ import {
 } from "@takomo/unit-test"
 import Joi from "joi"
 import { ExternalStackOutputResolverProvider } from "../src/impl/external-stack-output-resolver"
+import { defaultSchema } from "../src/resolver-registry"
 
 const provider = new ExternalStackOutputResolverProvider()
 
@@ -14,7 +15,7 @@ describe("ExternalStackOutputResolverProvider", () => {
   describe("#schema validation", () => {
     const schema = provider.schema(
       Joi.defaults((schema) => schema),
-      Joi.object(),
+      defaultSchema("external-stack-output"),
     )
 
     test("should succeed when a valid configuration is given", () => {
@@ -23,6 +24,16 @@ describe("ExternalStackOutputResolverProvider", () => {
         output: "subnetId",
         region: "eu-west-1",
         commandRole: "arn:aws:iam::123456789012:role/admin",
+      })
+    })
+
+    test("should succeed when a valid configuration and confidential is given", () => {
+      expectNoValidationError(schema)({
+        stack: "database",
+        output: "subnetId",
+        region: "eu-west-1",
+        commandRole: "arn:aws:iam::123456789012:role/admin",
+        confidential: false,
       })
     })
 

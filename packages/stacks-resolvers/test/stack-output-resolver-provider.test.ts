@@ -4,6 +4,7 @@ import {
 } from "@takomo/unit-test"
 import Joi from "joi"
 import { StackOutputResolverProvider } from "../src/impl/stack-output-resolver"
+import { defaultSchema } from "../src/resolver-registry"
 
 const provider = new StackOutputResolverProvider()
 
@@ -14,13 +15,21 @@ describe("StackOutputResolverProvider", () => {
   describe("#schema validation", () => {
     const schema = provider.schema(
       Joi.defaults((schema) => schema),
-      Joi.object(),
+      defaultSchema("stack-output"),
     )
 
     test("should succeed when a valid configuration is given", () => {
       expectNoValidationError(schema)({
         stack: "/dev.yml",
         output: "myOutput",
+      })
+    })
+
+    test("should succeed when a valid configuration and confidential is given", () => {
+      expectNoValidationError(schema)({
+        stack: "/dev.yml",
+        output: "myOutput",
+        confidential: true,
       })
     })
 

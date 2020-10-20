@@ -5,3 +5,11 @@ parameters:
   CidrBlock:
     resolver: cmd
     command: echo 10.0.0.0/25
+  ConfidentialParam:
+    resolver: cmd
+    command: echo hello
+    confidential: true
+  NonConfidentialParam:
+    resolver: cmd
+    command: echo world
+    confidential: false
