@@ -6,13 +6,11 @@ import {
   StackResult,
 } from "@takomo/stacks-model"
 import { mapToObject, readFileContents, renderTemplate } from "@takomo/util"
+import { CloudFormation } from "aws-sdk"
 import path from "path"
-import {
-  InitialLaunchContext,
-  TemplateBodyHolder,
-  TemplateLocationHolder,
-} from "./model"
-import { prepareParameters } from "./parameters"
+import { createOrUpdateStack } from "./execute"
+import { TagsHolder, TemplateBodyHolder, TemplateLocationHolder } from "./model"
+import { reviewChanges } from "./review"
 import { validateTemplate } from "./validate"
 
 export const summarizeTemplate = async (
@@ -25,6 +23,7 @@ export const summarizeTemplate = async (
     templateBody,
     io,
     watch,
+    state,
   } = holder
   const childWatch = watch.startChild("summarize-template")
   const input = templateS3Url || templateBody
@@ -36,7 +35,12 @@ export const summarizeTemplate = async (
     })
 
     childWatch.stop()
-    return prepareParameters({
+
+    if (state.autoConfirm) {
+      return createOrUpdateStack({ ...holder, templateSummary })
+    }
+
+    return reviewChanges({
       ...holder,
       templateSummary,
     })
@@ -107,6 +111,7 @@ export const uploadTemplate = async (
 export const createVariablesForStackTemplate = (
   variables: StackOperationVariables,
   stack: Stack,
+  parameters: CloudFormation.Parameter[],
 ): any => {
   const stackPath = stack.getPath()
   const pathSegments = stackPath.substr(1).split("/")
@@ -127,6 +132,10 @@ export const createVariablesForStackTemplate = (
       depends: stack.getDependencies(),
       terminationProtection: stack.isTerminationProtectionEnabled(),
       data: stack.getData(),
+      parameters: parameters.map((p) => ({
+        key: p.ParameterKey,
+        value: p.ParameterValue,
+      })),
       configFile: {
         filePath,
         basename: path.basename(filePath),
@@ -139,13 +148,17 @@ export const createVariablesForStackTemplate = (
 }
 
 export const prepareCloudFormationTemplate = async (
-  holder: InitialLaunchContext,
+  holder: TagsHolder,
 ): Promise<StackResult> => {
-  const { ctx, stack, watch, variables, logger } = holder
+  const { ctx, stack, watch, variables, logger, parameters } = holder
   logger.debug("Prepare CloudFormation template")
 
   const childWatch = watch.startChild("prepare-template")
-  const stackVariables = createVariablesForStackTemplate(variables, stack)
+  const stackVariables = createVariablesForStackTemplate(
+    variables,
+    stack,
+    parameters,
+  )
 
   const pathToTemplate = path.join(
     ctx.getOptions().getProjectDir(),

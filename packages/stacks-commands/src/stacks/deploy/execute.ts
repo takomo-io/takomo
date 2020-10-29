@@ -6,11 +6,11 @@ import {
 } from "@takomo/stacks-model"
 import uuid from "uuid"
 import { executeAfterLaunchHooks } from "./hooks"
-import { TagsHolder } from "./model"
+import { TemplateSummaryHolder } from "./model"
 import { waitForStackCreateOrUpdateToComplete } from "./wait"
 
 export const createOrUpdateStack = async (
-  holder: TagsHolder,
+  holder: TemplateSummaryHolder,
 ): Promise<StackResult> => {
   const {
     stack,

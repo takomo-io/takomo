@@ -62,7 +62,15 @@ export interface InitialLaunchContext {
   readonly state: DeployState
 }
 
-export interface TemplateBodyHolder extends InitialLaunchContext {
+export interface ParameterHolder extends InitialLaunchContext {
+  readonly parameters: CloudFormation.Parameter[]
+}
+
+export interface TagsHolder extends ParameterHolder {
+  readonly tags: CloudFormation.Tag[]
+}
+
+export interface TemplateBodyHolder extends TagsHolder {
   readonly templateBody: string
 }
 
@@ -74,15 +82,7 @@ export interface TemplateSummaryHolder extends TemplateLocationHolder {
   readonly templateSummary: CloudFormation.GetTemplateSummaryOutput
 }
 
-export interface ParameterHolder extends TemplateSummaryHolder {
-  readonly parameters: CloudFormation.Parameter[]
-}
-
-export interface TagsHolder extends ParameterHolder {
-  readonly tags: CloudFormation.Tag[]
-}
-
-export interface ClientTokenHolder extends TagsHolder {
+export interface ClientTokenHolder extends TemplateSummaryHolder {
   readonly clientToken: string
 }
 

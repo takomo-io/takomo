@@ -1,5 +1,6 @@
 import { TakomoCredentialProvider } from "@takomo/core"
 import { Stack } from "@takomo/stacks-model"
+import { Logger } from "@takomo/util/src/logging"
 import { mock } from "jest-mock-extended"
 import { createVariablesForStackTemplate } from "../../../src/stacks/deploy/template"
 
@@ -57,9 +58,26 @@ describe("#createVariablesForStackTemplate", () => {
         update: 4,
         create: 3,
       },
+      stackGroupPath: "/",
+      logger: mock<Logger>(),
     })
 
-    const stackVariables = createVariablesForStackTemplate(variables, stack)
+    const parameters = [
+      {
+        ParameterKey: "foo",
+        ParameterValue: "fooValue",
+      },
+      {
+        ParameterKey: "bar",
+        ParameterValue: "barValue",
+      },
+    ]
+
+    const stackVariables = createVariablesForStackTemplate(
+      variables,
+      stack,
+      parameters,
+    )
 
     expect(stackVariables).toStrictEqual({
       env: {
@@ -101,6 +119,16 @@ describe("#createVariablesForStackTemplate", () => {
           a: "b",
           c: "d",
         },
+        parameters: [
+          {
+            key: "foo",
+            value: "fooValue",
+          },
+          {
+            key: "bar",
+            value: "barValue",
+          },
+        ],
         depends: ["/vpc.yml"],
         terminationProtection: false,
         configFile: {
@@ -156,9 +184,11 @@ describe("#createVariablesForStackTemplate", () => {
         update: 40,
         create: 0,
       },
+      stackGroupPath: "/dev/apps/prod",
+      logger: mock<Logger>(),
     })
 
-    const stackVariables = createVariablesForStackTemplate(variables, stack)
+    const stackVariables = createVariablesForStackTemplate(variables, stack, [])
 
     expect(stackVariables).toStrictEqual({
       env: {},
@@ -190,6 +220,7 @@ describe("#createVariablesForStackTemplate", () => {
         tags: {
           Name: "Value",
         },
+        parameters: [],
         depends: [],
         terminationProtection: false,
         configFile: {
