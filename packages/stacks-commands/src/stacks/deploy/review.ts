@@ -13,7 +13,11 @@ import {
 } from "aws-sdk/clients/cloudformation"
 import uuid from "uuid"
 import { createOrUpdateStack } from "./execute"
-import { ConfirmStackDeployAnswer, DeployStacksIO, TagsHolder } from "./model"
+import {
+  ConfirmStackDeployAnswer,
+  DeployStacksIO,
+  TemplateSummaryHolder,
+} from "./model"
 
 export const resolveChangeSetType = (
   launchType: StackLaunchType,
@@ -56,7 +60,7 @@ const confirmStackDeploy = async (
 }
 
 export const reviewChanges = async (
-  holder: TagsHolder,
+  holder: TemplateSummaryHolder,
 ): Promise<StackResult> => {
   const {
     ctx,

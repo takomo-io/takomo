@@ -7,7 +7,7 @@ import {
   StackResult,
 } from "@takomo/stacks-model"
 import { InitialLaunchContext, ResultHolder } from "./model"
-import { prepareCloudFormationTemplate } from "./template"
+import { prepareParameters } from "./parameters"
 
 export const toHookOperation = (launchType: StackLaunchType): HookOperation => {
   switch (launchType) {
@@ -69,7 +69,7 @@ export const executeBeforeLaunchHooks = async (
   childWatch.stop()
   logger.debug("Execute before deploy hooks completed")
 
-  return prepareCloudFormationTemplate(holder)
+  return prepareParameters(holder)
 }
 
 export const executeAfterLaunchHooks = async (

@@ -1,6 +1,6 @@
 import { CommandStatus } from "@takomo/core"
 import { StackResult } from "@takomo/stacks-model"
-import { TemplateSummaryHolder } from "./model"
+import { InitialLaunchContext } from "./model"
 import { prepareTags } from "./tags"
 
 const getValueForLog = (
@@ -15,7 +15,7 @@ const getValueForLog = (
 }
 
 export const prepareParameters = async (
-  holder: TemplateSummaryHolder,
+  holder: InitialLaunchContext,
 ): Promise<StackResult> => {
   const { stack, ctx, io, watch, logger } = holder
   const logConfidentialInfo = ctx

@@ -1,12 +1,11 @@
 import { StackResult } from "@takomo/stacks-model"
-import { createOrUpdateStack } from "./execute"
 import { ParameterHolder } from "./model"
-import { reviewChanges } from "./review"
+import { prepareCloudFormationTemplate } from "./template"
 
 export const prepareTags = async (
   holder: ParameterHolder,
 ): Promise<StackResult> => {
-  const { stack, watch, logger, state } = holder
+  const { stack, watch, logger } = holder
   const childWatch = watch.startChild("prepare-tags")
 
   logger.debug("Prepare tags")
@@ -25,12 +24,5 @@ export const prepareTags = async (
 
   childWatch.stop()
 
-  if (state.autoConfirm) {
-    return createOrUpdateStack({ ...holder, tags })
-  }
-
-  return reviewChanges({
-    ...holder,
-    tags,
-  })
+  return prepareCloudFormationTemplate({ ...holder, tags })
 }

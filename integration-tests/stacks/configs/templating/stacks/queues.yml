@@ -1,6 +1,9 @@
 template: queues.yml.hbs
 tags:
   hello: World
+parameters:
+  HelloParam: World
+  NumberParam: 300
 data:
   queueNames:
     {{#each var.queues}}

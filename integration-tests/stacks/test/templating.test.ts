@@ -48,6 +48,19 @@ describe("Templating", () => {
       stackName: "queues",
     })
     expect(stack.Description).toBe("IT - templating World")
+
+    const outputs = stack.Outputs!
+    expect(outputs).toHaveLength(2)
+
+    const sortedOutputs = outputs.sort((a, b) =>
+      a.OutputKey!.localeCompare(b.OutputKey!),
+    )
+
+    expect(sortedOutputs[0].OutputKey).toBe("HelloParam")
+    expect(sortedOutputs[0].OutputValue).toBe("World")
+
+    expect(sortedOutputs[1].OutputKey).toBe("NumberParam")
+    expect(sortedOutputs[1].OutputValue).toBe("300")
   })
 
   test("Undeploy", async () => {
