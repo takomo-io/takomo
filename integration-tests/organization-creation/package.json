@@ -1,7 +1,7 @@
 {
   "name": "integration-test-organization-creation",
   "private": true,
-  "version": "2.11.1",
+  "version": "2.12.0",
   "description": "Takomo integration tests for organization creation",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -20,11 +20,11 @@
     "integration-test": "jest test --passWithNoTests --runInBand --ci"
   },
   "dependencies": {
-    "@takomo/cli": "2.11.1",
-    "@takomo/cli-io": "2.11.1",
+    "@takomo/cli": "2.12.0",
+    "@takomo/cli-io": "2.12.0",
     "@takomo/core": "2.11.0",
-    "@takomo/organization-commands": "2.11.1",
-    "@takomo/test": "2.11.1",
+    "@takomo/organization-commands": "2.12.0",
+    "@takomo/test": "2.12.0",
     "@takomo/util": "2.11.0"
   },
   "devDependencies": {
