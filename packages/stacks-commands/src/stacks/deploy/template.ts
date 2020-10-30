@@ -147,6 +147,11 @@ export const createVariablesForStackTemplate = (
   }
 }
 
+export const isDynamicTemplate = (pathToTemplate: string): boolean =>
+  pathToTemplate.endsWith(".hbs") ||
+  pathToTemplate.endsWith(".hbs.yml") ||
+  pathToTemplate.endsWith(".hbs.json")
+
 export const prepareCloudFormationTemplate = async (
   holder: TagsHolder,
 ): Promise<StackResult> => {
@@ -173,7 +178,7 @@ export const prepareCloudFormationTemplate = async (
 
     logger.traceText("Raw template body:", content)
 
-    if (!pathToTemplate.endsWith(".hbs")) {
+    if (!isDynamicTemplate(pathToTemplate)) {
       childWatch.stop()
       return await uploadTemplate({
         ...holder,

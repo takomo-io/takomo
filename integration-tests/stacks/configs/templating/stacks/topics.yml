@@ -1,4 +1,4 @@
-template: topics.yml.hbs
+template: topics.hbs.yml
 data:
   topics:
     - one
