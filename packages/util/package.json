@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "chalk": "3.0.0",
-    "date-and-time": "0.11.1",
+    "date-and-time": "0.14.2",
     "easy-table": "1.1.1",
     "handlebars": "4.7.6",
     "joi": "17.2.1",
