@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-schema",
-  "version": "2.12.0",
+  "version": "2.12.1",
   "description": "Takomo Organization Schema",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,8 +26,8 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/config-sets": "2.12.0",
-    "@takomo/core": "2.11.0",
+    "@takomo/config-sets": "2.12.1",
+    "@takomo/core": "2.12.1",
     "joi": "17.2.1"
   },
   "devDependencies": {

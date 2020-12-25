@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-context",
-  "version": "2.12.0",
+  "version": "2.12.1",
   "description": "Takomo Organization Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,11 +26,11 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.11.1",
-    "@takomo/config-sets": "2.12.0",
-    "@takomo/core": "2.11.0",
-    "@takomo/organization-config": "2.12.0",
-    "@takomo/util": "2.11.0",
+    "@takomo/aws-clients": "2.12.1",
+    "@takomo/config-sets": "2.12.1",
+    "@takomo/core": "2.12.1",
+    "@takomo/organization-config": "2.12.1",
+    "@takomo/util": "2.12.1",
     "aws-sdk": "2.745.0",
     "lodash.flatten": "4.4.0",
     "lodash.uniq": "4.5.0",

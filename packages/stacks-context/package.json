@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-context",
-  "version": "2.11.1",
+  "version": "2.12.1",
   "description": "Takomo Stacks Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,13 +26,13 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.11.1",
-    "@takomo/core": "2.11.0",
-    "@takomo/stacks-config": "2.11.1",
-    "@takomo/stacks-hooks": "2.11.1",
-    "@takomo/stacks-model": "2.11.1",
-    "@takomo/stacks-resolvers": "2.11.1",
-    "@takomo/util": "2.11.0",
+    "@takomo/aws-clients": "2.12.1",
+    "@takomo/core": "2.12.1",
+    "@takomo/stacks-config": "2.12.1",
+    "@takomo/stacks-hooks": "2.12.1",
+    "@takomo/stacks-model": "2.12.1",
+    "@takomo/stacks-resolvers": "2.12.1",
+    "@takomo/util": "2.12.1",
     "aws-sdk": "2.745.0",
     "cockatiel": "2.0.0",
     "lodash.flatten": "4.4.0",
