@@ -23,7 +23,7 @@ export const parseConfigFile = async (
     : (obj: any) => {
         return {
           ...obj,
-          env: "<concealed>",
+          env: "*****",
         }
       }
 

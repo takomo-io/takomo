@@ -48,7 +48,7 @@ export class ResolverRegistry {
   ): Promise<Resolver> => {
     if (props.confidential) {
       this.logger.debug(
-        `Init resolver '${name}' for stack: '${stackPath}', parameter: '${parameterName}' with properties: <concealed>`,
+        `Init resolver '${name}' for stack: '${stackPath}', parameter: '${parameterName}' with properties: *****`,
       )
     } else {
       this.logger.debugObject(

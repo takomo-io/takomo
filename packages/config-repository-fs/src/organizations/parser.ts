@@ -22,7 +22,7 @@ export const parseOrganizationConfigFile = async (
     : (obj: any) => {
         return {
           ...obj,
-          env: "<concealed>",
+          env: "*****",
         }
       }
 

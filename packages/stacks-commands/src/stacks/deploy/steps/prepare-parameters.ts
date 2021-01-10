@@ -9,7 +9,7 @@ const getValueForLog = (
   if (!confidential) {
     return value
   }
-  return logConfidentialInfo ? value : "<concealed>"
+  return logConfidentialInfo ? value : "*****"
 }
 
 /**

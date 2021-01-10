@@ -30,7 +30,7 @@ export const parseStackConfigFile = async (
     : (obj: any) => {
         return {
           ...obj,
-          env: "<concealed>",
+          env: "*****",
         }
       }
 
@@ -76,7 +76,7 @@ export const parseStackGroupConfigFile = async (
     : (obj: any) => {
         return {
           ...obj,
-          env: "<concealed>",
+          env: "*****",
         }
       }
 
