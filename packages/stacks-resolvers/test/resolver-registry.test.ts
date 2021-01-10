@@ -1,11 +1,15 @@
+import { CommandContext } from "@takomo/core"
 import { ResolverInput } from "@takomo/stacks-model"
-import { ConsoleLogger, LogLevel } from "@takomo/util"
+import { createConsoleLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
 import { ResolverRegistry } from "../src"
-import { StaticResolver } from "../src/impl/static-resolver"
+import { createStaticResolverProvider } from "../src/static-resolver"
 
-const logger = new ConsoleLogger(LogLevel.DEBUG)
+const logger = createConsoleLogger({
+  logLevel: "info",
+  concealConfidentialInformation: true,
+})
 
 describe("#registerBuiltInProvider", () => {
   describe("when given a valid provider", () => {
@@ -13,7 +17,7 @@ describe("#registerBuiltInProvider", () => {
       const registry = new ResolverRegistry(logger)
       await registry.registerBuiltInProvider({
         name: "static",
-        init: async (props: any) => new StaticResolver(props),
+        init: createStaticResolverProvider().init,
       })
 
       expect(registry.hasProvider("static")).toBeTruthy()
@@ -25,7 +29,7 @@ describe("#registerBuiltInProvider", () => {
       const register = async () =>
         registry.registerBuiltInProvider({
           name: "static",
-          init: async (props: any) => new StaticResolver(props),
+          init: createStaticResolverProvider().init,
         })
 
       await register()
@@ -50,7 +54,7 @@ describe("#hasProvider", () => {
       const registry = new ResolverRegistry(logger)
       await registry.registerBuiltInProvider({
         name: "hello",
-        init: async (props: any) => new StaticResolver(props),
+        init: createStaticResolverProvider().init,
       })
       expect(registry.hasProvider("hello")).toBeTruthy()
     })
@@ -58,7 +62,7 @@ describe("#hasProvider", () => {
 })
 
 describe("#getRegisteredResolverNames", () => {
-  describe("when no resolvers is registed", () => {
+  describe("when no resolvers are registered", () => {
     test("returns an empty array", () => {
       const registry = new ResolverRegistry(logger)
       expect(registry.getRegisteredResolverNames()).toHaveLength(0)
@@ -69,15 +73,15 @@ describe("#getRegisteredResolverNames", () => {
       const registry = new ResolverRegistry(logger)
       await registry.registerBuiltInProvider({
         name: "hello",
-        init: async (props: any) => new StaticResolver(props),
+        init: createStaticResolverProvider().init,
       })
       await registry.registerBuiltInProvider({
         name: "xxxx",
-        init: async (props: any) => new StaticResolver(props),
+        init: createStaticResolverProvider().init,
       })
       await registry.registerBuiltInProvider({
         name: "aaaa",
-        init: async (props: any) => new StaticResolver(props),
+        init: createStaticResolverProvider().init,
       })
       expect(registry.getRegisteredResolverNames()).toStrictEqual([
         "aaaa",
@@ -94,14 +98,23 @@ describe("#initResolver", () => {
     let invoked = false
     await registry.registerBuiltInProvider({
       name: "hello",
-      init: async (props: any) => new StaticResolver(props),
-      schema: (joi: Joi.Root, base: Joi.ObjectSchema): Joi.ObjectSchema => {
+      init: createStaticResolverProvider().init,
+      schema: ({ base }): Joi.ObjectSchema => {
         invoked = true
         return base
       },
     })
 
-    await registry.initResolver("/myfile", "param1", "hello", {})
+    await registry.initResolver(
+      mock<CommandContext>(),
+      "/myfile",
+      "param1",
+      "hello",
+      {
+        resolver: "hello",
+        immutable: false,
+      },
+    )
     expect(invoked).toBeTruthy()
   })
 
@@ -109,12 +122,20 @@ describe("#initResolver", () => {
     const registry = new ResolverRegistry(logger)
     await registry.registerBuiltInProvider({
       name: "hello",
-      init: async (props: any) => new StaticResolver(props),
+      init: createStaticResolverProvider().init,
     })
 
-    const resolver = await registry.initResolver("/myfile", "param1", "hello", {
-      value: "world",
-    })
+    const resolver = await registry.initResolver(
+      mock<CommandContext>(),
+      "/myfile",
+      "param1",
+      "hello",
+      {
+        value: "world",
+        resolver: "static",
+        immutable: false,
+      },
+    )
     expect(await resolver.resolve(mock<ResolverInput>())).toBe("world")
   })
 
@@ -126,13 +147,17 @@ describe("#initResolver", () => {
 
     await expect(
       registry.initResolver(
+        mock<CommandContext>(),
         "/myfile",
         "param1",
         "invalid-resolver-bad-schema2",
-        {},
+        {
+          resolver: "static",
+          immutable: false,
+        },
       ),
     ).rejects.toThrow(
-      "Error in parameter 'param1' of stack config file /myfile:\n\n" +
+      "Error in parameter 'param1' of stack /myfile:\n\n" +
         "  - value returned from resolver schema function is not a Joi schema object",
     )
   })
@@ -148,11 +173,14 @@ describe("#registerProviderFromFile", () => {
       expect(registry.hasProvider("my-cool-resolver")).toBeTruthy()
 
       const resolver = await registry.initResolver(
+        mock<CommandContext>(),
         "/myfile",
         "param1",
         "my-cool-resolver",
         {
           greeting: "Good day",
+          resolver: "my-cool-resolver",
+          immutable: false,
         },
       )
 
@@ -167,11 +195,19 @@ describe("#registerProviderFromFile", () => {
       expect(registry.hasProvider("my-cool-resolver")).toBeTruthy()
 
       await expect(
-        registry.initResolver("/myfile", "param1", "my-cool-resolver", {
-          greeting: "I'm too long message",
-        }),
+        registry.initResolver(
+          mock<CommandContext>(),
+          "/myfile",
+          "param1",
+          "my-cool-resolver",
+          {
+            greeting: "I'm too long message",
+            resolver: "my-cool-resolver",
+            immutable: false,
+          },
+        ),
       ).rejects.toThrow(
-        "1 validation error(s) in parameter 'param1' of stack config file /myfile:\n\n" +
+        "1 validation error(s) in parameter 'param1' of stack /myfile:\n\n" +
           '  - "greeting" length must be less than or equal to 10 characters long',
       )
     })

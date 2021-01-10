@@ -1,19 +1,18 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { CommandStatus } from "@takomo/core"
+import { OrganizationPolicyType } from "@takomo/aws-model"
 import { OrganizationState } from "@takomo/organization-context"
-import { Logger } from "@takomo/util"
-import { PolicyType } from "aws-sdk/clients/organizations"
+import { TkmLogger } from "@takomo/util"
 import flatten from "lodash.flatten"
+import { PlannedOrganizationalUnit } from "../../common/plan/organizational-units/model"
 import { OrganizationalUnitDeploymentResult } from "../model"
-import { PlannedOrganizationalUnit } from "../plan/model"
 import { addOrUpdateOrganizationalUnits } from "./add-or-update-organizational-units"
 import { attachAndDetachPolicies } from "./attach-and-detach-policies"
 import { cancelOrganizationalUnits } from "./cancel-organizational-units"
 
 export const updateOrganizationalUnit = async (
-  logger: Logger,
+  logger: TkmLogger,
   client: OrganizationsClient,
-  enabledPolicyTypes: PolicyType[],
+  enabledPolicyTypes: ReadonlyArray<OrganizationPolicyType>,
   serviceControlPoliciesJustEnabled: boolean,
   organizationState: OrganizationState,
   planned: PlannedOrganizationalUnit,
@@ -43,7 +42,7 @@ export const updateOrganizationalUnit = async (
         id: planned.id!,
         name: planned.name,
         success: false,
-        status: CommandStatus.FAILED,
+        status: "FAILED",
         message: "Policies failed",
       },
       ...flatten(planned.children.map(cancelOrganizationalUnits)),
@@ -55,14 +54,14 @@ export const updateOrganizationalUnit = async (
     const currentOu = organizationState.getParentOrganizationalUnit(accountId)
     const newOu = planned.id!
     logger.info(
-      `Move account ${accountId} from organizational unit ${currentOu.Id} to ${newOu}`,
+      `Move account ${accountId} from organizational unit ${currentOu.id} to ${newOu}`,
     )
 
     if (
       !(await client.moveAccount({
         AccountId: accountId,
         DestinationParentId: newOu,
-        SourceParentId: currentOu.Id!,
+        SourceParentId: currentOu.id,
       }))
     ) {
       logger.warn(
@@ -75,7 +74,7 @@ export const updateOrganizationalUnit = async (
           id: planned.id!,
           name: planned.name,
           success: false,
-          status: CommandStatus.FAILED,
+          status: "FAILED",
           message: "Accounts failed",
         },
         ...flatten(planned.children.map(cancelOrganizationalUnits)),
@@ -107,7 +106,7 @@ export const updateOrganizationalUnit = async (
           id: planned.id!,
           name: planned.name,
           success: false,
-          status: CommandStatus.FAILED,
+          status: "FAILED",
           message: "Accounts failed",
         },
         ...flatten(planned.children.map(cancelOrganizationalUnits)),
@@ -120,7 +119,7 @@ export const updateOrganizationalUnit = async (
     name: planned.name,
     message: "Updated",
     success: true,
-    status: CommandStatus.SUCCESS,
+    status: "SUCCESS",
   })
 
   for (const child of planned.children) {

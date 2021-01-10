@@ -1,18 +1,13 @@
 import { ResolverProvider } from "@takomo/stacks-model"
-import {
-  CmdResolverProvider,
-  ExternalStackOutputResolverProvider,
-  SecretResolverProvider,
-  StackOutputResolverProvider,
-  StaticResolverProvider,
-} from "./impl"
-export { ListResolver } from "./impl"
+import { createCmdResolverProvider } from "./cmd-resolver"
+import { createExternalStackOutputResolverProvider } from "./external-stack-output-resolver"
+import { createStackOutputResolverProvider } from "./stack-output-resolver"
+import { createStaticResolverProvider } from "./static-resolver"
 export { ResolverRegistry } from "./resolver-registry"
 
-export const coreResolverProviders = (): ResolverProvider[] => [
-  new CmdResolverProvider(),
-  new ExternalStackOutputResolverProvider(),
-  new SecretResolverProvider(),
-  new StackOutputResolverProvider(),
-  new StaticResolverProvider(),
+export const coreResolverProviders = (): ReadonlyArray<ResolverProvider> => [
+  createCmdResolverProvider(),
+  createExternalStackOutputResolverProvider(),
+  createStackOutputResolverProvider(),
+  createStaticResolverProvider(),
 ]

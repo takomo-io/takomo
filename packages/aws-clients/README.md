@@ -1,3 +1,3 @@
-# Takomo AWS Clients
+# Takomo - AWS Clients
 
-AWS clients for https://takomo.io
+AWS clients.

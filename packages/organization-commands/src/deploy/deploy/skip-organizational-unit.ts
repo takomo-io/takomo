@@ -1,20 +1,19 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { CommandStatus } from "@takomo/core"
+import { OrganizationPolicyType } from "@takomo/aws-model"
 import { OrganizationState } from "@takomo/organization-context"
-import { Logger } from "@takomo/util"
-import { PolicyType } from "aws-sdk/clients/organizations"
+import { TkmLogger } from "@takomo/util"
+import { PlannedOrganizationalUnit } from "../../common/plan/organizational-units/model"
 import { OrganizationalUnitDeploymentResult } from "../model"
-import { PlannedOrganizationalUnit } from "../plan/model"
 import { addOrUpdateOrganizationalUnits } from "./add-or-update-organizational-units"
 
 export const skipOrganizationalUnit = async (
-  logger: Logger,
+  logger: TkmLogger,
   client: OrganizationsClient,
-  enabledPolicyTypes: PolicyType[],
+  enabledPolicyTypes: ReadonlyArray<OrganizationPolicyType>,
   serviceControlPoliciesJustEnabled: boolean,
   organizationState: OrganizationState,
   planned: PlannedOrganizationalUnit,
-): Promise<OrganizationalUnitDeploymentResult[]> => {
+): Promise<ReadonlyArray<OrganizationalUnitDeploymentResult>> => {
   const results = new Array<OrganizationalUnitDeploymentResult>()
 
   logger.info(`Skip organizational unit: ${planned.path}`)
@@ -24,7 +23,7 @@ export const skipOrganizationalUnit = async (
     name: planned.name,
     message: "No changes",
     success: true,
-    status: CommandStatus.SKIPPED,
+    status: "SKIPPED",
   })
 
   for (const child of planned.children) {

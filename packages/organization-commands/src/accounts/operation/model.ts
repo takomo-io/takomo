@@ -1,85 +1,65 @@
+import { AccountId, OrganizationAccount } from "@takomo/aws-model"
 import { ConfigSetOperationResult, ConfigSetType } from "@takomo/config-sets"
 import {
-  AccountId,
   CommandInput,
   CommandOutput,
   CommandOutputBase,
   ConfirmResult,
-  DeploymentOperation,
   IO,
-  Options,
 } from "@takomo/core"
-import { OrganizationAccount } from "@takomo/organization-config"
-import {
-  OrganizationContext,
-  OrganizationState,
-} from "@takomo/organization-context"
+import { OrganizationAccountConfig } from "@takomo/organization-config"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { StopWatch } from "@takomo/util"
-import { Account } from "aws-sdk/clients/organizations"
-
-export interface InitialLaunchAccountsContext {
-  readonly watch: StopWatch
-  readonly ctx: OrganizationContext
-  readonly io: AccountsOperationIO
-  readonly input: AccountsOperationInput
-}
-
-export interface LaunchAccountsDataHolder extends InitialLaunchAccountsContext {
-  readonly organizationState: OrganizationState
-}
-
-export interface LaunchAccountsPlanHolder extends InitialLaunchAccountsContext {
-  readonly plan: AccountsLaunchPlan
-}
+import { DeploymentOperation } from "@takomo/stacks-model"
+import { Timer } from "@takomo/util"
 
 export interface AccountsOperationInput extends CommandInput {
-  readonly organizationalUnits: string[]
-  readonly accountIds: AccountId[]
+  readonly organizationalUnits: ReadonlyArray<string>
+  readonly accountIds: ReadonlyArray<AccountId>
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType
 }
 
 export interface AccountOperationResult extends CommandOutputBase {
   readonly accountId: AccountId
-  readonly results: ConfigSetOperationResult[]
-  readonly watch: StopWatch
+  readonly results: ReadonlyArray<ConfigSetOperationResult>
+  readonly timer: Timer
 }
 
 export interface OrganizationalUnitAccountsOperationResult
   extends CommandOutputBase {
   readonly path: string
-  readonly results: AccountOperationResult[]
-  readonly watch: StopWatch
+  readonly results: ReadonlyArray<AccountOperationResult>
+  readonly timer: Timer
 }
 
 export interface AccountsOperationOutput extends CommandOutput {
-  readonly results: OrganizationalUnitAccountsOperationResult[]
+  readonly results?: ReadonlyArray<OrganizationalUnitAccountsOperationResult>
 }
 
-export interface AccountsOperationIO extends IO {
-  createStackDeployIO(options: Options, accountId: string): DeployStacksIO
-  createStackUndeployIO(options: Options, accountId: string): UndeployStacksIO
-  printOutput(output: AccountsOperationOutput): AccountsOperationOutput
-  confirmLaunch(plan: AccountsLaunchPlan): Promise<ConfirmResult>
+export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
+  readonly createStackDeployIO: (accountId: AccountId) => DeployStacksIO
+  readonly createStackUndeployIO: (accountId: AccountId) => UndeployStacksIO
+  readonly confirmLaunch: (plan: AccountsLaunchPlan) => Promise<ConfirmResult>
 }
 
 export interface PlannedLaunchableAccount {
-  readonly account: Account
-  readonly config: OrganizationAccount
+  readonly account: OrganizationAccount
+  readonly config: OrganizationAccountConfig
 }
 
 export interface PlannedAccountDeploymentOrganizationalUnit {
   readonly path: string
-  readonly accountAdminRoleName: string | null
-  readonly accountBootstrapRoleName: string | null
-  readonly accounts: PlannedLaunchableAccount[]
+  readonly accountAdminRoleName?: string
+  readonly accountBootstrapRoleName?: string
+  readonly accounts: ReadonlyArray<PlannedLaunchableAccount>
   readonly vars: any
-  readonly configSets: string[]
+  readonly configSets: ReadonlyArray<string>
 }
 
 export interface AccountsLaunchPlan {
   readonly hasChanges: boolean
-  readonly organizationalUnits: PlannedAccountDeploymentOrganizationalUnit[]
+  readonly organizationalUnits: ReadonlyArray<
+    PlannedAccountDeploymentOrganizationalUnit
+  >
   readonly configSetType: ConfigSetType
 }

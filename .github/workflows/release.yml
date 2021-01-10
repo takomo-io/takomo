@@ -27,8 +27,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
-      - run: echo ::set-env name=RELEASE_VERSION::$(node ci/get-current-version.js)
-      - run: echo ::set-env name=DOCS_BASE::$(echo /api-docs/release/v$RELEASE_VERSION/ | tr '.' '-')
+      - run: echo "RELEASE_VERSION=$(node ci/get-current-version.js)" >> $GITHUB_ENV
+      - run: echo "DOCS_BASE=$(echo /api-docs/release/v$RELEASE_VERSION/ | tr '.' '-')" >> $GITHUB_ENV
       - name: Build API docs
         run: yarn api-docs --name "Takomo v$RELEASE_VERSION"
       - run: ./ci/publish-api-docs.sh

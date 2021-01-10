@@ -1,23 +1,27 @@
+import { Region } from "@takomo/aws-model"
 import { formatCommandStatus } from "@takomo/cli-io"
 import {
+  CommandContext,
+  CommandHandler,
   CommandInput,
   CommandOutput,
-  Constants,
   ContextVars,
-  Options,
-  parseProjectConfigFile,
+  IO,
   Variables,
 } from "@takomo/core"
 import {
+  createLogger,
+  createTimer,
+  deepFreeze,
   fileExists,
   indentLines,
   LogLevel,
   parseYamlFile,
-  printStopWatch,
+  printTimer,
   readFileContents,
   red,
-  StopWatch,
   TakomoError,
+  TkmLogger,
 } from "@takomo/util"
 import { Credentials } from "aws-sdk"
 import dotenv from "dotenv"
@@ -27,6 +31,68 @@ import merge from "lodash.merge"
 import os from "os"
 import path from "path"
 import prettyMs from "pretty-ms"
+import { CliCommandContext, ProjectFilePaths } from "./cli-command-context"
+import { loadProjectConfig } from "./config"
+import {
+  CONFIG_FILE_EXTENSION,
+  DEFAULT_DEPLOYMENT_CONFIG_FILE,
+  DEFAULT_ORGANIZATION_CONFIG_FILE,
+  DEPLOYMENT_DIR,
+  HELPERS_DIR,
+  HOOKS_DIR,
+  ORGANIZATION_DIR,
+  PARTIALS_DIR,
+  RESOLVERS_DIR,
+  STACKS_DIR,
+  STACK_GROUP_CONFIG_FILE_NAME,
+  TAKOMO_PROJECT_CONFIG_FILE_NAME,
+  TEMPLATES_DIR,
+} from "./constants"
+
+// TODO: Read from file
+const regions: ReadonlyArray<Region> = [
+  "af-south-1",
+  "ap-east-1",
+  "ap-northeast-1",
+  "ap-northeast-2",
+  "ap-northeast-3",
+  "ap-south-1",
+  "ap-southeast-1",
+  "ap-southeast-2",
+  "ca-central-1",
+  "cn-north-1",
+  "cn-northwest-1",
+  "eu-central-1",
+  "eu-north-1",
+  "eu-south-1",
+  "eu-west-1",
+  "eu-west-2",
+  "eu-west-3",
+  "me-south-1",
+  "sa-east-1",
+  "us-east-1",
+  "us-east-2",
+  "us-gov-east-1",
+  "us-west-1",
+  "us-west-2",
+]
+
+const organizationServicePrincipals = [
+  "aws-artifact-account-sync.amazonaws.com",
+  "backup.amazonaws.com",
+  "cloudtrail.amazonaws.com",
+  "compute-optimizer.amazonaws.com",
+  "config.amazonaws.com",
+  "ds.amazonaws.com",
+  "fms.amazonaws.com",
+  "license-manager.amazonaws.com",
+  "member.org.stacksets.cloudformation.amazonaws.com",
+  "ram.amazonaws.com",
+  "servicecatalog.amazonaws.com",
+  "ssm.amazonaws.com",
+  "sso.amazonaws.com",
+  "tagpolicies.tag.amazonaws.com",
+]
 
 const readVariablesFromFile = async (
   projectDir: string,
@@ -175,30 +241,24 @@ const resolveProjectDir = (projectDirArg: any): string => {
 const resolveLogLevel = (log: string): LogLevel => {
   switch (log) {
     case "trace":
-      return LogLevel.TRACE
+      return "trace"
     case "debug":
-      return LogLevel.DEBUG
+      return "debug"
     case "info":
-      return LogLevel.INFO
+      return "info"
     case "warn":
-      return LogLevel.WARN
+      return "warn"
     case "error":
-      return LogLevel.ERROR
+      return "error"
     default:
-      return LogLevel.INFO
+      return "info"
   }
 }
 
-export interface OptionsAndVariables {
-  readonly options: Options
-  readonly variables: Variables
-  readonly watch: StopWatch
-}
-
-export const initOptionsAndVariables = async (
+export const initCommandContext = async (
   argv: any,
   credentials?: Credentials,
-): Promise<OptionsAndVariables> => {
+): Promise<CliCommandContext> => {
   if (argv.profile) {
     process.env.AWS_PROFILE = argv.profile
   }
@@ -210,15 +270,6 @@ export const initOptionsAndVariables = async (
   const projectDir = resolveProjectDir(argv.dir)
   const logLevel = resolveLogLevel(argv.log)
 
-  const options = new Options({
-    logLevel,
-    projectDir,
-    autoConfirm: argv.yes === true,
-    stats: argv.stats === true,
-    logConfidentialInfo: argv["log-confidential-info"] === true,
-    credentials,
-  })
-
   const variables = await parseVariables(
     projectDir,
     argv["var-file"],
@@ -226,11 +277,56 @@ export const initOptionsAndVariables = async (
     argv["env-file"],
   )
 
-  return {
-    options,
-    variables,
-    watch: new StopWatch("total"),
+  const filePaths: ProjectFilePaths = {
+    projectDir,
+    hooksDir: path.join(projectDir, HOOKS_DIR),
+    helpersDir: path.join(projectDir, HELPERS_DIR),
+    partialsDir: path.join(projectDir, PARTIALS_DIR),
+    resolversDir: path.join(projectDir, RESOLVERS_DIR),
+    stacksDir: path.join(projectDir, STACKS_DIR),
+    templatesDir: path.join(projectDir, TEMPLATES_DIR),
+    projectConfigFile: path.join(projectDir, TAKOMO_PROJECT_CONFIG_FILE_NAME),
+    projectConfigFileName: TAKOMO_PROJECT_CONFIG_FILE_NAME,
+    stackGroupConfigFileName: STACK_GROUP_CONFIG_FILE_NAME,
+    configFileExtension: CONFIG_FILE_EXTENSION,
+    defaultDeploymentConfigFileName: DEFAULT_DEPLOYMENT_CONFIG_FILE,
+    deploymentDir: path.join(projectDir, DEPLOYMENT_DIR),
+    organizationDir: path.join(projectDir, ORGANIZATION_DIR),
+    organizationTagPoliciesDir: path.join(
+      projectDir,
+      ORGANIZATION_DIR,
+      "tag-policies",
+    ),
+    organizationBackupPoliciesDir: path.join(
+      projectDir,
+      ORGANIZATION_DIR,
+      "backup-policies",
+    ),
+    organizationServiceControlPoliciesDir: path.join(
+      projectDir,
+      ORGANIZATION_DIR,
+      "service-control-policies",
+    ),
+    organizationAiServicesOptOutPoliciesDir: path.join(
+      projectDir,
+      ORGANIZATION_DIR,
+      "ai-services-opt-out-policies",
+    ),
+    defaultOrganizationConfigFileName: DEFAULT_ORGANIZATION_CONFIG_FILE,
   }
+
+  return deepFreeze({
+    regions,
+    credentials,
+    logLevel,
+    variables,
+    filePaths,
+    autoConfirmEnabled: argv.yes === true,
+    statisticsEnabled: argv.stats === true,
+    confidentialValuesLoggingEnabled: argv["log-confidential-info"] === true,
+    organizationServicePrincipals: organizationServicePrincipals.slice(),
+    projectDir: filePaths.projectDir,
+  })
 }
 
 export const onError = (e: any): void => {
@@ -283,8 +379,11 @@ export const onError = (e: any): void => {
 const toMB = (bytes: number): number =>
   Math.round((bytes / 1024 / 1024) * 100) / 100
 
-export const onComplete = (options: Options, output: CommandOutput): void => {
-  if (options.isStatsEnabled()) {
+export const onComplete = (
+  ctx: CommandContext,
+  output: CommandOutput,
+): void => {
+  if (ctx.statisticsEnabled) {
     const { heapUsed, heapTotal, external, rss } = process.memoryUsage()
 
     const table = new Table()
@@ -313,13 +412,13 @@ export const onComplete = (options: Options, output: CommandOutput): void => {
 
     console.log("Execution times:")
     console.log()
-    console.log(indentLines(printStopWatch(output.watch)))
+    console.log(indentLines(printTimer(output.timer)))
   }
 
   console.log()
   console.log(
     `Completed in ${prettyMs(
-      output.watch.secondsElapsed,
+      output.timer.getSecondsElapsed(),
     )} with status: ${formatCommandStatus(output.status)}`,
   )
   console.log()
@@ -329,30 +428,44 @@ export const onComplete = (options: Options, output: CommandOutput): void => {
   }
 }
 
-export const loadProjectConfig = async (projectDir: string): Promise<void> => {
-  const pathConfigFile = path.join(
-    projectDir,
-    Constants.TAKOMO_PROJECT_CONFIG_FILE,
-  )
-
-  if (!(await fileExists(pathConfigFile))) {
-    return
-  }
-
-  await parseProjectConfigFile(pathConfigFile)
+interface HandleProps<
+  C,
+  I extends IO<OUT>,
+  IN extends CommandInput,
+  OUT extends CommandOutput
+> {
+  argv: any
+  input: (ctx: CliCommandContext, input: CommandInput) => IN
+  io: (ctx: CliCommandContext, logger: TkmLogger) => I
+  configRepository: (ctx: CliCommandContext, logger: TkmLogger) => Promise<C>
+  executor: CommandHandler<C, I, IN, OUT>
 }
 
-export const handle = async <I extends CommandInput, O extends CommandOutput>(
-  argv: any,
-  makeInput: (ov: OptionsAndVariables) => I,
-  executor: (input: I) => Promise<O>,
+export const handle = async <
+  C,
+  I extends IO<OUT>,
+  IN extends CommandInput,
+  OUT extends CommandOutput
+>(
+  props: HandleProps<C, I, IN, OUT>,
 ): Promise<void> => {
   try {
-    const ov = await initOptionsAndVariables(argv)
-    await loadProjectConfig(ov.options.getProjectDir())
-    const input = makeInput(ov)
-    const output = await executor(input)
-    onComplete(ov.options, output)
+    const ctx = await initCommandContext(props.argv)
+    const logger = createLogger({
+      writer: console.log,
+      logLevel: ctx.logLevel,
+    })
+    await loadProjectConfig(ctx.filePaths.projectConfigFile)
+    const input = props.input(ctx, { timer: createTimer("total") })
+    const io = props.io(ctx, logger)
+    const configRepository = await props.configRepository(ctx, logger)
+    const output = await props.executor({
+      ctx,
+      configRepository,
+      io,
+      input,
+    })
+    onComplete(ctx, output)
   } catch (e) {
     onError(e)
   }

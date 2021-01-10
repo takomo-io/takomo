@@ -1,41 +1,11 @@
-import { initOptionsAndVariables } from "@takomo/cli"
-import { CommandStatus, Constants } from "@takomo/core"
-import { initProjectCommand } from "@takomo/init-command"
-import { TestInitProjectIO } from "@takomo/test"
+import { executeInitProjectCommand } from "@takomo/test-integration/src"
 import {
   dirExists,
   fileExists,
   parseYamlFile,
   readFileContents,
 } from "@takomo/util"
-import mkdirp from "mkdirp"
-import rimfaf from "rimraf"
-import uuid from "uuid"
-
-const tmpPath = `/tmp/takomo-tests/${uuid.v4()}`
-
-const createOptions = async (dir: string) =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir,
-  })
-
-const cleanTmpDir = async (): Promise<boolean> =>
-  new Promise((resolve, reject) => {
-    rimfaf(`${tmpPath}/*`, (err) => {
-      if (err) reject(err)
-      else resolve(true)
-    })
-  })
-
-const makeDir = async (dir: string): Promise<string> =>
-  mkdirp(dir).then(() => dir)
-
-const createTmpDir = async (): Promise<string> => makeDir(tmpPath)
-
-beforeAll(createTmpDir)
-afterAll(cleanTmpDir)
+import tmp from "tmp"
 
 const assertCreatedFiles = async (
   dir: string,
@@ -91,104 +61,48 @@ Resources:
   return dir
 }
 
-const takomoDirs = [
-  Constants.STACKS_DIR,
-  Constants.TEMPLATES_DIR,
-  Constants.RESOLVERS_DIR,
-  Constants.HOOKS_DIR,
-  Constants.PARTIALS_DIR,
-  Constants.HELPERS_DIR,
-]
+const createTempDir = (): string => tmp.dirSync({ unsafeCleanup: true }).name
 
 describe("Init project", () => {
   test("with project and a single region given from command line", async () => {
-    const dir = await makeDir(`${tmpPath}/a`)
-    const { options, variables, watch } = await createOptions(dir)
-    const result = await initProjectCommand(
-      {
-        options,
-        variables,
-        watch,
-        createSamples: false,
-        project: "MyProject",
-        regions: ["eu-west-1"],
-      },
-      new TestInitProjectIO(options),
-    )
+    const projectDir = createTempDir()
+    await executeInitProjectCommand({
+      projectDir,
+      createSamples: false,
+      project: "MyProject",
+      regions: ["eu-west-1"],
+    })
+      .expectOutputToBeSuccessful()
+      .assert()
 
-    expect(result.success).toBeTruthy()
-    expect(result.status).toBe(CommandStatus.SUCCESS)
-
-    await assertCreatedFiles(result.projectDir, "MyProject", "eu-west-1")
+    await assertCreatedFiles(projectDir, "MyProject", "eu-west-1")
   })
 
   test("with project and two regions given from command line", async () => {
-    const dir = await makeDir(`${tmpPath}/b`)
-    const { options, variables, watch } = await createOptions(dir)
-    const result = await initProjectCommand(
-      {
-        options,
-        variables,
-        watch,
-        createSamples: false,
-        project: "Foo",
-        regions: ["us-east-1", "eu-north-1"],
-      },
-      new TestInitProjectIO(options),
-    )
+    const projectDir = createTempDir()
+    await executeInitProjectCommand({
+      projectDir,
+      createSamples: false,
+      project: "Foo",
+      regions: ["us-east-1", "eu-north-1"],
+    })
+      .expectOutputToBeSuccessful()
+      .assert()
 
-    expect(result.success).toBeTruthy()
-    expect(result.status).toBe(CommandStatus.SUCCESS)
-
-    await assertCreatedFiles(result.projectDir, "Foo", [
-      "us-east-1",
-      "eu-north-1",
-    ])
+    await assertCreatedFiles(projectDir, "Foo", ["us-east-1", "eu-north-1"])
   })
 
   test("with project, region and create samples given from command line", async () => {
-    const dir = await makeDir(`${tmpPath}/c`)
-    const { options, variables, watch } = await createOptions(dir)
-    const result = await initProjectCommand(
-      {
-        options,
-        variables,
-        watch,
-        createSamples: true,
-        project: "test",
-        regions: ["eu-central-1"],
-      },
-      new TestInitProjectIO(options),
-    )
+    const projectDir = createTempDir()
+    await executeInitProjectCommand({
+      projectDir,
+      createSamples: true,
+      project: "test",
+      regions: ["eu-central-1"],
+    })
+      .expectOutputToBeSuccessful()
+      .assert()
 
-    expect(result.success).toBeTruthy()
-    expect(result.status).toBe(CommandStatus.SUCCESS)
-
-    await assertCreatedFiles(result.projectDir, "test", "eu-central-1", true)
+    await assertCreatedFiles(projectDir, "test", "eu-central-1", true)
   })
-
-  test.each(takomoDirs)(
-    "fails when '%s' dir already exists",
-    async (takomoDir) => {
-      const dir = await makeDir(`${tmpPath}/${uuid.v4()}`)
-      const { options, variables, watch } = await createOptions(dir)
-      await makeDir(`${dir}/${takomoDir}`)
-      const initProject = async () =>
-        initProjectCommand(
-          {
-            options,
-            variables,
-            watch,
-            createSamples: false,
-            project: "test",
-            regions: ["eu-central-1"],
-          },
-          new TestInitProjectIO(options),
-        )
-
-      await expect(initProject).rejects.toThrow(
-        `Could not initialize a new project in directory: ${dir}. Following directories already exists in the target directory:\n\n  - ${takomoDir}`,
-      )
-    },
-  )
 })

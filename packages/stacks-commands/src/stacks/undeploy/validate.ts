@@ -1,7 +1,10 @@
-import { CommandContext } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
+import { StacksUndeployPlan, StackUndeployOperation } from "./plan"
 
+/**
+ * @hidden
+ */
 export const isStackReadyForUndeploy = (
   stackStatus: CloudFormation.StackStatus,
 ): boolean =>
@@ -19,53 +22,54 @@ export const isStackReadyForUndeploy = (
     "IMPORT_ROLLBACK_COMPLETE",
   ].includes(stackStatus)
 
-const validateStackStatus = async (ctx: CommandContext): Promise<void> => {
-  const stacks = []
-  for (const stack of ctx.getStacksToProcess()) {
-    const existing = await ctx.getExistingStack(stack.getPath())
-    if (existing && !isStackReadyForUndeploy(existing.StackStatus!)) {
-      stacks.push({ stack, existing })
+const validateStackStatus = (
+  operations: ReadonlyArray<StackUndeployOperation>,
+): void => {
+  const stacksInInvalidStatus = []
+  for (const operation of operations) {
+    const { currentStack } = operation
+    if (currentStack && !isStackReadyForUndeploy(currentStack.status)) {
+      stacksInInvalidStatus.push(operation)
     }
   }
 
-  if (stacks.length > 0) {
+  if (stacksInInvalidStatus.length > 0) {
     throw new TakomoError(
       "Can't undeploy stacks because following stacks are in invalid status:\n\n" +
-        stacks
+        stacksInInvalidStatus
           .map(
             (s) =>
-              `  - ${s.stack.getPath()} in invalid status: ${
-                s.existing.StackStatus
-              }`,
+              `  - ${s.stack.path} in invalid status: ${s.currentStack?.status}`,
           )
           .join("\n"),
     )
   }
 }
 
-const validateTerminationProtection = async (
-  ctx: CommandContext,
-): Promise<void> => {
+const validateTerminationProtection = (
+  operations: ReadonlyArray<StackUndeployOperation>,
+): void => {
   const stacks = []
-  for (const stack of ctx.getStacksToProcess()) {
-    const existing = await ctx.getExistingStack(stack.getPath())
-    if (existing && existing.EnableTerminationProtection === true) {
-      stacks.push({ stack, existing })
+  for (const operation of operations) {
+    const { currentStack } = operation
+    if (currentStack && currentStack.enableTerminationProtection) {
+      stacks.push(operation)
     }
   }
 
   if (stacks.length > 0) {
     throw new TakomoError(
       "Can't undeploy stacks because following stacks have termination protection enabled:\n\n" +
-        stacks.map((s) => `  - ${s.stack.getPath()}`).join("\n"),
+        stacks.map((s) => `  - ${s.stack.path}`).join("\n"),
     )
   }
 }
 
-export const validateUndeployContext = async (
-  ctx: CommandContext,
-): Promise<CommandContext> => {
-  await validateStackStatus(ctx)
-  await validateTerminationProtection(ctx)
-  return ctx
+/**
+ * @hidden
+ */
+export const validateStacksUndeployPlan = (plan: StacksUndeployPlan): void => {
+  const operations = plan.operations.filter((o) => o.type === "DELETE")
+  validateStackStatus(operations)
+  validateTerminationProtection(operations)
 }

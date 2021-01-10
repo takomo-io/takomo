@@ -1,40 +1,94 @@
-import { Logger, StopWatch } from "@takomo/util"
-import { Options, Variables } from "./model"
+import { CredentialManager } from "@takomo/aws-clients"
+import { IamRoleArn, Region, ServicePrincipal } from "@takomo/aws-model"
+import { FilePath, LogLevel, Timer, TkmLogger } from "@takomo/util"
+import { Credentials } from "aws-sdk"
+import { Variables } from "./variables"
 
-export enum CommandStatus {
-  SUCCESS = "SUCCESS",
-  FAILED = "FAILED",
-  CANCELLED = "CANCELLED",
-  SKIPPED = "SKIPPED",
+export type Project = string
+
+/**
+ * @hidden
+ */
+export enum ConfirmResult {
+  YES,
+  NO,
 }
 
+export interface CommandRole {
+  readonly iamRoleArn: IamRoleArn
+}
+
+/**
+ * @hidden
+ */
+export type CommandStatus = "SUCCESS" | "FAILED" | "CANCELLED" | "SKIPPED"
+
+/**
+ * @hidden
+ */
+export const SUCCESS: CommandStatus = "SUCCESS"
+
+/**
+ * @hidden
+ */
+export const FAILED: CommandStatus = "FAILED"
+
+/**
+ * @hidden
+ */
+export const CANCELLED: CommandStatus = "CANCELLED"
+
+/**
+ * @hidden
+ */
+export const SKIPPED: CommandStatus = "SKIPPED"
+
+/**
+ * @hidden
+ */
 export interface SuccessHolder {
   readonly success: boolean
 }
 
+/**
+ * @hidden
+ */
 export interface CommandOutputBase extends SuccessHolder {
   readonly message: string
   readonly status: CommandStatus
+  readonly error?: Error
 }
 
+/**
+ * @hidden
+ */
 export interface CommandOutput extends CommandOutputBase {
-  readonly watch: StopWatch
+  readonly timer: Timer
 }
 
+/**
+ * @hidden
+ */
 export interface CommandInput {
-  readonly options: Options
-  readonly variables: Variables
-  readonly watch: StopWatch
+  readonly timer: Timer
 }
 
-export type IO = Logger
+/**
+ * @hidden
+ */
+export interface IO<O extends CommandOutput> extends TkmLogger {
+  readonly printOutput: (output: O) => O
+}
 
+/**
+ * @hidden
+ */
 export const resolveCommandOutputBase = (
-  items: CommandOutputBase[],
+  items: ReadonlyArray<CommandOutputBase>,
 ): CommandOutputBase => {
   if (items.length === 0) {
     return {
-      status: CommandStatus.SUCCESS,
+      status: "SUCCESS",
       message: "Success",
       success: true,
     }
@@ -42,23 +96,23 @@ export const resolveCommandOutputBase = (
 
   const success = items.every((i) => i.success)
 
-  if (items.every((i) => i.status === CommandStatus.CANCELLED)) {
+  if (items.every((i) => i.status === "CANCELLED")) {
     return {
-      status: CommandStatus.CANCELLED,
+      status: "CANCELLED",
       message: "Cancelled",
       success,
     }
   }
 
-  if (items.every((i) => i.status === CommandStatus.SKIPPED)) {
+  if (items.every((i) => i.status === "SKIPPED")) {
     return {
-      status: CommandStatus.SKIPPED,
+      status: "SKIPPED",
       message: "Skipped",
       success,
     }
   }
 
-  const status = success ? CommandStatus.SUCCESS : CommandStatus.FAILED
+  const status = success ? "SUCCESS" : "FAILED"
   const message = success ? "Success" : "Failed"
   return {
     status,
@@ -66,3 +120,41 @@ export const resolveCommandOutputBase = (
     success,
   }
 }
+
+export interface CommandContext {
+  readonly autoConfirmEnabled: boolean
+  readonly statisticsEnabled: boolean
+  readonly confidentialValuesLoggingEnabled: boolean
+  readonly variables: Variables
+  readonly regions: ReadonlyArray<Region>
+  readonly organizationServicePrincipals: ReadonlyArray<ServicePrincipal>
+  readonly credentials?: Credentials
+  readonly projectDir: FilePath
+  readonly logLevel: LogLevel
+}
+
+/**
+ * @hidden
+ */
+export interface CommandHandlerArgs<
+  C,
+  I extends IO<OUT>,
+  IN extends CommandInput,
+  OUT extends CommandOutput
+> {
+  readonly ctx: CommandContext
+  readonly configRepository: C
+  readonly io: I
+  readonly input: IN
+  readonly credentialManager?: CredentialManager
+}
+
+/**
+ * @hidden
+ */
+export type CommandHandler<
+  C,
+  I extends IO<OUT>,
+  IN extends CommandInput,
+  OUT extends CommandOutput
+> = (args: CommandHandlerArgs<C, I, IN, OUT>) => Promise<OUT>

@@ -1,6 +1,6 @@
-import { StackPath } from "@takomo/core"
+import { StackPath } from "@takomo/stacks-model"
 
-export const parseDepends = (value: any): StackPath[] => {
+export const parseDepends = (value: any): ReadonlyArray<StackPath> => {
   if (value === null || value === undefined) {
     return []
   }

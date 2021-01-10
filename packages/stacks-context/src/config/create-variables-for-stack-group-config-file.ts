@@ -7,8 +7,8 @@ export const createVariablesForStackGroupConfigFile = (
 ): any => ({
   ...variables,
   stackGroup: {
-    path: stackGroup.getPath(),
-    pathSegments: stackGroup.getPath().substr(1).split("/"),
-    name: stackGroup.getName(),
+    path: stackGroup.path,
+    pathSegments: stackGroup.path.substr(1).split("/"),
+    name: stackGroup.name,
   },
 })

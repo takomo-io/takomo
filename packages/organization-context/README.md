@@ -1,3 +1,3 @@
-# Takomo Organization
+# Takomo - Organization Context
 
-Organization related commands for https://takomo.io
+Context for organization.

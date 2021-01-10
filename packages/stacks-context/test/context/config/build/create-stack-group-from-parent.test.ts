@@ -6,7 +6,8 @@ describe("create stack group config from parent", () => {
     const root = createRootStackGroup()
     const group = createStackGroupFromParent(
       {
-        dir: { fullPath: "/tmp/projects/stacks/dev", basename: "dev" },
+        getConfig: jest.fn(),
+        name: "dev",
         path: "/dev",
         parentPath: "/",
         children: [],
@@ -15,23 +16,24 @@ describe("create stack group config from parent", () => {
       root,
     )
 
-    expect(group.getPath()).toEqual("/dev")
-    expect(group.isRoot()).toEqual(false)
-    expect(group.getProject()).toBeNull()
-    expect(group.getTemplateBucket()).toBeNull()
-    expect(group.getRegions()).toEqual([])
-    expect(group.getCommandRole()).toBeNull()
-    expect(group.getTimeout()).toBeNull()
-    expect(group.getCapabilities()).toBeNull()
-    expect(group.isIgnored()).toBeFalsy()
-    expect(group.getChildren()).toHaveLength(0)
+    expect(group.path).toEqual("/dev")
+    expect(group.root).toEqual(false)
+    expect(group.project).toBeUndefined()
+    expect(group.templateBucket).toBeUndefined()
+    expect(group.regions).toEqual([])
+    expect(group.commandRole).toBeUndefined()
+    expect(group.timeout).toBeUndefined()
+    expect(group.capabilities).toBeUndefined()
+    expect(group.ignore).toBeFalsy()
+    expect(group.children).toHaveLength(0)
   })
 
   test("using a non-root parent", () => {
     const root = createRootStackGroup()
     const parent = createStackGroupFromParent(
       {
-        dir: { fullPath: "/tmp/projects/stacks/prod", basename: "prod" },
+        getConfig: jest.fn(),
+        name: "prod",
         path: "/prod",
         parentPath: "/",
         children: [],
@@ -41,10 +43,8 @@ describe("create stack group config from parent", () => {
     )
     const group = createStackGroupFromParent(
       {
-        dir: {
-          fullPath: "/tmp/projects/stacks/prod/eu-central-1",
-          basename: "eu-central-1",
-        },
+        getConfig: jest.fn(),
+        name: "eu-central-1",
         path: "/prod/eu-central-1",
         parentPath: "/prod",
         children: [],
@@ -53,15 +53,15 @@ describe("create stack group config from parent", () => {
       parent,
     )
 
-    expect(group.getPath()).toEqual("/prod/eu-central-1")
-    expect(group.isRoot()).toEqual(false)
-    expect(group.getProject()).toBeNull()
-    expect(group.getTemplateBucket()).toBeNull()
-    expect(group.getRegions()).toEqual([])
-    expect(group.getCommandRole()).toBeNull()
-    expect(group.getTimeout()).toBeNull()
-    expect(group.getCapabilities()).toBeNull()
-    expect(group.isIgnored()).toBeFalsy()
-    expect(group.getChildren()).toHaveLength(0)
+    expect(group.path).toEqual("/prod/eu-central-1")
+    expect(group.root).toEqual(false)
+    expect(group.project).toBeUndefined()
+    expect(group.templateBucket).toBeUndefined()
+    expect(group.regions).toEqual([])
+    expect(group.commandRole).toBeUndefined()
+    expect(group.timeout).toBeUndefined()
+    expect(group.capabilities).toBeUndefined()
+    expect(group.ignore).toBeFalsy()
+    expect(group.children).toHaveLength(0)
   })
 })

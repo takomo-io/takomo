@@ -1,25 +1,25 @@
 import {
-  buildOptionsForConfigSet,
   ConfigSetCommandPathOperationResult,
   ConfigSetName,
   ConfigSetOperationResult,
   ConfigSetType,
 } from "@takomo/config-sets"
-import { OperationState, resolveCommandOutputBase } from "@takomo/core"
-import { StopWatch } from "@takomo/util"
+import { resolveCommandOutputBase } from "@takomo/core"
+import { OperationState } from "@takomo/stacks-model"
+import { Timer } from "@takomo/util"
 import {
-  LaunchAccountsPlanHolder,
   PlannedAccountDeploymentOrganizationalUnit,
   PlannedLaunchableAccount,
 } from "../model"
+import { AccountsOperationPlanHolder } from "../states"
 import { processCommandPath } from "./command-path"
 
 export const processConfigSet = async (
-  holder: LaunchAccountsPlanHolder,
+  holder: AccountsOperationPlanHolder,
   ou: PlannedAccountDeploymentOrganizationalUnit,
   plannedAccount: PlannedLaunchableAccount,
   configSetName: ConfigSetName,
-  configSetWatch: StopWatch,
+  configSetTimer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
 ): Promise<ConfigSetOperationResult> => {
@@ -29,17 +29,14 @@ export const processConfigSet = async (
   const configSet = ctx.getConfigSet(configSetName)
   const results = new Array<ConfigSetCommandPathOperationResult>()
 
-  const options = buildOptionsForConfigSet(ctx.getOptions(), configSet)
-
   for (const commandPath of configSet.commandPaths) {
     const result = await processCommandPath(
       holder,
       ou,
       plannedAccount,
       configSetName,
-      options,
       commandPath,
-      configSetWatch.startChild(commandPath),
+      configSetTimer.startChild(commandPath),
       state,
       configSetType,
     )
@@ -51,10 +48,11 @@ export const processConfigSet = async (
     results.push(result)
   }
 
+  configSetTimer.stop()
   return {
     ...resolveCommandOutputBase(results),
     configSetName,
     results,
-    watch: configSetWatch.stop(),
+    timer: configSetTimer,
   }
 }

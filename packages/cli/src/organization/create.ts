@@ -1,34 +1,45 @@
-import { CliCreateOrganizationIO } from "@takomo/cli-io"
+import { createCreateOrganizationIO } from "@takomo/cli-io"
+import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   createOrganizationCommand,
   createOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../common"
 
+const command = "create"
+const desc = "Create a new organization"
+
+const builder = (yargs: any) =>
+  yargs
+    .epilog(commonEpilog(createOrganizationCommandIamPolicy))
+    .option("feature-set", {
+      description: "Feature set",
+      string: true,
+      global: false,
+      default: "ALL",
+      demandOption: false,
+    })
+
+const handler = (argv: any) =>
+  handle({
+    argv,
+    input: (ctx, input) => ({
+      ...input,
+      featureSet: argv["feature-set"],
+    }),
+    io: (ctx, logger) => createCreateOrganizationIO(logger),
+    configRepository: (ctx, logger) =>
+      createFileSystemOrganizationConfigRepository({
+        ctx,
+        logger,
+        ...ctx.filePaths,
+      }),
+    executor: createOrganizationCommand,
+  })
+
 export const createOrganizationCmd = {
-  command: "create",
-  desc: "Create a new organization",
-  builder: (yargs: any) =>
-    yargs
-      .epilog(commonEpilog(createOrganizationCommandIamPolicy))
-      .option("feature-set", {
-        description: "Feature set",
-        string: true,
-        global: false,
-        default: "ALL",
-        demandOption: false,
-      }),
-  handler: (argv: any) =>
-    handle(
-      argv,
-      (ov) => ({
-        ...ov,
-        featureSet: argv["feature-set"],
-      }),
-      (input) =>
-        createOrganizationCommand(
-          input,
-          new CliCreateOrganizationIO(input.options),
-        ),
-    ),
+  command,
+  desc,
+  builder,
+  handler,
 }

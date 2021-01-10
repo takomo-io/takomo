@@ -17,8 +17,8 @@ describe("#sortStacksForUndeploy", () => {
 
     const sorted = sortStacksForUndeploy([a, b])
 
-    expect(sorted[0].getPath()).toBe(a.getPath())
-    expect(sorted[1].getPath()).toBe(b.getPath())
+    expect(sorted[0].path).toBe(a.path)
+    expect(sorted[1].path).toBe(b.path)
   })
 
   test("when two stacks are given", () => {
@@ -31,8 +31,8 @@ describe("#sortStacksForUndeploy", () => {
 
     const sorted = sortStacksForUndeploy([a, b])
 
-    expect(sorted[0].getPath()).toBe(b.getPath())
-    expect(sorted[1].getPath()).toBe(a.getPath())
+    expect(sorted[0].path).toBe(b.path)
+    expect(sorted[1].path).toBe(a.path)
   })
 
   test("when multiple stacks are given", () => {
@@ -54,9 +54,9 @@ describe("#sortStacksForUndeploy", () => {
 
     const sorted = sortStacksForUndeploy([a, b, c])
 
-    expect(sorted[0].getPath()).toBe(b.getPath())
-    expect(sorted[1].getPath()).toBe(c.getPath())
-    expect(sorted[2].getPath()).toBe(a.getPath())
+    expect(sorted[0].path).toBe(b.path)
+    expect(sorted[1].path).toBe(c.path)
+    expect(sorted[2].path).toBe(a.path)
   })
 
   test("when complex dependency graph is given", () => {
@@ -103,13 +103,13 @@ describe("#sortStacksForUndeploy", () => {
 
     const sorted = sortStacksForUndeploy([a, b, c, d, e, f, g, h])
 
-    expect(sorted[0].getPath()).toBe(b.getPath())
-    expect(sorted[1].getPath()).toBe(g.getPath())
-    expect(sorted[2].getPath()).toBe(h.getPath())
-    expect(sorted[3].getPath()).toBe(f.getPath())
-    expect(sorted[4].getPath()).toBe(d.getPath())
-    expect(sorted[5].getPath()).toBe(e.getPath())
-    expect(sorted[6].getPath()).toBe(c.getPath())
-    expect(sorted[7].getPath()).toBe(a.getPath())
+    expect(sorted[0].path).toBe(b.path)
+    expect(sorted[1].path).toBe(g.path)
+    expect(sorted[2].path).toBe(h.path)
+    expect(sorted[3].path).toBe(f.path)
+    expect(sorted[4].path).toBe(d.path)
+    expect(sorted[5].path).toBe(e.path)
+    expect(sorted[6].path).toBe(c.path)
+    expect(sorted[7].path).toBe(a.path)
   })
 })

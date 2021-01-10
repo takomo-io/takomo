@@ -1,0 +1,14 @@
+regions: eu-north-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+parameters:
+  Param1:
+    immutable: true
+    resolver: cmd
+    command: echo {{ var.value1 }}
+  Param2:
+    value: {{ var.value2 }}
+    immutable: false
+  Param3:
+    immutable: {{ var.immutable3 }}
+    resolver: cmd
+    command: echo foobar

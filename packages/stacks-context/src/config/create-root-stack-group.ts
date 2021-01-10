@@ -1,23 +1,20 @@
-import { Constants } from "@takomo/core"
-import { Stack, StackGroup } from "@takomo/stacks-model"
+import {
+  createStackGroup,
+  InternalStack,
+  ROOT_STACK_GROUP_PATH,
+  StackGroup,
+} from "@takomo/stacks-model"
 
 export const createRootStackGroup = (): StackGroup =>
-  new StackGroup({
-    name: Constants.ROOT_STACK_GROUP_PATH,
-    isRoot: true,
+  createStackGroup({
+    name: ROOT_STACK_GROUP_PATH,
     regions: [],
-    commandRole: null,
-    project: null,
-    timeout: null,
-    templateBucket: null,
     tags: new Map(),
-    path: Constants.ROOT_STACK_GROUP_PATH,
-    parentPath: null,
+    path: ROOT_STACK_GROUP_PATH,
     children: new Array<StackGroup>(),
-    stacks: new Array<Stack>(),
+    stacks: new Array<InternalStack>(),
     data: {},
     hooks: [],
-    capabilities: null,
     accountIds: [],
     ignore: false,
     terminationProtection: false,

@@ -1,7 +1,7 @@
 import uniq from "lodash.uniq"
 
 export const findMissingDirectChildrenPaths = (
-  childPaths: string[],
+  childPaths: ReadonlyArray<string>,
   ouPathDepth: number,
 ): string[] => {
   return uniq(

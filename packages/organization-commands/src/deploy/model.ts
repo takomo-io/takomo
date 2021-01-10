@@ -1,45 +1,50 @@
 import {
+  OrganizationPolicy,
+  OrganizationPolicyName,
+  OrganizationPolicyType,
+} from "@takomo/aws-model"
+import {
   CommandInput,
   CommandOutput,
   CommandOutputBase,
   IO,
 } from "@takomo/core"
-import {
-  OrganizationContext,
-  OrganizationState,
-} from "@takomo/organization-context"
-import { StopWatch } from "@takomo/util"
-import { Policy } from "aws-sdk/clients/organizations"
-import { OrganizationLaunchPlan } from "./plan/model"
+import { OrganizationBasicConfigDeploymentPlan } from "../common/plan/basic-config/model"
+import { OrganizationalUnitsDeploymentPlan } from "../common/plan/organizational-units/model"
+import { PolicyDeploymentPlan } from "../common/plan/policies/model"
 
 export type DeployOrganizationInput = CommandInput
 
 export interface DeployOrganizationOutput extends CommandOutput {
-  readonly policiesDeploymentResult: PoliciesDeploymentResult
-  readonly policiesCleanResult: PoliciesDeploymentResult
-  readonly organizationalUnitsDeploymentResult: OrganizationalUnitsDeploymentResult
-  readonly organizationalUnitsCleanResult: OrganizationalUnitsDeploymentResult
-  readonly basicConfigDeploymentResult: OrganizationBasicConfigDeploymentResult
-  readonly basicConfigCleanResult: OrganizationBasicConfigDeploymentResult
-  readonly watch: StopWatch
+  readonly policiesDeploymentResult?: PoliciesDeploymentResult
+  readonly policiesCleanResult?: PoliciesDeploymentResult
+  readonly organizationalUnitsDeploymentResult?: OrganizationalUnitsDeploymentResult
+  readonly organizationalUnitsCleanResult?: OrganizationalUnitsDeploymentResult
+  readonly basicConfigDeploymentResult?: OrganizationBasicConfigDeploymentResult
+  readonly basicConfigCleanResult?: OrganizationBasicConfigDeploymentResult
 }
 
-export interface DeployOrganizationIO extends IO {
-  printOutput: (output: DeployOrganizationOutput) => DeployOrganizationOutput
+export interface ConfirmOrganizationDeployProps {
+  readonly organizationBasicConfigPlan: OrganizationBasicConfigDeploymentPlan
+  readonly policiesPlan: PolicyDeploymentPlan
+  readonly organizationalUnitsPlan: OrganizationalUnitsDeploymentPlan
+}
 
-  confirmLaunch: (plan: DeploymentPlanHolder) => Promise<boolean>
+export interface DeployOrganizationIO extends IO<DeployOrganizationOutput> {
+  readonly confirmDeploy: (
+    props: ConfirmOrganizationDeployProps,
+  ) => Promise<boolean>
 }
 
 export interface PolicyDeploymentResult extends CommandOutputBase {
-  readonly id: string
-  readonly type: string
-  readonly name: string
+  readonly type: OrganizationPolicyType
+  readonly name: OrganizationPolicyName
   readonly awsManaged: boolean
-  readonly policy: Policy | null
+  readonly policy?: OrganizationPolicy
 }
 
 export interface PoliciesDeploymentResult extends CommandOutputBase {
-  readonly results: PolicyDeploymentResult[]
+  readonly results: ReadonlyArray<PolicyDeploymentResult>
 }
 
 export interface OrganizationalUnitDeploymentResult extends CommandOutputBase {
@@ -48,54 +53,7 @@ export interface OrganizationalUnitDeploymentResult extends CommandOutputBase {
 }
 
 export interface OrganizationalUnitsDeploymentResult extends CommandOutputBase {
-  readonly results: OrganizationalUnitDeploymentResult[]
+  readonly results: ReadonlyArray<OrganizationalUnitDeploymentResult>
 }
 
 export type OrganizationBasicConfigDeploymentResult = CommandOutputBase
-
-export interface InitialOrganizationDeployContext {
-  readonly watch: StopWatch
-  readonly ctx: OrganizationContext
-  readonly io: DeployOrganizationIO
-  readonly input: DeployOrganizationInput
-  readonly result: CommandOutputBase | null
-}
-
-export interface OrganizationDataHolder
-  extends InitialOrganizationDeployContext {
-  organizationState: OrganizationState
-}
-
-export interface DeploymentPlanHolder extends OrganizationDataHolder {
-  readonly plan: OrganizationLaunchPlan
-}
-
-export interface OrganizationBasicConfigDeploymentResultHolder
-  extends DeploymentPlanHolder {
-  readonly organizationBasicConfigDeploymentResult: OrganizationBasicConfigDeploymentResult
-}
-
-export interface PoliciesDeploymentResultHolder
-  extends OrganizationBasicConfigDeploymentResultHolder {
-  readonly policiesDeploymentResult: PoliciesDeploymentResult
-}
-
-export interface OrganizationalUnitsDeploymentResultHolder
-  extends PoliciesDeploymentResultHolder {
-  readonly organizationalUnitsDeploymentResult: OrganizationalUnitsDeploymentResult
-}
-
-export interface OrganizationalUnitsCleanResultHolder
-  extends OrganizationalUnitsDeploymentResultHolder {
-  readonly organizationalUnitsCleanResult: OrganizationalUnitsDeploymentResult
-}
-
-export interface PoliciesCleanResultHolder
-  extends OrganizationalUnitsCleanResultHolder {
-  readonly policiesCleanResult: PoliciesDeploymentResult
-}
-
-export interface OrganizationBasicConfigCleanResultHolder
-  extends PoliciesCleanResultHolder {
-  readonly organizationBasicConfigCleanResult: OrganizationBasicConfigDeploymentResult
-}

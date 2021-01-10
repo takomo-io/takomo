@@ -1,27 +1,55 @@
-import { accountId } from "@takomo/core"
-import { buildOrganizationContext } from "@takomo/organization-context"
-import { organizationalUnitPath } from "@takomo/organization-schema"
+import { createAwsSchemas } from "@takomo/aws-schema"
+import { CommandContext, CommandHandler } from "@takomo/core"
+import {
+  buildOrganizationContext,
+  OrganizationConfigRepository,
+} from "@takomo/organization-context"
+import { createOrganizationSchemas } from "@takomo/organization-schema"
 import { validateInput } from "@takomo/util"
-import Joi from "joi"
-import { deployAccounts } from "./deploy-accounts"
+import Joi, { ObjectSchema } from "joi"
 import {
   AccountsOperationInput,
   AccountsOperationIO,
   AccountsOperationOutput,
 } from "./model"
+import { executeSteps } from "./steps"
+import { createAccountsOperationTransitions } from "./transitions"
 
-const schema = Joi.object({
-  organizationalUnits: Joi.array().items(organizationalUnitPath).unique(),
-  accountIds: Joi.array().items(accountId).unique(),
-}).unknown(true)
+const inputSchema = (ctx: CommandContext): ObjectSchema => {
+  const { organizationalUnitPath } = createOrganizationSchemas({
+    regions: ctx.regions,
+    trustedAwsServices: ctx.organizationServicePrincipals,
+  })
 
-export const accountsOperationCommand = async (
-  input: AccountsOperationInput,
-  io: AccountsOperationIO,
-): Promise<AccountsOperationOutput> =>
-  validateInput(schema, input)
-    .then(({ options, variables }) =>
-      buildOrganizationContext(options, variables, io),
+  const { accountId } = createAwsSchemas({ regions: ctx.regions })
+
+  return Joi.object({
+    organizationalUnits: Joi.array().items(organizationalUnitPath).unique(),
+    accountIds: Joi.array().items(accountId).unique(),
+  }).unknown(true)
+}
+
+export const accountsOperationCommand: CommandHandler<
+  OrganizationConfigRepository,
+  AccountsOperationIO,
+  AccountsOperationInput,
+  AccountsOperationOutput
+> = async ({
+  ctx,
+  input,
+  configRepository,
+  io,
+}): Promise<AccountsOperationOutput> =>
+  validateInput(inputSchema(ctx), input)
+    .then(() => buildOrganizationContext(ctx, configRepository, io))
+    .then((ctx) =>
+      executeSteps({
+        configRepository,
+        ctx,
+        input,
+        io,
+        totalTimer: input.timer,
+        transitions: createAccountsOperationTransitions(),
+      }),
     )
-    .then((ctx) => deployAccounts(ctx, io, input))
     .then(io.printOutput)

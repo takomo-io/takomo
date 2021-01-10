@@ -1,22 +1,25 @@
 import {
-  CommandContext,
   HookExecutor,
   HookOperation,
   HooksExecutionOutput,
   HookStage,
   HookStatus,
+  InternalStacksContext,
   StackOperationVariables,
 } from "@takomo/stacks-model"
-import { Logger } from "@takomo/util"
+import { TkmLogger } from "@takomo/util"
 
+/**
+ * @hidden
+ */
 export const executeHooks = async (
-  ctx: CommandContext,
+  ctx: InternalStacksContext,
   variables: StackOperationVariables,
-  hooks: HookExecutor[],
+  hooks: ReadonlyArray<HookExecutor>,
   operation: HookOperation,
   stage: HookStage,
-  logger: Logger,
-  status: HookStatus | null = null,
+  logger: TkmLogger,
+  status?: HookStatus,
 ): Promise<HooksExecutionOutput> => {
   logger.debug(
     `About to execute hooks (operation: ${operation}, stage: ${stage}, status: ${status})`,

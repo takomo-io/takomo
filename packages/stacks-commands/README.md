@@ -1,3 +1,3 @@
-# Takomo Stacks Commands
+# Takomo - Stacks Commands
 
-Stacks related commands for https://takomo.io
+Commands for stacks.

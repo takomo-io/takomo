@@ -1,30 +1,33 @@
-import { DetailedOrganizationalUnit } from "@takomo/aws-clients"
-import { AccountId, Constants } from "@takomo/core"
-import { collectFromHierarchy } from "@takomo/util"
 import {
-  Account,
+  AccountId,
+  DetailedOrganizationalUnit,
   Organization,
+  OrganizationAccount,
   OrganizationalUnit,
   OrganizationalUnitId,
-  Policy,
-  PolicyName,
-  PolicyType,
-} from "aws-sdk/clients/organizations"
+  OrganizationPolicy,
+  OrganizationPolicyName,
+  OrganizationPolicyType,
+} from "@takomo/aws-model"
+import { collectFromHierarchy } from "@takomo/util"
 import uniq from "lodash.uniq"
 import { OrgEntityId } from "./model"
 
 export type PoliciesByTypeByTargetMap = Map<
-  PolicyType,
-  Map<OrgEntityId, PolicyName[]>
+  OrganizationPolicyType,
+  Map<OrgEntityId, ReadonlyArray<OrganizationPolicyName>>
 >
 
-export type PoliciesByTypeByName = Map<PolicyType, Map<PolicyName, Policy>>
+export type PoliciesByTypeByName = Map<
+  OrganizationPolicyType,
+  Map<OrganizationPolicyName, OrganizationPolicy>
+>
 
 export interface OrganizationStateProps {
   readonly rootOrganizationalUnit: DetailedOrganizationalUnit
-  readonly accounts: Account[]
-  readonly trustedAwsServices: string[]
-  readonly enabledPolicies: PolicyType[]
+  readonly accounts: ReadonlyArray<OrganizationAccount>
+  readonly trustedAwsServices: ReadonlyArray<string>
+  readonly enabledPolicies: ReadonlyArray<OrganizationPolicyType>
   readonly organization: Organization
   readonly allFeaturesEnabled: boolean
   readonly policiesByTypeByName: PoliciesByTypeByName
@@ -46,11 +49,11 @@ export class OrganizationState {
     this.#props = props
   }
 
-  get enabledPolicies(): PolicyType[] {
+  get enabledPolicies(): ReadonlyArray<OrganizationPolicyType> {
     return this.#props.enabledPolicies.slice()
   }
 
-  get trustedAwsServices(): string[] {
+  get trustedAwsServices(): ReadonlyArray<string> {
     return this.#props.trustedAwsServices.slice()
   }
 
@@ -58,7 +61,7 @@ export class OrganizationState {
     return this.#props.allFeaturesEnabled
   }
 
-  get accounts(): Account[] {
+  get accounts(): ReadonlyArray<OrganizationAccount> {
     return this.#props.accounts.slice()
   }
 
@@ -73,7 +76,9 @@ export class OrganizationState {
    * @return policies of given type
    * @throws error if no policy type is found
    */
-  getPolicies = (policyType: PolicyType): Policy[] => {
+  getPolicies = (
+    policyType: OrganizationPolicyType,
+  ): ReadonlyArray<OrganizationPolicy> => {
     const policies = this.#props.policiesByTypeByName.get(policyType)
     if (!policies) {
       throw new Error(`Unknown policy type: '${policyType}'`)
@@ -89,10 +94,12 @@ export class OrganizationState {
    * @param policyName
    * @return policy of given type and name, or null if no matching policy is found
    */
-  getPolicy = (policyType: PolicyType, policyName: PolicyName): Policy | null =>
-    this.getPolicies(policyType).find(
-      (p) => p.PolicySummary?.Name === policyName,
-    ) || null
+  getPolicy = (
+    policyType: OrganizationPolicyType,
+    policyName: OrganizationPolicyName,
+  ): OrganizationPolicy | null =>
+    this.getPolicies(policyType).find((p) => p.summary?.name === policyName) ||
+    null
 
   /**
    * Get id of a policy by type and name, or throw an error if no matching policy is found.
@@ -102,7 +109,10 @@ export class OrganizationState {
    * @return policy of given type and name
    * @throws error if no policy is found
    */
-  getPolicyId = (policyType: PolicyType, policyName: PolicyName): string => {
+  getPolicyId = (
+    policyType: OrganizationPolicyType,
+    policyName: OrganizationPolicyName,
+  ): string => {
     const policy = this.getPolicy(policyType, policyName)
     if (!policy) {
       throw new Error(
@@ -110,7 +120,7 @@ export class OrganizationState {
       )
     }
 
-    return policy.PolicySummary!.Id!
+    return policy.summary.id
   }
 
   /**
@@ -121,9 +131,9 @@ export class OrganizationState {
    * @param policy
    */
   setPolicy = (
-    policyType: PolicyType,
-    policyName: PolicyName,
-    policy: Policy,
+    policyType: OrganizationPolicyType,
+    policyName: OrganizationPolicyName,
+    policy: OrganizationPolicy,
   ): void => {
     const policies = this.#props.policiesByTypeByName.get(policyType)
     if (!policies) {
@@ -141,9 +151,9 @@ export class OrganizationState {
    * @return names of policies of given type attached to a target
    */
   getPoliciesAttachedToTarget = (
-    policyType: string,
+    policyType: OrganizationPolicyType,
     targetId: OrgEntityId,
-  ): PolicyName[] => {
+  ): ReadonlyArray<OrganizationPolicyName> => {
     const policiesByType = this.#props.policiesByTypeByTarget.get(policyType)
     if (!policiesByType) {
       throw new Error(`Unknown policy type: '${policyType}'`)
@@ -160,9 +170,9 @@ export class OrganizationState {
    * @return names of policies of given type inherited by a target
    */
   getPoliciesInheritedByTarget = (
-    policyType: PolicyType,
+    policyType: OrganizationPolicyType,
     targetId: OrgEntityId,
-  ): PolicyName[] => {
+  ): ReadonlyArray<OrganizationPolicyName> => {
     const parentId = this.#props.parentByTargetId.get(targetId)
     if (!parentId) {
       return []
@@ -181,8 +191,8 @@ export class OrganizationState {
    * @return account
    * @throws error if account is not found
    */
-  getAccount = (accountId: AccountId): Account => {
-    const account = this.#props.accounts.find((a) => a.Id === accountId)
+  getAccount = (accountId: AccountId): OrganizationAccount => {
+    const account = this.#props.accounts.find((a) => a.id === accountId)
     if (!account) {
       throw new Error(`Account '${accountId}' not found`)
     }
@@ -204,20 +214,20 @@ export class OrganizationState {
   }
 
   getAsObject = (): unknown => {
-    const getPolicies = (policyType: PolicyType): any =>
+    const getPolicies = (policyType: OrganizationPolicyType): any =>
       this.getPolicies(policyType).map((p) => ({
-        id: p.PolicySummary?.Id,
-        name: p.PolicySummary?.Name,
-        description: p.PolicySummary?.Description,
-        awsManaged: p.PolicySummary?.AwsManaged,
-        arn: p.PolicySummary?.Arn,
+        id: p.summary?.id,
+        name: p.summary?.name,
+        description: p.summary?.description,
+        awsManaged: p.summary?.awsManaged,
+        arn: p.summary?.arn,
       }))
 
     const policies = {
-      serviceControl: getPolicies(Constants.SERVICE_CONTROL_POLICY_TYPE),
-      tag: getPolicies(Constants.TAG_POLICY_TYPE),
-      backup: getPolicies(Constants.BACKUP_POLICY_TYPE),
-      aiServicesOptOut: getPolicies(Constants.AISERVICES_OPT_OUT_POLICY_TYPE),
+      serviceControl: getPolicies("SERVICE_CONTROL_POLICY"),
+      tag: getPolicies("TAG_POLICY"),
+      backup: getPolicies("BACKUP_POLICY"),
+      aiServicesOptOut: getPolicies("AISERVICES_OPT_OUT_POLICY"),
     }
 
     const organizationalUnits = collectFromHierarchy(
@@ -225,96 +235,90 @@ export class OrganizationState {
       (p) => p.children,
     ).map((ou) => {
       return {
-        id: ou.ou.Id,
-        name: ou.ou.Name,
-        arn: ou.ou.Arn,
+        id: ou.ou.id,
+        name: ou.ou.name,
+        arn: ou.ou.arn,
         policies: {
           serviceControl: {
             attached: this.getPoliciesAttachedToTarget(
-              Constants.SERVICE_CONTROL_POLICY_TYPE,
-              ou.ou.Id!,
+              "SERVICE_CONTROL_POLICY",
+              ou.ou.id,
             ),
             inherited: this.getPoliciesInheritedByTarget(
-              Constants.SERVICE_CONTROL_POLICY_TYPE,
-              ou.ou.Id!,
+              "SERVICE_CONTROL_POLICY",
+              ou.ou.id,
             ),
           },
           tag: {
-            attached: this.getPoliciesAttachedToTarget(
-              Constants.TAG_POLICY_TYPE,
-              ou.ou.Id!,
-            ),
+            attached: this.getPoliciesAttachedToTarget("TAG_POLICY", ou.ou.id),
             inherited: this.getPoliciesInheritedByTarget(
-              Constants.TAG_POLICY_TYPE,
-              ou.ou.Id!,
+              "TAG_POLICY",
+              ou.ou.id,
             ),
           },
           aiServicesOptOut: {
             attached: this.getPoliciesAttachedToTarget(
-              Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
-              ou.ou.Id!,
+              "AISERVICES_OPT_OUT_POLICY",
+              ou.ou.id,
             ),
             inherited: this.getPoliciesInheritedByTarget(
-              Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
-              ou.ou.Id!,
+              "AISERVICES_OPT_OUT_POLICY",
+              ou.ou.id,
             ),
           },
           backup: {
             attached: this.getPoliciesAttachedToTarget(
-              Constants.BACKUP_POLICY_TYPE,
-              ou.ou.Id!,
+              "BACKUP_POLICY",
+              ou.ou.id,
             ),
             inherited: this.getPoliciesInheritedByTarget(
-              Constants.BACKUP_POLICY_TYPE,
-              ou.ou.Id!,
+              "BACKUP_POLICY",
+              ou.ou.id,
             ),
           },
         },
         accounts: ou.accounts.map((a) => {
           return {
-            id: a.Id,
-            arn: a.Arn,
-            email: a.Email,
-            name: a.Name,
+            id: a.id,
+            arn: a.arn,
+            email: a.email,
+            name: a.name,
             policies: {
               serviceControl: {
                 attached: this.getPoliciesAttachedToTarget(
-                  Constants.SERVICE_CONTROL_POLICY_TYPE,
-                  a.Id!,
+                  "SERVICE_CONTROL_POLICY",
+                  a.id,
                 ),
                 inherited: this.getPoliciesInheritedByTarget(
-                  Constants.SERVICE_CONTROL_POLICY_TYPE,
-                  a.Id!,
+                  "SERVICE_CONTROL_POLICY",
+                  a.id,
                 ),
               },
               tag: {
-                attached: this.getPoliciesAttachedToTarget(
-                  Constants.TAG_POLICY_TYPE,
-                  a.Id!,
-                ),
+                attached: this.getPoliciesAttachedToTarget("TAG_POLICY", a.id),
                 inherited: this.getPoliciesInheritedByTarget(
-                  Constants.TAG_POLICY_TYPE,
-                  a.Id!,
+                  "TAG_POLICY",
+                  a.id,
                 ),
               },
               aiServicesOptOut: {
                 attached: this.getPoliciesAttachedToTarget(
-                  Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
-                  a.Id!,
+                  "AISERVICES_OPT_OUT_POLICY",
+                  a.id,
                 ),
                 inherited: this.getPoliciesInheritedByTarget(
-                  Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
-                  a.Id!,
+                  "AISERVICES_OPT_OUT_POLICY",
+                  a.id,
                 ),
               },
               backup: {
                 attached: this.getPoliciesAttachedToTarget(
-                  Constants.BACKUP_POLICY_TYPE,
-                  a.Id!,
+                  "BACKUP_POLICY",
+                  a.id,
                 ),
                 inherited: this.getPoliciesInheritedByTarget(
-                  Constants.BACKUP_POLICY_TYPE,
-                  a.Id!,
+                  "BACKUP_POLICY",
+                  a.id,
                 ),
               },
             },

@@ -1,20 +1,34 @@
-import { CliListAccountsIO } from "@takomo/cli-io"
+import { createListAccountsIO } from "@takomo/cli-io"
+import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   listAccountsCommand,
   listAccountsCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../../common"
 
+const command = "list"
+const desc = "List accounts"
+
+const builder = (yargs: any) =>
+  yargs.epilog(commonEpilog(listAccountsCommandIamPolicy))
+
+const handler = (argv: any) =>
+  handle({
+    argv,
+    input: (ctx, input) => input,
+    io: (ctx, logger) => createListAccountsIO(logger),
+    configRepository: (ctx, logger) =>
+      createFileSystemOrganizationConfigRepository({
+        ctx,
+        logger,
+        ...ctx.filePaths,
+      }),
+    executor: listAccountsCommand,
+  })
+
 export const listAccountsCmd = {
-  command: "list",
-  desc: "List accounts",
-  builder: (yargs: any) =>
-    yargs.epilog(commonEpilog(listAccountsCommandIamPolicy)),
-  handler: (argv: any) =>
-    handle(
-      argv,
-      (ov) => ov,
-      (input) =>
-        listAccountsCommand(input, new CliListAccountsIO(input.options)),
-    ),
+  command,
+  desc,
+  builder,
+  handler,
 }

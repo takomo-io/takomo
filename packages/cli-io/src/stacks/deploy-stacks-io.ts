@@ -1,17 +1,24 @@
-import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandPath, Options, StackPath } from "@takomo/core"
+import {
+  DetailedChangeSet,
+  DetailedCloudFormationStack,
+  DetailedStackParameter,
+  StackEvent,
+  TemplateBody,
+  TemplateSummary,
+} from "@takomo/aws-model"
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
+  StackDeployOperationType,
+  StacksDeployPlan,
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
-import { resolveStackLaunchType } from "@takomo/stacks-context"
 import {
-  CommandContext,
-  Stack,
+  CommandPath,
+  InternalStack,
   StackGroup,
-  StackLaunchType,
+  StackPath,
 } from "@takomo/stacks-model"
 import {
   collectFromHierarchy,
@@ -20,55 +27,63 @@ import {
   LogWriter,
   orange,
   red,
+  TkmLogger,
   yellow,
 } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
-import { DescribeChangeSetOutput } from "aws-sdk/clients/cloudformation"
 import { diffLines } from "diff"
-import Table from "easy-table"
-import prettyMs from "pretty-ms"
-import CliIO from "../cli-io"
+import { createBaseIO } from "../cli-io"
 import {
-  formatCommandStatus,
   formatResourceChange,
   formatStackEvent,
   formatStackStatus,
 } from "../formatters"
+import { printStacksOperationOutput } from "./common"
 
-const CONFIRM_STACK_DEPLOY_ANSWER_CANCEL = {
+interface ConfirmStackDeployAnswerChoice {
+  readonly name: string
+  readonly value: ConfirmStackDeployAnswer
+}
+
+interface ConfirmDeployAnswerChoice {
+  readonly name: string
+  readonly value: ConfirmDeployAnswer
+}
+
+const CONFIRM_STACK_DEPLOY_ANSWER_CANCEL: ConfirmStackDeployAnswerChoice = {
   name: "cancel deploy of this stack and all remaining stacks",
-  value: ConfirmStackDeployAnswer.CANCEL,
+  value: "CANCEL",
 }
 
-const CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE = {
+const CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE: ConfirmStackDeployAnswerChoice = {
   name: "review changes in the stack template",
-  value: ConfirmStackDeployAnswer.REVIEW_TEMPLATE,
+  value: "REVIEW_TEMPLATE",
 }
 
-const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE = {
+const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE: ConfirmStackDeployAnswerChoice = {
   name: "continue to deploy the stack, then let me review the remaining stacks",
-  value: ConfirmStackDeployAnswer.CONTINUE,
+  value: "CONTINUE",
 }
 
-const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS = {
+const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS: ConfirmStackDeployAnswerChoice = {
   name:
     "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
-  value: ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS,
+  value: "CONTINUE_AND_SKIP_REMAINING_REVIEWS",
 }
 
-const CONFIRM_DEPLOY_ANSWER_CANCEL = {
+const CONFIRM_DEPLOY_ANSWER_CANCEL: ConfirmDeployAnswerChoice = {
   name: "cancel deployment",
-  value: ConfirmDeployAnswer.CANCEL,
+  value: "CANCEL",
 }
 
-const CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW = {
+const CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW: ConfirmDeployAnswerChoice = {
   name: "continue, but let me review changes to each stack",
-  value: ConfirmDeployAnswer.CONTINUE_AND_REVIEW,
+  value: "CONTINUE_AND_REVIEW",
 }
 
-const CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW = {
+const CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW: ConfirmDeployAnswerChoice = {
   name: "continue, deploy all stacks without reviewing changes",
-  value: ConfirmDeployAnswer.CONTINUE_NO_REVIEW,
+  value: "CONTINUE_NO_REVIEW",
 }
 
 export enum ParameterOperation {
@@ -79,17 +94,17 @@ export enum ParameterOperation {
 
 const formatStackOperation = (
   stackPath: StackPath,
-  launchType: StackLaunchType,
+  type: StackDeployOperationType,
 ): string => {
-  switch (launchType) {
-    case StackLaunchType.CREATE:
+  switch (type) {
+    case "CREATE":
       return green(`+ ${stackPath}:`)
-    case StackLaunchType.RECREATE:
+    case "RECREATE":
       return orange(`± ${stackPath}:`)
-    case StackLaunchType.UPDATE:
+    case "UPDATE":
       return yellow(`~ ${stackPath}:`)
     default:
-      throw new Error(`Unsupported stack launch type: ${launchType}`)
+      throw new Error(`Unsupported stack operation type: ${type}`)
   }
 }
 
@@ -113,8 +128,8 @@ const formatParameterOperation = (param: ParameterSpec): string => {
   }
 }
 
-const formatParameterValue = (value: string | null): string => {
-  if (value !== null) {
+const formatParameterValue = (value?: string): string => {
+  if (value !== undefined) {
     return value
   } else {
     return grey("<undefined>")
@@ -124,16 +139,16 @@ const formatParameterValue = (value: string | null): string => {
 export interface ParameterSpec {
   readonly key: string
   readonly operation: ParameterOperation
-  readonly currentValue: string | null
-  readonly newValue: string | null
+  readonly currentValue?: string
+  readonly newValue?: string
   readonly newNoEcho: boolean
   readonly currentNoEcho: boolean
 }
 
 export interface ParametersSpec {
-  readonly updated: ParameterSpec[]
-  readonly added: ParameterSpec[]
-  readonly removed: ParameterSpec[]
+  readonly updated: ReadonlyArray<ParameterSpec>
+  readonly added: ReadonlyArray<ParameterSpec>
+  readonly removed: ReadonlyArray<ParameterSpec>
 }
 
 enum ResourceOperation {
@@ -166,127 +181,80 @@ const resolveResourceOperation = (
 }
 
 export const collectRemovedParameters = (
-  newParameterDeclarations: CloudFormation.ParameterDeclaration[],
-  newParameters: CloudFormation.Parameter[],
-  existingParameterDeclarations: CloudFormation.ParameterDeclaration[],
-  existingParameters: CloudFormation.Parameter[],
-): ParameterSpec[] => {
-  const newParameterNames = newParameters.map((p) => p.ParameterKey!)
-
+  newParameters: ReadonlyArray<DetailedStackParameter>,
+  existingParameters: ReadonlyArray<DetailedStackParameter>,
+): ReadonlyArray<ParameterSpec> => {
+  const newParameterNames = newParameters.map((p) => p.key)
   return existingParameters
-    .filter((p) => !newParameterNames.includes(p.ParameterKey!))
-    .map(({ ParameterKey, ParameterValue }) => ({
-      key: ParameterKey!,
-      currentValue: ParameterValue || null,
-      newValue: null,
+    .filter((p) => !newParameterNames.includes(p.key))
+    .map(({ key, value, noEcho }) => ({
+      key,
+      currentValue: value,
+      newValue: undefined,
       operation: ParameterOperation.DELETE,
-      currentNoEcho:
-        existingParameterDeclarations.find(
-          (d) => d.ParameterKey === ParameterKey,
-        )?.NoEcho || false,
+      currentNoEcho: noEcho,
       newNoEcho: false,
     }))
 }
 
 export const collectAddedParameters = (
-  newParameterDeclarations: CloudFormation.ParameterDeclaration[],
-  newParameters: CloudFormation.Parameter[],
-  existingParameterDeclarations: CloudFormation.ParameterDeclaration[],
-  existingParameters: CloudFormation.Parameter[],
-): ParameterSpec[] => {
-  const existingParameterNames = existingParameters.map((p) => p.ParameterKey!)
+  newParameters: ReadonlyArray<DetailedStackParameter>,
+  existingParameters: ReadonlyArray<DetailedStackParameter>,
+): ReadonlyArray<ParameterSpec> => {
+  const existingParameterNames = existingParameters.map((p) => p.key)
   return newParameters
-    .filter((p) => !existingParameterNames.includes(p.ParameterKey!))
-    .map(({ ParameterKey, ParameterValue }) => ({
-      key: ParameterKey!,
-      currentValue: null,
-      newValue: ParameterValue || null,
+    .filter((p) => !existingParameterNames.includes(p.key))
+    .map(({ key, value, noEcho }) => ({
+      key,
+      currentValue: undefined,
+      newValue: value,
       operation: ParameterOperation.ADD,
-      newNoEcho:
-        newParameterDeclarations.find((d) => d.ParameterKey === ParameterKey)
-          ?.NoEcho || false,
+      newNoEcho: noEcho,
       currentNoEcho: false,
     }))
 }
 
 export const collectUpdatedParameters = (
-  newParameterDeclarations: CloudFormation.ParameterDeclaration[],
-  newParameters: CloudFormation.Parameter[],
-  existingParameterDeclarations: CloudFormation.ParameterDeclaration[],
-  existingParameters: CloudFormation.Parameter[],
-): ParameterSpec[] => {
+  newParameters: ReadonlyArray<DetailedStackParameter>,
+  existingParameters: ReadonlyArray<DetailedStackParameter>,
+): ReadonlyArray<ParameterSpec> => {
+  const existingParameterNames = existingParameters.map((p) => p.key)
   return newParameters
-    .map((p) => {
-      const existing = existingParameters.find(
-        (e) => e.ParameterKey === p.ParameterKey,
+    .filter((p) => existingParameterNames.includes(p.key))
+    .map((newParam) => {
+      const existingParam = existingParameters.find(
+        (existingParam) => existingParam.key === newParam.key,
       )
-      return [p, existing]
+
+      return [newParam, existingParam!]
     })
-    .filter(([p, e]) => {
-      if (!e) {
-        return false
-      }
-
-      const newNoEcho =
-        newParameterDeclarations.find(
-          (d) => d.ParameterKey === p!.ParameterKey!,
-        )?.NoEcho || false
-      const existingNoEcho =
-        existingParameterDeclarations.find(
-          (d) => d.ParameterKey === p!.ParameterKey!,
-        )?.NoEcho || false
-
-      if (newNoEcho || existingNoEcho) {
-        return true
-      }
-
-      return e.ParameterValue !== p?.ParameterValue
-    })
-    .map(([p, e]) => ({
-      key: p!.ParameterKey!,
-      currentValue: e?.ParameterValue || null,
-      newValue: p?.ParameterValue || null,
+    .filter(
+      ([newParam, existingParam]) =>
+        newParam.noEcho ||
+        existingParam.noEcho ||
+        newParam.value !== existingParam.value,
+    )
+    .map(([newParam, existingParam]) => ({
+      key: newParam.key,
+      currentValue: existingParam?.value,
+      newValue: newParam.value,
       operation: ParameterOperation.UPDATE,
-      newNoEcho:
-        newParameterDeclarations.find((d) => d.ParameterKey === p?.ParameterKey)
-          ?.NoEcho || false,
-      currentNoEcho:
-        existingParameterDeclarations.find(
-          (d) => d.ParameterKey === p?.ParameterKey,
-        )?.NoEcho || false,
+      newNoEcho: newParam.noEcho,
+      currentNoEcho: existingParam?.noEcho || false,
     }))
 }
 
 const buildParametersSpec = (
-  changeSet: DescribeChangeSetOutput,
-  templateSummary: CloudFormation.GetTemplateSummaryOutput,
-  existingStack: CloudFormation.Stack | null,
-  existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
+  templateSummary: TemplateSummary,
+  changeSet: DetailedChangeSet,
+  existingStack?: DetailedCloudFormationStack,
 ): ParametersSpec => {
-  const newParameters = changeSet.Parameters || []
-  const newParameterDeclarations = templateSummary.Parameters || []
-  const existingParameters = existingStack?.Parameters || []
-  const existingParameterDeclarations =
-    existingTemplateSummary?.Parameters || []
+  const newParameters = changeSet.parameters
+  const existingParameters = existingStack?.parameters || []
 
-  const updated = collectUpdatedParameters(
-    newParameterDeclarations,
-    newParameters,
-    existingParameterDeclarations,
-    existingParameters,
-  )
-  const added = collectAddedParameters(
-    newParameterDeclarations,
-    newParameters,
-    existingParameterDeclarations,
-    existingParameters,
-  )
-  const removed = collectRemovedParameters(
-    newParameterDeclarations,
-    newParameters,
-    existingParameterDeclarations,
-    existingParameters,
-  )
+  const updated = collectUpdatedParameters(newParameters, existingParameters)
+  const added = collectAddedParameters(newParameters, existingParameters)
+  const removed = collectRemovedParameters(newParameters, existingParameters)
 
   return {
     updated,
@@ -295,30 +263,28 @@ const buildParametersSpec = (
   }
 }
 
-export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
-  private autoConfirm: boolean
+export const createDeployStacksIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): DeployStacksIO => {
+  const io = createBaseIO(writer)
 
-  constructor(
-    options: Options,
-    logWriter: LogWriter = console.log,
-    loggerName: string | null = null,
-  ) {
-    super(logWriter, options, loggerName)
-    this.autoConfirm = options.isAutoConfirmEnabled()
-  }
+  // TODO: Come up some other solution
+  let autoConfirmEnabled = false
 
-  chooseCommandPath = async (
+  const chooseCommandPath = async (
     rootStackGroup: StackGroup,
   ): Promise<CommandPath> => {
-    const allStackGroups = collectFromHierarchy(rootStackGroup, (s) =>
-      s.getChildren(),
+    const allStackGroups = collectFromHierarchy(
+      rootStackGroup,
+      (s) => s.children,
     )
 
     const allCommandPaths = allStackGroups.reduce(
       (collected, stackGroup) => [
         ...collected,
-        stackGroup.getPath(),
-        ...stackGroup.getStacks().map((s) => s.getPath()),
+        stackGroup.path,
+        ...stackGroup.stacks.map((s) => s.path),
       ],
       new Array<string>(),
     )
@@ -332,70 +298,71 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
         : allCommandPaths
     }
 
-    return this.autocomplete("Choose command path", source)
+    return io.autocomplete("Choose command path", source)
   }
 
-  confirmDeploy = async (ctx: CommandContext): Promise<ConfirmDeployAnswer> => {
-    if (this.autoConfirm) {
-      return ConfirmDeployAnswer.CONTINUE_NO_REVIEW
+  const confirmDeploy = async ({
+    operations,
+  }: StacksDeployPlan): Promise<ConfirmDeployAnswer> => {
+    if (autoConfirmEnabled) {
+      return "CONTINUE_NO_REVIEW"
     }
 
-    const identity = await ctx.getCredentialProvider().getCallerIdentity()
-    this.debugObject("Default credentials:", identity)
+    io.subheader({ text: "Review stacks deployment plan:", marginTop: true })
+    io.longMessage(
+      [
+        "A stacks deployment plan has been created and is shown below.",
+        "Stacks will be deployed in the order they are listed, and in parallel",
+        "when possible.",
+        "",
+        "Stack operations are indicated with the following symbols:",
+        "",
+        `  ${green("+ create")}           Stack will be created`,
+        `  ${yellow("~ update")}           Stack will be updated`,
+        `  ${orange(
+          "± replace",
+        )}          Stack has an invalid status and will be first deleted and then created`,
+        "",
+        `Following ${operations.length} stack(s) will be deployed:`,
+      ],
+      false,
+      false,
+      0,
+    )
 
-    const stacks = ctx.getStacksToProcess()
+    const stacksMap = new Map(
+      operations.map((o) => o.stack).map((s) => [s.path, s]),
+    )
 
-    this.subheader("Review stacks deployment plan:", true)
-    this.longMessage([
-      "A stacks deployment plan has been created and is shown below.",
-      "Stacks will be deployed in the order they are listed, and in parallel",
-      "when possible.",
-      "",
-      "Stack operations are indicated with the following symbols:",
-      "",
-      `  ${green("+ create")}           Stack will be created`,
-      `  ${yellow("~ update")}           Stack will be updated`,
-      `  ${orange(
-        "± replace",
-      )}          Stack has an invalid status and will be first deleted and then created`,
-      "",
-      `Following ${stacks.length} stack(s) will be deployed:`,
-    ])
+    for (const { stack, type, currentStack } of operations) {
+      const stackIdentity = await stack.credentialManager.getCallerIdentity()
 
-    for (const stack of stacks) {
-      const stackIdentity = await stack
-        .getCredentialProvider()
-        .getCallerIdentity()
-
-      const current = await ctx.getExistingStack(stack.getPath())
-      const status = current ? current.StackStatus : null
-      const launchType = resolveStackLaunchType(current?.StackStatus || null)
-      const stackOperation = formatStackOperation(stack.getPath(), launchType)
-
-      this.longMessage(
+      io.longMessage(
         [
-          `  ${stackOperation}`,
-          `      name:          ${stack.getName()}`,
-          `      status:        ${formatStackStatus(status)}`,
+          `  ${formatStackOperation(stack.path, type)}`,
+          `      name:          ${stack.name}`,
+          `      status:        ${formatStackStatus(currentStack?.status)}`,
           `      account id:    ${stackIdentity.accountId}`,
-          `      region:        ${stack.getRegion()}`,
+          `      region:        ${stack.region}`,
           "      credentials:",
           `        user id:     ${stackIdentity.userId}`,
           `        account id:  ${stackIdentity.accountId}`,
           `        arn:         ${stackIdentity.arn}`,
         ],
         true,
+        false,
+        0,
       )
 
-      if (stack.getDependencies().length > 0) {
-        this.message("      dependencies:")
-        this.printStackDependencies(stack, ctx, 8)
+      if (stack.dependencies.length > 0) {
+        io.message({ text: "      dependencies:" })
+        printStackDependencies(stack, stacksMap, 8)
       } else {
-        this.message("      dependencies:  []")
+        io.message({ text: "      dependencies:  []" })
       }
     }
 
-    return this.choose(
+    return io.choose(
       "How do you want to continue?",
       [
         CONFIRM_DEPLOY_ANSWER_CANCEL,
@@ -406,55 +373,56 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     )
   }
 
-  printOutput = (output: StacksOperationOutput): StacksOperationOutput => {
-    const succeeded = output.results.filter((r) => r.success)
-    const failed = output.results.filter((r) => !r.success)
-    const all = [...succeeded, ...failed]
+  const printOutput = (output: StacksOperationOutput): StacksOperationOutput =>
+    printStacksOperationOutput(io, output)
+  // {
+  // const succeeded = output.results.filter((r) => r.success)
+  // const failed = output.results.filter((r) => !r.success)
+  // const all = [...succeeded, ...failed]
+  //
+  // const table = new Table()
+  //
+  // all.forEach((r) => {
+  //   table.cell("Stack path", r.stack.path)
+  //   table.cell("Stack name", r.stack.name)
+  //   table.cell("Status", formatCommandStatus(r.status))
+  //   table.cell("Time", prettyMs(r.timer.getSecondsElapsed()))
+  //   table.cell("Message", r.message)
+  //   table.newRow()
+  // })
+  //
+  // io.message({ text: table.toString(), marginTop: true })
+  //
+  // if (failed.length > 0) {
+  //   io.message({ text: "Events for failed stacks", marginTop: true })
+  //   io.message({ text: "------------------------" })
+  //
+  //   failed.forEach((r) => {
+  //     io.message({ text: r.stack.path, marginTop: true, marginBottom: true })
+  //
+  //     if (r.events.length === 0) {
+  //       io.message({ text: "  <no events>" })
+  //     } else {
+  //       const fn = (e: StackEvent) =>
+  //         io.message({ text: "  " + formatStackEvent(e) })
+  //       r.events.forEach(fn)
+  //     }
+  //   })
+  // }
+  //
+  // return output
+  // }
 
-    const table = new Table()
-
-    all.forEach((r) => {
-      table.cell("Stack path", r.stack.getPath())
-      table.cell("Stack name", r.stack.getName())
-      table.cell("Status", formatCommandStatus(r.status))
-      table.cell("Reason", r.reason)
-      table.cell("Time", prettyMs(r.watch.secondsElapsed))
-      table.cell("Message", r.message)
-      table.newRow()
-    })
-
-    this.message(table.toString(), true)
-
-    if (failed.length > 0) {
-      this.message("Events for failed stacks", true)
-      this.message("------------------------")
-
-      failed.forEach((r) => {
-        this.message(r.stack.getPath(), true, true)
-
-        if (r.events.length === 0) {
-          this.message("  <no events>")
-        } else {
-          const fn = (e: CloudFormation.StackEvent) =>
-            this.message("  " + formatStackEvent(e))
-          r.events.forEach(fn)
-        }
-      })
-    }
-
-    return output
-  }
-
-  printChangeSet = (
+  const printChangeSet = (
     path: StackPath,
-    changeSet: DescribeChangeSetOutput | null,
+    changeSet?: DetailedChangeSet,
   ): void => {
     if (!changeSet) {
-      this.message(`0 stack resources to modify:`, true)
+      io.message({ text: `0 stack resources to modify:`, marginTop: true })
       return
     }
 
-    const changes = changeSet.Changes || []
+    const changes = changeSet.changes
 
     const summary = new Map<ResourceOperation, number>([
       [ResourceOperation.ADD, 0],
@@ -463,64 +431,67 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       [ResourceOperation.REPLACE, 0],
     ])
 
-    this.message(`${changes.length} stack resources to modify:`, true)
+    io.message({
+      text: `${changes.length} stack resources to modify:`,
+      marginTop: true,
+    })
 
     changes.forEach((change) => {
       const {
-        LogicalResourceId,
-        Action,
-        Replacement,
-        Scope,
-        PhysicalResourceId,
-        ResourceType,
-        Details,
-      } = change.ResourceChange!
+        logicalResourceId,
+        action,
+        replacement,
+        scope,
+        physicalResourceId,
+        resourceType,
+        details,
+      } = change.resourceChange
 
-      const operation = resolveResourceOperation(Action!, Replacement!)
+      const operation = resolveResourceOperation(action, replacement)
 
       summary.set(operation, summary.get(operation)! + 1)
 
-      this.message(
-        formatResourceChange(Action!, Replacement!, LogicalResourceId!),
-        true,
-      )
-      this.message(`      type:                      ${ResourceType}`)
-      this.message(
-        `      physical id:               ${
-          PhysicalResourceId || "<known after deploy>"
+      io.message({
+        text: formatResourceChange(action, replacement, logicalResourceId),
+        marginTop: true,
+      })
+      io.message({ text: `      type:                      ${resourceType}` })
+      io.message({
+        text: `      physical id:               ${
+          physicalResourceId || "<known after deploy>"
         }`,
-      )
+      })
 
-      if (Replacement) {
-        this.message(`      replacement:               ${Replacement}`)
+      if (replacement) {
+        io.message({ text: `      replacement:               ${replacement}` })
       }
 
-      if (Scope && Scope.length > 0) {
-        this.message(`      scope:                     ${Scope}`)
+      if (scope.length > 0) {
+        io.message({ text: `      scope:                     ${scope}` })
       }
 
-      if (Details && Details.length > 0) {
-        this.message(`      details:`)
-        Details.forEach((detail) => {
-          this.message(
-            `        - causing entity:        ${detail.CausingEntity}`,
-          )
-          this.message(`          evaluation:            ${detail.Evaluation}`)
-          this.message(
-            `          change source:         ${detail.ChangeSource}`,
-          )
-          this.message(`          target:`)
-          this.message(
-            `            attribute:           ${detail.Target!.Attribute}`,
-          )
-          this.message(
-            `            name:                ${detail.Target!.Name}`,
-          )
-          this.message(
-            `            require recreation:  ${
-              detail.Target!.RequiresRecreation
-            }`,
-          )
+      if (details.length > 0) {
+        io.message({ text: `      details:` })
+        details.forEach((detail) => {
+          io.message({
+            text: `        - causing entity:        ${detail.causingEntity}`,
+          })
+          io.message({
+            text: `          evaluation:            ${detail.evaluation}`,
+          })
+          io.message({
+            text: `          change source:         ${detail.changeSource}`,
+          })
+          io.message({ text: `          target:` })
+          io.message({
+            text: `            attribute:           ${detail.target.attribute}`,
+          })
+          io.message({
+            text: `            name:                ${detail.target.name}`,
+          })
+          io.message({
+            text: `            require recreation:  ${detail.target.requiresRecreation}`,
+          })
         })
       }
     })
@@ -530,121 +501,130 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
     const removeCount = summary.get(ResourceOperation.DELETE)!.toString()
     const replaceCount = summary.get(ResourceOperation.REPLACE)!.toString()
 
-    this.message(
-      `add: ${green(addCount)}, update: ${yellow(
+    io.message({
+      text: `add: ${green(addCount)}, update: ${yellow(
         modifyCount,
       )}, replace: ${orange(replaceCount)}, delete: ${red(removeCount)}`,
-      true,
-      true,
-    )
+      marginTop: true,
+      marginBottom: true,
+    })
   }
 
-  printParameters = (
-    changeSet: DescribeChangeSetOutput | null,
-    templateSummary: CloudFormation.GetTemplateSummaryOutput,
-    existingStack: CloudFormation.Stack | null,
-    existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
+  const printParameters = (
+    templateSummary: TemplateSummary,
+    changeSet?: DetailedChangeSet,
+    existingStack?: DetailedCloudFormationStack,
   ): void => {
     if (!changeSet) {
-      this.message("No stack parameters to modify.")
+      io.message({ text: "No stack parameters to modify." })
       return
     }
 
     const { updated, added, removed } = buildParametersSpec(
-      changeSet,
       templateSummary,
+      changeSet,
       existingStack,
-      existingTemplateSummary,
     )
 
     const all = [...updated, ...added, ...removed].sort((a, b) =>
       a.key.localeCompare(b.key),
     )
     if (all.length === 0) {
-      this.message("No stack parameters to modify.")
+      io.message({ text: "No stack parameters to modify." })
       return
     }
 
-    this.message(`${all.length} stack parameters to modify:`)
+    io.message({ text: `${all.length} stack parameters to modify:` })
 
     all.forEach((param) => {
-      this.message(`  ${formatParameterOperation(param)}`, true)
-      this.message(`      no echo:   ${param.newNoEcho}`)
-      this.message(
-        `      current:   ${formatParameterValue(param.currentValue)}`,
-      )
-      this.message(`      new:       ${formatParameterValue(param.newValue)}`)
+      io.message({
+        text: `  ${formatParameterOperation(param)}`,
+        marginTop: true,
+      })
+      io.message({ text: `      no echo:   ${param.newNoEcho}` })
+      io.message({
+        text: `      current:   ${formatParameterValue(param.currentValue)}`,
+      })
+      io.message({
+        text: `      new:       ${formatParameterValue(param.newValue)}`,
+      })
     })
   }
 
-  #printTerminationProtection = (
-    stack: Stack,
-    existingStack: CloudFormation.Stack | null,
+  const printTerminationProtection = (
+    stack: InternalStack,
+    existingStack?: DetailedCloudFormationStack,
   ): void => {
-    const protection = stack.isTerminationProtectionEnabled()
+    const protection = stack.terminationProtection
       ? green("enabled")
       : red("disabled")
     if (!existingStack) {
-      this.message(`Termination protection will be ${protection}`, true)
+      io.message({
+        text: `Termination protection will be ${protection}`,
+        marginTop: true,
+      })
       return
     }
 
     if (
-      existingStack.EnableTerminationProtection !==
-      stack.isTerminationProtectionEnabled()
+      existingStack.enableTerminationProtection !== stack.terminationProtection
     ) {
-      this.message(`Termination protection will be ${protection}`, true)
+      io.message({
+        text: `Termination protection will be ${protection}`,
+        marginTop: true,
+      })
     } else {
-      this.message("No changes to termination protection")
+      io.message({ text: "No changes to termination protection" })
     }
   }
 
-  confirmStackDeploy = async (
-    stack: Stack,
-    changeSet: DescribeChangeSetOutput | null,
-    templateBody: string,
-    templateSummary: CloudFormation.GetTemplateSummaryOutput,
-    cloudFormationClient: CloudFormationClient,
-    existingStack: CloudFormation.Stack | null,
-    existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
+  const confirmStackDeploy = async (
+    stack: InternalStack,
+    templateBody: TemplateBody,
+    templateSummary: TemplateSummary,
+    existingStack?: DetailedCloudFormationStack,
+    changeSet?: DetailedChangeSet,
   ): Promise<ConfirmStackDeployAnswer> => {
-    if (this.autoConfirm) {
-      return ConfirmStackDeployAnswer.CONTINUE
+    if (autoConfirmEnabled) {
+      return "CONTINUE"
     }
 
-    this.subheader("Review deployment plan for a stack:", true)
-    this.longMessage([
-      "A stack deployment plan has been created and is shown below.",
-      "",
-      `  stack path:    ${stack.getPath()}`,
-      `  stack name:    ${stack.getName()}`,
-      `  stack region:  ${stack.getRegion()}`,
-      "",
-      "Operations targeting stack parameters or resources are indicated with the following symbols:",
-      "",
-      `  ${green("+ create")}       Resource/parameter will be created`,
-      `  ${yellow(
-        "~ update",
-      )}       Resource/parameter will be updated in-place`,
-      `  ${orange(
-        "± replace",
-      )}      Resource can't be updated in-place and will be replaced with a new resource`,
-      `  ${red("- delete")}       Resource/parameter will be deleted`,
-      "",
-    ])
-
-    this.printParameters(
-      changeSet,
-      templateSummary,
-      existingStack,
-      existingTemplateSummary,
+    io.subheader({
+      text: "Review deployment plan for a stack:",
+      marginTop: true,
+    })
+    io.longMessage(
+      [
+        "A stack deployment plan has been created and is shown below.",
+        "",
+        `  stack path:    ${stack.path}`,
+        `  stack name:    ${stack.name}`,
+        `  stack region:  ${stack.region}`,
+        "",
+        "Operations targeting stack parameters or resources are indicated with the following symbols:",
+        "",
+        `  ${green("+ create")}       Resource/parameter will be created`,
+        `  ${yellow(
+          "~ update",
+        )}       Resource/parameter will be updated in-place`,
+        `  ${orange(
+          "± replace",
+        )}      Resource can't be updated in-place and will be replaced with a new resource`,
+        `  ${red("- delete")}       Resource/parameter will be deleted`,
+        "",
+      ],
+      false,
+      false,
+      0,
     )
 
-    this.#printTerminationProtection(stack, existingStack)
+    printParameters(templateSummary, changeSet, existingStack)
 
-    this.printChangeSet(stack.getPath(), changeSet)
+    printTerminationProtection(stack, existingStack)
 
-    const answer = await this.choose(
+    printChangeSet(stack.path, changeSet)
+
+    const answer = await io.choose(
       "How do you want to continue the deployment?",
       [
         CONFIRM_STACK_DEPLOY_ANSWER_CANCEL,
@@ -655,10 +635,10 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
       true,
     )
 
-    if (answer === ConfirmStackDeployAnswer.REVIEW_TEMPLATE) {
-      const currentTemplateBody = await cloudFormationClient.getCurrentTemplate(
-        stack.getName(),
-      )
+    if (answer === "REVIEW_TEMPLATE") {
+      const currentTemplateBody = await stack
+        .getCloudFormationClient()
+        .getCurrentTemplate(stack.name)
       const lines = diffLines(currentTemplateBody, templateBody)
       const diffOutput = lines
         .map((line) => {
@@ -668,9 +648,9 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
         })
         .join("")
 
-      this.message(diffOutput, true)
+      io.message({ text: diffOutput, marginTop: true })
 
-      const reviewAnswer = await this.choose(
+      const reviewAnswer = await io.choose(
         "How do you want to continue the deployment?",
         [
           CONFIRM_STACK_DEPLOY_ANSWER_CANCEL,
@@ -680,43 +660,50 @@ export class CliDeployStacksIO extends CliIO implements DeployStacksIO {
         true,
       )
 
-      if (
-        reviewAnswer ===
-        ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS
-      ) {
-        this.autoConfirm = true
+      if (reviewAnswer === "CONTINUE_AND_SKIP_REMAINING_REVIEWS") {
+        autoConfirmEnabled = true
       }
 
       return reviewAnswer
     }
 
-    if (
-      answer === ConfirmStackDeployAnswer.CONTINUE_AND_SKIP_REMAINING_REVIEWS
-    ) {
-      this.autoConfirm = true
+    if (answer === "CONTINUE_AND_SKIP_REMAINING_REVIEWS") {
+      autoConfirmEnabled = true
     }
 
     return answer
   }
 
-  printStackEvent = (
-    stackPath: StackPath,
-    e: CloudFormation.StackEvent,
-  ): void => this.info(stackPath + " - " + formatStackEvent(e))
+  const printStackEvent = (stackPath: StackPath, e: StackEvent): void =>
+    logger.info(stackPath + " - " + formatStackEvent(e))
 
-  private printStackDependencies = (
-    stack: Stack,
-    ctx: CommandContext,
+  const printStackDependencies = (
+    stack: InternalStack,
+    stacksMap: Map<StackPath, InternalStack>,
     depth: number,
   ) => {
-    stack.getDependencies().forEach((dependencyPath) => {
-      const [dependency] = ctx.getStacksByPath(dependencyPath)
+    stack.dependencies.forEach((dependencyPath) => {
+      const dependency = stacksMap.get(dependencyPath)
+      if (!dependency) {
+        throw new Error(`Dependency ${dependencyPath} was not found`)
+      }
+
       const padding = " ".repeat(depth)
-      const end = dependency.getDependencies().length > 0 ? ":" : ""
+      const end = dependency.dependencies.length > 0 ? ":" : ""
 
-      this.message(`${padding}- ${dependencyPath}${end}`)
+      io.message({ text: `${padding}- ${dependencyPath}${end}` })
 
-      this.printStackDependencies(dependency, ctx, depth + 2)
+      printStackDependencies(dependency, stacksMap, depth + 2)
     })
+  }
+
+  return {
+    ...logger,
+    ...io,
+    chooseCommandPath,
+    confirmDeploy,
+    confirmStackDeploy,
+    printOutput,
+    printStackEvent,
   }
 }

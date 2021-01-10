@@ -1,7 +1,4 @@
-import { initOptionsAndVariables } from "@takomo/cli"
-import { CliListAccountsIO } from "@takomo/cli-io"
-import { CommandStatus } from "@takomo/core"
-import { listAccountsCommand } from "@takomo/organization-commands"
+import { executeListAccountsCommand } from "@takomo/test-integration/src"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,
@@ -11,35 +8,18 @@ import {
   ORG_A_MASTER_ACCOUNT_ID,
 } from "./env"
 
-const createOptions = async (version: string) =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs",
-    var: `configVersion=${version}.yml`,
-  })
-
 describe("List accounts command", () => {
   it("returns correct output", async () => {
-    const { options, variables, watch } = await createOptions("v01")
-    const output = await listAccountsCommand(
-      {
-        watch,
-        variables,
-        options,
-      },
-      new CliListAccountsIO(options),
-    )
-
-    const { status, success, message, accounts, masterAccountId } = output
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
+    const { accounts, masterAccountId } = await executeListAccountsCommand({
+      projectDir: "configs",
+      var: [`configVersion=v01.yml`],
+    })
+      .expectCommandToSucceed()
+      .assert()
 
     expect(
       accounts
-        .map((a) => a.Id)
+        .map((a) => a.id)
         .slice()
         .sort(),
     ).toStrictEqual(

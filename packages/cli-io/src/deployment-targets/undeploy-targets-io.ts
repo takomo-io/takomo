@@ -1,29 +1,18 @@
-import { Options } from "@takomo/core"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { CliDeploymentOperationIO } from "./deployment-operation-io"
-import { LogWriter } from "@takomo/util"
+import { DeploymentTargetsOperationIO } from "@takomo/deployment-targets-commands"
+import { LogWriter, TkmLogger } from "@takomo/util"
+import { createDeploymentTargetsOperationIO } from "./deployment-operation-io"
 
-export class CliUndeployTargetsIO extends CliDeploymentOperationIO {
-  constructor(
-    options: Options,
-    stacksDeployIO: (options: Options, loggerName: string) => DeployStacksIO,
-    stacksUndeployIO: (
-      options: Options,
-      loggerName: string,
-    ) => UndeployStacksIO,
-    logWriter: LogWriter = console.log,
-  ) {
-    super(
-      logWriter,
-      options,
-      {
-        confirmHeader: "Targets undeployment plan",
-        confirmQuestion: "Continue to undeploy targets?",
-        outputHeader: "Targets undeployment summary",
-        outputNoTargets: "No targets undeployed",
-      },
-      stacksDeployIO,
-      stacksUndeployIO,
-    )
-  }
-}
+export const createUndeployTargetsIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): DeploymentTargetsOperationIO =>
+  createDeploymentTargetsOperationIO(
+    logger,
+    {
+      confirmHeader: "Targets undeployment plan",
+      confirmQuestion: "Continue to undeploy targets?",
+      outputHeader: "Targets undeployment summary",
+      outputNoTargets: "No targets undeployed",
+    },
+    writer,
+  )

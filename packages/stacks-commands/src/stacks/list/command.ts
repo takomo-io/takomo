@@ -1,28 +1,42 @@
-import { commandPath } from "@takomo/core"
+import { CommandContext, CommandHandler } from "@takomo/core"
 import {
-  buildConfigContext,
-  prepareDeployContext,
+  buildStacksContext,
+  StacksConfigRepository,
 } from "@takomo/stacks-context"
+import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
-import Joi from "joi"
+import Joi, { AnySchema } from "joi"
 import { listStacks } from "./list-stacks"
 import { ListStacksInput, ListStacksIO, ListStacksOutput } from "./model"
 
-const schema = Joi.object({
-  commandPath: commandPath.required(),
-}).unknown(true)
+const inputSchema = (ctx: CommandContext): AnySchema => {
+  const { commandPath } = createStacksSchemas({ regions: ctx.regions })
+  return Joi.object({
+    commandPath: commandPath.required(),
+  }).unknown(true)
+}
 
-export const listStacksCommand = async (
-  input: ListStacksInput,
-  io: ListStacksIO,
-): Promise<ListStacksOutput> =>
-  validateInput(schema, input)
+export const listStacksCommand: CommandHandler<
+  StacksConfigRepository,
+  ListStacksIO,
+  ListStacksInput,
+  ListStacksOutput
+> = ({
+  credentialManager,
+  ctx,
+  input,
+  configRepository,
+  io,
+}): Promise<ListStacksOutput> =>
+  validateInput(inputSchema(ctx), input)
     .then((input) =>
-      buildConfigContext({
+      buildStacksContext({
         ...input,
+        configRepository,
+        ctx,
         logger: io,
+        overrideCredentialManager: credentialManager,
       }),
     )
-    .then((ctx) => prepareDeployContext(ctx, input.commandPath, false))
     .then((ctx) => listStacks(ctx, input))
     .then(io.printOutput)

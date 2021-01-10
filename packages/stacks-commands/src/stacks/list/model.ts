@@ -1,20 +1,18 @@
-import { CommandInput, CommandOutput, CommandPath, IO } from "@takomo/core"
-import { Stack } from "@takomo/stacks-model"
-import { CloudFormation } from "aws-sdk"
+import { CloudFormationStack } from "@takomo/aws-model"
+import { CommandInput, CommandOutput, IO } from "@takomo/core"
+import { CommandPath, InternalStack } from "@takomo/stacks-model"
 
 export interface StackInfo {
-  readonly current: CloudFormation.Stack | null
-  readonly stack: Stack
+  readonly current?: CloudFormationStack
+  readonly stack: InternalStack
 }
 
 export interface ListStacksInput extends CommandInput {
-  commandPath: CommandPath
+  readonly commandPath: CommandPath
 }
 
 export interface ListStacksOutput extends CommandOutput {
-  stacks: StackInfo[]
+  readonly stacks: ReadonlyArray<StackInfo>
 }
 
-export interface ListStacksIO extends IO {
-  printOutput(output: ListStacksOutput): ListStacksOutput
-}
+export type ListStacksIO = IO<ListStacksOutput>

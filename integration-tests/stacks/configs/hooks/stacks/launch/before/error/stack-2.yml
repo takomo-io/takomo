@@ -1,6 +1,0 @@
-template: hooks.yml
-hooks:
-  - name: hook-1
-    type: error
-    stage: before
-depends: /launch/before/error/stack-1.yml

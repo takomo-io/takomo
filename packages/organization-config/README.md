@@ -1,3 +1,3 @@
-# Takomo Organization
+# Takomo - Organization Config
 
-Organization related commands for https://takomo.io
+Configuration for organization.

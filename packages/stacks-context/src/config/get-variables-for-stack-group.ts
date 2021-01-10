@@ -1,19 +1,23 @@
 import { StackGroup } from "@takomo/stacks-model"
-import { mapToObject } from "@takomo/util"
+import { deepCopy } from "@takomo/util"
 
-export const getVariablesForStackGroup = (stackGroup: StackGroup): any => ({
-  name: stackGroup.getName(),
-  project: stackGroup.getProject(),
-  regions: stackGroup.getRegions(),
-  commandRole: stackGroup.getCommandRole(),
-  path: stackGroup.getPath(),
-  pathSegments: stackGroup.getPath().substr(1).split("/"),
-  isRoot: stackGroup.isRoot(),
-  templateBucket: stackGroup.getTemplateBucket(),
-  timeout: stackGroup.getTimeout(),
-  tags: mapToObject(stackGroup.getTags()),
-  data: stackGroup.getData(),
-  capabilities: stackGroup.getCapabilities(),
-  accountIds: stackGroup.getAccountIds(),
-  terminationProtection: stackGroup.isTerminationProtectionEnabled(),
-})
+export const getVariablesForStackGroup = (stackGroup: StackGroup): any =>
+  deepCopy({
+    name: stackGroup.name,
+    project: stackGroup.project,
+    regions: stackGroup.regions,
+    commandRole: stackGroup.commandRole,
+    path: stackGroup.path,
+    pathSegments: stackGroup.path.substr(1).split("/"),
+    isRoot: stackGroup.root,
+    templateBucket: stackGroup.templateBucket,
+    timeout: stackGroup.timeout,
+    tags: Array.from(stackGroup.tags.entries()).map(([key, value]) => ({
+      key,
+      value,
+    })),
+    data: stackGroup.data,
+    capabilities: stackGroup.capabilities,
+    accountIds: stackGroup.accountIds,
+    terminationProtection: stackGroup.terminationProtection,
+  })

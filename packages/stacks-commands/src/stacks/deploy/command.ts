@@ -1,27 +1,25 @@
-import { commandPath, TakomoCredentialProvider } from "@takomo/core"
+import { CommandContext, CommandHandler } from "@takomo/core"
 import {
-  buildConfigContext,
-  ConfigContext,
-  prepareDeployContext,
+  buildStacksContext,
+  StacksConfigRepository,
 } from "@takomo/stacks-context"
+import { InternalStacksContext } from "@takomo/stacks-model"
+import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
-import Joi from "joi"
+import Joi, { AnySchema } from "joi"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { executeDeployContext } from "./execute-deploy-context"
 import { DeployStacksIO } from "./model"
-import { validateDeployContext } from "./validate"
-
-const schema = Joi.object({
-  commandPath: commandPath.required(),
-}).unknown(true)
+import { buildStacksDeployPlan } from "./plan"
+import { validateStacksDeployPlan } from "./validate"
 
 const modifyInput = async (
   input: StacksOperationInput,
-  ctx: ConfigContext,
+  ctx: InternalStacksContext,
   io: DeployStacksIO,
 ): Promise<StacksOperationInput> => {
   if (input.interactive) {
-    const commandPath = await io.chooseCommandPath(ctx.getRootStackGroup())
+    const commandPath = await io.chooseCommandPath(ctx.rootStackGroup)
     return {
       ...input,
       commandPath,
@@ -31,27 +29,53 @@ const modifyInput = async (
   return input
 }
 
-export const deployStacksCommand = async (
-  input: StacksOperationInput,
+const deployStacks = async (
+  ctx: InternalStacksContext,
+  configRepository: StacksConfigRepository,
   io: DeployStacksIO,
-  credentialProvider?: TakomoCredentialProvider,
-): Promise<StacksOperationOutput> =>
-  validateInput(schema, input)
+  input: StacksOperationInput,
+): Promise<StacksOperationOutput> => {
+  const modifiedInput = await modifyInput(input, ctx, io)
+
+  const plan = await buildStacksDeployPlan(
+    ctx.stacks,
+    input.commandPath,
+    input.ignoreDependencies,
+  )
+
+  await validateStacksDeployPlan(plan)
+
+  return executeDeployContext(ctx, modifiedInput, io, plan, configRepository)
+}
+
+const inputSchema = (ctx: CommandContext): AnySchema => {
+  const { commandPath } = createStacksSchemas({ regions: ctx.regions })
+  return Joi.object({
+    commandPath: commandPath.required(),
+  }).unknown(true)
+}
+
+export const deployStacksCommand: CommandHandler<
+  StacksConfigRepository,
+  DeployStacksIO,
+  StacksOperationInput,
+  StacksOperationOutput
+> = ({
+  credentialManager,
+  ctx,
+  input,
+  configRepository,
+  io,
+}): Promise<StacksOperationOutput> =>
+  validateInput(inputSchema(ctx), input)
     .then((input) =>
-      buildConfigContext({
-        ...input,
+      buildStacksContext({
+        ctx,
+        configRepository,
+        commandPath: input.interactive ? undefined : input.commandPath,
         logger: io,
-        overrideCredentialProvider: credentialProvider,
+        overrideCredentialManager: credentialManager,
       }),
     )
-    .then(async (ctx) => {
-      const modifiedInput = await modifyInput(input, ctx, io)
-      return prepareDeployContext(
-        ctx,
-        modifiedInput.commandPath,
-        modifiedInput.ignoreDependencies,
-      )
-        .then((ctx) => validateDeployContext(ctx))
-        .then((ctx) => executeDeployContext(ctx, modifiedInput, io))
-    })
+    .then((ctx) => deployStacks(ctx, configRepository, io, input))
     .then(io.printOutput)

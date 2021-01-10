@@ -1,3 +1,3 @@
-# Takomo Stacks Hooks
+# Takomo - Stacks Hooks
 
-Stacks hooks for https://takomo.io
+Hooks for stacks.

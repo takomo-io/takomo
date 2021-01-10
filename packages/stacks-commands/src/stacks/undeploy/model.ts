@@ -1,44 +1,17 @@
-import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandPath, IO, StackPath } from "@takomo/core"
-import {
-  CommandContext,
-  Stack,
-  StackGroup,
-  StackOperationVariables,
-  StackResult,
-} from "@takomo/stacks-model"
-import { Logger, StopWatch } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
+import { StackEvent } from "@takomo/aws-model"
+import { IO } from "@takomo/core"
+import { CommandPath, StackGroup, StackPath } from "@takomo/stacks-model"
 import { StacksOperationOutput } from "../../model"
+import { StacksUndeployPlan } from "./plan"
 
-export interface InitialUndeployContext {
-  readonly stack: Stack
-  readonly existingStack: CloudFormation.Stack | null
-  readonly watch: StopWatch
-  readonly ctx: CommandContext
-  readonly logger: Logger
-  readonly dependants: Promise<StackResult>[]
-  readonly cloudFormationClient: CloudFormationClient
-  readonly io: UndeployStacksIO
-  readonly variables: StackOperationVariables
-}
+export type ConfirmUndeployAnswer = "CANCEL" | "CONTINUE"
 
-export interface ClientTokenHolder extends InitialUndeployContext {
-  readonly clientToken: string
-}
-
-export interface ResultHolder extends InitialUndeployContext {
-  readonly result: StackResult
-}
-
-export enum ConfirmUndeployAnswer {
-  CANCEL,
-  CONTINUE,
-}
-
-export interface UndeployStacksIO extends IO {
-  chooseCommandPath: (rootStackGroup: StackGroup) => Promise<CommandPath>
-  confirmUndeploy: (ctx: CommandContext) => Promise<ConfirmUndeployAnswer>
-  printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
-  printOutput: (output: StacksOperationOutput) => StacksOperationOutput
+export interface UndeployStacksIO extends IO<StacksOperationOutput> {
+  readonly chooseCommandPath: (
+    rootStackGroup: StackGroup,
+  ) => Promise<CommandPath>
+  readonly confirmUndeploy: (
+    plan: StacksUndeployPlan,
+  ) => Promise<ConfirmUndeployAnswer>
+  readonly printStackEvent: (stackPath: StackPath, e: StackEvent) => void
 }

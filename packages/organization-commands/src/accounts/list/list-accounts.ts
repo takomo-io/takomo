@@ -4,7 +4,7 @@ import { AccountsList } from "./model"
 export const listAccounts = async (
   ctx: OrganizationContext,
 ): Promise<AccountsList> => {
-  const organizationConfigFile = ctx.getOrganizationConfigFile()
+  const organizationConfigFile = ctx.organizationConfig
   const client = ctx.getClient()
 
   return {

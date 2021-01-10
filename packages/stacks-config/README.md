@@ -1,3 +1,3 @@
-# Takomo Stacks Config
+# Takomo - Stacks Config
 
-Stacks config for https://takomo.io
+Configuration for stacks.

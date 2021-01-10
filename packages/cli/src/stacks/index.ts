@@ -1,7 +1,6 @@
 import { deployStacksCmd } from "./deploy"
 import { inspectCmd } from "./inspect"
 import { listStacksCmd } from "./list"
-import { secretsCmd } from "./secrets"
 import { undeployStacksCmd } from "./undeploy"
 
 export const stacksCmd = {
@@ -12,8 +11,7 @@ export const stacksCmd = {
       .command(listStacksCmd)
       .command(deployStacksCmd)
       .command(undeployStacksCmd)
-      .command(inspectCmd)
-      .command(secretsCmd),
+      .command(inspectCmd),
   // eslint-disable-next-line
   handler: (argv: any) => {},
 }

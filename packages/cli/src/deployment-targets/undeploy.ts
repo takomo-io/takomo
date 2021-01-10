@@ -1,14 +1,11 @@
-import {
-  CliDeployStacksIO,
-  CliUndeployStacksIO,
-  CliUndeployTargetsIO,
-} from "@takomo/cli-io"
+import { createUndeployTargetsIO } from "@takomo/cli-io"
+import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
-import { DeploymentOperation, Options } from "@takomo/core"
 import {
   deploymentTargetsOperationCommand,
   undeployTargetsOperationCommandIamPolicy,
-} from "@takomo/deployment-targets"
+} from "@takomo/deployment-targets-commands"
+import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
 
 const parseTargets = (value: any): string[] => {
@@ -38,26 +35,24 @@ export const undeployTargetsCmd = {
         demandOption: false,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
         targets: parseTargets(argv.target),
         groups: argv.groups || [],
         configFile: argv["config-file"] || null,
-        operation: DeploymentOperation.UNDEPLOY,
-        configSetType: ConfigSetType.STANDARD,
+        operation: "undeploy" as DeploymentOperation,
+        configSetType: "standard" as ConfigSetType,
       }),
-      (input) =>
-        deploymentTargetsOperationCommand(
-          input,
-          new CliUndeployTargetsIO(
-            input.options,
-            (options: Options, loggerName: string) =>
-              new CliDeployStacksIO(options, console.log, loggerName),
-            (options: Options, loggerName: string) =>
-              new CliUndeployStacksIO(options, console.log, loggerName),
-          ),
-        ),
-    ),
+      io: (ctx, logger) => createUndeployTargetsIO(logger),
+      configRepository: (ctx, logger) =>
+        createFileSystemDeploymentTargetsConfigRepository({
+          ctx,
+          logger,
+          pathToDeploymentConfigFile: argv["config-file"],
+          ...ctx.filePaths,
+        }),
+      executor: deploymentTargetsOperationCommand,
+    }),
 }

@@ -1,15 +1,19 @@
-import { Constants, Options, project } from "@takomo/core"
+import { Region } from "@takomo/aws-model"
+import { CommandContext, createCommonSchema, Project } from "@takomo/core"
 import {
   InitProjectInput,
   InitProjectIO,
   InitProjectOutput,
   ProjectInformation,
 } from "@takomo/init-command"
-import { indentLines, LogWriter } from "@takomo/util"
+import { LogWriter, TkmLogger } from "@takomo/util"
 import Joi from "joi"
-import CliIO from "./cli-io"
+import { createBaseIO } from "./cli-io"
 
-const regionChoices = Constants.REGIONS.map((r) => ({ name: r, value: r }))
+const makeRegionChoices = (regions: ReadonlyArray<Region>) =>
+  regions.map((r) => ({ name: r, value: r }))
+
+const { project } = createCommonSchema()
 
 const projectSchema = Joi.object({
   project,
@@ -28,57 +32,72 @@ const validateProject = (input: string): string | boolean => {
   return true
 }
 
-export class CliInitProjectIO extends CliIO implements InitProjectIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
+export const createInitProjectIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): InitProjectIO => {
+  const io = createBaseIO(writer)
 
-  private promptProject = async (
-    givenValue: string | null,
-  ): Promise<string | null> => {
+  const promptProject = async (
+    givenValue?: Project,
+  ): Promise<Project | undefined> => {
     if (givenValue) {
       return givenValue
     }
 
-    const value = await this.question("Enter project name:", false, {
+    const value = await io.question("Enter project name:", false, {
       validate: validateProject,
     })
 
-    return value.trim() === "" ? null : value
+    return value.trim() === "" ? undefined : value
   }
 
-  private promptRegions = async (
-    givenValue: string[] | null,
-  ): Promise<string[]> =>
-    givenValue || (await this.chooseMany("Choose region(s):", regionChoices))
+  const promptRegions = async (
+    ctx: CommandContext,
+    givenValue?: ReadonlyArray<Region>,
+  ): Promise<ReadonlyArray<Region>> =>
+    givenValue ||
+    io.chooseMany("Choose region(s):", makeRegionChoices(ctx.regions), true)
 
-  private promptCreateSamples = async (
-    givenValue: boolean | null,
+  const promptCreateSamples = async (
+    givenValue?: boolean,
   ): Promise<boolean> => {
     if (givenValue === true || givenValue === false) {
       return givenValue
     }
 
-    return await this.confirm("Create sample stacks?:")
+    return io.confirm("Create sample stacks?:", true)
   }
 
-  promptProjectInformation = async (
+  const promptProjectInformation = async (
+    ctx: CommandContext,
     input: InitProjectInput,
   ): Promise<ProjectInformation> => ({
-    project: await this.promptProject(input.project),
-    regions: await this.promptRegions(input.regions),
-    createSamples: await this.promptCreateSamples(input.createSamples),
+    project: await promptProject(input.project),
+    regions: await promptRegions(ctx, input.regions),
+    createSamples: await promptCreateSamples(input.createSamples),
   })
 
-  printOutput = (output: InitProjectOutput): InitProjectOutput => {
+  const printOutput = (output: InitProjectOutput): InitProjectOutput => {
     if (output.success) {
-      this.header("Project initialized!", true, true)
-      this.message(
-        `The following file structure was created to dir: ${output.projectDir}`,
-      )
-      this.message(indentLines(output.description, 2), true)
+      io.header({
+        text: "Project initialized!",
+        marginTop: true,
+        marginBottom: true,
+      })
+      io.message({
+        text: output.description,
+        marginTop: true,
+      })
     }
 
     return output
+  }
+
+  return {
+    ...logger,
+    ...io,
+    printOutput,
+    promptProjectInformation,
   }
 }

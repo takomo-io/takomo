@@ -1,2 +1,8 @@
 export { initProjectCommand } from "./command"
-export * from "./model"
+export {
+  InitProjectInput,
+  InitProjectIO,
+  InitProjectOutput,
+  ProjectConfigRepository,
+  ProjectInformation,
+} from "./model"

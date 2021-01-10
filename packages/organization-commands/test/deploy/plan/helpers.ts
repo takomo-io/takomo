@@ -1,19 +1,19 @@
-import { Constants } from "@takomo/core"
+import { OrganizationPolicyType } from "@takomo/aws-model"
 import { OrgEntityPoliciesConfig } from "@takomo/organization-config"
 import { OrganizationState } from "@takomo/organization-context"
-import { ConsoleLogger, LogLevel } from "@takomo/util"
+import { createConsoleLogger } from "@takomo/util"
 import { PolicyName } from "aws-sdk/clients/organizations"
 import { mock } from "jest-mock-extended"
+import { EnabledPoliciesPlan } from "../../../src/common/plan/basic-config/model"
 import {
   createOrgEntityPoliciesPlanForExistingEntity,
   createOrgEntityPoliciesPlanForNewEntity,
-} from "../../../src/deploy/plan/create-org-entity-policies-plan"
-import {
-  EnabledPoliciesPlan,
-  OrgEntityPoliciesPlan,
-} from "../../../src/deploy/plan/model"
+} from "../../../src/common/plan/organizational-units/create-org-entity-policies-plan"
+import { OrgEntityPoliciesPlan } from "../../../src/common/plan/organizational-units/model"
 
-const logger = new ConsoleLogger(LogLevel.INFO)
+const logger = createConsoleLogger({
+  logLevel: "info",
+})
 
 type MockOrgEntityPolicies = {
   attached?: PolicyName[]
@@ -40,9 +40,9 @@ type MockState = {
 }
 
 type MockEnabledPoliciesPlan = {
-  add?: string[]
-  remove?: string[]
-  retain?: string[]
+  add?: OrganizationPolicyType[]
+  remove?: OrganizationPolicyType[]
+  retain?: OrganizationPolicyType[]
 }
 
 type MockPolicyOperations = {
@@ -213,32 +213,30 @@ class MockEntityStateBuilder {
     const state = mock<OrganizationState>()
 
     const attached = new Map([
-      [
-        Constants.SERVICE_CONTROL_POLICY_TYPE,
-        mockState.serviceControl?.attached || [],
-      ],
-      [Constants.BACKUP_POLICY_TYPE, mockState.backup?.attached || []],
-      [Constants.TAG_POLICY_TYPE, mockState.tag?.attached || []],
-      [
-        Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
-        mockState.aiServicesOptOut?.attached || [],
-      ],
+      ["SERVICE_CONTROL_POLICY", mockState.serviceControl?.attached || []],
+      ["BACKUP_POLICY", mockState.backup?.attached || []],
+      ["TAG_POLICY", mockState.tag?.attached || []],
+      ["AISERVICES_OPT_OUT_POLICY", mockState.aiServicesOptOut?.attached || []],
     ])
 
     const inherited = new Map([
+      ["SERVICE_CONTROL_POLICY", mockState.serviceControl?.inherited || []],
+      ["BACKUP_POLICY", mockState.backup?.inherited || []],
+      ["TAG_POLICY", mockState.tag?.inherited || []],
       [
-        Constants.SERVICE_CONTROL_POLICY_TYPE,
-        mockState.serviceControl?.inherited || [],
-      ],
-      [Constants.BACKUP_POLICY_TYPE, mockState.backup?.inherited || []],
-      [Constants.TAG_POLICY_TYPE, mockState.tag?.inherited || []],
-      [
-        Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
+        "AISERVICES_OPT_OUT_POLICY",
         mockState.aiServicesOptOut?.inherited || [],
       ],
     ])
 
-    Constants.ORGANIZATION_POLICY_TYPES.forEach((policyType) => {
+    const organizationPolicyTypes: OrganizationPolicyType[] = [
+      "SERVICE_CONTROL_POLICY",
+      "BACKUP_POLICY",
+      "TAG_POLICY",
+      "AISERVICES_OPT_OUT_POLICY",
+    ]
+
+    organizationPolicyTypes.forEach((policyType) => {
       state.getPoliciesAttachedToTarget
         .calledWith(policyType, entityId)
         .mockReturnValue(attached.get(policyType) || [])

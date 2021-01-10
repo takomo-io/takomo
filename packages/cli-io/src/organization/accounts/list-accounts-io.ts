@@ -1,36 +1,38 @@
-import { Options } from "@takomo/core"
 import {
   ListAccountsIO,
   ListAccountsOutput,
 } from "@takomo/organization-commands"
+import { LogWriter, TkmLogger } from "@takomo/util"
 import date from "date-and-time"
 import Table from "easy-table"
-import CliIO from "../../cli-io"
+import { createBaseIO } from "../../cli-io"
 import { formatAccountStatus } from "../../formatters"
-import { LogWriter } from "@takomo/util"
 
-export class CliListAccountsIO extends CliIO implements ListAccountsIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
+export const createListAccountsIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): ListAccountsIO => {
+  const io = createBaseIO(writer)
 
-  printOutput = (output: ListAccountsOutput): ListAccountsOutput => {
+  const printOutput = (output: ListAccountsOutput): ListAccountsOutput => {
     const table = new Table()
 
     output.accounts.forEach((a) => {
-      table.cell("Id", a.Id)
-      table.cell("Name", a.Name)
-      table.cell("Email", a.Email)
-      table.cell("Status", formatAccountStatus(a.Status!))
+      table.cell("Id", a.id)
+      table.cell("Name", a.name)
+      table.cell("Email", a.email)
+      table.cell("Status", formatAccountStatus(a.status))
       table.cell(
         "Joined",
-        date.format(a.JoinedTimestamp!, "YYYY-MM-DD HH:mm:ss Z"),
+        date.format(a.joinedTimestamp, "YYYY-MM-DD HH:mm:ss Z"),
       )
       table.newRow()
     })
 
-    this.message(table.toString(), true)
+    io.message({ text: table.toString(), marginTop: true })
 
     return output
   }
+
+  return { ...logger, printOutput }
 }

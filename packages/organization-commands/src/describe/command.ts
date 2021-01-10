@@ -1,6 +1,8 @@
-import { buildOrganizationContext } from "@takomo/organization-context"
-import { validateInput } from "@takomo/util"
-import Joi from "joi"
+import { CommandHandler } from "@takomo/core"
+import {
+  buildOrganizationContext,
+  OrganizationConfigRepository,
+} from "@takomo/organization-context"
 import { describeOrganization } from "./describe-organization"
 import {
   DescribeOrganizationInput,
@@ -8,15 +10,16 @@ import {
   DescribeOrganizationOutput,
 } from "./model"
 
-const schema = Joi.object({}).unknown(true)
-
-export const describeOrganizationCommand = async (
-  input: DescribeOrganizationInput,
-  io: DescribeOrganizationIO,
-): Promise<DescribeOrganizationOutput> =>
-  validateInput(schema, input)
-    .then(({ options, variables }) =>
-      buildOrganizationContext(options, variables, io),
-    )
-    .then((ctx) => describeOrganization(ctx, io))
+export const describeOrganizationCommand: CommandHandler<
+  OrganizationConfigRepository,
+  DescribeOrganizationIO,
+  DescribeOrganizationInput,
+  DescribeOrganizationOutput
+> = async ({
+  ctx,
+  configRepository,
+  io,
+}): Promise<DescribeOrganizationOutput> =>
+  buildOrganizationContext(ctx, configRepository, io)
+    .then(describeOrganization)
     .then(io.printOutput)

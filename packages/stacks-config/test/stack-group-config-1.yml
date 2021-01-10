@@ -1,8 +1,0 @@
-project: example-project
-regions: eu-west-1
-timeout:
-  update: 10
-  create: 5
-tags:
-  first: 1
-  second: b

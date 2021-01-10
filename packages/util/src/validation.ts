@@ -1,6 +1,9 @@
 import { AnySchema } from "joi"
 import { TakomoError } from "./errors"
 
+/**
+ * @hidden
+ */
 export const validate = (
   schema: AnySchema,
   value: any,
@@ -16,6 +19,9 @@ export const validate = (
   }
 }
 
+/**
+ * @hidden
+ */
 export const validateInput = async <T>(
   schema: AnySchema,
   input: T,

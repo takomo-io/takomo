@@ -1,33 +1,36 @@
+import { AccountId } from "@takomo/aws-model"
 import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
-import { ConfirmResult, Options } from "@takomo/core"
+import { ConfirmResult } from "@takomo/core"
 import {
   AccountsLaunchPlan,
   AccountsOperationIO,
   AccountsOperationOutput,
 } from "@takomo/organization-commands"
-import { OrganizationAccount } from "@takomo/organization-config"
+import { OrganizationAccountConfig } from "@takomo/organization-config"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+import { LogWriter, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
-import CliIO from "../../cli-io"
+import { createBaseIO } from "../../cli-io"
 import { formatCommandStatus } from "../../formatters"
-import { LogWriter } from "@takomo/util"
+import { createDeployStacksIO } from "../../stacks/deploy-stacks-io"
+import { createUndeployStacksIO } from "../../stacks/undeploy-stacks-io"
 
 export interface Messages {
-  confirmHeader: string
-  confirmQuestion: string
-  outputHeader: string
-  outputNoAccounts: string
+  readonly confirmHeader: string
+  readonly confirmQuestion: string
+  readonly outputHeader: string
+  readonly outputNoAccounts: string
 }
 
 const getConfigSets = (
   configSetType: ConfigSetType,
-  account: OrganizationAccount,
-): ConfigSetName[] => {
+  account: OrganizationAccountConfig,
+): ReadonlyArray<ConfigSetName> => {
   switch (configSetType) {
-    case ConfigSetType.STANDARD:
+    case "standard":
       return account.configSets
-    case ConfigSetType.BOOTSTRAP:
+    case "bootstrap":
       return account.bootstrapConfigSets
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
@@ -36,78 +39,61 @@ const getConfigSets = (
 
 const getConfigSetsName = (configSetType: ConfigSetType): string => {
   switch (configSetType) {
-    case ConfigSetType.STANDARD:
+    case "standard":
       return "config sets"
-    case ConfigSetType.BOOTSTRAP:
+    case "bootstrap":
       return "bootstrap config sets"
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
   }
 }
 
-export abstract class CliAccountsOperationIO
-  extends CliIO
-  implements AccountsOperationIO {
-  private messages: Messages
-  private readonly stacksDeployIO: (
-    options: Options,
-    accountId: string,
-  ) => DeployStacksIO
-  private readonly stacksUndeployIO: (
-    options: Options,
-    accountId: string,
-  ) => UndeployStacksIO
+export const createAccountsOperationIO = (
+  logger: TkmLogger,
+  messages: Messages,
+  writer: LogWriter = console.log,
+): AccountsOperationIO => {
+  const io = createBaseIO(writer)
 
-  protected constructor(
-    logWriter: LogWriter,
-    options: Options,
-    messages: Messages,
-    stacksDeployIO: (options: Options, accountId: string) => DeployStacksIO,
-    stacksUndeployIO: (options: Options, accountId: string) => UndeployStacksIO,
-  ) {
-    super(logWriter, options)
-    this.messages = messages
-    this.stacksDeployIO = stacksDeployIO
-    this.stacksUndeployIO = stacksUndeployIO
-  }
+  const createStackDeployIO = (accountId: AccountId): DeployStacksIO =>
+    createDeployStacksIO(logger.childLogger(accountId))
 
-  createStackDeployIO = (options: Options, accountId: string): DeployStacksIO =>
-    this.stacksDeployIO(options, accountId)
+  const createStackUndeployIO = (accountId: AccountId): UndeployStacksIO =>
+    createUndeployStacksIO(logger.childLogger(accountId))
 
-  createStackUndeployIO = (
-    options: Options,
-    accountId: string,
-  ): UndeployStacksIO => this.stacksUndeployIO(options, accountId)
-
-  confirmLaunch = async (plan: AccountsLaunchPlan): Promise<ConfirmResult> => {
-    this.header(this.messages.confirmHeader, true)
+  const confirmLaunch = async (
+    plan: AccountsLaunchPlan,
+  ): Promise<ConfirmResult> => {
+    io.header({ text: messages.confirmHeader, marginTop: true })
 
     plan.organizationalUnits.forEach((ou) => {
-      this.message(`  ${ou.path}:`, true)
+      io.message({ text: `  ${ou.path}:`, marginTop: true })
       ou.accounts.forEach(({ account, config }) => {
-        this.message(`    - id:       ${config.id}`, true)
-        this.message(`      name:     ${account.Name}`)
-        this.message(`      email:    ${account.Email}`)
-        this.message(`      ${getConfigSetsName(plan.configSetType)}:`)
+        io.message({ text: `    - id:       ${config.id}`, marginTop: true })
+        io.message({ text: `      name:     ${account.name}` })
+        io.message({ text: `      email:    ${account.email}` })
+        io.message({ text: `      ${getConfigSetsName(plan.configSetType)}:` })
 
         getConfigSets(plan.configSetType, config).forEach((configSet) => {
-          this.message(`        - ${configSet}`)
+          io.message({ text: `        - ${configSet}` })
         })
       })
     })
 
-    if (await this.confirm(this.messages.confirmQuestion, true)) {
+    if (await io.confirm(messages.confirmQuestion, true)) {
       return ConfirmResult.YES
     }
 
     return ConfirmResult.NO
   }
 
-  printOutput = (output: AccountsOperationOutput): AccountsOperationOutput => {
-    this.header(this.messages.outputHeader, true)
+  const printOutput = (
+    output: AccountsOperationOutput,
+  ): AccountsOperationOutput => {
+    io.header({ text: messages.outputHeader, marginTop: true })
 
-    if (output.results.length === 0) {
-      this.message(this.messages.outputNoAccounts, true)
+    if (!output.results) {
+      io.message({ text: messages.outputNoAccounts, marginTop: true })
       return output
     }
 
@@ -122,16 +108,15 @@ export abstract class CliAccountsOperationIO
                 targetsTable.cell("Account", account.accountId)
                 targetsTable.cell("Config set", configSet.configSetName)
                 targetsTable.cell("Command path", result.commandPath)
-                targetsTable.cell("Stack path", stackResult.stack.getPath())
-                targetsTable.cell("Stack name", stackResult.stack.getName())
+                targetsTable.cell("Stack path", stackResult.stack.path)
+                targetsTable.cell("Stack name", stackResult.stack.name)
                 targetsTable.cell(
                   "Status",
                   formatCommandStatus(stackResult.status),
                 )
-                targetsTable.cell("Reason", stackResult.reason)
                 targetsTable.cell(
                   "Time",
-                  prettyMs(stackResult.watch.secondsElapsed),
+                  prettyMs(stackResult.timer.getSecondsElapsed()),
                 )
                 targetsTable.cell("Message", stackResult.message)
                 targetsTable.newRow()
@@ -144,10 +129,9 @@ export abstract class CliAccountsOperationIO
               targetsTable.cell("Stack path", "-")
               targetsTable.cell("Stack name", "-")
               targetsTable.cell("Status", formatCommandStatus(result.status))
-              targetsTable.cell("Reason", "-")
               targetsTable.cell(
                 "Time",
-                prettyMs(result.result.watch.secondsElapsed),
+                prettyMs(result.result.timer.getSecondsElapsed()),
               )
               targetsTable.cell("Message", result.result.message)
               targetsTable.newRow()
@@ -157,8 +141,16 @@ export abstract class CliAccountsOperationIO
       })
     })
 
-    this.message(targetsTable.toString(), true)
+    io.message({ text: targetsTable.toString(), marginTop: true })
 
     return output
+  }
+
+  return {
+    ...logger,
+    printOutput,
+    confirmLaunch,
+    createStackDeployIO,
+    createStackUndeployIO,
   }
 }

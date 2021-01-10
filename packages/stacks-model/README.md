@@ -1,3 +1,3 @@
-# Takomo Stacks Model
+# Takomo - Stacks Model
 
-Stacks model for https://takomo.io
+Types and interfaces for stacks.

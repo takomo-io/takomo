@@ -1,52 +1,61 @@
-import { CommandPath, Options, StackPath } from "@takomo/core"
+import { StackEvent } from "@takomo/aws-model"
 import {
   ConfirmUndeployAnswer,
   StacksOperationOutput,
+  StacksUndeployPlan,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
-import { CommandContext, Stack, StackGroup } from "@takomo/stacks-model"
-import { collectFromHierarchy, grey, LogWriter, red } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
-import Table from "easy-table"
-import prettyMs from "pretty-ms"
-import CliIO from "../cli-io"
 import {
-  formatCommandStatus,
-  formatStackEvent,
-  formatStackStatus,
-} from "../formatters"
+  CommandPath,
+  InternalStack,
+  StackGroup,
+  StackPath,
+} from "@takomo/stacks-model"
+import {
+  collectFromHierarchy,
+  grey,
+  LogWriter,
+  red,
+  TkmLogger,
+} from "@takomo/util"
+import { createBaseIO } from "../cli-io"
+import { formatStackEvent, formatStackStatus } from "../formatters"
+import { printStacksOperationOutput } from "./common"
 
-const CONFIRM_UNDEPLOY_ANSWER_CANCEL = {
+interface ConfirmUndeployAnswerOption {
+  readonly name: string
+  readonly value: ConfirmUndeployAnswer
+}
+
+const CONFIRM_UNDEPLOY_ANSWER_CANCEL: ConfirmUndeployAnswerOption = {
   name: "no",
-  value: ConfirmUndeployAnswer.CANCEL,
+  value: "CANCEL",
 }
 
-const CONFIRM_UNDEPLOY_ANSWER_CONTINUE = {
+const CONFIRM_UNDEPLOY_ANSWER_CONTINUE: ConfirmUndeployAnswerOption = {
   name: "yes",
-  value: ConfirmUndeployAnswer.CONTINUE,
+  value: "CONTINUE",
 }
 
-export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
-  constructor(
-    options: Options,
-    logWriter: LogWriter = console.log,
-    loggerName: string | null = null,
-  ) {
-    super(logWriter, options, loggerName)
-  }
+export const createUndeployStacksIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): UndeployStacksIO => {
+  const io = createBaseIO(writer)
 
-  chooseCommandPath = async (
+  const chooseCommandPath = async (
     rootStackGroup: StackGroup,
   ): Promise<CommandPath> => {
-    const allStackGroups = collectFromHierarchy(rootStackGroup, (s) =>
-      s.getChildren(),
+    const allStackGroups = collectFromHierarchy(
+      rootStackGroup,
+      (s) => s.children,
     )
 
     const allCommandPaths = allStackGroups.reduce(
       (collected, stackGroup) => [
         ...collected,
-        stackGroup.getPath(),
-        ...stackGroup.getStacks().map((s) => s.getPath()),
+        stackGroup.path,
+        ...stackGroup.stacks.map((s) => s.path),
       ],
       new Array<string>(),
     )
@@ -60,127 +69,144 @@ export class CliUndeployStacksIO extends CliIO implements UndeployStacksIO {
         : allCommandPaths
     }
 
-    return this.autocomplete("Choose command path", source)
+    return io.autocomplete("Choose command path", source)
   }
 
-  confirmUndeploy = async (
-    ctx: CommandContext,
-  ): Promise<ConfirmUndeployAnswer> => {
-    const identity = await ctx.getCredentialProvider().getCallerIdentity()
-    this.debugObject("Default credentials:", identity)
+  const confirmUndeploy = async ({
+    operations,
+  }: StacksUndeployPlan): Promise<ConfirmUndeployAnswer> => {
+    io.subheader({ text: "Review stacks undeployment plan:", marginTop: true })
+    io.longMessage(
+      [
+        "A stacks undeployment plan has been created and is shown below.",
+        "Stacks will be undeployed in the order they are listed, and in parallel",
+        "when possible.",
+        "",
+        "Stack operations are indicated with the following symbols:",
+        "",
+        `  ${red("- delete")}           Stack exists and will be deleted`,
+        `  ${grey("* skip")}             Stack does not exist and will skipped`,
+        "",
+        `Following ${operations.length} stack(s) will be undeployed:`,
+      ],
+      false,
+      false,
+      0,
+    )
 
-    const stacks = ctx.getStacksToProcess()
+    const stacksMap = new Map(
+      operations.map((o) => o.stack).map((s) => [s.path, s]),
+    )
 
-    this.subheader("Review stacks undeployment plan:", true)
-    this.longMessage([
-      "A stacks undeployment plan has been created and is shown below.",
-      "Stacks will be undeployed in the order they are listed, and in parallel",
-      "when possible.",
-      "",
-      "Stack operations are indicated with the following symbols:",
-      "",
-      `  ${red("- delete")}           Stack exists and will be deleted`,
-      `  ${grey("* skip")}             Stack does not exist and will skipped`,
-      "",
-      `Following ${stacks.length} stack(s) will be undeployed:`,
-    ])
+    for (const { stack, currentStack, type } of operations) {
+      const stackIdentity = await stack.credentialManager.getCallerIdentity()
 
-    for (const stack of stacks) {
-      const stackIdentity = await stack
-        .getCredentialProvider()
-        .getCallerIdentity()
+      const stackOperation =
+        type === "DELETE" ? red(`- ${stack.path}:`) : grey(`* ${stack.path}:`)
 
-      const current = await ctx.getExistingStack(stack.getPath())
-      const status = current ? current.StackStatus : null
-      const stackOperation = current
-        ? red(`- ${stack.getPath()}:`)
-        : grey(`* ${stack.getPath()}:`)
-
-      this.longMessage(
+      io.longMessage(
         [
           `  ${stackOperation}`,
-          `      name:          ${stack.getName()}`,
-          `      status:        ${formatStackStatus(status)}`,
+          `      name:          ${stack.name}`,
+          `      status:        ${formatStackStatus(currentStack?.status)}`,
           `      account id:    ${stackIdentity.accountId}`,
-          `      region:        ${stack.getRegion()}`,
+          `      region:        ${stack.region}`,
           "      credentials:",
           `        user id:     ${stackIdentity.userId}`,
           `        account id:  ${stackIdentity.accountId}`,
           `        arn:         ${stackIdentity.arn}`,
         ],
         true,
+        false,
+        0,
       )
 
-      if (stack.getDependants().length > 0) {
-        this.message("      dependants:")
-        this.printStackDependants(stack, ctx, 8)
+      if (stack.dependants.length > 0) {
+        io.message({ text: "      dependents:" })
+        printStackDependents(stack, stacksMap, 8)
       } else {
-        this.message("      dependants:    []")
+        io.message({ text: "      dependents:    []" })
       }
     }
 
-    return await this.choose(
+    return await io.choose(
       "Continue to undeploy the stacks?",
       [CONFIRM_UNDEPLOY_ANSWER_CANCEL, CONFIRM_UNDEPLOY_ANSWER_CONTINUE],
       true,
     )
   }
 
-  printStackEvent = (
-    stackPath: StackPath,
-    e: CloudFormation.StackEvent,
-  ): void => this.info(stackPath + " - " + formatStackEvent(e))
+  const printStackEvent = (stackPath: StackPath, e: StackEvent): void =>
+    logger.info(stackPath + " - " + formatStackEvent(e))
 
-  printOutput = (output: StacksOperationOutput): StacksOperationOutput => {
-    const succeeded = output.results.filter((r) => r.success)
-    const failed = output.results.filter((r) => !r.success)
-    const all = [...succeeded, ...failed]
+  const printOutput = (output: StacksOperationOutput): StacksOperationOutput =>
+    printStacksOperationOutput(io, output)
+  // {
+  //   const succeeded = output.results.filter((r) => r.success)
+  //   const failed = output.results.filter((r) => !r.success)
+  //   const all = [...succeeded, ...failed]
+  //
+  //   const table = new Table()
+  //
+  //   all.forEach((r) => {
+  //     table.cell("Stack path", r.stack.path)
+  //     table.cell("Stack name", r.stack.name)
+  //     table.cell("Status", formatCommandStatus(r.status))
+  //     table.cell("Time", prettyMs(r.timer.getSecondsElapsed()))
+  //     table.cell("Message", r.message)
+  //     table.newRow()
+  //   })
+  //
+  //   io.message({ text: table.toString(), marginTop: true })
+  //
+  //   if (failed.length > 0) {
+  //     io.message({ text: "Events for failed stacks", marginTop: true })
+  //     io.message({ text: "------------------------" })
+  //
+  //     failed.forEach((r) => {
+  //       io.message({
+  //         text: r.stack.path,
+  //         marginTop: true,
+  //         marginBottom: true,
+  //       })
+  //
+  //       if (r.events.length === 0) {
+  //         io.message({ text: "  <No events>" })
+  //       } else {
+  //         const fn = (e: StackEvent) =>
+  //           io.message({ text: "  " + formatStackEvent(e) })
+  //         r.events.forEach(fn)
+  //       }
+  //     })
+  //   }
+  //
+  //   return output
+  // }
 
-    const table = new Table()
-
-    all.forEach((r) => {
-      table.cell("Stack path", r.stack.getPath())
-      table.cell("Stack name", r.stack.getName())
-      table.cell("Status", formatCommandStatus(r.status))
-      table.cell("Reason", r.reason)
-      table.cell("Time", prettyMs(r.watch.secondsElapsed))
-      table.cell("Message", r.message)
-      table.newRow()
-    })
-
-    this.message(table.toString(), true)
-
-    if (failed.length > 0) {
-      this.message("Events for failed stacks", true)
-      this.message("------------------------")
-
-      failed.forEach((r) => {
-        this.message(r.stack.getPath(), true, true)
-
-        if (r.events.length === 0) {
-          this.message("  <No events>")
-        } else {
-          const fn = (e: CloudFormation.StackEvent) =>
-            this.message("  " + formatStackEvent(e))
-          r.events.forEach(fn)
-        }
-      })
-    }
-
-    return output
-  }
-
-  private printStackDependants = (
-    stack: Stack,
-    ctx: CommandContext,
+  const printStackDependents = (
+    stack: InternalStack,
+    stacksMap: Map<StackPath, InternalStack>,
     depth: number,
   ) => {
-    stack.getDependants().forEach((dependantPath, index) => {
-      const [dependency] = ctx.getStacksByPath(dependantPath)
+    stack.dependants.forEach((dependentPath) => {
+      const dependent = stacksMap.get(dependentPath)
+      if (!dependent) {
+        throw new Error(`Dependency ${dependentPath} was not found`)
+      }
+
       const padding = " ".repeat(depth)
-      const end = dependency.getDependencies().length > 0 ? ":" : ""
-      this.message(`${padding}- ${dependantPath}${end}`)
-      this.printStackDependants(dependency, ctx, depth + 2)
+      const end = dependent.dependencies.length > 0 ? ":" : ""
+      io.message({ text: `${padding}- ${dependentPath}${end}` })
+      printStackDependents(dependent, stacksMap, depth + 2)
     })
+  }
+
+  return {
+    ...logger,
+    ...io,
+    printOutput,
+    chooseCommandPath,
+    printStackEvent,
+    confirmUndeploy,
   }
 }

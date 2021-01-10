@@ -1,6 +1,8 @@
-export const parseTerminationProtection = (value: unknown): boolean | null => {
+export const parseTerminationProtection = (
+  value: unknown,
+): boolean | undefined => {
   if (value === null || value === undefined) {
-    return null
+    return undefined
   }
 
   return value === true

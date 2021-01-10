@@ -1,68 +1,69 @@
-import { IamClient } from "@takomo/aws-clients"
-import { AccountId, TakomoCredentialProvider } from "@takomo/core"
+import { createIamClient, CredentialManager } from "@takomo/aws-clients"
+import { AccountId } from "@takomo/aws-model"
 import { OrganizationContext } from "@takomo/organization-context"
-import { Failure, Logger, Result, Success } from "@takomo/util"
+import { TkmLogger } from "@takomo/util"
 import { Policy } from "cockatiel"
+import { err, ok, Result } from "neverthrow"
 
-const createCredentialProvider = async (
+const createCredentialManager = async (
   ctx: OrganizationContext,
-  logger: Logger,
+  logger: TkmLogger,
   role: string,
-): Promise<TakomoCredentialProvider> => {
+): Promise<CredentialManager> => {
   const retry = Policy.handleAll().retry().delay([2000, 4000, 8000, 16000])
   return retry.execute(() =>
-    ctx.getCredentialProvider().createCredentialProviderForRole(role),
+    ctx.credentialManager.createCredentialManagerForRole(role),
   )
 }
 
 export const createAccountAliasInternal = async (
   ctx: OrganizationContext,
-  logger: Logger,
+  logger: TkmLogger,
   accountId: AccountId,
   roleName: string,
   alias: string,
-): Promise<Result<Error, boolean>> => {
+): Promise<Result<boolean, Error>> => {
   const role = `arn:aws:iam::${accountId}:role/${roleName}`
 
   try {
-    const credentialProvider = await createCredentialProvider(ctx, logger, role)
+    const credentialManager = await createCredentialManager(ctx, logger, role)
 
-    const iam = new IamClient({
+    const iam = createIamClient({
       logger,
-      credentialProvider,
+      credentialManager,
       region: "us-east-1",
     })
 
-    return Success.of(await iam.createAccountAlias(alias))
+    return ok(await iam.createAccountAlias(alias))
   } catch (e) {
-    return Failure.of(e)
+    return err(e)
   }
 }
 
 export const deleteAccountAliasInternal = async (
   ctx: OrganizationContext,
-  logger: Logger,
+  logger: TkmLogger,
   accountId: AccountId,
   roleName: string,
-): Promise<Result<Error, boolean>> => {
+): Promise<Result<boolean, Error>> => {
   const role = `arn:aws:iam::${accountId}:role/${roleName}`
 
   try {
-    const credentialProvider = await createCredentialProvider(ctx, logger, role)
+    const credentialManager = await createCredentialManager(ctx, logger, role)
 
-    const iam = new IamClient({
+    const iam = createIamClient({
       logger,
-      credentialProvider,
+      credentialManager,
       region: "us-east-1",
     })
 
     const alias = await iam.describeAccountAlias()
-    if (alias === null) {
-      return Success.of(false)
+    if (!alias) {
+      return ok(false)
     }
 
-    return Success.of(await iam.deleteAccountAlias(alias))
+    return ok(await iam.deleteAccountAlias(alias))
   } catch (e) {
-    return Failure.of(e)
+    return err(e)
   }
 }

@@ -1,153 +1,176 @@
+import { resolveCommandOutputBase } from "@takomo/core"
+import { StacksConfigRepository } from "@takomo/stacks-context"
 import {
-  CommandStatus,
-  resolveCommandOutputBase,
+  InternalStacksContext,
   StackPath,
-} from "@takomo/core"
-import { CommandContext, Stack, StackResult } from "@takomo/stacks-model"
-import { StopWatch } from "@takomo/util"
+  StackResult,
+} from "@takomo/stacks-model"
+import { createTimer, Timer } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
-import { cleanStacksWithInvalidStatus } from "./clean-stacks-with-invalid-status"
+import { deployStack } from "./deploy-stack"
 import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"
-import { deployStack } from "./launch"
 import { ConfirmDeployAnswer, DeployStacksIO, DeployState } from "./model"
+import { StackDeployOperation, StacksDeployPlan } from "./plan"
 
 const confirmDeploy = async (
   autoConfirm: boolean,
-  ctx: CommandContext,
+  plan: StacksDeployPlan,
   io: DeployStacksIO,
 ): Promise<ConfirmDeployAnswer> => {
   if (autoConfirm) {
-    return ConfirmDeployAnswer.CONTINUE_NO_REVIEW
+    return "CONTINUE_NO_REVIEW"
   }
 
-  return io.confirmDeploy(ctx)
+  return io.confirmDeploy(plan)
 }
 
+/**
+ * @hidden
+ */
 const executeStacksInParallel = async (
-  ctx: CommandContext,
+  ctx: InternalStacksContext,
   io: DeployStacksIO,
   state: DeployState,
-  watch: StopWatch,
-  stacksToDeploy: Stack[],
+  timer: Timer,
+  operations: ReadonlyArray<StackDeployOperation>,
   ignoreDependencies: boolean,
   map: Map<StackPath, Promise<StackResult>>,
+  configRepository: StacksConfigRepository,
 ): Promise<StacksOperationOutput> => {
-  const executions = stacksToDeploy.reduce((executions, stack) => {
+  const executions = operations.reduce((executions, operation) => {
+    const { stack, type, currentStack } = operation
     const dependencies = ignoreDependencies
       ? []
-      : stack.getDependencies().map((d) => {
+      : stack.dependencies.map((d) => {
           const dependency = executions.get(d)
           if (!dependency) {
-            io.error(
-              `Dependency '${d}' in stack ${stack.getPath()} does not exists`,
+            throw new Error(
+              `Dependency '${d}' in stack ${stack.path} does not exists`,
             )
           }
 
-          // TODO: Throw an error if dependency doesn't exists
-          return dependency!
+          return dependency
         })
 
-    const execution = deployStack(watch, ctx, io, state, stack, dependencies)
-    executions.set(stack.getPath(), execution)
+    const execution = deployStack(
+      timer,
+      ctx,
+      io,
+      state,
+      stack,
+      dependencies,
+      type,
+      configRepository,
+      currentStack,
+    )
+    executions.set(stack.path, execution)
 
     return executions
   }, map)
 
   const results = await Promise.all(Array.from(executions.values()))
+  timer.stop()
   return {
     ...resolveCommandOutputBase(results),
     results,
-    watch: watch.stop(),
+    timer,
   }
 }
 
+/**
+ * @hidden
+ */
 export const executeDeployContext = async (
-  ctx: CommandContext,
+  ctx: InternalStacksContext,
   input: StacksOperationInput,
   io: DeployStacksIO,
+  plan: StacksDeployPlan,
+  configRepository: StacksConfigRepository,
 ): Promise<StacksOperationOutput> => {
-  const { ignoreDependencies } = input
-  const stacksToDeploy = ctx.getStacksToProcess()
+  const { ignoreDependencies, timer } = input
+  const { operations } = plan
 
-  io.debugObject(
-    "Deploy stacks in the following order:",
-    stacksToDeploy.map((s) => s.getPath()),
+  io.debugObject("Deploy stacks in the following order:", () =>
+    plan.operations.map((o) => o.stack.path),
   )
 
-  if (ignoreDependencies && stacksToDeploy.length > 1) {
-    throw new IncompatibleIgnoreDependenciesOptionOnLaunchError(stacksToDeploy)
+  if (ignoreDependencies && operations.length > 1) {
+    throw new IncompatibleIgnoreDependenciesOptionOnLaunchError(
+      operations.map((o) => o.stack),
+    )
   }
 
-  const autoConfirm = ctx.getOptions().isAutoConfirmEnabled()
-  const { watch } = input
-
+  const autoConfirm = ctx.autoConfirmEnabled
   const state = { cancelled: false, autoConfirm }
-  const confirmAnswer = await confirmDeploy(autoConfirm, ctx, io)
+  const confirmAnswer = await confirmDeploy(autoConfirm, plan, io)
 
-  if (confirmAnswer === ConfirmDeployAnswer.CANCEL) {
+  if (confirmAnswer === "CANCEL") {
+    timer.stop()
     return {
       success: false,
       results: [],
-      status: CommandStatus.CANCELLED,
+      status: "CANCELLED",
       message: "Cancelled",
-      watch: watch.stop(),
+      timer,
     }
   }
 
-  if (confirmAnswer === ConfirmDeployAnswer.CONTINUE_NO_REVIEW) {
+  if (confirmAnswer === "CONTINUE_NO_REVIEW") {
     state.autoConfirm = true
   }
-
-  await cleanStacksWithInvalidStatus(ctx, io)
 
   if (state.autoConfirm) {
     return executeStacksInParallel(
       ctx,
       io,
       state,
-      watch,
-      stacksToDeploy,
+      timer,
+      operations,
       ignoreDependencies,
       new Map(),
+      configRepository,
     )
   }
 
   const executions = new Map<StackPath, StackResult>()
-  for (let i = 0; i < stacksToDeploy.length; i++) {
-    const stack = stacksToDeploy[i]
+  for (let i = 0; i < operations.length; i++) {
+    const operation = operations[i]
+    const stack = operation.stack
     const dependencies = ignoreDependencies
       ? []
-      : stack.getDependencies().map((d) => Promise.resolve(executions.get(d)!))
+      : stack.dependencies.map((d) => Promise.resolve(executions.get(d)!))
 
     if (state.cancelled) {
-      executions.set(stack.getPath(), {
-        status: CommandStatus.CANCELLED,
-        watch: new StopWatch("launch").stop(),
+      const t = createTimer("deploy")
+      t.stop()
+      executions.set(stack.path, {
+        status: "CANCELLED",
+        timer: t,
         stack,
         success: false,
         events: [],
         message: "Cancelled",
-        reason: "CANCELLED",
       })
       continue
     }
 
     const execution = await deployStack(
-      watch,
+      timer,
       ctx,
       io,
       state,
       stack,
       dependencies,
+      operation.type,
+      configRepository,
+      operation.currentStack,
     )
-    if (
-      execution.status === CommandStatus.CANCELLED ||
-      execution.status === CommandStatus.FAILED
-    ) {
+
+    if (execution.status === "CANCELLED" || execution.status === "FAILED") {
       state.cancelled = true
     }
 
-    executions.set(stack.getPath(), execution)
+    executions.set(stack.path, execution)
 
     if (state.autoConfirm) {
       const promisedExecutions = new Map(
@@ -161,19 +184,22 @@ export const executeDeployContext = async (
         ctx,
         io,
         state,
-        watch,
-        stacksToDeploy.slice(i + 1),
+        timer,
+        operations.slice(i + 1),
         ignoreDependencies,
         promisedExecutions,
+        configRepository,
       )
     }
   }
 
   const results = Array.from(executions.values())
 
+  timer.stop()
+
   return {
     ...resolveCommandOutputBase(results),
     results,
-    watch: watch.stop(),
+    timer,
   }
 }

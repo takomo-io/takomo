@@ -1,6 +1,8 @@
 import { OrganizationPolicyConfig } from "../model"
 
-export const parsePolicies = (value: any): OrganizationPolicyConfig[] => {
+export const parsePolicies = (
+  value: any,
+): ReadonlyArray<OrganizationPolicyConfig> => {
   if (!value) {
     return []
   }

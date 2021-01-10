@@ -1,19 +1,21 @@
-import { AccountId, CommandInput, CommandOutput, IO } from "@takomo/core"
-import { Organization } from "aws-sdk/clients/organizations"
+import {
+  AccountId,
+  Organization,
+  OrganizationFeatureSet,
+} from "@takomo/aws-model"
+import { CommandInput, CommandOutput, IO } from "@takomo/core"
 
 export interface CreateOrganizationInput extends CommandInput {
-  readonly featureSet: string
+  readonly featureSet: OrganizationFeatureSet
 }
 
 export interface CreateOrganizationOutput extends CommandOutput {
-  readonly organization: Organization | null
-  readonly configurationFile: string | null
+  readonly organization?: Organization
 }
 
-export interface CreateOrganizationIO extends IO {
-  confirmOrganizationCreation(
+export interface CreateOrganizationIO extends IO<CreateOrganizationOutput> {
+  readonly confirmOrganizationCreation: (
     masterAccountId: AccountId,
-    featureSet: string,
-  ): Promise<boolean>
-  printOutput(output: CreateOrganizationOutput): CreateOrganizationOutput
+    featureSet: OrganizationFeatureSet,
+  ) => Promise<boolean>
 }

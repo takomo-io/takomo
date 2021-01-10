@@ -18,27 +18,27 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "build-if-changed": "../../ci/build-if-changed.sh",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "clean:deps": "rm -rf node_modules",
     "clean:dist": "rm -rf dist",
     "depcheck": "depcheck --config=../../.depcheckrc",
-    "test": "jest test --passWithNoTests",
+    "test": "jest test --passWithNoTests --verbose",
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "2.12.1",
+    "@takomo/aws-model": "2.12.1",
     "@takomo/config-sets": "2.12.1",
     "@takomo/core": "2.12.1",
-    "@takomo/deployment-targets": "2.12.1",
+    "@takomo/deployment-targets-commands": "2.12.1",
     "@takomo/init-command": "2.12.1",
     "@takomo/organization-commands": "2.12.1",
     "@takomo/organization-config": "2.12.1",
     "@takomo/stacks-commands": "2.12.1",
-    "@takomo/stacks-context": "2.12.1",
     "@takomo/stacks-model": "2.12.1",
     "@takomo/util": "2.12.1",
     "aws-sdk": "2.745.0",
-    "date-and-time": "0.14.2",
+    "date-and-time": "0.11.1",
     "diff": "4.0.1",
     "easy-table": "1.1.1",
     "inquirer": "7.0.6",
@@ -46,12 +46,9 @@
     "joi": "17.2.1",
     "lodash.flatten": "4.4.0",
     "lodash.uniq": "4.5.0",
-    "pretty-ms": "5.1.0",
-    "ts-dedent": "2.0.0"
+    "pretty-ms": "5.1.0"
   },
-  "devDependencies": {
-    "@takomo/unit-test": "2.11.0"
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">=14.4.0"
   },

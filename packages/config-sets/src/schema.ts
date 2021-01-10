@@ -1,0 +1,40 @@
+import { Region } from "@takomo/aws-model"
+import { createCommonSchema } from "@takomo/core"
+import { createStacksSchemas } from "@takomo/stacks-schema"
+import Joi, { ObjectSchema, StringSchema } from "joi"
+
+interface CreateConfigSetsSchemasProps {
+  readonly regions: ReadonlyArray<Region>
+}
+
+export interface ConfigSetsSchemas {
+  readonly configSets: ObjectSchema
+  readonly configSet: ObjectSchema
+  readonly configSetName: StringSchema
+}
+
+export const createConfigSetsSchemas = (
+  props: CreateConfigSetsSchemasProps,
+): ConfigSetsSchemas => {
+  const { commandPath } = createStacksSchemas({ ...props })
+  const { vars } = createCommonSchema()
+
+  const configSetName = Joi.string()
+    .min(1)
+    .max(60)
+    .regex(/^[a-zA-Z_]+[a-zA-Z0-9-_]*$/)
+
+  const configSet = Joi.object({
+    description: Joi.string(),
+    commandPaths: Joi.array().items(commandPath).unique(),
+    vars,
+  })
+
+  const configSets = Joi.object().pattern(configSetName, configSet)
+
+  return {
+    configSets,
+    configSet,
+    configSetName,
+  }
+}

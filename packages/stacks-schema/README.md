@@ -1,3 +1,3 @@
-# Takomo Stacks Schema
+# Takomo - Stacks Schema
 
-Stacks schema for https://takomo.io
+Validation schema for stacks.

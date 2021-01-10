@@ -4,7 +4,8 @@ import { initProjectCmd } from "./init"
 import { organizationCmd } from "./organization"
 import { stacksCmd } from "./stacks"
 
-export { initOptionsAndVariables, OptionsAndVariables } from "./common"
+export { CliCommandContext } from "./cli-command-context"
+export { initCommandContext } from "./common"
 
 export const run = (): void => {
   yargs
@@ -39,7 +40,7 @@ export const run = (): void => {
       global: true,
     })
     .option("stats", {
-      description: "Print statistics after command execution",
+      description: "Print statistics after the command execution",
       boolean: true,
       default: false,
       global: true,

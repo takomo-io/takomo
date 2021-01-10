@@ -1,20 +1,18 @@
-import { Constants, Options } from "@takomo/core"
 import {
   DescribeOrganizationIO,
   DescribeOrganizationOutput,
 } from "@takomo/organization-commands"
+import { LogWriter, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
-import CliIO from "../cli-io"
-import { LogWriter } from "@takomo/util"
+import { createBaseIO } from "../cli-io"
 
-export class CliDescribeOrganizationIO
-  extends CliIO
-  implements DescribeOrganizationIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
+export const createDescribeOrganizationIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): DescribeOrganizationIO => {
+  const io = createBaseIO(writer)
 
-  printOutput = (
+  const printOutput = (
     output: DescribeOrganizationOutput,
   ): DescribeOrganizationOutput => {
     const { organization, services, enabledPolicies, masterAccount } = output
@@ -22,32 +20,34 @@ export class CliDescribeOrganizationIO
     const policies =
       enabledPolicies.length === 0 ? "-" : enabledPolicies.join(", ")
 
-    this.header("ORGANIZATION", true)
-    this.message(`id:              ${organization.Id}`)
-    this.message(`arn:             ${organization.Arn}`)
-    this.message(`feature set:     ${organization.FeatureSet}`)
-    this.message(`policy types:    ${policies}`)
+    io.header({ text: "ORGANIZATION", marginTop: true })
+    io.message({ text: `id:              ${organization.id}` })
+    io.message({ text: `arn:             ${organization.arn}` })
+    io.message({ text: `feature set:     ${organization.featureSet}` })
+    io.message({ text: `policy types:    ${policies}` })
 
-    this.header("MASTER ACCOUNT", true)
-    this.message(`id:            ${masterAccount.Id}`)
-    this.message(`arn:           ${masterAccount.Arn}`)
-    this.message(`email:         ${masterAccount.Email}`)
-    this.message(`name:          ${masterAccount.Name}`)
+    io.header({ text: "MASTER ACCOUNT", marginTop: true })
+    io.message({ text: `id:            ${masterAccount.id}` })
+    io.message({ text: `arn:           ${masterAccount.arn}` })
+    io.message({ text: `email:         ${masterAccount.email}` })
+    io.message({ text: `name:          ${masterAccount.name}` })
 
-    this.header("TRUSTED ACCESS FOR AWS SERVICES", true)
+    io.header({ text: "TRUSTED ACCESS FOR AWS SERVICES", marginTop: true })
 
     const servicesTable = new Table()
-    Constants.ORGANIZATION_SERVICE_PRINCIPALS.forEach((sp) => {
-      const enabled =
-        services.find((s) => s.ServicePrincipal === sp) !== undefined
-
-      servicesTable.cell("Service", sp)
-      servicesTable.cell("Enabled", enabled)
+    services.forEach((sp) => {
+      servicesTable.cell("Service", sp.service)
+      servicesTable.cell("Enabled", sp.enabled)
       servicesTable.newRow()
     })
 
-    this.message(servicesTable.print())
+    io.message({ text: servicesTable.print() })
 
     return output
+  }
+
+  return {
+    ...logger,
+    printOutput,
   }
 }

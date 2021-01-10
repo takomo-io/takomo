@@ -1,20 +1,26 @@
-import { timeoutObject } from "../src"
+import {
+  expectNoValidationError,
+  expectValidationErrors,
+} from "@takomo/test-unit"
+import { createStacksSchemas } from "../src"
+
+const { timeoutObject } = createStacksSchemas({
+  regions: [],
+})
 
 const valid = [{ update: 10 }, { create: 5 }, { create: 5, update: 3 }]
 
-const invalid = [
+const invalid: Array<[unknown, string]> = [
   [-1, '"value" must be of type object'],
   ["a", '"value" must be of type object'],
 ]
 
 describe("timeout object validation", () => {
   test.each(invalid)("fails when '%s' is given", (value, expectedMessage) => {
-    const { error } = timeoutObject.validate(value)
-    expect(error!.message).toBe(expectedMessage)
+    expectValidationErrors(timeoutObject)(value, expectedMessage)
   })
 
   test.each(valid)("succeeds when '%s' is given", (value) => {
-    const { error } = timeoutObject.validate(value)
-    expect(error).toBeUndefined()
+    expectNoValidationError(timeoutObject)(value)
   })
 })

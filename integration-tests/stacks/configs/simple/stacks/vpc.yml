@@ -1,4 +1,4 @@
-project: examples-simple
+project: simple
 commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
 regions: eu-central-1
 parameters:

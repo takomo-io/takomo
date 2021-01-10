@@ -1,26 +1,18 @@
-import { Options } from "@takomo/core"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { CliAccountsOperationIO } from "./accounts-operation-io"
-import { LogWriter } from "@takomo/util"
+import { AccountsOperationIO } from "@takomo/organization-commands"
+import { LogWriter, TkmLogger } from "@takomo/util"
+import { createAccountsOperationIO } from "./accounts-operation-io"
 
-export class CliDeployAccountsIO extends CliAccountsOperationIO {
-  constructor(
-    options: Options,
-    stacksDeployIO: (options: Options, accountId: string) => DeployStacksIO,
-    stacksUndeployIO: (options: Options, accountId: string) => UndeployStacksIO,
-    logWriter: LogWriter = console.log,
-  ) {
-    super(
-      logWriter,
-      options,
-      {
-        confirmHeader: "Accounts deployment plan",
-        confirmQuestion: "Continue to deploy accounts?",
-        outputHeader: "Accounts deployment summary",
-        outputNoAccounts: "No accounts deployed",
-      },
-      stacksDeployIO,
-      stacksUndeployIO,
-    )
-  }
-}
+export const createDeployAccountsIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): AccountsOperationIO =>
+  createAccountsOperationIO(
+    logger,
+    {
+      confirmHeader: "Accounts deployment plan",
+      confirmQuestion: "Continue to deploy accounts?",
+      outputHeader: "Accounts deployment summary",
+      outputNoAccounts: "No accounts deployed",
+    },
+    writer,
+  )

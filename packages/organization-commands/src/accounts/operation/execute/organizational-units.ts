@@ -1,18 +1,19 @@
 import { ConfigSetType } from "@takomo/config-sets"
-import { OperationState, resolveCommandOutputBase } from "@takomo/core"
-import { StopWatch } from "@takomo/util"
+import { resolveCommandOutputBase } from "@takomo/core"
+import { OperationState } from "@takomo/stacks-model"
+import { Timer } from "@takomo/util"
 import {
   AccountOperationResult,
-  LaunchAccountsPlanHolder,
   OrganizationalUnitAccountsOperationResult,
   PlannedAccountDeploymentOrganizationalUnit,
 } from "../model"
+import { AccountsOperationPlanHolder } from "../states"
 import { processAccount } from "./account"
 
 export const processOrganizationalUnit = async (
-  holder: LaunchAccountsPlanHolder,
+  holder: AccountsOperationPlanHolder,
   organizationalUnit: PlannedAccountDeploymentOrganizationalUnit,
-  watch: StopWatch,
+  timer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
 ): Promise<OrganizationalUnitAccountsOperationResult> => {
@@ -28,17 +29,18 @@ export const processOrganizationalUnit = async (
       holder,
       organizationalUnit,
       account,
-      watch.startChild(account.account.Id!),
+      timer.startChild(account.account.id),
       state,
       configSetType,
     )
     results.push(result)
   }
 
+  timer.stop()
   return {
     ...resolveCommandOutputBase(results),
     path: organizationalUnit.path,
     results,
-    watch: watch.stop(),
+    timer,
   }
 }

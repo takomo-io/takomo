@@ -1,14 +1,11 @@
-import {
-  CliDeployStacksIO,
-  CliTearDownAccountsIO,
-  CliUndeployStacksIO,
-} from "@takomo/cli-io"
+import { createTearDownAccountsIO } from "@takomo/cli-io"
+import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
-import { DeploymentOperation, Options } from "@takomo/core"
 import {
   accountsOperationCommand,
   accountsUndeployOperationCommandIamPolicy,
 } from "@takomo/organization-commands"
+import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../../common"
 import { parseAccountIds } from "./fn"
 
@@ -26,25 +23,22 @@ export const tearDownAccountsCmd = {
         demandOption: false,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
-        operation: DeploymentOperation.UNDEPLOY,
-        configSetType: ConfigSetType.BOOTSTRAP,
+        operation: "undeploy" as DeploymentOperation,
+        configSetType: "bootstrap" as ConfigSetType,
       }),
-      (input) =>
-        accountsOperationCommand(
-          input,
-          new CliTearDownAccountsIO(
-            input.options,
-            (options: Options, accountId: string) =>
-              new CliDeployStacksIO(options, console.log, accountId),
-            (options: Options, accountId: string) =>
-              new CliUndeployStacksIO(options, console.log, accountId),
-          ),
-        ),
-    ),
+      configRepository: (ctx, logger) =>
+        createFileSystemOrganizationConfigRepository({
+          ctx,
+          logger,
+          ...ctx.filePaths,
+        }),
+      io: (ctx, logger) => createTearDownAccountsIO(logger),
+      executor: accountsOperationCommand,
+    }),
 }

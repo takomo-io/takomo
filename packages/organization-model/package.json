@@ -1,0 +1,41 @@
+{
+  "name": "@takomo/organization-model",
+  "version": "2.12.1",
+  "description": "Takomo Organization Model",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "license": "MIT",
+  "author": "henri@takomo.io",
+  "type": "commonjs",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build-if-changed": "../../ci/build-if-changed.sh",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "clean:deps": "rm -rf node_modules",
+    "clean:dist": "rm -rf dist",
+    "depcheck": "depcheck --config=../../.depcheckrc",
+    "test": "jest test --passWithNoTests --verbose",
+    "watch": "tsc -p tsconfig.build.json --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.4.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

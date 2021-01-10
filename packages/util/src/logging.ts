@@ -5,18 +5,12 @@ import { formatYaml } from "./yaml"
 /**
  * Logging level.
  */
-export enum LogLevel {
-  TRACE = "trace",
-  DEBUG = "debug",
-  INFO = "info",
-  WARN = "warn",
-  ERROR = "error",
-}
+export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
 
 /**
  * Logger.
  */
-export interface Logger {
+export interface TkmLogger {
   /**
    * Log messages using trace level.
    *
@@ -47,7 +41,7 @@ export interface Logger {
    * @param message Message to log
    * @param text Text to log
    */
-  traceText(message: string, text: string): void
+  traceText(message: string, text: string | (() => string)): void
 
   /**
    * Log messages using debug level.
@@ -79,7 +73,7 @@ export interface Logger {
    * @param message Message to log
    * @param text Text to log
    */
-  debugText(message: string, text: string): void
+  debugText(message: string, text: string | (() => string)): void
 
   /**
    * Log messages using info level.
@@ -111,7 +105,7 @@ export interface Logger {
    * @param message Message to log
    * @param text Text to log
    */
-  infoText(message: string, text: string): void
+  infoText(message: string, text: string | (() => string)): void
 
   /**
    * Log messages using warn level.
@@ -143,7 +137,7 @@ export interface Logger {
    * @param message Message to log
    * @param text Text to log
    */
-  warnText(message: string, text: string): void
+  warnText(message: string, text: string | (() => string)): void
 
   /**
    * Log messages using error level.
@@ -158,7 +152,7 @@ export interface Logger {
    * @param name Child logger name
    * @returns Child logger
    */
-  childLogger(name: string): Logger
+  childLogger(name: string): TkmLogger
 }
 
 const timestamp = (): string => date.format(new Date(), "YYYY-MM-DD HH:mm:ss Z")
@@ -167,15 +161,15 @@ const defaultFilterFn = (obj: any): any => obj
 
 const getNumericLogLevel = (logLevel: LogLevel): number => {
   switch (logLevel) {
-    case LogLevel.TRACE:
+    case "trace":
       return 0
-    case LogLevel.DEBUG:
+    case "debug":
       return 1
-    case LogLevel.INFO:
+    case "info":
       return 2
-    case LogLevel.WARN:
+    case "warn":
       return 3
-    case LogLevel.ERROR:
+    case "error":
       return 4
     default:
       throw new Error(`Unknown log level: ${logLevel}`)
@@ -184,157 +178,168 @@ const getNumericLogLevel = (logLevel: LogLevel): number => {
 
 const formatLogLevel = (logLevel: LogLevel): string => {
   switch (logLevel) {
-    case LogLevel.TRACE:
+    case "trace":
       return "[trace]"
-    case LogLevel.DEBUG:
+    case "debug":
       return "[debug]"
-    case LogLevel.INFO:
+    case "info":
       return "[info ]"
-    case LogLevel.WARN:
+    case "warn":
       return "[warn ]"
-    case LogLevel.ERROR:
+    case "error":
       return "[error]"
     default:
       throw new Error(`Unknown log level: ${logLevel}`)
   }
 }
 
-export type LogWriter = (message?: any, ...optionalParams: any[]) => void
+/**
+ * @hidden
+ */
+export type LogWriter = (
+  message?: unknown,
+  ...optionalParams: unknown[]
+) => void
 
-export class BaseLogger implements Logger {
-  readonly #logLevel: LogLevel
-  readonly #logLevelNumber: number
-  readonly #name: string | null
-  readonly #log: LogWriter
+interface TkmLoggerProps {
+  readonly logLevel: LogLevel
+  readonly writer: LogWriter
+  readonly name?: string
+}
 
-  constructor(
-    log: LogWriter,
-    logLevel: LogLevel = LogLevel.INFO,
-    name: string | null = null,
-  ) {
-    this.#logLevel = logLevel
-    this.#logLevelNumber = getNumericLogLevel(logLevel)
-    this.#name = name
-    this.#log = log
-  }
+/**
+ * @hidden
+ */
+export const createLogger = (props: TkmLoggerProps): TkmLogger => {
+  const { name, writer, logLevel } = props
 
-  private meta(level: LogLevel): string {
-    return (
-      timestamp() +
-      " " +
-      formatLogLevel(level) +
-      (this.#name ? ` - ${this.#name}` : "")
-    )
-  }
+  const meta = (level: LogLevel): string =>
+    timestamp() + " " + formatLogLevel(level) + (name ? ` - ${name}` : "")
 
-  private log(level: LogLevel, ...message: any[]) {
-    if (this.#logLevelNumber <= getNumericLogLevel(level)) {
-      this.#log(`${this.meta(level)} -`, ...message)
+  const logLevelNumber = getNumericLogLevel(logLevel)
+
+  const log = (level: LogLevel, ...message: any[]): void => {
+    if (logLevelNumber <= getNumericLogLevel(level)) {
+      writer(`${meta(level)} -`, ...message)
     }
   }
 
-  private logObject(
+  const logObject = (
     level: LogLevel,
     message: string,
     obj: any,
     filterFn: (obj: any) => any,
-  ) {
-    if (this.#logLevelNumber <= getNumericLogLevel(level)) {
-      const filteredObj = filterFn(obj)
-      this.#log(
-        `${this.meta(level)} - ${message}\n\n${indentLines(
+  ): void => {
+    if (logLevelNumber <= getNumericLogLevel(level)) {
+      const value = typeof obj === "function" ? obj() : obj
+      const filteredObj = filterFn(value)
+      writer(
+        `${meta(level)} - ${message}\n\n${indentLines(
           formatYaml(filteredObj),
         )}`,
       )
     }
   }
 
-  private logText(level: LogLevel, message: string, text: string) {
-    if (this.#logLevelNumber <= getNumericLogLevel(level)) {
+  const logText = (
+    level: LogLevel,
+    message: string,
+    text: string | (() => string),
+  ): void => {
+    if (logLevelNumber <= getNumericLogLevel(level)) {
+      const t = typeof text === "function" ? text() : text
       if (text === "") {
-        this.#log(`${this.meta(level)} - ${message} <empty>`)
+        writer(`${meta(level)} - ${message} <empty>`)
       } else {
-        this.#log(`${this.meta(level)} - ${message}\n\n${indentLines(text)}`)
+        writer(`${meta(level)} - ${message}\n\n${indentLines(t)}`)
       }
     }
   }
 
-  trace(...message: any[]): void {
-    this.log(LogLevel.TRACE, ...message)
-  }
+  return {
+    trace: (...message: any[]): void => {
+      log("trace", ...message)
+    },
 
-  traceObject(
-    message: string,
-    obj: any,
-    filterFn: (obj: any) => any = defaultFilterFn,
-  ): void {
-    this.logObject(LogLevel.TRACE, message, obj, filterFn)
-  }
+    traceObject: (
+      message: string,
+      obj: any,
+      filterFn: (obj: any) => any = defaultFilterFn,
+    ): void => {
+      logObject("trace", message, obj, filterFn)
+    },
 
-  traceText(message: string, text: string): void {
-    this.logText(LogLevel.TRACE, message, text)
-  }
+    traceText: (message: string, text: string | (() => string)): void => {
+      logText("trace", message, text)
+    },
 
-  debug(...message: any[]): void {
-    this.log(LogLevel.DEBUG, ...message)
-  }
+    debug: (...message: any[]): void => {
+      log("debug", ...message)
+    },
 
-  debugObject(
-    message: string,
-    obj: any,
-    filterFn: (obj: any) => any = defaultFilterFn,
-  ): void {
-    this.logObject(LogLevel.DEBUG, message, obj, filterFn)
-  }
+    debugObject: (
+      message: string,
+      obj: any,
+      filterFn: (obj: any) => any = defaultFilterFn,
+    ): void => {
+      logObject("debug", message, obj, filterFn)
+    },
 
-  debugText(message: string, text: string): void {
-    this.logText(LogLevel.DEBUG, message, text)
-  }
+    debugText: (message: string, text: string | (() => string)): void => {
+      logText("debug", message, text)
+    },
 
-  info(...message: any[]): void {
-    this.log(LogLevel.INFO, ...message)
-  }
+    info: (...message: any[]): void => {
+      log("info", ...message)
+    },
 
-  infoText(message: string, text: string): void {
-    this.logText(LogLevel.INFO, message, text)
-  }
+    infoText: (message: string, text: string | (() => string)): void => {
+      logText("info", message, text)
+    },
 
-  infoObject(
-    message: string,
-    obj: any,
-    filterFn: (obj: any) => any = defaultFilterFn,
-  ): void {
-    this.logObject(LogLevel.INFO, message, obj, filterFn)
-  }
+    infoObject: (
+      message: string,
+      obj: any,
+      filterFn: (obj: any) => any = defaultFilterFn,
+    ): void => {
+      logObject("info", message, obj, filterFn)
+    },
 
-  warn(...message: any[]): void {
-    this.log(LogLevel.WARN, ...message)
-  }
+    warn: (...message: any[]): void => {
+      log("warn", ...message)
+    },
 
-  warnObject(
-    message: string,
-    obj: any,
-    filterFn: (obj: any) => any = defaultFilterFn,
-  ): void {
-    this.logObject(LogLevel.WARN, message, obj, filterFn)
-  }
+    warnObject: (
+      message: string,
+      obj: any,
+      filterFn: (obj: any) => any = defaultFilterFn,
+    ): void => {
+      logObject("warn", message, obj, filterFn)
+    },
 
-  warnText(message: string, text: string): void {
-    this.logText(LogLevel.WARN, message, text)
-  }
+    warnText: (message: string, text: string | (() => string)): void => {
+      logText("warn", message, text)
+    },
 
-  error(...message: any[]): void {
-    this.log(LogLevel.ERROR, ...message)
-  }
+    error: (...message: any[]): void => {
+      log("error", ...message)
+    },
 
-  childLogger(name: string): Logger {
-    const childName = this.#name ? `${this.#name} - ${name}` : name
-    return new ConsoleLogger(this.#logLevel, childName)
+    childLogger: (childName: string): TkmLogger =>
+      createLogger({
+        ...props,
+        name: name ? `${name} - ${childName}` : childName,
+      }),
   }
 }
 
-export class ConsoleLogger extends BaseLogger {
-  constructor(logLevel: LogLevel = LogLevel.INFO, name: string | null = null) {
-    super(console.log, logLevel, name)
-  }
-}
+type ConsoleLoggerProps = Omit<TkmLoggerProps, "writer">
+
+/**
+ * @hidden
+ */
+export const createConsoleLogger = (props: ConsoleLoggerProps): TkmLogger =>
+  createLogger({
+    ...props,
+    writer: console.log,
+  })

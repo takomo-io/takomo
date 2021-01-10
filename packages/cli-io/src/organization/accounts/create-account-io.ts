@@ -1,24 +1,25 @@
-import { CommandStatus, ConfirmResult, Options } from "@takomo/core"
+import { ConfirmResult } from "@takomo/core"
 import {
   CreateAccountIO,
   CreateAccountOutput,
 } from "@takomo/organization-commands"
-import { LogWriter } from "@takomo/util"
-import CliIO from "../../cli-io"
+import { LogWriter, TkmLogger } from "@takomo/util"
+import { createBaseIO } from "../../cli-io"
 
-export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
+export const createCreateAccountIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): CreateAccountIO => {
+  const io = createBaseIO(writer)
 
-  confirmAccountCreation = async (
+  const confirmAccountCreation = async (
     name: string,
     email: string,
     iamUserAccessToBilling: boolean,
     roleName: string,
     alias?: string,
   ): Promise<ConfirmResult> => {
-    this.longMessage(
+    io.longMessage(
       [
         "Account information:",
         "",
@@ -29,30 +30,32 @@ export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
         `  alias:                       ${alias || "<undefined>"}`,
       ],
       true,
+      false,
+      0,
     )
 
-    return (await this.confirm("Continue to create the account?", true))
+    return (await io.confirm("Continue to create the account?", true))
       ? ConfirmResult.YES
       : ConfirmResult.NO
   }
 
-  printOutput = (output: CreateAccountOutput): CreateAccountOutput => {
+  const printOutput = (output: CreateAccountOutput): CreateAccountOutput => {
     const createAccountStatus = output.createAccountStatus
 
     switch (output.status) {
-      case CommandStatus.FAILED:
+      case "FAILED":
         if (createAccountStatus) {
-          this.message(
-            `Account creation failed. Reason: ${createAccountStatus.FailureReason}`,
-            true,
-          )
+          io.message({
+            text: `Account creation failed. Reason: ${createAccountStatus.FailureReason}`,
+            marginTop: true,
+          })
         } else {
-          this.message("Account creation failed", true)
+          io.message({ text: "Account creation failed", marginTop: true })
         }
         break
-      case CommandStatus.SUCCESS:
+      case "SUCCESS":
         const { AccountId, AccountName } = createAccountStatus!
-        this.longMessage(
+        io.longMessage(
           [
             "Account information:",
             "",
@@ -60,11 +63,19 @@ export class CliCreateAccountIO extends CliIO implements CreateAccountIO {
             `  name: ${AccountName}`,
           ],
           true,
+          false,
+          0,
         )
 
         break
     }
 
     return output
+  }
+
+  return {
+    ...logger,
+    confirmAccountCreation,
+    printOutput,
   }
 }

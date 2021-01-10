@@ -1,23 +1,15 @@
 import {
-  Options,
-  StackPath,
-  TakomoCredentialProvider,
-  Variables,
-} from "@takomo/core"
-import {
-  CommandContext,
   Hook,
   HookExecutor,
   HookInput,
   HookOutput,
   HooksExecutionOutput,
-  Stack,
+  InternalStacksContext,
   StackOperationVariables,
 } from "@takomo/stacks-model"
-import { ConsoleLogger, Logger, LogLevel, TemplateEngine } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
+import { createConsoleLogger } from "@takomo/util"
+import { mock } from "jest-mock-extended"
 import { executeHooks } from "../src"
-import { mockTakomoCredentialProvider } from "./mocks"
 
 class ThrowingHook implements Hook {
   private readonly error: Error
@@ -62,37 +54,7 @@ class HandlerHook implements Hook {
   }
 }
 
-const ctx: CommandContext = {
-  getCredentialProvider: (): TakomoCredentialProvider =>
-    mockTakomoCredentialProvider(),
-  getStacksToProcess: (): Stack[] => [],
-  getLogger: (): Logger => new ConsoleLogger(),
-  getStacksByPath: (path: string): Stack[] => [],
-  getTemplateEngine: (): TemplateEngine => new TemplateEngine(),
-  getExistingStack: (
-    stackPath: StackPath,
-  ): Promise<CloudFormation.Stack | null> => Promise.resolve(null),
-  getExistingTemplateSummary: async (
-    stackPath: StackPath,
-  ): Promise<CloudFormation.GetTemplateSummaryOutput | null> => null,
-  // eslint-disable-next-line
-  removeExistingTemplateSummary(stackPath: StackPath) {},
-  getVariables: (): Variables => ({
-    context: { projectDir: "" },
-    env: {},
-    var: {},
-  }),
-  // eslint-disable-next-line
-  removeExistingStack: (stackPath: StackPath) => {},
-  getOptions: (): Options =>
-    new Options({
-      projectDir: "",
-      autoConfirm: false,
-      logConfidentialInfo: false,
-      logLevel: LogLevel.INFO,
-      stats: false,
-    }),
-}
+const ctx: InternalStacksContext = mock<InternalStacksContext>()
 
 const createVariables = (): StackOperationVariables => ({
   context: { projectDir: "" },
@@ -101,7 +63,10 @@ const createVariables = (): StackOperationVariables => ({
   hooks: {},
 })
 
-const logger = new ConsoleLogger()
+const logger = createConsoleLogger({
+  logLevel: "info",
+  concealConfidentialInformation: true,
+})
 
 const executor = (name: string, hook: Hook): HookExecutor =>
   new HookExecutor(

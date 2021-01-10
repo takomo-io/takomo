@@ -1,4 +1,4 @@
-template: queues.yml.hbs
+template: queues.yml
 tags:
   hello: World
 parameters:

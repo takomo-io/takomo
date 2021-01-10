@@ -1,18 +1,19 @@
-import { Stack } from "@takomo/stacks-model"
+import { InternalStack } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 
+/**
+ * @hidden
+ */
 export class IncompatibleIgnoreDependenciesOptionOnLaunchError extends TakomoError {
-  constructor(stacksToLaunch: Stack[]) {
-    const stacksPathsToLaunch = stacksToLaunch
-      .map((s) => `  - ${s.getPath()}`)
-      .join("\n")
+  constructor(stacks: ReadonlyArray<InternalStack>) {
+    const stackPaths = stacks.map((s) => `  - ${s.path}`).join("\n")
 
     super(
       "Incompatible option --ignore-dependencies. Expected exactly " +
-        `one stack to be launched but got ${stacksToLaunch.length}.\n\nStacks selected for launch:\n${stacksPathsToLaunch}`,
+        `one stack to be deployed but got ${stacks.length}.\n\nStacks selected for deploy:\n${stackPaths}`,
       {
         info:
-          "Using --ignore-dependencies option is allowed only when exactly one stack is launched.",
+          "Using --ignore-dependencies option is allowed only when exactly one stack is deployed.",
         instructions: [
           "Provide more specific command path that points to exactly one stack, e.g. use the full stack path.",
         ],

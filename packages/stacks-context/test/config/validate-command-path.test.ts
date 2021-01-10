@@ -1,39 +1,46 @@
-import { validateCommandPath } from "../../src/config/build-config-context"
-import { ConfigTree } from "../../src/config/tree/config-tree"
+import { ConfigTree } from "../../dist"
+import { validateCommandPath } from "../../src/config/build-stacks-context"
 
 const tree: ConfigTree = {
   rootStackGroup: {
     path: "/",
+    name: "/",
     children: [
       {
         path: "/dev",
         children: [],
-        dir: {
-          basename: "dev",
-          fullPath: "/tmp/dev",
-        },
+        getConfig: jest.fn(),
+        name: "dev",
+        parentPath: undefined,
+        // dir: {
+        //   basename: "dev",
+        //   fullPath: "/tmp/dev",
+        // },
         stacks: [
           {
             path: "/dev/stack-x.yml",
-            file: {
-              fullPath: "/tmp/dev/stack-x.yml",
-              basename: "stack-x.yml",
-            },
+            getConfig: jest.fn(),
+            // file: {
+            //   fullPath: "/tmp/dev/stack-x.yml",
+            //   basename: "stack-x.yml",
+            // },
           },
         ],
       },
     ],
-    dir: {
-      basename: "tmp",
-      fullPath: "/tmp",
-    },
+    // dir: {
+    //   basename: "tmp",
+    //   fullPath: "/tmp",
+    // },
+    getConfig: jest.fn(),
     stacks: [
       {
         path: "/stack-a.yml",
-        file: {
-          fullPath: "/tmp/stack-a.yml",
-          basename: "stack-a.yml",
-        },
+        // file: {
+        //   fullPath: "/tmp/stack-a.yml",
+        //   basename: "stack-a.yml",
+        // },
+        getConfig: jest.fn(),
       },
     ],
   },

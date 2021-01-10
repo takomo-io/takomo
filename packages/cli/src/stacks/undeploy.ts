@@ -1,9 +1,10 @@
-import { CliUndeployStacksIO } from "@takomo/cli-io"
-import { Constants } from "@takomo/core"
+import { createUndeployStacksIO } from "@takomo/cli-io"
+import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
 import {
   undeployStacksCommand,
   undeployStacksCommandIamPolicy,
 } from "@takomo/stacks-commands"
+import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
 
 export const undeployStacksCmd = {
@@ -37,18 +38,24 @@ export const undeployStacksCmd = {
       })
       .positional("commandPath", {
         describe: "Undeploy stacks within this path",
-        default: Constants.ROOT_STACK_GROUP_PATH,
+        default: ROOT_STACK_GROUP_PATH,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      configRepository: (ctx, logger) =>
+        createFileSystemStacksConfigRepository({
+          ctx,
+          logger,
+          ...ctx.filePaths,
+        }),
+      input: (ctx, input) => ({
+        ...input,
         ignoreDependencies: argv["ignore-dependencies"],
         commandPath: argv.commandPath,
         interactive: argv.interactive,
       }),
-      (input) =>
-        undeployStacksCommand(input, new CliUndeployStacksIO(input.options)),
-    ),
+      io: (ctx, logger) => createUndeployStacksIO(logger),
+      executor: undeployStacksCommand,
+    }),
 }

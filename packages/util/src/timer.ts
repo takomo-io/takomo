@@ -1,54 +1,73 @@
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 
-export class StopWatch {
+/**
+ * @hidden
+ */
+export interface Timer {
   readonly name: string
   readonly startTime: number
-  readonly children: StopWatch[] = []
-  stopTime = 0
+  readonly startChild: (name: string) => Timer
+  readonly stop: (stopTime?: number) => void
+  readonly getSecondsElapsed: () => number
+  readonly withChildren: (visitor: (child: Timer) => void) => void
+}
 
-  constructor(name: string) {
-    this.name = name
-    this.startTime = Date.now()
-  }
+/**
+ * @hidden
+ */
+export const createTimer = (name: string): Timer => {
+  const children: Timer[] = []
+  const startTime = Date.now()
 
-  startChild = (name: string): StopWatch => {
-    const child = new StopWatch(name)
-    this.children.push(child)
+  let stopTime: number | undefined = undefined
+
+  const startChild = (name: string): Timer => {
+    const child = createTimer(name)
+    children.push(child)
     return child
   }
 
-  stop = (stopTime?: number): StopWatch => {
-    if (this.stopTime === 0) {
-      this.stopTime = stopTime || Date.now()
+  const stop = (time: number = Date.now()): void => {
+    if (!stopTime) {
+      stopTime = time || Date.now()
     }
 
-    this.children.forEach((child) => child.stop(stopTime))
-    return this
+    children.forEach((child) => child.stop(stopTime))
   }
 
-  get secondsElapsed(): number {
-    return this.stopTime === 0
-      ? Date.now() - this.startTime
-      : this.stopTime - this.startTime
+  const getSecondsElapsed = (): number =>
+    stopTime ? stopTime - startTime : Date.now() - startTime
+
+  const withChildren = (visitor: (child: Timer) => void): void => {
+    children.forEach(visitor)
+  }
+
+  return {
+    name,
+    startChild,
+    startTime,
+    stop,
+    getSecondsElapsed,
+    withChildren,
   }
 }
 
-const collectStopWatchItems = (
-  watch: StopWatch,
-  table: Table,
-  depth: number,
-): void => {
+const collectTimerItems = (timer: Timer, table: Table, depth: number): void => {
   const padding = " ".repeat(depth * 2)
-  table.cell("Name", `${padding}${watch.name}`)
-  table.cell("Time", prettyMs(watch.secondsElapsed))
+  table.cell("Name", `${padding}${timer.name}`)
+  table.cell("Time", prettyMs(timer.getSecondsElapsed()))
   table.newRow()
-
-  watch.children.forEach((c) => collectStopWatchItems(c, table, depth + 1))
+  timer.withChildren((child) => {
+    collectTimerItems(child, table, depth + 1)
+  })
 }
 
-export const printStopWatch = (watch: StopWatch): string => {
+/**
+ * @hidden
+ */
+export const printTimer = (timer: Timer): string => {
   const table = new Table()
-  collectStopWatchItems(watch, table, 0)
+  collectTimerItems(timer, table, 0)
   return table.toString()
 }

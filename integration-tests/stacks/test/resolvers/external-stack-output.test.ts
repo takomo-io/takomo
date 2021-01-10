@@ -1,67 +1,46 @@
 /**
  * @testenv-recycler-count 2
  */
-import { initOptionsAndVariables, OptionsAndVariables } from "@takomo/cli"
-import { CommandStatus, Constants } from "@takomo/core"
+
 import {
-  deployStacksCommand,
-  undeployStacksCommand,
-} from "@takomo/stacks-commands"
-import { TestDeployStacksIO, TestUndeployStacksIO } from "@takomo/test"
-import { Credentials } from "aws-sdk"
+  executeDeployStacksCommand,
+  executeUndeployStacksCommand,
+} from "@takomo/test-integration"
 
-const createOptions = async (): Promise<OptionsAndVariables> => {
-  const account1Id = global.reservation.accounts[0].accountId
-  const account2Id = global.reservation.accounts[1].accountId
-  return initOptionsAndVariables(
-    {
-      log: "info",
-      yes: true,
-      dir: "configs/resolvers/external-stack-output",
-      var: [`ACCOUNT_1_ID=${account1Id}`, `ACCOUNT_2_ID=${account2Id}`],
-    },
-    new Credentials(global.reservation.credentials),
-  )
-}
+const projectDir = "configs/resolvers/external-stack-output"
 
-describe("resolvers/external-stack-output", () => {
-  test("Deploy", async () => {
-    const { options, variables, watch } = await createOptions()
-    const output = await deployStacksCommand(
-      {
-        commandPath: Constants.ROOT_STACK_GROUP_PATH,
-        options,
-        variables,
-        ignoreDependencies: false,
-        interactive: false,
-        watch,
-      },
-      new TestDeployStacksIO(options),
-    )
+describe("External stack output resolver", () => {
+  test("Deploy", () =>
+    executeDeployStacksCommand({ projectDir })
+      .expectCommandToSucceed()
+      .expectStackCreateSuccess({
+        stackName: "account-a-stack1",
+        stackPath: "/account-a/stack1.yml/us-east-1",
+      })
+      .expectStackCreateSuccess({
+        stackName: "account-a-stack2",
+        stackPath: "/account-a/stack2.yml/eu-west-1",
+      })
+      .expectStackCreateSuccess({
+        stackName: "account-b-stack3",
+        stackPath: "/account-b/stack3.yml/us-east-1",
+      })
+      .assert())
 
-    expect(output).stacksOperationOutputToBeSuccess()
-
-    const [res1, res2, res3] = output.results
-
-    expect(res1.status).toBe(CommandStatus.SUCCESS)
-    expect(res2.status).toBe(CommandStatus.SUCCESS)
-    expect(res3.status).toBe(CommandStatus.SUCCESS)
-  })
-
-  test("Undeploy", async () => {
-    const { options, variables, watch } = await createOptions()
-    const output = await undeployStacksCommand(
-      {
-        commandPath: Constants.ROOT_STACK_GROUP_PATH,
-        ignoreDependencies: false,
-        interactive: false,
-        options,
-        variables,
-        watch,
-      },
-      new TestUndeployStacksIO(options),
-    )
-
-    expect(output).stacksOperationOutputToBeSuccess()
-  })
+  test("Undeploy", () =>
+    executeUndeployStacksCommand({ projectDir })
+      .expectCommandToSucceed()
+      .expectStackDeleteSuccess({
+        stackName: "account-a-stack1",
+        stackPath: "/account-a/stack1.yml/us-east-1",
+      })
+      .expectStackDeleteSuccess({
+        stackName: "account-a-stack2",
+        stackPath: "/account-a/stack2.yml/eu-west-1",
+      })
+      .expectStackDeleteSuccess({
+        stackName: "account-b-stack3",
+        stackPath: "/account-b/stack3.yml/us-east-1",
+      })
+      .assert())
 })

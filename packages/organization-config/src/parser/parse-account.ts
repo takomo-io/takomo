@@ -1,32 +1,27 @@
+import { OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { parseVars } from "@takomo/core"
-import { PolicyName } from "aws-sdk/clients/organizations"
 import uniq from "lodash.uniq"
-import { OrganizationAccount, OrganizationAccountStatus } from "../model"
+import { OrganizationAccountConfig } from "../model"
 import { parseAccountStatus } from "./parse-account-status"
 import { parseConfigSetNames } from "./parse-config-set-names"
 import { parsePolicyNames } from "./parse-policy-names"
 
 const parseSimpleAccount = (
   id: string,
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
-  inheritedServiceControlPolicies: PolicyName[],
-  inheritedTagPolicies: PolicyName[],
-  inheritedAiServicesOptOutPolicies: PolicyName[],
-  inheritedBackupPolicies: PolicyName[],
-): OrganizationAccount => {
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+): OrganizationAccountConfig => {
   return {
     id,
     configSets: inheritedConfigSets,
     bootstrapConfigSets: inheritedBootstrapConfigSets,
-    name: null,
-    email: null,
-    description: null,
     vars: {},
-    accountAdminRoleName: null,
-    accountBootstrapRoleName: null,
-    status: OrganizationAccountStatus.ACTIVE,
+    status: "active",
     policies: {
       serviceControl: {
         inherited: inheritedServiceControlPolicies,
@@ -53,13 +48,13 @@ const parseSimpleAccount = (
 
 const parseComplexAccount = (
   value: any,
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
-  inheritedServiceControlPolicies: PolicyName[],
-  inheritedTagPolicies: PolicyName[],
-  inheritedAiServicesOptOutPolicies: PolicyName[],
-  inheritedBackupPolicies: PolicyName[],
-): OrganizationAccount => {
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+): OrganizationAccountConfig => {
   const configuredConfigSets = parseConfigSetNames(value.configSets)
   const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
 
@@ -123,13 +118,13 @@ const parseComplexAccount = (
 
 export const parseAccount = (
   value: any,
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
-  inheritedServiceControlPolicies: PolicyName[],
-  inheritedTagPolicies: PolicyName[],
-  inheritedAiServicesOptOutPolicies: PolicyName[],
-  inheritedBackupPolicies: PolicyName[],
-): OrganizationAccount => {
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+): OrganizationAccountConfig => {
   if (typeof value === "string") {
     return parseSimpleAccount(
       value,

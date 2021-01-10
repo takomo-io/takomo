@@ -4,23 +4,38 @@ import { promisify } from "util"
 const statP = promisify(fs.stat)
 const readFileP = promisify(readFile)
 
+/**
+ * @hidden
+ */
 export type FilePath = string
 
+/**
+ * @hidden
+ */
 export const readFileContents = async (pathToFile: FilePath): Promise<string> =>
   readFileP(pathToFile, { encoding: "utf8" }).then((contents) =>
     contents.toString(),
   )
 
+/**
+ * @hidden
+ */
 export const fileExists = async (pathToFile: FilePath): Promise<boolean> =>
   statP(pathToFile)
     .then((s) => s.isFile())
     .catch(() => false)
 
+/**
+ * @hidden
+ */
 export const dirExists = async (pathToDir: FilePath): Promise<boolean> =>
   statP(pathToDir)
     .then((s) => s.isDirectory())
     .catch(() => false)
 
+/**
+ * @hidden
+ */
 export const createDir = async (pathToDir: FilePath): Promise<boolean> =>
   new Promise((resolve, reject) => {
     mkdir(pathToDir, (err) => {
@@ -29,6 +44,9 @@ export const createDir = async (pathToDir: FilePath): Promise<boolean> =>
     })
   })
 
+/**
+ * @hidden
+ */
 export const createFile = async (
   pathToFile: FilePath,
   content: string,
@@ -40,12 +58,12 @@ export const createFile = async (
     })
   })
 
-export interface File {
-  readonly basename: FilePath
-  readonly fullPath: FilePath
-}
-
-export interface Dir {
-  readonly basename: FilePath
-  readonly fullPath: FilePath
-}
+// export interface File {
+//   readonly basename: FilePath
+//   readonly fullPath: FilePath
+// }
+//
+// export interface Dir {
+//   readonly basename: FilePath
+//   readonly fullPath: FilePath
+// }

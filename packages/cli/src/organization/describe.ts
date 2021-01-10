@@ -1,23 +1,34 @@
-import { CliDescribeOrganizationIO } from "@takomo/cli-io"
+import { createDescribeOrganizationIO } from "@takomo/cli-io"
+import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   describeOrganizationCommand,
   describeOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../common"
 
+const command = "describe"
+const desc = "Describe organization"
+
+const builder = (yargs: any) =>
+  yargs.epilog(commonEpilog(describeOrganizationCommandIamPolicy))
+
+const handler = (argv: any) =>
+  handle({
+    argv,
+    input: (ctx, input) => input,
+    io: (ctx, logger) => createDescribeOrganizationIO(logger),
+    configRepository: (ctx, logger) =>
+      createFileSystemOrganizationConfigRepository({
+        ctx,
+        logger,
+        ...ctx.filePaths,
+      }),
+    executor: describeOrganizationCommand,
+  })
+
 export const describeOrganizationCmd = {
-  command: "describe",
-  desc: "Describe organization",
-  builder: (yargs: any) =>
-    yargs.epilog(commonEpilog(describeOrganizationCommandIamPolicy)),
-  handler: (argv: any) =>
-    handle(
-      argv,
-      (ov) => ov,
-      (input) =>
-        describeOrganizationCommand(
-          input,
-          new CliDescribeOrganizationIO(input.options),
-        ),
-    ),
+  command,
+  desc,
+  builder,
+  handler,
 }

@@ -1,33 +1,43 @@
-import { CommandStatus } from "@takomo/core"
 import { OrganizationContext } from "@takomo/organization-context"
-import { StopWatch } from "@takomo/util"
-import { DescribeOrganizationIO, DescribeOrganizationOutput } from "./model"
+import { createTimer } from "@takomo/util"
+import { DescribeOrganizationOutput } from "./model"
 
 export const describeOrganization = async (
   ctx: OrganizationContext,
-  io: DescribeOrganizationIO,
 ): Promise<DescribeOrganizationOutput> => {
-  const watch = new StopWatch("total")
+  const timer = createTimer("total")
   const client = ctx.getClient()
   const [organization, roots] = await Promise.all([
     client.describeOrganization(),
     client.listOrganizationRoots(),
   ])
 
-  const enabledPolicies = roots[0]
-    .PolicyTypes!.filter((p) => p.Status === "ENABLED")
-    .map((p) => p.Type!)
+  const [root] = roots
+  if (!root) {
+    throw new Error("Root not found")
+  }
+
+  const enabledPolicies = root.policyTypes
+    .filter((p) => p.status === "ENABLED")
+    .map((p) => p.type)
 
   const masterAccount = await client.describeAccount(
-    organization.MasterAccountId!,
+    organization.masterAccountId,
   )
 
   // Listing of AWS service access for organization will
   // fail if feature set is not "ALL"
-  const services =
-    organization.FeatureSet === "ALL"
+  const trustedServices =
+    organization.featureSet === "ALL"
       ? await client.listAWSServiceAccessForOrganization()
       : []
+
+  const services = ctx.organizationServicePrincipals.map((s) => ({
+    service: s,
+    enabled: trustedServices.includes(s),
+  }))
+
+  timer.stop()
 
   return {
     organization,
@@ -35,8 +45,8 @@ export const describeOrganization = async (
     enabledPolicies,
     masterAccount,
     success: true,
-    watch: watch.stop(),
-    status: CommandStatus.SUCCESS,
+    timer,
+    status: "SUCCESS",
     message: "Success",
   }
 }

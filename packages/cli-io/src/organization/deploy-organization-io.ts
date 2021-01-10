@@ -1,6 +1,5 @@
-import { Options } from "@takomo/core"
 import {
-  DeploymentPlanHolder,
+  ConfirmOrganizationDeployProps,
   DeployOrganizationIO,
   DeployOrganizationOutput,
   OrganizationalUnitsDeploymentPlan,
@@ -15,12 +14,13 @@ import {
   green,
   LogWriter,
   red,
+  TkmLogger,
   yellow,
 } from "@takomo/util"
 import Table from "easy-table"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
-import CliIO from "../cli-io"
+import { createBaseIO } from "../cli-io"
 import { formatCommandStatus } from "../formatters"
 
 interface Formatters {
@@ -40,86 +40,85 @@ interface PolicyOperationsToInclude {
 const addFormatter = (s: string) => green(s)
 const deleteFormatter = (s: string) => red(s)
 
-export class CliDeployOrganizationIO
-  extends CliIO
-  implements DeployOrganizationIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
+export const createDeployOrganizationIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): DeployOrganizationIO => {
+  const io = createBaseIO(writer)
 
-  private printTrustedServicesPlan = (
+  const printTrustedServicesPlan = (
     plan: OrganizationBasicConfigDeploymentPlan,
   ): void => {
-    this.subheader("Trusted AWS services", true)
+    io.subheader({ text: "Trusted AWS services", marginTop: true })
 
     const { add, remove } = plan.trustedServices
     if (add.length + remove.length === 0) {
-      this.message("No changes to trusted AWS services")
+      io.message({ text: "No changes to trusted AWS services" })
       return
     }
 
     if (add.length > 0) {
-      this.message(
-        `Access for the following ${add.length} service(s) will be enabled:`,
-        false,
-        true,
-      )
+      io.message({
+        text: `Access for the following ${add.length} service(s) will be enabled:`,
+        marginTop: false,
+        marginBottom: true,
+      })
       add.forEach((s) => {
-        this.message(green(`  - ${s}`))
+        io.message({ text: green(`  - ${s}`) })
       })
     }
 
     if (remove.length > 0) {
-      this.message(
-        `Access for the following ${remove.length} service(s) will be disabled:`,
-        false,
-        true,
-      )
+      io.message({
+        text: `Access for the following ${remove.length} service(s) will be disabled:`,
+        marginTop: false,
+        marginBottom: true,
+      })
       add.forEach((s) => {
-        this.message(red(`  - ${s}`))
+        io.message({ text: red(`  - ${s}`) })
       })
     }
   }
 
-  private printEnabledPolicyTypesPlan = (
+  const printEnabledPolicyTypesPlan = (
     plan: OrganizationBasicConfigDeploymentPlan,
   ): void => {
-    this.subheader("Policy types", true)
+    io.subheader({ text: "Policy types", marginTop: true })
     const { add, remove } = plan.enabledPolicies
 
     if (add.length + remove.length === 0) {
-      this.message("No changes to enabled policy types")
+      io.message({ text: "No changes to enabled policy types" })
       return
     }
 
     if (add.length > 0) {
-      this.message(
-        `The following ${add.length} policy types(s) will be enabled:`,
-        false,
-        true,
-      )
+      io.message({
+        text: `The following ${add.length} policy types(s) will be enabled:`,
+        marginTop: false,
+        marginBottom: true,
+      })
       add.forEach((s) => {
-        this.message(green(`  - ${s}`))
+        io.message({ text: green(`  - ${s}`) })
       })
     }
 
     if (remove.length > 0) {
-      this.message(
-        `The following ${remove.length} policy types(s) will be disabled:`,
-        false,
-        true,
-      )
+      io.message({
+        text: `The following ${remove.length} policy types(s) will be disabled:`,
+        marginTop: false,
+        marginBottom: true,
+      })
       remove.forEach((s) => {
-        this.message(red(`  - ${s}`))
+        io.message({ text: red(`  - ${s}`) })
       })
     }
   }
 
-  private printPoliciesDeploymentPlan = (plan: PolicyDeploymentPlan): void => {
-    this.subheader("Policies", true)
+  const printPoliciesDeploymentPlan = (plan: PolicyDeploymentPlan): void => {
+    io.subheader({ text: "Policies", marginTop: true })
 
     if (!plan.hasChanges) {
-      this.message("No changes to policies")
+      io.message({ text: "No changes to policies" })
       return
     }
 
@@ -130,46 +129,46 @@ export class CliDeployOrganizationIO
     const policiesToUpdate = flatten(allPolicies.map((p) => p.update))
 
     if (policiesToAdd.length > 0) {
-      this.message(
-        `The following ${policiesToAdd.length} policies will be added:`,
-        false,
-        true,
-      )
-      policiesToAdd.forEach((p) => {
-        this.message(green(`  - name: ${p.name}`))
-        this.message(green(`    type: ${p.type}`))
+      io.message({
+        text: `The following ${policiesToAdd.length} policies will be added:`,
+        marginTop: false,
+        marginBottom: true,
       })
-      this.message()
+      policiesToAdd.forEach((p) => {
+        io.message({ text: green(`  - name: ${p.name}`) })
+        io.message({ text: green(`    type: ${p.type}`) })
+      })
+      io.print()
     }
 
     if (policiesToUpdate.length > 0) {
-      this.message(
-        `The following ${policiesToUpdate.length} policies will be updated:`,
-        false,
-        true,
-      )
-      policiesToUpdate.forEach((p) => {
-        this.message(yellow(`  - name: ${p.name}`))
-        this.message(yellow(`    type: ${p.type}`))
+      io.message({
+        text: `The following ${policiesToUpdate.length} policies will be updated:`,
+        marginTop: false,
+        marginBottom: true,
       })
-      this.message()
+      policiesToUpdate.forEach((p) => {
+        io.message({ text: yellow(`  - name: ${p.name}`) })
+        io.message({ text: yellow(`    type: ${p.type}`) })
+      })
+      io.print()
     }
 
     if (policiesToRemove.length > 0) {
-      this.message(
-        `The following ${policiesToRemove.length} policies will be removed:`,
-        false,
-        true,
-      )
-      policiesToRemove.forEach((p) => {
-        this.message(red(`  - name: ${p.name}`))
-        this.message(red(`    type: ${p.type}`))
+      io.message({
+        text: `The following ${policiesToRemove.length} policies will be removed:`,
+        marginTop: false,
+        marginBottom: true,
       })
-      this.message()
+      policiesToRemove.forEach((p) => {
+        io.message({ text: red(`  - name: ${p.name}`) })
+        io.message({ text: red(`    type: ${p.type}`) })
+      })
+      io.print()
     }
   }
 
-  private printOrganizationalUnit = (
+  const printOrganizationalUnit = (
     ou: PlannedOrganizationalUnit,
     depth: number,
     printer?: (message: string) => void,
@@ -177,13 +176,13 @@ export class CliDeployOrganizationIO
     if (!printer) {
       switch (ou.operation) {
         case "delete":
-          this.printOrganizationalUnit(ou, depth, (message: string) =>
-            this.message(red("- " + "  ".repeat(depth) + message)),
+          printOrganizationalUnit(ou, depth, (message: string) =>
+            io.message({ text: red("- " + "  ".repeat(depth) + message) }),
           )
           return
         case "add":
-          this.printOrganizationalUnit(ou, depth, (message: string) =>
-            this.message(green("+ " + "  ".repeat(depth) + message)),
+          printOrganizationalUnit(ou, depth, (message: string) =>
+            io.message({ text: green("+ " + "  ".repeat(depth) + message) }),
           )
           return
       }
@@ -191,18 +190,19 @@ export class CliDeployOrganizationIO
 
     const print =
       printer ||
-      ((message: string) => this.message("  ".repeat(depth + 1) + message))
+      ((message: string) =>
+        io.message({ text: "  ".repeat(depth + 1) + message }))
 
     print(`${ou.name}:`)
     if (ou.children.length > 0) {
       print("  children:")
       ou.children.forEach((child) => {
-        this.printOrganizationalUnit(child, depth + 2)
+        printOrganizationalUnit(child, depth + 2)
       })
     }
   }
 
-  private printPolicyOperations = (
+  const printPolicyOperations = (
     name: string,
     { inherited, attached }: OrgEntityPolicyOperationsPlan,
     formatters: Formatters,
@@ -283,21 +283,23 @@ export class CliDeployOrganizationIO
     }
 
     if (all.every((p) => p.operation === "remove")) {
-      this.message(deleteFormatter(`${" ".repeat(depth)}${name}:`))
+      io.message({ text: deleteFormatter(`${" ".repeat(depth)}${name}:`) })
     } else if (all.every((p) => p.operation === "add")) {
-      this.message(addFormatter(`${" ".repeat(depth)}${name}:`))
+      io.message({ text: addFormatter(`${" ".repeat(depth)}${name}:`) })
     } else {
-      this.message(formatters.header(`${" ".repeat(depth)}${name}:`))
+      io.message({ text: formatters.header(`${" ".repeat(depth)}${name}:`) })
     }
 
     all
       .sort((a, b) => a.name.localeCompare(b.name))
       .forEach(({ name, formatter, type }) => {
-        this.message(formatter(`${" ".repeat(depth + 2)}- ${name}   (${type})`))
+        io.message({
+          text: formatter(`${" ".repeat(depth + 2)}- ${name}   (${type})`),
+        })
       })
   }
 
-  private printPolicies = (
+  const printPolicies = (
     policies: OrgEntityPoliciesPlan,
     formatters: Formatters,
     inclusions: PolicyOperationsToInclude,
@@ -315,7 +317,7 @@ export class CliDeployOrganizationIO
       return
     }
 
-    this.printPolicyOperations(
+    printPolicyOperations(
       "serviceControlPolicies",
       serviceControl,
       formatters,
@@ -323,15 +325,9 @@ export class CliDeployOrganizationIO
       depth,
     )
 
-    this.printPolicyOperations(
-      "tagPolicies",
-      tag,
-      formatters,
-      inclusions,
-      depth,
-    )
+    printPolicyOperations("tagPolicies", tag, formatters, inclusions, depth)
 
-    this.printPolicyOperations(
+    printPolicyOperations(
       "backupPolicies",
       backup,
       formatters,
@@ -339,7 +335,7 @@ export class CliDeployOrganizationIO
       depth,
     )
 
-    this.printPolicyOperations(
+    printPolicyOperations(
       "aiServicesOptOutPolicies",
       aiServicesOptOut,
       formatters,
@@ -348,14 +344,14 @@ export class CliDeployOrganizationIO
     )
   }
 
-  private printOrganizationalUnitsDeploymentPlan = ({
+  const printOrganizationalUnitsDeploymentPlan = ({
     root,
     hasChanges,
   }: OrganizationalUnitsDeploymentPlan): void => {
-    this.subheader("Organizational units", true)
+    io.subheader({ text: "Organizational units", marginTop: true })
 
     if (!hasChanges) {
-      this.message("No changes to organizational units")
+      io.message({ text: "No changes to organizational units" })
       return
     }
 
@@ -368,15 +364,15 @@ export class CliDeployOrganizationIO
     const ousToDelete = ous.filter((ou) => ou.operation === "delete")
 
     if (ousToAdd.length > 0) {
-      this.message(
-        `The following ${ousToAdd.length} organizational unit(s) will be added:`,
-        false,
-        true,
-      )
+      io.message({
+        text: `The following ${ousToAdd.length} organizational unit(s) will be added:`,
+        marginTop: false,
+        marginBottom: true,
+      })
       ousToAdd.forEach((ou) => {
-        this.message(green(`  - path: ${ou.path}`))
-        this.message(green(`    id: <known after deploy>`))
-        this.printPolicies(
+        io.message({ text: green(`  - path: ${ou.path}`) })
+        io.message({ text: green(`    id: <known after deploy>`) })
+        printPolicies(
           ou.policies,
           {
             add: addFormatter,
@@ -394,10 +390,10 @@ export class CliDeployOrganizationIO
         )
 
         if (ou.accounts.add.length > 0) {
-          this.message(green(`    accounts:`))
+          io.message({ text: green(`    accounts:`) })
           ou.accounts.add.forEach((a) => {
-            this.message(green(`      - id: ${a.id}`))
-            this.printPolicies(
+            io.message({ text: green(`      - id: ${a.id}`) })
+            printPolicies(
               a.policies,
               {
                 add: addFormatter,
@@ -417,19 +413,19 @@ export class CliDeployOrganizationIO
         }
       })
 
-      this.message()
+      io.print()
     }
 
     if (ousToUpdate.length > 0) {
-      this.message(
-        `The following ${ousToUpdate.length} organizational unit(s) will be updated:`,
-        false,
-        true,
-      )
+      io.message({
+        text: `The following ${ousToUpdate.length} organizational unit(s) will be updated:`,
+        marginTop: false,
+        marginBottom: true,
+      })
       ousToUpdate.forEach((ou) => {
-        this.message(`  - path: ${ou.path}`)
-        this.message(`    id: ${ou.id}`)
-        this.printPolicies(
+        io.message({ text: `  - path: ${ou.path}` })
+        io.message({ text: `    id: ${ou.id}` })
+        printPolicies(
           ou.policies,
           {
             add: addFormatter,
@@ -448,10 +444,10 @@ export class CliDeployOrganizationIO
 
         const { remove, add, retain } = ou.accounts
         if (remove.length + add.length + retain.length > 0) {
-          this.message(`    accounts:`)
+          io.message({ text: `    accounts:` })
           add.forEach((a) => {
-            this.message(green(`      - id: ${a.id}`))
-            this.printPolicies(
+            io.message({ text: green(`      - id: ${a.id}`) })
+            printPolicies(
               a.policies,
               {
                 add: addFormatter,
@@ -470,8 +466,8 @@ export class CliDeployOrganizationIO
           })
 
           retain.forEach((a) => {
-            this.message(`      - id: ${a.id}`)
-            this.printPolicies(
+            io.message({ text: `      - id: ${a.id}` })
+            printPolicies(
               a.policies,
               {
                 add: addFormatter,
@@ -490,8 +486,8 @@ export class CliDeployOrganizationIO
           })
 
           remove.forEach((a) => {
-            this.message(red(`      - id: ${a.id}`))
-            this.printPolicies(
+            io.message({ text: red(`      - id: ${a.id}`) })
+            printPolicies(
               a.policies,
               {
                 add: deleteFormatter,
@@ -511,19 +507,19 @@ export class CliDeployOrganizationIO
         }
       })
 
-      this.message()
+      io.print()
     }
 
     if (ousToDelete.length > 0) {
-      this.message(
-        `The following ${ousToDelete.length} organizational unit(s) will be deleted:`,
-        false,
-        true,
-      )
+      io.message({
+        text: `The following ${ousToDelete.length} organizational unit(s) will be deleted:`,
+        marginTop: false,
+        marginBottom: true,
+      })
       ousToDelete.forEach((ou) => {
-        this.message(red(`  - path: ${ou.path}`))
-        this.message(red(`    id: ${ou.id}`))
-        this.printPolicies(
+        io.message({ text: red(`  - path: ${ou.path}`) })
+        io.message({ text: red(`    id: ${ou.id}`) })
+        printPolicies(
           ou.policies,
           {
             add: deleteFormatter,
@@ -541,10 +537,10 @@ export class CliDeployOrganizationIO
         )
 
         if (ou.accounts.remove.length > 0) {
-          this.message(red(`    accounts:`))
+          io.message({ text: red(`    accounts:`) })
           ou.accounts.remove.forEach((a) => {
-            this.message(red(`      - id: ${a.id}`))
-            this.printPolicies(
+            io.message({ text: red(`      - id: ${a.id}`) })
+            printPolicies(
               a.policies,
               {
                 add: deleteFormatter,
@@ -564,28 +560,35 @@ export class CliDeployOrganizationIO
         }
       })
 
-      this.message()
+      io.print()
     }
   }
 
-  confirmLaunch = async (plan: DeploymentPlanHolder): Promise<boolean> => {
-    this.header("Review organization deployment plan", true)
-    this.longMessage([
-      "An organization deployment plan has been created and is shown below.",
-      "Review each section carefully before proceeding.",
-    ])
-
-    this.printTrustedServicesPlan(plan.plan.organizationBasicConfigPlan)
-    this.printEnabledPolicyTypesPlan(plan.plan.organizationBasicConfigPlan)
-    this.printPoliciesDeploymentPlan(plan.plan.policiesPlan)
-    this.printOrganizationalUnitsDeploymentPlan(
-      plan.plan.organizationalUnitsPlan,
+  const confirmDeploy = async ({
+    organizationalUnitsPlan,
+    organizationBasicConfigPlan,
+    policiesPlan,
+  }: ConfirmOrganizationDeployProps): Promise<boolean> => {
+    io.header({ text: "Review organization deployment plan", marginTop: true })
+    io.longMessage(
+      [
+        "An organization deployment plan has been created and is shown below.",
+        "Review each section carefully before proceeding.",
+      ],
+      false,
+      false,
+      0,
     )
 
-    return await this.confirm("Continue to deploy the organization?", true)
+    printTrustedServicesPlan(organizationBasicConfigPlan)
+    printEnabledPolicyTypesPlan(organizationBasicConfigPlan)
+    printPoliciesDeploymentPlan(policiesPlan)
+    printOrganizationalUnitsDeploymentPlan(organizationalUnitsPlan)
+
+    return await io.confirm("Continue to deploy the organization?", true)
   }
 
-  printOutput = (
+  const printOutput = (
     output: DeployOrganizationOutput,
   ): DeployOrganizationOutput => {
     const {
@@ -597,21 +600,47 @@ export class CliDeployOrganizationIO
       basicConfigCleanResult,
     } = output
 
-    this.header("Deployment summary", true)
+    io.header({ text: "Deployment summary", marginTop: true })
 
     const table = new Table()
 
-    const results = [
-      { ...basicConfigDeploymentResult, name: "Deploy basic configuration" },
-      { ...policiesDeploymentResult, name: "Deploy policies" },
-      {
+    const results = []
+
+    if (basicConfigDeploymentResult) {
+      results.push({
+        ...basicConfigDeploymentResult,
+        name: "Deploy basic configuration",
+      })
+    }
+
+    if (policiesDeploymentResult) {
+      results.push({ ...policiesDeploymentResult, name: "Deploy policies" })
+    }
+
+    if (organizationalUnitsDeploymentResult) {
+      results.push({
         ...organizationalUnitsDeploymentResult,
         name: "Deploy organizational units",
-      },
-      { ...organizationalUnitsCleanResult, name: "Clean organizational units" },
-      { ...policiesCleanResult, name: "Clean policies" },
-      { ...basicConfigCleanResult, name: "Clean basic configuration" },
-    ]
+      })
+    }
+
+    if (organizationalUnitsCleanResult) {
+      results.push({
+        ...organizationalUnitsCleanResult,
+        name: "Clean organizational units",
+      })
+    }
+
+    if (policiesCleanResult) {
+      results.push({ ...policiesCleanResult, name: "Clean policies" })
+    }
+
+    if (basicConfigCleanResult) {
+      results.push({
+        ...basicConfigCleanResult,
+        name: "Clean basic configuration",
+      })
+    }
 
     results.forEach((r) => {
       table.cell("Task", r.name)
@@ -620,8 +649,14 @@ export class CliDeployOrganizationIO
       table.newRow()
     })
 
-    this.message(table.toString(), true)
+    io.message({ text: table.toString(), marginTop: true })
 
     return output
+  }
+
+  return {
+    ...logger,
+    printOutput,
+    confirmDeploy,
   }
 }

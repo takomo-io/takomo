@@ -1,18 +1,11 @@
-import { initOptionsAndVariables } from "@takomo/cli"
+import { DeployOrganizationOutput } from "@takomo/organization-commands"
+import { executeTeardownAccountsCommand } from "@takomo/test-integration"
 import {
-  CliDeployAccountsIO,
-  CliDeployOrganizationIO,
-  CliDeployStacksIO,
-  CliUndeployAccountsIO,
-  CliUndeployStacksIO,
-} from "@takomo/cli-io"
-import { ConfigSetType } from "@takomo/config-sets"
-import { CommandStatus, DeploymentOperation, Options } from "@takomo/core"
-import {
-  accountsOperationCommand,
-  deployOrganizationCommand,
-  DeployOrganizationOutput,
-} from "@takomo/organization-commands"
+  executeBootstrapAccountsCommand,
+  executeDeployAccountsCommand,
+  executeDeployOrganizationCommand,
+  executeUndeployAccountsCommand,
+} from "@takomo/test-integration/src"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,
@@ -21,123 +14,50 @@ import {
   ORG_A_ACCOUNT_5_ID,
 } from "./env"
 
-const createOptions = async (version: string) =>
-  initOptionsAndVariables({
-    log: "info",
-    yes: true,
-    dir: "configs",
-    var: `configVersion=${version}.yml`,
-  })
+const projectDir = "configs"
 
 const deployOrganization = async (
   version: string,
 ): Promise<DeployOrganizationOutput> =>
-  createOptions(version).then(({ options, variables, watch }) =>
-    deployOrganizationCommand(
-      {
-        watch,
-        variables,
-        options,
-      },
-      new CliDeployOrganizationIO(options),
-    ),
-  )
+  executeDeployOrganizationCommand({
+    projectDir,
+    var: [`configVersion=${version}.yml`],
+  })
+    .expectCommandToSucceed()
+    .assert()
 
 describe("Organization commands", () => {
-  test("initial configuration", async () => {
-    const { success, status, message } = await deployOrganization("v01")
+  test("initial configuration", () => deployOrganization("v01"))
 
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
+  test("add new service control policy", () => deployOrganization("v02"))
 
-  test("add new service control policy", async () => {
-    const { success, status, message } = await deployOrganization("v02")
+  test("add new organization units and move some accounts to them", () =>
+    deployOrganization("v03"))
 
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
+  test("add new tag policy", () => deployOrganization("v04"))
 
-  test("add new organization units and move some accounts to them", async () => {
-    const { success, status, message } = await deployOrganization("v03")
+  test("disable service control policies", () => deployOrganization("v05"))
 
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
+  test("disable tag policies", () => deployOrganization("v06"))
 
-  test("add new tag policy", async () => {
-    const { success, status, message } = await deployOrganization("v04")
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
-
-  test("disable service control policies", async () => {
-    const { success, status, message } = await deployOrganization("v05")
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
-
-  test("disable tag policies", async () => {
-    const { success, status, message } = await deployOrganization("v06")
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
-
-  test("enabled tag policies", async () => {
-    const { success, status, message } = await deployOrganization("v07")
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
+  test("enabled tag policies", () => deployOrganization("v07"))
 
   // Undeploy all accounts
   test("undeploy accounts", async () => {
-    const { options, watch, variables } = await createOptions("v07")
-    const {
-      success,
-      status,
-      message,
-      results,
-    } = await accountsOperationCommand(
-      {
-        variables,
-        watch,
-        options,
-        accountIds: [],
-        organizationalUnits: [],
-        operation: DeploymentOperation.UNDEPLOY,
-        configSetType: ConfigSetType.STANDARD,
-      },
-      new CliUndeployAccountsIO(
-        options,
-        (options: Options, accountId: string) =>
-          new CliDeployStacksIO(options, console.log, accountId),
-        (options: Options, accountId: string) =>
-          new CliUndeployStacksIO(options, console.log, accountId),
-      ),
-    )
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
+    const { results } = await executeUndeployAccountsCommand({
+      projectDir,
+      var: ["configVersion=v07.yml"],
+    })
+      .expectCommandToSucceed()
+      .assert()
 
     expect(results).toHaveLength(2)
 
-    const [sandbox2Ou, testAccountsOu] = results
+    const [sandbox2Ou, testAccountsOu] = results!
 
     expect(sandbox2Ou.path).toBe("Root/sandbox accounts/sandbox-2")
     expect(sandbox2Ou.success).toBeTruthy()
-    expect(sandbox2Ou.status).toBe(CommandStatus.SUCCESS)
+    expect(sandbox2Ou.status).toBe("SUCCESS")
     expect(sandbox2Ou.results).toHaveLength(2)
 
     const [a4, a5] = sandbox2Ou.results
@@ -150,7 +70,7 @@ describe("Organization commands", () => {
 
     expect(testAccountsOu.path).toBe("Root/test-accounts")
     expect(testAccountsOu.success).toBeTruthy()
-    expect(testAccountsOu.status).toBe(CommandStatus.SUCCESS)
+    expect(testAccountsOu.status).toBe("SUCCESS")
     expect(testAccountsOu.results).toHaveLength(3)
 
     const [a1, a2, a3] = testAccountsOu.results
@@ -166,37 +86,17 @@ describe("Organization commands", () => {
   })
 
   test("deploy accounts from Root/test-accounts", async () => {
-    const { options, watch, variables } = await createOptions("v07")
-    const {
-      success,
-      status,
-      message,
-      results,
-    } = await accountsOperationCommand(
-      {
-        variables,
-        watch,
-        options,
-        accountIds: [],
-        organizationalUnits: ["Root/test-accounts"],
-        operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.STANDARD,
-      },
-      new CliDeployAccountsIO(
-        options,
-        (options: Options, accountId: string) =>
-          new CliDeployStacksIO(options, console.log, accountId),
-        (options: Options, accountId: string) =>
-          new CliUndeployStacksIO(options, console.log, accountId),
-      ),
-    )
+    const { results } = await executeDeployAccountsCommand({
+      projectDir,
+      var: ["configVersion=v07.yml"],
+      organizationalUnits: ["Root/test-accounts"],
+    })
+      .expectCommandToSucceed()
+      .assert()
 
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
     expect(results).toHaveLength(1)
 
-    const [testAccountsOu] = results
+    const [testAccountsOu] = results!
 
     expect(testAccountsOu.results).toHaveLength(3)
     const [a1, a2, a3] = testAccountsOu.results
@@ -212,38 +112,17 @@ describe("Organization commands", () => {
   })
 
   test("deploy single accounts", async () => {
-    const { options, watch, variables } = await createOptions("v07")
-    const {
-      success,
-      status,
-      message,
-      results,
-    } = await accountsOperationCommand(
-      {
-        variables,
-        watch,
-        options,
-        accountIds: [ORG_A_ACCOUNT_4_ID, ORG_A_ACCOUNT_5_ID],
-        organizationalUnits: [],
-        operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.STANDARD,
-      },
-      new CliDeployAccountsIO(
-        options,
-        (options: Options, accountId: string) =>
-          new CliDeployStacksIO(options, console.log, accountId),
-        (options: Options, accountId: string) =>
-          new CliUndeployStacksIO(options, console.log, accountId),
-      ),
-    )
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
+    const { results } = await executeDeployAccountsCommand({
+      projectDir,
+      var: ["configVersion=v07.yml"],
+      accountIds: [ORG_A_ACCOUNT_4_ID, ORG_A_ACCOUNT_5_ID],
+    })
+      .expectCommandToSucceed()
+      .assert()
 
     expect(results).toHaveLength(1)
 
-    const [sandbox2Ou] = results
+    const [sandbox2Ou] = results!
     expect(sandbox2Ou.results).toHaveLength(2)
 
     const [a4, a5] = sandbox2Ou.results
@@ -256,35 +135,16 @@ describe("Organization commands", () => {
   })
 
   test("bootstrap accounts", async () => {
-    const { options, watch, variables } = await createOptions("v07")
-    const {
-      success,
-      status,
-      message,
-      results,
-    } = await accountsOperationCommand(
-      {
-        variables,
-        watch,
-        options,
-        accountIds: [],
-        organizationalUnits: [],
-        operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.BOOTSTRAP,
-      },
-      new CliDeployAccountsIO(
-        options,
-        (options: Options, accountId: string) =>
-          new CliDeployStacksIO(options, console.log, accountId),
-        (options: Options, accountId: string) =>
-          new CliUndeployStacksIO(options, console.log, accountId),
-      ),
-    )
+    const { results } = await executeBootstrapAccountsCommand({
+      projectDir,
+      var: ["configVersion=v07.yml"],
+    })
+      .expectCommandToSucceed()
+      .assert()
 
-    expect(success).toBeTruthy()
     expect(results).toHaveLength(1)
 
-    const [testOu] = results
+    const [testOu] = results!
     expect(testOu.results).toHaveLength(3)
 
     const [a1, a2, a3] = testOu.results
@@ -299,60 +159,32 @@ describe("Organization commands", () => {
     expect(a3.success).toBeTruthy()
   })
 
-  test("deploy organizational units that use config set with different project dir", async () => {
-    const { options, watch, variables } = await createOptions("v08")
-    const {
-      success,
-      status,
-      message,
-      results,
-    } = await accountsOperationCommand(
-      {
-        variables,
-        watch,
-        options,
-        accountIds: [],
-        organizationalUnits: ["Root/sandbox accounts/sandbox-2"],
-        operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.STANDARD,
-      },
-      new CliDeployAccountsIO(
-        options,
-        (options: Options, accountId: string) =>
-          new CliDeployStacksIO(options, console.log, accountId),
-        (options: Options, accountId: string) =>
-          new CliUndeployStacksIO(options, console.log, accountId),
-      ),
-    )
+  test("tear down accounts", async () => {
+    const { results } = await executeTeardownAccountsCommand({
+      projectDir,
+      var: ["configVersion=v07.yml"],
+    })
+      .expectCommandToSucceed()
+      .assert()
 
-    expect(success).toBeTruthy()
     expect(results).toHaveLength(1)
 
-    const [sandbox2Ou] = results
-    expect(sandbox2Ou.results).toHaveLength(2)
+    const [testOu] = results!
+    expect(testOu.results).toHaveLength(3)
 
-    const [a4, a5] = sandbox2Ou.results
+    const [a1, a2, a3] = testOu.results
 
-    expect(a4.accountId).toBe(ORG_A_ACCOUNT_4_ID)
-    expect(a4.success).toBeTruthy()
+    expect(a1.accountId).toBe(ORG_A_ACCOUNT_1_ID)
+    expect(a1.success).toBeTruthy()
 
-    expect(a5.accountId).toBe(ORG_A_ACCOUNT_5_ID)
-    expect(a5.success).toBeTruthy()
+    expect(a2.accountId).toBe(ORG_A_ACCOUNT_2_ID)
+    expect(a2.success).toBeTruthy()
+
+    expect(a3.accountId).toBe(ORG_A_ACCOUNT_3_ID)
+    expect(a3.success).toBeTruthy()
   })
 
-  test("enable AI services opt-out policies", async () => {
-    const { success, status, message } = await deployOrganization("v09")
+  test("enable AI services opt-out policies", () => deployOrganization("v09"))
 
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
-
-  test("enable backup policies", async () => {
-    const { success, status, message } = await deployOrganization("v10")
-
-    expect(success).toBeTruthy()
-    expect(status).toBe(CommandStatus.SUCCESS)
-    expect(message).toBe("Success")
-  })
+  test("enable backup policies", () => deployOrganization("v10"))
 })

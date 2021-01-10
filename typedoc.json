@@ -1,14 +1,13 @@
 {
-  "inputFiles": ["./packages"],
-  "exclude": "**/test/**",
-  "mode": "file",
-  "out": "api-docs",
-  "includeVersion": false,
-  "excludeNotExported": true,
-  "excludePrivate": true,
-  "excludeProtected": true,
-  "excludeNotDocumented": true,
-  "name": "Takomo",
-  "readme": "none",
-  "gaID": "UA-165592316-1"
+  "entryPoints": [
+    "packages/aws-clients/src/index.ts",
+    "packages/aws-model/src/index.ts",
+    "packages/aws-schema/src/index.ts",
+    "packages/core/src/index.ts",
+    "packages/stacks-model/src/index.ts",
+    "packages/util/src/index.ts"
+  ],
+  "gaID": "UA-165592316-1",
+  "readme": "api-docs-readme.md",
+  "out": "api-docs"
 }

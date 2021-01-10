@@ -1,5 +1,5 @@
-import { StackPath, Variables } from "@takomo/core"
-import { StackGroup } from "@takomo/stacks-model"
+import { Variables } from "@takomo/core"
+import { StackGroup, StackPath } from "@takomo/stacks-model"
 import path from "path"
 import { getVariablesForStackGroup } from "./get-variables-for-stack-group"
 
@@ -19,7 +19,7 @@ export const createVariablesForStackConfigFile = (
         filePath,
         basename: path.basename(filePath),
         name: path.basename(filePath, ".yml"),
-        dirPath: stackGroup.getPath().substr(1),
+        dirPath: stackGroup.path.substr(1),
       },
     },
     stackGroup: stackGroupVariables,

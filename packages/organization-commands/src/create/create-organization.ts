@@ -1,21 +1,12 @@
-import { OrganizationsClient } from "@takomo/aws-clients"
 import {
-  CommandStatus,
-  Constants,
-  initDefaultCredentialProvider,
-} from "@takomo/core"
-import { parseOrganizationConfigFile } from "@takomo/organization-config"
-import { loadCustomPartials } from "@takomo/organization-context"
-import {
-  createDir,
-  createFile,
-  dirExists,
-  fileExists,
-  StopWatch,
-  TakomoError,
-  TemplateEngine,
-} from "@takomo/util"
-import path from "path"
+  createOrganizationsClient,
+  initDefaultCredentialManager,
+} from "@takomo/aws-clients"
+import { CommandContext } from "@takomo/core"
+import { OrganizationConfig } from "@takomo/organization-config"
+import { OrganizationConfigRepository } from "@takomo/organization-context"
+import { DEFAULT_ORGANIZATION_ROLE_NAME } from "@takomo/organization-model"
+import { createTimer } from "@takomo/util"
 import {
   CreateOrganizationInput,
   CreateOrganizationIO,
@@ -23,139 +14,125 @@ import {
 } from "./model"
 
 export const createOrganization = async (
+  ctx: CommandContext,
+  configRepository: OrganizationConfigRepository,
   input: CreateOrganizationInput,
   io: CreateOrganizationIO,
 ): Promise<CreateOrganizationOutput> => {
-  const watch = new StopWatch("total")
-  const { options, featureSet } = input
+  const timer = createTimer("total")
+  const { featureSet } = input
 
-  const credentialProvider = await initDefaultCredentialProvider()
-  const identity = await credentialProvider.getCallerIdentity()
+  const credentialManager = await initDefaultCredentialManager()
+  const identity = await credentialManager.getCallerIdentity()
 
   if (
-    !options.isAutoConfirmEnabled() &&
+    !ctx.autoConfirmEnabled &&
     !(await io.confirmOrganizationCreation(identity.accountId, featureSet))
   ) {
+    timer.stop()
     return {
+      timer,
       message: "Cancelled",
-      status: CommandStatus.CANCELLED,
+      status: "CANCELLED",
       success: true,
-      organization: null,
-      configurationFile: null,
-      watch: watch.stop(),
     }
   }
 
-  const projectDir = input.options.getProjectDir()
-  const pathToOrganizationDir = path.join(
-    projectDir,
-    Constants.ORGANIZATION_DIR,
-  )
-
-  const pathToOrganizationFile = path.join(
-    pathToOrganizationDir,
-    Constants.ORGANIZATION_CONFIG_FILE,
-  )
-
-  const organizationConfigFileExists = await fileExists(pathToOrganizationFile)
-
-  if (organizationConfigFileExists) {
-    const templateEngine = new TemplateEngine()
-
-    await loadCustomPartials(pathToOrganizationDir, io, templateEngine)
-
-    const organizationConfigFile = await parseOrganizationConfigFile(
-      io,
-      options,
-      input.variables,
-      pathToOrganizationFile,
-      templateEngine,
-    )
-
-    const masterAccountId = organizationConfigFile.masterAccountId
-    if (!masterAccountId === undefined) {
-      throw new TakomoError(
-        "An exiting organization configuration file found but it does not have masterAccountId property",
-        {
-          instructions: [
-            `Either remove the existing organization configuration file or add masterAccountId property with value "${identity.accountId}" in it`,
-          ],
-        },
-      )
-    }
-
-    if (masterAccountId !== identity.accountId) {
-      throw new TakomoError(
-        "An exiting organization configuration file found but its masterAccountId property does not match with the account id of current credentials",
-        {
-          instructions: [
-            `Either remove the existing organization configuration file or set masterAccountId property value to "${identity.accountId}" in it`,
-          ],
-        },
-      )
-    }
-  }
-
-  const client = new OrganizationsClient({
+  const client = createOrganizationsClient({
+    credentialManager,
     logger: io,
-    credentialProvider,
     region: "us-east-1",
   })
 
   try {
     const organization = await client.createOrganization(featureSet)
 
-    if (!organizationConfigFileExists) {
-      const organizationConfigContent =
-        `masterAccountId: "${identity.accountId}"\n` +
-        "organizationalUnits:\n" +
-        "  Root:\n" +
-        "    accounts:\n" +
-        `      - "${identity.accountId}"\n`
-
-      if (!(await dirExists(pathToOrganizationDir))) {
-        try {
-          await createDir(pathToOrganizationDir)
-        } catch (e) {
-          io.error("Failed to create the organization configuration file", e)
-          io.warn(
-            "The organization was created successfully but organization configuration file could not be created. You can create it manually.",
-          )
-        }
-      }
-
-      try {
-        await createFile(pathToOrganizationFile, organizationConfigContent)
-        io.info(
-          `Created organization configuration file: ${pathToOrganizationFile}`,
-        )
-      } catch (e) {
-        io.error("Failed to create the organization configuration file", e)
-        io.warn(
-          "The organization was created successfully but organization configuration file could not be created. You can create it manually.",
-        )
-      }
+    // TODO: Specify this default config somewhere?
+    const organizationConfig: OrganizationConfig = {
+      masterAccountId: identity.accountId,
+      vars: {},
+      accountCreation: {
+        constraints: {},
+        defaults: {
+          iamUserAccessToBilling: true,
+          roleName: DEFAULT_ORGANIZATION_ROLE_NAME,
+        },
+      },
+      aiServicesOptOutPolicies: {
+        enabled: false,
+        policies: [],
+        policyType: "AISERVICES_OPT_OUT_POLICY",
+      },
+      backupPolicies: {
+        enabled: false,
+        policies: [],
+        policyType: "BACKUP_POLICY",
+      },
+      configSets: [],
+      serviceControlPolicies: {
+        enabled: false,
+        policies: [],
+        policyType: "SERVICE_CONTROL_POLICY",
+      },
+      tagPolicies: {
+        enabled: false,
+        policies: [],
+        policyType: "TAG_POLICY",
+      },
+      trustedAwsServices: ctx.organizationServicePrincipals,
+      organizationalUnits: {
+        Root: {
+          name: "Root",
+          path: "Root",
+          status: "active",
+          priority: 0,
+          children: [],
+          configSets: [],
+          bootstrapConfigSets: [],
+          policies: {
+            aiServicesOptOut: { attached: [], inherited: [] },
+            backup: { attached: [], inherited: [] },
+            serviceControl: { attached: [], inherited: [] },
+            tag: { attached: [], inherited: [] },
+          },
+          vars: {},
+          accounts: [
+            {
+              id: identity.accountId,
+              status: "active",
+              policies: {
+                aiServicesOptOut: { attached: [], inherited: [] },
+                backup: { attached: [], inherited: [] },
+                serviceControl: { attached: [], inherited: [] },
+                tag: { attached: [], inherited: [] },
+              },
+              configSets: [],
+              bootstrapConfigSets: [],
+              vars: {},
+            },
+          ],
+        },
+      },
     }
 
+    await configRepository.putOrganizationConfig(organizationConfig)
+
+    timer.stop()
     return {
       message: "Success",
-      status: CommandStatus.SUCCESS,
+      status: "SUCCESS",
       success: true,
       organization,
-      configurationFile: organizationConfigFileExists
-        ? null
-        : pathToOrganizationFile,
-      watch: watch.stop(),
+      timer,
     }
   } catch (e) {
+    timer.stop()
     io.error("Failed to create the organization", e)
     return {
       message: e.message,
-      status: CommandStatus.FAILED,
+      status: "FAILED",
       success: false,
-      organization: null,
-      configurationFile: null,
-      watch: watch.stop(),
+      timer,
     }
   }
 }

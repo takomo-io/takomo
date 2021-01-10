@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 export const undeployStacksCommandIamPolicy = (): string => `
 # Minimum permissions. Additional permissions are needed to actually 
 # modify resources defined in CloudFormation templates.
@@ -8,13 +11,6 @@ Statement:
       - cloudformation:DescribeStackEvents
       - cloudformation:DeleteStack
       - cloudformation:DescribeStacks
-    Resource: "*"
-  - Sid: Secrets
-    Effect: Allow
-    Action:
-      - ssm:GetParametersByPath
-      - ssm:DeleteParameters
-      - kms:Decrypt
     Resource: "*"
 
   # IAM permissions needed only if command roles are used  

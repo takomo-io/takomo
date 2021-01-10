@@ -1,7 +1,8 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { CommandStatus, ConfirmResult } from "@takomo/core"
+import { ConfirmResult } from "@takomo/core"
 import { OrganizationContext } from "@takomo/organization-context"
-import { Failure, Result, Success, TakomoError } from "@takomo/util"
+import { TakomoError } from "@takomo/util"
+import { ResultAsync } from "neverthrow"
 import { createAccountAliasInternal } from "../common"
 import {
   CreateAccountInput,
@@ -9,38 +10,47 @@ import {
   CreateAccountOutput,
 } from "./model"
 
-const initiateAccountCreation = async (
+const initiateAccountCreation = (
   client: OrganizationsClient,
   { name, email, roleName, iamUserAccessToBilling }: CreateAccountInput,
-): Promise<Result<Error, string>> =>
-  client
-    .createAccount({
+): ResultAsync<string, Error> =>
+  ResultAsync.fromPromise(
+    client.createAccount({
       AccountName: name,
       Email: email,
       IamUserAccessToBilling: iamUserAccessToBilling ? "ALLOW" : "DENY",
       RoleName: roleName,
-    })
-    .then(Success.of)
-    .catch(Failure.of)
+    }),
+    (e) => e as Error,
+  )
+
+// client
+//   .createAccount({
+//     AccountName: name,
+//     Email: email,
+//     IamUserAccessToBilling: iamUserAccessToBilling ? "ALLOW" : "DENY",
+//     RoleName: roleName,
+//   })
+//   .then(ok)
+//   .catch(err)
 
 export const createAccount = async (
   ctx: OrganizationContext,
   io: CreateAccountIO,
   input: CreateAccountInput,
 ): Promise<CreateAccountOutput> => {
-  const { name, email, roleName, alias, iamUserAccessToBilling, watch } = input
-  const options = ctx.getOptions()
+  const { name, email, roleName, alias, iamUserAccessToBilling, timer } = input
 
-  const emailPattern = ctx.getOrganizationConfigFile().accountCreation
-    .constraints.emailPattern
+  const emailPattern =
+    ctx.organizationConfig.accountCreation.constraints.emailPattern
   if (emailPattern && !emailPattern.test(email)) {
     throw new TakomoError(
       `Provided email '${email}' does not match with required pattern ${emailPattern}`,
     )
   }
 
-  const namePattern = ctx.getOrganizationConfigFile().accountCreation
-    .constraints.namePattern
+  const namePattern =
+    ctx.organizationConfig.accountCreation.constraints.namePattern
   if (namePattern && !namePattern.test(name)) {
     throw new TakomoError(
       `Provided name '${name}' does not match with required pattern ${namePattern}`,
@@ -48,7 +58,7 @@ export const createAccount = async (
   }
 
   if (
-    !options.isAutoConfirmEnabled() &&
+    !ctx.autoConfirmEnabled &&
     (await io.confirmAccountCreation(
       name,
       email,
@@ -57,12 +67,13 @@ export const createAccount = async (
       alias,
     )) !== ConfirmResult.YES
   ) {
+    timer.stop()
     return {
       success: false,
       createAccountStatus: null,
-      status: CommandStatus.CANCELLED,
+      status: "CANCELLED",
       message: "Cancelled",
-      watch: watch.stop(),
+      timer,
     }
   }
 
@@ -70,13 +81,14 @@ export const createAccount = async (
 
   io.info(`Initiate account creation`)
   const result = await initiateAccountCreation(client, input)
-  if (!result.success) {
+  if (!result.isOk()) {
+    timer.stop()
     return {
       success: false,
       createAccountStatus: null,
-      status: CommandStatus.FAILED,
+      status: "FAILED",
       message: result.error.message,
-      watch: watch.stop(),
+      timer,
     }
   }
 
@@ -97,14 +109,15 @@ export const createAccount = async (
       roleName,
       alias,
     )
-    if (!createAliasResult.success) {
+    if (!createAliasResult.isOk()) {
       io.error("Failed to set account alias", createAliasResult.error)
+      timer.stop()
       return {
         success: false,
         createAccountStatus,
-        status: CommandStatus.FAILED,
+        status: "FAILED",
         message: createAliasResult.error.message,
-        watch: watch.stop(),
+        timer,
       }
     }
 
@@ -112,13 +125,14 @@ export const createAccount = async (
   }
 
   const message = success ? "Success" : createAccountStatus.FailureReason!
-  const status = success ? CommandStatus.SUCCESS : CommandStatus.FAILED
+  const status = success ? "SUCCESS" : "FAILED"
 
+  timer.stop()
   return {
     createAccountStatus,
     success,
     message,
     status,
-    watch: watch.stop(),
+    timer,
   }
 }

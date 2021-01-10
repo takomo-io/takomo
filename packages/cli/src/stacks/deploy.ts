@@ -1,5 +1,5 @@
-import { CliDeployStacksIO } from "@takomo/cli-io"
-import { Constants } from "@takomo/core"
+import { createDeployStacksIO } from "@takomo/cli-io"
+import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
 import {
   deployStacksCommand,
   deployStacksCommandIamPolicy,
@@ -34,18 +34,24 @@ export const deployStacksCmd = {
       })
       .positional("commandPath", {
         describe: "Deploy stacks within this path",
-        default: Constants.ROOT_STACK_GROUP_PATH,
+        default: "/",
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
         ignoreDependencies: argv["ignore-dependencies"],
         commandPath: argv.commandPath,
         interactive: argv.interactive,
       }),
-      (input) =>
-        deployStacksCommand(input, new CliDeployStacksIO(input.options)),
-    ),
+      io: (ctx, logger) => createDeployStacksIO(logger),
+      configRepository: (ctx, logger) =>
+        createFileSystemStacksConfigRepository({
+          ctx,
+          logger,
+          ...ctx.filePaths,
+        }),
+      executor: deployStacksCommand,
+    }),
 }

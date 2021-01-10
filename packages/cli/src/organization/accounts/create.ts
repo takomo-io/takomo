@@ -1,9 +1,10 @@
-import { CliCreateAccountIO } from "@takomo/cli-io"
-import { Constants } from "@takomo/core"
+import { createCreateAccountIO } from "@takomo/cli-io"
+import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   createAccountCommand,
   createAccountCommandIamPolicy,
 } from "@takomo/organization-commands"
+import { DEFAULT_ORGANIZATION_ROLE_NAME } from "@takomo/organization-model"
 import { commonEpilog, handle } from "../../common"
 
 export const createAccountCmd = {
@@ -34,7 +35,7 @@ export const createAccountCmd = {
         description: "Name of the IAM role used to manage the new account",
         string: true,
         global: false,
-        default: Constants.DEFAULT_ORGANIZATION_ROLE_NAME,
+        default: DEFAULT_ORGANIZATION_ROLE_NAME,
       })
       .option("alias", {
         description: "Account alias",
@@ -42,17 +43,23 @@ export const createAccountCmd = {
         global: false,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
         email: argv.email,
         name: argv.name,
         iamUserAccessToBilling: argv["iam-user-access-to-billing"],
         roleName: argv["role-name"],
         alias: argv.alias,
       }),
-      (input) =>
-        createAccountCommand(input, new CliCreateAccountIO(input.options)),
-    ),
+      io: (ctx, logger) => createCreateAccountIO(logger),
+      configRepository: (ctx, logger) =>
+        createFileSystemOrganizationConfigRepository({
+          ctx,
+          logger,
+          ...ctx.filePaths,
+        }),
+      executor: createAccountCommand,
+    }),
 }

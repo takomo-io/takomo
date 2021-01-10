@@ -1,4 +1,24 @@
-import { trustedAwsServices } from "../src/"
+import { createOrganizationSchemas } from "../src/"
+
+const { trustedAwsServices } = createOrganizationSchemas({
+  regions: [],
+  trustedAwsServices: [
+    "aws-artifact-account-sync.amazonaws.com",
+    "backup.amazonaws.com",
+    "cloudtrail.amazonaws.com",
+    "compute-optimizer.amazonaws.com",
+    "config.amazonaws.com",
+    "ds.amazonaws.com",
+    "fms.amazonaws.com",
+    "license-manager.amazonaws.com",
+    "member.org.stacksets.cloudformation.amazonaws.com",
+    "ram.amazonaws.com",
+    "servicecatalog.amazonaws.com",
+    "ssm.amazonaws.com",
+    "sso.amazonaws.com",
+    "tagpolicies.tag.amazonaws.com",
+  ],
+})
 
 describe("trusted aws services validation succeeds", () => {
   test("when an empty list of services is given", () => {

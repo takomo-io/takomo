@@ -1,8 +1,8 @@
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "@takomo/unit-test"
-import { trustedAwsService } from "../src/"
+} from "@takomo/test-unit"
+import { createOrganizationSchemas } from "../src/"
 
 const valid = [
   "aws-artifact-account-sync.amazonaws.com",
@@ -20,6 +20,11 @@ const valid = [
   "sso.amazonaws.com",
   "tagpolicies.tag.amazonaws.com",
 ]
+
+const { trustedAwsService } = createOrganizationSchemas({
+  regions: [],
+  trustedAwsServices: valid,
+})
 
 const allowedValuesErrorMessage =
   '"value" must be one of [aws-artifact-account-sync.amazonaws.com, backup.amazonaws.com, cloudtrail.amazonaws.com, compute-optimizer.amazonaws.com, config.amazonaws.com, ds.amazonaws.com, fms.amazonaws.com, license-manager.amazonaws.com, member.org.stacksets.cloudformation.amazonaws.com, ram.amazonaws.com, servicecatalog.amazonaws.com, ssm.amazonaws.com, sso.amazonaws.com, tagpolicies.tag.amazonaws.com]'

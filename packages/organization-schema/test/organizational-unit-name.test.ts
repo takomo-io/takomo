@@ -1,8 +1,13 @@
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "@takomo/unit-test"
-import { organizationalUnitName } from "../src"
+} from "@takomo/test-unit"
+import { createOrganizationSchemas } from "../src"
+
+const { organizationalUnitName } = createOrganizationSchemas({
+  regions: [],
+  trustedAwsServices: [],
+})
 
 const valid = [
   "basic",

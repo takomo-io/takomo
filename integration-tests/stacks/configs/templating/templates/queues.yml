@@ -1,0 +1,22 @@
+Description: IT - templating {{ stack.tags.0.value }}
+
+Parameters:
+  HelloParam:
+    Type: String
+  NumberParam:
+    Type: String
+
+Resources:
+
+  {{#each stack.data.queueNames}}
+  Queue{{@index}}:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: {{this}}
+  {{/each}}
+
+Outputs:
+  {{#each stack.parameters}}
+  {{this.key}}:
+    Value: {{this.value}}
+  {{/each}}

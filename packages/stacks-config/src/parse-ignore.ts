@@ -1,6 +1,6 @@
-export const parseIgnore = (value: unknown): boolean | null => {
+export const parseIgnore = (value: unknown): boolean | undefined => {
   if (value === null || value === undefined) {
-    return null
+    return undefined
   }
 
   return value === true

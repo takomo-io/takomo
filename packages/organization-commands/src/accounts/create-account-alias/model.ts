@@ -1,23 +1,16 @@
-import {
-  AccountId,
-  CommandInput,
-  CommandOutput,
-  ConfirmResult,
-  IO,
-} from "@takomo/core"
+import { AccountAlias, AccountId } from "@takomo/aws-model"
+import { CommandInput, CommandOutput, ConfirmResult, IO } from "@takomo/core"
 
 export interface CreateAccountAliasInput extends CommandInput {
   readonly accountId: AccountId
-  readonly alias: string
+  readonly alias: AccountAlias
 }
 
 export type CreateAccountAliasOutput = CommandOutput
 
-export interface CreateAccountAliasIO extends IO {
-  confirmCreateAlias: (
+export interface CreateAccountAliasIO extends IO<CreateAccountAliasOutput> {
+  readonly confirmCreateAlias: (
     accountId: AccountId,
-    alias: string,
+    alias: AccountAlias,
   ) => Promise<ConfirmResult>
-
-  printOutput: (output: CreateAccountAliasOutput) => CreateAccountAliasOutput
 }

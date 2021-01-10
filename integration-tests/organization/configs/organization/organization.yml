@@ -16,8 +16,8 @@ configSets:
     description: Bootstrap
     commandPaths:
       - /bootstrap
-  example:
-    description: Using project dir
-    projectDir: example/my-web
-    commandPaths:
-      - /dev/web
+#  example:
+#    description: Using project dir
+#    projectDir: example/my-web
+#    commandPaths:
+#      - /dev/web

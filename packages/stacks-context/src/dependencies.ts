@@ -1,19 +1,26 @@
-import { StackPath } from "@takomo/core"
-import { Stack, StackProps } from "@takomo/stacks-model"
+import {
+  createStack,
+  InternalStack,
+  StackPath,
+  StackProps,
+} from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
 
+/**
+ * @hidden
+ */
 export const checkCyclicDependenciesForStack = (
-  stack: Stack,
-  stacks: Map<StackPath, Stack>,
-  collectedDependencies: StackPath[],
-) => {
-  if (stack.getDependencies().length === 0) {
+  stack: InternalStack,
+  stacks: Map<StackPath, InternalStack>,
+  collectedDependencies: ReadonlyArray<StackPath>,
+): void => {
+  if (stack.dependencies.length === 0) {
     return
   }
 
-  stack.getDependencies().forEach((d) => {
+  stack.dependencies.forEach((d) => {
     if (collectedDependencies.includes(d)) {
       throw new TakomoError(
         `Cyclic dependency detected: ${collectedDependencies.join(
@@ -29,38 +36,50 @@ export const checkCyclicDependenciesForStack = (
   })
 }
 
-export const checkCyclicDependencies = (stacks: Map<StackPath, Stack>) => {
-  stacks.forEach((s) =>
-    checkCyclicDependenciesForStack(s, stacks, [s.getPath()]),
-  )
+/**
+ * @hidden
+ */
+export const checkCyclicDependencies = (
+  stacks: Map<StackPath, InternalStack>,
+) => {
+  stacks.forEach((s) => checkCyclicDependenciesForStack(s, stacks, [s.path]))
 }
 
+/**
+ * @hidden
+ */
 export const collectAllDependencies = (
   stackPath: StackPath,
-  stacks: Stack[],
+  stacks: InternalStack[],
 ): StackPath[] => {
-  const stack = stacks.find((s) => s.getPath() === stackPath)!
+  const stack = stacks.find((s) => s.path === stackPath)!
   return uniq(
-    stack.getDependencies().reduce((collected, dependencyPath) => {
+    stack.dependencies.reduce((collected, dependencyPath) => {
       const childDependencies = collectAllDependencies(dependencyPath, stacks)
       return [...collected, ...childDependencies, dependencyPath]
     }, new Array<StackPath>()),
   )
 }
 
+/**
+ * @hidden
+ */
 export const collectAllDependants = (
   stackPath: StackPath,
-  stacks: Stack[],
+  stacks: InternalStack[],
 ): StackPath[] => {
-  const stack = stacks.find((s) => s.getPath() === stackPath)!
+  const stack = stacks.find((s) => s.path === stackPath)!
   return uniq(
-    stack.getDependants().reduce((collected, dependantPath) => {
+    stack.dependants.reduce((collected, dependantPath) => {
       const childDependants = collectAllDependants(dependantPath, stacks)
       return [...collected, ...childDependants, dependantPath]
     }, new Array<StackPath>()),
   )
 }
 
+/**
+ * @hidden
+ */
 export const collectStackDirectDependants = (
   stackPath: StackPath,
   stacks: StackProps[],
@@ -73,20 +92,28 @@ export const collectStackDirectDependants = (
         : dependants
     }, new Array<string>())
 
+/**
+ * @hidden
+ */
 export const populateDependants = (stacks: StackProps[]): StackProps[] =>
   stacks.reduce((collected, stack) => {
     const dependants = collectStackDirectDependants(stack.path, stacks)
     return [...collected, { ...stack, dependants }]
   }, new Array<StackProps>())
 
-export const processStackDependencies = (stacks: Stack[]): Stack[] => {
+/**
+ * @hidden
+ */
+export const processStackDependencies = (
+  stacks: InternalStack[],
+): InternalStack[] => {
   const processed = stacks
     .map((stack) => stack.toProps())
     .map((stack) => {
       const stackDependencies = stack.dependencies.map((dependency) => {
         const matching = stacks
-          .filter((other) => other.getPath().startsWith(dependency))
-          .map((other) => other.getPath())
+          .filter((other) => other.path.startsWith(dependency))
+          .map((other) => other.path)
 
         if (matching.length === 0) {
           throw new TakomoError(
@@ -104,8 +131,8 @@ export const processStackDependencies = (stacks: Stack[]): Stack[] => {
           .getDependencies()
           .map((dependency) => {
             const matching = stacks
-              .filter((other) => other.getPath().startsWith(dependency))
-              .map((other) => other.getPath())
+              .filter((other) => other.path.startsWith(dependency))
+              .map((other) => other.path)
 
             if (matching.length === 0) {
               throw new TakomoError(
@@ -127,30 +154,38 @@ export const processStackDependencies = (stacks: Stack[]): Stack[] => {
       }
     })
 
-  return populateDependants(processed).map((props) => new Stack(props))
+  return populateDependants(processed).map((props) => createStack(props))
 }
 
 const sortStacks = (
-  stacks: Stack[],
-  selector: (stack: Stack) => StackPath[],
-): Stack[] => {
-  const unsorted = new Map(stacks.map((s) => [s.getPath(), s]))
-  const sorted = new Array<Stack>()
+  stacks: ReadonlyArray<InternalStack>,
+  selector: (stack: InternalStack) => ReadonlyArray<StackPath>,
+): ReadonlyArray<InternalStack> => {
+  const unsorted = new Map(stacks.map((s) => [s.path, s]))
+  const sorted = new Array<InternalStack>()
   while (unsorted.size > 0) {
     Array.from(unsorted.values())
       .filter((s) => selector(s).filter((d) => unsorted.has(d)).length === 0)
-      .sort((a, b) => a.getPath().localeCompare(b.getPath()))
+      .sort((a, b) => a.path.localeCompare(b.path))
       .forEach((s) => {
         sorted.push(s)
-        unsorted.delete(s.getPath())
+        unsorted.delete(s.path)
       })
   }
 
   return sorted
 }
 
-export const sortStacksForUndeploy = (stacks: Stack[]): Stack[] =>
-  sortStacks(stacks, (s) => s.getDependants())
+/**
+ * @hidden
+ */
+export const sortStacksForUndeploy = (
+  stacks: ReadonlyArray<InternalStack>,
+): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependants)
 
-export const sortStacksForDeploy = (stacks: Stack[]): Stack[] =>
-  sortStacks(stacks, (s) => s.getDependencies())
+/**
+ * @hidden
+ */
+export const sortStacksForDeploy = (
+  stacks: ReadonlyArray<InternalStack>,
+): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependencies)

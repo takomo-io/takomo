@@ -1,8 +1,8 @@
 import { TimeoutConfig } from "@takomo/stacks-model"
 
-export const parseTimeout = (value: any): TimeoutConfig | null => {
+export const parseTimeout = (value: any): TimeoutConfig | undefined => {
   if (!value) {
-    return null
+    return undefined
   }
 
   if (typeof value === "number") {

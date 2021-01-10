@@ -1,29 +1,29 @@
-import { CommandStatus } from "@takomo/core"
-import { buildOrganizationContext } from "@takomo/organization-context"
-import { StopWatch, validateInput } from "@takomo/util"
-import Joi from "joi"
+import { CommandHandler } from "@takomo/core"
+import {
+  buildOrganizationContext,
+  OrganizationConfigRepository,
+} from "@takomo/organization-context"
 import { listAccounts } from "./list-accounts"
 import { ListAccountsInput, ListAccountsIO, ListAccountsOutput } from "./model"
 
-const schema = Joi.object({}).unknown(true)
-
-export const listAccountsCommand = async (
-  input: ListAccountsInput,
-  io: ListAccountsIO,
-): Promise<ListAccountsOutput> =>
-  validateInput(schema, input)
-    .then(({ options, variables }) =>
-      buildOrganizationContext(options, variables, io),
-    )
+export const listAccountsCommand: CommandHandler<
+  OrganizationConfigRepository,
+  ListAccountsIO,
+  ListAccountsInput,
+  ListAccountsOutput
+> = async ({ ctx, configRepository, io, input }): Promise<ListAccountsOutput> =>
+  buildOrganizationContext(ctx, configRepository, io)
     .then((ctx) => listAccounts(ctx))
     .then(({ accounts, masterAccountId }) => {
+      const { timer } = input
+      timer.stop()
       return {
         accounts,
         masterAccountId,
         success: true,
         message: "Success",
-        status: CommandStatus.SUCCESS,
-        watch: new StopWatch("total").stop(),
-      }
+        status: "SUCCESS",
+        timer,
+      } as ListAccountsOutput
     })
     .then(io.printOutput)

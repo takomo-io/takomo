@@ -1,17 +1,17 @@
+import { OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
-import { PolicyName } from "aws-sdk/clients/organizations"
-import { OrganizationAccount } from "../model"
+import { OrganizationAccountConfig } from "../model"
 import { parseAccount } from "./parse-account"
 
 export const parseAccounts = (
   value: any,
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
-  inheritedServiceControlPolicies: PolicyName[],
-  inheritedTagPolicies: PolicyName[],
-  inheritedAiServicesOptOutPolicies: PolicyName[],
-  inheritedBackupPolicies: PolicyName[],
-): OrganizationAccount[] => {
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+): OrganizationAccountConfig[] => {
   if (value === null || value === undefined) {
     return []
   }

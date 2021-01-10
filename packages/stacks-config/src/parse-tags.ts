@@ -1,4 +1,6 @@
-export const parseTags = (value: any): Map<string, string> => {
+import { TagKey, TagValue } from "@takomo/aws-model"
+
+export const parseTags = (value: any): Map<TagKey, TagValue> => {
   if (value === null || value === undefined) {
     return new Map()
   }

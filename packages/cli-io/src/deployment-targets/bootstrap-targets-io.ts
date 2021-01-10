@@ -1,29 +1,18 @@
-import { Options } from "@takomo/core"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { CliDeploymentOperationIO } from "./deployment-operation-io"
-import { LogWriter } from "@takomo/util"
+import { DeploymentTargetsOperationIO } from "@takomo/deployment-targets-commands"
+import { LogWriter, TkmLogger } from "@takomo/util"
+import { createDeploymentTargetsOperationIO } from "./deployment-operation-io"
 
-export class CliBootstrapTargetsIO extends CliDeploymentOperationIO {
-  constructor(
-    options: Options,
-    stacksDeployIO: (options: Options, loggerName: string) => DeployStacksIO,
-    stacksUndeployIO: (
-      options: Options,
-      loggerName: string,
-    ) => UndeployStacksIO,
-    logWriter: LogWriter = console.log,
-  ) {
-    super(
-      logWriter,
-      options,
-      {
-        confirmHeader: "Targets bootstrap plan",
-        confirmQuestion: "Continue to bootstrap targets?",
-        outputHeader: "Targets bootstrap summary",
-        outputNoTargets: "No targets bootstrapped",
-      },
-      stacksDeployIO,
-      stacksUndeployIO,
-    )
-  }
-}
+export const createBootstrapTargetsIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): DeploymentTargetsOperationIO =>
+  createDeploymentTargetsOperationIO(
+    logger,
+    {
+      confirmHeader: "Targets bootstrap plan",
+      confirmQuestion: "Continue to bootstrap targets?",
+      outputHeader: "Targets bootstrap summary",
+      outputNoTargets: "No targets bootstrapped",
+    },
+    writer,
+  )

@@ -1,30 +1,38 @@
-import { Options } from "@takomo/core"
 import {
   DependencyGraphIO,
   DependencyGraphOutput,
 } from "@takomo/stacks-commands"
-import { LogWriter } from "@takomo/util"
-import CliIO from "../../cli-io"
+import { LogWriter, TkmLogger } from "@takomo/util"
+import { createBaseIO } from "../../cli-io"
 
-export class CliDependencyGraphIO extends CliIO implements DependencyGraphIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
+export const createDependencyGraphIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): DependencyGraphIO => {
+  const io = createBaseIO(writer)
+  const indent = 2
 
-  printOutput = (output: DependencyGraphOutput): DependencyGraphOutput => {
-    this.message("digraph dependencies {", true)
+  const printOutput = (
+    output: DependencyGraphOutput,
+  ): DependencyGraphOutput => {
+    io.message({ text: "digraph dependencies {", marginTop: true })
     output.stacks.forEach((stack) => {
-      if (stack.getDependencies().length === 0) {
-        this.message(`  "${stack.getPath()}"`)
+      if (stack.dependencies.length === 0) {
+        io.message({ text: `"${stack.path}"`, indent })
       } else {
-        stack.getDependencies().forEach((dependency) => {
-          this.message(`  "${stack.getPath()}" -> "${dependency}"`)
+        stack.dependencies.forEach((dependency) => {
+          io.message({ text: `"${stack.path}" -> "${dependency}"`, indent })
         })
       }
     })
 
-    this.print("}")
+    io.print("}")
 
     return output
+  }
+
+  return {
+    ...logger,
+    printOutput,
   }
 }

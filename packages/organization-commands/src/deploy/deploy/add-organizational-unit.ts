@@ -1,17 +1,19 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { CommandStatus, Constants } from "@takomo/core"
+import { OrganizationalUnitId, OrganizationPolicyType } from "@takomo/aws-model"
 import { OrganizationState } from "@takomo/organization-context"
-import { Logger } from "@takomo/util"
-import { OrganizationalUnitId, PolicyType } from "aws-sdk/clients/organizations"
+import { TkmLogger } from "@takomo/util"
 import flatten from "lodash.flatten"
+import {
+  OrgEntityPoliciesPlan,
+  PlannedOrganizationalUnit,
+} from "../../common/plan/organizational-units/model"
 import { OrganizationalUnitDeploymentResult } from "../model"
-import { OrgEntityPoliciesPlan, PlannedOrganizationalUnit } from "../plan/model"
 import { addOrUpdateOrganizationalUnits } from "./add-or-update-organizational-units"
 import { attachAndDetachPolicies } from "./attach-and-detach-policies"
 import { cancelOrganizationalUnits } from "./cancel-organizational-units"
 
 const createOrganizationalUnit = async (
-  logger: Logger,
+  logger: TkmLogger,
   client: OrganizationsClient,
   planned: PlannedOrganizationalUnit,
   parentId: OrganizationalUnitId,
@@ -21,13 +23,16 @@ const createOrganizationalUnit = async (
       Name: planned.name,
       ParentId: parentId!,
     })
-    .then((res) => ({
-      id: res.Id!,
-      name: res.Name!,
-      message: "Added",
-      success: true,
-      status: CommandStatus.SUCCESS,
-    }))
+    .then(
+      (res) =>
+        ({
+          id: res.id,
+          name: res.name,
+          message: "Added",
+          success: true,
+          status: "SUCCESS",
+        } as OrganizationalUnitDeploymentResult),
+    )
     .catch((e) => {
       logger.error(
         `Failed to create new organizational unit '${planned.path}'`,
@@ -38,19 +43,19 @@ const createOrganizationalUnit = async (
         name: planned.name,
         message: e.message,
         success: false,
-        status: CommandStatus.FAILED,
-      }
+        status: "FAILED",
+      } as OrganizationalUnitDeploymentResult
     })
 
 export const addOrganizationalUnit = async (
-  logger: Logger,
+  logger: TkmLogger,
   client: OrganizationsClient,
-  enabledPolicyTypes: PolicyType[],
+  enabledPolicyTypes: ReadonlyArray<OrganizationPolicyType>,
   serviceControlPoliciesJustEnabled: boolean,
   organizationState: OrganizationState,
   planned: PlannedOrganizationalUnit,
   parentId: OrganizationalUnitId,
-): Promise<OrganizationalUnitDeploymentResult[]> => {
+): Promise<ReadonlyArray<OrganizationalUnitDeploymentResult>> => {
   const results = new Array<OrganizationalUnitDeploymentResult>()
 
   logger.info(`Create new organizational unit with path '${planned.path}'`)
@@ -85,25 +90,25 @@ export const addOrganizationalUnit = async (
   )
 
   const initialServiceControlPolicies = initialPolicies.filter(
-    (p) => p.Type === Constants.SERVICE_CONTROL_POLICY_TYPE,
+    (p) => p.type === "SERVICE_CONTROL_POLICY",
   )
   const initialServiceControlPolicyNames = initialServiceControlPolicies.map(
-    (p) => p.Name!,
+    (p) => p.name,
   )
   const initialTagPolicies = initialPolicies.filter(
-    (p) => p.Type === Constants.TAG_POLICY_TYPE,
+    (p) => p.type === "TAG_POLICY",
   )
-  const initialTagPolicyNames = initialTagPolicies.map((p) => p.Name!)
+  const initialTagPolicyNames = initialTagPolicies.map((p) => p.name)
   const initialAiServicesOptOutPolicies = initialPolicies.filter(
-    (p) => p.Type === Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
+    (p) => p.type === "AISERVICES_OPT_OUT_POLICY",
   )
   const initialAiServicesOptOutPolicyNames = initialAiServicesOptOutPolicies.map(
-    (p) => p.Name!,
+    (p) => p.name,
   )
   const initialBackupPolicies = initialPolicies.filter(
-    (p) => p.Type === Constants.BACKUP_POLICY_TYPE,
+    (p) => p.type === "BACKUP_POLICY",
   )
-  const initialBackupPolicyNames = initialBackupPolicies.map((p) => p.Name!)
+  const initialBackupPolicyNames = initialBackupPolicies.map((p) => p.name)
   const serviceControlPoliciesToAttach = planned.policies.serviceControl.attached.add.filter(
     (p) => !initialServiceControlPolicyNames.includes(p),
   )
@@ -201,7 +206,7 @@ export const addOrganizationalUnit = async (
       {
         ...addedOu,
         success: false,
-        status: CommandStatus.FAILED,
+        status: "FAILED",
         message: "Policies failed",
       },
       ...flatten(planned.children.map(cancelOrganizationalUnits)),
@@ -220,7 +225,7 @@ export const addOrganizationalUnit = async (
       !(await client.moveAccount({
         AccountId: accountId,
         DestinationParentId: newOu,
-        SourceParentId: currentOu.Id!,
+        SourceParentId: currentOu.id,
       }))
     ) {
       logger.warn(
@@ -231,7 +236,7 @@ export const addOrganizationalUnit = async (
         {
           ...addedOu,
           success: false,
-          status: CommandStatus.FAILED,
+          status: "FAILED",
           message: "Accounts failed",
         },
         ...flatten(planned.children.map(cancelOrganizationalUnits)),
@@ -258,7 +263,7 @@ export const addOrganizationalUnit = async (
         {
           ...addedOu,
           success: false,
-          status: CommandStatus.FAILED,
+          status: "FAILED",
           message: "Accounts failed",
         },
         ...flatten(planned.children.map(cancelOrganizationalUnits)),

@@ -1,142 +1,40 @@
-import { CloudFormationClient, SSMClient } from "@takomo/aws-clients"
-import { CommandStatus } from "@takomo/core"
-import { CommandContext, Stack, StackResult } from "@takomo/stacks-model"
-import { StopWatch } from "@takomo/util"
-import uuid from "uuid"
-import { InitialUndeployContext, UndeployStacksIO } from "./model"
-import {
-  waitCloudFormationStackDeletionToComplete,
-  waitForDependantsToComplete,
-} from "./wait"
+import { InternalStacksContext, StackResult } from "@takomo/stacks-model"
+import { Timer } from "@takomo/util"
+import { executeSteps } from "../common/steps"
+import { UndeployStacksIO } from "./model"
+import { StackUndeployOperation } from "./plan"
+import { InitialUndeployStackState } from "./states"
+import { createUndeployStackTransitions } from "./transitions"
 
+/**
+ * @hidden
+ */
 export const deleteStack = async (
-  watch: StopWatch,
-  ctx: CommandContext,
+  timer: Timer,
+  ctx: InternalStacksContext,
   io: UndeployStacksIO,
-  stack: Stack,
-  dependants: Promise<StackResult>[],
+  operation: StackUndeployOperation,
+  dependents: Promise<StackResult>[],
 ): Promise<StackResult> => {
-  const logger = io.childLogger(stack.getPath())
-  logger.debugObject("Stack config:", stack)
-
-  const existingStack = await ctx.getExistingStack(stack.getPath())
-  if (!existingStack) {
-    logger.debug("No existing stack found")
-    return {
-      stack,
-      message: "Stack not found",
-      reason: "DELETE_SKIPPED",
-      status: CommandStatus.SKIPPED,
-      events: [],
-      success: true,
-      watch: watch.stop(),
-    }
-  }
-
-  const cloudFormationClient = new CloudFormationClient({
-    region: stack.getRegion(),
-    credentialProvider: stack.getCredentialProvider(),
-    logger,
-  })
+  const { stack, currentStack } = operation
+  const logger = io.childLogger(operation.stack.path)
 
   const variables = {
-    ...ctx.getVariables(),
+    ...ctx.variables,
     hooks: {},
   }
 
-  const initial = {
+  const initial: InitialUndeployStackState = {
     ctx,
-    existingStack,
     stack,
-    dependants,
-    cloudFormationClient,
     io,
     logger,
     variables,
-    watch: watch.startChild(stack.getPath()),
+    dependents,
+    currentStack,
+    totalTimer: timer.startChild(stack.path),
+    transitions: createUndeployStackTransitions(),
   }
 
-  return waitForDependantsToComplete(initial)
-}
-
-export const initiateCloudFormationStackDeletion = async (
-  holder: InitialUndeployContext,
-): Promise<StackResult> => {
-  const { stack, existingStack, cloudFormationClient, watch, logger } = holder
-  const childWatch = watch.startChild("initiate-stack-deletion")
-
-  const clientToken = uuid.v4()
-
-  try {
-    logger.debug(`Initiate stack deletion with client token ${clientToken}`)
-    await cloudFormationClient.initiateStackDeletion({
-      StackName: existingStack!.StackId!,
-      ClientRequestToken: clientToken,
-    })
-  } catch (e) {
-    logger.error("An error occurred while initiating stack deletion", e)
-    return {
-      stack,
-      message: "Initiate stack deletion failed",
-      reason: "INITIATE_DELETE_STACK_FAILED",
-      status: CommandStatus.FAILED,
-      events: [],
-      success: false,
-      watch: watch.stop(),
-    }
-  }
-
-  logger.debug("Stack delete initiated successfully")
-  childWatch.stop()
-  return await waitCloudFormationStackDeletionToComplete({
-    ...holder,
-    clientToken,
-  })
-}
-
-export const deleteSecrets = async (
-  initial: InitialUndeployContext,
-): Promise<StackResult> => {
-  const { stack, watch, logger } = initial
-  const childWatch = watch.startChild("delete-secrets")
-
-  logger.debug("Delete secrets")
-
-  try {
-    const ssm = new SSMClient({
-      credentialProvider: stack.getCredentialProvider(),
-      region: stack.getRegion(),
-      logger,
-    })
-
-    const parameters = await ssm.getEncryptedParametersByPath(
-      stack.getSecretsPath(),
-    )
-
-    logger.debug(`Found ${parameters.length} secret(s)`)
-
-    if (parameters.length > 0) {
-      const parameterNames = parameters.map((p) => p.Name!)
-      logger.debugObject(
-        "Delete following SSM parameter(s) used to store secrets:",
-        parameterNames,
-      )
-      await ssm.deleteParameters(parameterNames)
-      logger.debug("SSM parameter(s) deleted")
-    }
-  } catch (e) {
-    logger.error("An error occurred while deleting secrets", e)
-    return {
-      stack,
-      message: e.message,
-      reason: "DELETE_SECRETS_FAILED",
-      status: CommandStatus.FAILED,
-      events: [],
-      success: false,
-      watch: watch.stop(),
-    }
-  }
-
-  childWatch.stop()
-  return initiateCloudFormationStackDeletion(initial)
+  return executeSteps(initial)
 }

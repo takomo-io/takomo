@@ -1,4 +1,3 @@
-import { Constants } from "@takomo/core"
 import { givenEmptyLocalConfig, givenlocalConfig } from "./helpers"
 
 describe("#createOrgEntityPoliciesPlanForExistingEntity", () => {
@@ -21,7 +20,7 @@ describe("#createOrgEntityPoliciesPlanForExistingEntity", () => {
       },
     })
       .andEmptyCurrentState()
-      .andEnabledPolicies({ retain: [Constants.SERVICE_CONTROL_POLICY_TYPE] })
+      .andEnabledPolicies({ retain: ["SERVICE_CONTROL_POLICY"] })
       .thenExpectPlanForExistingEntityToBe({
         hasChanges: true,
         serviceControl: {
@@ -50,7 +49,7 @@ describe("#createOrgEntityPoliciesPlanForExistingEntity", () => {
       },
     })
       .andEmptyCurrentState()
-      .andEnabledPolicies({ retain: [Constants.SERVICE_CONTROL_POLICY_TYPE] })
+      .andEnabledPolicies({ retain: ["SERVICE_CONTROL_POLICY"] })
       .thenExpectPlanForExistingEntityToBe({
         hasChanges: true,
         serviceControl: {
@@ -85,7 +84,7 @@ describe("#createOrgEntityPoliciesPlanForExistingEntity", () => {
         },
       })
       .andEnabledPolicies({
-        retain: [Constants.SERVICE_CONTROL_POLICY_TYPE],
+        retain: ["SERVICE_CONTROL_POLICY"],
       })
       .thenExpectPlanForExistingEntityToBe({
         hasChanges: false,
@@ -156,11 +155,7 @@ describe("#createOrgEntityPoliciesPlanForExistingEntity", () => {
         },
       })
       .andEnabledPolicies({
-        retain: [
-          Constants.TAG_POLICY_TYPE,
-          Constants.SERVICE_CONTROL_POLICY_TYPE,
-          Constants.BACKUP_POLICY_TYPE,
-        ],
+        retain: ["TAG_POLICY", "SERVICE_CONTROL_POLICY", "BACKUP_POLICY"],
       })
       .thenExpectPlanForExistingEntityToBe({
         hasChanges: true,
@@ -203,7 +198,7 @@ describe("#createOrgEntityPoliciesPlanForExistingEntity", () => {
         },
       })
       .andEnabledPolicies({
-        retain: [Constants.SERVICE_CONTROL_POLICY_TYPE],
+        retain: ["SERVICE_CONTROL_POLICY"],
       })
       .thenExpectPlanForExistingEntityToBe({
         hasChanges: true,

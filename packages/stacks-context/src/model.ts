@@ -1,14 +1,23 @@
+import { IamRoleArn, StackEvent } from "@takomo/aws-model"
+import { CommandStatus, EnvVars, Variables } from "@takomo/core"
+import { ParameterConfig } from "@takomo/stacks-config"
 import {
   CommandPath,
-  Options,
+  HookInitializersMap,
+  InternalStack,
+  Resolver,
+  ResolverInput,
+  ResolverName,
   StackPath,
-  TakomoCredentialProvider,
-  Variables,
-} from "@takomo/core"
-import { CommandContext, Stack } from "@takomo/stacks-model"
-import { deepCopy, Logger, TakomoError, TemplateEngine } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
+} from "@takomo/stacks-model"
+import { ResolverRegistry } from "@takomo/stacks-resolvers"
+import { TakomoError, TemplateEngine, Timer } from "@takomo/util"
+import flatten from "lodash.flatten"
+import { ConfigTree } from "./config/config-tree"
 
+/**
+ * @hidden
+ */
 export class CommandPathMatchesNoStacksError extends TakomoError {
   constructor(commandPath: CommandPath, availableStackPaths: StackPath[]) {
     const stackPaths = availableStackPaths.map((s) => `  - ${s}`).join("\n")
@@ -19,78 +28,178 @@ export class CommandPathMatchesNoStacksError extends TakomoError {
   }
 }
 
-export interface StdCommandContextProps {
-  readonly stacksToProcess: Stack[]
-  readonly allStacks: Stack[]
-  readonly options: Options
-  readonly credentialProvider: TakomoCredentialProvider
-  readonly logger: Logger
-  readonly variables: Variables
-  readonly templateEngine: TemplateEngine
-  readonly existingStacks: Map<StackPath, CloudFormation.Stack>
-  readonly existingTemplateSummaries: Map<
-    StackPath,
-    CloudFormation.GetTemplateSummaryOutput
-  >
+interface HookOutputValues {
+  [hookName: string]: any
 }
 
-export class StdCommandContext implements CommandContext {
-  readonly #stacksToProcess: Stack[]
-  readonly #allStacks: Stack[]
-  readonly #options: Options
-  readonly #variables: Variables
-  readonly #logger: Logger
-  readonly #stacksMap: Map<CommandPath, Stack>
-  readonly #credentialProvider: TakomoCredentialProvider
-  readonly #templateEngine: TemplateEngine
-  readonly #existingStacks: Map<StackPath, CloudFormation.Stack>
-  readonly #existingTemplateSummaries: Map<
-    StackPath,
-    CloudFormation.GetTemplateSummaryOutput
-  >
+/**
+ * A mutable copy of the current command variables during a stack operation.
+ */
+export interface StackOperationVariables extends Variables {
+  /**
+   * Environment variables
+   */
+  readonly env: EnvVars
 
-  constructor(props: StdCommandContextProps) {
-    this.#credentialProvider = props.credentialProvider
-    this.#options = props.options
-    this.#stacksToProcess = props.stacksToProcess
-    this.#allStacks = props.allStacks
-    this.#logger = props.logger
-    this.#variables = props.variables
-    this.#templateEngine = props.templateEngine
-    this.#existingStacks = props.existingStacks
-    this.#existingTemplateSummaries = props.existingTemplateSummaries
-    this.#stacksMap = new Map(props.allStacks.map((s) => [s.getPath(), s]))
+  /**
+   * Hook output values
+   */
+  readonly hooks: HookOutputValues
+}
+
+/**
+ * Type representing either a function that returns a value
+ * or a constant value.
+ */
+type GetterOrConst<T> = () => T | T
+
+const getValue = <T>(defaultValue: T, value?: GetterOrConst<T>): T => {
+  if (value === undefined) {
+    return defaultValue
   }
 
-  getStacksToProcess = (): Stack[] => [...this.#stacksToProcess]
-  getLogger = (): Logger => this.#logger
-  getOptions = (): Options => this.#options
-  getVariables = (): Variables => deepCopy(this.#variables)
-  getTemplateEngine = (): TemplateEngine => this.#templateEngine
+  if (typeof value === "function") {
+    return value()
+  }
 
-  getCredentialProvider = (): TakomoCredentialProvider =>
-    this.#credentialProvider
+  return value
+}
 
-  getStacksByPath = (path: CommandPath): Stack[] =>
-    this.getAllStacks().filter((s) => s.getPath().startsWith(path))
+/**
+ * @hidden
+ */
+export class SingleResolverExecutor implements ResolverExecutor {
+  readonly #name: ResolverName
+  readonly #resolver: Resolver
+  readonly #confidential?: boolean
+  readonly #immutable: boolean
 
-  getAllStacks = (): Stack[] => this.#allStacks.slice()
+  constructor(
+    name: ResolverName,
+    resolver: Resolver,
+    paramConfig: ParameterConfig,
+  ) {
+    this.#name = name
+    this.#resolver = resolver
+    this.#confidential = paramConfig.confidential
+    this.#immutable = paramConfig.immutable
+  }
 
-  getExistingStack = async (
+  resolve = async (input: ResolverInput): Promise<any> =>
+    this.#resolver.resolve(input)
+
+  isConfidential = (): boolean => {
+    if (this.#confidential === true) {
+      return true
+    } else if (this.#confidential === false) {
+      return false
+    }
+
+    return getValue(false, this.#resolver.confidential)
+  }
+
+  isImmutable = (): boolean => this.#immutable
+
+  getIamRoleArns = (): IamRoleArn[] => getValue([], this.#resolver.iamRoleArns)
+
+  getDependencies = (): StackPath[] => getValue([], this.#resolver.dependencies)
+
+  /**
+   * @returns Resolver name
+   */
+  getName = (): ResolverName => this.#name
+}
+
+/**
+ * Wrapper that executes parameter resolver.
+ * @hidden
+ */
+export class ListResolverExecutor implements ResolverExecutor {
+  readonly #name: ResolverName
+  readonly #resolvers: ReadonlyArray<ResolverExecutor>
+  readonly #confidential?: boolean
+  readonly #immutable: boolean
+
+  constructor(
+    name: ResolverName,
+    resolvers: ReadonlyArray<ResolverExecutor>,
+    immutable: boolean,
+    confidential?: boolean,
+  ) {
+    this.#name = name
+    this.#resolvers = resolvers
+    this.#immutable = immutable
+    this.#confidential = confidential
+  }
+
+  resolve = async (input: ResolverInput): Promise<any> =>
+    Promise.all(
+      this.#resolvers.map(async (resolver, index) =>
+        resolver.resolve({ ...input, listParameterIndex: index }),
+      ),
+    )
+
+  isConfidential = (): boolean => {
+    if (this.#confidential === true) {
+      return true
+    } else if (this.#confidential === false) {
+      return false
+    }
+
+    return this.#resolvers.some((r) => r.isConfidential)
+  }
+  isImmutable = (): boolean => this.#immutable
+
+  getDependencies = (): StackPath[] =>
+    flatten(this.#resolvers.map((r) => r.getDependencies()))
+
+  getIamRoleArns = (): IamRoleArn[] =>
+    flatten(this.#resolvers.map((r) => r.getIamRoleArns()))
+
+  getName = (): ResolverName => this.#name
+}
+
+export interface StackResult {
+  readonly stack: InternalStack
+  readonly message: string
+  readonly status: CommandStatus
+  readonly events: ReadonlyArray<StackEvent>
+  readonly success: boolean
+  readonly timer: Timer
+  readonly error?: Error
+}
+
+/**
+ * Wrapper that executes parameter resolver.
+ * @hidden
+ */
+export interface ResolverExecutor {
+  resolve: (input: ResolverInput) => Promise<any>
+
+  isConfidential: () => boolean
+
+  isImmutable: () => boolean
+
+  getDependencies: () => StackPath[]
+
+  getIamRoleArns: () => IamRoleArn[]
+
+  getName: () => ResolverName
+}
+
+export interface StacksConfigRepository {
+  getStackTemplateContents: (
     stackPath: StackPath,
-  ): Promise<CloudFormation.Stack | null> =>
-    this.#existingStacks.get(stackPath) || null
+    variables: any,
+    templatePath?: string,
+  ) => Promise<string>
 
-  getExistingTemplateSummary = async (
-    stackPath: StackPath,
-  ): Promise<CloudFormation.GetTemplateSummaryOutput | null> =>
-    this.#existingTemplateSummaries.get(stackPath) || null
+  buildConfigTree: () => Promise<ConfigTree>
 
-  removeExistingStack = (stackPath: StackPath): void => {
-    this.#existingStacks.delete(stackPath)
-  }
+  loadExtensions: (
+    resolverRegistry: ResolverRegistry,
+    hookInitializers: HookInitializersMap,
+  ) => Promise<void>
 
-  removeExistingTemplateSummary = (stackPath: StackPath): void => {
-    this.#existingTemplateSummaries.delete(stackPath)
-  }
+  templateEngine: TemplateEngine
 }

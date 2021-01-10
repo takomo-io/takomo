@@ -1,8 +1,12 @@
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "@takomo/unit-test"
-import { hookName } from "../src"
+} from "@takomo/test-unit"
+import { createStacksSchemas } from "../src"
+
+const { hookName } = createStacksSchemas({
+  regions: [],
+})
 
 const valid = ["hook", "Example", "after-all"]
 

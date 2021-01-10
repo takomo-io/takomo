@@ -1,4 +1,5 @@
-import { CliInitProjectIO } from "@takomo/cli-io"
+import { createInitProjectIO } from "@takomo/cli-io"
+import { createFileSystemProjectConfigRepository } from "@takomo/config-repository-fs"
 import { initProjectCommand } from "@takomo/init-command"
 import { handle } from "./common"
 
@@ -26,14 +27,22 @@ export const initProjectCmd = {
         demandOption: false,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
+        ...ctx.filePaths,
         regions: argv.regions,
         project: argv.project,
         createSamples: argv["create-samples"],
       }),
-      (input) => initProjectCommand(input, new CliInitProjectIO(input.options)),
-    ),
+      io: (ctx, logger) => createInitProjectIO(logger),
+      configRepository: (ctx, logger) =>
+        createFileSystemProjectConfigRepository({
+          ctx,
+          logger,
+          ...ctx.filePaths,
+        }),
+      executor: initProjectCommand,
+    }),
 }

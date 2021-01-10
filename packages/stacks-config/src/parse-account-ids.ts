@@ -1,8 +1,10 @@
-import { AccountId } from "@takomo/core"
+import { AccountId } from "@takomo/aws-model"
 
-export const parseAccountIds = (value: any): AccountId[] | null => {
+export const parseAccountIds = (
+  value: any,
+): ReadonlyArray<AccountId> | undefined => {
   if (value === null || value === undefined) {
-    return null
+    return undefined
   }
 
   return Array.isArray(value)

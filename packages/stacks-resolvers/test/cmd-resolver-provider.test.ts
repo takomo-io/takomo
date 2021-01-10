@@ -1,23 +1,26 @@
+import { CommandContext } from "@takomo/core"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "@takomo/unit-test"
+} from "@takomo/test-unit"
+import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { CmdResolverProvider } from "../src/impl/cmd-resolver"
+import { createCmdResolverProvider } from "../src/cmd-resolver"
 import { defaultSchema } from "../src/resolver-registry"
 
-const provider = new CmdResolverProvider()
+const provider = createCmdResolverProvider()
+
+const schema = provider.schema!({
+  ctx: mock<CommandContext>(),
+  joi: Joi.defaults((schema) => schema),
+  base: defaultSchema("cmd"),
+})
 
 describe("CmdResolverProvider", () => {
   test("#name should be cmd", () => {
     expect(provider.name).toBe("cmd")
   })
   describe("#schema validation", () => {
-    const schema = provider.schema(
-      Joi.defaults((schema) => schema),
-      defaultSchema("cmd"),
-    )
-
     test("should succeed when a valid configuration is given", () => {
       expectNoValidationError(schema)({
         command: "echo 'Hello'",
@@ -39,6 +42,21 @@ describe("CmdResolverProvider", () => {
       expectNoValidationError(schema)({
         command: "echo cool",
         confidential: true,
+      })
+    })
+
+    test("should succeed when immutable property is given", () => {
+      expectNoValidationError(schema)({
+        command: "echo cool",
+        immutable: true,
+      })
+    })
+
+    test("should succeed when all supported properties are given", () => {
+      expectNoValidationError(schema)({
+        command: "echo cool",
+        immutable: true,
+        confidential: false,
       })
     })
   })

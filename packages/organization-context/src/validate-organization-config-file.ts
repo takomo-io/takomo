@@ -1,13 +1,15 @@
-import { ConfigSet } from "@takomo/config-sets"
-import { CallerIdentity } from "@takomo/core"
 import {
-  OrganizationAccountStatus,
-  OrganizationalUnit,
-  OrganizationConfigFile,
+  CallerIdentity,
+  Organization,
+  OrganizationAccount,
+} from "@takomo/aws-model"
+import { ConfigSet } from "@takomo/config-sets"
+import {
+  OrganizationalUnitConfig,
+  OrganizationConfig,
   OrganizationPolicyConfig,
 } from "@takomo/organization-config"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
-import { Account, Organization } from "aws-sdk/clients/organizations"
 import flatten from "lodash.flatten"
 import {
   AccountsMissingFromLocalConfigError,
@@ -17,14 +19,15 @@ import {
 import { OrganizationContext } from "./organization-context"
 
 const collectPolicyNames = (
-  policies: OrganizationPolicyConfig[] | undefined,
+  policies: ReadonlyArray<OrganizationPolicyConfig> | undefined,
 ): string[] => (policies ? policies.map((p) => p.name) : [])
 
-const collectConfigSetNames = (configSets: ConfigSet[]): string[] =>
-  configSets.map((r) => r.name)
+const collectConfigSetNames = (
+  configSets: ReadonlyArray<ConfigSet>,
+): ReadonlyArray<string> => configSets.map((r) => r.name)
 
 export const validateOrganizationConfigFile = (
-  configFile: OrganizationConfigFile,
+  configFile: OrganizationConfig,
   masterCallerIdentity: CallerIdentity,
   organization: Organization,
 ): void => {
@@ -43,7 +46,7 @@ export const validateOrganizationConfigFile = (
     )
   }
 
-  if (organization.FeatureSet !== "ALL") {
+  if (organization.featureSet !== "ALL") {
     if (configFile.serviceControlPolicies.enabled) {
       throw new TakomoError(
         "Local configuration must not contain 'serviceControlPolicies' configuration when the organization does not have all features enabled",
@@ -75,7 +78,7 @@ export const validateOrganizationConfigFile = (
     }
   }
 
-  if (organization.FeatureSet === "ALL" && serviceControlPolicies.enabled) {
+  if (organization.featureSet === "ALL" && serviceControlPolicies.enabled) {
     if (serviceControlPolicies.policies.length === 0) {
       throw new TakomoError(
         "Local configuration must contain at least one service control policy when the organization has service control policies enabled",
@@ -104,7 +107,7 @@ export const validateOrganizationConfigFile = (
   const backupPolicyNames = collectPolicyNames(backupPolicies.policies)
   const configSetNames = collectConfigSetNames(configSets)
 
-  const validateOu = (ou: OrganizationalUnit): void => {
+  const validateOu = (ou: OrganizationalUnitConfig): void => {
     ou.policies.serviceControl.attached.forEach((policyName) => {
       if (!serviceControlPolicyNames.includes(policyName)) {
         throw new TakomoError(
@@ -223,7 +226,7 @@ export const validateOrganizationConfigFile = (
 
 export const validateCommonLocalConfiguration = async (
   ctx: OrganizationContext,
-  currentAccounts: Account[],
+  currentAccounts: ReadonlyArray<OrganizationAccount>,
 ): Promise<void> => {
   const allAccountsInConfig = flatten(
     collectFromHierarchy(
@@ -234,7 +237,7 @@ export const validateCommonLocalConfiguration = async (
 
   const allAccountIdsInConfig = allAccountsInConfig.map((a) => a.id)
 
-  const currentAccountIds = currentAccounts.map((a) => a.Id!)
+  const currentAccountIds = currentAccounts.map((a) => a.id)
   const invalidAccountIds = allAccountIdsInConfig.filter(
     (id) => !currentAccountIds.includes(id),
   )
@@ -243,14 +246,12 @@ export const validateCommonLocalConfiguration = async (
   }
 
   const suspendedAccountsIds = currentAccounts
-    .filter((a) => a.Status === "SUSPENDED")
-    .map((a) => a.Id!)
+    .filter((a) => a.status === "SUSPENDED")
+    .map((a) => a.id)
 
   const suspendedAccountIdsInLocalConfig = allAccountsInConfig
     .filter(
-      (a) =>
-        suspendedAccountsIds.includes(a.id) &&
-        a.status !== OrganizationAccountStatus.SUSPENDED,
+      (a) => suspendedAccountsIds.includes(a.id) && a.status !== "suspended",
     )
     .map((a) => a.id)
   if (suspendedAccountIdsInLocalConfig.length > 0) {
@@ -260,7 +261,7 @@ export const validateCommonLocalConfiguration = async (
   }
 
   const accountIdsMissingFromLocalConfig = currentAccounts.filter(
-    (a) => !allAccountIdsInConfig.includes(a.Id!),
+    (a) => !allAccountIdsInConfig.includes(a.id),
   )
   if (accountIdsMissingFromLocalConfig.length > 0) {
     throw new AccountsMissingFromLocalConfigError(
@@ -268,18 +269,18 @@ export const validateCommonLocalConfiguration = async (
     )
   }
 
-  const currentAccountsMap = new Map(currentAccounts.map((a) => [a.Id!, a]))
+  const currentAccountsMap = new Map(currentAccounts.map((a) => [a.id, a]))
 
   allAccountsInConfig.forEach((localAccount) => {
     const currentAccount = currentAccountsMap.get(localAccount.id)!
-    if (localAccount.email && localAccount.email !== currentAccount.Email!) {
+    if (localAccount.email && localAccount.email !== currentAccount.email) {
       throw new TakomoError(
-        `Account email '${localAccount.email}' configured in local config does not match with the current email '${currentAccount.Email}' for account ${localAccount.id}`,
+        `Account email '${localAccount.email}' configured in local config does not match with the current email '${currentAccount.email}' for account ${localAccount.id}`,
       )
     }
-    if (localAccount.name && localAccount.name !== currentAccount.Name!) {
+    if (localAccount.name && localAccount.name !== currentAccount.name) {
       throw new TakomoError(
-        `Account name '${localAccount.name}' configured in local config does not match with the current name '${currentAccount.Name}' for account ${localAccount.id}`,
+        `Account name '${localAccount.name}' configured in local config does not match with the current name '${currentAccount.name}' for account ${localAccount.id}`,
       )
     }
   })

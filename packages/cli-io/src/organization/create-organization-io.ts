@@ -1,59 +1,64 @@
-import { AccountId, Options } from "@takomo/core"
+import { AccountId } from "@takomo/aws-model"
 import {
   CreateOrganizationIO,
   CreateOrganizationOutput,
 } from "@takomo/organization-commands"
-import CliIO from "../cli-io"
-import { LogWriter } from "@takomo/util"
+import { LogWriter, TkmLogger } from "@takomo/util"
+import { createBaseIO } from "../cli-io"
 
-export class CliCreateOrganizationIO
-  extends CliIO
-  implements CreateOrganizationIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
-
-  printOutput = (
+export const createCreateOrganizationIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): CreateOrganizationIO => {
+  const io = createBaseIO(writer)
+  const printOutput = (
     output: CreateOrganizationOutput,
   ): CreateOrganizationOutput => {
-    const { organization, configurationFile } = output
+    const { organization } = output
 
     if (!organization) {
       return output
     }
 
-    this.header("Organization", true)
-    this.message(`id:            ${organization.Id}`)
-    this.message(`arn:           ${organization.Arn}`)
-    this.message(`feature set:   ${organization.FeatureSet}`)
+    io.header({ text: "Organization", marginTop: true })
+    io.message({ text: `id:            ${organization.id}` })
+    io.message({ text: `arn:           ${organization.arn}` })
+    io.message({ text: `feature set:   ${organization.featureSet}` })
 
-    this.header("Master account", true)
-    this.message(`id:            ${organization.MasterAccountId}`)
-    this.message(`arn:           ${organization.MasterAccountArn}`)
-    this.message(`email:         ${organization.MasterAccountEmail}`)
-
-    if (configurationFile) {
-      this.message(
-        `Organization configuration file was created in path: ${configurationFile}`,
-        true,
-      )
-    }
+    io.header({ text: "Master account", marginTop: true })
+    io.message({ text: `id:            ${organization.masterAccountId}` })
+    io.message({ text: `arn:           ${organization.masterAccountArn}` })
+    io.message({ text: `email:         ${organization.masterAccountEmail}` })
 
     return output
   }
 
-  confirmOrganizationCreation = async (
+  const confirmOrganizationCreation = async (
     masterAccountId: AccountId,
     featureSet: string,
   ): Promise<boolean> => {
-    this.subheader("Review new organization information", true)
-    this.longMessage([
-      "A new organization will be created with following information:",
-      "",
-      `  master account id:   ${masterAccountId}`,
-      `  feature set:         ${featureSet}`,
-    ])
+    io.subheader({
+      text: "Review new organization information",
+      marginTop: true,
+    })
+    io.longMessage(
+      [
+        "A new organization will be created with following information:",
+        "",
+        `  master account id:   ${masterAccountId}`,
+        `  feature set:         ${featureSet}`,
+      ],
+      false,
+      false,
+      0,
+    )
 
-    return this.confirm("Continue to create a new organization?", true)
+    return io.confirm("Continue to create a new organization?", true)
+  }
+
+  return {
+    ...logger,
+    confirmOrganizationCreation,
+    printOutput,
   }
 }

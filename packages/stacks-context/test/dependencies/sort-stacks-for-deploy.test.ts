@@ -15,8 +15,8 @@ describe("#sortStacksForDeploy", () => {
     const a = createStack({ name: "a", path: "/a.yml" })
     const b = createStack({ name: "b", path: "/b.yml" })
 
-    const sorted = sortStacksForDeploy([a, b]).map((s) => s.getPath())
-    expect(sorted).toStrictEqual([a.getPath(), b.getPath()])
+    const sorted = sortStacksForDeploy([a, b]).map((s) => s.path)
+    expect(sorted).toStrictEqual([a.path, b.path])
   })
 
   test("when two stacks are given", () => {
@@ -27,8 +27,8 @@ describe("#sortStacksForDeploy", () => {
     })
     const b = createStack({ name: "b", path: "/b.yml" })
 
-    const sorted = sortStacksForDeploy([a, b]).map((s) => s.getPath())
-    expect(sorted).toStrictEqual([b.getPath(), a.getPath()])
+    const sorted = sortStacksForDeploy([a, b]).map((s) => s.path)
+    expect(sorted).toStrictEqual([b.path, a.path])
   })
 
   test("when multiple stacks are given", () => {
@@ -48,8 +48,8 @@ describe("#sortStacksForDeploy", () => {
       dependencies: ["/b.yml"],
     })
 
-    const sorted = sortStacksForDeploy([a, b, c]).map((s) => s.getPath())
-    expect(sorted).toStrictEqual([b.getPath(), c.getPath(), a.getPath()])
+    const sorted = sortStacksForDeploy([a, b, c]).map((s) => s.path)
+    expect(sorted).toStrictEqual([b.path, c.path, a.path])
   })
 
   test("when complex dependency graph is given", () => {
@@ -94,19 +94,19 @@ describe("#sortStacksForDeploy", () => {
       dependencies: [],
     })
 
-    const sorted = sortStacksForDeploy([a, b, c, d, e, f, g, h]).map((s) =>
-      s.getPath(),
+    const sorted = sortStacksForDeploy([a, b, c, d, e, f, g, h]).map(
+      (s) => s.path,
     )
 
     expect(sorted).toStrictEqual([
-      b.getPath(),
-      g.getPath(),
-      h.getPath(),
-      f.getPath(),
-      d.getPath(),
-      e.getPath(),
-      c.getPath(),
-      a.getPath(),
+      b.path,
+      g.path,
+      h.path,
+      f.path,
+      d.path,
+      e.path,
+      c.path,
+      a.path,
     ])
   })
 
@@ -322,32 +322,32 @@ describe("#sortStacksForDeploy", () => {
       euWestD,
       euWestC,
       euWestB,
-    ]).map((s) => s.getPath())
+    ]).map((s) => s.path)
 
     expect(sorted).toStrictEqual([
-      euNorthB.getPath(),
-      euWestB.getPath(),
-      euWestG.getPath(),
-      euWestL.getPath(),
-      euWestQ.getPath(),
-      usEastG.getPath(),
-      usEastH.getPath(),
-      euNorthA.getPath(),
-      euWestS.getPath(),
-      usEastS.getPath(),
-      euWestC.getPath(),
-      euWestE.getPath(),
-      euWestD.getPath(),
-      euWestH.getPath(),
-      euWestK.getPath(),
-      euWestP.getPath(),
-      euWestR.getPath(),
-      usEastI.getPath(),
-      euWestI.getPath(),
-      euWestJ.getPath(),
-      euWestM.getPath(),
-      euWestO.getPath(),
-      euWestN.getPath(),
+      euNorthB.path,
+      euWestB.path,
+      euWestG.path,
+      euWestL.path,
+      euWestQ.path,
+      usEastG.path,
+      usEastH.path,
+      euNorthA.path,
+      euWestS.path,
+      usEastS.path,
+      euWestC.path,
+      euWestE.path,
+      euWestD.path,
+      euWestH.path,
+      euWestK.path,
+      euWestP.path,
+      euWestR.path,
+      usEastI.path,
+      euWestI.path,
+      euWestJ.path,
+      euWestM.path,
+      euWestO.path,
+      euWestN.path,
     ])
   })
 })

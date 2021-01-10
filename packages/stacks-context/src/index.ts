@@ -1,13 +1,9 @@
-import { resolveStackLaunchType } from "./common"
-import { buildConfigContext } from "./config/build-config-context"
-import { ConfigContext } from "./config/config-context"
-import { prepareDeployContext } from "./deploy"
-import { prepareUndeployContext } from "./undeploy"
-
+export { isWithinCommandPath } from "./common"
+export { buildStacksContext } from "./config/build-stacks-context"
 export {
-  prepareUndeployContext,
-  prepareDeployContext,
-  buildConfigContext,
-  ConfigContext,
-  resolveStackLaunchType,
-}
+  ConfigTree,
+  StackConfigNode,
+  StackGroupConfigNode,
+} from "./config/config-tree"
+export { sortStacksForDeploy, sortStacksForUndeploy } from "./dependencies"
+export { StacksConfigRepository } from "./model"

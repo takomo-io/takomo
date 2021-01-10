@@ -1,14 +1,14 @@
-import { DetailedOrganizationalUnit, DetailedPolicy } from "@takomo/aws-clients"
-import { Constants } from "@takomo/core"
-import { arrayToMap, collectFromHierarchy, Logger } from "@takomo/util"
 import {
-  EnabledServicePrincipal,
+  DetailedOrganizationalUnit,
+  DetailedOrganizationPolicy,
   OrganizationalUnitId,
-  Policy,
-  PolicyId,
-  PolicyName,
-  Root,
-} from "aws-sdk/clients/organizations"
+  OrganizationPolicy,
+  OrganizationPolicyId,
+  OrganizationPolicyName,
+  OrganizationPolicyType,
+  OrganizationRoot,
+} from "@takomo/aws-model"
+import { arrayToMap, collectFromHierarchy, TkmLogger } from "@takomo/util"
 import { OrgEntityId } from "./model"
 import { OrganizationContext } from "./organization-context"
 import {
@@ -18,29 +18,30 @@ import {
 } from "./organization-state"
 
 const collectPoliciesByTargetId = (
-  policies: DetailedPolicy[],
-): Map<OrgEntityId, PolicyId[]> => {
-  const map = new Map<OrgEntityId, PolicyName[]>()
+  policies: ReadonlyArray<DetailedOrganizationPolicy>,
+): Map<OrgEntityId, ReadonlyArray<OrganizationPolicyId>> => {
+  const map = new Map<OrgEntityId, Array<OrganizationPolicyName>>()
   policies.forEach(({ policy, targets }) => {
     targets.forEach((target) => {
-      const policyIds = map.get(target.TargetId!)
+      const policyIds = map.get(target.targetId)
       if (policyIds) {
-        policyIds.push(policy.PolicySummary!.Name!)
+        policyIds.push(policy.summary.name)
       } else {
-        map.set(target.TargetId!, [policy.PolicySummary!.Name!])
+        map.set(target.targetId, [policy.summary.name])
       }
     })
   })
   return map
 }
 
-const collectPolicies = (detailedPolicies: DetailedPolicy[]): Policy[] =>
-  detailedPolicies.map((p) => p.policy)
+const collectPolicies = (
+  detailedPolicies: ReadonlyArray<DetailedOrganizationPolicy>,
+): ReadonlyArray<OrganizationPolicy> => detailedPolicies.map((p) => p.policy)
 
 const getRootOrganizationalUnit = (
-  roots: DetailedOrganizationalUnit[],
+  roots: ReadonlyArray<DetailedOrganizationalUnit>,
 ): DetailedOrganizationalUnit => {
-  const root = roots.find((r) => r.ou.Name === "Root")
+  const root = roots.find((r) => r.ou.name === "Root")
   if (!root) {
     throw new Error("Could not load root organizational unit")
   }
@@ -48,85 +49,84 @@ const getRootOrganizationalUnit = (
   return root
 }
 
-const collectTrustedAwsServices = (
-  principals: EnabledServicePrincipal[],
-): string[] => principals.map((s) => s.ServicePrincipal!)
-
-const collectEnabledPolicies = (roots: Root[]): string[] =>
-  roots[0]
-    .PolicyTypes!.filter((p) => p.Status === "ENABLED")
-    .map((p) => p.Type!)
+const collectEnabledPolicies = (
+  roots: ReadonlyArray<OrganizationRoot>,
+): ReadonlyArray<OrganizationPolicyType> =>
+  roots[0].policyTypes.filter((p) => p.status === "ENABLED").map((p) => p.type)
 
 const buildParentByTargetIdMap = (
   ou: DetailedOrganizationalUnit,
   map: Map<OrgEntityId, OrgEntityId> = new Map(),
 ): Map<OrgEntityId, OrgEntityId> => {
-  const id = ou.ou.Id!
+  const id = ou.ou.id
 
   ou.accounts.forEach((account) => {
-    map.set(account.Id!, id)
+    map.set(account.id, id)
   })
 
   ou.children.forEach((child) => {
-    map.set(child.ou.Id!, id)
+    map.set(child.ou.id, id)
     buildParentByTargetIdMap(child, map)
   })
 
   return map
 }
 
-const getPolicyName = (policy: Policy): PolicyName =>
-  policy.PolicySummary?.Name!
+const getPolicyName = (policy: OrganizationPolicy): OrganizationPolicyName =>
+  policy.summary.name
 
 const buildPoliciesByTypeByNameMap = (
-  serviceControlPolicies: Policy[],
-  tagPolicies: Policy[],
-  aiServicesOptOutPolicies: Policy[],
-  backupPolicies: Policy[],
+  serviceControlPolicies: ReadonlyArray<OrganizationPolicy>,
+  tagPolicies: ReadonlyArray<OrganizationPolicy>,
+  aiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicy>,
+  backupPolicies: ReadonlyArray<OrganizationPolicy>,
 ): PoliciesByTypeByName =>
   new Map([
     [
-      Constants.SERVICE_CONTROL_POLICY_TYPE,
+      "SERVICE_CONTROL_POLICY",
       arrayToMap(serviceControlPolicies, getPolicyName),
     ],
-    [Constants.TAG_POLICY_TYPE, arrayToMap(tagPolicies, getPolicyName)],
+    ["TAG_POLICY", arrayToMap(tagPolicies, getPolicyName)],
     [
-      Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
+      "AISERVICES_OPT_OUT_POLICY",
       arrayToMap(aiServicesOptOutPolicies, getPolicyName),
     ],
-    [Constants.BACKUP_POLICY_TYPE, arrayToMap(backupPolicies, getPolicyName)],
+    ["BACKUP_POLICY", arrayToMap(backupPolicies, getPolicyName)],
   ])
 
 const buildPoliciesByTypeByTargetMap = (
-  serviceControlPolicies: Map<OrgEntityId, PolicyId[]>,
-  tagPolicies: Map<OrgEntityId, PolicyId[]>,
-  aiServicesOptOutPolicies: Map<OrgEntityId, PolicyId[]>,
-  backupPolicies: Map<OrgEntityId, PolicyId[]>,
+  serviceControlPolicies: Map<OrgEntityId, ReadonlyArray<OrganizationPolicyId>>,
+  tagPolicies: Map<OrgEntityId, ReadonlyArray<OrganizationPolicyId>>,
+  aiServicesOptOutPolicies: Map<
+    OrgEntityId,
+    ReadonlyArray<OrganizationPolicyId>
+  >,
+  backupPolicies: Map<OrgEntityId, ReadonlyArray<OrganizationPolicyId>>,
 ): PoliciesByTypeByTargetMap =>
   new Map([
-    [Constants.SERVICE_CONTROL_POLICY_TYPE, serviceControlPolicies],
-    [Constants.TAG_POLICY_TYPE, tagPolicies],
-    [Constants.AISERVICES_OPT_OUT_POLICY_TYPE, aiServicesOptOutPolicies],
-    [Constants.BACKUP_POLICY_TYPE, backupPolicies],
+    ["SERVICE_CONTROL_POLICY", serviceControlPolicies],
+    ["TAG_POLICY", tagPolicies],
+    ["AISERVICES_OPT_OUT_POLICY", aiServicesOptOutPolicies],
+    ["BACKUP_POLICY", backupPolicies],
   ])
 
 const buildOrganizationalUnitsByIdMap = (
   root: DetailedOrganizationalUnit,
 ): Map<OrganizationalUnitId, DetailedOrganizationalUnit> => {
   const ous = collectFromHierarchy(root, (ou) => ou.children)
-  return arrayToMap(ous, (ou) => ou.ou.Id!)
+  return arrayToMap(ous, (ou) => ou.ou.id)
 }
 
 export const loadOrganizationState = async (
   ctx: OrganizationContext,
-  logger: Logger,
+  logger: TkmLogger,
 ): Promise<OrganizationState> => {
   logger.info("Load organization state")
 
   const client = ctx.getClient()
   const organization = await client.describeOrganization()
 
-  const allFeaturesEnabled = organization.FeatureSet === "ALL"
+  const allFeaturesEnabled = organization.featureSet === "ALL"
 
   const [
     detailedTagPolicies,
@@ -138,10 +138,10 @@ export const loadOrganizationState = async (
     awsServices,
     organizationRoots,
   ] = await Promise.all([
-    client.listDetailedPolicies(Constants.TAG_POLICY_TYPE),
-    client.listDetailedPolicies(Constants.SERVICE_CONTROL_POLICY_TYPE),
-    client.listDetailedPolicies(Constants.AISERVICES_OPT_OUT_POLICY_TYPE),
-    client.listDetailedPolicies(Constants.BACKUP_POLICY_TYPE),
+    client.listDetailedPolicies("TAG_POLICY"),
+    client.listDetailedPolicies("SERVICE_CONTROL_POLICY"),
+    client.listDetailedPolicies("AISERVICES_OPT_OUT_POLICY"),
+    client.listDetailedPolicies("BACKUP_POLICY"),
     client.listAllOrganizationUnitsWithDetails(),
     client.listAccounts(),
     allFeaturesEnabled ? client.listAWSServiceAccessForOrganization() : [],
@@ -149,7 +149,6 @@ export const loadOrganizationState = async (
   ])
 
   const rootOrganizationalUnit = getRootOrganizationalUnit(existingRoots)
-  const trustedAwsServices = collectTrustedAwsServices(awsServices)
   const enabledPolicies = collectEnabledPolicies(organizationRoots)
 
   const policies = [
@@ -199,7 +198,7 @@ export const loadOrganizationState = async (
     enabledPolicies,
     rootOrganizationalUnit,
     organization,
-    trustedAwsServices,
+    trustedAwsServices: awsServices,
     policiesByTypeByName,
     policiesByTypeByTarget,
     parentByTargetId,

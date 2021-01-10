@@ -5,7 +5,7 @@ module.exports = {
       resolve: () => props.greeting.toUpperCase(),
     }
   },
-  schema: (joi, base) => {
+  schema: ({ joi, base }) => {
     return base.keys({
       greeting: joi.string().max(10),
     })

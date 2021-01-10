@@ -1,12 +1,19 @@
-import { Resolver, ResolverName, ResolverProvider } from "@takomo/stacks-model"
-import { Logger, TakomoError, TakomoErrorOptions } from "@takomo/util"
+import { CommandContext } from "@takomo/core"
+import { ParameterConfig } from "@takomo/stacks-config"
+import {
+  Resolver,
+  ResolverName,
+  ResolverProvider,
+  StackPath,
+} from "@takomo/stacks-model"
+import { TakomoError, TakomoErrorProps, TkmLogger } from "@takomo/util"
 import Joi from "joi"
 
 class InvalidResolverProviderConfigurationError extends TakomoError {
   constructor(
     sourceDescription: string,
     details: string,
-    options?: TakomoErrorOptions,
+    options?: TakomoErrorProps,
   ) {
     super(
       `Invalid resolver provider configuration in ${sourceDescription}:\n\n${details}`,
@@ -19,45 +26,48 @@ export const defaultSchema = (resolverName: string): Joi.ObjectSchema =>
   Joi.object({
     resolver: Joi.string().valid(resolverName),
     confidential: Joi.boolean(),
+    immutable: Joi.boolean(),
   })
 
 export class ResolverRegistry {
   private readonly providers: Map<ResolverName, ResolverProvider> = new Map()
-  private readonly logger: Logger
+  private readonly logger: TkmLogger
 
-  constructor(logger: Logger) {
+  constructor(logger: TkmLogger) {
     this.logger = logger
   }
 
   hasProvider = (name: ResolverName): boolean => this.providers.has(name)
 
   initResolver = async (
-    filePath: string,
+    ctx: CommandContext,
+    stackPath: StackPath,
     parameterName: string,
     name: ResolverName,
-    props: any,
+    props: ParameterConfig,
   ): Promise<Resolver> => {
-    if (props.confidential === true) {
+    if (props.confidential) {
       this.logger.debug(
-        `Init resolver '${name}' for parameter '${parameterName}' with properties: <concealed>`,
+        `Init resolver '${name}' for stack: '${stackPath}', parameter: '${parameterName}' with properties: <concealed>`,
       )
     } else {
       this.logger.debugObject(
-        `Init resolver '${name}' for parameter '${parameterName}' with properties:`,
-        props,
+        `Init resolver '${name}' for stack: '${stackPath}', parameter: '${parameterName}' with properties:`,
+        () => props,
       )
     }
 
     const provider = this.getProvider(name)
     if (provider.schema) {
-      const schema = provider.schema(
-        Joi.defaults((schema) => schema),
-        defaultSchema(name),
-      )
+      const schema = provider.schema({
+        ctx,
+        joi: Joi.defaults((schema) => schema),
+        base: defaultSchema(name),
+      })
 
       if (!Joi.isSchema(schema)) {
         throw new TakomoError(
-          `Error in parameter '${parameterName}' of stack config file ${filePath}:\n\n` +
+          `Error in parameter '${parameterName}' of stack ${stackPath}:\n\n` +
             `  - value returned from resolver schema function is not a Joi schema object`,
         )
       }
@@ -66,7 +76,7 @@ export class ResolverRegistry {
       if (error) {
         const details = error.details.map((d) => `  - ${d.message}`).join("\n")
         throw new TakomoError(
-          `${error.details.length} validation error(s) in parameter '${parameterName}' of stack config file ${filePath}:\n\n${details}`,
+          `${error.details.length} validation error(s) in parameter '${parameterName}' of stack ${stackPath}:\n\n${details}`,
         )
       }
     }

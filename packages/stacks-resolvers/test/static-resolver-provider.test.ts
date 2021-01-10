@@ -1,22 +1,26 @@
+import { CommandContext } from "@takomo/core"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "@takomo/unit-test"
+} from "@takomo/test-unit"
+import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { StaticResolverProvider } from "../src/impl/static-resolver"
+import { defaultSchema } from "../src/resolver-registry"
+import { createStaticResolverProvider } from "../src/static-resolver"
 
-const provider = new StaticResolverProvider()
+const provider = createStaticResolverProvider()
+
+const schema = provider.schema!({
+  ctx: mock<CommandContext>(),
+  joi: Joi.defaults((schema) => schema),
+  base: defaultSchema("static"),
+})
 
 describe("StaticResolverProvider", () => {
   test("#name should be static", () => {
     expect(provider.name).toBe("static")
   })
   describe("#schema validation", () => {
-    const schema = provider.schema(
-      Joi.defaults((schema) => schema),
-      Joi.object(),
-    )
-
     test("should succeed when a valid configuration with a string value is given", () => {
       expectNoValidationError(schema)({
         value: "string",
@@ -38,6 +42,28 @@ describe("StaticResolverProvider", () => {
     test("should succeed when a valid configuration with an array value is given", () => {
       expectNoValidationError(schema)({
         value: ["string", 123, false],
+      })
+    })
+
+    test("should succeed when a valid configuration with confidential is given", () => {
+      expectNoValidationError(schema)({
+        value: 9999,
+        confidential: false,
+      })
+    })
+
+    test("should succeed when a valid configuration with immutable is given", () => {
+      expectNoValidationError(schema)({
+        value: 9999,
+        immutable: false,
+      })
+    })
+
+    test("should succeed when a valid configuration when all supported properties is given", () => {
+      expectNoValidationError(schema)({
+        value: 9999,
+        immutable: false,
+        confidential: true,
       })
     })
 

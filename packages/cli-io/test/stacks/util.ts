@@ -1,3 +1,4 @@
+import { DetailedStackParameter } from "@takomo/aws-model"
 import { CloudFormation } from "aws-sdk"
 import {
   ParameterOperation,
@@ -5,11 +6,14 @@ import {
 } from "../../src/stacks/deploy-stacks-io"
 
 export const param = (
-  ParameterKey: string,
-  ParameterValue: string,
-): CloudFormation.Parameter => ({
-  ParameterKey,
-  ParameterValue,
+  key: string,
+  value: string,
+  noEcho: boolean,
+): DetailedStackParameter => ({
+  key,
+  value,
+  noEcho,
+  description: "",
 })
 
 export const paramDeclaration = (
@@ -22,8 +26,8 @@ export const paramDeclaration = (
 
 export const paramSpec = (
   key: string,
-  currentValue: string | null,
-  newValue: string | null,
+  currentValue: string | undefined,
+  newValue: string | undefined,
   newNoEcho: boolean,
   currentNoEcho: boolean,
   operation: ParameterOperation,

@@ -1,19 +1,18 @@
-import { CommandStatus } from "@takomo/core"
-import { toHookStatus } from "../../../src/stacks/deploy/hooks"
+import { toHookStatus } from "../../../src/stacks/common/hooks"
 
 describe("#toHookStatus", () => {
   describe("returns correct value", () => {
     test("when is CommandStatus.CANCELLED given", () => {
-      expect(toHookStatus(CommandStatus.CANCELLED)).toBe("cancelled")
+      expect(toHookStatus("CANCELLED")).toBe("cancelled")
     })
     test("when is CommandStatus.SKIPPED given", () => {
-      expect(toHookStatus(CommandStatus.SKIPPED)).toBe("skipped")
+      expect(toHookStatus("SKIPPED")).toBe("skipped")
     })
     test("when is CommandStatus.SUCCESS given", () => {
-      expect(toHookStatus(CommandStatus.SUCCESS)).toBe("success")
+      expect(toHookStatus("SUCCESS")).toBe("success")
     })
     test("when is CommandStatus.FAILED given", () => {
-      expect(toHookStatus(CommandStatus.FAILED)).toBe("failed")
+      expect(toHookStatus("FAILED")).toBe("failed")
     })
   })
 })

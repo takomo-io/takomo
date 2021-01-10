@@ -1,5 +1,10 @@
-import { configSetName } from "../../../src/"
-import { expectNoValidationError, expectValidationErrors } from "../../helpers"
+import {
+  expectNoValidationError,
+  expectValidationErrors,
+} from "@takomo/test-unit"
+import { createConfigSetsSchemas } from "../../../src/"
+
+const { configSetName } = createConfigSetsSchemas({ regions: [] })
 
 const valid = ["basic", "Example", "my-group", "_with_underscores"]
 

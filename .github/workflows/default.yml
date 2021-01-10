@@ -7,6 +7,7 @@ on:
       - release/**
       - fix/**
       - chore/**
+      - master
 
 env:
   TKM_ORG_A_ID: ${{ secrets.TKM_ORG_A_ID }}
@@ -26,36 +27,153 @@ env:
   RECYCLER_PASSWORD: ${{ secrets.RECYCLER_PASSWORD }}
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        id: node_modules
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - name: Install dependencies
+        if: steps.node_modules.outputs.cache-hit != 'true'
+        run: yarn
+      - name: Dependency check
+        run: yarn depcheck
+      - name: Build
+        run: yarn build
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
       - uses: actions/cache@v1
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - name: Install dependencies
-        run: yarn
-      - name: Build
-        run: yarn build
-      - name: Dependency check
-        run: yarn depcheck  
-      - name: Unit tests
-        run: yarn test
-      - name: Stacks integration tests
-        run: yarn workspace integration-test-stacks integration-test
-      - name: Deployment targets integration tests
-        run: yarn workspace integration-test-deployment-targets integration-test
-      - name: Organization creation integration tests
-        run: yarn workspace integration-test-organization-creation integration-test
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - run: yarn test
+
+  stacks-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - run: yarn workspace integration-test-stacks integration-test
+
+  deployment-targets-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - run: yarn workspace integration-test-deployment-targets integration-test
+
+  organization-creation-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - run: yarn workspace integration-test-organization-creation integration-test
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_B_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_B_AWS_SECRET_ACCESS_KEY }}
-      - name: Organization integration tests
-        run: yarn workspace integration-test-organization integration-test
+
+  organization-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - run: yarn workspace integration-test-organization integration-test
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
+
+  docs:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - unit-test
+      - stacks-test
+      - deployment-targets-test
+      - organization-creation-test
+      - organization-test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - name: Build API docs
+        run: yarn api-docs
+      - run: ./ci/publish-api-docs.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+          DOCS_BASE: /api-docs/release/master/

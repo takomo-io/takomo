@@ -1,2 +1,11 @@
-export { parseStackConfigFile } from "./parse-stack-config-file"
-export { parseStackGroupConfigFile } from "./parse-stack-group-config-file"
+export { buildStackConfig } from "./build-stack-config"
+export { buildStackGroupConfig } from "./build-stack-group-config"
+export {
+  HookConfig,
+  ListParameterConfig,
+  ParameterConfig,
+  ParameterConfigs,
+  SingleParameterConfig,
+  StackConfig,
+  StackGroupConfig,
+} from "./model"

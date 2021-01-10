@@ -1,9 +1,6 @@
+import { HookConfig } from "@takomo/stacks-config"
 import { CmdHook } from "@takomo/stacks-hooks"
-import {
-  HookConfig,
-  HookExecutor,
-  HookInitializersMap,
-} from "@takomo/stacks-model"
+import { HookExecutor, HookInitializersMap } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 
 export const coreHookInitializers = (): HookInitializersMap =>

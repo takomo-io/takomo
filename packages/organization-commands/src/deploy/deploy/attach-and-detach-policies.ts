@@ -1,18 +1,20 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { Constants } from "@takomo/core"
-import { OrganizationState } from "@takomo/organization-context"
-import { OrgEntityId } from "@takomo/organization-context/src/model"
-import { Logger } from "@takomo/util"
-import { PolicyName, PolicyType } from "aws-sdk/clients/organizations"
-import { OrgEntityPoliciesPlan } from "../plan/model"
+import {
+  OrganizationPolicyName,
+  OrganizationPolicyType,
+} from "@takomo/aws-model"
+import { OrganizationState, OrgEntityId } from "@takomo/organization-context"
+import { DEFAULT_SERVICE_CONTROL_POLICY_NAME } from "@takomo/organization-model"
+import { TkmLogger } from "@takomo/util"
+import { OrgEntityPoliciesPlan } from "../../common/plan/organizational-units/model"
 
 const attachPolicies = async (
-  logger: Logger,
-  policyType: PolicyType,
+  logger: TkmLogger,
+  policyType: OrganizationPolicyType,
   client: OrganizationsClient,
   targetType: string,
   targetId: OrgEntityId,
-  policiesToAttach: string[],
+  policiesToAttach: ReadonlyArray<string>,
   organizationState: OrganizationState,
 ): Promise<boolean> => {
   if (policiesToAttach.length === 0) {
@@ -54,12 +56,12 @@ const attachPolicies = async (
 }
 
 const detachPolicies = async (
-  logger: Logger,
-  policyType: PolicyType,
+  logger: TkmLogger,
+  policyType: OrganizationPolicyType,
   client: OrganizationsClient,
   targetType: "account" | "organizational unit",
   targetId: OrgEntityId,
-  policiesToDetach: PolicyName[],
+  policiesToDetach: ReadonlyArray<OrganizationPolicyName>,
   organizationState: OrganizationState,
 ): Promise<boolean> => {
   if (policiesToDetach.length === 0) {
@@ -101,29 +103,29 @@ const detachPolicies = async (
 }
 
 export const attachAndDetachPolicies = async (
-  logger: Logger,
+  logger: TkmLogger,
   client: OrganizationsClient,
-  enabledPolicyTypes: PolicyType[],
+  enabledPolicyTypes: ReadonlyArray<OrganizationPolicyType>,
   serviceControlPoliciesJustEnabled: boolean,
   organizationState: OrganizationState,
   targetType: "organizational unit" | "account",
   targetId: OrgEntityId,
   plan: OrgEntityPoliciesPlan,
 ): Promise<boolean> => {
-  if (enabledPolicyTypes.includes(Constants.SERVICE_CONTROL_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("SERVICE_CONTROL_POLICY")) {
     // If service control policies were just enabled in organization,
     // then the default policy was attached to every OU and account,
     // and therefore it can't be attached again here
     const policiesToAttach = serviceControlPoliciesJustEnabled
       ? plan.serviceControl.attached.add.filter(
-          (p) => p !== Constants.DEFAULT_SERVICE_CONTROL_POLICY_NAME,
+          (p) => p !== DEFAULT_SERVICE_CONTROL_POLICY_NAME,
         )
       : plan.serviceControl.attached.add
 
     if (
       !(await attachPolicies(
         logger,
-        Constants.SERVICE_CONTROL_POLICY_TYPE,
+        "SERVICE_CONTROL_POLICY",
         client,
         targetType,
         targetId,
@@ -135,11 +137,11 @@ export const attachAndDetachPolicies = async (
     }
   }
 
-  if (enabledPolicyTypes.includes(Constants.TAG_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("TAG_POLICY")) {
     if (
       !(await attachPolicies(
         logger,
-        Constants.TAG_POLICY_TYPE,
+        "TAG_POLICY",
         client,
         targetType,
         targetId,
@@ -151,11 +153,11 @@ export const attachAndDetachPolicies = async (
     }
   }
 
-  if (enabledPolicyTypes.includes(Constants.AISERVICES_OPT_OUT_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("AISERVICES_OPT_OUT_POLICY")) {
     if (
       !(await attachPolicies(
         logger,
-        Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
+        "AISERVICES_OPT_OUT_POLICY",
         client,
         targetType,
         targetId,
@@ -167,11 +169,11 @@ export const attachAndDetachPolicies = async (
     }
   }
 
-  if (enabledPolicyTypes.includes(Constants.BACKUP_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("BACKUP_POLICY")) {
     if (
       !(await attachPolicies(
         logger,
-        Constants.BACKUP_POLICY_TYPE,
+        "BACKUP_POLICY",
         client,
         targetType,
         targetId,
@@ -183,11 +185,11 @@ export const attachAndDetachPolicies = async (
     }
   }
 
-  if (enabledPolicyTypes.includes(Constants.SERVICE_CONTROL_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("SERVICE_CONTROL_POLICY")) {
     if (
       !(await detachPolicies(
         logger,
-        Constants.SERVICE_CONTROL_POLICY_TYPE,
+        "SERVICE_CONTROL_POLICY",
         client,
         targetType,
         targetId,
@@ -199,11 +201,11 @@ export const attachAndDetachPolicies = async (
     }
   }
 
-  if (enabledPolicyTypes.includes(Constants.TAG_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("TAG_POLICY")) {
     if (
       !(await detachPolicies(
         logger,
-        Constants.TAG_POLICY_TYPE,
+        "TAG_POLICY",
         client,
         targetType,
         targetId,
@@ -215,11 +217,11 @@ export const attachAndDetachPolicies = async (
     }
   }
 
-  if (enabledPolicyTypes.includes(Constants.AISERVICES_OPT_OUT_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("AISERVICES_OPT_OUT_POLICY")) {
     if (
       !(await detachPolicies(
         logger,
-        Constants.AISERVICES_OPT_OUT_POLICY_TYPE,
+        "AISERVICES_OPT_OUT_POLICY",
         client,
         targetType,
         targetId,
@@ -231,11 +233,11 @@ export const attachAndDetachPolicies = async (
     }
   }
 
-  if (enabledPolicyTypes.includes(Constants.BACKUP_POLICY_TYPE)) {
+  if (enabledPolicyTypes.includes("BACKUP_POLICY")) {
     if (
       !(await detachPolicies(
         logger,
-        Constants.BACKUP_POLICY_TYPE,
+        "BACKUP_POLICY",
         client,
         targetType,
         targetId,

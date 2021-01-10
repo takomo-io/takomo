@@ -1,6 +1,8 @@
-import { PolicyName } from "aws-sdk/clients/organizations"
+import { OrganizationPolicyName } from "@takomo/aws-model"
 
-export const parsePolicyNames = (value: any): PolicyName[] => {
+export const parsePolicyNames = (
+  value: any,
+): ReadonlyArray<OrganizationPolicyName> => {
   if (value === null || value === undefined) {
     return []
   }

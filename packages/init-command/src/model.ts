@@ -1,26 +1,35 @@
-import { CommandInput, CommandOutput, IO, Region } from "@takomo/core"
+import { Region } from "@takomo/aws-model"
+import {
+  CommandContext,
+  CommandInput,
+  CommandOutput,
+  IO,
+  Project,
+} from "@takomo/core"
 
 export interface ProjectInformation {
-  readonly project: string | null
-  readonly regions: Region[]
+  readonly project?: Project
+  readonly regions: ReadonlyArray<Region>
   readonly createSamples: boolean
 }
 
 export interface InitProjectInput extends CommandInput {
-  readonly project: string | null
-  readonly regions: Region[] | null
-  readonly createSamples: boolean | null
+  readonly project?: Project
+  readonly regions?: ReadonlyArray<Region>
+  readonly createSamples?: boolean
 }
 
 export interface InitProjectOutput extends CommandOutput {
-  readonly projectDir: string
   readonly description: string
 }
 
-export interface InitProjectIO extends IO {
-  promptProjectInformation: (
+export interface InitProjectIO extends IO<InitProjectOutput> {
+  readonly promptProjectInformation: (
+    ctx: CommandContext,
     input: InitProjectInput,
   ) => Promise<ProjectInformation>
+}
 
-  printOutput: (output: InitProjectOutput) => InitProjectOutput
+export interface ProjectConfigRepository {
+  readonly putProjectConfig: (info: ProjectInformation) => Promise<string>
 }

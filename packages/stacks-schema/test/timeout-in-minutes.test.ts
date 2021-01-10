@@ -1,21 +1,27 @@
-import { timeoutInMinutes } from "../src"
+import {
+  expectNoValidationError,
+  expectValidationErrors,
+} from "@takomo/test-unit"
+import { createStacksSchemas } from "../src"
+
+const { timeoutInMinutes } = createStacksSchemas({
+  regions: [],
+})
 
 const valid = [10, "6", 0]
 
-const invalid = [
+const invalid: Array<[unknown, string]> = [
   [-1, '"value" must be greater than or equal to 0'],
   ["a", '"value" must be a number'],
   [1.1, '"value" must be an integer'],
 ]
 
-describe("timeout in minutes validation", () => {
+describe("timeout validation", () => {
   test.each(invalid)("fails when '%s' is given", (value, expectedMessage) => {
-    const { error } = timeoutInMinutes.validate(value)
-    expect(error!.message).toBe(expectedMessage)
+    expectValidationErrors(timeoutInMinutes)(value, expectedMessage)
   })
 
   test.each(valid)("succeeds when '%s' is given", (value) => {
-    const { error } = timeoutInMinutes.validate(value)
-    expect(error).toBeUndefined()
+    expectNoValidationError(timeoutInMinutes)(value)
   })
 })

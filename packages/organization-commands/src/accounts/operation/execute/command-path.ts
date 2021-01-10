@@ -1,18 +1,13 @@
+import { CredentialManager } from "@takomo/aws-clients"
 import {
   ConfigSetCommandPathOperationResult,
+  ConfigSetName,
   ConfigSetType,
 } from "@takomo/config-sets"
+import { CommandContext } from "@takomo/core"
 import {
-  CommandPath,
-  CommandStatus,
-  DeploymentOperation,
-  OperationState,
-  Options,
-  TakomoCredentialProvider,
-} from "@takomo/core"
-import {
-  OrganizationAccount,
-  OrganizationConfigFile,
+  OrganizationAccountConfig,
+  OrganizationConfig,
 } from "@takomo/organization-config"
 import {
   deployStacksCommand,
@@ -20,35 +15,47 @@ import {
   StacksOperationOutput,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { deepCopy, StopWatch } from "@takomo/util"
+import { StacksConfigRepository } from "@takomo/stacks-context"
+import {
+  CommandPath,
+  DeploymentOperation,
+  OperationState,
+} from "@takomo/stacks-model"
+import { createTimer, deepCopy, Timer } from "@takomo/util"
 import merge from "lodash.merge"
 import {
   AccountsOperationIO,
-  LaunchAccountsPlanHolder,
   PlannedAccountDeploymentOrganizationalUnit,
   PlannedLaunchableAccount,
 } from "../model"
+import { AccountsOperationPlanHolder } from "../states"
 
 const executeOperation = async (
   operation: DeploymentOperation,
   input: StacksOperationInput,
-  account: OrganizationAccount,
-  credentialProvider: TakomoCredentialProvider,
+  account: OrganizationAccountConfig,
+  credentialManager: CredentialManager,
   io: AccountsOperationIO,
+  ctx: CommandContext,
+  configRepository: StacksConfigRepository,
 ): Promise<StacksOperationOutput> => {
   switch (operation) {
-    case DeploymentOperation.DEPLOY:
-      return deployStacksCommand(
+    case "deploy":
+      return deployStacksCommand({
         input,
-        io.createStackDeployIO(input.options, account.id),
-        credentialProvider,
-      )
-    case DeploymentOperation.UNDEPLOY:
-      return undeployStacksCommand(
+        ctx,
+        credentialManager,
+        configRepository,
+        io: io.createStackDeployIO(account.id),
+      })
+    case "undeploy":
+      return undeployStacksCommand({
         input,
-        io.createStackUndeployIO(input.options, account.id),
-        credentialProvider,
-      )
+        ctx,
+        credentialManager,
+        configRepository,
+        io: io.createStackUndeployIO(account.id),
+      })
     default:
       throw new Error(`Unsupported operation: ${operation}`)
   }
@@ -57,18 +64,18 @@ const executeOperation = async (
 const getRoleName = (
   configSetType: ConfigSetType,
   ou: PlannedAccountDeploymentOrganizationalUnit,
-  account: OrganizationAccount,
-  organizationConfigFile: OrganizationConfigFile,
+  account: OrganizationAccountConfig,
+  organizationConfigFile: OrganizationConfig,
 ): string => {
   switch (configSetType) {
-    case ConfigSetType.BOOTSTRAP:
+    case "bootstrap":
       return (
         account.accountBootstrapRoleName ||
         ou.accountBootstrapRoleName ||
         organizationConfigFile.accountBootstrapRoleName ||
         organizationConfigFile.accountCreation.defaults.roleName
       )
-    case ConfigSetType.STANDARD:
+    case "standard":
       return (
         account.accountAdminRoleName ||
         ou.accountAdminRoleName ||
@@ -81,74 +88,82 @@ const getRoleName = (
 }
 
 export const processCommandPath = async (
-  holder: LaunchAccountsPlanHolder,
+  holder: AccountsOperationPlanHolder,
   ou: PlannedAccountDeploymentOrganizationalUnit,
   plannedAccount: PlannedLaunchableAccount,
-  configSetName: string,
-  options: Options,
+  configSetName: ConfigSetName,
   commandPath: CommandPath,
-  commandPathWatch: StopWatch,
+  commandPathTimer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const {
     io,
     ctx,
-    input: { variables, operation },
+    input: { operation },
   } = holder
   const account = plannedAccount.config
-  const credentialProvider = ctx.getCredentialProvider()
-  const organizationConfigFile = ctx.getOrganizationConfigFile()
+  const credentialManager = ctx.credentialManager
+  const organizationConfig = ctx.organizationConfig
 
   io.info(`Process command path: ${commandPath}`)
 
   if (state.failed) {
+    const timer = createTimer("total")
+    timer.stop()
+
     return {
       commandPath,
       result: {
+        timer,
         message: "Cancelled",
-        status: CommandStatus.CANCELLED,
-        watch: new StopWatch("total").stop(),
+        status: "CANCELLED",
         success: false,
         results: [],
       },
-      status: CommandStatus.CANCELLED,
+      status: "CANCELLED",
       message: "Cancelled",
       success: false,
     }
   }
 
-  const roleName = getRoleName(
-    configSetType,
-    ou,
-    account,
-    organizationConfigFile,
-  )
+  const roleName = getRoleName(configSetType, ou, account, organizationConfig)
 
   io.info(`Using role name: ${roleName}`)
 
-  const mergedVars = deepCopy(variables.var)
-  merge(mergedVars, organizationConfigFile.vars, ou.vars, account.vars)
+  const mergedVars = deepCopy(ctx.variables.var)
+  merge(mergedVars, organizationConfig.vars, ou.vars, account.vars)
 
   const input = {
-    variables: {
-      env: variables.env,
-      var: mergedVars,
-      context: variables.context,
-    },
-    watch: new StopWatch("total"),
-    options,
     commandPath,
+    timer: createTimer("total"),
     ignoreDependencies: false,
     interactive: false,
   }
 
-  const dc = await credentialProvider.createCredentialProviderForRole(
+  const variables = {
+    env: ctx.variables.env,
+    var: mergedVars,
+    context: ctx.variables.context,
+  }
+
+  const dc = await credentialManager.createCredentialManagerForRole(
     `arn:aws:iam::${account.id}:role/${roleName}`,
   )
 
   try {
-    const result = await executeOperation(operation, input, account, dc, io)
+    const result = await executeOperation(
+      operation,
+      input,
+      account,
+      dc,
+      io,
+      {
+        ...ctx.commandContext,
+        variables,
+      },
+      ctx.configRepository,
+    )
 
     return {
       result,
@@ -163,17 +178,20 @@ export const processCommandPath = async (
       e,
     )
 
+    const timer = createTimer("total")
+    timer.stop()
+
     return {
       commandPath,
       result: {
+        timer,
         message: e.message,
-        status: CommandStatus.FAILED,
-        watch: new StopWatch("total").stop(),
+        status: "FAILED",
         success: false,
         results: [],
       },
       success: false,
-      status: CommandStatus.FAILED,
+      status: "FAILED",
       message: "Failed",
     }
   }

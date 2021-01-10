@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 export const randomInt = (min: number, max: number): number => {
   const minC = Math.ceil(min)
   const maxF = Math.floor(max)

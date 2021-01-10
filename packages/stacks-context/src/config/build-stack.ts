@@ -1,78 +1,63 @@
+import { CredentialManager } from "@takomo/aws-clients"
+import { IamRoleArn } from "@takomo/aws-model"
+import { createAwsSchemas } from "@takomo/aws-schema"
+import { CommandContext } from "@takomo/core"
 import {
   CommandPath,
-  IamRoleArn,
-  Options,
-  stackName,
-  TakomoCredentialProvider,
-  Variables,
-} from "@takomo/core"
-import { parseStackConfigFile } from "@takomo/stacks-config"
-import {
+  createStack,
   HookInitializersMap,
-  Stack,
+  InternalStack,
   StackGroup,
   StackProps,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
-import { Logger, TakomoError, TemplateEngine, validate } from "@takomo/util"
+import { TakomoError, TkmLogger, validate } from "@takomo/util"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
 import { isWithinCommandPath } from "../common"
+import { StackConfigNode } from "./config-tree"
 import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file"
-import { getCredentialProvider } from "./get-credential-provider"
+import { getCredentialManager } from "./get-credential-provider"
 import { initializeHooks } from "./hooks"
 import { makeStackName } from "./make-stack-name"
 import { buildParameters } from "./parameters"
-import { buildSecrets, makeSecretsPath } from "./secrets"
-import { StackConfigNode } from "./tree/stack-config-node"
 
 export const buildStack = async (
-  logger: Logger,
-  defaultCredentialProvider: TakomoCredentialProvider,
-  credentialsProviders: Map<IamRoleArn, TakomoCredentialProvider>,
+  ctx: CommandContext,
+  logger: TkmLogger,
+  defaultCredentialManager: CredentialManager,
+  credentialManagers: Map<IamRoleArn, CredentialManager>,
   resolverRegistry: ResolverRegistry,
   hookInitializers: HookInitializersMap,
-  options: Options,
-  variables: Variables,
   node: StackConfigNode,
   stackGroup: StackGroup,
-  templateEngine: TemplateEngine,
   commandPath: CommandPath,
-): Promise<Stack[]> => {
+): Promise<InternalStack[]> => {
+  const { stackName } = createAwsSchemas({ regions: ctx.regions })
+
   logger.debug(`Build stack with path '${node.path}'`)
 
   const stackPath = node.path
   const stackVariables = createVariablesForStackConfigFile(
-    variables,
+    ctx.variables,
     stackGroup,
     stackPath,
   )
 
-  const stackConfig = await parseStackConfigFile(
-    logger.childLogger(stackPath),
-    options,
-    stackVariables,
-    node.file.fullPath,
-    templateEngine,
-  )
+  const stackConfig = await node.getConfig(stackVariables)
 
   const name =
     stackConfig.name ||
-    makeStackName(stackPath, stackConfig.project || stackGroup.getProject())
+    makeStackName(stackPath, stackConfig.project || stackGroup.project)
 
   const regions =
-    stackConfig.regions.length > 0
-      ? stackConfig.regions
-      : stackGroup.getRegions()
+    stackConfig.regions.length > 0 ? stackConfig.regions : stackGroup.regions
 
   if (regions.length === 0) {
     throw new TakomoError(`Stack ${stackPath} has no regions`)
   }
 
-  const template =
-    stackConfig.template ||
-    `${stackGroup.getPath().slice(1)}/${node.file.basename}`
-
+  const template = stackConfig.template ?? stackPath.substr(1)
   validate(stackName, name, `Name of stack ${stackPath} is not valid`)
 
   if (!template) {
@@ -80,7 +65,7 @@ export const buildStack = async (
   }
 
   const parameters = await buildParameters(
-    node.file.fullPath,
+    ctx,
     stackPath,
     stackConfig.parameters,
     resolverRegistry,
@@ -95,67 +80,60 @@ export const buildStack = async (
   )
     .map((iamRoleArn) => ({ iamRoleArn }))
     .forEach((commandRole) => {
-      getCredentialProvider(
+      getCredentialManager(
         commandRole,
-        defaultCredentialProvider,
-        credentialsProviders,
+        defaultCredentialManager,
+        credentialManagers,
       )
     })
 
-  const accountIds = stackConfig.accountIds || stackGroup.getAccountIds()
-  const hookConfigs = [...stackGroup.getHooks(), ...stackConfig.hooks]
+  const accountIds = stackConfig.accountIds || stackGroup.accountIds
+  const hookConfigs = [...stackGroup.hooks, ...stackConfig.hooks]
   const hooks = await initializeHooks(hookConfigs, hookInitializers)
 
-  const commandRole = stackConfig.commandRole || stackGroup.getCommandRole()
-  const credentialProvider = await getCredentialProvider(
+  const commandRole = stackConfig.commandRole || stackGroup.commandRole
+  const credentialManager = await getCredentialManager(
     commandRole,
-    defaultCredentialProvider,
-    credentialsProviders,
+    defaultCredentialManager,
+    credentialManagers,
   )
 
-  const capabilities = stackConfig.capabilities || stackGroup.getCapabilities()
+  const capabilities = stackConfig.capabilities || stackGroup.capabilities
   const ignore =
-    stackConfig.ignore !== null ? stackConfig.ignore : stackGroup.isIgnored()
+    stackConfig.ignore !== undefined ? stackConfig.ignore : stackGroup.ignore
 
   const terminationProtection =
-    stackConfig.terminationProtection !== null
+    stackConfig.terminationProtection !== undefined
       ? stackConfig.terminationProtection
-      : stackGroup.isTerminationProtectionEnabled()
+      : stackGroup.terminationProtection
 
   return regions
     .map((region) => {
       const exactPath = `${stackPath}/${region}`
-      const secretsPath = makeSecretsPath(
-        exactPath,
-        stackConfig.project || stackGroup.getProject(),
-      )
 
       const props: StackProps = {
         name,
         template,
-        secretsPath,
         region,
         parameters,
         commandRole,
-        credentialProvider,
+        credentialManager: credentialManager,
         hooks,
         ignore,
         terminationProtection,
-        path: exactPath,
-        stackGroupPath: stackGroup.getPath(),
-        project: stackConfig.project || stackGroup.getProject(),
-        tags: stackGroup.getTags(),
-        timeout: stackConfig.timeout ||
-          stackGroup.getTimeout() || { create: 0, update: 0 },
-        dependencies: stackConfig.depends,
-        dependants: [],
-        templateBucket:
-          stackConfig.templateBucket || stackGroup.getTemplateBucket(),
-        data: stackGroup.getData(),
-        secrets: buildSecrets(secretsPath, stackConfig.secrets),
-        logger: logger.childLogger(stackPath),
         capabilities,
         accountIds,
+        path: exactPath,
+        stackGroupPath: stackGroup.path,
+        project: stackConfig.project || stackGroup.project,
+        tags: stackGroup.tags,
+        timeout: stackConfig.timeout ||
+          stackGroup.timeout || { create: 0, update: 0 },
+        dependencies: stackConfig.depends,
+        dependants: [],
+        templateBucket: stackConfig.templateBucket || stackGroup.templateBucket,
+        data: stackGroup.data,
+        logger: logger.childLogger(exactPath),
       }
 
       stackConfig.tags.forEach((value, key) => {
@@ -164,7 +142,7 @@ export const buildStack = async (
 
       props.data = { ...props.data, ...stackConfig.data }
 
-      return new Stack(props)
+      return createStack(props)
     })
-    .filter((s) => isWithinCommandPath(commandPath, s.getPath()))
+    .filter((s) => isWithinCommandPath(commandPath, s.path))
 }

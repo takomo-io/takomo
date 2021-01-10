@@ -1,3 +1,3 @@
-# Takomo Init Command
+# Takomo - Init Command
 
-Init command for https://takomo.io
+Init new Takomo project command.

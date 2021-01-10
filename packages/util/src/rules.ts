@@ -1,8 +1,11 @@
 /**
- * Rule, that
+ * @hidden
  */
 export type Rule<A, V> = (input: A) => V | undefined
 
+/**
+ * @hidden
+ */
 export const evaluateRules = <A, V>(
   rules: Rule<A, V>[],
   input: A,

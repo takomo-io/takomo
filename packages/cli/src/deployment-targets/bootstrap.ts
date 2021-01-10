@@ -1,14 +1,11 @@
-import {
-  CliBootstrapTargetsIO,
-  CliDeployStacksIO,
-  CliUndeployStacksIO,
-} from "@takomo/cli-io"
+import { createBootstrapTargetsIO } from "@takomo/cli-io"
+import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
-import { DeploymentOperation, Options } from "@takomo/core"
 import {
   deploymentTargetsOperationCommand,
   deployTargetsOperationCommandIamPolicy,
-} from "@takomo/deployment-targets"
+} from "@takomo/deployment-targets-commands"
+import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
 
 const parseTargets = (value: any): string[] => {
@@ -38,26 +35,24 @@ export const bootstrapTargetsCmd = {
         demandOption: false,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
         targets: parseTargets(argv.target),
         groups: argv.groups || [],
         configFile: argv["config-file"] || null,
-        operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.BOOTSTRAP,
+        operation: "deploy" as DeploymentOperation,
+        configSetType: "bootstrap" as ConfigSetType,
       }),
-      (input) =>
-        deploymentTargetsOperationCommand(
-          input,
-          new CliBootstrapTargetsIO(
-            input.options,
-            (options: Options, loggerName: string) =>
-              new CliDeployStacksIO(options, console.log, loggerName),
-            (options: Options, loggerName: string) =>
-              new CliUndeployStacksIO(options, console.log, loggerName),
-          ),
-        ),
-    ),
+      io: (ctx, logger) => createBootstrapTargetsIO(logger),
+      configRepository: (ctx, logger) =>
+        createFileSystemDeploymentTargetsConfigRepository({
+          ctx,
+          logger,
+          pathToDeploymentConfigFile: argv["config-file"],
+          ...ctx.filePaths,
+        }),
+      executor: deploymentTargetsOperationCommand,
+    }),
 }

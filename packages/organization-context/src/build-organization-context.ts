@@ -1,139 +1,101 @@
-import { OrganizationsClient } from "@takomo/aws-clients"
 import {
-  Constants,
-  initDefaultCredentialProvider,
-  IO,
-  Options,
-  TakomoCredentialProvider,
-  Variables,
-} from "@takomo/core"
+  createOrganizationsClient,
+  CredentialManager,
+  initDefaultCredentialManager,
+} from "@takomo/aws-clients"
+import { CommandContext } from "@takomo/core"
+import { OrganizationConfig } from "@takomo/organization-config"
+import { TkmLogger } from "@takomo/util"
+import { OrganizationConfigRepository } from "./model"
 import {
-  OrganizationConfigFile,
-  parseOrganizationConfigFile,
-} from "@takomo/organization-config"
-import {
-  dirExists,
-  fileExists,
-  Logger,
-  readFileContents,
-  TakomoError,
-  TemplateEngine,
-} from "@takomo/util"
-import path from "path"
-import readdirp from "readdirp"
-import { OrganizationContext } from "./organization-context"
+  createOrganizationContext,
+  OrganizationContext,
+} from "./organization-context"
 import { validateOrganizationConfigFile } from "./validate-organization-config-file"
 
-export const loadCustomPartials = async (
-  organizationDir: string,
-  logger: Logger,
-  te: TemplateEngine,
-): Promise<void> => {
-  const partialsDirPath = path.join(organizationDir, Constants.PARTIALS_DIR)
-  if (await dirExists(partialsDirPath)) {
-    logger.debug(`Found partials dir: ${partialsDirPath}`)
-
-    const partialFiles = await readdirp.promise(partialsDirPath, {
-      alwaysStat: true,
-      depth: 100,
-      type: "files",
-    })
-
-    for (const partialFile of partialFiles) {
-      const name = partialFile.fullPath.substr(partialsDirPath.length + 1)
-
-      logger.debug(`Register partial: ${name}`)
-      const contents = await readFileContents(partialFile.fullPath)
-      te.registerPartial(name, contents)
-    }
-  } else {
-    logger.debug("Partials dir not found")
-  }
-}
-
-const getCredentialProviderForOrganizationAdmin = async (
-  logger: Logger,
-  config: OrganizationConfigFile,
-  credentialProvider: TakomoCredentialProvider,
-): Promise<TakomoCredentialProvider> => {
+const getCredentialManagererForOrganizationAdmin = async (
+  logger: TkmLogger,
+  config: OrganizationConfig,
+  credentialManager: CredentialManager,
+): Promise<CredentialManager> => {
   if (config.organizationAdminRoleName) {
     const iamRoleArn = `arn:aws:iam::${config.masterAccountId}:role/${config.organizationAdminRoleName}`
     logger.debug(`Using role '${iamRoleArn}' to manage the organization`)
-    return credentialProvider.createCredentialProviderForRole(iamRoleArn)
+    return credentialManager.createCredentialManagerForRole(iamRoleArn)
   }
 
-  logger.debug("Using default credential provider to manage the organization")
-  return credentialProvider
+  logger.debug("Using default credential manager to manage the organization")
+  return credentialManager
 }
 
 export const buildOrganizationContext = async (
-  options: Options,
-  variables: Variables,
-  io: IO,
+  ctx: CommandContext,
+  configRepository: OrganizationConfigRepository,
+  logger: TkmLogger,
 ): Promise<OrganizationContext> => {
-  const credentialProvider = await initDefaultCredentialProvider()
+  const credentialManager = await initDefaultCredentialManager()
 
-  const projectDir = options.getProjectDir()
-  io.debug(`Current project dir: ${projectDir}`)
+  // const projectDir = options.projectDir
+  // io.debug(`Current project dir: ${projectDir}`)
+  //
+  // const organizationDirPath = path.join(projectDir, Constants.ORGANIZATION_DIR)
+  // if (!(await dirExists(organizationDirPath))) {
+  //   throw new TakomoError(
+  //     `Takomo organization dir '${Constants.ORGANIZATION_DIR}' not found from the project dir ${projectDir}`,
+  //   )
+  // }
+  //
+  // const pathToOrganizationConfigFile = path.join(
+  //   organizationDirPath,
+  //   Constants.ORGANIZATION_CONFIG_FILE,
+  // )
+  // if (!(await fileExists(pathToOrganizationConfigFile))) {
+  //   throw new TakomoError(
+  //     `Takomo organization configuration file '${Constants.ORGANIZATION_CONFIG_FILE}' not found from the organization dir ${organizationDirPath}`,
+  //   )
+  // }
 
-  const organizationDirPath = path.join(projectDir, Constants.ORGANIZATION_DIR)
-  if (!(await dirExists(organizationDirPath))) {
-    throw new TakomoError(
-      `Takomo organization dir '${Constants.ORGANIZATION_DIR}' not found from the project dir ${projectDir}`,
-    )
-  }
+  // const templateEngine = new TemplateEngine()
+  //
+  // await loadCustomPartials(organizationDirPath, io, templateEngine)
+  //
+  const organizationConfig = await configRepository.getOrganizationConfig()
 
-  const pathToOrganizationConfigFile = path.join(
-    organizationDirPath,
-    Constants.ORGANIZATION_CONFIG_FILE,
+  // const organizationConfigFile = await parseOrganizationConfigFile(
+  //   io,
+  //   ctx,
+  //   organizationConfigObject,
+  // )
+
+  const organizationAdminCredentialManager = await getCredentialManagererForOrganizationAdmin(
+    logger,
+    organizationConfig,
+    credentialManager,
   )
-  if (!(await fileExists(pathToOrganizationConfigFile))) {
-    throw new TakomoError(
-      `Takomo organization configuration file '${Constants.ORGANIZATION_CONFIG_FILE}' not found from the organization dir ${organizationDirPath}`,
-    )
-  }
 
-  const templateEngine = new TemplateEngine()
-
-  await loadCustomPartials(organizationDirPath, io, templateEngine)
-
-  const organizationConfigFile = await parseOrganizationConfigFile(
-    io,
-    options,
-    variables,
-    pathToOrganizationConfigFile,
-    templateEngine,
-  )
-
-  const organizationAdminCredentialProvider = await getCredentialProviderForOrganizationAdmin(
-    io,
-    organizationConfigFile,
-    credentialProvider,
-  )
-
-  const client = new OrganizationsClient({
+  const client = createOrganizationsClient({
     region: "us-east-1",
-    credentialProvider: organizationAdminCredentialProvider,
-    logger: io.childLogger("http"),
+    credentialManager: organizationAdminCredentialManager,
+    logger: logger.childLogger("http"),
   })
 
   const [callerIdentity, organization] = await Promise.all([
-    organizationAdminCredentialProvider.getCallerIdentity(),
+    organizationAdminCredentialManager.getCallerIdentity(),
     client.describeOrganization(),
   ])
 
   validateOrganizationConfigFile(
-    organizationConfigFile,
+    organizationConfig,
     callerIdentity,
     organization,
   )
 
-  return new OrganizationContext({
-    variables,
-    options,
-    logger: io,
-    credentialProvider,
-    organizationAdminCredentialProvider,
-    organizationConfigFile,
+  return createOrganizationContext({
+    ctx,
+    configRepository,
+    organizationAdminCredentialManager,
+    organizationConfig,
+    credentialManager,
+    logger,
   })
 }

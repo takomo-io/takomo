@@ -1,1 +1,0 @@
-# Takomo - Common libs for integration tests

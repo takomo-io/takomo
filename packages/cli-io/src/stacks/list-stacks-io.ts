@@ -1,31 +1,38 @@
-import { Options } from "@takomo/core"
 import { ListStacksIO, ListStacksOutput } from "@takomo/stacks-commands"
-import { LogWriter } from "@takomo/util"
+import { LogWriter, TkmLogger } from "@takomo/util"
 import date from "date-and-time"
 import Table from "easy-table"
-import CliIO from "../cli-io"
+import { createBaseIO } from "../cli-io"
 import { formatStackStatus } from "../formatters"
 
 const formatDate = (d: any): string =>
   d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
 
-export class CliListStacksIO extends CliIO implements ListStacksIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
-  printOutput = (output: ListStacksOutput): ListStacksOutput => {
+export const createListStacksIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): ListStacksIO => {
+  const io = createBaseIO(writer)
+
+  const printOutput = (output: ListStacksOutput): ListStacksOutput => {
     const table = new Table()
     output.stacks.forEach(({ stack, current }) => {
-      table.cell("Path", stack.getPath())
-      table.cell("Name", stack.getName())
-      table.cell("Status", formatStackStatus(current?.StackStatus || null))
-      table.cell("Created", formatDate(current?.CreationTime))
-      table.cell("Updated", formatDate(current?.LastUpdatedTime))
+      table.cell("Path", stack.path)
+      table.cell("Name", stack.name)
+      table.cell("Status", formatStackStatus(current?.status))
+      table.cell("Created", formatDate(current?.creationTime))
+      table.cell("Updated", formatDate(current?.lastUpdatedTime))
       table.newRow()
     })
 
-    this.message(table.toString(), true)
+    io.message({ text: table.toString(), marginTop: true })
 
     return output
+  }
+
+  return {
+    ...io,
+    ...logger,
+    printOutput,
   }
 }

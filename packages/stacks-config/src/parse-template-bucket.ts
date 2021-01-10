@@ -2,15 +2,15 @@ import { TemplateBucketConfig } from "@takomo/stacks-model"
 
 export const parseTemplateBucket = (
   value: any,
-): TemplateBucketConfig | null => {
+): TemplateBucketConfig | undefined => {
   if (!value) {
-    return null
+    return undefined
   }
 
   const { name, keyPrefix } = value
 
   return {
-    name: name || null,
-    keyPrefix: keyPrefix || null,
+    name: name,
+    keyPrefix: keyPrefix,
   }
 }

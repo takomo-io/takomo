@@ -1,23 +1,25 @@
-import { CommandRole, IamRoleArn, TakomoCredentialProvider } from "@takomo/core"
+import { CredentialManager } from "@takomo/aws-clients"
+import { IamRoleArn } from "@takomo/aws-model"
+import { CommandRole } from "@takomo/core"
 
-export const getCredentialProvider = async (
-  commandRole: CommandRole | null,
-  defaultCredentialProvider: TakomoCredentialProvider,
-  credentialProviders: Map<IamRoleArn, TakomoCredentialProvider>,
-): Promise<TakomoCredentialProvider> => {
+export const getCredentialManager = async (
+  commandRole: CommandRole | undefined,
+  defaultCredentialManager: CredentialManager,
+  credentialManagers: Map<IamRoleArn, CredentialManager>,
+): Promise<CredentialManager> => {
   if (!commandRole) {
-    return defaultCredentialProvider
+    return defaultCredentialManager
   }
 
-  const credentialProvider = credentialProviders.get(commandRole.iamRoleArn)
-  if (credentialProvider) {
-    return credentialProvider
+  const credentialManager = credentialManagers.get(commandRole.iamRoleArn)
+  if (credentialManager) {
+    return credentialManager
   }
 
-  const newCredentialProvider = await defaultCredentialProvider.createCredentialProviderForRole(
+  const newCredentialManager = await defaultCredentialManager.createCredentialManagerForRole(
     commandRole.iamRoleArn,
   )
 
-  credentialProviders.set(commandRole.iamRoleArn, newCredentialProvider)
-  return newCredentialProvider
+  credentialManagers.set(commandRole.iamRoleArn, newCredentialManager)
+  return newCredentialManager
 }

@@ -1,14 +1,14 @@
-import { OrganizationAccountStatus } from "../model"
+import { OrganizationAccountStatus } from "@takomo/organization-model"
 
 export const parseAccountStatus = (value: any): OrganizationAccountStatus => {
   switch (value) {
     case "active":
-      return OrganizationAccountStatus.ACTIVE
+      return "active"
     case "disabled":
-      return OrganizationAccountStatus.DISABLED
+      return "disabled"
     case "suspended":
-      return OrganizationAccountStatus.SUSPENDED
+      return "suspended"
     default:
-      return OrganizationAccountStatus.ACTIVE
+      return "active"
   }
 }

@@ -1,5 +1,7 @@
-import { configSet } from "../../../src/config/schema"
-import { expectNoValidationError } from "../../helpers"
+import { expectNoValidationError } from "@takomo/test-unit"
+import { createConfigSetsSchemas } from "../../../src"
+
+const { configSet } = createConfigSetsSchemas({ regions: [] })
 
 describe("config set validation", () => {
   describe("should succeed when", () => {
@@ -23,18 +25,10 @@ describe("config set validation", () => {
         },
       })
     })
-    test("a valid config set with projectDir is given", () => {
-      expectNoValidationError(configSet)({
-        description: "my config set",
-        commandPaths: ["/path"],
-        projectDir: "/tmp",
-      })
-    })
     test("a valid full config set is given", () => {
       expectNoValidationError(configSet)({
         description: "my config set",
         commandPaths: ["/path", "/another"],
-        projectDir: "/tmp",
         vars: {
           hello: "world",
           code: 123,

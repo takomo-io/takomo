@@ -18,18 +18,25 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "build-if-changed": "../../ci/build-if-changed.sh",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "clean:deps": "rm -rf node_modules",
     "clean:dist": "rm -rf dist",
     "depcheck": "depcheck --config=../../.depcheckrc",
-    "test": "jest test --passWithNoTests",
+    "test": "jest test --passWithNoTests --verbose",
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
+    "@takomo/aws-model": "2.12.1",
     "@takomo/core": "2.12.1",
     "@takomo/stacks-commands": "2.12.1",
+    "@takomo/stacks-model": "2.12.1",
+    "@takomo/stacks-schema": "2.12.1",
     "@takomo/util": "2.12.1",
     "joi": "17.2.1"
+  },
+  "devDependencies": {
+    "@takomo/test-unit": "2.12.1"
   },
   "engines": {
     "node": ">=14.4.0"

@@ -15,7 +15,7 @@ describe("#createVariablesForStackGroupConfigFile", () => {
       },
     }
 
-    const stackGroup = new StackGroup({
+    const stackGroup: StackGroup = {
       accountIds: ["123456789012", "222222222222"],
       capabilities: ["CAPABILITY_IAM"],
       children: [],
@@ -33,7 +33,7 @@ describe("#createVariablesForStackGroupConfigFile", () => {
       hooks: [],
       ignore: false,
       terminationProtection: false,
-      isRoot: true,
+      root: true,
       name: "cool",
       path: "/dev/apps/cool",
       project: "my project",
@@ -51,7 +51,8 @@ describe("#createVariablesForStackGroupConfigFile", () => {
         create: 10,
         update: 20,
       },
-    })
+      toProps: jest.fn(),
+    }
 
     const stackGroupVariables = createVariablesForStackGroupConfigFile(
       variables,

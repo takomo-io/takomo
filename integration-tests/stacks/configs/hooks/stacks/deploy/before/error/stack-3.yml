@@ -1,0 +1,2 @@
+template: hooks.yml
+depends: /deploy/before/error/stack-2.yml

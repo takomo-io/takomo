@@ -8,7 +8,9 @@ parameters:
     resolver: cmd
     command: echo hello
     confidential: true
+    immutable: true
   NonConfidentialParam:
     resolver: cmd
     command: echo world
     confidential: false
+    immutable: false

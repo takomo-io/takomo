@@ -1,22 +1,22 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
+import { OrganizationalUnitId, OrganizationPolicyType } from "@takomo/aws-model"
 import { OrganizationState } from "@takomo/organization-context"
-import { Logger } from "@takomo/util"
-import { OrganizationalUnitId, PolicyType } from "aws-sdk/clients/organizations"
+import { TkmLogger } from "@takomo/util"
+import { PlannedOrganizationalUnit } from "../../common/plan/organizational-units/model"
 import { OrganizationalUnitDeploymentResult } from "../model"
-import { PlannedOrganizationalUnit } from "../plan/model"
 import { addOrganizationalUnit } from "./add-organizational-unit"
 import { skipOrganizationalUnit } from "./skip-organizational-unit"
 import { updateOrganizationalUnit } from "./update-organizational-unit"
 
 export const addOrUpdateOrganizationalUnits = async (
-  logger: Logger,
+  logger: TkmLogger,
   client: OrganizationsClient,
-  enabledPolicyTypes: PolicyType[],
+  enabledPolicyTypes: ReadonlyArray<OrganizationPolicyType>,
   serviceControlPoliciesJustEnabled: boolean,
   organizationState: OrganizationState,
   planned: PlannedOrganizationalUnit,
   parentId: OrganizationalUnitId | null,
-): Promise<OrganizationalUnitDeploymentResult[]> => {
+): Promise<ReadonlyArray<OrganizationalUnitDeploymentResult>> => {
   switch (planned.operation) {
     case "add":
       // eslint-disable-next-line @typescript-eslint/no-use-before-define

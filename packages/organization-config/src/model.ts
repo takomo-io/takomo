@@ -1,23 +1,18 @@
-import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
-import { AccountId } from "@takomo/core"
 import {
+  AccountEmail,
+  AccountId,
+  AccountName,
   OrganizationalUnitName,
-  PolicyName,
-  PolicyType,
-} from "aws-sdk/clients/organizations"
-
-export type OrganizationalUnitPath = string
-
-export enum OrganizationAccountStatus {
-  ACTIVE = "active",
-  DISABLED = "disabled",
-  SUSPENDED = "suspended",
-}
-
-export enum OrganizationalUnitStatus {
-  ACTIVE = "active",
-  DISABLED = "disabled",
-}
+  OrganizationPolicyName,
+  OrganizationPolicyType,
+  ServicePrincipal,
+} from "@takomo/aws-model"
+import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
+import {
+  OrganizationAccountStatus,
+  OrganizationalUnitPath,
+  OrganizationalUnitStatus,
+} from "@takomo/organization-model"
 
 export interface NewAccountDefaults {
   readonly iamUserAccessToBilling: boolean
@@ -25,8 +20,8 @@ export interface NewAccountDefaults {
 }
 
 export interface NewAccountConstraints {
-  readonly emailPattern: RegExp | null
-  readonly namePattern: RegExp | null
+  readonly emailPattern?: RegExp
+  readonly namePattern?: RegExp
 }
 
 export interface AccountCreationConfig {
@@ -42,13 +37,13 @@ export interface OrganizationPolicyConfig {
 
 export interface OrganizationPoliciesConfig {
   readonly enabled: boolean
-  readonly policyType: PolicyType
-  readonly policies: OrganizationPolicyConfig[]
+  readonly policyType: OrganizationPolicyType
+  readonly policies: ReadonlyArray<OrganizationPolicyConfig>
 }
 
 export interface OrgEntityPolicies {
-  readonly attached: PolicyName[]
-  readonly inherited: PolicyName[]
+  readonly attached: ReadonlyArray<OrganizationPolicyName>
+  readonly inherited: ReadonlyArray<OrganizationPolicyName>
 }
 
 export interface OrgEntityPoliciesConfig {
@@ -61,45 +56,45 @@ export interface OrgEntityPoliciesConfig {
 export interface OrgEntity {
   readonly policies: OrgEntityPoliciesConfig
   readonly vars: any
-  readonly configSets: ConfigSetName[]
-  readonly bootstrapConfigSets: ConfigSetName[]
-  readonly accountAdminRoleName: string | null
-  readonly accountBootstrapRoleName: string | null
-  readonly description: string | null
+  readonly configSets: ReadonlyArray<ConfigSetName>
+  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
+  readonly accountAdminRoleName?: string
+  readonly accountBootstrapRoleName?: string
+  readonly description?: string
 }
 
-export interface OrganizationAccount extends OrgEntity {
+export interface OrganizationAccountConfig extends OrgEntity {
   readonly id: AccountId
-  readonly name: string | null
-  readonly email: string | null
+  readonly name?: AccountName
+  readonly email?: AccountEmail
   readonly status: OrganizationAccountStatus
 }
 
-export interface OrganizationalUnit extends OrgEntity {
+export interface OrganizationalUnitConfig extends OrgEntity {
   readonly name: OrganizationalUnitName
   readonly path: OrganizationalUnitPath
   readonly priority: number
   readonly status: OrganizationalUnitStatus
-  readonly accounts: OrganizationAccount[]
-  readonly children: OrganizationalUnit[]
+  readonly accounts: ReadonlyArray<OrganizationAccountConfig>
+  readonly children: ReadonlyArray<OrganizationalUnitConfig>
 }
 
 export interface OrganizationalUnitsConfig {
-  readonly Root: OrganizationalUnit
+  readonly Root: OrganizationalUnitConfig
 }
 
-export interface OrganizationConfigFile {
+export interface OrganizationConfig {
   readonly masterAccountId: AccountId
   readonly accountCreation: AccountCreationConfig
-  readonly configSets: ConfigSet[]
+  readonly configSets: ReadonlyArray<ConfigSet>
   readonly vars: any
   readonly serviceControlPolicies: OrganizationPoliciesConfig
   readonly tagPolicies: OrganizationPoliciesConfig
   readonly aiServicesOptOutPolicies: OrganizationPoliciesConfig
   readonly backupPolicies: OrganizationPoliciesConfig
   readonly organizationalUnits: OrganizationalUnitsConfig
-  readonly trustedAwsServices: string[]
-  readonly organizationAdminRoleName: string | null
-  readonly accountAdminRoleName: string | null
-  readonly accountBootstrapRoleName: string | null
+  readonly trustedAwsServices: ReadonlyArray<ServicePrincipal>
+  readonly organizationAdminRoleName?: string
+  readonly accountAdminRoleName?: string
+  readonly accountBootstrapRoleName?: string
 }

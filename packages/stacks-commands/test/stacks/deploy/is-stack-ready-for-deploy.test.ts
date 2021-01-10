@@ -1,6 +1,7 @@
+import { StackStatus } from "@takomo/aws-model"
 import { isStackReadyForDeploy } from "../../../src/stacks/deploy/validate"
 
-const data: Array<[string, boolean]> = [
+const data: Array<[StackStatus, boolean]> = [
   ["CREATE_IN_PROGRESS", false],
   ["CREATE_FAILED", true],
   ["CREATE_COMPLETE", true],

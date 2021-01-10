@@ -1,3 +1,3 @@
-# Takomo CLI
+# Takomo - CLI
 
-Command line interface for https://takomo.io
+Takomo CLI

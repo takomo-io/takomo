@@ -1,21 +1,34 @@
-import { CliDeployOrganizationIO } from "@takomo/cli-io"
+import { createDeployOrganizationIO } from "@takomo/cli-io"
+import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   deployOrganizationCommand,
   deployOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
-import { identity } from "@takomo/util"
 import { commonEpilog, handle } from "../common"
 
+const command = "deploy"
+const desc = "Deploy organization"
+
+const builder = (yargs: any) =>
+  yargs.epilog(commonEpilog(deployOrganizationCommandIamPolicy))
+
+const handler = (argv: any) =>
+  handle({
+    argv,
+    input: (ctx, input) => input,
+    io: (ctx, logger) => createDeployOrganizationIO(logger),
+    configRepository: (ctx, logger) =>
+      createFileSystemOrganizationConfigRepository({
+        ctx,
+        logger,
+        ...ctx.filePaths,
+      }),
+    executor: deployOrganizationCommand,
+  })
+
 export const deployOrganizationCmd = {
-  command: "deploy",
-  desc: "Deploy organization",
-  builder: (yargs: any) =>
-    yargs.epilog(commonEpilog(deployOrganizationCommandIamPolicy)),
-  handler: (argv: any) =>
-    handle(argv, identity, (input) =>
-      deployOrganizationCommand(
-        input,
-        new CliDeployOrganizationIO(input.options),
-      ),
-    ),
+  command,
+  desc,
+  builder,
+  handler,
 }

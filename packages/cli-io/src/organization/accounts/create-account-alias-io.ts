@@ -1,32 +1,38 @@
-import { AccountId, ConfirmResult, Options } from "@takomo/core"
+import { AccountId } from "@takomo/aws-model"
+import { ConfirmResult } from "@takomo/core"
 import {
   CreateAccountAliasIO,
   CreateAccountAliasOutput,
 } from "@takomo/organization-commands"
-import { LogWriter } from "@takomo/util"
-import CliIO from "../../cli-io"
+import { LogWriter, TkmLogger } from "@takomo/util"
+import { createBaseIO } from "../../cli-io"
 
-export class CliCreateAccountAliasIO
-  extends CliIO
-  implements CreateAccountAliasIO {
-  constructor(options: Options, logWriter: LogWriter = console.log) {
-    super(logWriter, options)
-  }
+export const createCreateAccountAliasIO = (
+  logger: TkmLogger,
+  writer: LogWriter = console.log,
+): CreateAccountAliasIO => {
+  const io = createBaseIO(writer)
 
-  printOutput = (
+  const printOutput = (
     output: CreateAccountAliasOutput,
   ): CreateAccountAliasOutput => {
     return output
   }
 
-  confirmCreateAlias = async (
+  const confirmCreateAlias = async (
     accountId: AccountId,
     alias: string,
   ): Promise<ConfirmResult> =>
-    (await this.confirm(
+    (await io.confirm(
       `Continue to create alias '${alias}' to account ${accountId}?`,
       true,
     ))
       ? ConfirmResult.YES
       : ConfirmResult.NO
+
+  return {
+    ...logger,
+    printOutput,
+    confirmCreateAlias,
+  }
 }

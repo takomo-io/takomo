@@ -1,9 +1,10 @@
-import { CliListStacksIO } from "@takomo/cli-io"
-import { Constants } from "@takomo/core"
+import { createListStacksIO } from "@takomo/cli-io"
+import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
 import {
   listStacksCommand,
   listStacksCommandIamPolicy,
 } from "@takomo/stacks-commands"
+import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
 
 export const listStacksCmd = {
@@ -14,15 +15,22 @@ export const listStacksCmd = {
       .epilog(commonEpilog(listStacksCommandIamPolicy))
       .positional("commandPath", {
         describe: "List stacks within this path",
-        default: Constants.ROOT_STACK_GROUP_PATH,
+        default: ROOT_STACK_GROUP_PATH,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
         commandPath: argv.commandPath,
       }),
-      (input) => listStacksCommand(input, new CliListStacksIO(input.options)),
-    ),
+      io: (ctx, logger) => createListStacksIO(logger),
+      configRepository: (ctx, logger) =>
+        createFileSystemStacksConfigRepository({
+          ctx,
+          logger,
+          ...ctx.filePaths,
+        }),
+      executor: listStacksCommand,
+    }),
 }

@@ -4,7 +4,7 @@ import { createStack } from "../../helpers"
 describe("collect all dependants", () => {
   test("when stack has no dependants", () => {
     const a = createStack({ name: "a", path: "/a.yml" })
-    const dependants = collectAllDependants(a.getPath(), [a])
+    const dependants = collectAllDependants(a.path, [a])
     expect(dependants).toHaveLength(0)
   })
 
@@ -13,13 +13,13 @@ describe("collect all dependants", () => {
     const b = createStack({
       name: "b",
       path: "/b.yml",
-      dependants: [a.getPath()],
+      dependants: [a.path],
     })
 
-    const dependants = collectAllDependants(b.getPath(), [a, b])
+    const dependants = collectAllDependants(b.path, [a, b])
 
     expect(dependants).toHaveLength(1)
-    expect(dependants[0]).toBe(a.getPath())
+    expect(dependants[0]).toBe(a.path)
   })
 
   test("when stack has three direct dependants", () => {
@@ -29,15 +29,15 @@ describe("collect all dependants", () => {
     const d = createStack({
       name: "d",
       path: "/d.yml",
-      dependants: [a.getPath(), b.getPath(), c.getPath()],
+      dependants: [a.path, b.path, c.path],
     })
 
-    const dependants = collectAllDependants(d.getPath(), [a, b, c, d])
+    const dependants = collectAllDependants(d.path, [a, b, c, d])
 
     expect(dependants).toHaveLength(3)
-    expect(dependants).toContain(a.getPath())
-    expect(dependants).toContain(b.getPath())
-    expect(dependants).toContain(c.getPath())
+    expect(dependants).toContain(a.path)
+    expect(dependants).toContain(b.path)
+    expect(dependants).toContain(c.path)
   })
 
   test("when stack has nested dependants", () => {
@@ -46,34 +46,34 @@ describe("collect all dependants", () => {
     const c = createStack({
       name: "c",
       path: "/c.yml",
-      dependants: [a.getPath(), b.getPath()],
+      dependants: [a.path, b.path],
     })
     const d = createStack({
       name: "d",
       path: "/d.yml",
-      dependants: [c.getPath()],
+      dependants: [c.path],
     })
     const e = createStack({
       name: "e",
       path: "/e.yml",
-      dependants: [d.getPath()],
+      dependants: [d.path],
     })
     const f = createStack({ name: "f", path: "/f.yml" })
 
     const stacks = [a, b, c, d, e, f]
 
-    const eDependants = collectAllDependants(e.getPath(), stacks)
+    const eDependants = collectAllDependants(e.path, stacks)
 
     expect(eDependants).toHaveLength(4)
-    expect(eDependants).toContain(d.getPath())
-    expect(eDependants).toContain(c.getPath())
-    expect(eDependants).toContain(a.getPath())
-    expect(eDependants).toContain(b.getPath())
+    expect(eDependants).toContain(d.path)
+    expect(eDependants).toContain(c.path)
+    expect(eDependants).toContain(a.path)
+    expect(eDependants).toContain(b.path)
 
-    const cDependants = collectAllDependants(c.getPath(), stacks)
+    const cDependants = collectAllDependants(c.path, stacks)
 
     expect(cDependants).toHaveLength(2)
-    expect(cDependants).toContain(a.getPath())
-    expect(cDependants).toContain(b.getPath())
+    expect(cDependants).toContain(a.path)
+    expect(cDependants).toContain(b.path)
   })
 })

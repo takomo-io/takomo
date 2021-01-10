@@ -1,16 +1,18 @@
+import { CredentialManager } from "@takomo/aws-clients"
+import { IamRoleArn } from "@takomo/aws-model"
+import { CommandContext } from "@takomo/core"
 import {
   CommandPath,
-  Constants,
-  IamRoleArn,
-  Options,
+  createStackGroup,
+  HookInitializersMap,
+  InternalStack,
+  ROOT_STACK_GROUP_PATH,
+  StackGroup,
   StackGroupPath,
   StackPath,
-  TakomoCredentialProvider,
-  Variables,
-} from "@takomo/core"
-import { HookInitializersMap, Stack, StackGroup } from "@takomo/stacks-model"
+} from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
-import { Logger, TemplateEngine } from "@takomo/util"
+import { TkmLogger } from "@takomo/util"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
 import { isWithinCommandPath } from "../common"
@@ -19,17 +21,16 @@ import {
   processStackDependencies,
 } from "../dependencies"
 import { buildStack } from "./build-stack"
-import { createStackGroup } from "./create-stack-group"
-import { ConfigTree } from "./tree/config-tree"
-import { StackGroupConfigNode } from "./tree/stack-group-config-node"
+import { ConfigTree, StackGroupConfigNode } from "./config-tree"
+import { doCreateStackGroup } from "./create-stack-group"
 
 class ProcessStatus {
   readonly #stackGroups = new Map<StackGroupPath, StackGroup>()
-  readonly #stacks = new Map<StackPath, Stack>()
-  readonly #newStacks = new Map<StackPath, Stack>()
+  readonly #stacks = new Map<StackPath, InternalStack>()
+  readonly #newStacks = new Map<StackPath, InternalStack>()
 
   getRootStackGroup = (): StackGroup =>
-    this.getStackGroup(Constants.ROOT_STACK_GROUP_PATH)
+    this.getStackGroup(ROOT_STACK_GROUP_PATH)
 
   isStackGroupProcessed = (path: StackGroupPath): boolean =>
     this.#stackGroups.has(path)
@@ -37,12 +38,12 @@ class ProcessStatus {
   isStackProcessed = (path: StackPath): boolean => this.#stacks.has(path)
 
   setStackGroupProcessed = (stackGroup: StackGroup): void => {
-    this.#stackGroups.set(stackGroup.getPath(), stackGroup)
+    this.#stackGroups.set(stackGroup.path, stackGroup)
   }
 
-  setStackProcessed = (stack: Stack): void => {
-    this.#stacks.set(stack.getPath(), stack)
-    this.#newStacks.set(stack.getPath(), stack)
+  setStackProcessed = (stack: InternalStack): void => {
+    this.#stacks.set(stack.path, stack)
+    this.#newStacks.set(stack.path, stack)
   }
 
   getStackGroup = (path: StackGroupPath): StackGroup => {
@@ -54,7 +55,7 @@ class ProcessStatus {
     return stackGroup
   }
 
-  getStack = (path: StackPath): Stack => {
+  getStack = (path: StackPath): InternalStack => {
     const stack = this.#stacks.get(path)
     if (!stack) {
       throw new Error(`Stack '${path}' is not processed`)
@@ -63,27 +64,28 @@ class ProcessStatus {
     return stack
   }
 
-  getNewlyProcessedStacks = (): Stack[] => Array.from(this.#newStacks.values())
+  getNewlyProcessedStacks = (): InternalStack[] =>
+    Array.from(this.#newStacks.values())
   getStackGroups = (): StackGroup[] => Array.from(this.#stackGroups.values())
-  getStacks = (): Stack[] => Array.from(this.#stacks.values())
+  getStacks = (): InternalStack[] => Array.from(this.#stacks.values())
 
   reset = (): void => this.#newStacks.clear()
 }
 
 const populateChildrenAndStacks = (
   stackGroup: StackGroup,
-  allStacks: Stack[],
+  allStacks: InternalStack[],
   allStackGroups: StackGroup[],
 ): StackGroup => {
   const children = allStackGroups
-    .filter((sg) => sg.getParentPath() === stackGroup.getPath())
+    .filter((sg) => sg.parentPath === stackGroup.path)
     .map((child) => populateChildrenAndStacks(child, allStacks, allStackGroups))
 
   const stacks = allStacks
-    .filter((s) => s.getStackGroupPath() === stackGroup.getPath())
-    .filter((s) => !s.isIgnored())
+    .filter((s) => s.stackGroupPath === stackGroup.path)
+    .filter((s) => !s.ignore)
 
-  return new StackGroup({
+  return createStackGroup({
     ...stackGroup.toProps(),
     stacks,
     children,
@@ -91,14 +93,12 @@ const populateChildrenAndStacks = (
 }
 
 const processStackGroupConfigNode = async (
-  logger: Logger,
-  credentialProvider: TakomoCredentialProvider,
-  credentialsProviders: Map<IamRoleArn, TakomoCredentialProvider>,
+  ctx: CommandContext,
+  logger: TkmLogger,
+  credentialManager: CredentialManager,
+  credentialManagers: Map<IamRoleArn, CredentialManager>,
   resolverRegistry: ResolverRegistry,
   hookInitializers: HookInitializersMap,
-  options: Options,
-  variables: Variables,
-  templateEngine: TemplateEngine,
   commandPath: CommandPath,
   status: ProcessStatus,
   node: StackGroupConfigNode,
@@ -117,16 +117,9 @@ const processStackGroupConfigNode = async (
     )
     const parent = node.parentPath
       ? status.getStackGroup(node.parentPath)
-      : null
+      : undefined
 
-    const stackGroup = await createStackGroup(
-      logger,
-      options,
-      variables,
-      node,
-      parent,
-      templateEngine,
-    )
+    const stackGroup = await doCreateStackGroup(ctx, logger, node, parent)
 
     status.setStackGroupProcessed(stackGroup)
   } else {
@@ -137,7 +130,7 @@ const processStackGroupConfigNode = async (
 
   const currentStackGroup = status.getStackGroup(node.path)
 
-  const stacksToProcess = currentStackGroup.isIgnored()
+  const stacksToProcess = currentStackGroup.ignore
     ? []
     : node.stacks
         .filter((item) => isWithinCommandPath(commandPath, item.path))
@@ -146,16 +139,14 @@ const processStackGroupConfigNode = async (
   const processedStacks = await Promise.all(
     stacksToProcess.map((stack) =>
       buildStack(
+        ctx,
         logger,
-        credentialProvider,
-        credentialsProviders,
+        credentialManager,
+        credentialManagers,
         resolverRegistry,
         hookInitializers,
-        options,
-        variables,
         stack,
         status.getStackGroup(node.path),
-        templateEngine,
         commandPath,
       ),
     ),
@@ -169,14 +160,12 @@ const processStackGroupConfigNode = async (
   await Promise.all(
     childrenToProcess.map((child) =>
       processStackGroupConfigNode(
+        ctx,
         logger,
-        credentialProvider,
-        credentialsProviders,
+        credentialManager,
+        credentialManagers,
         resolverRegistry,
         hookInitializers,
-        options,
-        variables,
-        templateEngine,
         commandPath,
         status,
         child,
@@ -186,14 +175,12 @@ const processStackGroupConfigNode = async (
 }
 
 export const processConfigTree = async (
-  logger: Logger,
-  credentialProvider: TakomoCredentialProvider,
-  credentialsProviders: Map<IamRoleArn, TakomoCredentialProvider>,
+  ctx: CommandContext,
+  logger: TkmLogger,
+  credentialManager: CredentialManager,
+  credentialManagers: Map<IamRoleArn, CredentialManager>,
   resolverRegistry: ResolverRegistry,
   hookInitializers: HookInitializersMap,
-  options: Options,
-  variables: Variables,
-  templateEngine: TemplateEngine,
   commandPath: CommandPath,
   configTree: ConfigTree,
 ): Promise<StackGroup> => {
@@ -206,14 +193,12 @@ export const processConfigTree = async (
     for (const cp of commandPaths) {
       logger.debug(`Process config tree using command path: ${cp}`)
       await processStackGroupConfigNode(
+        ctx,
         logger,
-        credentialProvider,
-        credentialsProviders,
+        credentialManager,
+        credentialManagers,
         resolverRegistry,
         hookInitializers,
-        options,
-        variables,
-        templateEngine,
         cp,
         status,
         item,
@@ -223,19 +208,15 @@ export const processConfigTree = async (
     commandPaths = uniq(
       status
         .getNewlyProcessedStacks()
-        .filter((s) => !s.isIgnored())
+        .filter((s) => !s.ignore)
         .reduce((collected, stack) => {
           const parameterDependencies = flatten(
-            Array.from(stack.getParameters().values()).map((p) =>
+            Array.from(stack.parameters.values()).map((p) =>
               p.getDependencies(),
             ),
           )
 
-          return [
-            ...collected,
-            ...stack.getDependencies(),
-            ...parameterDependencies,
-          ]
+          return [...collected, ...stack.dependencies, ...parameterDependencies]
         }, new Array<StackPath>()),
     )
 
@@ -246,7 +227,7 @@ export const processConfigTree = async (
   const allStackGroups = status.getStackGroups()
   const root = status.getRootStackGroup()
 
-  const stacksByPath = new Map(allStacks.map((s) => [s.getPath(), s]))
+  const stacksByPath = new Map(allStacks.map((s) => [s.path, s]))
   checkCyclicDependencies(stacksByPath)
 
   return populateChildrenAndStacks(root, allStacks, allStackGroups)

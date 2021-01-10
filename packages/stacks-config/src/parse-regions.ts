@@ -1,6 +1,6 @@
-import { Region } from "@takomo/core"
+import { Region } from "@takomo/aws-model"
 
-export const parseRegions = (value: any): Region[] => {
+export const parseRegions = (value: any): ReadonlyArray<Region> => {
   if (value === null || value === undefined) {
     return []
   }

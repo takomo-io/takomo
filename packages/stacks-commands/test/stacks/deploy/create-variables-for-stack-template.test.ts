@@ -1,8 +1,12 @@
-import { TakomoCredentialProvider } from "@takomo/core"
-import { Stack } from "@takomo/stacks-model"
-import { Logger } from "@takomo/util/src/logging"
+import { CredentialManager } from "@takomo/aws-clients"
+import { InternalStack } from "@takomo/stacks-model"
+import { createConsoleLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
-import { createVariablesForStackTemplate } from "../../../src/stacks/deploy/template"
+import { createVariablesForStackTemplate } from "../../../src/stacks/deploy/steps/prepare-template"
+
+const logger = createConsoleLogger({
+  logLevel: "info",
+})
 
 describe("#createVariablesForStackTemplate", () => {
   test("returns correct variables #1", () => {
@@ -19,13 +23,13 @@ describe("#createVariablesForStackTemplate", () => {
       hooks: {},
     }
 
-    const stack = new Stack({
+    const stack: InternalStack = {
       accountIds: [],
       capabilities: [],
       commandRole: {
         iamRoleArn: "arn:aws:iam::888888888888:role/admin",
       },
-      credentialProvider: mock<TakomoCredentialProvider>(),
+      credentialManager: mock<CredentialManager>(),
       data: {
         age: 1,
         name: "James",
@@ -43,8 +47,6 @@ describe("#createVariablesForStackTemplate", () => {
       path: "/stack-x.yml/eu-west-1",
       project: "foobar",
       region: "eu-central-1",
-      secrets: new Map(),
-      secretsPath: "/stack-x.yml/eu-west-1",
       tags: new Map([
         ["a", "b"],
         ["c", "d"],
@@ -59,17 +61,22 @@ describe("#createVariablesForStackTemplate", () => {
         create: 3,
       },
       stackGroupPath: "/",
-      logger: mock<Logger>(),
-    })
+      logger,
+      getCurrentCloudFormationStack: jest.fn(),
+      getCloudFormationClient: jest.fn(),
+      toProps: jest.fn(),
+    }
 
     const parameters = [
       {
-        ParameterKey: "foo",
-        ParameterValue: "fooValue",
+        key: "foo",
+        value: "fooValue",
+        immutable: false,
       },
       {
-        ParameterKey: "bar",
-        ParameterValue: "barValue",
+        key: "bar",
+        value: "barValue",
+        immutable: false,
       },
     ]
 
@@ -115,10 +122,13 @@ describe("#createVariablesForStackTemplate", () => {
           update: 4,
           create: 3,
         },
-        tags: {
-          a: "b",
-          c: "d",
-        },
+        tags: [
+          {
+            key: "a",
+            value: "b",
+          },
+          { key: "c", value: "d" },
+        ],
         parameters: [
           {
             key: "foo",
@@ -157,11 +167,10 @@ describe("#createVariablesForStackTemplate", () => {
       },
     }
 
-    const stack = new Stack({
+    const stack: InternalStack = {
       accountIds: [],
       capabilities: [],
-      commandRole: null,
-      credentialProvider: mock<TakomoCredentialProvider>(),
+      credentialManager: mock<CredentialManager>(),
       data: {
         arrayData: [1, 2, 3],
       },
@@ -173,20 +182,19 @@ describe("#createVariablesForStackTemplate", () => {
       name: "stack-x",
       parameters: new Map(),
       path: "/dev/apps/prod/eb.yml/eu-north-1",
-      project: null,
       region: "eu-north-1",
-      secrets: new Map(),
-      secretsPath: "/dev/apps/prod/eb.yml/eu-north-1",
       tags: new Map([["Name", "Value"]]),
       template: "elastic-beanstalk.yml",
-      templateBucket: null,
       timeout: {
         update: 40,
         create: 0,
       },
       stackGroupPath: "/dev/apps/prod",
-      logger: mock<Logger>(),
-    })
+      logger,
+      getCurrentCloudFormationStack: jest.fn(),
+      getCloudFormationClient: jest.fn(),
+      toProps: jest.fn(),
+    }
 
     const stackVariables = createVariablesForStackTemplate(variables, stack, [])
 
@@ -203,13 +211,13 @@ describe("#createVariablesForStackTemplate", () => {
       hooks: { myHook: "ok" },
       stack: {
         name: "stack-x",
-        project: null,
+        project: undefined,
         path: "/dev/apps/prod/eb.yml/eu-north-1",
         pathSegments: ["dev", "apps", "prod", "eb.yml", "eu-north-1"],
         region: "eu-north-1",
         template: "elastic-beanstalk.yml",
-        templateBucket: null,
-        commandRole: null,
+        templateBucket: undefined,
+        commandRole: undefined,
         data: {
           arrayData: [1, 2, 3],
         },
@@ -217,9 +225,12 @@ describe("#createVariablesForStackTemplate", () => {
           update: 40,
           create: 0,
         },
-        tags: {
-          Name: "Value",
-        },
+        tags: [
+          {
+            key: "Name",
+            value: "Value",
+          },
+        ],
         parameters: [],
         depends: [],
         terminationProtection: false,

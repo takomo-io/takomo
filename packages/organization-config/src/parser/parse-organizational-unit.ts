@@ -1,9 +1,10 @@
+import { OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { parseVars } from "@takomo/core"
-import { Logger } from "@takomo/util"
-import { PolicyName } from "aws-sdk/clients/organizations"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
+import { TkmLogger } from "@takomo/util"
 import uniq from "lodash.uniq"
-import { OrganizationalUnit, OrganizationalUnitPath } from "../model"
+import { OrganizationalUnitConfig } from "../model"
 import { findMissingDirectChildrenPaths } from "./find-missing-direct-child-paths"
 import { parseAccounts } from "./parse-accounts"
 import { parseConfigSetNames } from "./parse-config-set-names"
@@ -21,28 +22,28 @@ const resolveOrganizationalUnitDepth = (
 const collectChildPaths = (
   ouPath: OrganizationalUnitPath,
   config: any,
-): OrganizationalUnitPath[] =>
+): ReadonlyArray<OrganizationalUnitPath> =>
   Object.keys(config).filter((key) => key.startsWith(`${ouPath}/`))
 
 const collectDirectChildPaths = (
   ouPathDepth: number,
-  childPaths: OrganizationalUnitPath[],
-): OrganizationalUnitPath[] =>
+  childPaths: ReadonlyArray<OrganizationalUnitPath>,
+): ReadonlyArray<OrganizationalUnitPath> =>
   childPaths.filter(
     (key) => resolveOrganizationalUnitDepth(key) === ouPathDepth + 1,
   )
 
 export const parseOrganizationalUnit = (
-  parentLogger: Logger,
+  parentLogger: TkmLogger,
   ouPath: OrganizationalUnitPath,
   config: any,
-  inheritedServiceControlPolicies: PolicyName[],
-  inheritedTagPolicies: PolicyName[],
-  inheritedAiServicesOptOutPolicies: PolicyName[],
-  inheritedBackupPolicies: PolicyName[],
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
-): OrganizationalUnit => {
+  inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+): OrganizationalUnitConfig => {
   const name = extractOrganizationalUnitName(ouPath)
   const ouPathDepth = resolveOrganizationalUnitDepth(ouPath)
 

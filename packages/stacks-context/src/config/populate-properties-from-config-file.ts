@@ -1,28 +1,20 @@
-import { Options } from "@takomo/core"
-import { parseStackGroupConfigFile } from "@takomo/stacks-config"
-import { StackGroup } from "@takomo/stacks-model"
-import { Logger, TemplateEngine } from "@takomo/util"
-import { StackGroupConfigNode } from "./tree/stack-group-config-node"
+import { CommandContext } from "@takomo/core"
+import { createStackGroup, StackGroup } from "@takomo/stacks-model"
+import { TkmLogger } from "@takomo/util"
+import { StackGroupConfigNode } from "./config-tree"
 
 export const populatePropertiesFromConfigFile = async (
-  logger: Logger,
-  options: Options,
+  ctx: CommandContext,
+  logger: TkmLogger,
   variables: any,
   stackGroup: StackGroup,
   node: StackGroupConfigNode,
-  templateEngine: TemplateEngine,
 ): Promise<StackGroup> => {
-  if (!node.file) {
+  const configFile = await node.getConfig(variables)
+
+  if (!configFile) {
     return stackGroup
   }
-
-  const configFile = await parseStackGroupConfigFile(
-    logger.childLogger(stackGroup.getPath()),
-    options,
-    variables,
-    node.file.fullPath,
-    templateEngine,
-  )
 
   const props = stackGroup.toProps()
 
@@ -50,11 +42,11 @@ export const populatePropertiesFromConfigFile = async (
     props.accountIds = configFile.accountIds
   }
 
-  if (configFile.ignore !== null) {
+  if (configFile.ignore !== undefined) {
     props.ignore = configFile.ignore
   }
 
-  if (configFile.terminationProtection !== null) {
+  if (configFile.terminationProtection !== undefined) {
     props.terminationProtection = configFile.terminationProtection
   }
 
@@ -66,8 +58,8 @@ export const populatePropertiesFromConfigFile = async (
     props.tags.set(key, value)
   })
 
-  props.data = { ...stackGroup.getData(), ...configFile.data }
-  props.hooks = [...stackGroup.getHooks(), ...configFile.hooks]
+  props.data = { ...stackGroup.data, ...configFile.data }
+  props.hooks = [...stackGroup.hooks, ...configFile.hooks]
 
-  return new StackGroup(props)
+  return createStackGroup(props)
 }

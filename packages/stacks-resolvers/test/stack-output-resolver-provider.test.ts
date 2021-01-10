@@ -1,23 +1,42 @@
+import { CommandContext } from "@takomo/core"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "@takomo/unit-test"
+} from "@takomo/test-unit"
 import Joi from "joi"
-import { StackOutputResolverProvider } from "../src/impl/stack-output-resolver"
 import { defaultSchema } from "../src/resolver-registry"
+import { createStackOutputResolverProvider } from "../src/stack-output-resolver"
 
-const provider = new StackOutputResolverProvider()
+const provider = createStackOutputResolverProvider()
+
+const ctx: CommandContext = {
+  projectDir: "",
+  autoConfirmEnabled: true,
+  regions: ["eu-west-1"],
+  organizationServicePrincipals: [],
+  logLevel: "info",
+  variables: {
+    var: {},
+    env: {},
+    context: {
+      projectDir: "",
+    },
+  },
+  confidentialValuesLoggingEnabled: false,
+  statisticsEnabled: true,
+}
+
+const schema = provider.schema!({
+  ctx,
+  joi: Joi.defaults((schema) => schema),
+  base: defaultSchema("stack-output"),
+})
 
 describe("StackOutputResolverProvider", () => {
   test("#name should be stack-output", () => {
     expect(provider.name).toBe("stack-output")
   })
   describe("#schema validation", () => {
-    const schema = provider.schema(
-      Joi.defaults((schema) => schema),
-      defaultSchema("stack-output"),
-    )
-
     test("should succeed when a valid configuration is given", () => {
       expectNoValidationError(schema)({
         stack: "/dev.yml",
@@ -29,6 +48,23 @@ describe("StackOutputResolverProvider", () => {
       expectNoValidationError(schema)({
         stack: "/dev.yml",
         output: "myOutput",
+        confidential: true,
+      })
+    })
+
+    test("should succeed when a valid configuration and immutable is given", () => {
+      expectNoValidationError(schema)({
+        stack: "/dev.yml",
+        output: "myOutput",
+        immutable: true,
+      })
+    })
+
+    test("should succeed when a valid configuration with all supported properties is given", () => {
+      expectNoValidationError(schema)({
+        stack: "/dev.yml",
+        output: "myOutput",
+        immutable: true,
         confidential: true,
       })
     })

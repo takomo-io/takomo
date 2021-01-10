@@ -1,33 +1,50 @@
-import { commandPath, CommandStatus } from "@takomo/core"
-import { buildConfigContext } from "@takomo/stacks-context"
+import { CommandContext, CommandHandler } from "@takomo/core"
+import {
+  buildStacksContext,
+  StacksConfigRepository,
+} from "@takomo/stacks-context"
+import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
-import Joi from "joi"
+import Joi, { AnySchema } from "joi"
 import {
   DependencyGraphInput,
   DependencyGraphIO,
   DependencyGraphOutput,
 } from "./model"
 
-const schema = Joi.object({
-  commandPath: commandPath.required(),
-}).unknown(true)
+const inputSchema = (ctx: CommandContext): AnySchema => {
+  const { commandPath } = createStacksSchemas({ regions: ctx.regions })
+  return Joi.object({
+    commandPath: commandPath.required(),
+  }).unknown(true)
+}
 
-export const dependencyGraphCommand = async (
-  input: DependencyGraphInput,
-  io: DependencyGraphIO,
-): Promise<DependencyGraphOutput> =>
-  validateInput(schema, input)
+export const dependencyGraphCommand: CommandHandler<
+  StacksConfigRepository,
+  DependencyGraphIO,
+  DependencyGraphInput,
+  DependencyGraphOutput
+> = ({ ctx, io, input, configRepository }): Promise<DependencyGraphOutput> =>
+  validateInput(inputSchema(ctx), input)
     .then((input) =>
-      buildConfigContext({
+      buildStacksContext({
         ...input,
+        configRepository,
+        ctx,
         logger: io,
       }),
     )
-    .then((ctx) => ({
-      success: true,
-      status: CommandStatus.SUCCESS,
-      message: "Success",
-      watch: input.watch.stop(),
-      stacks: ctx.getStacks(),
-    }))
+    .then((ctx) => {
+      const { timer } = input
+      timer.stop()
+      const output: DependencyGraphOutput = {
+        success: true,
+        status: "SUCCESS",
+        message: "Success",
+        timer,
+        stacks: ctx.stacks,
+      }
+
+      return output
+    })
     .then(io.printOutput)

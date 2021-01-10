@@ -1,5 +1,4 @@
-import { IO, Options } from "@takomo/core"
-import { BaseLogger, bold, indentLines, LogWriter } from "@takomo/util"
+import { bold, indentLines, LogWriter } from "@takomo/util"
 import inquirer from "inquirer"
 
 export interface Choice<T> {
@@ -15,183 +14,189 @@ interface QuestionOptions {
 // eslint-disable-next-line
 inquirer.registerPrompt("autocomplete", require("inquirer-autocomplete-prompt"))
 
-export default class CliIO extends BaseLogger implements IO {
-  protected readonly options: Options
-  private readonly logWriter: LogWriter
+interface MessageProps {
+  readonly text: string
+  readonly marginTop?: boolean
+  readonly marginBottom?: boolean
+  readonly indent?: number
+}
 
-  constructor(
-    logWriter: LogWriter,
-    options: Options,
-    loggerName: string | null = null,
-  ) {
-    super(logWriter, options.getLogLevel(), loggerName)
-    this.options = options
-    this.logWriter = logWriter
-  }
-
-  print(message?: any, ...optionalParams: any[]): void {
-    this.logWriter(message || "", ...optionalParams)
-  }
-
-  subheader = (
-    message: string,
-    marginTop = false,
-    marginBottom = false,
-    indent = 0,
-  ): void => {
-    const padding = " ".repeat(indent)
-    this.message(padding + bold(message), marginTop)
-    this.message(
-      padding + bold("-".repeat(message.length)),
-      false,
-      marginBottom,
-    )
-  }
-
-  header = (message: string, marginTop = false, marginBottom = false): void => {
-    this.message(bold(message), marginTop)
-    this.message(bold("=".repeat(message.length)), false, marginBottom)
-  }
-
-  message = (
-    message: any = "",
-    marginTop = false,
-    marginBottom = false,
-  ): void => {
-    if (marginTop) {
-      this.print()
-    }
-    this.print(message)
-    if (marginBottom) {
-      this.print()
-    }
-  }
-
-  longMessage = (
+export interface BaseIO {
+  print: (text?: any, ...optionalParams: any[]) => void
+  subheader: (props: MessageProps) => void
+  header: (props: MessageProps) => void
+  message: (props: MessageProps) => void
+  longMessage: (
     lines: string[],
-    marginTop = false,
-    marginBottom = false,
-    indent = 0,
-  ): void => {
-    if (marginTop) {
-      this.print()
-    }
-
-    this.print(indentLines(lines.join("\n"), indent))
-    if (marginBottom) {
-      this.print()
-    }
-  }
-
-  multilineMessage = (
+    marginTop: boolean,
+    marginBottom: boolean,
+    indent: number,
+  ) => void
+  confirm: (message: string, marginTop: boolean) => Promise<boolean>
+  question: (
     message: string,
-    marginTop = false,
-    marginBottom = false,
-    indent = 0,
-  ): void => {
-    if (marginTop) {
-      this.print()
-    }
-
-    this.print(indentLines(message, indent))
-    if (marginBottom) {
-      this.print()
-    }
-  }
-
-  confirm = async (message: string, marginTop = false): Promise<boolean> => {
-    if (marginTop) {
-      this.print()
-    }
-
-    const { answer } = await inquirer.prompt([
-      {
-        message,
-        name: "answer",
-        type: "confirm",
-      },
-    ])
-
-    return answer
-  }
-
-  question = async (
-    message: string,
-    marginTop = false,
-    options: QuestionOptions = {},
-  ): Promise<string> => {
-    if (marginTop) {
-      this.print()
-    }
-
-    const { answer } = await inquirer.prompt([
-      {
-        ...options,
-        message,
-        type: "input",
-        name: "answer",
-      },
-    ])
-
-    return answer
-  }
-
-  choose = async <T>(
+    marginTop: boolean,
+    options: QuestionOptions,
+  ) => Promise<string>
+  choose: <T>(
     message: string,
     choices: Choice<T>[],
-    marginTop = false,
-  ): Promise<T> => {
-    if (marginTop) {
-      this.print()
-    }
-
-    const { answer } = await inquirer.prompt([
-      {
-        choices,
-        message,
-        name: "answer",
-        type: "list",
-      },
-    ])
-
-    return answer
-  }
-
-  chooseMany = async <T>(
+    marginTop: boolean,
+  ) => Promise<T>
+  chooseMany: <T>(
     message: string,
     choices: Choice<T>[],
-    marginTop = false,
-  ): Promise<T[]> => {
-    if (marginTop) {
-      this.print()
-    }
-
-    const { answer } = await inquirer.prompt([
-      {
-        choices,
-        message,
-        name: "answer",
-        type: "checkbox",
-      },
-    ])
-
-    return answer
-  }
-
-  autocomplete = async (
+    marginTop: boolean,
+  ) => Promise<T[]>
+  autocomplete: (
     message: string,
     source: (answersSoFar: any, input: string) => Promise<string[]>,
-  ): Promise<string> => {
-    const { answer } = await inquirer.prompt([
-      {
-        message,
-        source,
-        name: "answer",
-        type: "autocomplete",
-        pageSize: 10,
-      },
-    ])
+  ) => Promise<string>
+}
 
-    return answer
+export const createBaseIO = (writer: LogWriter): BaseIO => {
+  const print = (text: unknown = "", ...optionalParams: unknown[]): void => {
+    writer(text, ...optionalParams)
+  }
+
+  const message = ({
+    text,
+    marginTop = false,
+    marginBottom = false,
+    indent = 0,
+  }: MessageProps): void => {
+    if (marginTop) {
+      print()
+    }
+    const padding = " ".repeat(indent)
+    print(padding + text)
+    if (marginBottom) {
+      print()
+    }
+  }
+
+  return {
+    print,
+    message,
+    header: ({ text, marginBottom, marginTop, indent }: MessageProps) => {
+      message({ text: bold(text), indent, marginTop })
+      message({ text: bold("=".repeat(text.length)), indent, marginBottom })
+    },
+    subheader: ({ text, marginBottom, marginTop, indent }: MessageProps) => {
+      message({ text: bold(text), indent, marginTop })
+      message({ text: bold("-".repeat(text.length)), indent, marginBottom })
+    },
+
+    longMessage: (
+      lines: string[],
+      marginTop = false,
+      marginBottom = false,
+      indent = 0,
+    ) => {
+      if (marginTop) {
+        print()
+      }
+
+      print(indentLines(lines.join("\n"), indent))
+      if (marginBottom) {
+        print()
+      }
+    },
+
+    confirm: async (msg: string, marginTop = false): Promise<boolean> => {
+      if (marginTop) {
+        print()
+      }
+
+      const { answer } = await inquirer.prompt([
+        {
+          message: msg,
+          name: "answer",
+          type: "confirm",
+        },
+      ])
+
+      return answer
+    },
+
+    question: async (
+      msg: string,
+      marginTop = false,
+      options: QuestionOptions = {},
+    ): Promise<string> => {
+      if (marginTop) {
+        print()
+      }
+
+      const { answer } = await inquirer.prompt([
+        {
+          ...options,
+          message: msg,
+          type: "input",
+          name: "answer",
+        },
+      ])
+
+      return answer
+    },
+
+    choose: async <T>(
+      msg: string,
+      choices: Choice<T>[],
+      marginTop = false,
+    ): Promise<T> => {
+      if (marginTop) {
+        print()
+      }
+
+      const { answer } = await inquirer.prompt([
+        {
+          choices,
+          message: msg,
+          name: "answer",
+          type: "list",
+        },
+      ])
+
+      return answer
+    },
+
+    chooseMany: async <T>(
+      msg: string,
+      choices: Choice<T>[],
+      marginTop = false,
+    ): Promise<T[]> => {
+      if (marginTop) {
+        print()
+      }
+
+      const { answer } = await inquirer.prompt([
+        {
+          choices,
+          message: msg,
+          name: "answer",
+          type: "checkbox",
+        },
+      ])
+
+      return answer
+    },
+
+    autocomplete: async (
+      msg: string,
+      source: (answersSoFar: any, input: string) => Promise<string[]>,
+    ): Promise<string> => {
+      const { answer } = await inquirer.prompt([
+        {
+          message: msg,
+          source,
+          name: "answer",
+          type: "autocomplete",
+          pageSize: 10,
+        },
+      ])
+
+      return answer
+    },
   }
 }

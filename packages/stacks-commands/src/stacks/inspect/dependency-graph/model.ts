@@ -1,14 +1,12 @@
-import { CommandInput, CommandOutput, CommandPath, IO } from "@takomo/core"
-import { Stack } from "@takomo/stacks-model"
+import { CommandInput, CommandOutput, IO } from "@takomo/core"
+import { CommandPath, InternalStack } from "@takomo/stacks-model"
 
 export interface DependencyGraphInput extends CommandInput {
-  commandPath: CommandPath
+  readonly commandPath: CommandPath
 }
 
 export interface DependencyGraphOutput extends CommandOutput {
-  stacks: Stack[]
+  readonly stacks: ReadonlyArray<InternalStack>
 }
 
-export interface DependencyGraphIO extends IO {
-  printOutput(output: DependencyGraphOutput): DependencyGraphOutput
-}
+export type DependencyGraphIO = IO<DependencyGraphOutput>

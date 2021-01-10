@@ -1,3 +1,3 @@
-# Takomo Organization
+# Takomo - Organization Commands
 
-Organization related commands for https://takomo.io
+Commands for organization.

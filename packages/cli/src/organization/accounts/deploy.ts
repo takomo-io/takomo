@@ -1,14 +1,11 @@
-import {
-  CliDeployAccountsIO,
-  CliDeployStacksIO,
-  CliUndeployStacksIO,
-} from "@takomo/cli-io"
+import { createDeployAccountsIO } from "@takomo/cli-io"
+import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
-import { DeploymentOperation, Options } from "@takomo/core"
 import {
   accountsDeployOperationCommandIamPolicy,
   accountsOperationCommand,
 } from "@takomo/organization-commands"
+import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../../common"
 import { parseAccountIds } from "./fn"
 
@@ -26,25 +23,22 @@ export const deployAccountsCmd = {
         demandOption: false,
       }),
   handler: (argv: any) =>
-    handle(
+    handle({
       argv,
-      (ov) => ({
-        ...ov,
+      input: (ctx, input) => ({
+        ...input,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
-        operation: DeploymentOperation.DEPLOY,
-        configSetType: ConfigSetType.STANDARD,
+        operation: "deploy" as DeploymentOperation,
+        configSetType: "standard" as ConfigSetType,
       }),
-      (input) =>
-        accountsOperationCommand(
-          input,
-          new CliDeployAccountsIO(
-            input.options,
-            (options: Options, accountId: string) =>
-              new CliDeployStacksIO(options, console.log, accountId),
-            (options: Options, accountId: string) =>
-              new CliUndeployStacksIO(options, console.log, accountId),
-          ),
-        ),
-    ),
+      configRepository: (ctx, logger) =>
+        createFileSystemOrganizationConfigRepository({
+          ctx,
+          logger,
+          ...ctx.filePaths,
+        }),
+      io: (ctx, logger) => createDeployAccountsIO(logger),
+      executor: accountsOperationCommand,
+    }),
 }

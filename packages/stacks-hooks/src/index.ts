@@ -1,2 +1,2 @@
+export { CmdHook } from "./cmd-hook"
 export { executeHooks } from "./execute"
-export { CmdHook } from "./impl"

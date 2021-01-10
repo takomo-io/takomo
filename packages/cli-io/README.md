@@ -1,3 +1,3 @@
-# Takomo CLI IO
+# Takomo - CLI IO
 
-CLI IO for https://takomo.io
+IO implementation for CLI.

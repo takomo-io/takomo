@@ -19,13 +19,6 @@ export {
   DeleteAccountAliasIO,
   DeleteAccountAliasOutput,
 } from "./accounts/delete-account-alias/model"
-export { describeAccountCommand } from "./accounts/describe/command"
-export { describeAccountCommandIamPolicy } from "./accounts/describe/iam-policy"
-export {
-  DescribeAccountInput,
-  DescribeAccountIO,
-  DescribeAccountOutput,
-} from "./accounts/describe/model"
 export { listAccountsCommand } from "./accounts/list/command"
 export { listAccountsCommandIamPolicy } from "./accounts/list/iam-policy"
 export {
@@ -44,6 +37,19 @@ export {
   AccountsOperationIO,
   AccountsOperationOutput,
 } from "./accounts/operation/model"
+export { OrganizationBasicConfigDeploymentPlan } from "./common/plan/basic-config/model"
+export {
+  OrganizationalUnitsDeploymentPlan,
+  OrgEntityPoliciesPlan,
+  OrgEntityPolicyOperations,
+  OrgEntityPolicyOperationsPlan,
+  PlannedAccounts,
+  PlannedOrganizationalUnit,
+} from "./common/plan/organizational-units/model"
+export {
+  PlannedPolicy,
+  PolicyDeploymentPlan,
+} from "./common/plan/policies/model"
 export { createOrganizationCommand } from "./create/command"
 export { createOrganizationCommandIamPolicy } from "./create/iam-policy"
 export {
@@ -54,22 +60,11 @@ export {
 export { deployOrganizationCommand } from "./deploy/command"
 export { deployOrganizationCommandIamPolicy } from "./deploy/iam-policy"
 export {
-  DeploymentPlanHolder,
+  ConfirmOrganizationDeployProps,
   DeployOrganizationInput,
   DeployOrganizationIO,
   DeployOrganizationOutput,
 } from "./deploy/model"
-export {
-  OrganizationalUnitsDeploymentPlan,
-  OrganizationBasicConfigDeploymentPlan,
-  OrgEntityPoliciesPlan,
-  OrgEntityPolicyOperations,
-  OrgEntityPolicyOperationsPlan,
-  PlannedAccounts,
-  PlannedOrganizationalUnit,
-  PlannedPolicy,
-  PolicyDeploymentPlan,
-} from "./deploy/plan/model"
 export { describeOrganizationCommand } from "./describe/command"
 export { describeOrganizationCommandIamPolicy } from "./describe/iam-policy"
 export {

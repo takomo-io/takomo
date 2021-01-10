@@ -1,62 +1,70 @@
+import { resolveCommandOutputBase } from "@takomo/core"
 import {
-  CommandStatus,
-  resolveCommandOutputBase,
+  InternalStacksContext,
   StackPath,
-} from "@takomo/core"
-import { CommandContext, StackResult } from "@takomo/stacks-model"
+  StackResult,
+} from "@takomo/stacks-model"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { deleteStack } from "./delete"
 import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors"
-import { ConfirmUndeployAnswer, UndeployStacksIO } from "./model"
+import { UndeployStacksIO } from "./model"
+import { StacksUndeployPlan } from "./plan"
 
+/**
+ * @hidden
+ */
 export const executeUndeployContext = async (
-  ctx: CommandContext,
+  ctx: InternalStacksContext,
   input: StacksOperationInput,
   io: UndeployStacksIO,
+  plan: StacksUndeployPlan,
 ): Promise<StacksOperationOutput> => {
-  const autoConfirm = ctx.getOptions().isAutoConfirmEnabled()
-  const stacks = ctx.getStacksToProcess()
-  const { watch, ignoreDependencies } = input
+  const autoConfirm = ctx.autoConfirmEnabled
+  const { operations } = plan
+  const { timer, ignoreDependencies } = input
 
-  if (ignoreDependencies && stacks.length > 1) {
-    throw new IncompatibleIgnoreDependenciesOptionOnDeleteError(stacks)
+  // TODO: Move to plan and then validate
+  if (ignoreDependencies && operations.length > 1) {
+    throw new IncompatibleIgnoreDependenciesOptionOnDeleteError(
+      operations.map((o) => o.stack),
+    )
   }
 
-  if (
-    !autoConfirm &&
-    (await io.confirmUndeploy(ctx)) !== ConfirmUndeployAnswer.CONTINUE
-  ) {
+  if (!autoConfirm && (await io.confirmUndeploy(plan)) !== "CONTINUE") {
     io.info("Undeploy cancelled")
+    timer.stop()
     return {
       success: true,
-      status: CommandStatus.CANCELLED,
+      status: "CANCELLED",
       message: "Cancelled",
       results: [],
-      watch: watch.stop(),
+      timer,
     }
   }
 
   io.debugObject(
-    `Undeploy ${stacks.length} stack(s) in following order:`,
-    stacks.map((s) => s.getPath()),
+    `Undeploy ${operations.length} stack(s) in following order:`,
+    operations.map((s) => s.stack.path),
   )
 
-  const executions = stacks.reduce((executions, stack) => {
-    const dependants = ignoreDependencies
+  const executions = operations.reduce((executions, operation) => {
+    const dependents = ignoreDependencies
       ? []
-      : stack.getDependants().map((d) => executions.get(d)!)
+      : operation.stack.dependants.map((d) => executions.get(d)!)
 
-    const execution = deleteStack(watch, ctx, io, stack, dependants)
-    executions.set(stack.getPath(), execution)
+    const execution = deleteStack(timer, ctx, io, operation, dependents)
+    executions.set(operation.stack.path, execution)
 
     return executions
   }, new Map<StackPath, Promise<StackResult>>())
 
   const results = await Promise.all(Array.from(executions.values()))
 
+  timer.stop()
+
   return {
     ...resolveCommandOutputBase(results),
     results,
-    watch: watch.stop(),
+    timer,
   }
 }

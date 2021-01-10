@@ -1,26 +1,30 @@
-import { CommandStatus } from "@takomo/core"
-import { CommandContext } from "@takomo/stacks-model"
+import { InternalStacksContext } from "@takomo/stacks-model"
 import { ListStacksInput, ListStacksOutput } from "./model"
 
+/**
+ * @hidden
+ */
 export const listStacks = async (
-  ctx: CommandContext,
+  ctx: InternalStacksContext,
   input: ListStacksInput,
 ): Promise<ListStacksOutput> => {
+  const { timer } = input
   const stacks = await Promise.all(
-    ctx
-      .getStacksToProcess()
-      .filter((stack) => stack.getPath().startsWith(input.commandPath))
+    ctx.stacks
+      .filter((stack) => stack.path.startsWith(input.commandPath))
       .map(async (stack) => {
-        const current = await ctx.getExistingStack(stack.getPath())
+        const current = await stack.getCurrentCloudFormationStack()
         return { stack, current }
       }),
   )
 
+  timer.stop()
+
   return {
     success: true,
-    status: CommandStatus.SUCCESS,
+    status: "SUCCESS",
     message: "Success",
-    watch: input.watch.stop(),
+    timer,
     stacks,
   }
 }

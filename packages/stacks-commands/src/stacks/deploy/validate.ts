@@ -1,13 +1,11 @@
-import { CommandStatus } from "@takomo/core"
-import { CommandContext, StackResult } from "@takomo/stacks-model"
+import { StackStatus } from "@takomo/aws-model"
 import { TakomoError } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
-import { TemplateLocationHolder } from "./model"
-import { summarizeTemplate } from "./template"
+import { StackDeployOperation, StacksDeployPlan } from "./plan"
 
-export const isStackReadyForDeploy = (
-  stackStatus: CloudFormation.StackStatus,
-): boolean =>
+/**
+ * @hidden
+ */
+export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
   [
     "CREATE_COMPLETE",
     "UPDATE_COMPLETE",
@@ -19,14 +17,17 @@ export const isStackReadyForDeploy = (
     "IMPORT_ROLLBACK_COMPLETE",
   ].includes(stackStatus)
 
-export const validateDeployContext = async (
-  ctx: CommandContext,
-): Promise<CommandContext> => {
+/**
+ * @hidden
+ */
+export const validateStacksStatus = (
+  operations: ReadonlyArray<StackDeployOperation>,
+): void => {
   const stacksInInvalidStatus = []
-  for (const stack of ctx.getStacksToProcess()) {
-    const existing = await ctx.getExistingStack(stack.getPath())
-    if (existing && !isStackReadyForDeploy(existing.StackStatus!)) {
-      stacksInInvalidStatus.push({ stack, existing })
+  for (const operation of operations) {
+    const { currentStack } = operation
+    if (currentStack && !isStackReadyForDeploy(currentStack.status)) {
+      stacksInInvalidStatus.push(operation)
     }
   }
 
@@ -36,52 +37,17 @@ export const validateDeployContext = async (
         stacksInInvalidStatus
           .map(
             (s) =>
-              `  - ${s.stack.getPath()} in invalid status: ${
-                s.existing.StackStatus
-              }`,
+              `  - ${s.stack.path} in invalid status: ${s.currentStack?.status}`,
           )
           .join("\n"),
     )
   }
-
-  return ctx
 }
 
-export const validateTemplate = async (
-  holder: TemplateLocationHolder,
-): Promise<StackResult> => {
-  const {
-    stack,
-    templateS3Url,
-    templateBody,
-    cloudFormationClient,
-    io,
-    watch,
-  } = holder
-
-  const childWatch = watch.startChild("validate-template")
-  io.debug(`${stack.getPath()} - Validate template`)
-
-  const input = templateS3Url || templateBody
-  const key = templateS3Url ? "TemplateURL" : "TemplateBody"
-
-  try {
-    await cloudFormationClient.validateTemplate({
-      [key]: input,
-    })
-
-    childWatch.stop()
-    return summarizeTemplate(holder)
-  } catch (e) {
-    io.error(`${stack.getPath()} - Failed to validate template`, e)
-    return {
-      stack,
-      message: e.message,
-      reason: "TEMPLATE_VALIDATION_FAILED",
-      status: CommandStatus.FAILED,
-      events: [],
-      success: false,
-      watch: watch.stop(),
-    }
-  }
+/**
+ * @hidden
+ */
+export const validateStacksDeployPlan = (plan: StacksDeployPlan): void => {
+  const { operations } = plan
+  validateStacksStatus(operations)
 }

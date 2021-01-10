@@ -1,4 +1,4 @@
-import { getPoliciesToAdd } from "../../../src/deploy/plan/create-org-entity-policies-plan"
+import { getPoliciesToAdd } from "../../../src/common/plan/organizational-units/create-org-entity-policies-plan"
 
 const cases: string[][][] = [
   [[], [], []],

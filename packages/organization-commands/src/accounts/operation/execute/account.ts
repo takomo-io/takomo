@@ -3,24 +3,25 @@ import {
   ConfigSetOperationResult,
   ConfigSetType,
 } from "@takomo/config-sets"
-import { OperationState, resolveCommandOutputBase } from "@takomo/core"
-import { StopWatch } from "@takomo/util"
+import { resolveCommandOutputBase } from "@takomo/core"
+import { OperationState } from "@takomo/stacks-model"
+import { Timer } from "@takomo/util"
 import {
   AccountOperationResult,
-  LaunchAccountsPlanHolder,
   PlannedAccountDeploymentOrganizationalUnit,
   PlannedLaunchableAccount,
 } from "../model"
+import { AccountsOperationPlanHolder } from "../states"
 import { processConfigSet } from "./config-set"
 
 const getConfigSetsToProcess = (
   configSetType: ConfigSetType,
   account: PlannedLaunchableAccount,
-): ConfigSetName[] => {
+): ReadonlyArray<ConfigSetName> => {
   switch (configSetType) {
-    case ConfigSetType.BOOTSTRAP:
+    case "bootstrap":
       return account.config.bootstrapConfigSets
-    case ConfigSetType.STANDARD:
+    case "standard":
       return account.config.configSets
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
@@ -28,10 +29,10 @@ const getConfigSetsToProcess = (
 }
 
 export const processAccount = async (
-  holder: LaunchAccountsPlanHolder,
+  holder: AccountsOperationPlanHolder,
   organizationalUnit: PlannedAccountDeploymentOrganizationalUnit,
   plannedAccount: PlannedLaunchableAccount,
-  accountWatch: StopWatch,
+  accountTimer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
 ): Promise<AccountOperationResult> => {
@@ -49,17 +50,19 @@ export const processAccount = async (
       organizationalUnit,
       plannedAccount,
       configSetName,
-      accountWatch.startChild(configSetName),
+      accountTimer.startChild(configSetName),
       state,
       configSetType,
     )
     results.push(result)
   }
 
+  accountTimer.stop()
+
   return {
     ...resolveCommandOutputBase(results),
     results,
     accountId: account.id,
-    watch: accountWatch.stop(),
+    timer: accountTimer,
   }
 }

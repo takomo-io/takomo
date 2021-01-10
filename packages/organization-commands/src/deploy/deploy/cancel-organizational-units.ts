@@ -1,16 +1,15 @@
-import { CommandStatus } from "@takomo/core"
+import { PlannedOrganizationalUnit } from "../../common/plan/organizational-units/model"
 import { OrganizationalUnitDeploymentResult } from "../model"
-import { PlannedOrganizationalUnit } from "../plan/model"
 
 export const cancelOrganizationalUnits = (
   planned: PlannedOrganizationalUnit,
-): OrganizationalUnitDeploymentResult[] => {
-  const ou = {
+): ReadonlyArray<OrganizationalUnitDeploymentResult> => {
+  const ou: OrganizationalUnitDeploymentResult = {
     id: planned.id,
     name: planned.name,
     message: "Cancelled due to earlier failures",
     success: false,
-    status: CommandStatus.CANCELLED,
+    status: "CANCELLED",
   }
 
   return planned.children.reduce(

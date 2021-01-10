@@ -1,3 +1,3 @@
-# Takomo Core
+# Takomo - Core
 
-Core functionalities for https://takomo.io
+Core types, interfaces and functions.

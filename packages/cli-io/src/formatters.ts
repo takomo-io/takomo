@@ -1,3 +1,4 @@
+import { StackEvent } from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
 import { cyan, green, grey, orange, red, yellow } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
@@ -6,13 +7,13 @@ import { AccountStatus } from "aws-sdk/clients/organizations"
 
 export const formatCommandStatus = (status: CommandStatus): string => {
   switch (status) {
-    case CommandStatus.CANCELLED:
+    case "CANCELLED":
       return grey(status)
-    case CommandStatus.FAILED:
+    case "FAILED":
       return red(status)
-    case CommandStatus.SKIPPED:
+    case "SKIPPED":
       return grey(status)
-    case CommandStatus.SUCCESS:
+    case "SUCCESS":
       return green(status)
     default:
       return status
@@ -41,8 +42,8 @@ export const formatResourceStatus = (
   return status
 }
 
-export const formatStackStatus = (status: StackStatus | null): string => {
-  if (status === null) {
+export const formatStackStatus = (status?: StackStatus): string => {
+  if (!status) {
     return cyan("PENDING")
   }
 
@@ -77,13 +78,13 @@ export const formatStackStatus = (status: StackStatus | null): string => {
   }
 }
 
-export const formatStackEvent = (e: CloudFormation.StackEvent): string =>
+export const formatStackEvent = (e: StackEvent): string =>
   [
-    e.StackName,
-    e.LogicalResourceId,
-    e.ResourceType,
-    formatResourceStatus(e.ResourceStatus!),
-    e.ResourceStatusReason,
+    e.stackName,
+    e.logicalResourceId,
+    e.resourceType,
+    formatResourceStatus(e.resourceStatus),
+    e.resourceStatusReason,
   ].join(" ")
 
 export const formatResourceChange = (

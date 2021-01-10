@@ -1,91 +1,73 @@
-import { CloudFormationClient } from "@takomo/aws-clients"
-import { CommandPath, IO, StackPath } from "@takomo/core"
 import {
-  CommandContext,
-  Stack,
+  DetailedChangeSet,
+  DetailedCloudFormationStack,
+  StackEvent,
+  StackParameterKey,
+  StackParameterValue,
+  TagKey,
+  TagValue,
+  TemplateBody,
+  TemplateSummary,
+} from "@takomo/aws-model"
+import { IO } from "@takomo/core"
+import {
+  CommandPath,
+  InternalStack,
   StackGroup,
-  StackLaunchType,
-  StackOperationVariables,
-  StackResult,
+  StackPath,
 } from "@takomo/stacks-model"
-import { Logger, StopWatch } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
-import { DescribeChangeSetOutput } from "aws-sdk/clients/cloudformation"
 import { StacksOperationOutput } from "../../model"
+import { StacksDeployPlan } from "./plan"
 
-export enum ConfirmDeployAnswer {
-  CANCEL,
-  CONTINUE_AND_REVIEW,
-  CONTINUE_NO_REVIEW,
-}
+export type ConfirmDeployAnswer =
+  | "CANCEL"
+  | "CONTINUE_AND_REVIEW"
+  | "CONTINUE_NO_REVIEW"
 
-export enum ConfirmStackDeployAnswer {
-  CANCEL,
-  REVIEW_TEMPLATE,
-  CONTINUE,
-  CONTINUE_AND_SKIP_REMAINING_REVIEWS,
-}
+export type ConfirmStackDeployAnswer =
+  | "CANCEL"
+  | "REVIEW_TEMPLATE"
+  | "CONTINUE"
+  | "CONTINUE_AND_SKIP_REMAINING_REVIEWS"
 
-export interface DeployStacksIO extends IO {
-  chooseCommandPath: (rootStackGroup: StackGroup) => Promise<CommandPath>
-  confirmStackDeploy: (
-    stack: Stack,
-    changeSet: DescribeChangeSetOutput | null,
-    templateBody: string,
-    templateSummary: CloudFormation.GetTemplateSummaryOutput,
-    cloudFormationClient: CloudFormationClient,
-    existingStack: CloudFormation.Stack | null,
-    existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null,
+export interface DeployStacksIO extends IO<StacksOperationOutput> {
+  readonly chooseCommandPath: (
+    rootStackGroup: StackGroup,
+  ) => Promise<CommandPath>
+  readonly confirmStackDeploy: (
+    stack: InternalStack,
+    templateBody: TemplateBody,
+    templateSummary: TemplateSummary,
+    existingStack?: DetailedCloudFormationStack,
+    changeSet?: DetailedChangeSet,
   ) => Promise<ConfirmStackDeployAnswer>
-  confirmDeploy: (ctx: CommandContext) => Promise<ConfirmDeployAnswer>
-  printOutput: (output: StacksOperationOutput) => StacksOperationOutput
-  printStackEvent: (stackPath: StackPath, e: CloudFormation.StackEvent) => void
+  readonly confirmDeploy: (
+    plan: StacksDeployPlan,
+  ) => Promise<ConfirmDeployAnswer>
+  readonly printStackEvent: (stackPath: StackPath, e: StackEvent) => void
 }
 
+/**
+ * @hidden
+ */
 export interface DeployState {
   cancelled: boolean
   autoConfirm: boolean
 }
 
-export interface InitialLaunchContext {
-  readonly stack: Stack
-  readonly existingStack: CloudFormation.Stack | null
-  readonly existingTemplateSummary: CloudFormation.GetTemplateSummaryOutput | null
-  readonly launchType: StackLaunchType
-  readonly watch: StopWatch
-  readonly logger: Logger
-  readonly ctx: CommandContext
-  readonly dependencies: Promise<StackResult>[]
-  readonly cloudFormationClient: CloudFormationClient
-  readonly io: DeployStacksIO
-  readonly variables: StackOperationVariables
-  readonly state: DeployState
+/**
+ * @hidden
+ */
+export interface StackParameterInfo {
+  readonly key: StackParameterKey
+  readonly value: StackParameterValue
+  readonly immutable: boolean
 }
 
-export interface ParameterHolder extends InitialLaunchContext {
-  readonly parameters: CloudFormation.Parameter[]
-}
-
-export interface TagsHolder extends ParameterHolder {
-  readonly tags: CloudFormation.Tag[]
-}
-
-export interface TemplateBodyHolder extends TagsHolder {
-  readonly templateBody: string
-}
-
-export interface TemplateLocationHolder extends TemplateBodyHolder {
-  readonly templateS3Url: string | null
-}
-
-export interface TemplateSummaryHolder extends TemplateLocationHolder {
-  readonly templateSummary: CloudFormation.GetTemplateSummaryOutput
-}
-
-export interface ClientTokenHolder extends TemplateSummaryHolder {
-  readonly clientToken: string
-}
-
-export interface ResultHolder extends ClientTokenHolder {
-  readonly result: StackResult
+/**
+ * @hidden
+ */
+export interface StackTagInfo {
+  readonly key: TagKey
+  readonly value: TagValue
 }

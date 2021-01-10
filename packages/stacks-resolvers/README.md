@@ -1,3 +1,3 @@
-# Takomo Stacks Resolvers
+# Takomo - Stacks Resolvers
 
-Stacks resolvers for https://takomo.io
+Resolvers.

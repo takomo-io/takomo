@@ -1,0 +1,12 @@
+Parameters:
+  Param1:
+    Type: String
+  Param2:
+    Type: String
+  Param3:
+    Type: String
+    NoEcho: true
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

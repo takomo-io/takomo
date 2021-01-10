@@ -1,6 +1,8 @@
 import { ConfigSetName } from "@takomo/config-sets"
 
-export const parseConfigSetNames = (value: any): ConfigSetName[] => {
+export const parseConfigSetNames = (
+  value: any,
+): ReadonlyArray<ConfigSetName> => {
   if (value === null || value === undefined) {
     return []
   }

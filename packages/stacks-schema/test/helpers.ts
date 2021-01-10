@@ -1,6 +1,6 @@
-import { StackName, StackPath } from "@takomo/core"
-import { Stack } from "@takomo/stacks-model"
-import { ConsoleLogger } from "@takomo/util"
+import { StackName } from "@takomo/aws-model"
+import { InternalStack, StackPath } from "@takomo/stacks-model"
+import { createConsoleLogger } from "@takomo/util"
 
 export interface TestStackProps {
   path: StackPath
@@ -9,18 +9,15 @@ export interface TestStackProps {
   dependants?: StackPath[]
 }
 
-export const createStack = (props: TestStackProps): Stack => {
-  return new Stack({
+export const createStack = (props: TestStackProps): InternalStack => {
+  return {
     path: props.path,
     name: props.name,
     dependencies: props.dependencies || [],
     dependants: props.dependants || [],
-    project: null,
     template: "",
-    templateBucket: null,
     region: "us-east-1",
     accountIds: [],
-    commandRole: null,
     tags: new Map(),
     timeout: {
       create: 0,
@@ -29,18 +26,21 @@ export const createStack = (props: TestStackProps): Stack => {
     parameters: new Map(),
     data: {},
     hooks: [],
-    secrets: new Map(),
-    secretsPath: "",
-    credentialProvider: {
-      getName: jest.fn(),
-      createCredentialProviderForRole: jest.fn(),
-      getCredentials: jest.fn(),
-      getCallerIdentity: jest.fn(),
-    },
     capabilities: [],
     ignore: false,
     terminationProtection: false,
-    logger: new ConsoleLogger(),
+    logger: createConsoleLogger({
+      logLevel: "info",
+    }),
     stackGroupPath: "/",
-  })
+    getCloudFormationClient: jest.fn(),
+    toProps: jest.fn(),
+    credentialManager: {
+      createCredentialManagerForRole: jest.fn(),
+      getCallerIdentity: jest.fn(),
+      getCredentials: jest.fn(),
+      name: "",
+    },
+    getCurrentCloudFormationStack: jest.fn(),
+  }
 }

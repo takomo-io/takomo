@@ -1,15 +1,16 @@
-import { Options } from "@takomo/core"
 import {
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
-} from "@takomo/deployment-targets"
+} from "@takomo/deployment-targets-commands"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+import { LogWriter, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
-import CliIO from "../cli-io"
+import { createBaseIO } from "../cli-io"
 import { formatCommandStatus } from "../formatters"
-import { LogWriter } from "@takomo/util"
+import { createDeployStacksIO } from "../stacks/deploy-stacks-io"
+import { createUndeployStacksIO } from "../stacks/undeploy-stacks-io"
 
 export interface Messages {
   confirmHeader: string
@@ -18,52 +19,26 @@ export interface Messages {
   outputNoTargets: string
 }
 
-export abstract class CliDeploymentOperationIO
-  extends CliIO
-  implements DeploymentTargetsOperationIO {
-  private readonly messages: Messages
-  private readonly stacksDeployIO: (
-    options: Options,
-    loggerName: string,
-  ) => DeployStacksIO
-  private readonly stacksUndeployIO: (
-    options: Options,
-    loggerName: string,
-  ) => UndeployStacksIO
+export const createDeploymentTargetsOperationIO = (
+  logger: TkmLogger,
+  messages: Messages,
+  writer: LogWriter = console.log,
+): DeploymentTargetsOperationIO => {
+  const io = createBaseIO(writer)
 
-  protected constructor(
-    logWriter: LogWriter,
-    options: Options,
-    messages: Messages,
-    stacksDeployIO: (options: Options, loggerName: string) => DeployStacksIO,
-    stacksUndeployIO: (
-      options: Options,
-      loggerName: string,
-    ) => UndeployStacksIO,
-  ) {
-    super(logWriter, options)
-    this.messages = messages
-    this.stacksDeployIO = stacksDeployIO
-    this.stacksUndeployIO = stacksUndeployIO
-  }
+  const createStackDeployIO = (loggerName: string): DeployStacksIO =>
+    createDeployStacksIO(logger.childLogger(loggerName))
 
-  createStackDeployIO = (
-    options: Options,
-    loggerName: string,
-  ): DeployStacksIO => this.stacksDeployIO(options, loggerName)
+  const createStackUndeployIO = (loggerName: string): UndeployStacksIO =>
+    createUndeployStacksIO(logger.childLogger(loggerName))
 
-  createStackUndeployIO = (
-    options: Options,
-    loggerName: string,
-  ): UndeployStacksIO => this.stacksUndeployIO(options, loggerName)
-
-  printOutput = (
+  const printOutput = (
     output: DeploymentTargetsOperationOutput,
   ): DeploymentTargetsOperationOutput => {
-    this.header(this.messages.outputHeader, true)
+    io.header({ text: messages.outputHeader, marginTop: true })
 
     if (output.results.length === 0) {
-      this.message(this.messages.outputNoTargets, true)
+      io.message({ text: messages.outputNoTargets, marginTop: true })
       return output
     }
 
@@ -78,16 +53,16 @@ export abstract class CliDeploymentOperationIO
                 targetsTable.cell("Target", target.name)
                 targetsTable.cell("Config set", configSet.configSetName)
                 targetsTable.cell("Command path", result.commandPath)
-                targetsTable.cell("Stack path", stackResult.stack.getPath())
-                targetsTable.cell("Stack name", stackResult.stack.getName())
+                targetsTable.cell("Stack path", stackResult.stack.path)
+                targetsTable.cell("Stack name", stackResult.stack.name)
                 targetsTable.cell(
                   "Status",
                   formatCommandStatus(stackResult.status),
                 )
-                targetsTable.cell("Reason", stackResult.reason)
+                // targetsTable.cell("Reason", stackResult.reason)
                 targetsTable.cell(
                   "Time",
-                  prettyMs(stackResult.watch.secondsElapsed),
+                  prettyMs(stackResult.timer.getSecondsElapsed()),
                 )
                 targetsTable.cell("Message", stackResult.message)
                 targetsTable.newRow()
@@ -100,10 +75,9 @@ export abstract class CliDeploymentOperationIO
               targetsTable.cell("Stack path", "-")
               targetsTable.cell("Stack name", "-")
               targetsTable.cell("Status", formatCommandStatus(result.status))
-              targetsTable.cell("Reason", "-")
               targetsTable.cell(
                 "Time",
-                prettyMs(result.result.watch.secondsElapsed),
+                prettyMs(result.result.timer.getSecondsElapsed()),
               )
               targetsTable.cell("Message", result.result.message)
               targetsTable.newRow()
@@ -113,26 +87,43 @@ export abstract class CliDeploymentOperationIO
       })
     })
 
-    this.message(targetsTable.toString(), true)
+    io.message({ text: targetsTable.toString(), marginTop: true })
 
     return output
   }
 
-  confirmOperation = async (plan: TargetsExecutionPlan): Promise<boolean> => {
-    this.header(this.messages.confirmHeader, true)
+  const confirmOperation = async (
+    plan: TargetsExecutionPlan,
+  ): Promise<boolean> => {
+    io.header({ text: messages.confirmHeader, marginTop: true })
 
     plan.groups.forEach((group) => {
-      this.message(`  ${group.path}:`, true)
+      io.message({ text: `${group.path}:`, marginTop: true, indent: 2 })
       group.targets.forEach((target) => {
-        this.message(`    - name: ${target.name}`, true)
-        this.message(`      description: ${target.description || "-"}`)
-        this.message("      config sets:")
+        io.message({
+          text: `- name: ${target.name}`,
+          marginTop: true,
+          indent: 4,
+        })
+        io.message({
+          text: `description: ${target.description || "-"}`,
+          indent: 6,
+        })
+        io.message({ text: "config sets:", indent: 6 })
         target.configSets.forEach((configSet) => {
-          this.message(`        - ${configSet}`)
+          io.message({ text: `- ${configSet}`, indent: 8 })
         })
       })
     })
 
-    return this.confirm(this.messages.confirmQuestion, true)
+    return io.confirm(messages.confirmQuestion, true)
+  }
+
+  return {
+    ...logger,
+    createStackDeployIO,
+    createStackUndeployIO,
+    confirmOperation,
+    printOutput,
   }
 }

@@ -1,2 +1,15 @@
-export * from "./model"
-export { parseOrganizationConfigFile } from "./parser/parse-organization-config-file"
+export {
+  AccountCreationConfig,
+  NewAccountConstraints,
+  NewAccountDefaults,
+  OrganizationAccountConfig,
+  OrganizationalUnitConfig,
+  OrganizationalUnitsConfig,
+  OrganizationConfig,
+  OrganizationPoliciesConfig,
+  OrganizationPolicyConfig,
+  OrgEntity,
+  OrgEntityPolicies,
+  OrgEntityPoliciesConfig,
+} from "./model"
+export { buildOrganizationConfig } from "./parser/build-organization-config"

@@ -1,6 +1,9 @@
+import { ChangeSet } from "@takomo/aws-model"
 import { evaluateRules, Rule } from "@takomo/util"
-import { DescribeChangeSetOutput } from "aws-sdk/clients/cloudformation"
 
+/**
+ * @hidden
+ */
 export type DescribeChangeSetResult =
   | "PENDING"
   | "READY"
@@ -8,38 +11,46 @@ export type DescribeChangeSetResult =
   | "FAILED"
   | "ERROR"
 
-type DescribeChangeSetRuleRule = Rule<
-  DescribeChangeSetOutput,
-  DescribeChangeSetResult
->
+type DescribeChangeSetRuleRule = Rule<ChangeSet, DescribeChangeSetResult>
 
+/**
+ * @hidden
+ */
 export const changeSetReadyRule: DescribeChangeSetRuleRule = ({
-  Status,
-}: DescribeChangeSetOutput) =>
-  Status === "CREATE_COMPLETE" ? "READY" : undefined
+  status,
+}: ChangeSet) => (status === "CREATE_COMPLETE" ? "READY" : undefined)
 
+/**
+ * @hidden
+ */
 export const changeSetPendingRule: DescribeChangeSetRuleRule = ({
-  Status,
-}: DescribeChangeSetOutput) =>
-  Status === "CREATE_IN_PROGRESS" || Status === "CREATE_PENDING"
+  status,
+}: ChangeSet) =>
+  status === "CREATE_IN_PROGRESS" || status === "CREATE_PENDING"
     ? "PENDING"
     : undefined
 
+/**
+ * @hidden
+ */
 export const changeSetFailedRule: DescribeChangeSetRuleRule = ({
-  Status,
-}: DescribeChangeSetOutput) => (Status === "FAILED" ? "FAILED" : undefined)
+  status,
+}: ChangeSet) => (status === "FAILED" ? "FAILED" : undefined)
 
+/**
+ * @hidden
+ */
 export const changeSetNoChangesRule: DescribeChangeSetRuleRule = ({
-  Status,
-  StatusReason,
-}: DescribeChangeSetOutput) => {
-  if (Status !== "FAILED") {
+  status,
+  statusReason,
+}: ChangeSet) => {
+  if (status !== "FAILED") {
     return undefined
   }
 
   const text1 = "The submitted information didn't contain changes"
   const text2 = "No updates are to be performed"
-  return StatusReason?.startsWith(text1) || StatusReason?.startsWith(text2)
+  return statusReason.startsWith(text1) || statusReason.startsWith(text2)
     ? "NO_CHANGES"
     : undefined
 }
@@ -51,6 +62,9 @@ const rules = [
   changeSetFailedRule,
 ]
 
+/**
+ * @hidden
+ */
 export const evaluateDescribeChangeSet = (
-  output: DescribeChangeSetOutput,
-): DescribeChangeSetResult => evaluateRules(rules, output, () => "ERROR")
+  changeSet: ChangeSet,
+): DescribeChangeSetResult => evaluateRules(rules, changeSet, () => "ERROR")

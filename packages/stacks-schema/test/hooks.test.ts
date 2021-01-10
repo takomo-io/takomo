@@ -1,4 +1,8 @@
-import { hooks } from "../src"
+import { createStacksSchemas } from "../src"
+
+const { hooks } = createStacksSchemas({
+  regions: [],
+})
 
 describe("hooks validation succeeds", () => {
   test("when an empty list of hooks is given", () => {

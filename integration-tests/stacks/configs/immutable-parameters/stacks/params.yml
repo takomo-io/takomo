@@ -1,0 +1,12 @@
+regions: eu-north-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+parameters:
+  Param1:
+    value: {{ var.value1 }}
+    immutable: true
+  Param2:
+    value: {{ var.value2 }}
+    immutable: false
+  Param3:
+    value: {{ var.value3 }}
+    immutable: {{ var.immutable3 }}

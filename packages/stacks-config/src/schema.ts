@@ -1,59 +1,106 @@
-import {
-  accountId,
-  accountIds,
-  data,
-  iamRoleArn,
-  project,
-  regions,
-  stackName,
-  stackPath,
-  stackPaths,
-} from "@takomo/core"
-import {
-  hooks,
-  ignore,
-  parameters,
-  secrets,
-  stackCapabilities,
-  tags,
-  template,
-  templateBucket,
-  terminationProtection,
-  timeout,
-} from "@takomo/stacks-schema"
-import Joi from "joi"
+import { Region } from "@takomo/aws-model"
+import { createAwsSchemas } from "@takomo/aws-schema"
+import { createCommonSchema } from "@takomo/core"
+import { createStacksSchemas } from "@takomo/stacks-schema"
+import Joi, { ObjectSchema } from "joi"
 
-export const stackGroupConfigFileSchema = Joi.object({
-  project,
-  templateBucket,
-  tags,
-  hooks,
-  data,
-  regions,
-  ignore,
-  terminationProtection,
-  accountIds: [accountId, accountIds],
-  timeout,
-  commandRole: iamRoleArn,
-  capabilities: stackCapabilities,
-})
+interface CreateStackGroupConfigSchemaProps {
+  readonly regions: ReadonlyArray<Region>
+}
 
-export const stackConfigFileSchema = Joi.object({
-  project,
-  regions,
-  ignore,
-  terminationProtection,
-  accountIds: [accountId, accountIds],
-  commandRole: iamRoleArn,
-  templateBucket,
-  tags,
-  hooks,
-  data,
-  template,
-  parameters,
-  secrets,
-  timeout,
-  name: stackName,
-  depends: [stackPath, stackPaths],
-  capabilities: stackCapabilities,
-})
+export const createStackGroupConfigSchema = (
+  props: CreateStackGroupConfigSchemaProps,
+): ObjectSchema => {
+  const { project, data } = createCommonSchema()
+  const {
+    regions,
+    tags,
+    iamRoleArn,
+    accountId,
+    accountIds,
+    stackCapabilities,
+  } = createAwsSchemas({
+    ...props,
+  })
+
+  const {
+    ignore,
+    terminationProtection,
+    templateBucket,
+    hooks,
+    timeoutInMinutes,
+    timeoutObject,
+  } = createStacksSchemas({ ...props })
+
+  const timeout = [timeoutInMinutes, timeoutObject]
+
+  return Joi.object({
+    project,
+    templateBucket,
+    tags,
+    hooks,
+    data,
+    regions,
+    ignore,
+    terminationProtection,
+    timeout,
+    accountIds: [accountId, accountIds],
+    commandRole: iamRoleArn,
+    capabilities: stackCapabilities,
+  })
+}
+
+interface CreateStackConfigSchemaProps {
+  readonly regions: ReadonlyArray<Region>
+}
+
+export const createStackConfigSchema = (
+  props: CreateStackConfigSchemaProps,
+): ObjectSchema => {
+  const { project, data } = createCommonSchema()
+  const {
+    regions,
+    stackName,
+    tags,
+    iamRoleArn,
+    accountId,
+    accountIds,
+    stackCapabilities,
+  } = createAwsSchemas({
+    ...props,
+  })
+
+  const {
+    ignore,
+    terminationProtection,
+    templateBucket,
+    template,
+    hooks,
+    timeoutInMinutes,
+    timeoutObject,
+    stackPath,
+    parameters,
+  } = createStacksSchemas({ ...props })
+
+  const timeout = [timeoutInMinutes, timeoutObject]
+  const stackPaths = Joi.array().items(stackPath).unique()
+
+  return Joi.object({
+    project,
+    regions,
+    ignore,
+    terminationProtection,
+    templateBucket,
+    tags,
+    hooks,
+    data,
+    template,
+    parameters,
+    timeout,
+    accountIds: [accountId, accountIds],
+    commandRole: iamRoleArn,
+    name: stackName,
+    depends: [stackPath, stackPaths],
+    capabilities: stackCapabilities,
+  })
+}

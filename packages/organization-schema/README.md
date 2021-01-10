@@ -1,3 +1,3 @@
-# Takomo Organization
+# Takomo - Organization Schema
 
-Organization related commands for https://takomo.io
+Validation schema for organization.

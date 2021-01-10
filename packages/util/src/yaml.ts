@@ -1,9 +1,20 @@
 import yaml from "js-yaml"
 import { TakomoError } from "./errors"
-import { buildErrorMessage } from "./errors/build-error-message"
-import { readFileContents } from "./files"
+import { FilePath, readFileContents } from "./files"
+import { buildErrorMessage } from "./templating"
 
-export const parseYaml = (filePath: string, contents: string): any => {
+/**
+ * @hidden
+ */
+export type YamlFormattedString = string
+
+/**
+ * @hidden
+ */
+export const parseYaml = (
+  filePath: FilePath,
+  contents: YamlFormattedString,
+): any => {
   try {
     return yaml.safeLoad(contents)
   } catch (e) {
@@ -34,8 +45,14 @@ export const parseYaml = (filePath: string, contents: string): any => {
   }
 }
 
-export const parseYamlFile = async (pathToYamlFile: string): Promise<any> =>
+/**
+ * @hidden
+ */
+export const parseYamlFile = async (pathToYamlFile: FilePath): Promise<any> =>
   readFileContents(pathToYamlFile).then((c) => parseYaml(pathToYamlFile, c))
 
-export const formatYaml = (object: any): string =>
+/**
+ * @hidden
+ */
+export const formatYaml = (object: unknown): YamlFormattedString =>
   yaml.safeDump(object, { skipInvalid: true, lineWidth: 300, noRefs: true })

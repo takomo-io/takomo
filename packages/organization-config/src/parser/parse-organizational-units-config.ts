@@ -1,9 +1,9 @@
-import { Logger } from "@takomo/util"
+import { TkmLogger } from "@takomo/util"
 import { OrganizationalUnitsConfig } from "../model"
 import { parseOrganizationalUnit } from "./parse-organizational-unit"
 
 export const parseOrganizationalUnitsConfig = (
-  logger: Logger,
+  logger: TkmLogger,
   value: any,
 ): OrganizationalUnitsConfig => ({
   Root: parseOrganizationalUnit(logger, "Root", value, [], [], [], [], [], []),

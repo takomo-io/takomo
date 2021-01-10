@@ -1,3 +1,3 @@
-# Takomo Stacks Context
+# Takomo - Stacks Context
 
-Stacks context for https://takomo.io
+Context for stacks.

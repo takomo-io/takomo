@@ -3,11 +3,14 @@ interface CollectFromHierarchyProps<T> {
   readonly filter?: (node: T) => boolean
 }
 
+/**
+ * @hidden
+ */
 export const collectFromHierarchy = <T>(
   root: T,
-  extractChildren: (node: T) => T[],
+  extractChildren: (node: T) => ReadonlyArray<T>,
   props?: CollectFromHierarchyProps<T>,
-): T[] => {
+): ReadonlyArray<T> => {
   const filter = props?.filter || (() => true)
   if (!filter(root)) {
     return []
@@ -27,13 +30,19 @@ export const collectFromHierarchy = <T>(
   )
 }
 
+/**
+ * @hidden
+ */
 export const mapToObject = (map: Map<string, any>): any =>
   Array.from(map.entries()).reduce(
     (collected, [key, value]) => ({ ...collected, [key]: value }),
     {},
   )
 
+/**
+ * @hidden
+ */
 export const arrayToMap = <T>(
-  items: T[],
+  items: ReadonlyArray<T>,
   keyExtractor: (item: T) => string,
 ): Map<string, T> => new Map(items.map((item) => [keyExtractor(item), item]))

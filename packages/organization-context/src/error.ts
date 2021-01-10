@@ -1,16 +1,15 @@
-import { AccountId } from "@takomo/core"
+import { AccountId, OrganizationAccount } from "@takomo/aws-model"
 import { TakomoError } from "@takomo/util"
-import { Account } from "aws-sdk/clients/organizations"
 
 export class AccountsMissingFromLocalConfigError extends TakomoError {
-  constructor(accounts: Account[]) {
+  constructor(accounts: ReadonlyArray<OrganizationAccount>) {
     super(
       `The organization has ${
         accounts.length
       } active account(s) that are not found from the local configuration:\n\n${accounts
         .map(
           (account) =>
-            `  - id: ${account.Id}, email: ${account.Email}, name: ${account.Name}`,
+            `  - id: ${account.id}, email: ${account.email}, name: ${account.name}`,
         )
         .join("\n")}`,
       {
@@ -25,7 +24,7 @@ export class AccountsMissingFromLocalConfigError extends TakomoError {
 }
 
 export class SuspendedAccountsInLocalConfigError extends TakomoError {
-  constructor(accountIds: AccountId[]) {
+  constructor(accountIds: ReadonlyArray<AccountId>) {
     super(
       `The local configuration contains ${
         accountIds.length
@@ -44,7 +43,7 @@ export class SuspendedAccountsInLocalConfigError extends TakomoError {
 }
 
 export class NonExistingAccountsInLocalConfigError extends TakomoError {
-  constructor(accountIds: AccountId[]) {
+  constructor(accountIds: ReadonlyArray<AccountId>) {
     super(
       `The local configuration contains ${
         accountIds.length

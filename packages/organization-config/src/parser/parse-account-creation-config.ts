@@ -1,4 +1,5 @@
-import { Constants, parseRegex } from "@takomo/core"
+import { parseRegex } from "@takomo/core"
+import { DEFAULT_ORGANIZATION_ROLE_NAME } from "@takomo/organization-model"
 import { AccountCreationConfig } from "../model"
 
 export const parseAccountCreationConfig = (
@@ -7,13 +8,10 @@ export const parseAccountCreationConfig = (
   if (value === null || value === undefined) {
     return {
       defaults: {
-        roleName: Constants.DEFAULT_ORGANIZATION_ROLE_NAME,
+        roleName: DEFAULT_ORGANIZATION_ROLE_NAME,
         iamUserAccessToBilling: true,
       },
-      constraints: {
-        emailPattern: null,
-        namePattern: null,
-      },
+      constraints: {},
     }
   }
 
@@ -28,8 +26,7 @@ export const parseAccountCreationConfig = (
 
   return {
     defaults: {
-      roleName:
-        value.accountAdminRoleName || Constants.DEFAULT_ORGANIZATION_ROLE_NAME,
+      roleName: value.accountAdminRoleName || DEFAULT_ORGANIZATION_ROLE_NAME,
       iamUserAccessToBilling: value.iamUserAccessToBilling !== false,
     },
     constraints: {

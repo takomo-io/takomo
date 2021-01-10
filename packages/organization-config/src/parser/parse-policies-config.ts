@@ -1,9 +1,9 @@
-import { PolicyType } from "aws-sdk/clients/organizations"
+import { OrganizationPolicyType } from "@takomo/aws-model"
 import { OrganizationPoliciesConfig } from "../model"
 import { parsePolicies } from "./parse-policies"
 
 export const parsePoliciesConfig = (
-  policyType: PolicyType,
+  policyType: OrganizationPolicyType,
   value: any,
 ): OrganizationPoliciesConfig => {
   if (value === null || value === undefined) {

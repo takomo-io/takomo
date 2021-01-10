@@ -1,27 +1,25 @@
-import { commandPath, TakomoCredentialProvider } from "@takomo/core"
+import { CommandContext, CommandHandler } from "@takomo/core"
 import {
-  buildConfigContext,
-  ConfigContext,
-  prepareUndeployContext,
+  buildStacksContext,
+  StacksConfigRepository,
 } from "@takomo/stacks-context"
+import { InternalStacksContext } from "@takomo/stacks-model"
+import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
-import Joi from "joi"
+import Joi, { AnySchema } from "joi"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { executeUndeployContext } from "./execute-undeploy-context"
 import { UndeployStacksIO } from "./model"
-import { validateUndeployContext } from "./validate"
-
-const schema = Joi.object({
-  commandPath: commandPath.required(),
-}).unknown(true)
+import { buildStacksUndeployPlan } from "./plan"
+import { validateStacksUndeployPlan } from "./validate"
 
 const modifyInput = async (
   input: StacksOperationInput,
-  ctx: ConfigContext,
+  ctx: InternalStacksContext,
   io: UndeployStacksIO,
 ): Promise<StacksOperationInput> => {
   if (input.interactive) {
-    const commandPath = await io.chooseCommandPath(ctx.getRootStackGroup())
+    const commandPath = await io.chooseCommandPath(ctx.rootStackGroup)
     return {
       ...input,
       commandPath,
@@ -31,28 +29,50 @@ const modifyInput = async (
   return input
 }
 
-export const undeployStacksCommand = async (
-  input: StacksOperationInput,
+const undeployStacks = async (
+  ctx: InternalStacksContext,
+  configRepository: StacksConfigRepository,
   io: UndeployStacksIO,
-  credentialProvider?: TakomoCredentialProvider,
+  input: StacksOperationInput,
 ): Promise<StacksOperationOutput> => {
-  return validateInput(schema, input)
+  const modifiedInput = await modifyInput(input, ctx, io)
+  const plan = await buildStacksUndeployPlan(
+    ctx.stacks,
+    input.commandPath,
+    input.ignoreDependencies,
+  )
+  validateStacksUndeployPlan(plan)
+  return executeUndeployContext(ctx, modifiedInput, io, plan)
+}
+
+const inputSchema = (ctx: CommandContext): AnySchema => {
+  const { commandPath } = createStacksSchemas({ regions: ctx.regions })
+  return Joi.object({
+    commandPath: commandPath.required(),
+  }).unknown(true)
+}
+
+export const undeployStacksCommand: CommandHandler<
+  StacksConfigRepository,
+  UndeployStacksIO,
+  StacksOperationInput,
+  StacksOperationOutput
+> = ({
+  credentialManager,
+  ctx,
+  input,
+  configRepository,
+  io,
+}): Promise<StacksOperationOutput> =>
+  validateInput(inputSchema(ctx), input)
     .then((input) =>
-      buildConfigContext({
-        ...input,
+      buildStacksContext({
+        configRepository,
+        ctx,
+        commandPath: input.interactive ? undefined : input.commandPath,
         logger: io,
-        overrideCredentialProvider: credentialProvider,
+        overrideCredentialManager: credentialManager,
       }),
     )
-    .then(async (ctx) => {
-      const modifiedInput = await modifyInput(input, ctx, io)
-      return prepareUndeployContext(
-        ctx,
-        modifiedInput.commandPath,
-        modifiedInput.ignoreDependencies,
-      )
-        .then((ctx) => validateUndeployContext(ctx))
-        .then((ctx) => executeUndeployContext(ctx, modifiedInput, io))
-    })
+    .then((ctx) => undeployStacks(ctx, configRepository, io, input))
     .then(io.printOutput)
-}
