@@ -15,10 +15,12 @@ jobs:
           node-version: 14.4.0
           registry-url: https://registry.npmjs.org
       - uses: actions/cache@v1
+        id: node_modules
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
       - name: Install dependencies
+        if: steps.node_modules.outputs.cache-hit != 'true'
         run: yarn
       - name: Build
         run: yarn build
