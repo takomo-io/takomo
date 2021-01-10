@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-model",
-  "version": "2.12.1",
+  "version": "3.0.0-alpha.0",
   "description": "Takomo Organization Model",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -26,8 +26,6 @@
     "test": "jest test --passWithNoTests --verbose",
     "watch": "tsc -p tsconfig.build.json --watch"
   },
-  "dependencies": {},
-  "devDependencies": {},
   "engines": {
     "node": ">=14.4.0"
   },

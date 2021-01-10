@@ -1,6 +1,6 @@
 {
   "name": "@takomo/test-unit",
-  "version": "2.12.1",
+  "version": "3.0.0-alpha.0",
   "description": "Takomo unit test utils",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
