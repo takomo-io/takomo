@@ -4,12 +4,14 @@ import {
   inProgress,
   StackOperationTransitions,
 } from "../common/transitions"
+import { resolveResultMessage } from "./common"
 import {
   ChangeSetHolder,
   ChangeSetNameHolder,
   CurrentStackHolder,
   DeleteFailedStackClientTokenHolder,
   DetailedCurrentStackHolder,
+  InitialDeployStackState,
   ParametersHolder,
   StackOperationClientTokenHolder,
   StackOperationResultHolder,
@@ -113,42 +115,73 @@ export const createDeployStackTransitions = (): DeployStackTransitions => ({
 
   initiateChangeSetCreate: inProgress(
     "initiate-change-set-create",
-    initiateChangeSetCreate,
+    executeAfterDeployHooksOnError(initiateChangeSetCreate),
   ),
 
-  initiateStackCreate: inProgress("initiate-stack-create", initiateStackCreate),
+  initiateStackCreate: inProgress(
+    "initiate-stack-create",
+    executeAfterDeployHooksOnError(initiateStackCreate),
+  ),
 
   initiateStackCreateOrUpdate: inProgress(
     "initiate-stack-create-or-update",
-    initiateStackCreateOrUpdate,
+    executeAfterDeployHooksOnError(initiateStackCreateOrUpdate),
   ),
 
-  validateParameters: inProgress("validate-parameters", validateParameters),
+  validateParameters: inProgress(
+    "validate-parameters",
+    executeAfterDeployHooksOnError(validateParameters),
+  ),
 
-  initiateStackUpdate: inProgress("initiate-stack-update", initiateStackUpdate),
+  initiateStackUpdate: inProgress(
+    "initiate-stack-update",
+    executeAfterDeployHooksOnError(initiateStackUpdate),
+  ),
 
-  prepareTemplate: inProgress("prepare-template", prepareTemplate),
+  prepareTemplate: inProgress(
+    "prepare-template",
+    executeAfterDeployHooksOnError(prepareTemplate),
+  ),
 
-  reviewChangeSet: inProgress("review-change-set", reviewChangeSet),
+  reviewChangeSet: inProgress(
+    "review-change-set",
+    executeAfterDeployHooksOnError(reviewChangeSet),
+  ),
 
-  summarizeTemplate: inProgress("summarize-template", summarizeTemplate),
+  summarizeTemplate: inProgress(
+    "summarize-template",
+    executeAfterDeployHooksOnError(summarizeTemplate),
+  ),
 
-  uploadTemplate: inProgress("upload-template", uploadTemplate),
+  uploadTemplate: inProgress(
+    "upload-template",
+    executeAfterDeployHooksOnError(uploadTemplate),
+  ),
 
-  validateTemplate: inProgress("validate-template", validateTemplate),
+  validateTemplate: inProgress(
+    "validate-template",
+    executeAfterDeployHooksOnError(validateTemplate),
+  ),
 
   waitChangeSetToBeReady: inProgress(
     "wait-change-set-to-be-ready",
-    waitChangeSetToBeReady,
+    executeAfterDeployHooksOnError(waitChangeSetToBeReady),
   ),
 
   waitStackCreateOrUpdateToComplete: inProgress(
     "wait-stack-create-or-update-complete",
-    waitStackCreateOrUpdateToComplete,
+    executeAfterDeployHooksOnError(waitStackCreateOrUpdateToComplete),
   ),
 
-  prepareParameters: inProgress("prepare-parameters", prepareParameters),
-  prepareTags: inProgress("prepare-tags", prepareTags),
+  prepareParameters: inProgress(
+    "prepare-parameters",
+    executeAfterDeployHooksOnError(prepareParameters),
+  ),
+
+  prepareTags: inProgress(
+    "prepare-tags",
+    executeAfterDeployHooksOnError(prepareTags),
+  ),
 
   initiateFailedStackDelete: inProgress(
     "initiate-failed-stack-delete",
@@ -164,6 +197,29 @@ export const createDeployStackTransitions = (): DeployStackTransitions => ({
 
   updateTerminationProtection: inProgress(
     "update-termination-protection",
-    updateTerminationProtection,
+    executeAfterDeployHooksOnError(updateTerminationProtection),
   ),
 })
+
+/**
+ * @hidden
+ */
+export const executeAfterDeployHooksOnError = <
+  S extends InitialDeployStackState
+>(
+  step: StackOperationStep<S>,
+): StackOperationStep<S> => (state: S) => {
+  try {
+    return step(state)
+  } catch (error) {
+    state.logger.error("An error occurred", error)
+    return state.transitions.executeAfterDeployHooks({
+      events: [],
+      ...state,
+      error,
+      success: false,
+      status: "FAILED",
+      message: resolveResultMessage(state.operationType, false),
+    })
+  }
+}

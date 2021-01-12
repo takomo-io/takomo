@@ -42,13 +42,21 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
     )
 
     if (!templateParameter) {
-      throw new Error(
-        `Parameter "${parameter.key}" not found from the template summary`,
+      throw new TakomoError(
+        `Parameter '${parameter.key}' is defined in the stack configuration but not found from the template`,
       )
     }
 
     if (parameter.immutable && templateParameter.noEcho) {
       throw new ImmutableNoEchoParameterError(parameter)
+    }
+  })
+
+  templateSummary.parameters.forEach((templateParameter) => {
+    if (!parameters.some((p) => p.key === templateParameter.key)) {
+      throw new TakomoError(
+        `Parameter '${templateParameter.key}' is defined in the template but not found from the stack configuration`,
+      )
     }
   })
 

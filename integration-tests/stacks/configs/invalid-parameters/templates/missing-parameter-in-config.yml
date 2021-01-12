@@ -1,0 +1,14 @@
+Parameters:
+  Foo:
+    Type: String
+    Description: Just some parameter
+  Hello:
+    Type: String
+    Description: A greeting
+  Third:
+    Type: String
+    Description: Another
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

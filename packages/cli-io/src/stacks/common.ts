@@ -31,7 +31,10 @@ export const printStacksOperationOutput = (
   io.message({ text: table.toString(), marginTop: true })
 
   if (failed.length > 0) {
-    io.subheader({ text: "More information of failed stacks", marginTop: true })
+    io.subheader({
+      text: "More information of the failed stacks",
+      marginTop: true,
+    })
 
     failed.forEach((r) => {
       io.message({

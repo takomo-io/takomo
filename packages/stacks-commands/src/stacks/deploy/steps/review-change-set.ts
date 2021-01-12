@@ -48,7 +48,13 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
       await cloudFormationClient.deleteChangeSet(stack.name, changeSetName)
     }
 
-    return transitions.cancelStackOperation({ ...input, message: "Cancelled" })
+    return transitions.executeAfterDeployHooks({
+      ...input,
+      message: "Cancelled",
+      status: "CANCELLED",
+      success: false,
+      events: [],
+    })
   }
 
   if (answer === "CONTINUE_AND_SKIP_REMAINING_REVIEWS") {

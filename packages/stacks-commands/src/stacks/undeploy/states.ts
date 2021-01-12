@@ -45,4 +45,5 @@ export interface StackOperationResultHolder extends InitialUndeployStackState {
   readonly events: ReadonlyArray<StackEvent>
   readonly success: boolean
   readonly status: CommandStatus
+  readonly error?: Error
 }

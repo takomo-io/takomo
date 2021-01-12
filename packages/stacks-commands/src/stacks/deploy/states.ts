@@ -130,9 +130,10 @@ export interface StackOperationClientTokenHolder extends TagsHolder {
 /**
  * @hidden
  */
-export interface StackOperationResultHolder extends DetailedCurrentStackHolder {
+export interface StackOperationResultHolder extends InitialDeployStackState {
   readonly message: string
   readonly success: boolean
   readonly status: CommandStatus
   readonly events: ReadonlyArray<StackEvent>
+  readonly error?: Error
 }

@@ -46,4 +46,5 @@ export interface StackOperationCompletedState
   readonly success: boolean
   readonly status: CommandStatus
   readonly events: ReadonlyArray<StackEvent>
+  readonly error?: Error
 }

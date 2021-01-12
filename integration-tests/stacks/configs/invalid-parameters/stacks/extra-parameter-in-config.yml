@@ -1,0 +1,5 @@
+regions: eu-north-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+parameters:
+  Code: 123
+  Number: 9

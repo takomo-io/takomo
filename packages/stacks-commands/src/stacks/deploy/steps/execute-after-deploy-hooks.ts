@@ -17,7 +17,6 @@ export const executeAfterDeployHooks: StackOperationStep<StackOperationResultHol
     variables,
     logger,
     transitions,
-    events,
   } = state
 
   const { success, message } = await executeHooks(
@@ -32,7 +31,7 @@ export const executeAfterDeployHooks: StackOperationStep<StackOperationResultHol
 
   if (!success) {
     logger.error(`After launch hooks failed with message: ${message}`)
-    return transitions.failStackOperation({ ...state, message, events })
+    return transitions.failStackOperation({ ...state, message })
   }
 
   return transitions.completeStackOperation(state)

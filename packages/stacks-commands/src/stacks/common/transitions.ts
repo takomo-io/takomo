@@ -53,14 +53,7 @@ export const defaultStackOperationTransitions = {
 
   completeStackOperation: async (
     state: StackOperationCompletedState,
-  ): Promise<StepResult> =>
-    new StackOperationCompleted({
-      message: state.message,
-      success: state.success,
-      status: state.status,
-      stack: state.stack,
-      events: [],
-    }),
+  ): Promise<StepResult> => new StackOperationCompleted(state),
 
   failStackOperation: async (
     state: StackOperationFailedState,

@@ -1,0 +1,8 @@
+Parameters:
+  Number:
+    Type: Number
+    Description: A number parameter
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}
