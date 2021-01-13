@@ -11,10 +11,9 @@ describe("Immutable parameters with resolvers", () => {
       var: ["value1=a", "value2=b", "value3=c", "immutable3=true"],
     })
       .expectCommandToFail("Failed")
-      .expectFailureStackResult({
+      .expectStackCreateFail({
         stackName,
         stackPath,
-        message: "Error",
         errorMessage: `Invalid configuration in parameter 'Param3'. Parameter with NoEcho=true can't be marked as immutable.`,
       })
       .assert())
@@ -37,10 +36,9 @@ describe("Immutable parameters with resolvers", () => {
       var: ["value1=a2", "value2=b", "value3=c", "immutable3=false"],
     })
       .expectCommandToFail("Failed")
-      .expectFailureStackResult({
+      .expectStackUpdateFail({
         stackName,
         stackPath,
-        message: "Error",
         errorMessage: `Parameter 'Param1' is marked as immutable but deploying the stack would update its value.`,
       })
       .assert())
