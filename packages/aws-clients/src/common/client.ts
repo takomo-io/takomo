@@ -120,10 +120,10 @@ export const createClient = <C>({
       .then(clientConfiguration)
       .then(clientConstructor)
 
-  const withClient = async <T>(fn: (client: C) => Promise<T>): Promise<T> =>
+  const withClient = <T>(fn: (client: C) => Promise<T>): Promise<T> =>
     getClient().then(fn)
 
-  const withClientPromise = async <T, R>(
+  const withClientPromise = <T, R>(
     fn: (client: C) => Request<R, AWSError>,
     onSuccess: (result: R) => T,
     onError?: (e: any) => T,

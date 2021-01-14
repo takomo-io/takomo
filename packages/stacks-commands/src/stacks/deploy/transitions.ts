@@ -208,9 +208,9 @@ export const executeAfterDeployHooksOnError = <
   S extends InitialDeployStackState
 >(
   step: StackOperationStep<S>,
-): StackOperationStep<S> => (state: S) => {
+): StackOperationStep<S> => async (state: S) => {
   try {
-    return step(state)
+    return await step(state)
   } catch (error) {
     state.logger.error("An error occurred", error)
     return state.transitions.executeAfterDeployHooks({

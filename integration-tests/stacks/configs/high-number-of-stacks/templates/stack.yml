@@ -1,0 +1,13 @@
+Resources:
+  {{ var.prefix }}LogGroup1:
+    Type: AWS::Logs::LogGroup
+    Properties: {}
+  LogGroup2:
+    Type: AWS::Logs::LogGroup
+    Properties: {}
+  LogGroup3:
+    Type: AWS::Logs::LogGroup
+    Properties: {}
+  LogGroup4:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

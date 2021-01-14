@@ -121,15 +121,13 @@ export const createCloudFormationClient = (
     clientConstructor: (config) => new CloudFormation(config),
   })
 
-  const validateTemplate = async (
-    input: ValidateTemplateInput,
-  ): Promise<boolean> =>
+  const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
     withClientPromise(
       (c) => c.validateTemplate(input),
       () => true,
     )
 
-  const describeStack = async (
+  const describeStack = (
     stackName: string,
   ): Promise<CloudFormationStack | undefined> =>
     withClientPromise(
@@ -175,7 +173,7 @@ export const createCloudFormationClient = (
     }
   }
 
-  const getTemplateSummaryForStack = async (
+  const getTemplateSummaryForStack = (
     stackName: string,
   ): Promise<CloudFormation.GetTemplateSummaryOutput | null> =>
     withClientPromise(
@@ -198,7 +196,7 @@ export const createCloudFormationClient = (
       },
     )
 
-  const getTemplateSummary = async (
+  const getTemplateSummary = (
     input: CloudFormation.GetTemplateSummaryInput,
   ): Promise<TemplateSummary> =>
     withClientPromise(
@@ -206,21 +204,19 @@ export const createCloudFormationClient = (
       convertTemplateSummary,
     )
 
-  const getCurrentTemplate = async (stackName: string): Promise<string> =>
+  const getCurrentTemplate = (stackName: string): Promise<string> =>
     withClientPromise(
       (c) => c.getTemplate({ StackName: stackName }),
       (res) => res.TemplateBody!,
     )
 
-  const initiateStackDeletion = async (
-    input: DeleteStackInput,
-  ): Promise<boolean> =>
+  const initiateStackDeletion = (input: DeleteStackInput): Promise<boolean> =>
     withClientPromise(
       (c) => c.deleteStack(input),
       () => true,
     )
 
-  const createChangeSet = async (
+  const createChangeSet = (
     params: CreateChangeSetInput,
   ): Promise<CloudFormation.ChangeSetId> =>
     withClientPromise(
@@ -228,7 +224,7 @@ export const createCloudFormationClient = (
       (res) => res.Id!,
     )
 
-  const deleteChangeSet = async (
+  const deleteChangeSet = (
     stackName: string,
     changeSetName: string,
   ): Promise<boolean> => {
@@ -243,7 +239,7 @@ export const createCloudFormationClient = (
     )
   }
 
-  const describeChangeSet = async (
+  const describeChangeSet = (
     stackName: string,
     changeSetName: string,
   ): Promise<ChangeSet> => {
@@ -281,7 +277,7 @@ export const createCloudFormationClient = (
     }
   }
 
-  const describeStackEvents = async (
+  const describeStackEvents = (
     stackName: string,
   ): Promise<ReadonlyArray<StackEvent>> =>
     withClient((c) =>
@@ -292,7 +288,7 @@ export const createCloudFormationClient = (
       ),
     )
 
-  const cancelStackUpdate = async (stackName: string): Promise<string> => {
+  const cancelStackUpdate = (stackName: string): Promise<string> => {
     const params = {
       StackName: stackName,
       ClientRequestToken: uuid.v4(),
@@ -304,13 +300,13 @@ export const createCloudFormationClient = (
     )
   }
 
-  const createStack = async (params: CreateStackInput): Promise<string> =>
+  const createStack = (params: CreateStackInput): Promise<string> =>
     withClientPromise(
       (c) => c.createStack(params),
       (res) => res.StackId!,
     )
 
-  const updateStack = async (params: UpdateStackInput): Promise<boolean> =>
+  const updateStack = (params: UpdateStackInput): Promise<boolean> =>
     withClientPromise(
       (c) => c.updateStack(params),
       () => true,
@@ -326,7 +322,7 @@ export const createCloudFormationClient = (
       },
     )
 
-  const updateTerminationProtection = async (
+  const updateTerminationProtection = (
     stackName: string,
     enable: boolean,
   ): Promise<boolean> =>

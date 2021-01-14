@@ -60,22 +60,22 @@ export interface StackResultsMatcher {
     props: ExpectFailureStackResultProps,
   ) => StackResultsMatcher
   expectStackCreateSuccess: (
-    props: ExpectStackCreateSuccessProps,
+    ...props: ExpectStackCreateSuccessProps[]
   ) => StackResultsMatcher
   expectStackCreateFail: (
     props: ExpectStackCreateFailProps,
   ) => StackResultsMatcher
   expectStackUpdateSuccess: (
-    props: ExpectStackUpdateSuccessProps,
+    ...props: ExpectStackUpdateSuccessProps[]
   ) => StackResultsMatcher
   expectStackUpdateSuccessWithNoChanges: (
-    props: ExpectStackUpdateSuccessProps,
+    ...props: ExpectStackUpdateSuccessProps[]
   ) => StackResultsMatcher
   expectStackUpdateFail: (
     props: ExpectStackUpdateSuccessProps,
   ) => StackResultsMatcher
   expectStackDeleteSuccess: (
-    props: ExpectStackDeleteSuccessProps,
+    ...props: ExpectStackDeleteSuccessProps[]
   ) => StackResultsMatcher
   expectSkippedStackResult: (
     props: ExpectSkippedStackResultProps,
@@ -141,12 +141,23 @@ const createStackResultsMatcher = (
     })
 
   const expectStackCreateSuccess = (
-    props: ExpectStackCreateSuccessProps,
-  ): StackResultsMatcher =>
-    expectSuccessStackResult({
-      ...props,
+    ...props: ExpectStackCreateSuccessProps[]
+  ): StackResultsMatcher => {
+    if (props.length === 0) {
+      throw new Error("At least one stack must be given")
+    }
+
+    const [first, ...rest] = props
+
+    const matcher = expectSuccessStackResult({
+      ...first,
       message: "Stack create succeeded",
     })
+
+    return rest.length === 0
+      ? matcher
+      : matcher.expectStackCreateSuccess(...rest)
+  }
 
   const expectFailureStackResult = (
     props: ExpectFailureStackResultProps,
@@ -166,28 +177,61 @@ const createStackResultsMatcher = (
     })
 
   const expectStackDeleteSuccess = (
-    props: ExpectStackDeleteSuccessProps,
-  ): StackResultsMatcher =>
-    expectSuccessStackResult({
-      ...props,
+    ...props: ExpectStackDeleteSuccessProps[]
+  ): StackResultsMatcher => {
+    if (props.length === 0) {
+      throw new Error("At least one stack must be given")
+    }
+
+    const [first, ...rest] = props
+
+    const matcher = expectSuccessStackResult({
+      ...first,
       message: "Stack delete succeeded",
     })
 
+    return rest.length === 0
+      ? matcher
+      : matcher.expectStackDeleteSuccess(...rest)
+  }
+
   const expectStackUpdateSuccess = (
-    props: ExpectStackUpdateSuccessProps,
-  ): StackResultsMatcher =>
-    expectSuccessStackResult({
-      ...props,
+    ...props: ExpectStackUpdateSuccessProps[]
+  ): StackResultsMatcher => {
+    if (props.length === 0) {
+      throw new Error("At least one stack must be given")
+    }
+
+    const [first, ...rest] = props
+
+    const matcher = expectSuccessStackResult({
+      ...first,
       message: "Stack update succeeded",
     })
 
+    return rest.length === 0
+      ? matcher
+      : matcher.expectStackUpdateSuccess(...rest)
+  }
+
   const expectStackUpdateSuccessWithNoChanges = (
-    props: ExpectStackUpdateSuccessProps,
-  ): StackResultsMatcher =>
-    expectSuccessStackResult({
-      ...props,
+    ...props: ExpectStackUpdateSuccessProps[]
+  ): StackResultsMatcher => {
+    if (props.length === 0) {
+      throw new Error("At least one stack must be given")
+    }
+
+    const [first, ...rest] = props
+
+    const matcher = expectSuccessStackResult({
+      ...first,
       message: "No changes",
     })
+
+    return rest.length === 0
+      ? matcher
+      : matcher.expectStackUpdateSuccessWithNoChanges(...rest)
+  }
 
   const expectStackUpdateFail = (
     props: ExpectStackUpdateSuccessProps,

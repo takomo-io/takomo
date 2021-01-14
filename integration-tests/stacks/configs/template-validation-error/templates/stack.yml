@@ -1,0 +1,5 @@
+Resources:
+  VPC:
+    Type: AWS::TypoHere::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/24

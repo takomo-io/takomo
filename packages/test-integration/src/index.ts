@@ -1,4 +1,7 @@
-export { StacksOperationOutputMatcher } from "./assertions/stacks"
+export {
+  ExpectStackCreateSuccessProps,
+  StacksOperationOutputMatcher,
+} from "./assertions/stacks"
 export { aws } from "./aws-api"
 export { ExecuteCommandProps } from "./commands/common"
 export { executeInitProjectCommand } from "./commands/init"

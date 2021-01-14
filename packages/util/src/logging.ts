@@ -11,6 +11,8 @@ export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
  * Logger.
  */
 export interface TkmLogger {
+  readonly logLevel: LogLevel
+
   /**
    * Log messages using trace level.
    *
@@ -257,6 +259,8 @@ export const createLogger = (props: TkmLoggerProps): TkmLogger => {
   }
 
   return {
+    logLevel,
+
     trace: (...message: any[]): void => {
       log("trace", ...message)
     },

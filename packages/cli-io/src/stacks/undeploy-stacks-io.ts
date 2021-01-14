@@ -140,48 +140,7 @@ export const createUndeployStacksIO = (
     logger.info(stackPath + " - " + formatStackEvent(e))
 
   const printOutput = (output: StacksOperationOutput): StacksOperationOutput =>
-    printStacksOperationOutput(io, output)
-  // {
-  //   const succeeded = output.results.filter((r) => r.success)
-  //   const failed = output.results.filter((r) => !r.success)
-  //   const all = [...succeeded, ...failed]
-  //
-  //   const table = new Table()
-  //
-  //   all.forEach((r) => {
-  //     table.cell("Stack path", r.stack.path)
-  //     table.cell("Stack name", r.stack.name)
-  //     table.cell("Status", formatCommandStatus(r.status))
-  //     table.cell("Time", prettyMs(r.timer.getSecondsElapsed()))
-  //     table.cell("Message", r.message)
-  //     table.newRow()
-  //   })
-  //
-  //   io.message({ text: table.toString(), marginTop: true })
-  //
-  //   if (failed.length > 0) {
-  //     io.message({ text: "Events for failed stacks", marginTop: true })
-  //     io.message({ text: "------------------------" })
-  //
-  //     failed.forEach((r) => {
-  //       io.message({
-  //         text: r.stack.path,
-  //         marginTop: true,
-  //         marginBottom: true,
-  //       })
-  //
-  //       if (r.events.length === 0) {
-  //         io.message({ text: "  <No events>" })
-  //       } else {
-  //         const fn = (e: StackEvent) =>
-  //           io.message({ text: "  " + formatStackEvent(e) })
-  //         r.events.forEach(fn)
-  //       }
-  //     })
-  //   }
-  //
-  //   return output
-  // }
+    printStacksOperationOutput(io, output, logger.logLevel)
 
   const printStackDependents = (
     stack: InternalStack,

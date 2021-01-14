@@ -1,0 +1,1 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
