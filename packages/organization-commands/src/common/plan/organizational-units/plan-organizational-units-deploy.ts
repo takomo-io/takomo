@@ -14,13 +14,13 @@ interface PlanOrganizationalUnitsDeployProps {
   readonly organizationState: OrganizationState
   readonly ctx: OrganizationContext
   readonly logger: TkmLogger
-  readonly organizationBasicConfigPlan: OrganizationBasicConfigDeploymentPlan
+  readonly basicConfigPlan: OrganizationBasicConfigDeploymentPlan
 }
 
 export const planOrganizationalUnitsDeploy = async (
   props: PlanOrganizationalUnitsDeployProps,
 ): Promise<OrganizationalUnitsDeploymentPlan> => {
-  const { organizationState, ctx, organizationBasicConfigPlan, logger } = props
+  const { organizationState, ctx, basicConfigPlan, logger } = props
 
   const { rootOrganizationalUnit } = organizationState
 
@@ -31,7 +31,7 @@ export const planOrganizationalUnitsDeploy = async (
 
   const root = createOrganizationalUnitsDeploymentPlan(
     logger,
-    organizationBasicConfigPlan.enabledPolicies,
+    basicConfigPlan.enabledPolicies,
     "Root",
     Root,
     rootOrganizationalUnit,

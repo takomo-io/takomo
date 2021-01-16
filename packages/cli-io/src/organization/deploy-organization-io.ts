@@ -74,7 +74,7 @@ export const createDeployOrganizationIO = (
         marginTop: false,
         marginBottom: true,
       })
-      add.forEach((s) => {
+      remove.forEach((s) => {
         io.message({ text: red(`  - ${s}`) })
       })
     }
@@ -566,7 +566,7 @@ export const createDeployOrganizationIO = (
 
   const confirmDeploy = async ({
     organizationalUnitsPlan,
-    organizationBasicConfigPlan,
+    basicConfigPlan,
     policiesPlan,
   }: ConfirmOrganizationDeployProps): Promise<boolean> => {
     io.header({ text: "Review organization deployment plan", marginTop: true })
@@ -580,8 +580,8 @@ export const createDeployOrganizationIO = (
       0,
     )
 
-    printTrustedServicesPlan(organizationBasicConfigPlan)
-    printEnabledPolicyTypesPlan(organizationBasicConfigPlan)
+    printTrustedServicesPlan(basicConfigPlan)
+    printEnabledPolicyTypesPlan(basicConfigPlan)
     printPoliciesDeploymentPlan(policiesPlan)
     printOrganizationalUnitsDeploymentPlan(organizationalUnitsPlan)
 

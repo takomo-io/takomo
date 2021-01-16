@@ -23,8 +23,7 @@ const executeStep = async <S extends InitialDeployOrganizationState>(
   logger.debug(`Begin step '${stepName}'`)
   const timer = state.totalTimer.startChild(stepName)
   try {
-    const result = await step(state)
-    return result
+    return await step(state)
   } catch (error) {
     logger.error(`Unhandled error in step '${stepName}':`, error)
     return new OrganizationDeployCompleted({

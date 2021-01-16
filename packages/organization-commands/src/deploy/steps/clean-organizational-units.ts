@@ -1,10 +1,5 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import {
-  CANCELLED,
-  FAILED,
-  resolveCommandOutputBase,
-  SUCCESS,
-} from "@takomo/core"
+import { CANCELLED, FAILED, SUCCESS } from "@takomo/core"
 import { collectFromHierarchy } from "@takomo/util"
 import { PlannedOrganizationalUnit } from "../../common/plan/organizational-units/model"
 import { OrganizationalUnitDeploymentResult } from "../model"
@@ -87,10 +82,9 @@ export const cleanOrganizationalUnits: DeployOrganizationStep<OrganizationalUnit
     return transitions.cleanPolicies({
       ...state,
       organizationalUnitsCleanResult: {
-        message: "Skipped",
-        status: "SKIPPED",
+        message: "No changes",
+        status: "SUCCESS",
         success: true,
-        results: [],
       },
     })
   }
@@ -101,11 +95,13 @@ export const cleanOrganizationalUnits: DeployOrganizationStep<OrganizationalUnit
     organizationalUnitsPlan.root!,
   )
 
+  const success = !results.some((r) => !r.success)
   return transitions.cleanPolicies({
     ...state,
     organizationalUnitsCleanResult: {
-      ...resolveCommandOutputBase(results),
-      results,
+      success,
+      status: success ? "SUCCESS" : "FAILED",
+      message: success ? "Clean succeeded" : "Clean failed",
     },
   })
 }

@@ -1,15 +1,10 @@
-import {
-  FAILED,
-  resolveCommandOutputBase,
-  SKIPPED,
-  SUCCESS,
-} from "@takomo/core"
+import { FAILED, resolveCommandOutputBase, SUCCESS } from "@takomo/core"
 import flatten from "lodash.flatten"
 import { PolicyDeploymentResult } from "../model"
-import { OrganizationBasicConfigDeploymentResultHolder } from "../states"
+import { BasicConfigDeploymentResultHolder } from "../states"
 import { DeployOrganizationStep } from "../steps"
 
-export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeploymentResultHolder> = async (
+export const deployPolicies: DeployOrganizationStep<BasicConfigDeploymentResultHolder> = async (
   state,
 ) => {
   const { transitions, io, ctx, policiesPlan, organizationState } = state
@@ -29,10 +24,9 @@ export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeplo
     return transitions.deployOrganizationalUnits({
       ...state,
       policiesDeploymentResult: {
-        results: [],
-        message: "Skipped",
+        message: "No changes",
         success: true,
-        status: "SKIPPED",
+        status: "SUCCESS",
       },
     })
   }
@@ -49,13 +43,13 @@ export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeplo
     id: p.id,
     type: p.type,
     name: p.name,
-    status: SKIPPED,
+    status: SUCCESS,
     success: true,
     awsManaged: p.awsManaged,
     message: "No changes",
   }))
 
-  io.info(`Add ${policiesToAdd.length} policies`)
+  io.info(`Create ${policiesToAdd.length} policies`)
   const addedPolicies: ReadonlyArray<PolicyDeploymentResult> = await Promise.all(
     policiesToAdd.map((p) =>
       client
@@ -72,7 +66,7 @@ export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeplo
           awsManaged: p.awsManaged,
           success: true,
           status: SUCCESS,
-          message: "Added",
+          message: "Policy create succeeded",
         }))
         .catch((error) => {
           io.error(
@@ -85,7 +79,7 @@ export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeplo
             awsManaged: p.awsManaged,
             success: false,
             status: FAILED,
-            message: "An error occurred",
+            message: "Policy create failed",
             error,
           }
         }),
@@ -109,7 +103,7 @@ export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeplo
           awsManaged: p.awsManaged,
           success: true,
           status: SUCCESS,
-          message: "Updated",
+          message: "Policy update succeeded",
         }))
         .catch((error) => {
           io.error(
@@ -122,7 +116,7 @@ export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeplo
             awsManaged: p.awsManaged,
             success: false,
             status: FAILED,
-            message: "An error occurred",
+            message: "Policy update failed",
             error,
           }
         }),
@@ -144,7 +138,6 @@ export const deployPolicies: DeployOrganizationStep<OrganizationBasicConfigDeplo
     ...state,
     policiesDeploymentResult: {
       ...resolveCommandOutputBase(results),
-      results,
     },
   })
 }

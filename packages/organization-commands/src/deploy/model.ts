@@ -16,16 +16,16 @@ import { PolicyDeploymentPlan } from "../common/plan/policies/model"
 export type DeployOrganizationInput = CommandInput
 
 export interface DeployOrganizationOutput extends CommandOutput {
-  readonly policiesDeploymentResult?: PoliciesDeploymentResult
-  readonly policiesCleanResult?: PoliciesDeploymentResult
-  readonly organizationalUnitsDeploymentResult?: OrganizationalUnitsDeploymentResult
-  readonly organizationalUnitsCleanResult?: OrganizationalUnitsDeploymentResult
-  readonly basicConfigDeploymentResult?: OrganizationBasicConfigDeploymentResult
-  readonly basicConfigCleanResult?: OrganizationBasicConfigDeploymentResult
+  readonly policiesDeploymentResult?: CommandOutputBase
+  readonly policiesCleanResult?: CommandOutputBase
+  readonly organizationalUnitsDeploymentResult?: CommandOutputBase
+  readonly organizationalUnitsCleanResult?: CommandOutputBase
+  readonly basicConfigDeploymentResult?: CommandOutputBase
+  readonly basicConfigCleanResult?: CommandOutputBase
 }
 
 export interface ConfirmOrganizationDeployProps {
-  readonly organizationBasicConfigPlan: OrganizationBasicConfigDeploymentPlan
+  readonly basicConfigPlan: OrganizationBasicConfigDeploymentPlan
   readonly policiesPlan: PolicyDeploymentPlan
   readonly organizationalUnitsPlan: OrganizationalUnitsDeploymentPlan
 }
@@ -43,17 +43,7 @@ export interface PolicyDeploymentResult extends CommandOutputBase {
   readonly policy?: OrganizationPolicy
 }
 
-export interface PoliciesDeploymentResult extends CommandOutputBase {
-  readonly results: ReadonlyArray<PolicyDeploymentResult>
-}
-
 export interface OrganizationalUnitDeploymentResult extends CommandOutputBase {
   readonly id: string | null
   readonly name: string
 }
-
-export interface OrganizationalUnitsDeploymentResult extends CommandOutputBase {
-  readonly results: ReadonlyArray<OrganizationalUnitDeploymentResult>
-}
-
-export type OrganizationBasicConfigDeploymentResult = CommandOutputBase

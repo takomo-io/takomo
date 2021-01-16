@@ -1,3 +1,4 @@
+import { CommandOutputBase } from "@takomo/core"
 import {
   OrganizationConfigRepository,
   OrganizationContext,
@@ -7,12 +8,7 @@ import { Timer } from "@takomo/util"
 import { OrganizationBasicConfigDeploymentPlan } from "../common/plan/basic-config/model"
 import { OrganizationalUnitsDeploymentPlan } from "../common/plan/organizational-units/model"
 import { PolicyDeploymentPlan } from "../common/plan/policies/model"
-import {
-  DeployOrganizationIO,
-  OrganizationalUnitsDeploymentResult,
-  OrganizationBasicConfigDeploymentResult,
-  PoliciesDeploymentResult,
-} from "./model"
+import { DeployOrganizationIO } from "./model"
 import { DeployOrganizationTransitions } from "./transitions"
 
 export interface InitialDeployOrganizationState {
@@ -29,7 +25,7 @@ export interface OrganizationStateHolder
 }
 
 export interface BasicConfigPlanHolder extends OrganizationStateHolder {
-  readonly organizationBasicConfigPlan: OrganizationBasicConfigDeploymentPlan
+  readonly basicConfigPlan: OrganizationBasicConfigDeploymentPlan
 }
 
 export interface PoliciesPlanHolder extends BasicConfigPlanHolder {
@@ -40,60 +36,38 @@ export interface OrganizationalUnitsPlanHolder extends PoliciesPlanHolder {
   readonly organizationalUnitsPlan: OrganizationalUnitsDeploymentPlan
 }
 
-export interface OrganizationBasicConfigDeploymentResultHolder
+export interface BasicConfigDeploymentResultHolder
   extends OrganizationalUnitsPlanHolder {
-  readonly organizationBasicConfigDeploymentResult: OrganizationBasicConfigDeploymentResult
+  readonly basicConfigDeploymentResult: CommandOutputBase
 }
 
 export interface PoliciesDeploymentResultHolder
-  extends OrganizationBasicConfigDeploymentResultHolder {
-  readonly policiesDeploymentResult: PoliciesDeploymentResult
+  extends BasicConfigDeploymentResultHolder {
+  readonly policiesDeploymentResult: CommandOutputBase
 }
 
 export interface OrganizationalUnitsDeploymentResultHolder
   extends PoliciesDeploymentResultHolder {
-  readonly organizationalUnitsDeploymentResult: OrganizationalUnitsDeploymentResult
+  readonly organizationalUnitsDeploymentResult: CommandOutputBase
 }
 
 export interface OrganizationalUnitsCleanResultHolder
   extends OrganizationalUnitsDeploymentResultHolder {
-  readonly organizationalUnitsCleanResult: OrganizationalUnitsDeploymentResult
+  readonly organizationalUnitsCleanResult: CommandOutputBase
 }
 
 export interface PoliciesCleanResultHolder
   extends OrganizationalUnitsCleanResultHolder {
-  readonly policiesCleanResult: PoliciesDeploymentResult
-}
-
-export interface DeployOrganizationFailedState
-  extends InitialDeployOrganizationState {
-  readonly message: string
-  readonly error?: Error
-  readonly organizationalUnitsCleanResult?: OrganizationalUnitsDeploymentResult
-  readonly policiesCleanResult?: PoliciesDeploymentResult
-  readonly organizationBasicConfigDeploymentResult?: OrganizationBasicConfigDeploymentResult
-  readonly policiesDeploymentResult?: PoliciesDeploymentResult
-  readonly organizationalUnitsDeploymentResult?: OrganizationalUnitsDeploymentResult
-  readonly organizationBasicConfigCleanResult?: OrganizationBasicConfigDeploymentResult
-}
-
-export interface DeployOrganizationSkippedState
-  extends InitialDeployOrganizationState {
-  readonly message: string
-}
-
-export interface DeployOrganizationCancelledState
-  extends InitialDeployOrganizationState {
-  readonly message: string
+  readonly policiesCleanResult: CommandOutputBase
 }
 
 export interface DeployOrganizationCompletedState
   extends InitialDeployOrganizationState {
   readonly message: string
-  readonly organizationalUnitsCleanResult: OrganizationalUnitsDeploymentResult
-  readonly policiesCleanResult: PoliciesDeploymentResult
-  readonly organizationBasicConfigDeploymentResult: OrganizationBasicConfigDeploymentResult
-  readonly policiesDeploymentResult: PoliciesDeploymentResult
-  readonly organizationalUnitsDeploymentResult: OrganizationalUnitsDeploymentResult
-  readonly organizationBasicConfigCleanResult: OrganizationBasicConfigDeploymentResult
+  readonly basicConfigDeploymentResult: CommandOutputBase
+  readonly basicConfigCleanResult: CommandOutputBase
+  readonly organizationalUnitsCleanResult: CommandOutputBase
+  readonly organizationalUnitsDeploymentResult: CommandOutputBase
+  readonly policiesDeploymentResult: CommandOutputBase
+  readonly policiesCleanResult: CommandOutputBase
 }

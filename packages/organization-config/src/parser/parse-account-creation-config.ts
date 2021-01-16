@@ -17,11 +17,11 @@ export const parseAccountCreationConfig = (
 
   const emailPattern = parseRegex(
     "accountCreation.constraints.emailPattern",
-    value.emailPattern,
+    value.constraints?.emailPattern,
   )
   const namePattern = parseRegex(
     "accountCreation.constraints.namePattern",
-    value.namePattern,
+    value.constraints?.namePattern,
   )
 
   return {

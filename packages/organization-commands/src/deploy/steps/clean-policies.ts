@@ -1,5 +1,5 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { FAILED, resolveCommandOutputBase, SUCCESS } from "@takomo/core"
+import { FAILED, SUCCESS } from "@takomo/core"
 import flatten from "lodash.flatten"
 import { PlannedPolicy } from "../../common/plan/policies/model"
 import { PolicyDeploymentResult } from "../model"
@@ -29,7 +29,7 @@ const deletePolicies = async (
       awsManaged: policyToDelete.awsManaged,
       success: true,
       status: SUCCESS,
-      message: "Deleted",
+      message: "Policy delete succeeded",
     }))
     .catch((error) => ({
       type: policyToDelete.type,
@@ -37,7 +37,7 @@ const deletePolicies = async (
       awsManaged: policyToDelete.awsManaged,
       success: false,
       status: FAILED,
-      message: "An error occurred",
+      message: "Policy delete failed",
       error,
     }))
 
@@ -51,18 +51,21 @@ export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResul
     transitions,
     ctx,
     io,
+    totalTimer,
     policiesPlan: { hasChanges, aiServicesOptOut, tag, backup, serviceControl },
   } = state
 
+  const timer = totalTimer.startChild("clean-policies")
+
   if (!hasChanges) {
+    timer.stop()
     io.info("No policies to clean")
     return transitions.cleanBasicConfig({
       ...state,
       policiesCleanResult: {
-        message: "Skipped",
+        message: "No changes",
         success: true,
-        status: "SKIPPED",
-        results: [],
+        status: "SUCCESS",
       },
     })
   }
@@ -78,12 +81,15 @@ export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResul
 
   io.info(`Delete ${policiesToDelete.length} policies`)
   const results = await deletePolicies(client, policiesToDelete, [])
+  const success = !results.some((r) => !r.success)
+  timer.stop()
 
   return transitions.cleanBasicConfig({
     ...state,
     policiesCleanResult: {
-      ...resolveCommandOutputBase(results),
-      results,
+      success,
+      status: success ? "SUCCESS" : "FAILED",
+      message: success ? "Clean succeeded" : "Clean failed",
     },
   })
 }

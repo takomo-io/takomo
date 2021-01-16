@@ -4,7 +4,22 @@ import { DeployOrganizationStep } from "../steps"
 export const confirmDeployment: DeployOrganizationStep<OrganizationalUnitsPlanHolder> = async (
   state,
 ) => {
-  const { transitions, io, ctx } = state
+  const {
+    transitions,
+    io,
+    ctx,
+    organizationalUnitsPlan,
+    policiesPlan,
+    basicConfigPlan,
+  } = state
+
+  if (
+    !organizationalUnitsPlan.hasChanges &&
+    !policiesPlan.hasChanges &&
+    !basicConfigPlan.hasChanges
+  ) {
+    return transitions.deployBasicConfig(state)
+  }
 
   io.debug("Confirm deployment")
 
@@ -13,10 +28,7 @@ export const confirmDeployment: DeployOrganizationStep<OrganizationalUnitsPlanHo
   }
 
   if (!(await io.confirmDeploy(state))) {
-    return transitions.cancelOrganizationDeploy({
-      ...state,
-      message: "Cancelled",
-    })
+    return transitions.cancelOrganizationDeploy(state)
   }
 
   return transitions.deployBasicConfig(state)

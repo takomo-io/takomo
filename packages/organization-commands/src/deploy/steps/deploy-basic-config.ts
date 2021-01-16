@@ -1,27 +1,22 @@
+import { createRamClient } from "@takomo/aws-clients"
 import { OrganizationalUnitsPlanHolder } from "../states"
 import { DeployOrganizationStep } from "../steps"
 
 export const deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHolder> = async (
   state,
 ) => {
-  const {
-    transitions,
-    organizationBasicConfigPlan,
-    io,
-    ctx,
-    organizationState,
-  } = state
+  const { transitions, basicConfigPlan, io, ctx, organizationState } = state
 
   const { rootOrganizationalUnit } = organizationState
 
-  if (!organizationBasicConfigPlan.hasChanges) {
+  if (!basicConfigPlan.hasChanges) {
     io.info("No changes to basic config")
     return transitions.deployPolicies({
       ...state,
-      organizationBasicConfigDeploymentResult: {
+      basicConfigDeploymentResult: {
         success: true,
-        message: "Skipped",
-        status: "SKIPPED",
+        message: "No changes",
+        status: "SUCCESS",
       },
     })
   }
@@ -30,7 +25,7 @@ export const deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHo
 
   const client = ctx.getClient()
 
-  for (const policy of organizationBasicConfigPlan.enabledPolicies.add) {
+  for (const policy of basicConfigPlan.enabledPolicies.add) {
     io.info(`Enable policy type: ${policy}`)
     await client.enablePolicyType({
       PolicyType: policy,
@@ -40,7 +35,7 @@ export const deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHo
     await client.waitUntilPolicyTypeIsEnabled(policy, 60000)
   }
 
-  for (const policy of organizationBasicConfigPlan.enabledPolicies.remove) {
+  for (const policy of basicConfigPlan.enabledPolicies.remove) {
     io.info(`Disable policy type: ${policy}`)
     await client.disablePolicyType({
       PolicyType: policy,
@@ -50,16 +45,27 @@ export const deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHo
     await client.waitUntilPolicyTypeIsDisabled(policy, 60000)
   }
 
-  for (const service of organizationBasicConfigPlan.trustedServices.add) {
+  for (const service of basicConfigPlan.trustedServices.add) {
     io.info(`Enable AWS service: ${service}`)
     await client.enableAWSServiceAccess(service)
+
+    // TODO: Move this logic elsewhere
+    if (service === "ram.amazonaws.com") {
+      const ram = createRamClient({
+        region: "us-east-1",
+        credentialManager: ctx.credentialManager,
+        logger: io,
+      })
+
+      await ram.enableSharingWithAwsOrganization()
+    }
   }
 
   return transitions.deployPolicies({
     ...state,
-    organizationBasicConfigDeploymentResult: {
+    basicConfigDeploymentResult: {
       success: true,
-      message: "Success",
+      message: "Deploy succeeded",
       status: "SUCCESS",
     },
   })

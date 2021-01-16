@@ -20,17 +20,17 @@ export const createIamClient = (props: AwsClientProps): IamClient => {
     clientConstructor: (configuration) => new IAM(configuration),
   })
 
-  const createAccountAlias = async (alias: AccountAlias): Promise<boolean> =>
+  const createAccountAlias = (alias: AccountAlias): Promise<boolean> =>
     getClient()
       .then((c) => c.createAccountAlias({ AccountAlias: alias }).promise())
       .then(() => true)
 
-  const deleteAccountAlias = async (alias: AccountAlias): Promise<boolean> =>
+  const deleteAccountAlias = (alias: AccountAlias): Promise<boolean> =>
     getClient()
       .then((c) => c.deleteAccountAlias({ AccountAlias: alias }).promise())
       .then(() => true)
 
-  const describeAccountAlias = async (): Promise<AccountAlias | undefined> =>
+  const describeAccountAlias = (): Promise<AccountAlias | undefined> =>
     getClient()
       .then((c) => c.listAccountAliases({}).promise())
       .then((res) =>

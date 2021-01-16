@@ -12,4 +12,5 @@ export {
   createOrganizationsClient,
   OrganizationsClient,
 } from "./organizations/client"
+export { createRamClient, RamClient } from "./ram/client"
 export { createS3Client, S3Client } from "./s3/client"

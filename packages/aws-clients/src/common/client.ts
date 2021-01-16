@@ -17,6 +17,7 @@ const retryableErrorCodes = [
   "Throttling",
   "TooManyRequestsException",
   "NetworkingError",
+  "TimeoutError",
 ]
 
 /**

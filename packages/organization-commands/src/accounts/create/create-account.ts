@@ -1,7 +1,7 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
 import { ConfirmResult } from "@takomo/core"
 import { OrganizationContext } from "@takomo/organization-context"
-import { TakomoError } from "@takomo/util"
+import { sleep, TakomoError } from "@takomo/util"
 import { ResultAsync } from "neverthrow"
 import { createAccountAliasInternal } from "../common"
 import {
@@ -23,16 +23,6 @@ const initiateAccountCreation = (
     }),
     (e) => e as Error,
   )
-
-// client
-//   .createAccount({
-//     AccountName: name,
-//     Email: email,
-//     IamUserAccessToBilling: iamUserAccessToBilling ? "ALLOW" : "DENY",
-//     RoleName: roleName,
-//   })
-//   .then(ok)
-//   .catch(err)
 
 export const createAccount = async (
   ctx: OrganizationContext,
@@ -101,6 +91,7 @@ export const createAccount = async (
 
   const success = createAccountStatus.State === "SUCCEEDED"
   if (success && alias) {
+    await sleep(10000)
     io.info("Account created successfully, set account alias...")
     const createAliasResult = await createAccountAliasInternal(
       ctx,

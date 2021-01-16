@@ -5,17 +5,11 @@ import { DeployOrganizationStep } from "../steps"
 export const planOrganizationalUnits: DeployOrganizationStep<PoliciesPlanHolder> = async (
   state,
 ) => {
-  const {
-    transitions,
-    organizationState,
-    ctx,
-    io,
-    organizationBasicConfigPlan,
-  } = state
+  const { transitions, organizationState, ctx, io, basicConfigPlan } = state
 
   const organizationalUnitsPlan = await planOrganizationalUnitsDeploy({
     ctx,
-    organizationBasicConfigPlan,
+    basicConfigPlan,
     organizationState,
     logger: io,
   })

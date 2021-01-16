@@ -14,7 +14,7 @@ export const deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymen
     io,
     organizationState,
     organizationalUnitsPlan,
-    organizationBasicConfigPlan,
+    basicConfigPlan,
   } = state
 
   if (!organizationalUnitsPlan.hasChanges) {
@@ -22,10 +22,9 @@ export const deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymen
     return transitions.cleanOrganizationalUnits({
       ...state,
       organizationalUnitsDeploymentResult: {
-        message: "Skipped",
-        status: "SKIPPED",
+        message: "No changes",
+        status: "SUCCESS",
         success: true,
-        results: [],
       },
     })
   }
@@ -33,8 +32,8 @@ export const deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymen
   io.info("Deploy organizational units")
 
   const enabledPolicyTypes = [
-    ...organizationBasicConfigPlan.enabledPolicies.add,
-    ...organizationBasicConfigPlan.enabledPolicies.retain,
+    ...basicConfigPlan.enabledPolicies.add,
+    ...basicConfigPlan.enabledPolicies.retain,
   ]
 
   const currentOus = flatten(
@@ -44,7 +43,7 @@ export const deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymen
     ),
   )
 
-  const serviceControlPoliciesJustEnabled = organizationBasicConfigPlan.enabledPolicies.add.includes(
+  const serviceControlPoliciesJustEnabled = basicConfigPlan.enabledPolicies.add.includes(
     "SERVICE_CONTROL_POLICY",
   )
 
@@ -64,7 +63,6 @@ export const deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymen
     ...state,
     organizationalUnitsDeploymentResult: {
       ...resolveCommandOutputBase(results),
-      results,
     },
   })
 }

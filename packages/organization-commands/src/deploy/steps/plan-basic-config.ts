@@ -15,6 +15,6 @@ export const planBasicConfig: DeployOrganizationStep<OrganizationStateHolder> = 
 
   return transitions.planPolicies({
     ...state,
-    organizationBasicConfigPlan,
+    basicConfigPlan: organizationBasicConfigPlan,
   })
 }

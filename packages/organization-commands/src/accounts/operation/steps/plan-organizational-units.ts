@@ -15,7 +15,7 @@ export const planOrganizationalUnits: AccountsOperationStep<PoliciesPlanHolder> 
 
   const organizationalUnitsPlan = await planOrganizationalUnitsDeploy({
     ctx,
-    organizationBasicConfigPlan,
+    basicConfigPlan: organizationBasicConfigPlan,
     organizationState,
     logger: io,
   })

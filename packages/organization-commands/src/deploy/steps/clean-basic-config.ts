@@ -4,17 +4,17 @@ import { DeployOrganizationStep } from "../steps"
 export const cleanBasicConfig: DeployOrganizationStep<PoliciesCleanResultHolder> = async (
   state,
 ) => {
-  const { transitions, ctx, io, organizationBasicConfigPlan } = state
+  const { transitions, ctx, io, basicConfigPlan } = state
 
-  if (!organizationBasicConfigPlan.hasChanges) {
+  if (!basicConfigPlan.hasChanges) {
     io.info("No basic configuration to clean")
     return transitions.completeOrganizationDeploy({
       ...state,
       message: "Success",
-      organizationBasicConfigCleanResult: {
-        message: "Skipped",
+      basicConfigCleanResult: {
+        message: "No changes",
         success: true,
-        status: "SKIPPED",
+        status: "SUCCESS",
       },
     })
   }
@@ -23,19 +23,20 @@ export const cleanBasicConfig: DeployOrganizationStep<PoliciesCleanResultHolder>
 
   const client = ctx.getClient()
 
-  for (const service of organizationBasicConfigPlan.trustedServices.remove) {
+  for (const service of basicConfigPlan.trustedServices.remove) {
     io.info(`Disable AWS service: ${service}`)
 
     try {
       await client.disableAWSServiceAccess(service)
-    } catch (e) {
-      io.error(`Failed to disable AWS service access: '${service}'`, e)
-      return transitions.failOrganizationDeploy({
+    } catch (error) {
+      io.error(`Failed to disable AWS service access: '${service}'`, error)
+      return transitions.completeOrganizationDeploy({
         ...state,
         message: "Failed",
-        organizationBasicConfigCleanResult: {
-          message: "Failed to disable AWS service access",
+        basicConfigCleanResult: {
+          error,
           success: false,
+          message: "Clean failed",
           status: "FAILED",
         },
       })
@@ -45,8 +46,8 @@ export const cleanBasicConfig: DeployOrganizationStep<PoliciesCleanResultHolder>
   return transitions.completeOrganizationDeploy({
     ...state,
     message: "Success",
-    organizationBasicConfigCleanResult: {
-      message: "Success",
+    basicConfigCleanResult: {
+      message: "Clean succeeded",
       success: true,
       status: "SUCCESS",
     },

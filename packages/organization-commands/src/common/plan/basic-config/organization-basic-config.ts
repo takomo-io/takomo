@@ -25,7 +25,7 @@ export const planOrganizationBasicConfig = async (
     enabledPolicies,
   } = organizationState
 
-  const configFile = ctx.organizationConfig
+  const config = ctx.organizationConfig
 
   if (!allFeaturesEnabled) {
     logger.debug(
@@ -49,19 +49,19 @@ export const planOrganizationBasicConfig = async (
   }
 
   const localTrustedAwsServices =
-    configFile.trustedAwsServices || ctx.organizationServicePrincipals
+    config.trustedAwsServices || ctx.organizationServicePrincipals
   const localEnabledPolicies = new Array<OrganizationPolicyType>()
 
-  if (configFile.serviceControlPolicies.enabled) {
+  if (config.serviceControlPolicies.enabled) {
     localEnabledPolicies.push("SERVICE_CONTROL_POLICY")
   }
-  if (configFile.tagPolicies.enabled) {
+  if (config.tagPolicies.enabled) {
     localEnabledPolicies.push("TAG_POLICY")
   }
-  if (configFile.aiServicesOptOutPolicies.enabled) {
+  if (config.aiServicesOptOutPolicies.enabled) {
     localEnabledPolicies.push("AISERVICES_OPT_OUT_POLICY")
   }
-  if (configFile.backupPolicies.enabled) {
+  if (config.backupPolicies.enabled) {
     localEnabledPolicies.push("BACKUP_POLICY")
   }
 

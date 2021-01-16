@@ -1,15 +1,12 @@
 import { DeployOrganizationOutput } from "./model"
 import {
+  BasicConfigDeploymentResultHolder,
   BasicConfigPlanHolder,
-  DeployOrganizationCancelledState,
   DeployOrganizationCompletedState,
-  DeployOrganizationFailedState,
-  DeployOrganizationSkippedState,
   InitialDeployOrganizationState,
   OrganizationalUnitsCleanResultHolder,
   OrganizationalUnitsDeploymentResultHolder,
   OrganizationalUnitsPlanHolder,
-  OrganizationBasicConfigDeploymentResultHolder,
   OrganizationStateHolder,
   PoliciesCleanResultHolder,
   PoliciesDeploymentResultHolder,
@@ -66,11 +63,7 @@ export class OrganizationDeployInProgress<
 export interface DeployOrganizationTransitions {
   start: DeployOrganizationStep<InitialDeployOrganizationState>
   validateConfiguration: DeployOrganizationStep<OrganizationStateHolder>
-  cancelOrganizationDeploy: DeployOrganizationStep<
-    DeployOrganizationCancelledState
-  >
-  skipOrganizationDeploy: DeployOrganizationStep<DeployOrganizationSkippedState>
-  failOrganizationDeploy: DeployOrganizationStep<DeployOrganizationFailedState>
+  cancelOrganizationDeploy: DeployOrganizationStep<OrganizationStateHolder>
   completeOrganizationDeploy: DeployOrganizationStep<
     DeployOrganizationCompletedState
   >
@@ -82,9 +75,7 @@ export interface DeployOrganizationTransitions {
   confirmDeployment: DeployOrganizationStep<OrganizationalUnitsPlanHolder>
 
   deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHolder>
-  deployPolicies: DeployOrganizationStep<
-    OrganizationBasicConfigDeploymentResultHolder
-  >
+  deployPolicies: DeployOrganizationStep<BasicConfigDeploymentResultHolder>
   deployOrganizationalUnits: DeployOrganizationStep<
     PoliciesDeploymentResultHolder
   >
@@ -108,10 +99,11 @@ export const inProgress = <S extends InitialDeployOrganizationState>(
 
 export const createDeployOrganizationTransitions = (): DeployOrganizationTransitions => ({
   cancelOrganizationDeploy: async (
-    state: DeployOrganizationCancelledState,
+    state: OrganizationStateHolder,
   ): Promise<StepResult> =>
     new OrganizationDeployCompleted({
-      message: state.message,
+      ...state,
+      message: "Cancelled",
       success: false,
       status: "CANCELLED",
     }),
@@ -119,26 +111,9 @@ export const createDeployOrganizationTransitions = (): DeployOrganizationTransit
     state: DeployOrganizationCompletedState,
   ): Promise<StepResult> =>
     new OrganizationDeployCompleted({
-      message: state.message,
+      ...state,
       success: true,
       status: "SUCCESS",
-    }),
-  failOrganizationDeploy: async (
-    state: DeployOrganizationFailedState,
-  ): Promise<StepResult> =>
-    new OrganizationDeployCompleted({
-      message: state.message,
-      success: false,
-      status: "FAILED",
-      error: state.error,
-    }),
-  skipOrganizationDeploy: async (
-    state: DeployOrganizationSkippedState,
-  ): Promise<StepResult> =>
-    new OrganizationDeployCompleted({
-      message: state.message,
-      success: true,
-      status: "SKIPPED",
     }),
   start: inProgress("load-organization-data", loadOrganizationData),
   validateConfiguration: inProgress(
@@ -159,7 +134,7 @@ export const createDeployOrganizationTransitions = (): DeployOrganizationTransit
     deployOrganizationalUnits,
   ),
   cleanOrganizationalUnits: inProgress(
-    "clean-organizationaö-units",
+    "clean-organizational-units",
     cleanOrganizationalUnits,
   ),
   cleanPolicies: inProgress("clean-policies", cleanPolicies),
