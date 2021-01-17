@@ -8,6 +8,9 @@ import {
 import Joi from "joi"
 import semver from "semver"
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version } = require("../package.json")
+
 export interface TakomoProjectConfig {
   readonly requiredVersion?: string
 }
@@ -19,10 +22,6 @@ const validateRequiredVersion = (
   if (!requiredVersion) {
     return
   }
-
-  // eslint-disable-next-line
-  const packageJson = require("./package.json")
-  const version = packageJson.version
 
   if (!semver.satisfies(version, requiredVersion)) {
     throw new TakomoError(

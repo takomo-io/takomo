@@ -49,6 +49,9 @@ import {
   TEMPLATES_DIR,
 } from "./constants"
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version } = require("../package.json")
+
 // TODO: Read from file
 const regions: ReadonlyArray<Region> = [
   "af-south-1",
@@ -355,10 +358,6 @@ export const onError = (e: any): void => {
   } else {
     console.log(red(e.stack))
   }
-
-  // eslint-disable-next-line
-  const packageJson = require("./package.json")
-  const version = packageJson.version
 
   console.log()
   console.log()
