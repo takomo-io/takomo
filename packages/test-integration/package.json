@@ -1,6 +1,6 @@
 {
   "name": "@takomo/test-integration",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.3",
   "description": "Takomo integration test utils",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@takomo/aws-clients": "^3.0.0-alpha.2",
     "@takomo/aws-model": "^3.0.0-alpha.1",
-    "@takomo/cli": "^3.0.0-alpha.2",
+    "@takomo/cli": "^3.0.0-alpha.3",
     "@takomo/cli-io": "^3.0.0-alpha.2",
     "@takomo/config-repository-fs": "^3.0.0-alpha.2",
     "@takomo/core": "^3.0.0-alpha.2",

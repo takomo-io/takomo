@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.3](https://github.com/takomo-io/takomo/compare/v3.0.0-alpha.2...v3.0.0-alpha.3) (2021-01-17)
+
+
+### Bug Fixes
+
+* fix loading of the current Takomo version from package.json ([e4e1632](https://github.com/takomo-io/takomo/commit/e4e1632402639df1930db5f3989760c9d16142ba))
+
+
+
+
+
 # [3.0.0-alpha.2](https://github.com/takomo-io/takomo/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2021-01-17)
 
 
