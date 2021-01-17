@@ -9,7 +9,6 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
 ) => {
   const {
     transitions,
-    ctx,
     io,
     accountsLaunchPlan: plan,
     input: { configSetType },

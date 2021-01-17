@@ -8,6 +8,7 @@ import {
   IO,
 } from "@takomo/core"
 import { OrganizationAccountConfig } from "@takomo/organization-config"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
@@ -27,7 +28,7 @@ export interface AccountOperationResult extends CommandOutputBase {
 
 export interface OrganizationalUnitAccountsOperationResult
   extends CommandOutputBase {
-  readonly path: string
+  readonly path: OrganizationalUnitPath
   readonly results: ReadonlyArray<AccountOperationResult>
   readonly timer: Timer
 }

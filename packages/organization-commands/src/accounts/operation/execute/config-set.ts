@@ -25,7 +25,7 @@ export const processConfigSet = async (
 ): Promise<ConfigSetOperationResult> => {
   const { io, ctx } = holder
 
-  io.info(`Process config set: ${configSetName}`)
+  io.info(`Process config set: '${configSetName}'`)
   const configSet = ctx.getConfigSet(configSetName)
   const results = new Array<ConfigSetCommandPathOperationResult>()
 

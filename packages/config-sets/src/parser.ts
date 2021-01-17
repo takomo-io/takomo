@@ -6,13 +6,12 @@ export const parseConfigSets = (value: any): ReadonlyArray<ConfigSet> => {
   }
 
   return Object.keys(value).map((name) => {
-    const { description, vars, commandPaths, projectDir } = value[name]
+    const { description, vars, commandPaths } = value[name]
     return {
       name,
       description,
-      projectDir: projectDir || null,
-      vars: vars || {},
-      commandPaths: commandPaths || [],
+      vars: vars ?? {},
+      commandPaths: commandPaths ?? [],
     }
   })
 }

@@ -12,7 +12,9 @@ import { LogWriter, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import { createBaseIO } from "../../cli-io"
+import { printError } from "../../common"
 import { formatCommandStatus } from "../../formatters"
+import { printFailedStackResults } from "../../stacks/common"
 import { createDeployStacksIO } from "../../stacks/deploy-stacks-io"
 import { createUndeployStacksIO } from "../../stacks/undeploy-stacks-io"
 
@@ -142,6 +144,146 @@ export const createAccountsOperationIO = (
     })
 
     io.message({ text: targetsTable.toString(), marginTop: true })
+
+    const failed = output.results.filter((r) => !r.success)
+
+    if (failed.length > 0) {
+      io.subheader({
+        text: "More information about the failed accounts",
+        marginTop: true,
+      })
+
+      failed.forEach((ou) => {
+        ou.results
+          .filter((a) => !a.success)
+          .forEach((accountResult) => {
+            accountResult.results
+              .filter((c) => !c.success)
+              .forEach((configSetResult) => {
+                configSetResult.results
+                  .filter((cp) => !cp.success)
+                  .forEach((commandPathResult) => {
+                    io.message({
+                      text: `- Organizational unit path:     ${ou.path}`,
+                      marginTop: true,
+                    })
+                    io.message({
+                      text: `  Account id:                   ${accountResult.accountId}`,
+                    })
+                    io.message({
+                      text: `  Config set:                   ${configSetResult.configSetName}`,
+                    })
+                    io.message({
+                      text: `  Command path:                 ${commandPathResult.commandPath}`,
+                    })
+
+                    const { error, result } = commandPathResult
+                    if (error) {
+                      printError(io, error, logger.logLevel, 0)
+                    }
+
+                    const failedStacks = result.results.filter(
+                      (s) => s.status === "FAILED",
+                    )
+
+                    if (failedStacks.length > 0) {
+                      io.message({
+                        text: "Failed stacks:",
+                        marginTop: true,
+                        indent: 2,
+                      })
+
+                      printFailedStackResults(
+                        io,
+                        failedStacks,
+                        logger.logLevel,
+                        2,
+                      )
+                    }
+                  })
+              })
+          })
+      })
+    }
+    /*
+      if (failed.length > 0) {
+    io.subheader({
+      text: "More information about the failed stacks",
+      marginTop: true,
+    })
+
+    failed.forEach((r) => {
+      io.message({
+        text: `- Stack path: ${r.stack.path}`,
+        marginTop: true,
+      })
+      io.message({
+        text: `Stack name: ${r.stack.name}`,
+        indent: 2,
+      })
+
+      if (r.events.length > 0) {
+        io.message({
+          text: "Stack events:",
+          marginTop: true,
+          indent: 2,
+        })
+        const fn = (e: StackEvent) =>
+          io.message({ text: formatStackEvent(e), indent: 4 })
+        r.events.forEach(fn)
+      }
+
+      if (r.error) {
+        io.message({
+          text: "Error:",
+          marginTop: true,
+          indent: 2,
+        })
+
+        const error = r.error
+
+        if (error instanceof TakomoError) {
+          io.message({ text: error.message, indent: 4 })
+          if (error.info) {
+            io.message({
+              text: "Additional info:",
+              indent: 4,
+              marginTop: true,
+            })
+
+            io.message({ text: error.info, indent: 6 })
+          }
+
+          if (error.instructions) {
+            io.message({
+              text: "How to fix:",
+              indent: 4,
+              marginTop: true,
+            })
+
+            error.instructions.forEach((instruction) => {
+              io.message({ text: `- ${instruction}`, indent: 6 })
+            })
+          }
+        } else {
+          io.message({ text: `${error}`, indent: 4 })
+        }
+
+        if ((error.stack && logLevel === "debug") || logLevel === "trace") {
+          io.message({
+            text: "Stack trace:",
+            marginTop: true,
+            indent: 4,
+          })
+
+          io.message({
+            text: indentLines(`${error.stack}`, 6),
+          })
+        }
+      }
+    })
+  }
+     */
 
     return output
   }

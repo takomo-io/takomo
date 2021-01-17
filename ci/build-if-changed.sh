@@ -20,5 +20,5 @@ if [ "$PREVIOUS_CHECKSUM" == "$CURRENT_CHECKSUM" ]; then
   echo "Checksum not changed -> do not build project"
 else
   echo "Checksum changed -> build project"
-  yarn tsc -p tsconfig.build.json
+  yarn build
 fi

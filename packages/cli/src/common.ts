@@ -357,7 +357,7 @@ export const onError = (e: any): void => {
   }
 
   // eslint-disable-next-line
-  const packageJson = require("../package.json")
+  const packageJson = require("./package.json")
   const version = packageJson.version
 
   console.log()

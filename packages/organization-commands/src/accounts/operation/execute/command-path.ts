@@ -106,7 +106,7 @@ export const processCommandPath = async (
   const credentialManager = ctx.credentialManager
   const organizationConfig = ctx.organizationConfig
 
-  io.info(`Process command path: ${commandPath}`)
+  io.info(`Process command path: '${commandPath}'`)
 
   if (state.failed) {
     const timer = createTimer("total")
@@ -147,7 +147,7 @@ export const processCommandPath = async (
     context: ctx.variables.context,
   }
 
-  const dc = await credentialManager.createCredentialManagerForRole(
+  const cm = await credentialManager.createCredentialManagerForRole(
     `arn:aws:iam::${account.id}:role/${roleName}`,
   )
 
@@ -156,7 +156,7 @@ export const processCommandPath = async (
       operation,
       input,
       account,
-      dc,
+      cm,
       io,
       {
         ...ctx.commandContext,
@@ -172,10 +172,10 @@ export const processCommandPath = async (
       success: result.success,
       message: result.message,
     }
-  } catch (e) {
+  } catch (error) {
     io.error(
-      `Unhandled error when deploying account: ${account.id}, config set: ${configSetName}, command path: ${commandPath}`,
-      e,
+      `An error occurred when deploying account: '${account.id}', config set: '${configSetName}', command path: '${commandPath}'`,
+      error,
     )
 
     const timer = createTimer("total")
@@ -183,9 +183,10 @@ export const processCommandPath = async (
 
     return {
       commandPath,
+      error,
       result: {
         timer,
-        message: e.message,
+        message: "Error",
         status: "FAILED",
         success: false,
         results: [],

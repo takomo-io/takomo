@@ -39,7 +39,7 @@ export const processAccount = async (
   const { io } = holder
 
   const account = plannedAccount.config
-  io.info(`Process account ${account.id}`)
+  io.info(`Process account: '${account.id}'`)
   const results = new Array<ConfigSetOperationResult>()
 
   const configSetNames = getConfigSetsToProcess(configSetType, plannedAccount)

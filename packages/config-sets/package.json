@@ -32,7 +32,6 @@
     "@takomo/stacks-commands": "^3.0.0-alpha.1",
     "@takomo/stacks-model": "^3.0.0-alpha.1",
     "@takomo/stacks-schema": "^3.0.0-alpha.1",
-    "@takomo/util": "^3.0.0-alpha.1",
     "joi": "17.2.1"
   },
   "devDependencies": {

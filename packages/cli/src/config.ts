@@ -21,7 +21,7 @@ const validateRequiredVersion = (
   }
 
   // eslint-disable-next-line
-  const packageJson = require("../../package.json")
+  const packageJson = require("./package.json")
   const version = packageJson.version
 
   if (!semver.satisfies(version, requiredVersion)) {

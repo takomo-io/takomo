@@ -1,4 +1,4 @@
-import { CANCELLED, FAILED, SKIPPED, SUCCESS } from "@takomo/core"
+import { CANCELLED, FAILED, SKIPPED } from "@takomo/core"
 import { AccountsOperationOutput } from "./model"
 import {
   AccountsOperationCancelledState,
@@ -116,6 +116,7 @@ export const createAccountsOperationTransitions = (): AccountsOperationTransitio
     "validate-configuration",
     validateConfiguration,
   ),
+
   cancelAccountsOperation: async (
     state: AccountsOperationCancelledState,
   ): Promise<StepResult> =>
@@ -127,12 +128,7 @@ export const createAccountsOperationTransitions = (): AccountsOperationTransitio
 
   completeAccountsOperation: async (
     state: AccountsOperationCompletedState,
-  ): Promise<StepResult> =>
-    new AccountsOperationCompleted({
-      ...state,
-      success: true,
-      status: SUCCESS,
-    }),
+  ): Promise<StepResult> => new AccountsOperationCompleted(state),
 
   failAccountsOperation: async (
     state: AccountsOperationFailedState,

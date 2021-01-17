@@ -1,7 +1,6 @@
-import { CommandOutputBase, Vars } from "@takomo/core"
+import { CommandOutput, CommandOutputBase, Vars } from "@takomo/core"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath } from "@takomo/stacks-model"
-import { Timer } from "@takomo/util"
 
 export type ConfigSetName = string
 
@@ -19,8 +18,7 @@ export interface ConfigSetCommandPathOperationResult extends CommandOutputBase {
   readonly result: StacksOperationOutput
 }
 
-export interface ConfigSetOperationResult extends CommandOutputBase {
+export interface ConfigSetOperationResult extends CommandOutput {
   readonly configSetName: ConfigSetName
   readonly results: ReadonlyArray<ConfigSetCommandPathOperationResult>
-  readonly timer: Timer
 }

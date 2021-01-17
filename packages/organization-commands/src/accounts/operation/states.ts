@@ -1,3 +1,4 @@
+import { CommandStatus } from "@takomo/core"
 import {
   OrganizationConfigRepository,
   OrganizationContext,
@@ -62,6 +63,9 @@ export interface AccountsOperationCancelledState
 
 export interface AccountsOperationCompletedState
   extends InitialAccountsOperationState {
+  readonly success: boolean
   readonly message: string
+  readonly status: CommandStatus
+  readonly error?: Error
   readonly results?: ReadonlyArray<OrganizationalUnitAccountsOperationResult>
 }
