@@ -1,6 +1,6 @@
 {
   "name": "@takomo/init-command",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "description": "Takomo Init Command",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@takomo/aws-model": "^3.0.0-alpha.1",
     "@takomo/aws-schema": "^3.0.0-alpha.1",
-    "@takomo/core": "^3.0.0-alpha.1",
+    "@takomo/core": "^3.0.0-alpha.2",
     "@takomo/util": "^3.0.0-alpha.1",
     "joi": "17.2.1"
   },

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.2](https://github.com/takomo-io/takomo/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2021-01-17)
+
+
+### Features
+
+* improve organization commands error handling ([691512c](https://github.com/takomo-io/takomo/commit/691512c174253db0ab18cb0ffd5915574be798ff))
+
+
+
+
+
 # [3.0.0-alpha.1](https://github.com/takomo-io/takomo/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2021-01-15)
 
 **Note:** Version bump only for package @takomo/cli
