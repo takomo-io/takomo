@@ -1,0 +1,2 @@
+template: stack.yml
+depends: /rds/g.yml

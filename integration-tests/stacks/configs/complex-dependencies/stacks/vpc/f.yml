@@ -1,0 +1,4 @@
+template: stack.yml
+depends:
+  - /vpc/c.yml
+  - /vpc/e.yml

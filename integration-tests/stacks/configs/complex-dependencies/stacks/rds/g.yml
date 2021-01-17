@@ -1,0 +1,5 @@
+template: stack.yml
+depends:
+  - /rds/d.yml
+  - /rds/o.yml
+  - /vpc/f.yml
