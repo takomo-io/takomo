@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-config",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.4",
   "description": "Takomo Organization Config",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -28,10 +28,10 @@
   },
   "dependencies": {
     "@takomo/aws-model": "^3.0.0-alpha.1",
-    "@takomo/config-sets": "^3.0.0-alpha.2",
-    "@takomo/core": "^3.0.0-alpha.2",
+    "@takomo/config-sets": "^3.0.0-alpha.4",
+    "@takomo/core": "^3.0.0-alpha.4",
     "@takomo/organization-model": "^3.0.0-alpha.0",
-    "@takomo/organization-schema": "^3.0.0-alpha.2",
+    "@takomo/organization-schema": "^3.0.0-alpha.4",
     "@takomo/util": "^3.0.0-alpha.1",
     "lodash.uniq": "4.5.0",
     "neverthrow": "3.1.3"

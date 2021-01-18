@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.4](https://github.com/takomo-io/takomo/compare/v3.0.0-alpha.3...v3.0.0-alpha.4) (2021-01-18)
+
+
+### Bug Fixes
+
+* fix inheritance of tags ([edfd5e7](https://github.com/takomo-io/takomo/commit/edfd5e75b1b3221fe4c0ffe4f7f1a882aec0c0c6))
+* fix tests ([96fd0e0](https://github.com/takomo-io/takomo/commit/96fd0e0599a407479ec0fd48f3a6cb77da2881a5))
+
+
+### Features
+
+* add option to disabled dynamic template processing ([efa59aa](https://github.com/takomo-io/takomo/commit/efa59aa9ad13226b284faf5a6c080c02d966079a))
+
+
+
+
+
 # [3.0.0-alpha.3](https://github.com/takomo-io/takomo/compare/v3.0.0-alpha.2...v3.0.0-alpha.3) (2021-01-17)
 
 

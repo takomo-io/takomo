@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-schema",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.4",
   "description": "Takomo Organization Schema",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,8 +29,8 @@
   "dependencies": {
     "@takomo/aws-model": "^3.0.0-alpha.1",
     "@takomo/aws-schema": "^3.0.0-alpha.1",
-    "@takomo/config-sets": "^3.0.0-alpha.2",
-    "@takomo/core": "^3.0.0-alpha.2",
+    "@takomo/config-sets": "^3.0.0-alpha.4",
+    "@takomo/core": "^3.0.0-alpha.4",
     "joi": "17.2.1"
   },
   "devDependencies": {
