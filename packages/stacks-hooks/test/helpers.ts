@@ -8,7 +8,7 @@ export interface TestStackProps {
   path: StackPath
   name: StackName
   dependencies?: StackPath[]
-  dependants?: StackPath[]
+  dependents?: StackPath[]
 }
 
 export const createStack = (props: TestStackProps): InternalStack => {
@@ -16,7 +16,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
     path: props.path,
     name: props.name,
     dependencies: props.dependencies || [],
-    dependants: props.dependants || [],
+    dependents: props.dependents || [],
     template: "",
     region: "us-east-1",
     accountIds: [],

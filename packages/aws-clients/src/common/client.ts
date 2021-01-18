@@ -15,6 +15,7 @@ const maxRetries = 30
 const retryableErrorCodes = [
   "UnknownEndpoint",
   "Throttling",
+  "ThrottlingException",
   "TooManyRequestsException",
   "NetworkingError",
   "TimeoutError",

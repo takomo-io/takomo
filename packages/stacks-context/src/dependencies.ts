@@ -64,15 +64,15 @@ export const collectAllDependencies = (
 /**
  * @hidden
  */
-export const collectAllDependants = (
+export const collectAllDependents = (
   stackPath: StackPath,
   stacks: InternalStack[],
 ): StackPath[] => {
   const stack = stacks.find((s) => s.path === stackPath)!
   return uniq(
-    stack.dependants.reduce((collected, dependantPath) => {
-      const childDependants = collectAllDependants(dependantPath, stacks)
-      return [...collected, ...childDependants, dependantPath]
+    stack.dependents.reduce((collected, dependentPath) => {
+      const childDependents = collectAllDependents(dependentPath, stacks)
+      return [...collected, ...childDependents, dependentPath]
     }, new Array<StackPath>()),
   )
 }
@@ -80,25 +80,25 @@ export const collectAllDependants = (
 /**
  * @hidden
  */
-export const collectStackDirectDependants = (
+export const collectStackDirectDependents = (
   stackPath: StackPath,
   stacks: StackProps[],
 ): string[] =>
   stacks
     .filter((s) => s.path !== stackPath)
-    .reduce((dependants, s) => {
+    .reduce((dependents, s) => {
       return s.dependencies.includes(stackPath)
-        ? [...dependants, s.path]
-        : dependants
+        ? [...dependents, s.path]
+        : dependents
     }, new Array<string>())
 
 /**
  * @hidden
  */
-export const populateDependants = (stacks: StackProps[]): StackProps[] =>
+export const populateDependents = (stacks: StackProps[]): StackProps[] =>
   stacks.reduce((collected, stack) => {
-    const dependants = collectStackDirectDependants(stack.path, stacks)
-    return [...collected, { ...stack, dependants }]
+    const dependents = collectStackDirectDependents(stack.path, stacks)
+    return [...collected, { ...stack, dependents }]
   }, new Array<StackProps>())
 
 /**
@@ -154,7 +154,7 @@ export const processStackDependencies = (
       }
     })
 
-  return populateDependants(processed).map((props) => createStack(props))
+  return populateDependents(processed).map((props) => createStack(props))
 }
 
 const sortStacks = (
@@ -181,7 +181,7 @@ const sortStacks = (
  */
 export const sortStacksForUndeploy = (
   stacks: ReadonlyArray<InternalStack>,
-): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependants)
+): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependents)
 
 /**
  * @hidden

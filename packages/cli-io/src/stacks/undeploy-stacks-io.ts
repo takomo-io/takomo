@@ -121,7 +121,7 @@ export const createUndeployStacksIO = (
         0,
       )
 
-      if (stack.dependants.length > 0) {
+      if (stack.dependents.length > 0) {
         io.message({ text: "      dependents:" })
         printStackDependents(stack, stacksMap, 8)
       } else {
@@ -147,7 +147,7 @@ export const createUndeployStacksIO = (
     stacksMap: Map<StackPath, InternalStack>,
     depth: number,
   ) => {
-    stack.dependants.forEach((dependentPath) => {
+    stack.dependents.forEach((dependentPath) => {
       const dependent = stacksMap.get(dependentPath)
       if (!dependent) {
         throw new Error(`Dependency ${dependentPath} was not found`)

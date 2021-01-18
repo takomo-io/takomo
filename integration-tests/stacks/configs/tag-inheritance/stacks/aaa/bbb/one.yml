@@ -1,0 +1,3 @@
+template: stack.yml
+tags:
+  fux: new-value

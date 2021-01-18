@@ -1,4 +1,5 @@
 import { createStackGroup, StackGroup } from "@takomo/stacks-model"
+import { deepCopy } from "@takomo/util"
 import { StackGroupConfigNode } from "./config-tree"
 
 export const createStackGroupFromParent = (
@@ -12,12 +13,12 @@ export const createStackGroupFromParent = (
     project: parent.project,
     timeout: parent.timeout,
     templateBucket: parent.templateBucket,
-    tags: parent.tags,
+    tags: new Map(parent.tags),
     path: node.path,
     parentPath: parent.path,
     children: [],
     stacks: [],
-    data: parent.data,
+    data: deepCopy(parent.data),
     hooks: parent.hooks,
     capabilities: parent.capabilities,
     accountIds: parent.accountIds,

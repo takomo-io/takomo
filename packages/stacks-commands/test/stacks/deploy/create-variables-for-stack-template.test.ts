@@ -37,7 +37,7 @@ describe("#createVariablesForStackTemplate", () => {
           fuz: "baz",
         },
       },
-      dependants: [],
+      dependents: [],
       dependencies: ["/vpc.yml"],
       hooks: [],
       ignore: false,
@@ -174,7 +174,7 @@ describe("#createVariablesForStackTemplate", () => {
       data: {
         arrayData: [1, 2, 3],
       },
-      dependants: [],
+      dependents: [],
       dependencies: [],
       hooks: [],
       ignore: false,

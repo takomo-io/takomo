@@ -1,0 +1,6 @@
+regions: eu-north-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+tags:
+  foo: bar
+  fux: baz
+  hello: world

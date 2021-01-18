@@ -11,7 +11,7 @@ describe("#sortStacksForUndeploy", () => {
     expect(sortStacksForUndeploy([a])).toHaveLength(1)
   })
 
-  test("when two stacks with no dependants are given", () => {
+  test("when two stacks with no dependents are given", () => {
     const a = createStack({ name: "a", path: "/a.yml" })
     const b = createStack({ name: "b", path: "/b.yml" })
 
@@ -25,7 +25,7 @@ describe("#sortStacksForUndeploy", () => {
     const a = createStack({
       name: "a",
       path: "/a.yml",
-      dependants: ["/b.yml"],
+      dependents: ["/b.yml"],
     })
     const b = createStack({ name: "b", path: "/b.yml" })
 
@@ -39,17 +39,17 @@ describe("#sortStacksForUndeploy", () => {
     const a = createStack({
       name: "a",
       path: "/a.yml",
-      dependants: ["/c.yml"],
+      dependents: ["/c.yml"],
     })
     const b = createStack({
       name: "b",
       path: "/b.yml",
-      dependants: [],
+      dependents: [],
     })
     const c = createStack({
       name: "c",
       path: "/c.yml",
-      dependants: ["/b.yml"],
+      dependents: ["/b.yml"],
     })
 
     const sorted = sortStacksForUndeploy([a, b, c])
@@ -63,42 +63,42 @@ describe("#sortStacksForUndeploy", () => {
     const a = createStack({
       name: "a",
       path: "/a.yml",
-      dependants: ["/c.yml", "/h.yml"],
+      dependents: ["/c.yml", "/h.yml"],
     })
     const b = createStack({
       name: "b",
       path: "/b.yml",
-      dependants: [],
+      dependents: [],
     })
     const c = createStack({
       name: "c",
       path: "/c.yml",
-      dependants: ["/d.yml", "/e.yml"],
+      dependents: ["/d.yml", "/e.yml"],
     })
     const d = createStack({
       name: "d",
       path: "/d.yml",
-      dependants: ["/f.yml"],
+      dependents: ["/f.yml"],
     })
     const e = createStack({
       name: "e",
       path: "/e.yml",
-      dependants: ["/f.yml"],
+      dependents: ["/f.yml"],
     })
     const f = createStack({
       name: "f",
       path: "/f.yml",
-      dependants: ["/g.yml"],
+      dependents: ["/g.yml"],
     })
     const g = createStack({
       name: "g",
       path: "/g.yml",
-      dependants: [],
+      dependents: [],
     })
     const h = createStack({
       name: "h",
       path: "/h.yml",
-      dependants: [],
+      dependents: [],
     })
 
     const sorted = sortStacksForUndeploy([a, b, c, d, e, f, g, h])

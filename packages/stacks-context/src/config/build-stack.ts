@@ -11,7 +11,7 @@ import {
   StackProps,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
-import { TakomoError, TkmLogger, validate } from "@takomo/util"
+import { deepCopy, TakomoError, TkmLogger, validate } from "@takomo/util"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
 import { isWithinCommandPath } from "../common"
@@ -117,7 +117,7 @@ export const buildStack = async (
         region,
         parameters,
         commandRole,
-        credentialManager: credentialManager,
+        credentialManager,
         hooks,
         ignore,
         terminationProtection,
@@ -125,22 +125,20 @@ export const buildStack = async (
         accountIds,
         path: exactPath,
         stackGroupPath: stackGroup.path,
-        project: stackConfig.project || stackGroup.project,
-        tags: stackGroup.tags,
-        timeout: stackConfig.timeout ||
-          stackGroup.timeout || { create: 0, update: 0 },
+        project: stackConfig.project ?? stackGroup.project,
+        tags: new Map(stackGroup.tags),
+        timeout: stackConfig.timeout ??
+          stackGroup.timeout ?? { create: 0, update: 0 },
         dependencies: stackConfig.depends,
-        dependants: [],
-        templateBucket: stackConfig.templateBucket || stackGroup.templateBucket,
-        data: stackGroup.data,
+        dependents: [],
+        templateBucket: stackConfig.templateBucket ?? stackGroup.templateBucket,
+        data: deepCopy({ ...stackGroup.data, ...stackConfig.data }),
         logger: logger.childLogger(exactPath),
       }
 
       stackConfig.tags.forEach((value, key) => {
         props.tags.set(key, value)
       })
-
-      props.data = { ...props.data, ...stackConfig.data }
 
       return createStack(props)
     })

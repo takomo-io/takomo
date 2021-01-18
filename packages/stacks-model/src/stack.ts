@@ -42,7 +42,7 @@ export interface StackProps {
   timeout: TimeoutConfig
   parameters: Map<StackParameterKey, ResolverExecutor>
   dependencies: ReadonlyArray<StackPath>
-  dependants: ReadonlyArray<StackPath>
+  dependents: ReadonlyArray<StackPath>
   data: Vars
   hooks: ReadonlyArray<HookExecutor>
   credentialManager: CredentialManager
@@ -59,7 +59,7 @@ export interface Stack {
   readonly name: StackName
   readonly region: Region
   readonly dependencies: ReadonlyArray<StackPath>
-  readonly dependants: ReadonlyArray<StackPath>
+  readonly dependents: ReadonlyArray<StackPath>
   readonly data: Record<string, unknown>
   readonly credentialManager: CredentialManager
   readonly logger: TkmLogger
@@ -97,7 +97,7 @@ export const createStack = (props: StackProps): InternalStack => {
     commandRole,
     credentialManager,
     data,
-    dependants,
+    dependents,
     dependencies,
     hooks,
     ignore,
@@ -131,7 +131,7 @@ export const createStack = (props: StackProps): InternalStack => {
     commandRole,
     credentialManager,
     data,
-    dependants,
+    dependents,
     dependencies,
     getCloudFormationClient,
     getCurrentCloudFormationStack,
