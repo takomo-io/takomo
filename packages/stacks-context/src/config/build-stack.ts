@@ -2,13 +2,16 @@ import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
 import { createAwsSchemas } from "@takomo/aws-schema"
 import { CommandContext } from "@takomo/core"
+import { TemplateConfig } from "@takomo/stacks-config/src/model"
 import {
   CommandPath,
   createStack,
   HookInitializersMap,
   InternalStack,
   StackGroup,
+  StackPath,
   StackProps,
+  Template,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { deepCopy, TakomoError, TkmLogger, validate } from "@takomo/util"
@@ -21,6 +24,14 @@ import { getCredentialManager } from "./get-credential-provider"
 import { initializeHooks } from "./hooks"
 import { makeStackName } from "./make-stack-name"
 import { buildParameters } from "./parameters"
+
+const buildTemplate = (
+  stackPath: StackPath,
+  { filename, dynamic }: TemplateConfig,
+): Template => ({
+  dynamic,
+  filename: filename ?? stackPath.substr(1),
+})
 
 export const buildStack = async (
   ctx: CommandContext,
@@ -57,7 +68,7 @@ export const buildStack = async (
     throw new TakomoError(`Stack ${stackPath} has no regions`)
   }
 
-  const template = stackConfig.template ?? stackPath.substr(1)
+  const template = buildTemplate(stackPath, stackConfig.template)
   validate(stackName, name, `Name of stack ${stackPath} is not valid`)
 
   if (!template) {

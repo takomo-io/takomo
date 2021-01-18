@@ -14,7 +14,7 @@ import {
   TagValue,
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
-import { deepFreeze, TkmLogger } from "@takomo/util"
+import { deepFreeze, FilePath, TkmLogger } from "@takomo/util"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { HookExecutor } from "./hook"
 import { ResolverExecutor } from "./resolver"
@@ -28,12 +28,20 @@ export type StackPath = string
 /**
  * @hidden
  */
+export interface Template {
+  readonly dynamic: boolean
+  readonly filename: FilePath
+}
+
+/**
+ * @hidden
+ */
 export interface StackProps {
   project?: Project
   path: StackPath
   stackGroupPath: StackGroupPath
   name: StackName
-  template: string
+  template: Template
   templateBucket?: TemplateBucketConfig
   region: Region
   accountIds: ReadonlyArray<AccountId>
@@ -73,7 +81,7 @@ export interface Stack {
  * @hidden
  */
 export interface InternalStack extends Stack {
-  readonly template?: string
+  readonly template: Template
   readonly templateBucket?: TemplateBucketConfig
   readonly accountIds: ReadonlyArray<AccountId>
   readonly commandRole?: CommandRole

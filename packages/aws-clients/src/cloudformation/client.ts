@@ -37,10 +37,6 @@ export interface CloudFormationClient {
     stack: CloudFormationStack,
   ) => Promise<DetailedCloudFormationStack>
 
-  readonly getTemplateSummaryForStack: (
-    stackName: string,
-  ) => Promise<CloudFormation.GetTemplateSummaryOutput | null>
-
   readonly getTemplateSummary: (
     input: CloudFormation.GetTemplateSummaryInput,
   ) => Promise<TemplateSummary>
@@ -172,29 +168,6 @@ export const createCloudFormationClient = (
       parameters,
     }
   }
-
-  const getTemplateSummaryForStack = (
-    stackName: string,
-  ): Promise<CloudFormation.GetTemplateSummaryOutput | null> =>
-    withClientPromise(
-      (c) => c.getTemplateSummary({ StackName: stackName }),
-      (res) => res,
-      (e) => {
-        if (e.code === "ValidationError") {
-          if (e.message === `Stack with id ${stackName} does not exist`) {
-            return null
-          }
-          if (
-            e.message ===
-            "GetTemplateSummary cannot be called on REVIEW_IN_PROGRESS stacks."
-          ) {
-            return null
-          }
-        }
-
-        throw e
-      },
-    )
 
   const getTemplateSummary = (
     input: CloudFormation.GetTemplateSummaryInput,
@@ -469,7 +442,6 @@ export const createCloudFormationClient = (
     validateTemplate,
     describeStack,
     enrichStack,
-    getTemplateSummaryForStack,
     getTemplateSummary,
     getCurrentTemplate,
     initiateStackDeletion,

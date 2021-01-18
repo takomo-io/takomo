@@ -51,7 +51,7 @@ describe("#createVariablesForStackTemplate", () => {
         ["a", "b"],
         ["c", "d"],
       ]),
-      template: "vpc.json",
+      template: { filename: "vpc.json", dynamic: true },
       templateBucket: {
         keyPrefix: "prefixation",
         name: "b",
@@ -184,7 +184,7 @@ describe("#createVariablesForStackTemplate", () => {
       path: "/dev/apps/prod/eb.yml/eu-north-1",
       region: "eu-north-1",
       tags: new Map([["Name", "Value"]]),
-      template: "elastic-beanstalk.yml",
+      template: { filename: "elastic-beanstalk.yml", dynamic: false },
       timeout: {
         update: 40,
         create: 0,

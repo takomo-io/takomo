@@ -24,28 +24,74 @@ describe("Templating", () => {
         stackPath: "/topics.yml/eu-north-1",
         stackName: "topics",
       })
+      .expectStackCreateSuccess({
+        stackPath: "/not-dynamic.yml/eu-north-1",
+        stackName: "not-dynamic",
+      })
+      .expectStackCreateSuccess({
+        stackPath: "/another-not-dynamic.yml/eu-north-1",
+        stackName: "another-not-dynamic",
+      })
+      .expectStackCreateSuccess({
+        stackPath: "/dynamic.yml/eu-north-1",
+        stackName: "dynamic",
+      })
       .assert()
 
-    const stack = await aws.cloudFormation.describeStack({
-      credentials: new Credentials(global.reservation.credentials),
-      iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
+    const credentials = new Credentials(global.reservation.credentials)
+    const iamRoleArn = `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`
+
+    const queuesStack = await aws.cloudFormation.describeStack({
+      credentials,
+      iamRoleArn,
       region: "eu-north-1",
       stackName: "queues",
     })
-    expect(stack.Description).toBe("IT - templating World")
 
-    const outputs = stack.Outputs!
-    expect(outputs).toHaveLength(2)
+    expect(queuesStack.Description).toBe("IT - templating World")
+    expect(queuesStack.Outputs).toStrictEqual([
+      { OutputKey: "NumberParam", OutputValue: "300" },
+      { OutputKey: "HelloParam", OutputValue: "World" },
+    ])
 
-    const sortedOutputs = outputs.sort((a, b) =>
-      a.OutputKey!.localeCompare(b.OutputKey!),
+    const dynamicStack = await aws.cloudFormation.describeStack({
+      credentials,
+      iamRoleArn,
+      region: "eu-north-1",
+      stackName: "dynamic",
+    })
+
+    expect(dynamicStack.Description).toBe("dynamic")
+
+    const notDynamicStack = await aws.cloudFormation.describeStack({
+      credentials,
+      iamRoleArn,
+      region: "eu-north-1",
+      stackName: "not-dynamic",
+    })
+    expect(notDynamicStack.Description).toBe(
+      "String with handlebars syntax {{ var.hello }}",
     )
 
-    expect(sortedOutputs[0].OutputKey).toBe("HelloParam")
-    expect(sortedOutputs[0].OutputValue).toBe("World")
+    const anotherNotDynamicStack = await aws.cloudFormation.describeStack({
+      credentials,
+      iamRoleArn,
+      region: "eu-north-1",
+      stackName: "another-not-dynamic",
+    })
+    expect(anotherNotDynamicStack.Description).toBe(
+      "Another string with handlebars syntax {{ var.hello }}",
+    )
 
-    expect(sortedOutputs[1].OutputKey).toBe("NumberParam")
-    expect(sortedOutputs[1].OutputValue).toBe("300")
+    // const sortedOutputs = outputs.sort((a, b) =>
+    //   a.OutputKey!.localeCompare(b.OutputKey!),
+    // )
+    //
+    // expect(sortedOutputs[0].OutputKey).toBe("HelloParam")
+    // expect(sortedOutputs[0].OutputValue).toBe("World")
+    //
+    // expect(sortedOutputs[1].OutputKey).toBe("NumberParam")
+    // expect(sortedOutputs[1].OutputValue).toBe("300")
   })
 
   test("Undeploy", () =>
@@ -58,6 +104,18 @@ describe("Templating", () => {
       .expectStackDeleteSuccess({
         stackPath: "/topics.yml/eu-north-1",
         stackName: "topics",
+      })
+      .expectStackDeleteSuccess({
+        stackPath: "/not-dynamic.yml/eu-north-1",
+        stackName: "not-dynamic",
+      })
+      .expectStackDeleteSuccess({
+        stackPath: "/another-not-dynamic.yml/eu-north-1",
+        stackName: "another-not-dynamic",
+      })
+      .expectStackDeleteSuccess({
+        stackPath: "/dynamic.yml/eu-north-1",
+        stackName: "dynamic",
       })
       .assert())
 })

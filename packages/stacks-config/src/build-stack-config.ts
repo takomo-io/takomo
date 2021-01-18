@@ -12,6 +12,7 @@ import { parseParameters } from "./parse-parameters"
 import { parseRegions } from "./parse-regions"
 import { parseString } from "./parse-string"
 import { parseTags } from "./parse-tags"
+import { parseTemplate } from "./parse-template"
 import { parseTemplateBucket } from "./parse-template-bucket"
 import { parseTerminationProtection } from "./parse-termination-protection"
 import { parseTimeout } from "./parse-timeout"
@@ -39,6 +40,7 @@ export const buildStackConfig = (
   const capabilities = parseCapabilities(record.capabilities)
   const accountIds = parseAccountIds(record.accountIds)
   const ignore = parseIgnore(record.ignore)
+  const template = parseTemplate(record.template)
   const terminationProtection = parseTerminationProtection(
     record.terminationProtection,
   )
@@ -50,11 +52,11 @@ export const buildStackConfig = (
     capabilities,
     data,
     hooks,
+    template,
     project: parseString(record.project),
     commandRole: parseCommandRole(record.commandRole),
     regions: parseRegions(record.regions),
     name: parseString(record.name),
-    template: parseString(record.template),
     timeout: parseTimeout(record.timeout),
     depends: parseDepends(record.depends),
     templateBucket: parseTemplateBucket(record.templateBucket),

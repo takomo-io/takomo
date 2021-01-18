@@ -10,6 +10,7 @@ export {
   Stack,
   StackPath,
   StackProps,
+  Template,
 } from "./stack"
 export {
   createStackGroup,

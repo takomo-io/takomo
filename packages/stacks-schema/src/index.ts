@@ -19,7 +19,7 @@ export interface StacksSchemas {
   stackGroupName: StringSchema
   terminationProtection: BooleanSchema
   ignore: BooleanSchema
-  template: StringSchema
+  template: (StringSchema | ObjectSchema)[]
   parameters: ObjectSchema
   hooks: ArraySchema
   timeoutObject: ObjectSchema
@@ -105,7 +105,16 @@ export const createStacksSchemas = (
         '{{#label}}[{{#index}}] has a non-unique name "{{#name}}", which is used also by "hooks[{{#other}}]"',
     })
 
-  const template = Joi.string().min(1)
+  const templateFilename = Joi.string().min(1)
+
+  const template = [
+    templateFilename,
+    Joi.object({
+      filename: templateFilename,
+      dynamic: Joi.boolean(),
+    }),
+  ]
+
   const staticStringParameterValue = Joi.string().required()
   const staticNumberParameterValue = Joi.number().required()
   const staticBooleanParameterValue = Joi.boolean().required()

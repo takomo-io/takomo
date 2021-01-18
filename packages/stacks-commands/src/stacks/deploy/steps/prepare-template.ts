@@ -22,7 +22,7 @@ export const createVariablesForStackTemplate = (
       project: stack.project,
       path: stackPath,
       name: stack.name,
-      template: stack.template,
+      template: stack.template.filename,
       templateBucket: stack.templateBucket,
       commandRole: stack.commandRole,
       region: stack.region,
@@ -57,10 +57,13 @@ export const prepareTemplate: StackOperationStep<TagsHolder> = async (
     parameters,
   )
 
+  const { filename, dynamic } = stack.template
+
   const templateBody = await configRepository.getStackTemplateContents(
     stack.path,
     stackVariables,
-    stack.template,
+    filename,
+    dynamic,
   )
 
   return transitions.uploadTemplate({

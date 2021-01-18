@@ -17,6 +17,7 @@ import {
   TemplateBucketConfig,
   TimeoutConfig,
 } from "@takomo/stacks-model"
+import { FilePath } from "@takomo/util"
 
 export interface ParameterConfig {
   readonly resolver: ResolverName
@@ -54,10 +55,15 @@ export class ListParameterConfig {
 
 export type ParameterConfigs = SingleParameterConfig | ListParameterConfig
 
+export interface TemplateConfig {
+  readonly dynamic: boolean
+  readonly filename?: FilePath
+}
+
 export interface StackConfig {
   readonly project?: Project
   readonly name?: StackName
-  readonly template?: string
+  readonly template: TemplateConfig
   readonly templateBucket?: TemplateBucketConfig
   readonly regions: ReadonlyArray<Region>
   readonly accountIds?: ReadonlyArray<AccountId>

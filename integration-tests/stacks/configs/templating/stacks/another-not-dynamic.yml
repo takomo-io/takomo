@@ -1,0 +1,3 @@
+template:
+  filename: another.yml
+  dynamic: false

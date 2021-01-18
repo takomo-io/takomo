@@ -479,7 +479,6 @@ export const createDeployStacksIO = (
     existingStack?: DetailedCloudFormationStack,
   ): void => {
     if (!changeSet) {
-      io.message({ text: "No stack parameters to modify." })
       return
     }
 
@@ -493,7 +492,6 @@ export const createDeployStacksIO = (
       a.key.localeCompare(b.key),
     )
     if (all.length === 0) {
-      io.message({ text: "No stack parameters to modify." })
       return
     }
 
@@ -523,7 +521,7 @@ export const createDeployStacksIO = (
       : red("disabled")
     if (!existingStack) {
       io.message({
-        text: `Termination protection will be ${protection}`,
+        text: `Termination protection will be set to ${protection}`,
         marginTop: true,
       })
       return
@@ -533,11 +531,9 @@ export const createDeployStacksIO = (
       existingStack.enableTerminationProtection !== stack.terminationProtection
     ) {
       io.message({
-        text: `Termination protection will be ${protection}`,
+        text: `Termination protection will be changed to ${protection}`,
         marginTop: true,
       })
-    } else {
-      io.message({ text: "No changes to termination protection" })
     }
   }
 

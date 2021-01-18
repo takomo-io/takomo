@@ -79,17 +79,18 @@ export const createFileSystemStacksConfigRepository = async ({
     getStackTemplateContents: async (
       stackPath: StackPath,
       variables: any,
-      templatePath?: string,
+      filepath: string,
+      dynamic: boolean,
     ): Promise<string> => {
-      const filepath =
-        templatePath ?? stackPath.substr(1).split("/").slice(0, -1).join("/")
-
       const pathToTemplate = path.join(templatesDir, filepath)
       const content = await readFileContents(pathToTemplate)
 
-      logger.traceText("Raw template body:", content)
+      if (!dynamic) {
+        return content
+      }
 
-      logger.traceObject("Render template using variables:", variables)
+      logger.traceText("Raw template body:", () => content)
+      logger.traceObject("Render template using variables:", () => variables)
 
       const renderedContent = await renderTemplate(
         templateEngine,
@@ -98,7 +99,7 @@ export const createFileSystemStacksConfigRepository = async ({
         variables,
       )
 
-      logger.traceText("Final rendered template:", renderedContent)
+      logger.traceText("Final rendered template:", () => renderedContent)
       return renderedContent
     },
 

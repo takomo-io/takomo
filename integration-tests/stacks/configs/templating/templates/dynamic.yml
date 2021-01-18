@@ -1,0 +1,6 @@
+Description: {{ stack.name }}
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

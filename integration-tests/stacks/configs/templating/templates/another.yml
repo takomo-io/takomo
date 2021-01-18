@@ -1,0 +1,6 @@
+Description: "Another string with handlebars syntax {{ var.hello }}"
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

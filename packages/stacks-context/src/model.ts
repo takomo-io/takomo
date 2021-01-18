@@ -191,7 +191,8 @@ export interface StacksConfigRepository {
   getStackTemplateContents: (
     stackPath: StackPath,
     variables: any,
-    templatePath?: string,
+    templatePath: string,
+    dynamic: boolean,
   ) => Promise<string>
 
   buildConfigTree: () => Promise<ConfigTree>
