@@ -15,7 +15,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
     name: props.name,
     dependencies: props.dependencies ?? [],
     dependents: props.dependents ?? [],
-    template: "",
+    template: { dynamic: true, filename: "" },
     region: "us-east-1",
     accountIds: [],
     tags: new Map(),
