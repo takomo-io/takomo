@@ -445,16 +445,21 @@ export const createDeployStacksIO = (
           io.message({
             text: `          change source:         ${detail.changeSource}`,
           })
-          io.message({ text: `          target:` })
-          io.message({
-            text: `            attribute:           ${detail.target.attribute}`,
-          })
-          io.message({
-            text: `            name:                ${detail.target.name}`,
-          })
-          io.message({
-            text: `            require recreation:  ${detail.target.requiresRecreation}`,
-          })
+
+          if (detail.target) {
+            io.message({ text: `          target:` })
+            io.message({
+              text: `            attribute:           ${detail.target.attribute}`,
+            })
+            io.message({
+              text: `            name:                ${detail.target.name}`,
+            })
+            io.message({
+              text: `            require recreation:  ${detail.target.requiresRecreation}`,
+            })
+          } else {
+            io.message({ text: `          target:                undefined` })
+          }
         })
       }
     })

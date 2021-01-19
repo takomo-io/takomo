@@ -52,13 +52,15 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
     }
   })
 
-  templateSummary.parameters.forEach((templateParameter) => {
-    if (!parameters.some((p) => p.key === templateParameter.key)) {
-      throw new TakomoError(
-        `Parameter '${templateParameter.key}' is defined in the template but not found from the stack configuration`,
-      )
-    }
-  })
+  templateSummary.parameters
+    .filter((p) => p.defaultValue === undefined)
+    .forEach((templateParameter) => {
+      if (!parameters.some((p) => p.key === templateParameter.key)) {
+        throw new TakomoError(
+          `Parameter '${templateParameter.key}' is defined in the template but not found from the stack configuration`,
+        )
+      }
+    })
 
   if (currentStack) {
     parameters.forEach((parameter) => {

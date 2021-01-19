@@ -73,7 +73,7 @@ const executeStep = async <S extends InitialStackOperationState>(
   } finally {
     timer.stop()
     logger.debug(
-      `Step '${stepName}' completed in ${timer.getSecondsElapsed()}s`,
+      `Step '${stepName}' completed in ${timer.getSecondsElapsed()}ms`,
     )
   }
 }

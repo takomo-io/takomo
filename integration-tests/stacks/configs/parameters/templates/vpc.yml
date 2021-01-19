@@ -18,6 +18,10 @@ Parameters:
   LogGroupRetentionInDays:
     Type: List<Number>
     Description: Log group retentions in days
+  ParamWithDefaultValue:
+    Type: String
+    Description: Parameter with default value
+    Default: Eren Jeager
 Resources:
   VPC:
     Type: AWS::EC2::VPC

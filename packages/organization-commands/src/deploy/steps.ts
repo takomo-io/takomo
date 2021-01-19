@@ -36,7 +36,7 @@ const executeStep = async <S extends InitialDeployOrganizationState>(
   } finally {
     timer.stop()
     logger.debug(
-      `Step '${stepName}' completed in ${timer.getSecondsElapsed()}s`,
+      `Step '${stepName}' completed in ${timer.getSecondsElapsed()}ms`,
     )
   }
 }

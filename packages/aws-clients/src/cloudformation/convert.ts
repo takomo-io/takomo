@@ -14,6 +14,8 @@ import {
   EventId,
   LogicalResourceId,
   PhysicalResourceId,
+  PropertyName,
+  RequiresRecreation,
   ResourceAttribute,
   ResourceChangeAction,
   ResourceChangeReplacement,
@@ -42,6 +44,7 @@ import {
   DescribeStackEventsOutput,
   DescribeStacksOutput,
   GetTemplateSummaryOutput,
+  ResourceTargetDefinition as CFResourceTargetDefinition,
 } from "aws-sdk/clients/cloudformation"
 
 /**
@@ -80,6 +83,20 @@ export const convertStack = ({
   }
 }
 
+const convertResourceChangeTarget = (
+  target?: CFResourceTargetDefinition,
+): ResourceTargetDefinition | undefined => {
+  if (!target) {
+    return undefined
+  }
+
+  return {
+    attribute: target.Attribute as ResourceAttribute,
+    name: target.Name as PropertyName,
+    requiresRecreation: target.RequiresRecreation as RequiresRecreation,
+  }
+}
+
 /**
  * @hidden
  */
@@ -106,7 +123,7 @@ export const convertChangeSet = (o: DescribeChangeSetOutput): ChangeSet => ({
       scope: c.ResourceChange?.Scope?.map((a) => a as ResourceAttribute) ?? [],
       details:
         c.ResourceChange?.Details?.map((d) => ({
-          target: d.Target as ResourceTargetDefinition,
+          target: convertResourceChangeTarget(d.Target),
           evaluation: d.Evaluation as EvaluationType,
           causingEntity: d.CausingEntity as CausingEntity,
           changeSource: d.ChangeSource as ChangeSource,
@@ -125,6 +142,7 @@ export const convertTemplateSummary = ({
     key: p.ParameterKey as StackParameterKey,
     noEcho: p.NoEcho as StackParameterNoEcho,
     description: p.Description as StackParameterDescription,
+    defaultValue: p.DefaultValue as StackParameterValue,
   })),
 })
 

@@ -90,6 +90,7 @@ export interface ParameterDeclaration {
   readonly key: StackParameterKey
   readonly description: StackParameterDescription
   readonly noEcho: StackParameterNoEcho
+  readonly defaultValue?: StackParameterValue
 }
 
 /**
@@ -242,10 +243,10 @@ export interface ResourceTargetDefinition {
 }
 
 export interface ResourceChangeDetail {
-  readonly target: ResourceTargetDefinition
+  readonly target?: ResourceTargetDefinition
   readonly evaluation: EvaluationType
   readonly changeSource: ChangeSource
-  readonly causingEntity: CausingEntity
+  readonly causingEntity?: CausingEntity
 }
 
 export type ChangeType = "Resource"
