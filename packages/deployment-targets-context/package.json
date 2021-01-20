@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-context",
-  "version": "3.0.0-alpha.4",
+  "version": "3.0.0-alpha.5",
   "description": "Takomo Deployment Targets Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,12 +27,12 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "^3.0.0-alpha.4",
-    "@takomo/config-sets": "^3.0.0-alpha.4",
-    "@takomo/core": "^3.0.0-alpha.4",
-    "@takomo/deployment-targets-config": "^3.0.0-alpha.4",
+    "@takomo/aws-clients": "^3.0.0-alpha.5",
+    "@takomo/config-sets": "^3.0.0-alpha.5",
+    "@takomo/core": "^3.0.0-alpha.5",
+    "@takomo/deployment-targets-config": "^3.0.0-alpha.5",
     "@takomo/deployment-targets-model": "^3.0.0-alpha.0",
-    "@takomo/stacks-context": "^3.0.0-alpha.4",
+    "@takomo/stacks-context": "^3.0.0-alpha.5",
     "@takomo/util": "^3.0.0-alpha.1",
     "lodash.flatten": "4.4.0"
   },
