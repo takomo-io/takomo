@@ -121,15 +121,53 @@ export const resolveCommandOutputBase = (
   }
 }
 
+/**
+ * Provides access to the current project configuration.
+ */
 export interface CommandContext {
+  /**
+   * No confirmation to operations is asked if auto-confirm is enabled.
+   */
   readonly autoConfirmEnabled: boolean
+
+  /**
+   * Show statistics collected during operations.
+   */
   readonly statisticsEnabled: boolean
+
+  /**
+   * Log confidential information during operations.
+   */
   readonly confidentialValuesLoggingEnabled: boolean
+
+  /**
+   * Variables available in operations.
+   */
   readonly variables: Variables
+
+  /**
+   * Supported AWS regions.
+   */
   readonly regions: ReadonlyArray<Region>
+
+  /**
+   * Supported AWS service principals
+   */
   readonly organizationServicePrincipals: ReadonlyArray<ServicePrincipal>
+
+  /**
+   * Credentials used to invoke the current operation.
+   */
   readonly credentials?: Credentials
+
+  /**
+   * Current project directory containing configuration files.
+   */
   readonly projectDir: FilePath
+
+  /**
+   * Logging level.
+   */
   readonly logLevel: LogLevel
 }
 

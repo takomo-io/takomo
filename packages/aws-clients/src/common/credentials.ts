@@ -15,11 +15,11 @@ import http from "http"
 import R from "ramda"
 
 /**
- * Provides AWS credentials to be used to invoke AWS APIs.
+ * Provides AWS credentials that can be used to invoke AWS APIs.
  */
 export interface CredentialManager {
   /**
-   * @returns Name
+   * Credential manager name
    */
   readonly name: string
 

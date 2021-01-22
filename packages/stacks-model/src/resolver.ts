@@ -12,38 +12,44 @@ import { Stack, StackPath } from "./stack"
 export type ResolverName = string
 
 /**
- * Parameter resolver used to resolve value for stack input parameters.
+ * An interface to be implemented by objects that resolve values for stack
+ * parameters at deploy time.
  */
 export interface Resolver {
   /**
-   * Resolve the parameter value.
+   * Resolve the stack parameter value.
    *
    * @param input Resolver input
-   * @returns Resolver parameter value
+   * @returns Resolved parameter value
    */
   readonly resolve: (input: ResolverInput) => Promise<any>
 
   /**
-   * A list of stack paths of the stacks this resolver depends on.
-   * The stacks will be added to the list of stacks that the stack
-   * where this resolver is used depends on.
+   * An optional list of stack paths of the stacks this resolver depends on.
+   *
+   * The stacks are added to the list of stacks that the stack where this
+   * resolver is used depends on.
    */
   readonly dependencies?: GetterOrConst<StackPath[]>
 
   /**
-   * A list of IAM roles needed to resolve the parameter value.
+   * An optional list of IAM roles needed to resolve the parameter value.
+   *
+   * The credentials used to deploy the stack that uses this resolver must
+   * have sufficient permissions to assume the listed IAM roles.
    */
   readonly iamRoleArns?: GetterOrConst<IamRoleArn[]>
 
   /**
-   * A boolean indicating whether the resolved parameter value is confidential and
-   * should be concealed from logs.
+   * An optional boolean indicating whether the resolved parameter value
+   * is confidential and should be concealed from the logs.
    */
   readonly confidential?: GetterOrConst<boolean>
 }
 
 /**
- * Input for resolve stack input parameter value operation.
+ * An interface representing the input object passed to {@linkcode Resolver.resolve}
+ * function when value for a stack parameter is being resolved.
  */
 export interface ResolverInput {
   /**
@@ -52,7 +58,7 @@ export interface ResolverInput {
   readonly stack: Stack
 
   /**
-   * Command context object providing access to configuration and stacks.
+   * Context object providing access to the project configuration.
    */
   readonly ctx: StacksContext
 
@@ -69,19 +75,37 @@ export interface ResolverInput {
   readonly listParameterIndex: number
 
   /**
-   * TkmLogger instance.
+   * Logger instance.
    */
   readonly logger: TkmLogger
 }
 
+/**
+ * An interface representing the input object passed to {@linkcode ResolverProvider.schema}
+ * function when the resolver provider schema is constructed.
+ */
 export interface ResolverProviderSchemaProps {
+  /**
+   * Context object providing access to the project configuration.
+   */
   readonly ctx: CommandContext
+
+  /**
+   * A [Joi object](https://joi.dev/api/?v=17.3.0#introduction) that can be
+   * used to create validation rules.
+   */
   readonly joi: Joi.Root
+
+  /**
+   * A pre-initialized [Joi object schema](https://joi.dev/api/?v=17.3.0#object)
+   * for the resolver provider.
+   */
   readonly base: Joi.ObjectSchema
 }
 
 /**
- * An object used to initialize resolvers.
+ * An interface to be implemented by objects that initialize {@linkcode Resolver}
+ * objects.
  */
 export interface ResolverProvider {
   /**
@@ -107,7 +131,7 @@ export interface ResolverExecutor {
   readonly resolve: (input: ResolverInput) => Promise<any>
   readonly isConfidential: () => boolean
   readonly isImmutable: () => boolean
-  readonly getDependencies: () => StackPath[]
-  readonly getIamRoleArns: () => IamRoleArn[]
+  readonly getDependencies: () => ReadonlyArray<StackPath>
+  readonly getIamRoleArns: () => ReadonlyArray<IamRoleArn>
   readonly getName: () => ResolverName
 }

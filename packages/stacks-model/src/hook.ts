@@ -43,19 +43,6 @@ export interface HooksExecutionOutput {
 }
 
 /**
- * Life-cycle hook used to perform actions at different stages of stack deploy and uneploy commands.
- */
-export interface Hook {
-  /**
-   * Perform the hook action.
-   *
-   * @param input Inputs for the action
-   * @returns Action output
-   */
-  execute(input: HookInput): Promise<HookOutput>
-}
-
-/**
  * Input for a life-cycle hook action.
  */
 export interface HookInput {
@@ -87,7 +74,7 @@ export interface HookOutputObject {
 }
 
 /**
- * Life-cycle hook used to perform actions at different stages of stack deploy and uneploy commands.
+ * Life-cycle hook used to perform actions at different stages of stack deploy and undeploy commands.
  */
 export interface Hook {
   /**
@@ -158,7 +145,7 @@ export class HookExecutor implements Hook {
       return result
     } catch (e) {
       return {
-        message: e.message || "Error",
+        message: e.message ?? "Error",
         success: false,
       }
     }
@@ -171,7 +158,7 @@ export class HookExecutor implements Hook {
 export interface HookConfig {
   readonly name: string
   readonly type: string
-  readonly stage: ReadonlyArray<HookStage> | null
-  readonly operation: ReadonlyArray<HookOperation> | null
-  readonly status: ReadonlyArray<HookStatus> | null
+  readonly stage?: ReadonlyArray<HookStage>
+  readonly operation?: ReadonlyArray<HookOperation>
+  readonly status?: ReadonlyArray<HookStatus>
 }

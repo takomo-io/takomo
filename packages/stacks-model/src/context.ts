@@ -5,12 +5,29 @@ import { InternalStack, Stack, StackPath } from "./stack"
 import { StackGroup, StackGroupPath } from "./stack-group"
 
 /**
- * Immutable object that provides access to the current stack context.
+ * Provides access to the current stack context and
+ * project configuration.
  */
 export interface StacksContext extends CommandContext {
+  /**
+   * Credential manager that provides access to AWS credentials used
+   * to invoke the current operation.
+   */
   readonly credentialManager: CredentialManager
+
+  /**
+   * Template engine instance.
+   */
   readonly templateEngine: TemplateEngine
+
+  /**
+   * Return a stack by exact path or throw an error if no stack is found
+   */
   readonly getStackByExactPath: (path: StackPath) => Stack
+
+  /**
+   * Return 0 or more stacks by path.
+   */
   readonly getStacksByPath: (path: StackPath) => ReadonlyArray<Stack>
 }
 

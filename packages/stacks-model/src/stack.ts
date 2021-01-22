@@ -60,18 +60,69 @@ export interface StackProps {
   logger: TkmLogger
 }
 
+/**
+ * An interface representing a CloudFormation stack configuration.
+ */
 export interface Stack {
+  /**
+   * Project of the stack
+   */
   readonly project?: Project
+
+  /**
+   * Path of the stack
+   */
   readonly path: StackPath
+
+  /**
+   * Path of the stack group where the stack belongs to
+   */
   readonly stackGroupPath: StackGroupPath
+
+  /**
+   * Name of the stack
+   */
   readonly name: StackName
+
+  /**
+   * Region where the stack is deployed
+   */
   readonly region: Region
+
+  /**
+   * Other stacks that the stack depends on
+   */
   readonly dependencies: ReadonlyArray<StackPath>
+
+  /**
+   * Other stacks that depend on the stack
+   */
   readonly dependents: ReadonlyArray<StackPath>
+
+  /**
+   * Data associated with the stack
+   */
   readonly data: Record<string, unknown>
+
+  /**
+   * Credential manager holding credentials associated with the stack
+   */
   readonly credentialManager: CredentialManager
+
+  /**
+   * Logger instance associated with the stack
+   */
   readonly logger: TkmLogger
+
+  /**
+   * Returns a client that can be used to invoke CloudFormation API using the
+   * credentials associated with the stack.
+   */
   readonly getCloudFormationClient: () => CloudFormationClient
+
+  /**
+   * Returns the current CloudFormation stack matching the stack
+   */
   readonly getCurrentCloudFormationStack: () => Promise<
     CloudFormationStack | undefined
   >

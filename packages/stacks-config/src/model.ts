@@ -9,9 +9,7 @@ import {
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
 import {
-  HookOperation,
-  HookStage,
-  HookStatus,
+  HookConfig,
   ResolverName,
   StackPath,
   TemplateBucketConfig,
@@ -92,30 +90,4 @@ export interface StackGroupConfig {
   readonly ignore?: boolean
   readonly terminationProtection?: boolean
   readonly capabilities?: ReadonlyArray<StackCapability>
-}
-
-/**
- * Hook configuration.
- */
-export interface HookConfig {
-  /**
-   * Hook name
-   */
-  readonly name: string
-  /**
-   * Hook type
-   */
-  readonly type: string
-  /**
-   * Stage when the hook should be executed
-   */
-  readonly stage: ReadonlyArray<HookStage> | null
-  /**
-   * Operation during which the hook should be executed
-   */
-  readonly operation: ReadonlyArray<HookOperation> | null
-  /**
-   * Stack operation status after which the hook should be executed
-   */
-  readonly status: ReadonlyArray<HookStatus> | null
 }

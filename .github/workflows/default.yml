@@ -176,4 +176,4 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
-          DOCS_BASE: /api-docs/release/master/
+          DOCS_BASE: /api-docs/release/next/
