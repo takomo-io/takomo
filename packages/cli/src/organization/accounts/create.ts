@@ -53,7 +53,7 @@ export const createAccountCmd = {
         roleName: argv["role-name"],
         alias: argv.alias,
       }),
-      io: (ctx, logger) => createCreateAccountIO(logger),
+      io: (ctx, logger) => createCreateAccountIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemOrganizationConfigRepository({
           ctx,

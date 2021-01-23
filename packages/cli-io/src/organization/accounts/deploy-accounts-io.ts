@@ -1,18 +1,14 @@
 import { AccountsOperationIO } from "@takomo/organization-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
+import { IOProps } from "../../stacks/common"
 import { createAccountsOperationIO } from "./accounts-operation-io"
 
-export const createDeployAccountsIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
-): AccountsOperationIO =>
-  createAccountsOperationIO(
-    logger,
-    {
+export const createDeployAccountsIO = (props: IOProps): AccountsOperationIO =>
+  createAccountsOperationIO({
+    ...props,
+    messages: {
       confirmHeader: "Accounts deployment plan",
       confirmQuestion: "Continue to deploy accounts?",
       outputHeader: "Accounts deployment summary",
       outputNoAccounts: "No accounts deployed",
     },
-    writer,
-  )
+  })

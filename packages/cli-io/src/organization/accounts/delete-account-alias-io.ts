@@ -4,14 +4,14 @@ import {
   DeleteAccountAliasIO,
   DeleteAccountAliasOutput,
 } from "@takomo/organization-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import { createBaseIO } from "../../cli-io"
+import { IOProps } from "../../stacks/common"
 
 export const createDeleteAccountAliasIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
+  props: IOProps,
 ): DeleteAccountAliasIO => {
-  const io = createBaseIO(writer)
+  const { logger } = props
+  const io = createBaseIO(props)
 
   const printOutput = (
     output: DeleteAccountAliasOutput,

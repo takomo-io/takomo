@@ -1,7 +1,4 @@
-import {
-  collectRemovedParameters,
-  ParameterOperation,
-} from "../../src/stacks/deploy-stacks-io"
+import { collectRemovedParameters } from "../../../src/stacks/deploy-stacks/parameters"
 import { param, paramSpec } from "./util"
 
 describe("#collectRemovedParameters", () => {
@@ -19,14 +16,7 @@ describe("#collectRemovedParameters", () => {
       ]
       const collected = collectRemovedParameters(newParams, existingParams)
       const expected = [
-        paramSpec(
-          "ParamB",
-          "valueB",
-          undefined,
-          false,
-          false,
-          ParameterOperation.DELETE,
-        ),
+        paramSpec("ParamB", "valueB", undefined, false, false, "delete"),
       ]
       expect(collected).toStrictEqual(expected)
     })

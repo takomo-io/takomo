@@ -24,7 +24,7 @@ export const listStacksCmd = {
         ...input,
         commandPath: argv.commandPath,
       }),
-      io: (ctx, logger) => createListStacksIO(logger),
+      io: (ctx, logger) => createListStacksIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemStacksConfigRepository({
           ctx,

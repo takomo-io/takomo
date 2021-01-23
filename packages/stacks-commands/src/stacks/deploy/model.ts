@@ -17,7 +17,7 @@ import {
   StackPath,
 } from "@takomo/stacks-model"
 import { StacksOperationOutput } from "../../model"
-import { StacksDeployPlan } from "./plan"
+import { StackDeployOperationType, StacksDeployPlan } from "./plan"
 
 export type ConfirmDeployAnswer =
   | "CANCEL"
@@ -38,6 +38,7 @@ export interface DeployStacksIO extends IO<StacksOperationOutput> {
     stack: InternalStack,
     templateBody: TemplateBody,
     templateSummary: TemplateSummary,
+    operationType: StackDeployOperationType,
     existingStack?: DetailedCloudFormationStack,
     changeSet?: DetailedChangeSet,
   ) => Promise<ConfirmStackDeployAnswer>

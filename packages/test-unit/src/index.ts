@@ -1,2 +1,2 @@
 export { expectNoValidationError, expectValidationErrors } from "./assertions"
-export { CapturingLogWriter } from "./capturing-log-writer"
+export { createCapturingLogWriter } from "./capturing-log-writer"

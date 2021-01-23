@@ -27,7 +27,7 @@ const handler = (argv: any) =>
       ...input,
       featureSet: argv["feature-set"],
     }),
-    io: (ctx, logger) => createCreateOrganizationIO(logger),
+    io: (ctx, logger) => createCreateOrganizationIO({ logger }),
     configRepository: (ctx, logger) =>
       createFileSystemOrganizationConfigRepository({
         ctx,

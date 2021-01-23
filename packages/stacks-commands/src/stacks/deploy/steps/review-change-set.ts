@@ -19,12 +19,14 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
     changeSetName,
     state,
     transitions,
+    operationType,
   } = input
 
   const answer = await io.confirmStackDeploy(
     stack,
     templateBody,
     templateSummary,
+    operationType,
     currentStack,
     changeSet,
   )

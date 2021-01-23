@@ -1,10 +1,10 @@
 import { StackEvent } from "@takomo/aws-model"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath, StackGroup, StackResult } from "@takomo/stacks-model"
-import { collectFromHierarchy, LogLevel } from "@takomo/util"
+import { collectFromHierarchy, LogLevel, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
-import { BaseIO } from "../cli-io"
+import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus, formatStackEvent } from "../formatters"
 
@@ -108,4 +108,11 @@ export const printStacksOperationOutput = (
   }
 
   return output
+}
+
+/**
+ * @hidden
+ */
+export interface IOProps extends BaseIOProps {
+  readonly logger: TkmLogger
 }

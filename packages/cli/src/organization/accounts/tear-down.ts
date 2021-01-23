@@ -38,7 +38,7 @@ export const tearDownAccountsCmd = {
           logger,
           ...ctx.filePaths,
         }),
-      io: (ctx, logger) => createTearDownAccountsIO(logger),
+      io: (ctx, logger) => createTearDownAccountsIO({ logger }),
       executor: accountsOperationCommand,
     }),
 }

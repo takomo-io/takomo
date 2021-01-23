@@ -36,7 +36,7 @@ export const initProjectCmd = {
         project: argv.project,
         createSamples: argv["create-samples"],
       }),
-      io: (ctx, logger) => createInitProjectIO(logger),
+      io: (ctx, logger) => createInitProjectIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemProjectConfigRepository({
           ctx,

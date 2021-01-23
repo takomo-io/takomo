@@ -1,18 +1,16 @@
 import { ListStacksIO, ListStacksOutput } from "@takomo/stacks-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import date from "date-and-time"
 import Table from "easy-table"
 import { createBaseIO } from "../cli-io"
 import { formatStackStatus } from "../formatters"
+import { IOProps } from "./common"
 
 const formatDate = (d: any): string =>
   d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
 
-export const createListStacksIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
-): ListStacksIO => {
-  const io = createBaseIO(writer)
+export const createListStacksIO = (props: IOProps): ListStacksIO => {
+  const { logger } = props
+  const io = createBaseIO(props)
 
   const printOutput = (output: ListStacksOutput): ListStacksOutput => {
     const table = new Table()

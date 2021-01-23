@@ -2,17 +2,15 @@ import {
   ListAccountsIO,
   ListAccountsOutput,
 } from "@takomo/organization-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import date from "date-and-time"
 import Table from "easy-table"
 import { createBaseIO } from "../../cli-io"
 import { formatAccountStatus } from "../../formatters"
+import { IOProps } from "../../stacks/common"
 
-export const createListAccountsIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
-): ListAccountsIO => {
-  const io = createBaseIO(writer)
+export const createListAccountsIO = (props: IOProps): ListAccountsIO => {
+  const { logger } = props
+  const io = createBaseIO(props)
 
   const printOutput = (output: ListAccountsOutput): ListAccountsOutput => {
     const table = new Table()

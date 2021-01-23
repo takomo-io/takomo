@@ -45,7 +45,7 @@ export const deployTargetsCmd = {
         operation: "deploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
       }),
-      io: (ctx, logger) => createDeployTargetsIO(logger),
+      io: (ctx, logger) => createDeployTargetsIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemDeploymentTargetsConfigRepository({
           ctx,

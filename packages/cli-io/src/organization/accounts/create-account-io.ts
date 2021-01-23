@@ -3,14 +3,12 @@ import {
   CreateAccountIO,
   CreateAccountOutput,
 } from "@takomo/organization-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import { createBaseIO } from "../../cli-io"
+import { IOProps } from "../../stacks/common"
 
-export const createCreateAccountIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
-): CreateAccountIO => {
-  const io = createBaseIO(writer)
+export const createCreateAccountIO = (props: IOProps): CreateAccountIO => {
+  const { logger } = props
+  const io = createBaseIO(props)
 
   const confirmAccountCreation = async (
     name: string,

@@ -31,7 +31,7 @@ const handler = (argv: any) =>
         logger,
         ...ctx.filePaths,
       }),
-    io: (ctx, logger) => createDeleteAccountAliasIO(logger),
+    io: (ctx, logger) => createDeleteAccountAliasIO({ logger }),
     executor: deleteAccountAliasCommand,
   })
 

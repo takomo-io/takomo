@@ -55,7 +55,7 @@ export const undeployStacksCmd = {
         commandPath: argv.commandPath,
         interactive: argv.interactive,
       }),
-      io: (ctx, logger) => createUndeployStacksIO(logger),
+      io: (ctx, logger) => createUndeployStacksIO({ logger }),
       executor: undeployStacksCommand,
     }),
 }

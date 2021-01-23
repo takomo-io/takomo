@@ -15,7 +15,7 @@ export { createUndeployAccountsIO } from "./organization/accounts/undeploy-accou
 export { createCreateOrganizationIO } from "./organization/create-organization-io"
 export { createDeployOrganizationIO } from "./organization/deploy-organization-io"
 export { createDescribeOrganizationIO } from "./organization/describe-organization-io"
-export { createDeployStacksIO } from "./stacks/deploy-stacks-io"
+export { createDeployStacksIO } from "./stacks/deploy-stacks/deploy-stacks-io"
 export { createDependencyGraphIO } from "./stacks/inspect/dependency-graph-io"
 export { createListStacksIO } from "./stacks/list-stacks-io"
 export { createUndeployStacksIO } from "./stacks/undeploy-stacks-io"

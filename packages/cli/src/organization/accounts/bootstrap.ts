@@ -38,7 +38,7 @@ export const bootstrapAccountsCmd = {
           logger,
           ...ctx.filePaths,
         }),
-      io: (ctx, logger) => createBootstrapAccountsIO(logger),
+      io: (ctx, logger) => createBootstrapAccountsIO({ logger }),
       executor: accountsOperationCommand,
     }),
 }

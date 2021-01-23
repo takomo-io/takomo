@@ -45,7 +45,7 @@ export const deployStacksCmd = {
         commandPath: argv.commandPath,
         interactive: argv.interactive,
       }),
-      io: (ctx, logger) => createDeployStacksIO(logger),
+      io: (ctx, logger) => createDeployStacksIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemStacksConfigRepository({
           ctx,

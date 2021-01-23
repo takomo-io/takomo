@@ -38,7 +38,7 @@ export const undeployAccountsCmd = {
           logger,
           ...ctx.filePaths,
         }),
-      io: (ctx, logger) => createUndeployAccountsIO(logger),
+      io: (ctx, logger) => createUndeployAccountsIO({ logger }),
       executor: accountsOperationCommand,
     }),
 }

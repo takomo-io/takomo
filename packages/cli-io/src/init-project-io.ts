@@ -6,9 +6,9 @@ import {
   InitProjectOutput,
   ProjectInformation,
 } from "@takomo/init-command"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import Joi from "joi"
 import { createBaseIO } from "./cli-io"
+import { IOProps } from "./stacks/common"
 
 const makeRegionChoices = (regions: ReadonlyArray<Region>) =>
   regions.map((r) => ({ name: r, value: r }))
@@ -32,11 +32,9 @@ const validateProject = (input: string): string | boolean => {
   return true
 }
 
-export const createInitProjectIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
-): InitProjectIO => {
-  const io = createBaseIO(writer)
+export const createInitProjectIO = (props: IOProps): InitProjectIO => {
+  const { logger } = props
+  const io = createBaseIO(props)
 
   const promptProject = async (
     givenValue?: Project,
