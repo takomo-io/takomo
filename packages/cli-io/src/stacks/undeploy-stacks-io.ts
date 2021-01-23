@@ -5,22 +5,11 @@ import {
   StacksUndeployPlan,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
-import {
-  CommandPath,
-  InternalStack,
-  StackGroup,
-  StackPath,
-} from "@takomo/stacks-model"
-import {
-  collectFromHierarchy,
-  grey,
-  LogWriter,
-  red,
-  TkmLogger,
-} from "@takomo/util"
+import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
+import { grey, LogWriter, red, TkmLogger } from "@takomo/util"
 import { createBaseIO } from "../cli-io"
 import { formatStackEvent, formatStackStatus } from "../formatters"
-import { printStacksOperationOutput } from "./common"
+import { chooseCommandPathInternal, printStacksOperationOutput } from "./common"
 
 interface ConfirmUndeployAnswerOption {
   readonly name: string
@@ -42,35 +31,6 @@ export const createUndeployStacksIO = (
   writer: LogWriter = console.log,
 ): UndeployStacksIO => {
   const io = createBaseIO(writer)
-
-  const chooseCommandPath = async (
-    rootStackGroup: StackGroup,
-  ): Promise<CommandPath> => {
-    const allStackGroups = collectFromHierarchy(
-      rootStackGroup,
-      (s) => s.children,
-    )
-
-    const allCommandPaths = allStackGroups.reduce(
-      (collected, stackGroup) => [
-        ...collected,
-        stackGroup.path,
-        ...stackGroup.stacks.map((s) => s.path),
-      ],
-      new Array<string>(),
-    )
-
-    const source = async (
-      answersSoFar: any,
-      input: string,
-    ): Promise<string[]> => {
-      return input
-        ? allCommandPaths.filter((p) => p.includes(input))
-        : allCommandPaths
-    }
-
-    return io.autocomplete("Choose command path", source)
-  }
 
   const confirmUndeploy = async ({
     operations,
@@ -159,6 +119,9 @@ export const createUndeployStacksIO = (
       printStackDependents(dependent, stacksMap, depth + 2)
     })
   }
+
+  const chooseCommandPath = (rootStackGroup: StackGroup) =>
+    chooseCommandPathInternal(io, rootStackGroup)
 
   return {
     ...logger,

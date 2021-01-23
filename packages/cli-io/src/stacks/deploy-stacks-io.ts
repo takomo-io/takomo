@@ -14,14 +14,8 @@ import {
   StacksDeployPlan,
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
+import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
 import {
-  CommandPath,
-  InternalStack,
-  StackGroup,
-  StackPath,
-} from "@takomo/stacks-model"
-import {
-  collectFromHierarchy,
   green,
   grey,
   LogWriter,
@@ -38,7 +32,7 @@ import {
   formatStackEvent,
   formatStackStatus,
 } from "../formatters"
-import { printStacksOperationOutput } from "./common"
+import { chooseCommandPathInternal, printStacksOperationOutput } from "./common"
 
 interface ConfirmStackDeployAnswerChoice {
   readonly name: string
@@ -271,35 +265,6 @@ export const createDeployStacksIO = (
 
   // TODO: Come up some other solution
   let autoConfirmEnabled = false
-
-  const chooseCommandPath = async (
-    rootStackGroup: StackGroup,
-  ): Promise<CommandPath> => {
-    const allStackGroups = collectFromHierarchy(
-      rootStackGroup,
-      (s) => s.children,
-    )
-
-    const allCommandPaths = allStackGroups.reduce(
-      (collected, stackGroup) => [
-        ...collected,
-        stackGroup.path,
-        ...stackGroup.stacks.map((s) => s.path),
-      ],
-      new Array<string>(),
-    )
-
-    const source = async (
-      answersSoFar: any,
-      input: string,
-    ): Promise<string[]> => {
-      return input
-        ? allCommandPaths.filter((p) => p.includes(input))
-        : allCommandPaths
-    }
-
-    return io.autocomplete("Choose command path", source)
-  }
 
   const confirmDeploy = async ({
     operations,
@@ -660,6 +625,9 @@ export const createDeployStacksIO = (
       printStackDependencies(dependency, stacksMap, depth + 2)
     })
   }
+
+  const chooseCommandPath = (rootStackGroup: StackGroup) =>
+    chooseCommandPathInternal(io, rootStackGroup)
 
   return {
     ...logger,
