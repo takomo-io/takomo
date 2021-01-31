@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli-io",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Takomo CLI IO",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,16 +27,16 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.0.0",
-    "@takomo/config-sets": "3.0.0",
-    "@takomo/core": "3.0.0",
-    "@takomo/deployment-targets-commands": "3.0.0",
-    "@takomo/init-command": "3.0.0",
-    "@takomo/organization-commands": "3.0.0",
-    "@takomo/organization-config": "3.0.0",
-    "@takomo/stacks-commands": "3.0.0",
-    "@takomo/stacks-model": "3.0.0",
-    "@takomo/util": "3.0.0",
+    "@takomo/aws-model": "3.0.1",
+    "@takomo/config-sets": "3.0.1",
+    "@takomo/core": "3.0.1",
+    "@takomo/deployment-targets-commands": "3.0.1",
+    "@takomo/init-command": "3.0.1",
+    "@takomo/organization-commands": "3.0.1",
+    "@takomo/organization-config": "3.0.1",
+    "@takomo/stacks-commands": "3.0.1",
+    "@takomo/stacks-model": "3.0.1",
+    "@takomo/util": "3.0.1",
     "date-and-time": "0.14.2",
     "diff": "4.0.1",
     "easy-table": "1.1.1",
@@ -46,11 +46,11 @@
     "lodash.flatten": "4.4.0",
     "lodash.uniq": "4.5.0",
     "pretty-ms": "5.1.0",
-    "ts-dedent": "2.0.0",
-    "ramda": "0.27.1"
+    "ramda": "0.27.1",
+    "ts-dedent": "2.0.0"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.0.0"
+    "@takomo/test-unit": "3.0.1"
   },
   "engines": {
     "node": ">=14.4.0"

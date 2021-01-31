@@ -1,7 +1,7 @@
 {
   "name": "integration-test-stacks",
   "private": true,
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Takomo integration tests for stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -20,8 +20,8 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci"
   },
   "dependencies": {
-    "@takomo/test-integration": "3.0.0",
-    "@takomo/util": "3.0.0",
+    "@takomo/test-integration": "3.0.1",
+    "@takomo/util": "3.0.1",
     "aws-sdk": "2.745.0",
     "ramda": "0.27.1",
     "tmp": "0.2.1"
