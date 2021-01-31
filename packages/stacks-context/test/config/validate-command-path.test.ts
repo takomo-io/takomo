@@ -1,4 +1,4 @@
-import { ConfigTree } from "../../dist"
+import { ConfigTree } from "../../src"
 import { validateCommandPath } from "../../src/config/build-stacks-context"
 
 const tree: ConfigTree = {

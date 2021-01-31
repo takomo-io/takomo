@@ -7,11 +7,11 @@ import {
   TagKey,
   TagValue,
 } from "@takomo/aws-model"
-import { TagOperation, TagSpec } from "../../../dist/stacks/deploy-stacks-io"
 import {
   ParameterOperation,
   ParameterSpec,
 } from "../../../src/stacks/deploy-stacks/parameters"
+import { TagOperation, TagSpec } from "../../../src/stacks/deploy-stacks/tags"
 
 export const param = (
   key: string,
