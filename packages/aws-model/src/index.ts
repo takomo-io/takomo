@@ -62,6 +62,7 @@ export {
   IamRoleArn,
   Region,
   ServicePrincipal,
+  Tag,
   TagKey,
   TagValue,
   UserId,

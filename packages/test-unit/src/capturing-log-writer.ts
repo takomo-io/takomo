@@ -1,11 +1,15 @@
-export class CapturingLogWriter {
-  output = ""
+import { LogWriter } from "@takomo/util"
 
-  write = (message?: any, ...optionalParams: any[]): void => {
+interface LogOutput {
+  value: string
+}
+
+export const createCapturingLogWriter = (output: LogOutput): LogWriter => {
+  return (message?: unknown, ...optionalParams: unknown[]) => {
     if (message) {
-      this.output += message + "\n"
+      output.value += message + "\n"
     } else {
-      this.output += "\n"
+      output.value += "\n"
     }
     console.log(message, ...optionalParams)
   }

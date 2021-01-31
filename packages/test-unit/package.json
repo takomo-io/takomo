@@ -27,7 +27,8 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "joi": "17.2.1"
+    "joi": "17.2.1",
+    "@takomo/util": "3.0.0"
   },
   "engines": {
     "node": ">=14.4.0"

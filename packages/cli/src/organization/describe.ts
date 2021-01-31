@@ -16,7 +16,7 @@ const handler = (argv: any) =>
   handle({
     argv,
     input: (ctx, input) => input,
-    io: (ctx, logger) => createDescribeOrganizationIO(logger),
+    io: (ctx, logger) => createDescribeOrganizationIO({ logger }),
     configRepository: (ctx, logger) =>
       createFileSystemOrganizationConfigRepository({
         ctx,

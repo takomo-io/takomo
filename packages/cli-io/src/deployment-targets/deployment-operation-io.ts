@@ -4,12 +4,12 @@ import {
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets-commands"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import { createBaseIO } from "../cli-io"
 import { formatCommandStatus } from "../formatters"
-import { createDeployStacksIO } from "../stacks/deploy-stacks-io"
+import { IOProps } from "../stacks/common"
+import { createDeployStacksIO } from "../stacks/deploy-stacks/deploy-stacks-io"
 import { createUndeployStacksIO } from "../stacks/undeploy-stacks-io"
 
 export interface Messages {
@@ -19,18 +19,21 @@ export interface Messages {
   outputNoTargets: string
 }
 
+interface DeploymentOperationIOProps extends IOProps {
+  readonly messages: Messages
+}
+
 export const createDeploymentTargetsOperationIO = (
-  logger: TkmLogger,
-  messages: Messages,
-  writer: LogWriter = console.log,
+  props: DeploymentOperationIOProps,
 ): DeploymentTargetsOperationIO => {
-  const io = createBaseIO(writer)
+  const { logger, messages } = props
+  const io = createBaseIO(props)
 
   const createStackDeployIO = (loggerName: string): DeployStacksIO =>
-    createDeployStacksIO(logger.childLogger(loggerName))
+    createDeployStacksIO({ logger: logger.childLogger(loggerName) })
 
   const createStackUndeployIO = (loggerName: string): UndeployStacksIO =>
-    createUndeployStacksIO(logger.childLogger(loggerName))
+    createUndeployStacksIO({ logger: logger.childLogger(loggerName) })
 
   const printOutput = (
     output: DeploymentTargetsOperationOutput,

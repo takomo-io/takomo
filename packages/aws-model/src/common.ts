@@ -2,6 +2,11 @@ export type ClientRequestToken = string
 export type TagKey = string
 export type TagValue = string
 
+export interface Tag {
+  readonly value: TagValue
+  readonly key: TagKey
+}
+
 /**
  * AWS region
  */

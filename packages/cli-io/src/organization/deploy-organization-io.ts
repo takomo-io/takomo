@@ -9,19 +9,13 @@ import {
   PlannedOrganizationalUnit,
   PolicyDeploymentPlan,
 } from "@takomo/organization-commands"
-import {
-  collectFromHierarchy,
-  green,
-  LogWriter,
-  red,
-  TkmLogger,
-  yellow,
-} from "@takomo/util"
+import { collectFromHierarchy, green, red, yellow } from "@takomo/util"
 import Table from "easy-table"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
 import { createBaseIO } from "../cli-io"
 import { formatCommandStatus } from "../formatters"
+import { IOProps } from "../stacks/common"
 
 interface Formatters {
   readonly header: (value: string) => string
@@ -41,10 +35,10 @@ const addFormatter = (s: string) => green(s)
 const deleteFormatter = (s: string) => red(s)
 
 export const createDeployOrganizationIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
+  props: IOProps,
 ): DeployOrganizationIO => {
-  const io = createBaseIO(writer)
+  const { logger } = props
+  const io = createBaseIO(props)
 
   const printTrustedServicesPlan = (
     plan: OrganizationBasicConfigDeploymentPlan,

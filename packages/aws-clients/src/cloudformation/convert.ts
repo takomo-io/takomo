@@ -37,6 +37,8 @@ import {
   StackParameterValue,
   StackStatus,
   StackStatusReason,
+  TagKey,
+  TagValue,
   TemplateSummary,
 } from "@takomo/aws-model"
 import {
@@ -80,6 +82,10 @@ export const convertStack = ({
       value: o.OutputValue as StackOutputValue,
       description: o.Description as StackOutputDescription,
     })),
+    tags: (s.Tags ?? []).map((t) => ({
+      key: t.Key as TagKey,
+      value: t.Value as TagValue,
+    })),
   }
 }
 
@@ -109,6 +115,10 @@ export const convertChangeSet = (o: DescribeChangeSetOutput): ChangeSet => ({
   parameters: (o.Parameters ?? []).map((p) => ({
     key: p.ParameterKey as StackParameterKey,
     value: p.ParameterValue as StackParameterValue,
+  })),
+  tags: (o.Tags ?? []).map((t) => ({
+    key: t.Key as TagKey,
+    value: t.Value as TagValue,
   })),
   changes: (o.Changes ?? []).map((c) => ({
     type: c.Type as ChangeType,

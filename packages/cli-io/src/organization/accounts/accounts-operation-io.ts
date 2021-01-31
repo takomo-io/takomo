@@ -8,14 +8,13 @@ import {
 } from "@takomo/organization-commands"
 import { OrganizationAccountConfig } from "@takomo/organization-config"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import { createBaseIO } from "../../cli-io"
 import { printError } from "../../common"
 import { formatCommandStatus } from "../../formatters"
-import { printFailedStackResults } from "../../stacks/common"
-import { createDeployStacksIO } from "../../stacks/deploy-stacks-io"
+import { IOProps, printFailedStackResults } from "../../stacks/common"
+import { createDeployStacksIO } from "../../stacks/deploy-stacks/deploy-stacks-io"
 import { createUndeployStacksIO } from "../../stacks/undeploy-stacks-io"
 
 export interface Messages {
@@ -50,18 +49,21 @@ const getConfigSetsName = (configSetType: ConfigSetType): string => {
   }
 }
 
+interface AccountsOperationIOProps extends IOProps {
+  readonly messages: Messages
+}
+
 export const createAccountsOperationIO = (
-  logger: TkmLogger,
-  messages: Messages,
-  writer: LogWriter = console.log,
+  props: AccountsOperationIOProps,
 ): AccountsOperationIO => {
-  const io = createBaseIO(writer)
+  const { logger, messages } = props
+  const io = createBaseIO(props)
 
   const createStackDeployIO = (accountId: AccountId): DeployStacksIO =>
-    createDeployStacksIO(logger.childLogger(accountId))
+    createDeployStacksIO({ logger: logger.childLogger(accountId) })
 
   const createStackUndeployIO = (accountId: AccountId): UndeployStacksIO =>
-    createUndeployStacksIO(logger.childLogger(accountId))
+    createUndeployStacksIO({ logger: logger.childLogger(accountId) })
 
   const confirmLaunch = async (
     plan: AccountsLaunchPlan,

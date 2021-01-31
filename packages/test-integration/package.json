@@ -27,12 +27,12 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "^3.0.0",
-    "@takomo/aws-model": "^3.0.0",
-    "@takomo/cli": "^3.0.0",
-    "@takomo/cli-io": "^3.0.0",
-    "@takomo/config-repository-fs": "^3.0.0",
-    "@takomo/core": "^3.0.0",
+    "@takomo/aws-clients": "3.0.0",
+    "@takomo/aws-model": "3.0.0",
+    "@takomo/cli": "3.0.0",
+    "@takomo/cli-io": "3.0.0",
+    "@takomo/config-repository-fs": "3.0.0",
+    "@takomo/core": "3.0.0",
     "@takomo/deployment-targets-commands": "^3.0.0",
     "@takomo/deployment-targets-context": "^3.0.0",
     "@takomo/init-command": "^3.0.0",

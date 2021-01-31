@@ -1,13 +1,40 @@
 import { StackEvent } from "@takomo/aws-model"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
-import { StackResult } from "@takomo/stacks-model"
-import { LogLevel } from "@takomo/util"
+import { CommandPath, StackGroup, StackResult } from "@takomo/stacks-model"
+import { collectFromHierarchy, LogLevel, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
-import { BaseIO } from "../cli-io"
+import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus, formatStackEvent } from "../formatters"
 
+/**
+ * @hidden
+ */
+export const chooseCommandPathInternal = async (
+  io: BaseIO,
+  rootStackGroup: StackGroup,
+): Promise<CommandPath> => {
+  const allStackGroups = collectFromHierarchy(rootStackGroup, (s) => s.children)
+
+  const allCommandPaths = allStackGroups.reduce(
+    (collected, stackGroup) => [
+      ...collected,
+      stackGroup.path,
+      ...stackGroup.stacks.map((s) => s.path),
+    ],
+    new Array<string>(),
+  )
+
+  const source = async (answersSoFar: any, input: string): Promise<string[]> =>
+    input ? allCommandPaths.filter((p) => p.includes(input)) : allCommandPaths
+
+  return io.autocomplete("Choose command path", source)
+}
+
+/**
+ * @hidden
+ */
 export const printFailedStackResults = (
   io: BaseIO,
   failed: ReadonlyArray<StackResult>,
@@ -81,4 +108,11 @@ export const printStacksOperationOutput = (
   }
 
   return output
+}
+
+/**
+ * @hidden
+ */
+export interface IOProps extends BaseIOProps {
+  readonly logger: TkmLogger
 }

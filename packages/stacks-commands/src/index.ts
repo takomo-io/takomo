@@ -7,6 +7,7 @@ export {
   DeployStacksIO,
 } from "./stacks/deploy/model"
 export {
+  StackDeployOperation,
   StackDeployOperationType,
   StacksDeployPlan,
 } from "./stacks/deploy/plan"

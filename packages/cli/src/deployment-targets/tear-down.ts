@@ -45,7 +45,7 @@ export const tearDownTargetsCmd = {
         operation: "undeploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
       }),
-      io: (ctx, logger) => createTearDownTargetsIO(logger),
+      io: (ctx, logger) => createTearDownTargetsIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemDeploymentTargetsConfigRepository({
           ctx,

@@ -45,7 +45,7 @@ export const bootstrapTargetsCmd = {
         operation: "deploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
       }),
-      io: (ctx, logger) => createBootstrapTargetsIO(logger),
+      io: (ctx, logger) => createBootstrapTargetsIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemDeploymentTargetsConfigRepository({
           ctx,

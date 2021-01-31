@@ -16,7 +16,7 @@ const builder = (yargs: any) =>
 const handler = (argv: any) =>
   handle({
     argv,
-    io: (ctx, logger) => createDependencyGraphIO(logger),
+    io: (ctx, logger) => createDependencyGraphIO({ logger }),
     input: (ctx, input) => ({
       ...input,
       commandPath: argv.commandPath,

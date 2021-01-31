@@ -1,18 +1,16 @@
 import { DeploymentTargetsOperationIO } from "@takomo/deployment-targets-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
+import { IOProps } from "../stacks/common"
 import { createDeploymentTargetsOperationIO } from "./deployment-operation-io"
 
 export const createDeployTargetsIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
+  props: IOProps,
 ): DeploymentTargetsOperationIO =>
-  createDeploymentTargetsOperationIO(
-    logger,
-    {
+  createDeploymentTargetsOperationIO({
+    ...props,
+    messages: {
       confirmHeader: "Targets deployment plan",
       confirmQuestion: "Continue to deploy targets?",
       outputHeader: "Targets deployment summary",
       outputNoTargets: "No targets deployed",
     },
-    writer,
-  )
+  })

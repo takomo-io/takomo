@@ -52,7 +52,7 @@ export const createTestDeployStacksIO = (
     confirmStackDeploy: "CANCEL",
   },
 ): DeployStacksIO => ({
-  ...createDeployStacksIO(logger),
+  ...createDeployStacksIO({ logger }),
 
   confirmDeploy: async (): Promise<ConfirmDeployAnswer> =>
     autoConfirmEnabled ? "CONTINUE_NO_REVIEW" : answers.confirmDeploy,
@@ -72,68 +72,68 @@ export const createTestUndeployStacksIO = (
     confirmUndeploy: "CANCEL",
   },
 ): UndeployStacksIO => ({
-  ...createUndeployStacksIO(logger),
+  ...createUndeployStacksIO({ logger }),
   confirmUndeploy: async (): Promise<ConfirmUndeployAnswer> =>
     autoConfirmEnabled ? "CONTINUE" : answers.confirmUndeploy,
 })
 
 export const createTestListStacksIO = (logger: TkmLogger): ListStacksIO =>
-  createListStacksIO(logger)
+  createListStacksIO({ logger })
 
 export const createTestCreateAccountAliasIO = (
   logger: TkmLogger,
-): CreateAccountAliasIO => createCreateAccountAliasIO(logger)
+): CreateAccountAliasIO => createCreateAccountAliasIO({ logger })
 
 export const createTestDeleteAccountAliasIO = (
   logger: TkmLogger,
-): DeleteAccountAliasIO => createDeleteAccountAliasIO(logger)
+): DeleteAccountAliasIO => createDeleteAccountAliasIO({ logger })
 
 export const createTestDescribeOrganizationIO = (
   logger: TkmLogger,
-): DescribeOrganizationIO => createDescribeOrganizationIO(logger)
+): DescribeOrganizationIO => createDescribeOrganizationIO({ logger })
 
 export const createTestCreateOrganizationIO = (
   logger: TkmLogger,
-): CreateOrganizationIO => createCreateOrganizationIO(logger)
+): CreateOrganizationIO => createCreateOrganizationIO({ logger })
 
 export const createTestDeployTargetsIO = (
   logger: TkmLogger,
-): DeploymentTargetsOperationIO => createDeployTargetsIO(logger)
+): DeploymentTargetsOperationIO => createDeployTargetsIO({ logger })
 
 export const createTestUndeployTargetsIO = (
   logger: TkmLogger,
-): DeploymentTargetsOperationIO => createUndeployTargetsIO(logger)
+): DeploymentTargetsOperationIO => createUndeployTargetsIO({ logger })
 
 export const createTestTeardownTargetsIO = (
   logger: TkmLogger,
-): DeploymentTargetsOperationIO => createTearDownTargetsIO(logger)
+): DeploymentTargetsOperationIO => createTearDownTargetsIO({ logger })
 
 export const createTestBootstrapTargetsIO = (
   logger: TkmLogger,
-): DeploymentTargetsOperationIO => createBootstrapTargetsIO(logger)
+): DeploymentTargetsOperationIO => createBootstrapTargetsIO({ logger })
 
 export const createTestListAccountsIO = (logger: TkmLogger): ListAccountsIO =>
-  createListAccountsIO(logger)
+  createListAccountsIO({ logger })
 
 export const createTestDeployAccountsIO = (
   logger: TkmLogger,
-): AccountsOperationIO => createDeployAccountsIO(logger)
+): AccountsOperationIO => createDeployAccountsIO({ logger })
 
 export const createTestUndeployAccountsIO = (
   logger: TkmLogger,
-): AccountsOperationIO => createUndeployAccountsIO(logger)
+): AccountsOperationIO => createUndeployAccountsIO({ logger })
 
 export const createTestTeardownAccountsIO = (
   logger: TkmLogger,
-): AccountsOperationIO => createTearDownAccountsIO(logger)
+): AccountsOperationIO => createTearDownAccountsIO({ logger })
 
 export const createTestBootstrapAccountsIO = (
   logger: TkmLogger,
-): AccountsOperationIO => createBootstrapAccountsIO(logger)
+): AccountsOperationIO => createBootstrapAccountsIO({ logger })
 
 export const createTestDeployOrganizationIO = (
   logger: TkmLogger,
-): DeployOrganizationIO => createDeployOrganizationIO(logger)
+): DeployOrganizationIO => createDeployOrganizationIO({ logger })
 
 export const createTestInitProjectIO = (logger: TkmLogger): InitProjectIO =>
-  createInitProjectIO(logger)
+  createInitProjectIO({ logger })

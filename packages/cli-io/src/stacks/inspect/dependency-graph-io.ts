@@ -2,14 +2,12 @@ import {
   DependencyGraphIO,
   DependencyGraphOutput,
 } from "@takomo/stacks-commands"
-import { LogWriter, TkmLogger } from "@takomo/util"
 import { createBaseIO } from "../../cli-io"
+import { IOProps } from "../common"
 
-export const createDependencyGraphIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
-): DependencyGraphIO => {
-  const io = createBaseIO(writer)
+export const createDependencyGraphIO = (props: IOProps): DependencyGraphIO => {
+  const { logger } = props
+  const io = createBaseIO(props)
   const indent = 2
 
   const printOutput = (

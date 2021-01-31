@@ -20,8 +20,8 @@
     "integration-test": "jest test --passWithNoTests --runInBand --ci"
   },
   "dependencies": {
-    "@takomo/test-integration": "^3.0.0",
-    "@takomo/util": "^3.0.0"
+    "@takomo/test-integration": "3.0.0",
+    "@takomo/util": "3.0.0"
   },
   "devDependencies": {
     "dotenv": "8.2.0"

@@ -1,4 +1,4 @@
-import { ClientRequestToken } from "./common"
+import { ClientRequestToken, Tag } from "./common"
 
 /**
  * CloudFormation stack id.
@@ -143,6 +143,7 @@ interface BaseCloudFormationStack<P> {
   readonly creationTime: CreationTime
   readonly lastUpdatedTime?: LastUpdatedTime
   readonly outputs: ReadonlyArray<StackOutput>
+  readonly tags: ReadonlyArray<Tag>
 }
 
 /**
@@ -276,6 +277,7 @@ export interface BaseChangeSet<P> {
   readonly statusReason: ChangeSetStatusReason
   readonly parameters: ReadonlyArray<P>
   readonly changes: ReadonlyArray<Change>
+  readonly tags: ReadonlyArray<Tag>
 }
 
 export type ChangeSet = BaseChangeSet<StackParameter>

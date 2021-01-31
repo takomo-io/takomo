@@ -1,9 +1,11 @@
-import { StackEvent } from "@takomo/aws-model"
+import {
+  AccountStatus,
+  ResourceStatus,
+  StackEvent,
+  StackStatus,
+} from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
-import { cyan, green, grey, orange, red, yellow } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
-import { StackStatus } from "aws-sdk/clients/cloudformation"
-import { AccountStatus } from "aws-sdk/clients/organizations"
+import { cyan, green, grey, red, yellow } from "@takomo/util"
 
 export const formatCommandStatus = (status: CommandStatus): string => {
   switch (status) {
@@ -20,9 +22,7 @@ export const formatCommandStatus = (status: CommandStatus): string => {
   }
 }
 
-export const formatResourceStatus = (
-  status: CloudFormation.ResourceStatus,
-): string => {
+export const formatResourceStatus = (status: ResourceStatus): string => {
   if (status.endsWith("COMPLETE")) {
     return green(status)
   }
@@ -86,31 +86,6 @@ export const formatStackEvent = (e: StackEvent): string =>
     formatResourceStatus(e.resourceStatus),
     e.resourceStatusReason,
   ].join(" ")
-
-export const formatResourceChange = (
-  action: CloudFormation.ChangeAction,
-  replacement: CloudFormation.Replacement,
-  resourceLogicalId: string,
-): string => {
-  switch (action) {
-    case "Add":
-      return green(`  + ${resourceLogicalId}:`)
-    case "Modify":
-      if (replacement === "True") {
-        return orange(`  ± ${resourceLogicalId}:       (new resource required)`)
-      } else if (replacement === "Conditional") {
-        return orange(
-          `  ± ${resourceLogicalId}:       (new resource required conditionally)`,
-        )
-      } else {
-        return yellow(`  ~ ${resourceLogicalId}:`)
-      }
-    case "Remove":
-      return red(`  - ${resourceLogicalId}:`)
-    default:
-      throw new Error(`Unsupported change action: ${action}`)
-  }
-}
 
 export const formatAccountStatus = (status: AccountStatus): string => {
   switch (status) {

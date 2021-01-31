@@ -3,74 +3,55 @@ import {
   ConfirmUndeployAnswer,
   StacksOperationOutput,
   StacksUndeployPlan,
+  StackUndeployOperationType,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
-import {
-  CommandPath,
-  InternalStack,
-  StackGroup,
-  StackPath,
-} from "@takomo/stacks-model"
-import {
-  collectFromHierarchy,
-  grey,
-  LogWriter,
-  red,
-  TkmLogger,
-} from "@takomo/util"
+import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
+import { grey, red } from "@takomo/util"
+import R from "ramda"
 import { createBaseIO } from "../cli-io"
 import { formatStackEvent, formatStackStatus } from "../formatters"
-import { printStacksOperationOutput } from "./common"
+import {
+  chooseCommandPathInternal,
+  IOProps,
+  printStacksOperationOutput,
+} from "./common"
 
 interface ConfirmUndeployAnswerOption {
   readonly name: string
   readonly value: ConfirmUndeployAnswer
 }
 
-const CONFIRM_UNDEPLOY_ANSWER_CANCEL: ConfirmUndeployAnswerOption = {
+export const CONFIRM_UNDEPLOY_ANSWER_CANCEL: ConfirmUndeployAnswerOption = {
   name: "no",
   value: "CANCEL",
 }
 
-const CONFIRM_UNDEPLOY_ANSWER_CONTINUE: ConfirmUndeployAnswerOption = {
+export const CONFIRM_UNDEPLOY_ANSWER_CONTINUE: ConfirmUndeployAnswerOption = {
   name: "yes",
   value: "CONTINUE",
 }
 
-export const createUndeployStacksIO = (
-  logger: TkmLogger,
-  writer: LogWriter = console.log,
-): UndeployStacksIO => {
-  const io = createBaseIO(writer)
-
-  const chooseCommandPath = async (
-    rootStackGroup: StackGroup,
-  ): Promise<CommandPath> => {
-    const allStackGroups = collectFromHierarchy(
-      rootStackGroup,
-      (s) => s.children,
-    )
-
-    const allCommandPaths = allStackGroups.reduce(
-      (collected, stackGroup) => [
-        ...collected,
-        stackGroup.path,
-        ...stackGroup.stacks.map((s) => s.path),
-      ],
-      new Array<string>(),
-    )
-
-    const source = async (
-      answersSoFar: any,
-      input: string,
-    ): Promise<string[]> => {
-      return input
-        ? allCommandPaths.filter((p) => p.includes(input))
-        : allCommandPaths
-    }
-
-    return io.autocomplete("Choose command path", source)
+const formatStackOperation = (
+  stackPath: StackPath,
+  type: StackUndeployOperationType,
+  columnLength: number,
+): string => {
+  switch (type) {
+    case "DELETE":
+      const removeKey = `- ${stackPath}:`.padEnd(columnLength + 4)
+      return red(`${removeKey}(stack will be removed)`)
+    case "SKIP":
+      const skipKey = `* ${stackPath}:`.padEnd(columnLength + 4)
+      return grey(`${skipKey}(stack not found and will be skipped)`)
+    default:
+      throw new Error(`Unsupported stack operation type: '${type}'`)
   }
+}
+
+export const createUndeployStacksIO = (props: IOProps): UndeployStacksIO => {
+  const { logger } = props
+  const io = createBaseIO(props)
 
   const confirmUndeploy = async ({
     operations,
@@ -79,15 +60,9 @@ export const createUndeployStacksIO = (
     io.longMessage(
       [
         "A stacks undeployment plan has been created and is shown below.",
-        "Stacks will be undeployed in the order they are listed, and in parallel",
-        "when possible.",
+        "Stacks will be undeployed in the order they are listed, and in parallel when possible.",
         "",
-        "Stack operations are indicated with the following symbols:",
-        "",
-        `  ${red("- delete")}           Stack exists and will be deleted`,
-        `  ${grey("* skip")}             Stack does not exist and will skipped`,
-        "",
-        `Following ${operations.length} stack(s) will be undeployed:`,
+        `Following stacks will be undeployed:`,
       ],
       false,
       false,
@@ -98,23 +73,29 @@ export const createUndeployStacksIO = (
       operations.map((o) => o.stack).map((s) => [s.path, s]),
     )
 
+    const maxStackPathLength = R.apply(
+      Math.max,
+      operations.map((o) => o.stack.path.length),
+    )
+
+    const stackPathColumnLength = Math.max(27, maxStackPathLength)
+
     for (const { stack, currentStack, type } of operations) {
       const stackIdentity = await stack.credentialManager.getCallerIdentity()
 
-      const stackOperation =
-        type === "DELETE" ? red(`- ${stack.path}:`) : grey(`* ${stack.path}:`)
-
       io.longMessage(
         [
-          `  ${stackOperation}`,
-          `      name:          ${stack.name}`,
-          `      status:        ${formatStackStatus(currentStack?.status)}`,
-          `      account id:    ${stackIdentity.accountId}`,
-          `      region:        ${stack.region}`,
+          `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
+          `      name:                      ${stack.name}`,
+          `      status:                    ${formatStackStatus(
+            currentStack?.status,
+          )}`,
+          `      account id:                ${stackIdentity.accountId}`,
+          `      region:                    ${stack.region}`,
           "      credentials:",
-          `        user id:     ${stackIdentity.userId}`,
-          `        account id:  ${stackIdentity.accountId}`,
-          `        arn:         ${stackIdentity.arn}`,
+          `        user id:                 ${stackIdentity.userId}`,
+          `        account id:              ${stackIdentity.accountId}`,
+          `        arn:                     ${stackIdentity.arn}`,
         ],
         true,
         false,
@@ -125,9 +106,30 @@ export const createUndeployStacksIO = (
         io.message({ text: "      dependents:" })
         printStackDependents(stack, stacksMap, 8)
       } else {
-        io.message({ text: "      dependents:    []" })
+        io.message({ text: "      dependents:                none" })
       }
     }
+
+    const operationCounts = R.countBy((o) => o.type, operations)
+    const counts = Object.entries(operationCounts)
+      .map(([key, count]) => {
+        switch (key) {
+          case "DELETE":
+            return { order: "1", text: red(`remove: ${count}`) }
+          case "SKIP":
+            return { order: "2", text: grey(`skip: ${count}`) }
+          default:
+            throw new Error(`Unsupported operation ${key}`)
+        }
+      })
+      .sort((a, b) => a.order.localeCompare(b.order))
+      .map((o) => o.text)
+      .join(", ")
+
+    io.message({
+      text: `  stacks | total: ${operations.length}, ${counts}`,
+      marginTop: true,
+    })
 
     return await io.choose(
       "Continue to undeploy the stacks?",
@@ -159,6 +161,9 @@ export const createUndeployStacksIO = (
       printStackDependents(dependent, stacksMap, depth + 2)
     })
   }
+
+  const chooseCommandPath = (rootStackGroup: StackGroup) =>
+    chooseCommandPathInternal(io, rootStackGroup)
 
   return {
     ...logger,

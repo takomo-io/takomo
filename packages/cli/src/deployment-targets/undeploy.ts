@@ -45,7 +45,7 @@ export const undeployTargetsCmd = {
         operation: "undeploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
       }),
-      io: (ctx, logger) => createUndeployTargetsIO(logger),
+      io: (ctx, logger) => createUndeployTargetsIO({ logger }),
       configRepository: (ctx, logger) =>
         createFileSystemDeploymentTargetsConfigRepository({
           ctx,

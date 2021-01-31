@@ -38,7 +38,7 @@ export const deployAccountsCmd = {
           logger,
           ...ctx.filePaths,
         }),
-      io: (ctx, logger) => createDeployAccountsIO(logger),
+      io: (ctx, logger) => createDeployAccountsIO({ logger }),
       executor: accountsOperationCommand,
     }),
 }

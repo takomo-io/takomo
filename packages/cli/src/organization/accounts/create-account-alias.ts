@@ -37,7 +37,7 @@ const handler = (argv: any) =>
         logger,
         ...ctx.filePaths,
       }),
-    io: (ctx, logger) => createCreateAccountAliasIO(logger),
+    io: (ctx, logger) => createCreateAccountAliasIO({ logger }),
     executor: createAccountAliasCommand,
   })
 

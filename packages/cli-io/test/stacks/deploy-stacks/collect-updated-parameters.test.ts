@@ -1,7 +1,4 @@
-import {
-  collectUpdatedParameters,
-  ParameterOperation,
-} from "../../src/stacks/deploy-stacks-io"
+import { collectUpdatedParameters } from "../../../src/stacks/deploy-stacks/parameters"
 import { param, paramSpec } from "./util"
 
 describe("#collectUpdatedParameters", () => {
@@ -37,22 +34,8 @@ describe("#collectUpdatedParameters", () => {
 
       const collected = collectUpdatedParameters(newParams, existingParams)
       const expected = [
-        paramSpec(
-          "ParamA",
-          "valueA",
-          "valueX",
-          false,
-          false,
-          ParameterOperation.UPDATE,
-        ),
-        paramSpec(
-          "ParamB",
-          "valueB",
-          "valueY",
-          false,
-          false,
-          ParameterOperation.UPDATE,
-        ),
+        paramSpec("ParamA", "valueA", "valueX", false, false, "update"),
+        paramSpec("ParamB", "valueB", "valueY", false, false, "update"),
       ]
       expect(collected).toStrictEqual(expected)
     })
@@ -69,14 +52,7 @@ describe("#collectUpdatedParameters", () => {
 
       const collected = collectUpdatedParameters(newParams, existingParams)
       const expected = [
-        paramSpec(
-          "ParamA",
-          "valueA",
-          "valueX",
-          false,
-          false,
-          ParameterOperation.UPDATE,
-        ),
+        paramSpec("ParamA", "valueA", "valueX", false, false, "update"),
       ]
       expect(collected).toStrictEqual(expected)
     })
