@@ -1,5 +1,6 @@
 import { TakomoError } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
+import { resolveResultMessage } from "../common"
 import { StackParameterInfo } from "../model"
 import { TemplateSummaryHolder } from "../states"
 
@@ -61,6 +62,36 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
         )
       }
     })
+
+  const validationErrors = parameters.reduce((collected, parameter) => {
+    if (parameter.schema) {
+      const { error } = parameter.schema.validate(parameter.value, {
+        abortEarly: false,
+      })
+
+      if (error) {
+        return [...collected, ...error.details.map((d) => d.message)]
+      }
+    }
+
+    return collected
+  }, new Array<string>())
+
+  if (validationErrors.length > 0) {
+    const message = validationErrors.map((e) => `  - ${e}`).join("\n")
+    const error = new TakomoError(
+      `Validation errors in stack parameters:\n${message}`,
+    )
+
+    return transitions.executeAfterDeployHooks({
+      events: [],
+      ...input,
+      error,
+      success: false,
+      status: "FAILED",
+      message: resolveResultMessage(input.operationType, false),
+    })
+  }
 
   if (currentStack) {
     parameters.forEach((parameter) => {

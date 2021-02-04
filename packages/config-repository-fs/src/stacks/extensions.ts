@@ -1,4 +1,4 @@
-import { HookInitializersMap } from "@takomo/stacks-model"
+import { HookInitializersMap, SchemaRegistry } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { dirExists, FilePath, TakomoError, TkmLogger } from "@takomo/util"
 import readdirp from "readdirp"
@@ -63,4 +63,31 @@ export const loadCustomHooks = async (
   } else {
     logger.debug("Hooks dir not found")
   }
+}
+
+interface LoadCustomSchemasProps {
+  readonly schemasDir: FilePath
+  readonly logger: TkmLogger
+  readonly registry: SchemaRegistry
+}
+
+export const loadCustomSchemas = async ({
+  schemasDir,
+  logger,
+  registry,
+}: LoadCustomSchemasProps): Promise<void> => {
+  if (!(await dirExists(schemasDir))) {
+    logger.debug("Schemas dir not found")
+  }
+
+  logger.debug(`Found schemas dir: ${schemasDir}`)
+
+  const schemaFiles = await readdirp.promise(schemasDir, {
+    alwaysStat: true,
+    depth: 100,
+    type: "files",
+    fileFilter: (e) => e.basename.endsWith(".js"),
+  })
+
+  schemaFiles.map((f) => f.fullPath).forEach(registry.registerProviderFromFile)
 }

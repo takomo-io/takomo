@@ -1,0 +1,9 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+template: template.yml
+regions: eu-north-1
+parameters:
+  Message:
+    value: {{ var.message2 }}
+    schema:
+      name: maxLength
+      max: 10

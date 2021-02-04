@@ -4,6 +4,7 @@ export {
   ListParameterConfig,
   ParameterConfig,
   ParameterConfigs,
+  SchemaConfig,
   SingleParameterConfig,
   StackConfig,
   StackGroupConfig,

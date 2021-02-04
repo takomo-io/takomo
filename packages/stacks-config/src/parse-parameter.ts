@@ -4,6 +4,7 @@ import {
   ParameterConfigs,
   SingleParameterConfig,
 } from "./model"
+import { parseSchema } from "./parse-schema"
 
 const parseConfidential = (value: unknown): boolean | undefined => {
   if (value === null || value === undefined) {
@@ -39,6 +40,7 @@ const parseParameterConfig = (value: unknown): ParameterConfig => {
       confidential: undefined,
       immutable: false,
       resolver: "static",
+      schema: undefined,
       value,
     }
   }
@@ -61,6 +63,7 @@ const parseParameterConfig = (value: unknown): ParameterConfig => {
     resolver,
     confidential: parseConfidential(objValue.confidential),
     immutable: parseImmutable(objValue.immutable),
+    schema: parseSchema(objValue.schema),
   }
 }
 
@@ -98,7 +101,8 @@ export const parseParameter = (value: unknown): ParameterConfigs => {
       const confidential = parseConfidential(objValue.confidential)
       const immutable = parseImmutable(objValue.immutable)
       const items = objValue.value.map(parseParameterConfig)
-      return new ListParameterConfig({ items, confidential, immutable })
+      const schema = parseSchema(objValue.schema)
+      return new ListParameterConfig({ items, confidential, immutable, schema })
     }
 
     return new SingleParameterConfig(
@@ -106,6 +110,7 @@ export const parseParameter = (value: unknown): ParameterConfigs => {
         ...objValue,
         confidential: parseConfidential(objValue.confidential),
         immutable: parseImmutable(objValue.immutable),
+        schema: parseSchema(objValue.schema),
         resolver: "static",
       }),
     )

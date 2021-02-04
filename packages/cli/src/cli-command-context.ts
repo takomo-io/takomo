@@ -9,6 +9,7 @@ export interface ProjectFilePaths {
   readonly hooksDir: FilePath
   readonly resolversDir: FilePath
   readonly helpersDir: FilePath
+  readonly schemasDir: FilePath
   readonly projectConfigFile: FilePath
   readonly stackGroupConfigFileName: string
   readonly projectConfigFileName: string

@@ -1,0 +1,8 @@
+Parameters:
+  Message:
+    Type: String
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {}

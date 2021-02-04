@@ -3,6 +3,7 @@ import { ConfigTree, StacksConfigRepository } from "@takomo/stacks-context"
 import {
   HookInitializersMap,
   ROOT_STACK_GROUP_PATH,
+  SchemaRegistry,
   StackPath,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
@@ -17,7 +18,11 @@ import {
 import path from "path"
 import { loadTemplateHelpers, loadTemplatePartials } from "../template-engine"
 import { buildStackGroupConfigNode } from "./config-tree"
-import { loadCustomHooks, loadCustomResolvers } from "./extensions"
+import {
+  loadCustomHooks,
+  loadCustomResolvers,
+  loadCustomSchemas,
+} from "./extensions"
 
 export interface FileSystemStacksConfigRepositoryProps {
   readonly ctx: CommandContext
@@ -29,6 +34,7 @@ export interface FileSystemStacksConfigRepositoryProps {
   readonly helpersDir: FilePath
   readonly partialsDir: FilePath
   readonly templatesDir: FilePath
+  readonly schemasDir: FilePath
   readonly configFileExtension: string
   readonly stackGroupConfigFileName: string
 }
@@ -44,6 +50,7 @@ export const createFileSystemStacksConfigRepository = async ({
   configFileExtension,
   stackGroupConfigFileName,
   templatesDir,
+  schemasDir,
 }: FileSystemStacksConfigRepositoryProps): Promise<StacksConfigRepository> => {
   const templateEngine = createTemplateEngine()
 
@@ -69,10 +76,12 @@ export const createFileSystemStacksConfigRepository = async ({
     loadExtensions: async (
       resolverRegistry: ResolverRegistry,
       hookInitializers: HookInitializersMap,
+      schemaRegistry: SchemaRegistry,
     ): Promise<void> => {
       await Promise.all([
         loadCustomResolvers(resolversDir, logger, resolverRegistry),
         loadCustomHooks(hooksDir, logger, hookInitializers),
+        loadCustomSchemas({ schemasDir, logger, registry: schemaRegistry }),
       ])
     },
 

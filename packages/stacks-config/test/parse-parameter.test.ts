@@ -9,6 +9,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: undefined,
       immutable: false,
       resolver: "static",
+      schema: undefined,
     },
   ],
   [
@@ -18,6 +19,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: undefined,
       immutable: false,
       resolver: "static",
+      schema: undefined,
     },
   ],
   [
@@ -27,6 +29,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: undefined,
       immutable: false,
       resolver: "static",
+      schema: undefined,
     },
   ],
   [
@@ -38,6 +41,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: undefined,
       immutable: false,
       resolver: "static",
+      schema: undefined,
     },
   ],
   [
@@ -50,6 +54,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: false,
       immutable: false,
       resolver: "static",
+      schema: undefined,
     },
   ],
   [
@@ -62,6 +67,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: true,
       immutable: false,
       resolver: "static",
+      schema: undefined,
     },
   ],
   [
@@ -74,6 +80,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: undefined,
       immutable: true,
       resolver: "static",
+      schema: undefined,
     },
   ],
   [
@@ -87,6 +94,7 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
       confidential: true,
       immutable: false,
       resolver: "static",
+      schema: undefined,
     },
   ],
 ]
@@ -107,18 +115,21 @@ const listParameterCases: Array<[
         confidential: undefined,
         immutable: false,
         resolver: "static",
+        schema: undefined,
       },
       {
         value: "b",
         confidential: undefined,
         immutable: false,
         resolver: "static",
+        schema: undefined,
       },
       {
         value: "c",
         confidential: undefined,
         immutable: false,
         resolver: "static",
+        schema: undefined,
       },
     ],
   ],
@@ -132,6 +143,7 @@ const listParameterCases: Array<[
         confidential: undefined,
         immutable: false,
         resolver: "static",
+        schema: undefined,
       },
     ],
   ],
@@ -147,12 +159,14 @@ const listParameterCases: Array<[
         confidential: undefined,
         immutable: false,
         resolver: "static",
+        schema: undefined,
       },
       {
         value: 2,
         confidential: undefined,
         immutable: false,
         resolver: "static",
+        schema: undefined,
       },
     ],
   ],
@@ -161,6 +175,7 @@ const listParameterCases: Array<[
       confidential: true,
       immutable: false,
       value: ["foobar"],
+      schema: undefined,
     },
     true,
     false,
@@ -170,6 +185,7 @@ const listParameterCases: Array<[
         confidential: undefined,
         immutable: false,
         resolver: "static",
+        schema: undefined,
       },
     ],
   ],
@@ -181,6 +197,7 @@ const listParameterCases: Array<[
           resolver: "stack-output",
           stack: "/db.yml",
           output: "VpcId",
+          schema: undefined,
         },
       ],
     },
@@ -193,6 +210,7 @@ const listParameterCases: Array<[
         resolver: "stack-output",
         stack: "/db.yml",
         output: "VpcId",
+        schema: undefined,
       },
     ],
   ],
@@ -202,11 +220,13 @@ const listParameterCases: Array<[
         resolver: "stack-output",
         stack: "/db.yml",
         output: "Subnet1",
+        schema: undefined,
       },
       {
         resolver: "external-stack-output",
         stack: "vpc",
         output: "VpcId",
+        schema: undefined,
       },
       100,
     ],
@@ -219,6 +239,7 @@ const listParameterCases: Array<[
         resolver: "stack-output",
         stack: "/db.yml",
         output: "Subnet1",
+        schema: undefined,
       },
       {
         confidential: undefined,
@@ -226,12 +247,14 @@ const listParameterCases: Array<[
         resolver: "external-stack-output",
         stack: "vpc",
         output: "VpcId",
+        schema: undefined,
       },
       {
         confidential: undefined,
         immutable: false,
         resolver: "static",
         value: 100,
+        schema: undefined,
       },
     ],
   ],
@@ -258,6 +281,7 @@ describe("#parseParameter", () => {
         expect(config.confidential).toBe(expectedConfidential)
         expect(config.immutable).toBe(expectedImmutable)
         expect(config.items).toStrictEqual(expectedConfigs)
+        expect(config.schema).toBeUndefined()
       } else {
         fail("Expected config to be ListParameterConfig")
       }

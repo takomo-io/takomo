@@ -16,6 +16,7 @@ import {
   StackGroup,
   StackPath,
 } from "@takomo/stacks-model"
+import { AnySchema } from "joi"
 import { StacksOperationOutput } from "../../model"
 import { StackDeployOperationType, StacksDeployPlan } from "./plan"
 
@@ -63,6 +64,7 @@ export interface StackParameterInfo {
   readonly key: StackParameterKey
   readonly value: StackParameterValue
   readonly immutable: boolean
+  readonly schema?: AnySchema
 }
 
 /**

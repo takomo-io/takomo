@@ -5,6 +5,14 @@ export { InternalStacksContext, StacksContext } from "./context"
 export * from "./hook"
 export * from "./resolver"
 export {
+  createSchemaRegistry,
+  InitSchemaProps,
+  SchemaName,
+  SchemaProps,
+  SchemaProvider,
+  SchemaRegistry,
+} from "./schemas"
+export {
   createStack,
   InternalStack,
   Stack,

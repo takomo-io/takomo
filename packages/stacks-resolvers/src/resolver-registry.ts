@@ -1,3 +1,4 @@
+import { StackParameterKey } from "@takomo/aws-model"
 import { CommandContext } from "@takomo/core"
 import { ParameterConfig } from "@takomo/stacks-config"
 import {
@@ -27,6 +28,10 @@ export const defaultSchema = (resolverName: string): Joi.ObjectSchema =>
     resolver: Joi.string().valid(resolverName),
     confidential: Joi.boolean(),
     immutable: Joi.boolean(),
+    schema: [
+      Joi.string(),
+      Joi.object({ name: Joi.string().required() }).unknown(true),
+    ],
   })
 
 export class ResolverRegistry {
@@ -42,7 +47,7 @@ export class ResolverRegistry {
   initResolver = async (
     ctx: CommandContext,
     stackPath: StackPath,
-    parameterName: string,
+    parameterName: StackParameterKey,
     name: ResolverName,
     props: ParameterConfig,
   ): Promise<Resolver> => {

@@ -17,10 +17,16 @@ import {
 } from "@takomo/stacks-model"
 import { FilePath } from "@takomo/util"
 
+export interface SchemaConfig {
+  readonly name: string
+  readonly [key: string]: unknown
+}
+
 export interface ParameterConfig {
   readonly resolver: ResolverName
   readonly confidential?: boolean
   readonly immutable: boolean
+  readonly schema?: SchemaConfig
   readonly [key: string]: unknown
 }
 
@@ -36,6 +42,7 @@ interface ListParameterConfigProps {
   readonly items: ReadonlyArray<ParameterConfig>
   readonly confidential?: boolean
   readonly immutable?: boolean
+  readonly schema?: SchemaConfig
 }
 
 export class ListParameterConfig {
@@ -43,11 +50,18 @@ export class ListParameterConfig {
   readonly immutable: boolean
   readonly items: ReadonlyArray<ParameterConfig>
   readonly isList = true
+  readonly schema?: SchemaConfig
 
-  constructor({ items, immutable, confidential }: ListParameterConfigProps) {
+  constructor({
+    items,
+    immutable,
+    confidential,
+    schema,
+  }: ListParameterConfigProps) {
     this.items = items
     this.immutable = immutable ?? false
     this.confidential = confidential
+    this.schema = schema
   }
 }
 
