@@ -8,6 +8,7 @@ import {
   createStack,
   HookInitializersMap,
   InternalStack,
+  SchemaRegistry,
   StackGroup,
   StackPath,
   StackProps,
@@ -39,6 +40,7 @@ export const buildStack = async (
   defaultCredentialManager: CredentialManager,
   credentialManagers: Map<IamRoleArn, CredentialManager>,
   resolverRegistry: ResolverRegistry,
+  schemaRegistry: SchemaRegistry,
   hookInitializers: HookInitializersMap,
   node: StackConfigNode,
   stackGroup: StackGroup,
@@ -80,6 +82,7 @@ export const buildStack = async (
     stackPath,
     stackConfig.parameters,
     resolverRegistry,
+    schemaRegistry,
   )
 
   uniq(

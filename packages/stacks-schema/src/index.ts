@@ -115,6 +115,11 @@ export const createStacksSchemas = (
     }),
   ]
 
+  const parameterSchema = [
+    Joi.string(),
+    Joi.object({ name: Joi.string().required() }).unknown(true),
+  ]
+
   const staticStringParameterValue = Joi.string().required()
   const staticNumberParameterValue = Joi.number().required()
   const staticBooleanParameterValue = Joi.boolean().required()
@@ -125,11 +130,14 @@ export const createStacksSchemas = (
       .max(60)
       .regex(/^[a-zA-Z]+[a-zA-Z0-9-_]*$/),
     confidential: Joi.boolean(),
+    immutable: Joi.boolean(),
+    schema: parameterSchema,
   }).unknown(true)
 
   const configurableStaticParameterValue = Joi.object({
     confidential: Joi.boolean(),
     immutable: Joi.boolean(),
+    schema: parameterSchema,
     value: [
       staticStringParameterValue,
       staticNumberParameterValue,

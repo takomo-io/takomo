@@ -58,7 +58,6 @@ export const buildStackGroupConfigNode = async (
   const stacks = files
     .filter((f) => f.stats!.isFile() && f.basename !== stackGroupConfigFileName)
     .map((f) => ({
-      //file: { fullPath: f.fullPath, basename: f.basename },
       path:
         stackGroupPath === ROOT_STACK_GROUP_PATH
           ? `/${f.basename}`
@@ -80,7 +79,6 @@ export const buildStackGroupConfigNode = async (
   }
 
   return {
-    //dir: { fullPath: stackGroupDir, basename: path.basename(stackGroupDir) },
     name: path.basename(stackGroupDir),
     path: stackGroupPath,
     parentPath: parentStackGroupPath,

@@ -50,7 +50,10 @@ export const prepareParameters: StackOperationStep<DetailedCurrentStackHolder> =
           ? value.map((v) => `${v}`).join(",")
           : `${value}`
 
+        const schema = executor.getSchema()
+
         return {
+          schema: schema?.label(parameterName),
           key: parameterName,
           value: parameterValue,
           immutable: executor.isImmutable(),

@@ -8,10 +8,12 @@ import {
   Resolver,
   ResolverInput,
   ResolverName,
+  SchemaRegistry,
   StackPath,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { TakomoError, TemplateEngine, Timer } from "@takomo/util"
+import { AnySchema } from "joi"
 import flatten from "lodash.flatten"
 import { ConfigTree } from "./config/config-tree"
 
@@ -73,16 +75,19 @@ export class SingleResolverExecutor implements ResolverExecutor {
   readonly #resolver: Resolver
   readonly #confidential?: boolean
   readonly #immutable: boolean
+  readonly #schema?: AnySchema
 
   constructor(
     name: ResolverName,
     resolver: Resolver,
     paramConfig: ParameterConfig,
+    schema?: AnySchema,
   ) {
     this.#name = name
     this.#resolver = resolver
     this.#confidential = paramConfig.confidential
     this.#immutable = paramConfig.immutable
+    this.#schema = schema
   }
 
   resolve = async (input: ResolverInput): Promise<any> =>
@@ -104,10 +109,9 @@ export class SingleResolverExecutor implements ResolverExecutor {
 
   getDependencies = (): StackPath[] => getValue([], this.#resolver.dependencies)
 
-  /**
-   * @returns Resolver name
-   */
   getName = (): ResolverName => this.#name
+
+  getSchema = (): AnySchema | undefined => this.#schema
 }
 
 /**
@@ -119,17 +123,20 @@ export class ListResolverExecutor implements ResolverExecutor {
   readonly #resolvers: ReadonlyArray<ResolverExecutor>
   readonly #confidential?: boolean
   readonly #immutable: boolean
+  readonly #schema?: AnySchema
 
   constructor(
     name: ResolverName,
     resolvers: ReadonlyArray<ResolverExecutor>,
     immutable: boolean,
     confidential?: boolean,
+    schema?: AnySchema,
   ) {
     this.#name = name
     this.#resolvers = resolvers
     this.#immutable = immutable
     this.#confidential = confidential
+    this.#schema = schema
   }
 
   resolve = async (input: ResolverInput): Promise<any> =>
@@ -157,6 +164,8 @@ export class ListResolverExecutor implements ResolverExecutor {
     flatten(this.#resolvers.map((r) => r.getIamRoleArns()))
 
   getName = (): ResolverName => this.#name
+
+  getSchema = (): AnySchema | undefined => this.#schema
 }
 
 export interface StackResult {
@@ -185,6 +194,8 @@ export interface ResolverExecutor {
   getIamRoleArns: () => IamRoleArn[]
 
   getName: () => ResolverName
+
+  getSchema: () => AnySchema | undefined
 }
 
 export interface StacksConfigRepository {
@@ -200,6 +211,7 @@ export interface StacksConfigRepository {
   loadExtensions: (
     resolverRegistry: ResolverRegistry,
     hookInitializers: HookInitializersMap,
+    schemaRegistry: SchemaRegistry,
   ) => Promise<void>
 
   templateEngine: TemplateEngine

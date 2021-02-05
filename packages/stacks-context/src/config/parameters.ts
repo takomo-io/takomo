@@ -1,7 +1,7 @@
 import { StackParameterKey } from "@takomo/aws-model"
 import { CommandContext } from "@takomo/core"
 import { ParameterConfig, ParameterConfigs } from "@takomo/stacks-config"
-import { StackPath } from "@takomo/stacks-model"
+import { SchemaRegistry, StackPath } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { TakomoError } from "@takomo/util"
 import {
@@ -16,6 +16,7 @@ const initializeResolver = async (
   paramName: StackParameterKey,
   paramConfig: ParameterConfig,
   resolverRegistry: ResolverRegistry,
+  schemaRegistry: SchemaRegistry,
 ): Promise<ResolverExecutor> => {
   const resolverName = paramConfig.resolver
 
@@ -39,7 +40,17 @@ const initializeResolver = async (
     paramConfig,
   )
 
-  return new SingleResolverExecutor(resolverName, resolver, paramConfig)
+  const schema = paramConfig.schema
+    ? await schemaRegistry.initParameterSchema(
+        ctx,
+        stackPath,
+        paramName,
+        paramConfig.schema?.name,
+        paramConfig.schema,
+      )
+    : undefined
+
+  return new SingleResolverExecutor(resolverName, resolver, paramConfig, schema)
 }
 
 export const buildParameters = async (
@@ -47,6 +58,7 @@ export const buildParameters = async (
   stackPath: StackPath,
   parameters: Map<StackParameterKey, ParameterConfigs>,
   resolverRegistry: ResolverRegistry,
+  schemaRegistry: SchemaRegistry,
 ): Promise<Map<StackParameterKey, ResolverExecutor>> => {
   const parametersMap = new Map<StackParameterKey, ResolverExecutor>()
 
@@ -60,6 +72,7 @@ export const buildParameters = async (
             `${paramName}[${index}]`,
             item,
             resolverRegistry,
+            schemaRegistry,
           ),
         ),
       )
@@ -80,6 +93,7 @@ export const buildParameters = async (
         paramName,
         paramConfig.config,
         resolverRegistry,
+        schemaRegistry,
       )
 
       parametersMap.set(paramName, resolver)

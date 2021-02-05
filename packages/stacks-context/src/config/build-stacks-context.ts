@@ -6,6 +6,7 @@ import { IamRoleArn } from "@takomo/aws-model"
 import { CommandContext } from "@takomo/core"
 import {
   CommandPath,
+  createSchemaRegistry,
   InternalStacksContext,
   ROOT_STACK_GROUP_PATH,
   StackGroupPath,
@@ -89,7 +90,13 @@ export const buildStacksContext = async ({
     resolverRegistry.registerBuiltInProvider(p),
   )
 
-  await configRepository.loadExtensions(resolverRegistry, hookInitializers)
+  const schemaRegistry = createSchemaRegistry(logger)
+
+  await configRepository.loadExtensions(
+    resolverRegistry,
+    hookInitializers,
+    schemaRegistry,
+  )
 
   const credentialManagers = new Map<IamRoleArn, CredentialManager>()
 
@@ -105,6 +112,7 @@ export const buildStacksContext = async ({
     credentialManager,
     credentialManagers,
     resolverRegistry,
+    schemaRegistry,
     hookInitializers,
     commandPath ?? ROOT_STACK_GROUP_PATH,
     configTree,

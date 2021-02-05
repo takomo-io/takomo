@@ -1,7 +1,7 @@
 import { IamRoleArn, StackParameterKey } from "@takomo/aws-model"
 import { CommandContext } from "@takomo/core"
 import { TkmLogger } from "@takomo/util"
-import Joi from "joi"
+import Joi, { AnySchema } from "joi"
 import { GetterOrConst } from "./common"
 import { StacksContext } from "./context"
 import { Stack, StackPath } from "./stack"
@@ -134,4 +134,5 @@ export interface ResolverExecutor {
   readonly getDependencies: () => ReadonlyArray<StackPath>
   readonly getIamRoleArns: () => ReadonlyArray<IamRoleArn>
   readonly getName: () => ResolverName
+  readonly getSchema: () => AnySchema | undefined
 }
