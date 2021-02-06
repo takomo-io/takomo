@@ -22,6 +22,7 @@ const handler = (argv: any) =>
         ctx,
         logger,
         ...ctx.filePaths,
+        projectConfig: ctx.projectConfig,
       }),
     executor: deployOrganizationCommand,
   })

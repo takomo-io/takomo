@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "build-if-changed": "../../ci/build-if-changed.sh",
-    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock && rm -rf .checksum",
     "clean:deps": "rm -rf node_modules",
     "clean:dist": "rm -rf dist",
     "depcheck": "depcheck --config=../../.depcheckrc",

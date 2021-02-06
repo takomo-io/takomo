@@ -29,6 +29,7 @@ import {
   createListAccountsOutputMatcher,
   CreateOrganizationOutputMatcher,
   DeleteAccountAliasOutputMatcher,
+  DeployOrganizationOutputMatcher,
   DescribeOrganizationOutputMatcher,
   ListAccountsOutputMatcher,
 } from "../assertions/organization"
@@ -66,6 +67,7 @@ export const createTestOrganizationConfigRepository = async ({
     logger: createConsoleLogger({
       logLevel: ctx.logLevel,
     }),
+    projectConfig: ctx.projectConfig,
   })
 
 const createCtxAndConfigRepository = async (
@@ -372,7 +374,7 @@ export const executeTeardownAccountsCommand = (
 
 export const executeDeployOrganizationCommand = (
   props: ExecuteCommandProps,
-): AccountsOperationOutputMatcher =>
+): DeployOrganizationOutputMatcher =>
   createDeployOrganizationOutputMatcher(async () => {
     const logLevel = props.logLevel ?? "info"
 

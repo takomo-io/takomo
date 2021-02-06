@@ -1,5 +1,7 @@
-import { aws } from "@takomo/test-integration"
-import { executeDescribeOrganizationCommand } from "@takomo/test-integration/src"
+import {
+  aws,
+  executeDescribeOrganizationCommand,
+} from "@takomo/test-integration"
 import {
   ORG_A_ID,
   ORG_A_MASTER_ACCOUNT_ID,

@@ -179,6 +179,7 @@ export const createOrganizationSchemas = (
   const featureSet = Joi.string().valid("ALL", "CONSOLIDATED_BILLING")
 
   return {
+    organizationAccount,
     trustedAwsServices,
     trustedAwsService,
     organizationalUnits,

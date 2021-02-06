@@ -57,13 +57,3 @@ export const createFile = async (
       else resolve(true)
     })
   })
-
-// export interface File {
-//   readonly basename: FilePath
-//   readonly fullPath: FilePath
-// }
-//
-// export interface Dir {
-//   readonly basename: FilePath
-//   readonly fullPath: FilePath
-// }

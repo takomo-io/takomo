@@ -1,11 +1,11 @@
 import { DeployOrganizationOutput } from "@takomo/organization-commands"
-import { executeTeardownAccountsCommand } from "@takomo/test-integration"
 import {
   executeBootstrapAccountsCommand,
   executeDeployAccountsCommand,
   executeDeployOrganizationCommand,
+  executeTeardownAccountsCommand,
   executeUndeployAccountsCommand,
-} from "@takomo/test-integration/src"
+} from "@takomo/test-integration"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,

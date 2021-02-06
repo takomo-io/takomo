@@ -1,4 +1,4 @@
-import { executeListAccountsCommand } from "@takomo/test-integration/src"
+import { executeListAccountsCommand } from "@takomo/test-integration"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,
