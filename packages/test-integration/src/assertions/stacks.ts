@@ -2,9 +2,9 @@ import { StackName, StackStatus } from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
 import {
   ListStacksOutput,
+  StackInfo,
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
-import { StackInfo } from "@takomo/stacks-commands/src/stacks/list/model"
 import { StackPath, StackResult } from "@takomo/stacks-model"
 
 export interface ExpectStackResultProps {

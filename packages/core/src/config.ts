@@ -35,3 +35,31 @@ export const parseRegex = (
     )
   }
 }
+
+/**
+ * @hidden
+ */
+export type AccountRepositoryType = string
+
+/**
+ * @hidden
+ */
+export interface AccountRepositoryConfig {
+  readonly type: AccountRepositoryType
+  readonly [key: string]: unknown
+}
+
+/**
+ * @hidden
+ */
+export interface TakomoProjectOrganizationConfig {
+  readonly accountRepository?: AccountRepositoryConfig
+}
+
+/**
+ * @hidden
+ */
+export interface TakomoProjectConfig {
+  readonly requiredVersion?: string
+  readonly organization?: TakomoProjectOrganizationConfig
+}

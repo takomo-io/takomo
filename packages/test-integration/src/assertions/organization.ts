@@ -218,6 +218,12 @@ export const createAccountsOperationOutputMatcher = (
 
 export interface DeployOrganizationOutputMatcher {
   expectCommandToSucceed: () => DeployOrganizationOutputMatcher
+  expectCommandToFail: (
+    message: string,
+    errorMessage?: string,
+  ) => DeployOrganizationOutputMatcher
+  expectCommandToThrow: (error: any) => Promise<void>
+  expectCommandToThrowWithMessage: (message: string) => Promise<void>
   assert: () => Promise<DeployOrganizationOutput>
 }
 
@@ -233,6 +239,29 @@ export const createDeployOrganizationOutputMatcher = (
       expect(output.error).toBeUndefined()
     })
 
+  const expectCommandToThrow = async (error: any): Promise<void> => {
+    await expect(executor).rejects.toEqual(error)
+  }
+
+  const expectCommandToThrowWithMessage = async (
+    message: string,
+  ): Promise<void> => {
+    await expect(executor).rejects.toThrow(message)
+  }
+
+  const expectCommandToFail = (message: string, errorMessage?: string) =>
+    createDeployOrganizationOutputMatcher(executor, (output) => {
+      expect(output.status).toEqual("FAILED")
+      expect(output.message).toEqual(message)
+      expect(output.success).toEqual(false)
+
+      if (errorMessage) {
+        expect(output.error?.message).toStrictEqual(errorMessage)
+      } else {
+        expect(output.error).toBeUndefined()
+      }
+    })
+
   const assert = async (): Promise<DeployOrganizationOutput> => {
     const output = await executor()
     if (outputAssertions) {
@@ -244,6 +273,9 @@ export const createDeployOrganizationOutputMatcher = (
 
   return {
     expectCommandToSucceed,
+    expectCommandToFail,
+    expectCommandToThrow,
+    expectCommandToThrowWithMessage,
     assert,
   }
 }

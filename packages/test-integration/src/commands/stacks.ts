@@ -62,6 +62,7 @@ const createCtxAndConfigRepository = async (
   props: CreateCtxAndConfigRepositoryProps,
 ): Promise<CtxAndConfigRepository> => {
   const ctx = await createTestCommandContext(props)
+
   const configRepository = await createTestStacksConfigRepository({ ctx })
   return {
     ctx,

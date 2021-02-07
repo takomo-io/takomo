@@ -1,5 +1,6 @@
 import { parseConfigSets } from "@takomo/config-sets"
 import { CommandContext, parseVars } from "@takomo/core"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { buildOrganizationConfigSchema } from "@takomo/organization-schema"
 import { deepFreeze, TkmLogger, ValidationError } from "@takomo/util"
 import { err, ok, Result } from "neverthrow"
@@ -10,11 +11,12 @@ import { parsePoliciesConfig } from "./parse-policies-config"
 import { parseString } from "./parse-string"
 import { parseTrustedAwsServices } from "./parse-trusted-aws-services"
 
-export const buildOrganizationConfig = (
+export const buildOrganizationConfig = async (
   logger: TkmLogger,
   ctx: CommandContext,
+  externallyLoadedAccounts: Map<OrganizationalUnitPath, ReadonlyArray<unknown>>,
   record: Record<string, unknown>,
-): Result<OrganizationConfig, ValidationError> => {
+): Promise<Result<OrganizationConfig, ValidationError>> => {
   const organizationConfigFileSchema = buildOrganizationConfigSchema({
     regions: ctx.regions,
     trustedAwsServices: ctx.organizationServicePrincipals,
@@ -50,12 +52,15 @@ export const buildOrganizationConfig = (
     record.backupPolicies,
   )
   const vars = parseVars(record.vars)
-  const organizationalUnits = parseOrganizationalUnitsConfig(
+  const organizationalUnits = await parseOrganizationalUnitsConfig(
     logger,
+    externallyLoadedAccounts,
     record.organizationalUnits,
   )
 
   const trustedAwsServices = parseTrustedAwsServices(record.trustedAwsServices)
+
+  // TODO: Validate that there is OU for each externally loaded account
 
   return ok(
     deepFreeze({

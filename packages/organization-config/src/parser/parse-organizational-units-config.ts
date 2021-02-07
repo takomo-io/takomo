@@ -1,10 +1,23 @@
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { TkmLogger } from "@takomo/util"
 import { OrganizationalUnitsConfig } from "../model"
 import { parseOrganizationalUnit } from "./parse-organizational-unit"
 
-export const parseOrganizationalUnitsConfig = (
+export const parseOrganizationalUnitsConfig = async (
   logger: TkmLogger,
+  externallyLoadedAccounts: Map<OrganizationalUnitPath, ReadonlyArray<unknown>>,
   value: any,
-): OrganizationalUnitsConfig => ({
-  Root: parseOrganizationalUnit(logger, "Root", value, [], [], [], [], [], []),
+): Promise<OrganizationalUnitsConfig> => ({
+  Root: await parseOrganizationalUnit(
+    logger,
+    externallyLoadedAccounts,
+    "Root",
+    value,
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+  ),
 })

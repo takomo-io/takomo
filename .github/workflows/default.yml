@@ -21,6 +21,11 @@ env:
 
   TKM_ORG_B_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_B_MASTER_ACCOUNT_ID }}
 
+  TKM_ORG_3_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_3_MASTER_ACCOUNT_ID }}
+  TKM_ORG_3_ACCOUNT_01_ID: ${{ secrets.TKM_ORG_3_ACCOUNT_01_ID }}
+  TKM_ORG_3_ACCOUNT_01_NAME: ${{ secrets.TKM_ORG_3_ACCOUNT_01_NAME }}
+  TKM_ORG_3_ACCOUNT_01_EMAIL: ${{ secrets.TKM_ORG_3_ACCOUNT_01_EMAIL }}
+
   RECYCLER_HOSTNAME: ${{ secrets.RECYCLER_HOSTNAME }}
   RECYCLER_BASEPATH: ${{ secrets.RECYCLER_BASEPATH }}
   RECYCLER_USERNAME: ${{ secrets.RECYCLER_USERNAME }}
@@ -148,6 +153,27 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
 
+  organization2-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - run: yarn workspace integration-test-organization2 integration-test
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_3_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_3_AWS_SECRET_ACCESS_KEY }}
+
   docs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
@@ -157,6 +183,7 @@ jobs:
       - deployment-targets-test
       - organization-creation-test
       - organization-test
+      - organization2-test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

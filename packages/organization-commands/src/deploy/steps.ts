@@ -20,12 +20,15 @@ const executeStep = async <S extends InitialDeployOrganizationState>(
   step: DeployOrganizationStep<S>,
   state: S,
 ): Promise<StepResult> => {
-  logger.debug(`Begin step '${stepName}'`)
+  logger.trace(`Begin step '${stepName}'`)
   const timer = state.totalTimer.startChild(stepName)
   try {
     return await step(state)
   } catch (error) {
-    logger.error(`Unhandled error in step '${stepName}':`, error)
+    if (!error.isTakomoError) {
+      logger.error(`Unhandled error in step '${stepName}':`, error)
+    }
+
     return new OrganizationDeployCompleted({
       ...state,
       error,
@@ -35,7 +38,7 @@ const executeStep = async <S extends InitialDeployOrganizationState>(
     })
   } finally {
     timer.stop()
-    logger.debug(
+    logger.trace(
       `Step '${stepName}' completed in ${timer.getSecondsElapsed()}ms`,
     )
   }

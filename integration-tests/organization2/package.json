@@ -1,0 +1,30 @@
+{
+  "name": "integration-test-organization2",
+  "private": true,
+  "version": "3.0.1",
+  "description": "Takomo integration tests for organization functionalities #2",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "scripts": {
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript",
+    "integration-test": "jest test --passWithNoTests --runInBand --ci"
+  },
+  "dependencies": {
+    "@takomo/organization-commands": "3.0.1",
+    "@takomo/test-integration": "3.0.1",
+    "ts-dedent": "2.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "8.2.0"
+  }
+}

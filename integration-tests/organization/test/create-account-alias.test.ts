@@ -1,7 +1,7 @@
 import {
   executeCreateAccountAliasCommand,
   executeDeleteAccountAliasCommand,
-} from "@takomo/test-integration/src"
+} from "@takomo/test-integration"
 import { ORG_A_ACCOUNT_2_ID } from "./env"
 
 describe("Account alias", () => {

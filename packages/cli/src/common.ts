@@ -320,12 +320,15 @@ export const initCommandContext = async (
     defaultOrganizationConfigFileName: DEFAULT_ORGANIZATION_CONFIG_FILE,
   }
 
+  const projectConfig = await loadProjectConfig(filePaths.projectConfigFile)
+
   return deepFreeze({
     regions,
     credentials,
     logLevel,
     variables,
     filePaths,
+    projectConfig,
     autoConfirmEnabled: argv.yes === true,
     statisticsEnabled: argv.stats === true,
     confidentialValuesLoggingEnabled: argv["log-confidential-info"] === true,
@@ -456,7 +459,7 @@ export const handle = async <
       writer: console.log,
       logLevel: ctx.logLevel,
     })
-    await loadProjectConfig(ctx.filePaths.projectConfigFile)
+
     const input = props.input(ctx, { timer: createTimer("total") })
     const io = props.io(ctx, logger)
     const configRepository = await props.configRepository(ctx, logger)

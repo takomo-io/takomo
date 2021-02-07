@@ -1,10 +1,18 @@
 import { OrganizationPolicyType } from "@takomo/aws-model"
+import { CommandContext, TakomoProjectConfig } from "@takomo/core"
+import {
+  createAccountConfigItemSchema,
+  createAccountRepositoryRegistry,
+  createFileSystemAccountRepositoryProvider,
+} from "@takomo/organization-account-repository"
 import {
   buildOrganizationConfig,
   OrganizationConfig,
 } from "@takomo/organization-config"
 import { OrganizationConfigRepository } from "@takomo/organization-context"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import {
+  collectFromHierarchy,
   createDir,
   createFile,
   dirExists,
@@ -12,8 +20,11 @@ import {
   FilePath,
   readFileContents,
   TakomoError,
+  TemplateEngine,
+  TkmLogger,
 } from "@takomo/util"
 import path from "path"
+import R from "ramda"
 import dedent from "ts-dedent"
 import {
   createFileSystemStacksConfigRepository,
@@ -29,6 +40,67 @@ interface FileSystemOrganizationConfigRepositoryProps
   readonly organizationServiceControlPoliciesDir: FilePath
   readonly organizationAiServicesOptOutPoliciesDir: FilePath
   readonly defaultOrganizationConfigFileName: string
+  readonly projectConfig?: TakomoProjectConfig
+}
+
+const loadExternallyPersistedAccounts = async (
+  ctx: CommandContext,
+  logger: TkmLogger,
+  templateEngine: TemplateEngine,
+  organizationDir: FilePath,
+  projectConfig?: TakomoProjectConfig,
+): Promise<Map<OrganizationalUnitPath, ReadonlyArray<unknown>>> => {
+  if (projectConfig?.organization?.accountRepository === undefined) {
+    return new Map()
+  }
+
+  const registry = createAccountRepositoryRegistry()
+  registry.registerAccountRepositoryProvider(
+    "filesystem",
+    createFileSystemAccountRepositoryProvider(),
+  )
+
+  const repository = await registry.initAccountRepository({
+    logger,
+    ctx,
+    templateEngine,
+    config: projectConfig.organization.accountRepository,
+  })
+
+  const accounts = await repository.listAccounts()
+
+  const schema = createAccountConfigItemSchema({
+    regions: ctx.regions,
+    trustedAwsServices: ctx.organizationServicePrincipals,
+  })
+
+  accounts.forEach((wrapper) => {
+    const { error } = schema.validate(wrapper.item, { abortEarly: false })
+    if (error) {
+      const details = error.details.map((m) => `  - ${m.message}`).join("\n")
+      throw new TakomoError(
+        `Validation errors in account configuration '${wrapper.source}':\n\n${details}`,
+      )
+    }
+  })
+
+  const accountsByOu = new Map(
+    Array.from(
+      Object.entries(
+        R.groupBy(
+          (a) => a.organizationalUnitPath,
+          accounts.map((w) => w.item),
+        ),
+      ),
+    ),
+  )
+
+  return new Map(
+    Array.from(accountsByOu.entries()).map(([ou, configs]) => [
+      ou,
+      configs.map((c) => c.config),
+    ]),
+  )
 }
 
 export const createFileSystemOrganizationConfigRepository = async (
@@ -47,6 +119,7 @@ export const createFileSystemOrganizationConfigRepository = async (
     defaultOrganizationConfigFileName,
     ctx,
     logger,
+    projectConfig,
   } = props
 
   const getOrganizationPolicyDir = (
@@ -88,16 +161,47 @@ export const createFileSystemOrganizationConfigRepository = async (
         pathToConfigFile,
       )
 
-      const result = await buildOrganizationConfig(logger, ctx, parsedFile)
+      const externallyLoadedAccounts = await loadExternallyPersistedAccounts(
+        ctx,
+        logger,
+        stacksConfigRepository.templateEngine,
+        organizationDir,
+        projectConfig,
+      )
 
-      if (result.isOk()) {
-        return result.value
+      const result = await buildOrganizationConfig(
+        logger,
+        ctx,
+        externallyLoadedAccounts,
+        parsedFile,
+      )
+
+      if (!result.isOk()) {
+        const details = result.error.messages.map((m) => `- ${m}`).join("\n")
+        throw new TakomoError(
+          `Validation errors in organization configuration file ${pathToConfigFile}:\n${details}`,
+        )
       }
 
-      const details = result.error.messages.map((m) => `- ${m}`).join("\n")
-      throw new TakomoError(
-        `Validation errors in organization configuration file ${pathToConfigFile}:\n${details}`,
+      const organizationConfig = result.value
+
+      const ouPaths = collectFromHierarchy(
+        organizationConfig.organizationalUnits.Root,
+        (n) => n.children,
+      ).map((ou) => ou.path)
+
+      const unknownOUs = Array.from(externallyLoadedAccounts.keys()).filter(
+        (ou) => !ouPaths.includes(ou),
       )
+
+      if (unknownOUs.length > 0) {
+        throw new TakomoError(
+          `Accounts loaded from account repository contain ${unknownOUs.length} organizational units that do not exists in organization configuration file:\n\n` +
+            unknownOUs.map((ou) => `  - ${ou}`).join("\n"),
+        )
+      }
+
+      return organizationConfig
     },
 
     putOrganizationConfig: async (

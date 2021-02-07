@@ -33,8 +33,9 @@ const collectDirectChildPaths = (
     (key) => resolveOrganizationalUnitDepth(key) === ouPathDepth + 1,
   )
 
-export const parseOrganizationalUnit = (
+export const parseOrganizationalUnit = async (
   parentLogger: TkmLogger,
+  externallyLoadedAccounts: Map<OrganizationalUnitPath, ReadonlyArray<unknown>>,
   ouPath: OrganizationalUnitPath,
   config: any,
   inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
@@ -43,7 +44,7 @@ export const parseOrganizationalUnit = (
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedConfigSets: ReadonlyArray<ConfigSetName>,
   inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
-): OrganizationalUnitConfig => {
+): Promise<OrganizationalUnitConfig> => {
   const name = extractOrganizationalUnitName(ouPath)
   const ouPathDepth = resolveOrganizationalUnitDepth(ouPath)
 
@@ -122,25 +123,28 @@ export const parseOrganizationalUnit = (
     ...inheritedBootstrapConfigSets,
   ])
 
-  const children = [
-    ...missingDirectChildPaths,
-    ...directChildPaths,
-  ].map((childPath) =>
-    parseOrganizationalUnit(
-      logger,
-      childPath,
-      config,
-      serviceControlPolicies.slice(),
-      tagPolicies.slice(),
-      aiServicesOptOutPolicies.slice(),
-      backupPolicies.slice(),
-      configSets.slice(),
-      bootstrapConfigSets.slice(),
+  const children = await Promise.all(
+    [...missingDirectChildPaths, ...directChildPaths].map(async (childPath) =>
+      parseOrganizationalUnit(
+        logger,
+        externallyLoadedAccounts,
+        childPath,
+        config,
+        serviceControlPolicies.slice(),
+        tagPolicies.slice(),
+        aiServicesOptOutPolicies.slice(),
+        backupPolicies.slice(),
+        configSets.slice(),
+        bootstrapConfigSets.slice(),
+      ),
     ),
   )
 
+  const externalAccounts = externallyLoadedAccounts.get(ouPath) ?? []
+  const allAccount = [...(ou?.accounts ?? []), ...externalAccounts]
+
   const accounts = parseAccounts(
-    ou?.accounts,
+    allAccount,
     configSets,
     bootstrapConfigSets,
     serviceControlPolicies,

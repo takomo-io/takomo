@@ -23,6 +23,7 @@ export {
   ListStacksInput,
   ListStacksIO,
   ListStacksOutput,
+  StackInfo,
 } from "./stacks/list/model"
 export { undeployStacksCommand } from "./stacks/undeploy/command"
 export { undeployStacksCommandIamPolicy } from "./stacks/undeploy/iam-policy"

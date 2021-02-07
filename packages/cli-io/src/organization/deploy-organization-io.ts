@@ -14,6 +14,7 @@ import Table from "easy-table"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
 import { createBaseIO } from "../cli-io"
+import { printError } from "../common"
 import { formatCommandStatus } from "../formatters"
 import { IOProps } from "../stacks/common"
 
@@ -592,9 +593,14 @@ export const createDeployOrganizationIO = (
       organizationalUnitsCleanResult,
       basicConfigDeploymentResult,
       basicConfigCleanResult,
+      error,
     } = output
 
     io.header({ text: "Deployment summary", marginTop: true })
+
+    if (error) {
+      printError(io, error, logger.logLevel, 0)
+    }
 
     const table = new Table()
 
@@ -643,7 +649,9 @@ export const createDeployOrganizationIO = (
       table.newRow()
     })
 
-    io.message({ text: table.toString(), marginTop: true })
+    if (results.length > 0) {
+      io.message({ text: table.toString(), marginTop: true })
+    }
 
     return output
   }

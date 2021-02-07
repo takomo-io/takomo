@@ -13,7 +13,7 @@ import {
 } from "./organization-context"
 import { validateOrganizationConfigFile } from "./validate-organization-config-file"
 
-const getCredentialManagererForOrganizationAdmin = async (
+const getCredentialManagerForOrganizationAdmin = async (
   logger: TkmLogger,
   config: OrganizationConfig,
   credentialManager: CredentialManager,
@@ -34,40 +34,9 @@ export const buildOrganizationContext = async (
   logger: TkmLogger,
 ): Promise<OrganizationContext> => {
   const credentialManager = await initDefaultCredentialManager()
-
-  // const projectDir = options.projectDir
-  // io.debug(`Current project dir: ${projectDir}`)
-  //
-  // const organizationDirPath = path.join(projectDir, Constants.ORGANIZATION_DIR)
-  // if (!(await dirExists(organizationDirPath))) {
-  //   throw new TakomoError(
-  //     `Takomo organization dir '${Constants.ORGANIZATION_DIR}' not found from the project dir ${projectDir}`,
-  //   )
-  // }
-  //
-  // const pathToOrganizationConfigFile = path.join(
-  //   organizationDirPath,
-  //   Constants.ORGANIZATION_CONFIG_FILE,
-  // )
-  // if (!(await fileExists(pathToOrganizationConfigFile))) {
-  //   throw new TakomoError(
-  //     `Takomo organization configuration file '${Constants.ORGANIZATION_CONFIG_FILE}' not found from the organization dir ${organizationDirPath}`,
-  //   )
-  // }
-
-  // const templateEngine = new TemplateEngine()
-  //
-  // await loadCustomPartials(organizationDirPath, io, templateEngine)
-  //
   const organizationConfig = await configRepository.getOrganizationConfig()
 
-  // const organizationConfigFile = await parseOrganizationConfigFile(
-  //   io,
-  //   ctx,
-  //   organizationConfigObject,
-  // )
-
-  const organizationAdminCredentialManager = await getCredentialManagererForOrganizationAdmin(
+  const organizationAdminCredentialManager = await getCredentialManagerForOrganizationAdmin(
     logger,
     organizationConfig,
     credentialManager,

@@ -1,3 +1,4 @@
+import { TakomoProjectConfig } from "@takomo/core"
 import {
   fileExists,
   FilePath,
@@ -10,10 +11,6 @@ import semver from "semver"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../package.json")
-
-export interface TakomoProjectConfig {
-  readonly requiredVersion?: string
-}
 
 const validateRequiredVersion = (
   configFilePath: string,
@@ -38,7 +35,7 @@ const parseProjectConfigFile = async (
   path: FilePath,
 ): Promise<TakomoProjectConfig> => {
   const contents = await readFileContents(path)
-  const parsedFile = (await parseYaml(path, contents)) || {}
+  const parsedFile = (await parseYaml(path, contents)) ?? {}
 
   const { error } = takomoProjectConfigFileSchema.validate(parsedFile, {
     abortEarly: false,
@@ -55,19 +52,32 @@ const parseProjectConfigFile = async (
 
   return {
     requiredVersion,
+    organization: parsedFile.organization,
   }
 }
 
+const accountRepositoryType = Joi.string()
+  .min(1)
+  .max(40)
+  .regex(/^[a-zA-Z0-9-_]+$/)
+
+const accountRepository = Joi.object({
+  type: accountRepositoryType.required(),
+}).unknown(true)
+
 export const takomoProjectConfigFileSchema = Joi.object({
   requiredVersion: Joi.string(),
+  organization: Joi.object({
+    accountRepository,
+  }),
 })
 
 export const loadProjectConfig = async (
   pathConfigFile: FilePath,
-): Promise<void> => {
+): Promise<TakomoProjectConfig> => {
   if (!(await fileExists(pathConfigFile))) {
-    return
+    return {}
   }
 
-  await parseProjectConfigFile(pathConfigFile)
+  return parseProjectConfigFile(pathConfigFile)
 }
