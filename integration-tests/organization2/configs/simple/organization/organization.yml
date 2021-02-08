@@ -6,3 +6,5 @@ organizationalUnits:
   Root/Test:
     accounts:
       - "{{ env.TKM_ORG_3_ACCOUNT_01_ID }}"
+      - "{{ env.TKM_ORG_3_ACCOUNT_02_ID }}"
+      - "{{ env.TKM_ORG_3_ACCOUNT_03_ID }}"

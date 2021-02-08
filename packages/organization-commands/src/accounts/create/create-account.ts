@@ -1,9 +1,13 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
 import { ConfirmResult } from "@takomo/core"
-import { OrganizationContext } from "@takomo/organization-context"
+import {
+  loadOrganizationState,
+  OrganizationContext,
+} from "@takomo/organization-context"
 import { sleep, TakomoError } from "@takomo/util"
 import { ResultAsync } from "neverthrow"
 import { createAccountAliasInternal } from "../common"
+import { UnknownOrganizationalUnitError } from "./errors"
 import {
   CreateAccountInput,
   CreateAccountIO,
@@ -29,7 +33,15 @@ export const createAccount = async (
   io: CreateAccountIO,
   input: CreateAccountInput,
 ): Promise<CreateAccountOutput> => {
-  const { name, email, roleName, alias, iamUserAccessToBilling, timer } = input
+  const {
+    name,
+    email,
+    roleName,
+    alias,
+    iamUserAccessToBilling,
+    ou,
+    timer,
+  } = input
 
   const emailPattern =
     ctx.organizationConfig.accountCreation.constraints.emailPattern
@@ -47,6 +59,10 @@ export const createAccount = async (
     )
   }
 
+  if (ou && !ctx.hasOrganizationalUnit(ou)) {
+    throw new UnknownOrganizationalUnitError(ou)
+  }
+
   if (
     !ctx.autoConfirmEnabled &&
     (await io.confirmAccountCreation(
@@ -55,12 +71,12 @@ export const createAccount = async (
       iamUserAccessToBilling,
       roleName,
       alias,
+      ou,
     )) !== ConfirmResult.YES
   ) {
     timer.stop()
     return {
       success: false,
-      createAccountStatus: null,
       status: "CANCELLED",
       message: "Cancelled",
       timer,
@@ -75,7 +91,6 @@ export const createAccount = async (
     timer.stop()
     return {
       success: false,
-      createAccountStatus: null,
       status: "FAILED",
       message: result.error.message,
       timer,
@@ -89,14 +104,22 @@ export const createAccount = async (
     result.value,
   )
 
-  const success = createAccountStatus.State === "SUCCEEDED"
+  const success = createAccountStatus.state === "SUCCEEDED"
+  if (success) {
+    if (alias || ou) {
+      // Wait some time for account to become ready
+      await sleep(10000)
+    }
+  }
+
+  io.info("Account created successfully")
+
   if (success && alias) {
-    await sleep(10000)
-    io.info("Account created successfully, set account alias...")
+    io.info("Set account alias...")
     const createAliasResult = await createAccountAliasInternal(
       ctx,
       io,
-      createAccountStatus.AccountId!,
+      createAccountStatus.accountId,
       roleName,
       alias,
     )
@@ -115,7 +138,39 @@ export const createAccount = async (
     io.info("Account alias set successfully")
   }
 
-  const message = success ? "Success" : createAccountStatus.FailureReason!
+  if (success && ou) {
+    const state = await loadOrganizationState(ctx, io)
+    const sourceOu = state.getParentOrganizationalUnit(
+      createAccountStatus.accountId,
+    )
+
+    const destinationOu = state.getOrganizationalUnitByPath(ou)
+
+    io.info(`Move account to OU...`)
+    try {
+      await client.moveAccount({
+        AccountId: createAccountStatus.accountId,
+        DestinationParentId: destinationOu.id,
+        SourceParentId: sourceOu.id,
+      })
+      io.info("Account moved to OU")
+    } catch (error) {
+      io.error("Failed to set account OU", error)
+      timer.stop()
+      return {
+        success: false,
+        createAccountStatus,
+        status: "FAILED",
+        message: "Failed to set OU",
+        error,
+        timer,
+      }
+    }
+  }
+
+  const message = success
+    ? "Success"
+    : createAccountStatus.failureReason ?? "Failure"
   const status = success ? "SUCCESS" : "FAILED"
 
   timer.stop()
