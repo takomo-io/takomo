@@ -2,12 +2,14 @@ import {
   DetailedOrganizationalUnit,
   DetailedOrganizationPolicy,
   OrganizationalUnitId,
+  OrganizationalUnitName,
   OrganizationPolicy,
   OrganizationPolicyId,
   OrganizationPolicyName,
   OrganizationPolicyType,
   OrganizationRoot,
 } from "@takomo/aws-model"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { arrayToMap, collectFromHierarchy, TkmLogger } from "@takomo/util"
 import { OrgEntityId } from "./model"
 import { OrganizationContext } from "./organization-context"
@@ -117,6 +119,18 @@ const buildOrganizationalUnitsByIdMap = (
   return arrayToMap(ous, (ou) => ou.ou.id)
 }
 
+const buildOrganizationalUnitsByPathMap = (
+  map: Map<OrganizationalUnitPath, DetailedOrganizationalUnit>,
+  ou: DetailedOrganizationalUnit,
+  parentNames: ReadonlyArray<OrganizationalUnitName>,
+): void => {
+  const newParentNames = [...parentNames, ou.ou.name]
+  map.set(newParentNames.join("/"), ou)
+  ou.children.forEach((child) =>
+    buildOrganizationalUnitsByPathMap(map, child, newParentNames),
+  )
+}
+
 export const loadOrganizationState = async (
   ctx: OrganizationContext,
   logger: TkmLogger,
@@ -192,6 +206,13 @@ export const loadOrganizationState = async (
     rootOrganizationalUnit,
   )
 
+  const organizationalUnitByPath = new Map()
+  buildOrganizationalUnitsByPathMap(
+    organizationalUnitByPath,
+    rootOrganizationalUnit,
+    [],
+  )
+
   const state = new OrganizationState({
     allFeaturesEnabled,
     accounts,
@@ -203,9 +224,10 @@ export const loadOrganizationState = async (
     policiesByTypeByTarget,
     parentByTargetId,
     organizationalUnitById,
+    organizationalUnitByPath,
   })
 
-  logger.debugObject("Organization state: ", state.getAsObject())
+  logger.debugObject("Organization state: ", () => state.getAsObject())
 
   return state
 }

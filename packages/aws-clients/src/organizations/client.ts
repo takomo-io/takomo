@@ -1,5 +1,7 @@
 import {
   AccountId,
+  CreateAccountRequestId,
+  CreateAccountStatus,
   DetailedOrganizationalUnit,
   DetailedOrganizationPolicy,
   Organization,
@@ -19,7 +21,6 @@ import { Organizations } from "aws-sdk"
 import {
   AttachPolicyRequest,
   CreateAccountRequest,
-  CreateAccountStatus,
   CreateOrganizationalUnitRequest,
   CreatePolicyRequest,
   DetachPolicyRequest,
@@ -31,6 +32,7 @@ import {
 import flatten from "lodash.flatten"
 import { AwsClientProps, createClient } from "../common/client"
 import {
+  convertCreateAccountStatus,
   convertOrganization,
   convertOrganizationAccount,
   convertOrganizationAccounts,
@@ -295,10 +297,10 @@ export const createOrganizationsClient = (
 
   const createAccount = async (
     request: CreateAccountRequest,
-  ): Promise<string> =>
+  ): Promise<CreateAccountRequestId> =>
     withClientPromise(
       (c) => c.createAccount(request),
-      (res) => res.CreateAccountStatus!.Id!,
+      (res) => convertCreateAccountStatus(res.CreateAccountStatus!).id,
     )
 
   const describeOrganization = async (): Promise<Organization> =>
@@ -483,20 +485,20 @@ export const createOrganizationsClient = (
   }
 
   const describeAccountCreationStatus = async (
-    requestId: string,
+    requestId: CreateAccountRequestId,
   ): Promise<CreateAccountStatus> =>
     withClientPromise(
       (c) =>
         c.describeCreateAccountStatus({ CreateAccountRequestId: requestId }),
-      (res) => res.CreateAccountStatus!,
+      (res) => convertCreateAccountStatus(res.CreateAccountStatus!),
     )
 
   const waitAccountCreationToComplete = async (
-    requestId: string,
+    requestId: CreateAccountRequestId,
   ): Promise<CreateAccountStatus> => {
     while (true) {
       const status = await describeAccountCreationStatus(requestId)
-      switch (status.State) {
+      switch (status.state) {
         case "IN_PROGRESS":
           await sleep(5000)
           break
@@ -505,7 +507,7 @@ export const createOrganizationsClient = (
         case "SUCCEEDED":
           return status
         default:
-          throw new Error(`Unknown account creation state: ${status.State}`)
+          throw new Error(`Unknown account creation state: ${status.state}`)
       }
     }
   }

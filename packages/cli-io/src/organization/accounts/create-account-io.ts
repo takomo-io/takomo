@@ -1,8 +1,10 @@
+import { AccountAlias, AccountEmail, AccountName } from "@takomo/aws-model"
 import { ConfirmResult } from "@takomo/core"
 import {
   CreateAccountIO,
   CreateAccountOutput,
 } from "@takomo/organization-commands"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { createBaseIO } from "../../cli-io"
 import { IOProps } from "../../stacks/common"
 
@@ -11,11 +13,12 @@ export const createCreateAccountIO = (props: IOProps): CreateAccountIO => {
   const io = createBaseIO(props)
 
   const confirmAccountCreation = async (
-    name: string,
-    email: string,
+    name: AccountName,
+    email: AccountEmail,
     iamUserAccessToBilling: boolean,
     roleName: string,
-    alias?: string,
+    alias?: AccountAlias,
+    ou?: OrganizationalUnitPath,
   ): Promise<ConfirmResult> => {
     io.longMessage(
       [
@@ -25,7 +28,8 @@ export const createCreateAccountIO = (props: IOProps): CreateAccountIO => {
         `  email:                       ${email}`,
         `  role name:                   ${roleName}`,
         `  iam user access to billing:  ${iamUserAccessToBilling}`,
-        `  alias:                       ${alias || "<undefined>"}`,
+        `  organizational unit:         ${ou ?? "<undefined>"}`,
+        `  alias:                       ${alias ?? "<undefined>"}`,
       ],
       true,
       false,
@@ -44,7 +48,7 @@ export const createCreateAccountIO = (props: IOProps): CreateAccountIO => {
       case "FAILED":
         if (createAccountStatus) {
           io.message({
-            text: `Account creation failed. Reason: ${createAccountStatus.FailureReason}`,
+            text: `Account creation failed. Reason: ${createAccountStatus.failureReason}`,
             marginTop: true,
           })
         } else {
@@ -52,13 +56,13 @@ export const createCreateAccountIO = (props: IOProps): CreateAccountIO => {
         }
         break
       case "SUCCESS":
-        const { AccountId, AccountName } = createAccountStatus!
+        const { accountId, accountName } = createAccountStatus!
         io.longMessage(
           [
             "Account information:",
             "",
-            `  id:   ${AccountId}`,
-            `  name: ${AccountName}`,
+            `  id:   ${accountId}`,
+            `  name: ${accountName}`,
           ],
           true,
           false,

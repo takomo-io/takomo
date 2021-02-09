@@ -34,6 +34,7 @@
     "@takomo/init-command": "3.0.1",
     "@takomo/organization-commands": "3.0.1",
     "@takomo/organization-config": "3.0.1",
+    "@takomo/organization-model": "3.0.0",
     "@takomo/stacks-commands": "3.0.1",
     "@takomo/stacks-model": "3.0.1",
     "@takomo/util": "3.0.1",

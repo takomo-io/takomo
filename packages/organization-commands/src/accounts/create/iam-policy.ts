@@ -10,6 +10,16 @@ export const createAccountCommandIamPolicy = (): string => dedent`
           - organizations:DescribeOrganization
           - organizations:CreateAccount
           - organizations:DescribeCreateAccountStatus
+          - organizations:ListRoots
+          - organizations:ListTargetsForPolicy
+          - organizations:ListAWSServiceAccessForOrganization
+          - organizations:DescribePolicy
+          - organizations:ListPolicies
+          - organizations:ListAccountsForParent
+          - organizations:ListAccounts
+          - organizations:DescribeOrganization
+          - organizations:ListOrganizationalUnitsForParent
+          - organizations:MoveAccount
         Resource: "*"
 
 `

@@ -3,4 +3,7 @@ organizationalUnits:
   Root/Master:
     accounts:
       - "{{ env.TKM_ORG_3_MASTER_ACCOUNT_ID }}"
-  Root/Test: {}
+  Root/Test:
+    accounts:
+    - "{{ env.TKM_ORG_3_ACCOUNT_02_ID }}"
+    - "{{ env.TKM_ORG_3_ACCOUNT_03_ID }}"

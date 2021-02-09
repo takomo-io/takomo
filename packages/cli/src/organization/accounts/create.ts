@@ -41,6 +41,11 @@ export const createAccountCmd = {
         description: "Account alias",
         string: true,
         global: false,
+      })
+      .option("ou", {
+        description: "Organizational unit",
+        string: true,
+        global: false,
       }),
   handler: (argv: any) =>
     handle({
@@ -52,6 +57,7 @@ export const createAccountCmd = {
         iamUserAccessToBilling: argv["iam-user-access-to-billing"],
         roleName: argv["role-name"],
         alias: argv.alias,
+        ou: argv.ou,
       }),
       io: (ctx, logger) => createCreateAccountIO({ logger }),
       configRepository: (ctx, logger) =>

@@ -9,6 +9,7 @@ import {
   OrganizationPolicyName,
   OrganizationPolicyType,
 } from "@takomo/aws-model"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { collectFromHierarchy } from "@takomo/util"
 import uniq from "lodash.uniq"
 import { OrgEntityId } from "./model"
@@ -35,6 +36,10 @@ export interface OrganizationStateProps {
   readonly parentByTargetId: Map<OrgEntityId, OrgEntityId>
   readonly organizationalUnitById: Map<
     OrganizationalUnitId,
+    DetailedOrganizationalUnit
+  >
+  readonly organizationalUnitByPath: Map<
+    OrganizationalUnitPath,
     DetailedOrganizationalUnit
   >
 }
@@ -208,6 +213,17 @@ export class OrganizationState {
     const ou = this.#props.organizationalUnitById.get(parentId)
     if (!ou) {
       throw new Error(`Parent OU not found for account '${accountId}'`)
+    }
+
+    return ou.ou
+  }
+
+  getOrganizationalUnitByPath = (
+    ouPath: OrganizationalUnitPath,
+  ): OrganizationalUnit => {
+    const ou = this.#props.organizationalUnitByPath.get(ouPath)
+    if (!ou) {
+      throw new Error(`OU not found with path '${ouPath}'`)
     }
 
     return ou.ou

@@ -105,3 +105,25 @@ export interface DetailedOrganizationPolicy {
   readonly policy: OrganizationPolicy
   readonly targets: ReadonlyArray<OrganizationPolicyTargetSummary>
 }
+
+export type CreateAccountRequestId = string
+export type CreateAccountFailureReason =
+  | "ACCOUNT_LIMIT_EXCEEDED"
+  | "EMAIL_ALREADY_EXISTS"
+  | "INVALID_ADDRESS"
+  | "INVALID_EMAIL"
+  | "CONCURRENT_ACCOUNT_MODIFICATION"
+  | "INTERNAL_FAILURE"
+  | "GOVCLOUD_ACCOUNT_ALREADY_EXISTS"
+  | "MISSING_BUSINESS_VALIDATION"
+  | "MISSING_PAYMENT_INSTRUMENT"
+
+export type CreateAccountState = "IN_PROGRESS" | "SUCCEEDED" | "FAILED"
+
+export interface CreateAccountStatus {
+  id: CreateAccountRequestId
+  accountName: AccountName
+  state: CreateAccountState
+  accountId: AccountId
+  failureReason?: CreateAccountFailureReason
+}

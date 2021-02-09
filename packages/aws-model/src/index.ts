@@ -71,6 +71,10 @@ export { CallerIdentity } from "./credentials"
 export { CredentialsError } from "./error"
 export {
   AccountStatus,
+  CreateAccountFailureReason,
+  CreateAccountRequestId,
+  CreateAccountState,
+  CreateAccountStatus,
   DetailedOrganizationalUnit,
   DetailedOrganizationPolicy,
   Organization,

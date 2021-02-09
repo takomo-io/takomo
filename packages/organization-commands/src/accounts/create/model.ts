@@ -1,6 +1,11 @@
-import { AccountAlias, AccountEmail, AccountName } from "@takomo/aws-model"
+import {
+  AccountAlias,
+  AccountEmail,
+  AccountName,
+  CreateAccountStatus,
+} from "@takomo/aws-model"
 import { CommandInput, CommandOutput, ConfirmResult, IO } from "@takomo/core"
-import { CreateAccountStatus } from "aws-sdk/clients/organizations"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 
 export interface CreateAccountInput extends CommandInput {
   readonly email: AccountEmail
@@ -8,10 +13,11 @@ export interface CreateAccountInput extends CommandInput {
   readonly iamUserAccessToBilling: boolean
   readonly roleName: string
   readonly alias?: AccountAlias
+  readonly ou?: OrganizationalUnitPath
 }
 
 export interface CreateAccountOutput extends CommandOutput {
-  readonly createAccountStatus: CreateAccountStatus | null
+  readonly createAccountStatus?: CreateAccountStatus
 }
 
 export interface CreateAccountIO extends IO<CreateAccountOutput> {
@@ -21,5 +27,6 @@ export interface CreateAccountIO extends IO<CreateAccountOutput> {
     iamUserAccessToBilling: boolean,
     roleName: string,
     alias?: AccountAlias,
+    ou?: OrganizationalUnitPath,
   ) => Promise<ConfirmResult>
 }

@@ -19,7 +19,10 @@ const inputSchema = (ctx: CommandContext) => {
     regions: ctx.regions,
   })
 
-  const { organizationRoleName } = createOrganizationSchemas({
+  const {
+    organizationRoleName,
+    organizationalUnitPath,
+  } = createOrganizationSchemas({
     regions: ctx.regions,
     trustedAwsServices: ctx.organizationServicePrincipals,
   })
@@ -30,6 +33,7 @@ const inputSchema = (ctx: CommandContext) => {
     roleName: organizationRoleName.required(),
     iamUserAccessToBilling: Joi.boolean(),
     alias: accountAlias,
+    ou: organizationalUnitPath,
   }).unknown(true)
 }
 
@@ -45,6 +49,6 @@ export const createAccountCommand: CommandHandler<
   io,
 }): Promise<CreateAccountOutput> =>
   validateInput(inputSchema(ctx), input)
-    .then((input) => buildOrganizationContext(ctx, configRepository, io))
+    .then(() => buildOrganizationContext(ctx, configRepository, io))
     .then((ctx) => createAccount(ctx, io, input))
     .then(io.printOutput)

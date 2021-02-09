@@ -5,6 +5,10 @@ import {
   AccountName,
   AccountStatus,
   Arn,
+  CreateAccountFailureReason,
+  CreateAccountRequestId,
+  CreateAccountState,
+  CreateAccountStatus,
   Organization,
   OrganizationAccount,
   OrganizationalUnit,
@@ -267,3 +271,16 @@ export const convertOrganizationRoots = ({
   Roots,
 }: RootsHolder): ReadonlyArray<OrganizationRoot> =>
   Roots ? Roots.map((Root) => convertOrganizationRoot({ Root })) : []
+
+/**
+ * @hidden
+ */
+export const convertCreateAccountStatus = (
+  status: O.CreateAccountStatus,
+): CreateAccountStatus => ({
+  accountId: status.AccountId as AccountId,
+  accountName: status.AccountName as AccountName,
+  failureReason: status.FailureReason as CreateAccountFailureReason,
+  id: status.Id as CreateAccountRequestId,
+  state: status.State as CreateAccountState,
+})
