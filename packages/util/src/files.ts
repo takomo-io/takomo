@@ -1,4 +1,5 @@
 import fs, { mkdir, readFile, writeFile } from "fs"
+import { join } from "path"
 import { promisify } from "util"
 
 const statP = promisify(fs.stat)
@@ -57,3 +58,21 @@ export const createFile = async (
       else resolve(true)
     })
   })
+
+/**
+ * @hidden
+ */
+export const expandDir = (
+  projectDir: FilePath,
+  dirPath: FilePath,
+): FilePath => {
+  if (
+    dirPath.startsWith("/") ||
+    dirPath.startsWith("~") ||
+    dirPath.startsWith("./")
+  ) {
+    return dirPath
+  }
+
+  return join(projectDir, dirPath)
+}

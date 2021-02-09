@@ -88,3 +88,77 @@ export const formatter = <T>({
 
   return R.pipe(getterFn, padder)
 }
+
+export interface PrintFormattedTableProps {
+  readonly showHeaders?: boolean
+  readonly indent?: number
+  readonly writer: (string?: string) => void
+}
+
+export interface FormattedTable {
+  readonly row: (...columns: unknown[]) => FormattedTable
+  readonly print: (props: PrintFormattedTableProps) => void
+}
+
+export interface FormattedTableProps {
+  readonly headers: string[]
+  readonly rows?: unknown[][]
+}
+
+export const table = (props: FormattedTableProps): FormattedTable => {
+  return {
+    row: (...columns: unknown[]): FormattedTable => {
+      if (columns.length !== props.headers.length) {
+        throw new Error(
+          `Expected ${props.headers.length} columns but got ${columns.length}`,
+        )
+      }
+      return table({
+        ...props,
+        rows: [...(props.rows ?? []), columns],
+      })
+    },
+    print: ({
+      showHeaders = true,
+      indent = 0,
+      writer,
+    }: PrintFormattedTableProps) => {
+      const write = (string = "") => {
+        writer(" ".repeat(indent) + string)
+      }
+      const { headers, rows = [] } = props
+
+      const columnObjects = headers.map((header, index) => {
+        const columns = rows.map((row) => `${row[index]}`)
+        const values = showHeaders ? [header, ...columns] : columns
+        const width = R.apply(
+          Math.max,
+          values.map((v) => v.length),
+        )
+
+        return {
+          header,
+          width,
+          columns,
+        }
+      })
+
+      if (showHeaders) {
+        write(
+          columnObjects
+            .map(({ header, width }) => header.padEnd(width))
+            .join(" "),
+        )
+        write(columnObjects.map(({ width }) => "-".repeat(width)).join(" "))
+      }
+
+      for (let row = 0; row < rows.length; row++) {
+        write(
+          columnObjects
+            .map(({ width, columns }) => columns[row].padEnd(width))
+            .join(" "),
+        )
+      }
+    },
+  }
+}

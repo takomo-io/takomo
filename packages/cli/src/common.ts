@@ -13,7 +13,9 @@ import {
   createLogger,
   createTimer,
   deepFreeze,
+  expandDir,
   fileExists,
+  FilePath,
   indentLines,
   LogLevel,
   parseYamlFile,
@@ -98,11 +100,31 @@ const organizationServicePrincipals = [
   "tagpolicies.tag.amazonaws.com",
 ]
 
+export const readConfigurationFromFiles = async (
+  projectDir: FilePath,
+  args: any,
+): Promise<Record<string, unknown>> => {
+  const filePaths = args ? (Array.isArray(args) ? args : [args]) : []
+  const config = {}
+  for (const filePath of filePaths) {
+    const configFromFile = await readVariablesFromFile(projectDir, filePath)
+    if (typeof configFromFile !== "object") {
+      throw new TakomoError(
+        `Contents of configuration file ${filePath} could not be deserialized to an object`,
+      )
+    }
+
+    merge(config, configFromFile)
+  }
+
+  return config
+}
+
 const readVariablesFromFile = async (
-  projectDir: string,
-  fileName: string,
+  projectDir: FilePath,
+  fileName: FilePath,
 ): Promise<any> => {
-  const pathToVarsFile = path.join(projectDir, fileName)
+  const pathToVarsFile = expandDir(projectDir, fileName)
 
   if (!(await fileExists(pathToVarsFile))) {
     throw new TakomoError(`Variable file ${pathToVarsFile} not found`)
@@ -114,7 +136,7 @@ const readVariablesFromFile = async (
   }
 
   if (pathToVarsFile.endsWith(".yml")) {
-    return await parseYamlFile(pathToVarsFile)
+    return parseYamlFile(pathToVarsFile)
   }
 
   return (await readFileContents(pathToVarsFile)).trim()
@@ -190,7 +212,7 @@ const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
     : []
 
   for (const envArg of envArray) {
-    const pathToEnvVarsFile = path.join(projectDir, envArg)
+    const pathToEnvVarsFile = expandDir(projectDir, envArg)
 
     if (!(await fileExists(pathToEnvVarsFile))) {
       throw new TakomoError(
@@ -439,7 +461,7 @@ interface HandleProps<
   OUT extends CommandOutput
 > {
   argv: any
-  input: (ctx: CliCommandContext, input: CommandInput) => IN
+  input: (ctx: CliCommandContext, input: CommandInput) => Promise<IN>
   io: (ctx: CliCommandContext, logger: TkmLogger) => I
   configRepository: (ctx: CliCommandContext, logger: TkmLogger) => Promise<C>
   executor: CommandHandler<C, I, IN, OUT>
@@ -460,7 +482,7 @@ export const handle = async <
       logLevel: ctx.logLevel,
     })
 
-    const input = props.input(ctx, { timer: createTimer("total") })
+    const input = await props.input(ctx, { timer: createTimer("total") })
     const io = props.io(ctx, logger)
     const configRepository = await props.configRepository(ctx, logger)
     const output = await props.executor({

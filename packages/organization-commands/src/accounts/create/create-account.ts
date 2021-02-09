@@ -2,6 +2,7 @@ import { OrganizationsClient } from "@takomo/aws-clients"
 import { ConfirmResult } from "@takomo/core"
 import {
   loadOrganizationState,
+  OrganizationConfigRepository,
   OrganizationContext,
 } from "@takomo/organization-context"
 import { sleep, TakomoError } from "@takomo/util"
@@ -30,6 +31,7 @@ const initiateAccountCreation = (
 
 export const createAccount = async (
   ctx: OrganizationContext,
+  configRepository: OrganizationConfigRepository,
   io: CreateAccountIO,
   input: CreateAccountInput,
 ): Promise<CreateAccountOutput> => {
@@ -41,13 +43,14 @@ export const createAccount = async (
     iamUserAccessToBilling,
     ou,
     timer,
+    config,
   } = input
 
   const emailPattern =
     ctx.organizationConfig.accountCreation.constraints.emailPattern
   if (emailPattern && !emailPattern.test(email)) {
     throw new TakomoError(
-      `Provided email '${email}' does not match with required pattern ${emailPattern}`,
+      `Provided email '${email}' does not match with required pattern: ${emailPattern}`,
     )
   }
 
@@ -55,7 +58,7 @@ export const createAccount = async (
     ctx.organizationConfig.accountCreation.constraints.namePattern
   if (namePattern && !namePattern.test(name)) {
     throw new TakomoError(
-      `Provided name '${name}' does not match with required pattern ${namePattern}`,
+      `Provided name '${name}' does not match with required pattern: ${namePattern}`,
     )
   }
 
@@ -72,14 +75,15 @@ export const createAccount = async (
       roleName,
       alias,
       ou,
+      config,
     )) !== ConfirmResult.YES
   ) {
     timer.stop()
     return {
+      timer,
       success: false,
       status: "CANCELLED",
       message: "Cancelled",
-      timer,
     }
   }
 
@@ -90,10 +94,10 @@ export const createAccount = async (
   if (!result.isOk()) {
     timer.stop()
     return {
+      timer,
       success: false,
       status: "FAILED",
       message: result.error.message,
-      timer,
     }
   }
 
@@ -105,17 +109,32 @@ export const createAccount = async (
   )
 
   const success = createAccountStatus.state === "SUCCEEDED"
-  if (success) {
-    if (alias || ou) {
-      // Wait some time for account to become ready
-      await sleep(10000)
+
+  if (!success) {
+    const message = success
+      ? "Success"
+      : createAccountStatus.failureReason ?? "Failure"
+    const status = success ? "SUCCESS" : "FAILED"
+
+    timer.stop()
+    return {
+      createAccountStatus,
+      success,
+      message,
+      status,
+      timer,
     }
+  }
+
+  if (alias || ou) {
+    // Wait some time for account to become ready
+    await sleep(10000)
   }
 
   io.info("Account created successfully")
 
-  if (success && alias) {
-    io.info("Set account alias...")
+  if (alias) {
+    io.info(`Set account alias to: '${alias}'`)
     const createAliasResult = await createAccountAliasInternal(
       ctx,
       io,
@@ -127,18 +146,18 @@ export const createAccount = async (
       io.error("Failed to set account alias", createAliasResult.error)
       timer.stop()
       return {
-        success: false,
+        timer,
         createAccountStatus,
+        success: false,
         status: "FAILED",
         message: createAliasResult.error.message,
-        timer,
       }
     }
 
     io.info("Account alias set successfully")
   }
 
-  if (success && ou) {
+  if (ou) {
     const state = await loadOrganizationState(ctx, io)
     const sourceOu = state.getParentOrganizationalUnit(
       createAccountStatus.accountId,
@@ -146,7 +165,7 @@ export const createAccount = async (
 
     const destinationOu = state.getOrganizationalUnitByPath(ou)
 
-    io.info(`Move account to OU...`)
+    io.info(`Move account to OU: ${ou}`)
     try {
       await client.moveAccount({
         AccountId: createAccountStatus.accountId,
@@ -158,27 +177,44 @@ export const createAccount = async (
       io.error("Failed to set account OU", error)
       timer.stop()
       return {
-        success: false,
         createAccountStatus,
-        status: "FAILED",
-        message: "Failed to set OU",
         error,
         timer,
+        success: false,
+        status: "FAILED",
+        message: "Failed to set account OU",
       }
     }
   }
 
-  const message = success
-    ? "Success"
-    : createAccountStatus.failureReason ?? "Failure"
-  const status = success ? "SUCCESS" : "FAILED"
+  try {
+    await configRepository.putAccountConfig({
+      organizationalUnitPath: ou ?? "Root",
+      accountId: createAccountStatus.accountId,
+      config: {
+        ...(config ?? {}),
+        id: createAccountStatus.accountId,
+      },
+    })
+  } catch (error) {
+    io.error("Failed to persist account to account repository", error)
+    timer.stop()
+    return {
+      createAccountStatus,
+      error,
+      timer,
+      success: false,
+      status: "FAILED",
+      message: "Failed to persist account to account repository",
+    }
+  }
 
   timer.stop()
   return {
     createAccountStatus,
-    success,
-    message,
-    status,
     timer,
+    success: true,
+    message: "Success",
+    status: "SUCCESS",
   }
 }

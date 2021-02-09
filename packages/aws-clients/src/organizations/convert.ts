@@ -278,7 +278,7 @@ export const convertOrganizationRoots = ({
 export const convertCreateAccountStatus = (
   status: O.CreateAccountStatus,
 ): CreateAccountStatus => ({
-  accountId: status.AccountId as AccountId,
+  accountId: `${status.AccountId}` as AccountId,
   accountName: status.AccountName as AccountName,
   failureReason: status.FailureReason as CreateAccountFailureReason,
   id: status.Id as CreateAccountRequestId,

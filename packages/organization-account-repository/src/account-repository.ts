@@ -10,7 +10,7 @@ import Joi from "joi"
 export interface AccountConfigItem {
   readonly accountId: AccountId
   readonly organizationalUnitPath: OrganizationalUnitPath
-  readonly config: OrganizationAccountConfig
+  readonly config: Partial<OrganizationAccountConfig>
 }
 
 export interface AccountConfigItemWrapper {

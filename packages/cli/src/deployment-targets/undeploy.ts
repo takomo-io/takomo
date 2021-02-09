@@ -37,11 +37,11 @@ export const undeployTargetsCmd = {
   handler: (argv: any) =>
     handle({
       argv,
-      input: (ctx, input) => ({
+      input: async (ctx, input) => ({
         ...input,
         targets: parseTargets(argv.target),
-        groups: argv.groups || [],
-        configFile: argv["config-file"] || null,
+        groups: argv.groups ?? [],
+        configFile: argv["config-file"] ?? null,
         operation: "undeploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
       }),

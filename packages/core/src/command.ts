@@ -2,6 +2,7 @@ import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn, Region, ServicePrincipal } from "@takomo/aws-model"
 import { FilePath, LogLevel, Timer, TkmLogger } from "@takomo/util"
 import { Credentials } from "aws-sdk"
+import { TakomoProjectConfig } from "./config"
 import { Variables } from "./variables"
 
 export type Project = string
@@ -169,6 +170,11 @@ export interface CommandContext {
    * Logging level.
    */
   readonly logLevel: LogLevel
+
+  /**
+   * Project configuration.
+   */
+  readonly projectConfig: TakomoProjectConfig
 }
 
 /**

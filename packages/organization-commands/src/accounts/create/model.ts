@@ -14,6 +14,7 @@ export interface CreateAccountInput extends CommandInput {
   readonly roleName: string
   readonly alias?: AccountAlias
   readonly ou?: OrganizationalUnitPath
+  readonly config?: Record<string, unknown>
 }
 
 export interface CreateAccountOutput extends CommandOutput {
@@ -28,5 +29,6 @@ export interface CreateAccountIO extends IO<CreateAccountOutput> {
     roleName: string,
     alias?: AccountAlias,
     ou?: OrganizationalUnitPath,
+    config?: Record<string, unknown>,
   ) => Promise<ConfirmResult>
 }

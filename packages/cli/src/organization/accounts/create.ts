@@ -5,7 +5,7 @@ import {
   createAccountCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { DEFAULT_ORGANIZATION_ROLE_NAME } from "@takomo/organization-model"
-import { commonEpilog, handle } from "../../common"
+import { commonEpilog, handle, readConfigurationFromFiles } from "../../common"
 
 export const createAccountCmd = {
   command: "create",
@@ -46,11 +46,16 @@ export const createAccountCmd = {
         description: "Organizational unit",
         string: true,
         global: false,
+      })
+      .option("config-file", {
+        description: "Config file",
+        string: true,
+        global: false,
       }),
   handler: (argv: any) =>
     handle({
       argv,
-      input: (ctx, input) => ({
+      input: async (ctx, input) => ({
         ...input,
         email: argv.email,
         name: argv.name,
@@ -58,6 +63,10 @@ export const createAccountCmd = {
         roleName: argv["role-name"],
         alias: argv.alias,
         ou: argv.ou,
+        config: await readConfigurationFromFiles(
+          ctx.projectDir,
+          argv["config-file"],
+        ),
       }),
       io: (ctx, logger) => createCreateAccountIO({ logger }),
       configRepository: (ctx, logger) =>

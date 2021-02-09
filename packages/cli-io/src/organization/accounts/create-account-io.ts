@@ -5,6 +5,7 @@ import {
   CreateAccountOutput,
 } from "@takomo/organization-commands"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
+import { formatYaml, table } from "@takomo/util"
 import { createBaseIO } from "../../cli-io"
 import { IOProps } from "../../stacks/common"
 
@@ -19,22 +20,29 @@ export const createCreateAccountIO = (props: IOProps): CreateAccountIO => {
     roleName: string,
     alias?: AccountAlias,
     ou?: OrganizationalUnitPath,
+    config?: Record<string, unknown>,
   ): Promise<ConfirmResult> => {
-    io.longMessage(
-      [
-        "Account information:",
-        "",
-        `  name:                        ${name}`,
-        `  email:                       ${email}`,
-        `  role name:                   ${roleName}`,
-        `  iam user access to billing:  ${iamUserAccessToBilling}`,
-        `  organizational unit:         ${ou ?? "<undefined>"}`,
-        `  alias:                       ${alias ?? "<undefined>"}`,
-      ],
-      true,
-      false,
-      0,
-    )
+    io.header({ text: "Review account creation plan:", marginTop: true })
+    io.message({ text: "Basic information:", marginTop: true })
+    io.table({
+      table: table({ headers: ["prop", "value"] })
+        .row("name:", name)
+        .row("email:", email)
+        .row("role name:", roleName)
+        .row("iam user access to billing:", iamUserAccessToBilling)
+        .row("organizational unit:", ou ?? "<undefined>")
+        .row("alias:", alias ?? "<undefined>"),
+      marginTop: true,
+      showHeaders: false,
+      indent: 2,
+    })
+
+    io.message({ text: "Configuration:", marginTop: true })
+    if (!config || Object.keys(config).length === 0) {
+      io.message({ text: "none", indent: 2, marginTop: true })
+    } else {
+      io.message({ text: formatYaml(config), indent: 2, marginTop: true })
+    }
 
     return (await io.confirm("Continue to create the account?", true))
       ? ConfirmResult.YES

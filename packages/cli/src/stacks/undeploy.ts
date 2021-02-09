@@ -49,7 +49,7 @@ export const undeployStacksCmd = {
           logger,
           ...ctx.filePaths,
         }),
-      input: (ctx, input) => ({
+      input: async (ctx, input) => ({
         ...input,
         ignoreDependencies: argv["ignore-dependencies"],
         commandPath: argv.commandPath,

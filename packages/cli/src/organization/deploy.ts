@@ -15,14 +15,13 @@ const builder = (yargs: any) =>
 const handler = (argv: any) =>
   handle({
     argv,
-    input: (ctx, input) => input,
+    input: async (ctx, input) => input,
     io: (ctx, logger) => createDeployOrganizationIO({ logger }),
     configRepository: (ctx, logger) =>
       createFileSystemOrganizationConfigRepository({
         ctx,
         logger,
         ...ctx.filePaths,
-        projectConfig: ctx.projectConfig,
       }),
     executor: deployOrganizationCommand,
   })
