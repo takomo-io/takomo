@@ -6,6 +6,11 @@ describe("parse var args", () => {
     expect(vars).toStrictEqual({})
   })
 
+  test("returns an empty object when undefined is given", async () => {
+    const vars = parseVarArgs(undefined, {})
+    expect(vars).toStrictEqual({})
+  })
+
   test("returns an empty object when empty array is given", async () => {
     const vars = parseVarArgs([], {})
     expect(vars).toStrictEqual({})

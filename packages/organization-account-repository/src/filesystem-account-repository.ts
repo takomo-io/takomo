@@ -2,7 +2,7 @@ import {
   createFile,
   deepFreeze,
   dirExists,
-  expandDir,
+  expandFilePath,
   FilePath,
   formatYaml,
   parseYaml,
@@ -61,7 +61,7 @@ export const createFileSystemAccountRepositoryProvider = (): AccountRepositoryPr
         )
       }
 
-      const expandedDir = expandDir(ctx.projectDir, accountsDir)
+      const expandedDir = expandFilePath(ctx.projectDir, accountsDir)
 
       if (!(await dirExists(expandedDir))) {
         throw new TakomoError(
