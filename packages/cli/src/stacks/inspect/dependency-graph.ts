@@ -17,7 +17,7 @@ const handler = (argv: any) =>
   handle({
     argv,
     io: (ctx, logger) => createDependencyGraphIO({ logger }),
-    input: (ctx, input) => ({
+    input: async (ctx, input) => ({
       ...input,
       commandPath: argv.commandPath,
     }),

@@ -67,7 +67,6 @@ export const createTestOrganizationConfigRepository = async ({
     logger: createConsoleLogger({
       logLevel: ctx.logLevel,
     }),
-    projectConfig: ctx.projectConfig,
   })
 
 const createCtxAndConfigRepository = async (

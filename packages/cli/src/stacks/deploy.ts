@@ -39,7 +39,7 @@ export const deployStacksCmd = {
   handler: (argv: any) =>
     handle({
       argv,
-      input: (ctx, input) => ({
+      input: async (ctx, input) => ({
         ...input,
         ignoreDependencies: argv["ignore-dependencies"],
         commandPath: argv.commandPath,

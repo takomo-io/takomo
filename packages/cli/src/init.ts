@@ -29,7 +29,7 @@ export const initProjectCmd = {
   handler: (argv: any) =>
     handle({
       argv,
-      input: (ctx, input) => ({
+      input: async (ctx, input) => ({
         ...input,
         ...ctx.filePaths,
         regions: argv.regions,

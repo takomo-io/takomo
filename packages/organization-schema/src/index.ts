@@ -57,8 +57,7 @@ export const createOrganizationSchemas = (
     awsManaged: Joi.boolean(),
   })
 
-  const organizationAccount = Joi.object({
-    id: accountId.required(),
+  const organizationAccountWithoutId = Joi.object({
     name: Joi.string(),
     email: Joi.string().email(),
     accountAdminRoleName: organizationRoleName,
@@ -80,6 +79,10 @@ export const createOrganizationSchemas = (
     status: organizationAccountStatus,
     description: Joi.string(),
     vars,
+  })
+
+  const organizationAccount = organizationAccountWithoutId.keys({
+    id: accountId.required(),
   })
 
   const organizationalUnitName = Joi.string()
@@ -180,6 +183,7 @@ export const createOrganizationSchemas = (
 
   return {
     organizationAccount,
+    organizationAccountWithoutId,
     trustedAwsServices,
     trustedAwsService,
     organizationalUnits,

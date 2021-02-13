@@ -60,8 +60,6 @@ export const buildOrganizationConfig = async (
 
   const trustedAwsServices = parseTrustedAwsServices(record.trustedAwsServices)
 
-  // TODO: Validate that there is OU for each externally loaded account
-
   return ok(
     deepFreeze({
       accountCreation,

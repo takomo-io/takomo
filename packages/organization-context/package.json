@@ -33,6 +33,7 @@
     "@takomo/core": "3.0.1",
     "@takomo/organization-config": "3.0.1",
     "@takomo/organization-model": "3.0.0",
+    "@takomo/organization-account-repository": "3.0.1",
     "@takomo/stacks-context": "3.0.1",
     "@takomo/util": "3.0.1",
     "lodash.flatten": "4.4.0",

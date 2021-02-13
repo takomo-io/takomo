@@ -21,7 +21,7 @@ const builder = (yargs: any) =>
 const handler = (argv: any) =>
   handle({
     argv,
-    input: (ctx, input) => ({
+    input: async (ctx, input) => ({
       ...input,
       accountId: argv["account-id"],
     }),

@@ -2,6 +2,7 @@ import {
   OrganizationPolicyName,
   OrganizationPolicyType,
 } from "@takomo/aws-model"
+import { AccountConfigItem } from "@takomo/organization-account-repository"
 import { OrganizationConfig } from "@takomo/organization-config"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 
@@ -14,4 +15,5 @@ export interface OrganizationConfigRepository extends StacksConfigRepository {
     policyType: OrganizationPolicyType,
     policyName: OrganizationPolicyName,
   ) => Promise<string>
+  readonly putAccountConfig: (config: AccountConfigItem) => Promise<void>
 }

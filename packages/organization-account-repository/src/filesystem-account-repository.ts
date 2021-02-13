@@ -2,6 +2,7 @@ import {
   createFile,
   deepFreeze,
   dirExists,
+  expandDir,
   FilePath,
   formatYaml,
   parseYaml,
@@ -37,18 +38,6 @@ const loadAccountFile = async (
     item,
     source: pathToFile,
   }
-}
-
-const expandDir = (projectDir: FilePath, dirPath: FilePath): FilePath => {
-  if (
-    dirPath.startsWith("/") ||
-    dirPath.startsWith("~") ||
-    dirPath.startsWith("./")
-  ) {
-    return dirPath
-  }
-
-  return join(projectDir, dirPath)
 }
 
 export const createFileSystemAccountRepositoryProvider = (): AccountRepositoryProvider => {
@@ -101,8 +90,12 @@ export const createFileSystemAccountRepositoryProvider = (): AccountRepositoryPr
 
       return {
         putAccount: async (item: AccountConfigItem): Promise<void> => {
-          const pathToFile = join(expandedDir, item.accountId, ".yml")
+          const pathToFile = join(expandedDir, `${item.accountId}.yml`)
+          logger.info(
+            `Persist account '${item.accountId}' to file: ${pathToFile}`,
+          )
           const contents = formatYaml(item)
+          logger.trace("File contents:", () => contents)
           await createFile(pathToFile, contents)
         },
         listAccounts: async (): Promise<

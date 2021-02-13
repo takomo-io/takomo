@@ -15,7 +15,7 @@ const builder = (yargs: any) =>
 const handler = (argv: any) =>
   handle({
     argv,
-    input: (ctx, input) => input,
+    input: async (ctx, input) => input,
     io: (ctx, logger) => createDescribeOrganizationIO({ logger }),
     configRepository: (ctx, logger) =>
       createFileSystemOrganizationConfigRepository({
