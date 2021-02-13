@@ -13,7 +13,7 @@ import {
   createLogger,
   createTimer,
   deepFreeze,
-  expandDir,
+  expandFilePath,
   fileExists,
   FilePath,
   indentLines,
@@ -124,7 +124,7 @@ const readVariablesFromFile = async (
   projectDir: FilePath,
   fileName: FilePath,
 ): Promise<any> => {
-  const pathToVarsFile = expandDir(projectDir, fileName)
+  const pathToVarsFile = expandFilePath(projectDir, fileName)
 
   if (!(await fileExists(pathToVarsFile))) {
     throw new TakomoError(`Variable file ${pathToVarsFile} not found`)
@@ -212,7 +212,7 @@ const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
     : []
 
   for (const envArg of envArray) {
-    const pathToEnvVarsFile = expandDir(projectDir, envArg)
+    const pathToEnvVarsFile = expandFilePath(projectDir, envArg)
 
     if (!(await fileExists(pathToEnvVarsFile))) {
       throw new TakomoError(

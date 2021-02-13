@@ -62,17 +62,17 @@ export const createFile = async (
 /**
  * @hidden
  */
-export const expandDir = (
+export const expandFilePath = (
   projectDir: FilePath,
-  dirPath: FilePath,
+  filePath: FilePath,
 ): FilePath => {
-  if (
-    dirPath.startsWith("/") ||
-    dirPath.startsWith("~") ||
-    dirPath.startsWith("./")
-  ) {
-    return dirPath
+  if (filePath.startsWith("/") || filePath.startsWith("~")) {
+    return filePath
   }
 
-  return join(projectDir, dirPath)
+  if (filePath.startsWith("./")) {
+    return join(projectDir, filePath.substr(2))
+  }
+
+  return join(projectDir, filePath)
 }

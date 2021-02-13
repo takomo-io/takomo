@@ -6,6 +6,11 @@ describe("parse var file args", () => {
     expect(vars).toStrictEqual({})
   })
 
+  test("returns an empty object when undefined is given", async () => {
+    const vars = await parseVarFileArgs(".", undefined)
+    expect(vars).toStrictEqual({})
+  })
+
   test("returns an empty object when empty array is given", async () => {
     const vars = await parseVarFileArgs(".", [])
     expect(vars).toStrictEqual({})
@@ -77,5 +82,14 @@ describe("parse var file args", () => {
         "Contents of variable file example.txt could not be deserialized to an object",
       )
     }
+  })
+
+  test("load variables from a .json file with path starting with ./ ", async () => {
+    const vars = await parseVarFileArgs("test", ["./example.json"])
+    const expected = {
+      key: "value",
+      array: ["a", "b", "c"],
+    }
+    expect(vars).toStrictEqual(expected)
   })
 })
