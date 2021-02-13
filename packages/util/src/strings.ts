@@ -25,10 +25,19 @@ export const checksum = (string: string): string =>
 export const getStringSizeInBytes = (string: string): number =>
   Buffer.byteLength(string, "utf8")
 
+/**
+ * @hidden
+ */
 export type Formatter<T> = (item: T) => string
 
+/**
+ * @hidden
+ */
 export type FormatterPadding = "none" | "left" | "right"
 
+/**
+ * @hidden
+ */
 export interface FormatterProps<T> {
   readonly items: T[]
   readonly getter: (item: T) => unknown
@@ -55,6 +64,9 @@ const getPadder = (
   }
 }
 
+/**
+ * @hidden
+ */
 export const formatter = <T>({
   items,
   getter,
@@ -89,22 +101,34 @@ export const formatter = <T>({
   return R.pipe(getterFn, padder)
 }
 
+/**
+ * @hidden
+ */
 export interface PrintFormattedTableProps {
   readonly showHeaders?: boolean
   readonly indent?: number
   readonly writer: (string?: string) => void
 }
 
+/**
+ * @hidden
+ */
 export interface FormattedTable {
   readonly row: (...columns: unknown[]) => FormattedTable
   readonly print: (props: PrintFormattedTableProps) => void
 }
 
+/**
+ * @hidden
+ */
 export interface FormattedTableProps {
   readonly headers: string[]
   readonly rows?: unknown[][]
 }
 
+/**
+ * @hidden
+ */
 export const table = (props: FormattedTableProps): FormattedTable => {
   return {
     row: (...columns: unknown[]): FormattedTable => {

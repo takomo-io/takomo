@@ -4,6 +4,9 @@ import { deepFreeze, FilePath, TakomoError, TkmLogger } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
 import { StackPath } from "./stack"
 
+/**
+ * @hidden
+ */
 export type SchemaName = string
 
 class CustomSchemaError extends TakomoError {
@@ -12,22 +15,35 @@ class CustomSchemaError extends TakomoError {
   }
 }
 
+/**
+ * @hidden
+ */
 export interface InitSchemaProps {
   readonly joi: Joi.Root
   readonly props: Record<string, unknown>
 }
+
+/**
+ * @hidden
+ */
 export interface SchemaProps {
   readonly ctx: CommandContext
   readonly joi: Joi.Root
   readonly base: Joi.ObjectSchema
 }
 
+/**
+ * @hidden
+ */
 export interface SchemaProvider {
   readonly init: (props: InitSchemaProps) => Promise<AnySchema>
   readonly name: SchemaName | (() => SchemaName)
   readonly schema?: (props: SchemaProps) => Joi.ObjectSchema
 }
 
+/**
+ * @hidden
+ */
 export interface SchemaRegistry {
   readonly initParameterSchema: (
     ctx: CommandContext,
@@ -42,11 +58,17 @@ export interface SchemaRegistry {
   readonly hasProvider: (name: SchemaName) => boolean
 }
 
+/**
+ * @hidden
+ */
 export const defaultSchema = (schemaName: SchemaName): Joi.ObjectSchema =>
   Joi.object({
     name: Joi.string().valid(schemaName),
   })
 
+/**
+ * @hidden
+ */
 export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
   const schemas = new Map<SchemaName, SchemaProvider>()
   return deepFreeze({
