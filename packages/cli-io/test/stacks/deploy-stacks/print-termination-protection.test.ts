@@ -1,4 +1,4 @@
-import { createCapturingLogWriter } from "@takomo/test-unit/src"
+import { createCapturingLogWriter } from "@takomo/test-unit"
 import { bold, green, grey, red } from "@takomo/util"
 import dedent from "ts-dedent"
 import { createBaseIO } from "../../../src/cli-io"

@@ -8,4 +8,5 @@ export {
   SingleParameterConfig,
   StackConfig,
   StackGroupConfig,
+  TemplateConfig,
 } from "./model"

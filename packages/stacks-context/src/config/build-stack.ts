@@ -2,7 +2,7 @@ import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
 import { createAwsSchemas } from "@takomo/aws-schema"
 import { CommandContext } from "@takomo/core"
-import { TemplateConfig } from "@takomo/stacks-config/src/model"
+import { TemplateConfig } from "@takomo/stacks-config"
 import {
   CommandPath,
   createStack,

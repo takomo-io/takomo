@@ -1,7 +1,7 @@
 import { CommandContext } from "@takomo/core"
 import { createConsoleLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
-import { createSchemaRegistry } from "../dist"
+import { createSchemaRegistry } from "../src"
 
 const logger = createConsoleLogger({ logLevel: "info" })
 
