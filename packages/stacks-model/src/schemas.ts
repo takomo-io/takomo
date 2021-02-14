@@ -4,9 +4,6 @@ import { deepFreeze, FilePath, TakomoError, TkmLogger } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
 import { StackPath } from "./stack"
 
-/**
- * @hidden
- */
 export type SchemaName = string
 
 class CustomSchemaError extends TakomoError {
@@ -15,17 +12,12 @@ class CustomSchemaError extends TakomoError {
   }
 }
 
-/**
- * @hidden
- */
 export interface InitSchemaProps {
   readonly joi: Joi.Root
+  readonly ctx: CommandContext
   readonly props: Record<string, unknown>
 }
 
-/**
- * @hidden
- */
 export interface SchemaProps {
   readonly ctx: CommandContext
   readonly joi: Joi.Root
@@ -33,11 +25,22 @@ export interface SchemaProps {
 }
 
 /**
- * @hidden
+ * An interface to be implemented by objects that initialize Joi schema objects.
  */
 export interface SchemaProvider {
+  /**
+   * Initialize Joi schema
+   */
   readonly init: (props: InitSchemaProps) => Promise<AnySchema>
+
+  /**
+   * Name of the schema that this provider initializes.
+   */
   readonly name: SchemaName | (() => SchemaName)
+
+  /**
+   * Create a schema used to validate properties used to initialize a new schema.
+   */
   readonly schema?: (props: SchemaProps) => Joi.ObjectSchema
 }
 
@@ -165,6 +168,7 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
 
       return provider.init({
         joi: Joi.defaults((schema) => schema),
+        ctx,
         props,
       })
     },
