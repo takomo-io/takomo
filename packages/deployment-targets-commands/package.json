@@ -32,7 +32,7 @@
     "@takomo/core": "3.0.1",
     "@takomo/deployment-targets-config": "3.0.1",
     "@takomo/deployment-targets-context": "3.0.1",
-    "@takomo/deployment-targets-model": "^3.0.0",
+    "@takomo/deployment-targets-model": "3.0.0",
     "@takomo/deployment-targets-schema": "3.0.1",
     "@takomo/stacks-commands": "3.0.1",
     "@takomo/stacks-context": "3.0.1",
