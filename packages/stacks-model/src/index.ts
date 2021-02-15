@@ -15,6 +15,7 @@ export {
 export {
   createStack,
   InternalStack,
+  normalizeStackPath,
   Stack,
   StackPath,
   StackProps,

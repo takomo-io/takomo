@@ -24,6 +24,7 @@ const ctx: CommandContext = {
   },
   confidentialValuesLoggingEnabled: false,
   statisticsEnabled: true,
+  projectConfig: {},
 }
 
 const schema = provider.schema!({

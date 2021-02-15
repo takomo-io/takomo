@@ -8,6 +8,7 @@ import {
   CommandPath,
   createSchemaRegistry,
   InternalStacksContext,
+  normalizeStackPath,
   ROOT_STACK_GROUP_PATH,
   StackGroupPath,
   StackPath,
@@ -136,15 +137,23 @@ export const buildStacksContext = async ({
     stacks,
     getStackGroup: (stackGroupPath: StackGroupPath) =>
       stackGroups.get(stackGroupPath),
-    getStackByExactPath: (path: StackPath) => {
-      const stack = stacksByPath.get(path)
+    getStackByExactPath: (path: StackPath, stackGroupPath?: StackGroupPath) => {
+      const normalizedPath = stackGroupPath
+        ? normalizeStackPath(stackGroupPath, path)
+        : path
+
+      const stack = stacksByPath.get(normalizedPath)
       if (!stack) {
         throw new Error(`No stack found with path: ${path}`)
       }
 
       return stack
     },
-    getStacksByPath: (path: StackPath) =>
-      stacks.filter((s) => s.path.startsWith(path)),
+    getStacksByPath: (path: StackPath, stackGroupPath?: StackGroupPath) => {
+      const normalizedPath = stackGroupPath
+        ? normalizeStackPath(stackGroupPath, path)
+        : path
+      return stacks.filter((s) => s.path.startsWith(normalizedPath))
+    },
   })
 }

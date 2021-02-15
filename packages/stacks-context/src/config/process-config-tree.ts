@@ -6,6 +6,7 @@ import {
   createStackGroup,
   HookInitializersMap,
   InternalStack,
+  normalizeStackPath,
   ROOT_STACK_GROUP_PATH,
   SchemaRegistry,
   StackGroup,
@@ -218,7 +219,9 @@ export const processConfigTree = async (
         .reduce((collected, stack) => {
           const parameterDependencies = flatten(
             Array.from(stack.parameters.values()).map((p) =>
-              p.getDependencies(),
+              p
+                .getDependencies()
+                .map((d) => normalizeStackPath(stack.stackGroupPath, d)),
             ),
           )
 

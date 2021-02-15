@@ -19,13 +19,17 @@ export const init = async (props: any): Promise<Resolver> => {
       ctx,
       logger,
       parameterName,
+      stack: stackConfig,
     }: ResolverInput): Promise<any> => {
       logger.debugObject(
         `Resolving value for parameter '${parameterName}' using stack-output resolver:`,
         { stack: props.stack, output: props.output },
       )
 
-      const [referencedStack, ...rest] = ctx.getStacksByPath(props.stack)
+      const [referencedStack, ...rest] = ctx.getStacksByPath(
+        props.stack,
+        stackConfig.stackGroupPath,
+      )
 
       if (!referencedStack) {
         // TODO: We should be able to detect this earlier - when the configuration is being built
@@ -63,10 +67,10 @@ export const init = async (props: any): Promise<Resolver> => {
 const name = "stack-output"
 
 const schema = ({ ctx, base }: ResolverProviderSchemaProps): ObjectSchema => {
-  const { stackPath } = createStacksSchemas({ regions: ctx.regions })
+  const { relativeStackPath } = createStacksSchemas({ regions: ctx.regions })
   const { stackOutputName } = createAwsSchemas({ regions: ctx.regions })
   return base.keys({
-    stack: stackPath.required(),
+    stack: relativeStackPath.required(),
     output: stackOutputName.required(),
   })
 }

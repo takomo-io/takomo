@@ -1,0 +1,5 @@
+template: a.yml
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+depends:
+  - ../../c.yml
+  - ../../foo/bar/d.yml

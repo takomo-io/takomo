@@ -8,6 +8,7 @@ import {
   createStack,
   HookInitializersMap,
   InternalStack,
+  normalizeStackPath,
   SchemaRegistry,
   StackGroup,
   StackPath,
@@ -143,7 +144,9 @@ export const buildStack = async (
         tags: new Map(stackGroup.tags),
         timeout: stackConfig.timeout ??
           stackGroup.timeout ?? { create: 0, update: 0 },
-        dependencies: stackConfig.depends,
+        dependencies: stackConfig.depends.map((d) =>
+          normalizeStackPath(stackGroup.path, d),
+        ),
         dependents: [],
         templateBucket: stackConfig.templateBucket ?? stackGroup.templateBucket,
         data: deepCopy({ ...stackGroup.data, ...stackConfig.data }),

@@ -16,6 +16,7 @@ export interface StacksSchemas {
   commandPath: StringSchema
   stackGroupPath: StringSchema
   stackPath: StringSchema
+  relativeStackPath: StringSchema
   stackGroupName: StringSchema
   terminationProtection: BooleanSchema
   ignore: BooleanSchema
@@ -193,6 +194,30 @@ export const createStacksSchemas = (
         '{{#label}} with value "{{#value}}" has invalid region "{{#region}}". The region must be one of [{{#regions}}]',
     })
 
+  const relativeStackPath = Joi.string()
+    .max(100)
+    .regex(/^(((\/|(\.\.\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\.yml\/?/)
+    .custom((value, helpers) => {
+      const [path, regionPart] = value.split(".yml", 2)
+      if (!regionPart) {
+        return value
+      }
+
+      const region = regionPart.substr(1)
+      if (!props.regions.includes(region)) {
+        return helpers.error("invalidRegion", {
+          region,
+          regions: props.regions.join(", "),
+        })
+      }
+
+      return value
+    }, "stack path")
+    .messages({
+      invalidRegion:
+        '{{#label}} with value "{{#value}}" has invalid region "{{#region}}". The region must be one of [{{#regions}}]',
+    })
+
   const stackGroupName = Joi.string().regex(/^[a-zA-Z][a-zA-Z0-9-]*$/)
 
   const stackGroupPath = Joi.string()
@@ -231,6 +256,7 @@ export const createStacksSchemas = (
     commandPath,
     stackGroupPath,
     stackPath,
+    relativeStackPath,
     stackGroupName,
     terminationProtection,
     ignore,
