@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-account-repository",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Takomo Organization Account Repository",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -30,9 +30,9 @@
     "@takomo/aws-model": "3.1.0",
     "@takomo/aws-schema": "3.1.0",
     "@takomo/core": "3.1.0",
-    "@takomo/organization-config": "3.1.0",
+    "@takomo/organization-config": "3.2.0",
     "@takomo/organization-model": "3.1.0",
-    "@takomo/organization-schema": "3.1.0",
+    "@takomo/organization-schema": "3.2.0",
     "@takomo/util": "3.1.0",
     "joi": "17.2.1",
     "readdirp": "3.5.0"

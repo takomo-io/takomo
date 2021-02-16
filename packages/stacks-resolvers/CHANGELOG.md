@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/takomo-io/takomo/compare/v3.1.0...v3.2.0) (2021-02-16)
+
+
+### Features
+
+* add support for relative stack paths ([#149](https://github.com/takomo-io/takomo/issues/149)) ([33854d0](https://github.com/takomo-io/takomo/commit/33854d0c23fc54a618d496fc9b8d8f6e318e70eb)), closes [#53](https://github.com/takomo-io/takomo/issues/53)
+
+
+
+
+
 # [3.1.0](https://github.com/takomo-io/takomo/compare/v3.0.1...v3.1.0) (2021-02-14)
 
 
