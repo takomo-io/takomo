@@ -21,14 +21,22 @@ export interface StacksContext extends CommandContext {
   readonly templateEngine: TemplateEngine
 
   /**
-   * Return a stack by exact path or throw an error if no stack is found
+   * Return a stack by exact path or throw an error if no stack is found.
+   * The stack path can be relative if stackGroupPath is given.
    */
-  readonly getStackByExactPath: (path: StackPath) => Stack
+  readonly getStackByExactPath: (
+    path: StackPath,
+    stackGroupPath?: StackGroupPath,
+  ) => Stack
 
   /**
-   * Return 0 or more stacks by path.
+   * Return 0 or more stacks by path. The stack path can be relative if
+   * stackGroupPath is given.
    */
-  readonly getStacksByPath: (path: StackPath) => ReadonlyArray<Stack>
+  readonly getStacksByPath: (
+    path: StackPath,
+    stackGroupPath?: StackGroupPath,
+  ) => ReadonlyArray<Stack>
 }
 
 /**
@@ -42,6 +50,12 @@ export interface InternalStacksContext extends CommandContext {
   readonly getStackGroup: (
     stackGroupPath: StackGroupPath,
   ) => StackGroup | undefined
-  readonly getStackByExactPath: (path: StackPath) => InternalStack
-  readonly getStacksByPath: (path: StackPath) => ReadonlyArray<InternalStack>
+  readonly getStackByExactPath: (
+    path: StackPath,
+    stackGroupPath?: StackGroupPath,
+  ) => InternalStack
+  readonly getStacksByPath: (
+    path: StackPath,
+    stackGroupPath?: StackGroupPath,
+  ) => ReadonlyArray<InternalStack>
 }

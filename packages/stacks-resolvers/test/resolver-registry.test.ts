@@ -8,7 +8,6 @@ import { createStaticResolverProvider } from "../src/static-resolver"
 
 const logger = createConsoleLogger({
   logLevel: "info",
-  concealConfidentialInformation: true,
 })
 
 describe("#registerBuiltInProvider", () => {

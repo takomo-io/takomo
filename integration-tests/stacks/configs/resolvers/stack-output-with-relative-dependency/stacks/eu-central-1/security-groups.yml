@@ -1,0 +1,6 @@
+template: security-groups.yml
+parameters:
+  VpcId:
+    resolver: stack-output
+    stack: vpc.yml
+    output: MyVpcId

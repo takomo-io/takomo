@@ -78,12 +78,12 @@ export const createStackConfigSchema = (
     hooks,
     timeoutInMinutes,
     timeoutObject,
-    stackPath,
+    relativeStackPath,
     parameters,
   } = createStacksSchemas({ ...props })
 
   const timeout = [timeoutInMinutes, timeoutObject]
-  const stackPaths = Joi.array().items(stackPath).unique()
+  const stackPaths = Joi.array().items(relativeStackPath).unique()
 
   return Joi.object({
     project,
@@ -100,7 +100,7 @@ export const createStackConfigSchema = (
     accountIds: [accountId, accountIds],
     commandRole: iamRoleArn,
     name: stackName,
-    depends: [stackPath, stackPaths],
+    depends: [relativeStackPath, stackPaths],
     capabilities: stackCapabilities,
   })
 }

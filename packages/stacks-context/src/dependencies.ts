@@ -1,6 +1,7 @@
 import {
   createStack,
   InternalStack,
+  normalizeStackPath,
   StackPath,
   StackProps,
 } from "@takomo/stacks-model"
@@ -130,8 +131,13 @@ export const processStackDependencies = (
         const matchingParamDeps = resolver
           .getDependencies()
           .map((dependency) => {
+            const normalizedDependency = normalizeStackPath(
+              stack.stackGroupPath,
+              dependency,
+            )
+
             const matching = stacks
-              .filter((other) => other.path.startsWith(dependency))
+              .filter((other) => other.path.startsWith(normalizedDependency))
               .map((other) => other.path)
 
             if (matching.length === 0) {

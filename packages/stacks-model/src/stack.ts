@@ -16,9 +16,10 @@ import {
 import { CommandRole, Project, Vars } from "@takomo/core"
 import { deepFreeze, FilePath, TkmLogger } from "@takomo/util"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
+import { ROOT_STACK_GROUP_PATH } from "./constants"
 import { HookExecutor } from "./hook"
 import { ResolverExecutor } from "./resolver"
-import { StackGroupPath } from "./stack-group"
+import { StackGroupName, StackGroupPath } from "./stack-group"
 
 /**
  * Stack path.
@@ -210,4 +211,54 @@ export const createStack = (props: StackProps): InternalStack => {
     timeout,
     toProps: () => props,
   })
+}
+
+const normalizeStackPathInternal = (
+  stackPath: StackPath,
+  parentPathParts: ReadonlyArray<StackGroupName>,
+  [firstStackPathPart, ...restStackPathParts]: ReadonlyArray<StackPath>,
+): StackPath => {
+  if (firstStackPathPart !== "..") {
+    return `/${[
+      ...parentPathParts,
+      firstStackPathPart,
+      ...restStackPathParts,
+    ].join("/")}`
+  }
+
+  if (parentPathParts.length === 0) {
+    throw new Error(`Invalid relative stack path '${stackPath}'`)
+  }
+
+  return normalizeStackPathInternal(
+    stackPath,
+    parentPathParts.slice(0, -1),
+    restStackPathParts,
+  )
+}
+
+/**
+ * @hidden
+ */
+export const normalizeStackPath = (
+  parentPath: StackGroupPath,
+  stackPath: StackPath,
+): StackPath => {
+  if (stackPath.startsWith("/")) {
+    return stackPath
+  }
+
+  if (!stackPath.startsWith("../")) {
+    return `${parentPath}/${stackPath}`
+  }
+
+  if (parentPath === ROOT_STACK_GROUP_PATH) {
+    throw new Error(`Invalid relative stack path '${stackPath}'`)
+  }
+
+  return normalizeStackPathInternal(
+    stackPath,
+    parentPath.substr(1).split("/"),
+    stackPath.split("/"),
+  )
 }
