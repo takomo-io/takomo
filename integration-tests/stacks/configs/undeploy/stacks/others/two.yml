@@ -1,0 +1,2 @@
+template: template2.yml
+depends: one.yml

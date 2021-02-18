@@ -36,6 +36,7 @@ const undeployStacks = async (
   input: StacksOperationInput,
 ): Promise<StacksOperationOutput> => {
   const modifiedInput = await modifyInput(input, ctx, io)
+
   const plan = await buildStacksUndeployPlan(
     ctx.stacks,
     input.commandPath,
@@ -65,11 +66,10 @@ export const undeployStacksCommand: CommandHandler<
   io,
 }): Promise<StacksOperationOutput> =>
   validateInput(inputSchema(ctx), input)
-    .then((input) =>
+    .then(() =>
       buildStacksContext({
         configRepository,
         ctx,
-        commandPath: input.interactive ? undefined : input.commandPath,
         logger: io,
         overrideCredentialManager: credentialManager,
       }),

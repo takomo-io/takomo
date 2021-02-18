@@ -249,7 +249,9 @@ export const normalizeStackPath = (
   }
 
   if (!stackPath.startsWith("../")) {
-    return `${parentPath}/${stackPath}`
+    return parentPath === ROOT_STACK_GROUP_PATH
+      ? `/${stackPath}`
+      : `${parentPath}/${stackPath}`
   }
 
   if (parentPath === ROOT_STACK_GROUP_PATH) {

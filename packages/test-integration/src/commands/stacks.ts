@@ -143,7 +143,7 @@ export const executeUndeployStacksCommand = (
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
         timer: createTimer("total"),
-        ignoreDependencies: false,
+        ignoreDependencies: props.ignoreDependencies ?? false,
         interactive: false,
       },
     })
