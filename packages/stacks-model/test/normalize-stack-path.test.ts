@@ -2,6 +2,7 @@ import { normalizeStackPath } from "../src/stack"
 
 const cases = [
   ["/", "/stack.yml", "/stack.yml"],
+  ["/", "hello.yml", "/hello.yml"],
   ["/networking", "sibling.yml", "/networking/sibling.yml"],
   ["/parent", "../root-child.yml", "/root-child.yml"],
   ["/foo", "bar/baz/child.yml", "/foo/bar/baz/child.yml"],

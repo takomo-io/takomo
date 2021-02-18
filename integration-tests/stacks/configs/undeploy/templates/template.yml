@@ -1,0 +1,12 @@
+Parameters:
+  Code:
+    Type: String
+    Description: Code
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+Outputs:
+  Code:
+    Description: Code output
+    Value: !Ref Code
+

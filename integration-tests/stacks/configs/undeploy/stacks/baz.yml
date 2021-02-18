@@ -1,0 +1,6 @@
+template: template.yml
+parameters:
+  Code:
+    resolver: stack-output
+    stack: /bar.yml
+    output: Code
