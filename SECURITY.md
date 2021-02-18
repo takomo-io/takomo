@@ -1,0 +1,15 @@
+# Security Policy
+
+## Supported Versions
+
+Use this section to tell people about which versions of your project are
+currently being supported with security updates.
+
+| Version | Supported          |
+| ------- | ------------------ |
+| 3.x     | :white_check_mark: |
+| < 3.0   | :x:                |
+
+## Reporting a Vulnerability
+
+Report security bugs by [creating a new issue](https://github.com/takomo-io/takomo/issues).
