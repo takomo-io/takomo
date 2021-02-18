@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.1](https://github.com/takomo-io/takomo/compare/v3.2.0...v3.2.1) (2021-02-18)
+
+
+### Bug Fixes
+
+* fix a bug in undeploy stacks command ([#155](https://github.com/takomo-io/takomo/issues/155)) ([046370b](https://github.com/takomo-io/takomo/commit/046370bba580bf07bca46904c4505e593d7c1d19)), closes [#154](https://github.com/takomo-io/takomo/issues/154)
+
+
+
+
+
 # [3.2.0](https://github.com/takomo-io/takomo/compare/v3.1.0...v3.2.0) (2021-02-16)
 
 **Note:** Version bump only for package @takomo/stacks-commands

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-commands",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Takomo Stacks Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -30,15 +30,15 @@
     "@takomo/aws-clients": "3.1.0",
     "@takomo/aws-model": "3.1.0",
     "@takomo/core": "3.1.0",
-    "@takomo/stacks-context": "3.2.0",
-    "@takomo/stacks-hooks": "3.2.0",
-    "@takomo/stacks-model": "3.2.0",
-    "@takomo/stacks-schema": "3.2.0",
+    "@takomo/stacks-context": "3.2.1",
+    "@takomo/stacks-hooks": "3.2.1",
+    "@takomo/stacks-model": "3.2.1",
+    "@takomo/stacks-schema": "3.2.1",
     "@takomo/util": "3.1.0",
     "aws-sdk": "2.745.0",
     "joi": "17.2.1",
-    "uuid": "3.3.3",
-    "lodash.uniq": "4.5.0"
+    "lodash.uniq": "4.5.0",
+    "uuid": "3.3.3"
   },
   "engines": {
     "node": ">=14.4.0"

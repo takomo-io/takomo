@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-resolvers",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Takomo Stacks Resolvers",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -31,9 +31,9 @@
     "@takomo/aws-model": "3.1.0",
     "@takomo/aws-schema": "3.1.0",
     "@takomo/core": "3.1.0",
-    "@takomo/stacks-config": "3.2.0",
-    "@takomo/stacks-model": "3.2.0",
-    "@takomo/stacks-schema": "3.2.0",
+    "@takomo/stacks-config": "3.2.1",
+    "@takomo/stacks-model": "3.2.1",
+    "@takomo/stacks-schema": "3.2.1",
     "@takomo/util": "3.1.0",
     "joi": "17.2.1"
   },
