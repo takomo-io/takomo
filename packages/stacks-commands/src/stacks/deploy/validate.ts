@@ -1,4 +1,5 @@
 import { StackStatus } from "@takomo/aws-model"
+import { validateStackCredentialManagersWithAllowedAccountIds } from "@takomo/stacks-context"
 import { TakomoError } from "@takomo/util"
 import { StackDeployOperation, StacksDeployPlan } from "./plan"
 
@@ -47,7 +48,12 @@ export const validateStacksStatus = (
 /**
  * @hidden
  */
-export const validateStacksDeployPlan = (plan: StacksDeployPlan): void => {
+export const validateStacksDeployPlan = async (
+  plan: StacksDeployPlan,
+): Promise<void> => {
   const { operations } = plan
+  await validateStackCredentialManagersWithAllowedAccountIds(
+    operations.map((o) => o.stack),
+  )
   validateStacksStatus(operations)
 }

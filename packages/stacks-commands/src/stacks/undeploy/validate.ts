@@ -1,3 +1,4 @@
+import { validateStackCredentialManagersWithAllowedAccountIds } from "@takomo/stacks-context"
 import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { StacksUndeployPlan, StackUndeployOperation } from "./plan"
@@ -68,8 +69,13 @@ const validateTerminationProtection = (
 /**
  * @hidden
  */
-export const validateStacksUndeployPlan = (plan: StacksUndeployPlan): void => {
+export const validateStacksUndeployPlan = async (
+  plan: StacksUndeployPlan,
+): Promise<void> => {
   const operations = plan.operations.filter((o) => o.type === "DELETE")
+  await validateStackCredentialManagersWithAllowedAccountIds(
+    operations.map((o) => o.stack),
+  )
   validateStackStatus(operations)
   validateTerminationProtection(operations)
 }

@@ -1,0 +1,2 @@
+template: template.yml
+accountIds: "{{ var.OTHER_ACCOUNT_ID }}"
