@@ -19,10 +19,7 @@ import {
 } from "@takomo/stacks-resolvers"
 import { collectFromHierarchy, deepFreeze, TkmLogger } from "@takomo/util"
 import flatten from "lodash.flatten"
-import {
-  isStackGroupPath,
-  validateStackCredentialManagersWithAllowedAccountIds,
-} from "../common"
+import { isStackGroupPath } from "../common"
 import {
   CommandPathMatchesNoStacksError,
   StacksConfigRepository,
@@ -126,8 +123,6 @@ export const buildStacksContext = async ({
   await Promise.all(
     Array.from(credentialManagers.values()).map((cm) => cm.getCallerIdentity()),
   )
-
-  await validateStackCredentialManagersWithAllowedAccountIds(stacks)
 
   return deepFreeze({
     ...ctx,

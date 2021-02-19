@@ -1,4 +1,7 @@
-export { isWithinCommandPath } from "./common"
+export {
+  isWithinCommandPath,
+  validateStackCredentialManagersWithAllowedAccountIds,
+} from "./common"
 export { buildStacksContext } from "./config/build-stacks-context"
 export {
   ConfigTree,

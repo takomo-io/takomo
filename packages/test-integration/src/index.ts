@@ -31,4 +31,5 @@ export {
   executeUndeployTargetsCommand,
 } from "./commands/targets"
 export { TIMEOUT } from "./constants"
+export { withTestAccountIds } from "./reservations"
 export * from "./typings"
