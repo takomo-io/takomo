@@ -139,6 +139,10 @@ describe("#createVariablesForStackTemplate", () => {
             value: "barValue",
           },
         ],
+        parametersMap: {
+          foo: "fooValue",
+          bar: "barValue",
+        },
         depends: ["/vpc.yml"],
         terminationProtection: false,
         configFile: {
@@ -232,6 +236,7 @@ describe("#createVariablesForStackTemplate", () => {
           },
         ],
         parameters: [],
+        parametersMap: {},
         depends: [],
         terminationProtection: false,
         configFile: {

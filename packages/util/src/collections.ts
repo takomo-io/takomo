@@ -1,3 +1,5 @@
+import R from "ramda"
+
 interface CollectFromHierarchyProps<T> {
   readonly sortSiblings?: (a: T, b: T) => number
   readonly filter?: (node: T) => boolean
@@ -33,9 +35,27 @@ export const collectFromHierarchy = <T>(
 /**
  * @hidden
  */
-export const mapToObject = (map: Map<string, any>): any =>
+export const mapToObject = (
+  map: Map<string, unknown>,
+): Record<string, unknown> =>
   Array.from(map.entries()).reduce(
     (collected, [key, value]) => ({ ...collected, [key]: value }),
+    {},
+  )
+
+/**
+ * @hidden
+ */
+export const arrayToObject = <T extends any>(
+  array: ReadonlyArray<T>,
+  keyExtractor: (item: T) => string,
+  valueExtractor: (item: T) => unknown = R.identity,
+): Record<string, unknown> =>
+  array.reduce(
+    (collected, item) => ({
+      ...collected,
+      [keyExtractor(item)]: valueExtractor(item),
+    }),
     {},
   )
 
