@@ -1,4 +1,5 @@
 import { InternalStack, StackOperationVariables } from "@takomo/stacks-model"
+import { arrayToObject } from "@takomo/util"
 import path from "path"
 import { StackOperationStep } from "../../common/steps"
 import { StackParameterInfo } from "../model"
@@ -31,6 +32,11 @@ export const createVariablesForStackTemplate = (
         value,
       })),
       parameters: parameters.map((p) => ({ key: p.key, value: p.value })),
+      parametersMap: arrayToObject(
+        parameters,
+        (p) => p.key,
+        (p) => p.value,
+      ),
       timeout: stack.timeout,
       depends: stack.dependencies,
       terminationProtection: stack.terminationProtection,
