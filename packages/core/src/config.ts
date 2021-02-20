@@ -1,3 +1,4 @@
+import { Region } from "@takomo/aws-model"
 import { TakomoError } from "@takomo/util"
 import { CommandRole } from "./command"
 import { Vars } from "./variables"
@@ -36,30 +37,22 @@ export const parseRegex = (
   }
 }
 
-/**
- * @hidden
- */
 export type AccountRepositoryType = string
 
-/**
- * @hidden
- */
 export interface AccountRepositoryConfig {
   readonly type: AccountRepositoryType
   readonly [key: string]: unknown
 }
 
-/**
- * @hidden
- */
 export interface TakomoProjectOrganizationConfig {
   readonly accountRepository?: AccountRepositoryConfig
 }
 
 /**
- * @hidden
+ * Takomo project configuration.
  */
 export interface TakomoProjectConfig {
   readonly requiredVersion?: string
   readonly organization?: TakomoProjectOrganizationConfig
+  readonly regions: ReadonlyArray<Region>
 }

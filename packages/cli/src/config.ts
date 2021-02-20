@@ -8,6 +8,7 @@ import {
 } from "@takomo/util"
 import Joi from "joi"
 import semver from "semver"
+import { DEFAULT_REGIONS } from "./constants"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../package.json")
@@ -31,7 +32,7 @@ const validateRequiredVersion = (
   }
 }
 
-const parseProjectConfigFile = async (
+export const parseProjectConfigFile = async (
   path: FilePath,
 ): Promise<TakomoProjectConfig> => {
   const contents = await readFileContents(path)
@@ -49,8 +50,10 @@ const parseProjectConfigFile = async (
 
   const requiredVersion = parsedFile.requiredVersion
   validateRequiredVersion(path, requiredVersion)
+  const regions = parsedFile.regions ?? DEFAULT_REGIONS
 
   return {
+    regions,
     requiredVersion,
     organization: parsedFile.organization,
   }
@@ -70,13 +73,16 @@ export const takomoProjectConfigFileSchema = Joi.object({
   organization: Joi.object({
     accountRepository,
   }),
+  regions: Joi.array().items(Joi.string()).unique(),
 })
 
 export const loadProjectConfig = async (
   pathConfigFile: FilePath,
 ): Promise<TakomoProjectConfig> => {
   if (!(await fileExists(pathConfigFile))) {
-    return {}
+    return {
+      regions: DEFAULT_REGIONS.slice(),
+    }
   }
 
   return parseProjectConfigFile(pathConfigFile)
