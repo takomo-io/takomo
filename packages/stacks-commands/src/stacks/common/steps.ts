@@ -56,7 +56,7 @@ const executeStep = async <S extends InitialStackOperationState>(
   step: StackOperationStep<S>,
   state: S,
 ): Promise<StepResult> => {
-  logger.debug(`Begin step '${stepName}'`)
+  logger.trace(`Begin step '${stepName}'`)
   const timer = state.totalTimer.startChild(stepName)
   try {
     return await step(state)
@@ -72,7 +72,7 @@ const executeStep = async <S extends InitialStackOperationState>(
     })
   } finally {
     timer.stop()
-    logger.debug(
+    logger.trace(
       `Step '${stepName}' completed in ${timer.getSecondsElapsed()}ms`,
     )
   }
