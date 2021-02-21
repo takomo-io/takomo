@@ -14,8 +14,7 @@ import {
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
 import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
-import { green, orange, red, yellow } from "@takomo/util"
-import { diffLines } from "diff"
+import { bold, green, orange, yellow } from "@takomo/util"
 import R from "ramda"
 import { createBaseIO } from "../../cli-io"
 import { formatStackEvent, formatStackStatus } from "../../formatters"
@@ -28,6 +27,7 @@ import { printOutputs } from "./outputs"
 import { printParameters } from "./parameters"
 import { printResources } from "./resources"
 import { printTags } from "./tags"
+import { diffTemplate } from "./template"
 import { printTerminationProtection } from "./termination-protection"
 
 interface ConfirmStackDeployAnswerChoice {
@@ -108,6 +108,9 @@ const formatStackOperationType = (type: StackDeployOperationType): string => {
       throw new Error(`Unsupported stack operation type: '${type}'`)
   }
 }
+
+const ensureContentsEndsWithLineFeed = (content: string): string =>
+  content.endsWith("\n") ? content : content + "\n"
 
 export const createDeployStacksIO = (props: IOProps): DeployStacksIO => {
   const { logger } = props
@@ -273,16 +276,27 @@ export const createDeployStacksIO = (props: IOProps): DeployStacksIO => {
       const currentTemplateBody = await stack
         .getCloudFormationClient()
         .getCurrentTemplate(stack.name)
-      const lines = diffLines(currentTemplateBody, templateBody)
-      const diffOutput = lines
-        .map((line) => {
-          if (line.added) return green(line.value)
-          else if (line.removed) return red(line.value)
-          else return line.value
-        })
-        .join("")
 
-      io.message({ text: diffOutput, marginTop: true })
+      const safeCurrentTemplateBody = ensureContentsEndsWithLineFeed(
+        currentTemplateBody,
+      )
+      const safeTemplateBody = ensureContentsEndsWithLineFeed(templateBody)
+
+      io.message({ text: bold("Changes to template:"), marginTop: true })
+
+      if (safeCurrentTemplateBody === safeTemplateBody) {
+        io.message({
+          text: "No changes to template",
+          marginTop: true,
+          indent: 2,
+        })
+      } else {
+        const diffOutput = diffTemplate(
+          safeCurrentTemplateBody,
+          safeTemplateBody,
+        )
+        io.message({ text: diffOutput, marginTop: true, indent: 2 })
+      }
 
       const reviewAnswer = await io.choose(
         "How do you want to continue the deployment?",
