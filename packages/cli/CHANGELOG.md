@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/takomo-io/takomo/compare/v3.2.2...v3.3.0) (2021-02-22)
+
+
+### Features
+
+* load supported regions from takomo.yml project configuration file ([#160](https://github.com/takomo-io/takomo/issues/160)) ([dd1338e](https://github.com/takomo-io/takomo/commit/dd1338e5ba410e2e5ba24cdde9bb7be50e8df807)), closes [#147](https://github.com/takomo-io/takomo/issues/147)
+
+
+
+
+
 ## [3.2.2](https://github.com/takomo-io/takomo/compare/v3.2.1...v3.2.2) (2021-02-20)
 
 **Note:** Version bump only for package @takomo/cli

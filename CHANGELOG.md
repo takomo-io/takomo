@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/takomo-io/takomo/compare/v3.2.2...v3.3.0) (2021-02-22)
+
+
+### Features
+
+* expose stack parameters as object in stack template file ([#159](https://github.com/takomo-io/takomo/issues/159)) ([ee51de4](https://github.com/takomo-io/takomo/commit/ee51de4fda498daec053eb98894e4a387f3a72f1)), closes [#150](https://github.com/takomo-io/takomo/issues/150)
+* improve stack template diff output ([4d387e1](https://github.com/takomo-io/takomo/commit/4d387e105b0c8a7e3eebe15a6807b7e7365812c6)), closes [#161](https://github.com/takomo-io/takomo/issues/161)
+* load supported regions from takomo.yml project configuration file ([#160](https://github.com/takomo-io/takomo/issues/160)) ([dd1338e](https://github.com/takomo-io/takomo/commit/dd1338e5ba410e2e5ba24cdde9bb7be50e8df807)), closes [#147](https://github.com/takomo-io/takomo/issues/147)
+
+
+
+
+
 ## [3.2.2](https://github.com/takomo-io/takomo/compare/v3.2.1...v3.2.2) (2021-02-20)
 
 

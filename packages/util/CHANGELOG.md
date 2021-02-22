@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/takomo-io/takomo/compare/v3.2.2...v3.3.0) (2021-02-22)
+
+
+### Features
+
+* expose stack parameters as object in stack template file ([#159](https://github.com/takomo-io/takomo/issues/159)) ([ee51de4](https://github.com/takomo-io/takomo/commit/ee51de4fda498daec053eb98894e4a387f3a72f1)), closes [#150](https://github.com/takomo-io/takomo/issues/150)
+
+
+
+
+
 # [3.1.0](https://github.com/takomo-io/takomo/compare/v3.0.1...v3.1.0) (2021-02-14)
 
 
