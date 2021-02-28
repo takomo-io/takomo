@@ -17,7 +17,12 @@ import {
   coreResolverProviders,
   ResolverRegistry,
 } from "@takomo/stacks-resolvers"
-import { collectFromHierarchy, deepFreeze, TkmLogger } from "@takomo/util"
+import {
+  arrayToMap,
+  collectFromHierarchy,
+  deepFreeze,
+  TkmLogger,
+} from "@takomo/util"
 import flatten from "lodash.flatten"
 import { isStackGroupPath } from "../common"
 import {
@@ -118,7 +123,7 @@ export const buildStacksContext = async ({
 
   const stackGroups = collectStackGroups(rootStackGroup)
   const stacks = collectStacks(stackGroups)
-  const stacksByPath = new Map(stacks.map((s) => [s.path, s]))
+  const stacksByPath = arrayToMap(stacks, (s) => s.path)
 
   await Promise.all(
     Array.from(credentialManagers.values()).map((cm) => cm.getCallerIdentity()),

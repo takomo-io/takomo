@@ -74,10 +74,6 @@ export const buildStack = async (
   const template = buildTemplate(stackPath, stackConfig.template)
   validate(stackName, name, `Name of stack ${stackPath} is not valid`)
 
-  if (!template) {
-    throw new TakomoError(`Stack ${stackPath} has no template`)
-  }
-
   const parameters = await buildParameters(
     ctx,
     stackPath,

@@ -14,7 +14,7 @@ import {
   StackPath,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
-import { TkmLogger } from "@takomo/util"
+import { arrayToMap, TkmLogger } from "@takomo/util"
 import flatten from "lodash.flatten"
 import uniq from "lodash.uniq"
 import { isWithinCommandPath } from "../common"
@@ -106,16 +106,16 @@ const processStackGroupConfigNode = async (
   status: ProcessStatus,
   node: StackGroupConfigNode,
 ): Promise<void> => {
-  logger.debug(`Process stack group config node with path '${node.path}'`)
+  logger.trace(`Process stack group config node with path '${node.path}'`)
   if (!isWithinCommandPath(commandPath, node.path)) {
-    logger.debug(
+    logger.trace(
       `Stack group config node with path '${node.path}' is not within command path '${commandPath}'`,
     )
     return
   }
 
   if (!status.isStackGroupProcessed(node.path)) {
-    logger.debug(
+    logger.trace(
       `Stack group config node with path '${node.path}' is not yet processed`,
     )
     const parent = node.parentPath
@@ -126,7 +126,7 @@ const processStackGroupConfigNode = async (
 
     status.setStackGroupProcessed(stackGroup)
   } else {
-    logger.debug(
+    logger.trace(
       `Stack group config node with path '${node.path}' is already processed`,
     )
   }
@@ -195,9 +195,9 @@ export const processConfigTree = async (
 
   let commandPaths = [commandPath]
   while (commandPaths.length > 0) {
-    logger.debugObject("Command paths to process:", commandPaths)
+    logger.traceObject("Command paths to process:", () => commandPaths)
     for (const cp of commandPaths) {
-      logger.debug(`Process config tree using command path: ${cp}`)
+      logger.trace(`Process config tree using command path: ${cp}`)
       await processStackGroupConfigNode(
         ctx,
         logger,
@@ -235,8 +235,8 @@ export const processConfigTree = async (
   const allStacks = processStackDependencies(status.getStacks())
   const allStackGroups = status.getStackGroups()
   const root = status.getRootStackGroup()
+  const stacksByPath = arrayToMap(allStacks, (s) => s.path)
 
-  const stacksByPath = new Map(allStacks.map((s) => [s.path, s]))
   checkCyclicDependencies(stacksByPath)
 
   return populateChildrenAndStacks(root, allStacks, allStackGroups)

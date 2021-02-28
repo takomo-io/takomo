@@ -4,6 +4,7 @@ import {
   deployStacksCommand,
   deployStacksCommandIamPolicy,
 } from "@takomo/stacks-commands"
+import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
 
 export const deployStacksCmd = {
@@ -34,7 +35,7 @@ export const deployStacksCmd = {
       })
       .positional("commandPath", {
         describe: "Deploy stacks within this path",
-        default: "/",
+        default: ROOT_STACK_GROUP_PATH,
       }),
   handler: (argv: any) =>
     handle({
