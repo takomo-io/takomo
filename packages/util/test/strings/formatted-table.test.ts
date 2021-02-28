@@ -13,10 +13,10 @@ describe("FormattedTable#print", () => {
       .row(4, 5, 6)
       .print({ writer })
     expect(output).toStrictEqual(
-      "first second very long header\n" +
-        "----- ------ ----------------\n" +
-        "1     2      3               \n" +
-        "4     5      6               \n",
+      "first  second  very long header\n" +
+        "-----  ------  ----------------\n" +
+        "1      2       3               \n" +
+        "4      5       6               \n",
     )
   })
 
@@ -31,7 +31,7 @@ describe("FormattedTable#print", () => {
       .row(1, 2, 3)
       .row(4, 5, 6)
       .print({ writer, showHeaders: false })
-    expect(output).toStrictEqual("1 2 3\n" + "4 5 6\n")
+    expect(output).toStrictEqual("1  2  3\n" + "4  5  6\n")
   })
 
   test("show headers with indent", () => {
@@ -46,10 +46,10 @@ describe("FormattedTable#print", () => {
       .row(4, 5, 6)
       .print({ writer, indent: 2 })
     expect(output).toStrictEqual(
-      "  first second very long header\n" +
-        "  ----- ------ ----------------\n" +
-        "  1     2      3               \n" +
-        "  4     5      6               \n",
+      "  first  second  very long header\n" +
+        "  -----  ------  ----------------\n" +
+        "  1      2       3               \n" +
+        "  4      5       6               \n",
     )
   })
 })

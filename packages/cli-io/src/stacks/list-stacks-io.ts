@@ -1,6 +1,6 @@
 import { ListStacksIO, ListStacksOutput } from "@takomo/stacks-commands"
+import { table } from "@takomo/util"
 import date from "date-and-time"
-import Table from "easy-table"
 import { createBaseIO } from "../cli-io"
 import { formatStackStatus } from "../formatters"
 import { IOProps } from "./common"
@@ -13,17 +13,25 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
   const io = createBaseIO(props)
 
   const printOutput = (output: ListStacksOutput): ListStacksOutput => {
-    const table = new Table()
-    output.stacks.forEach(({ stack, current }) => {
-      table.cell("Path", stack.path)
-      table.cell("Name", stack.name)
-      table.cell("Status", formatStackStatus(current?.status))
-      table.cell("Created", formatDate(current?.creationTime))
-      table.cell("Updated", formatDate(current?.lastUpdatedTime))
-      table.newRow()
-    })
+    const headers = ["Path", "Name", "Status", "Created", "Updated"]
 
-    io.message({ text: table.toString(), marginTop: true })
+    const stacksTable = output.stacks.reduce(
+      (tbl, { stack, current }) =>
+        tbl.row(
+          stack.path,
+          stack.name,
+          formatStackStatus(current?.status),
+          formatDate(current?.creationTime),
+          formatDate(current?.lastUpdatedTime),
+        ),
+      table({ headers }),
+    )
+
+    io.table({
+      showHeaders: true,
+      marginTop: true,
+      table: stacksTable,
+    })
 
     return output
   }

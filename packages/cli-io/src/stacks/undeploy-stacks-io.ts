@@ -127,8 +127,9 @@ export const createUndeployStacksIO = (props: IOProps): UndeployStacksIO => {
       .join(", ")
 
     io.message({
-      text: `  stacks | total: ${operations.length}, ${counts}`,
+      text: `stacks | total: ${operations.length}, ${counts}`,
       marginTop: true,
+      indent: 2,
     })
 
     return await io.choose(

@@ -3,6 +3,7 @@ import {
   DetailedChangeSet,
   TemplateSummary,
 } from "@takomo/aws-model"
+import { arrayToMap } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { ChangeSetNameHolder } from "../states"
 
@@ -10,9 +11,7 @@ const enrichChangeSet = (
   changeSet: ChangeSet,
   templateSummary: TemplateSummary,
 ): DetailedChangeSet => {
-  const declarationMap = new Map(
-    templateSummary.parameters.map((p) => [p.key, p]),
-  )
+  const declarationMap = arrayToMap(templateSummary.parameters, (p) => p.key)
 
   const parameters = changeSet.parameters.map((parameter) => {
     const declaration = declarationMap.get(parameter.key)
@@ -55,7 +54,7 @@ export const waitChangeSetToBeReady: StackOperationStep<ChangeSetNameHolder> = a
     : false
 
   if (changeSet === undefined && !terminationProtectionChanged) {
-    logger.debug("Change set contains no changes")
+    logger.info("Change set contains no changes")
     return transitions.executeAfterDeployHooks({
       ...state,
       message: "No changes",

@@ -1,8 +1,7 @@
 import { StackEvent } from "@takomo/aws-model"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath, StackGroup, StackResult } from "@takomo/stacks-model"
-import { collectFromHierarchy, LogLevel, TkmLogger } from "@takomo/util"
-import Table from "easy-table"
+import { collectFromHierarchy, LogLevel, table, TkmLogger } from "@takomo/util"
 import prettyMs from "pretty-ms"
 import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
@@ -85,18 +84,23 @@ export const printStacksOperationOutput = (
     (r) => !r.success && r.status === "FAILED",
   )
 
-  const table = new Table()
+  const headers = ["Path", "Name", "Status", "Time", "Message"]
+  const resultsTable = output.results.reduce(
+    (tbl, r) =>
+      tbl.row(
+        r.stack.path,
+        r.stack.name,
+        formatCommandStatus(r.status),
+        prettyMs(r.timer.getSecondsElapsed()),
+        r.message,
+      ),
+    table({ headers }),
+  )
 
-  output.results.forEach((r) => {
-    table.cell("Stack path", r.stack.path)
-    table.cell("Stack name", r.stack.name)
-    table.cell("Status", formatCommandStatus(r.status))
-    table.cell("Time", prettyMs(r.timer.getSecondsElapsed()))
-    table.cell("Message", r.message)
-    table.newRow()
+  io.table({
+    marginTop: true,
+    table: resultsTable,
   })
-
-  io.message({ text: table.toString(), marginTop: true })
 
   if (failed.length > 0) {
     io.subheader({
