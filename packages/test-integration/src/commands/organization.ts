@@ -4,7 +4,7 @@ import {
   OrganizationFeatureSet,
 } from "@takomo/aws-model"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import {
   accountsOperationCommand,
   createAccountAliasCommand,
@@ -52,7 +52,7 @@ import {
 } from "./stacks"
 
 interface CtxAndConfigRepository {
-  ctx: CommandContext
+  ctx: InternalCommandContext
   configRepository: OrganizationConfigRepository
 }
 

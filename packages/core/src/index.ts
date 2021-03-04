@@ -10,6 +10,7 @@ export {
   CommandStatus,
   ConfirmResult,
   FAILED,
+  InternalCommandContext,
   IO,
   Project,
   resolveCommandOutputBase,
@@ -20,6 +21,8 @@ export {
 export {
   AccountRepositoryConfig,
   AccountRepositoryType,
+  ExternalResolverConfig,
+  InternalTakomoProjectConfig,
   parseCommandRole,
   parseRegex,
   parseVars,

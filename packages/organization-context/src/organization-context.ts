@@ -5,7 +5,7 @@ import {
 } from "@takomo/aws-clients"
 import { AccountId } from "@takomo/aws-model"
 import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import {
   OrganizationalUnitConfig,
   OrganizationConfig,
@@ -49,7 +49,7 @@ const findConfigForAccount = (
   return null
 }
 
-export interface OrganizationContext extends CommandContext {
+export interface OrganizationContext extends InternalCommandContext {
   getClient: () => OrganizationsClient
   hasOrganizationalUnit: (path: OrganizationalUnitPath) => boolean
   getOrganizationalUnit: (
@@ -60,14 +60,14 @@ export interface OrganizationContext extends CommandContext {
   getConfigSet: (name: ConfigSetName) => ConfigSet
   configRepository: OrganizationConfigRepository
   credentialManager: CredentialManager
-  commandContext: CommandContext
+  commandContext: InternalCommandContext
 }
 
 export interface OrganizationContextProps {
   readonly organizationAdminCredentialManager: CredentialManager
   readonly credentialManager: CredentialManager
   readonly organizationConfig: OrganizationConfig
-  readonly ctx: CommandContext
+  readonly ctx: InternalCommandContext
   readonly configRepository: OrganizationConfigRepository
   readonly logger: TkmLogger
 }

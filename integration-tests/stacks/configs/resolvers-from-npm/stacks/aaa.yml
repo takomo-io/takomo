@@ -1,0 +1,12 @@
+template: hello.yml
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+parameters:
+  Name:
+    resolver: custom-name
+    name: HelloHello
+  AnotherName:
+    resolver: MyCustomName
+    name: HelloHello
+  Code:
+    resolver: custom-code

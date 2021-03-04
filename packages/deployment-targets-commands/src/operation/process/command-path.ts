@@ -4,7 +4,7 @@ import {
   ConfigSetCommandPathOperationResult,
   ConfigSetType,
 } from "@takomo/config-sets"
-import { CommandContext, CommandRole, Variables } from "@takomo/core"
+import { CommandRole, InternalCommandContext, Variables } from "@takomo/core"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
@@ -52,7 +52,7 @@ const deploy = async (
   input: StacksOperationInput,
   io: DeploymentTargetsOperationIO,
   configRepository: StacksConfigRepository,
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const result = await deployStacksCommand({
     input,
@@ -79,7 +79,7 @@ const undeploy = async (
   input: StacksOperationInput,
   io: DeploymentTargetsOperationIO,
   configRepository: StacksConfigRepository,
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const result = await undeployStacksCommand({
     input,

@@ -4,7 +4,7 @@ import {
   ConfigSetName,
   ConfigSetType,
 } from "@takomo/config-sets"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import {
   OrganizationAccountConfig,
   OrganizationConfig,
@@ -36,7 +36,7 @@ const executeOperation = async (
   account: OrganizationAccountConfig,
   credentialManager: CredentialManager,
   io: AccountsOperationIO,
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   configRepository: StacksConfigRepository,
 ): Promise<StacksOperationOutput> => {
   switch (operation) {

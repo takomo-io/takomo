@@ -1,6 +1,6 @@
 import { Region } from "@takomo/aws-model"
 import { createFileSystemProjectConfigRepository } from "@takomo/config-repository-fs"
-import { CommandContext, Project } from "@takomo/core"
+import { InternalCommandContext, Project } from "@takomo/core"
 import {
   initProjectCommand,
   ProjectConfigRepository,
@@ -29,7 +29,7 @@ export const createTestProjectConfigRepository = async ({
   })
 
 interface CtxAndConfigRepository {
-  ctx: CommandContext
+  ctx: InternalCommandContext
   configRepository: ProjectConfigRepository
 }
 

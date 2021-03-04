@@ -16,7 +16,7 @@
     "clean:dist": "rm -rf dist",
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
-    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript,@takomo/test-custom-resolver-name,@takomo/test-custom-resolver-code",
     "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci"
   },
   "dependencies": {
@@ -29,6 +29,8 @@
   "devDependencies": {
     "@types/tmp": "^0.2.0",
     "dotenv": "8.2.0",
-    "jest-environment-testenv-recycler": "0.0.12"
+    "jest-environment-testenv-recycler": "0.0.12",
+    "@takomo/test-custom-resolver-name": "0.0.1",
+    "@takomo/test-custom-resolver-code": "0.0.1"
   }
 }

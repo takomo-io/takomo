@@ -1,6 +1,6 @@
 import { CliCommandContext } from "@takomo/cli"
 import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import {
   deployStacksCommand,
   listStacksCommand,
@@ -54,7 +54,7 @@ export const createTestStacksConfigRepository = async ({
   })
 
 interface CtxAndConfigRepository {
-  ctx: CommandContext
+  ctx: InternalCommandContext
   configRepository: StacksConfigRepository
 }
 

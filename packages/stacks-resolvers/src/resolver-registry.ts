@@ -1,5 +1,5 @@
 import { StackParameterKey } from "@takomo/aws-model"
-import { CommandContext } from "@takomo/core"
+import { CommandContext, ExternalResolverConfig } from "@takomo/core"
 import { ParameterConfig } from "@takomo/stacks-config"
 import {
   Resolver,
@@ -101,6 +101,16 @@ export class ResolverRegistry {
     provider: ResolverProvider,
   ): Promise<void> => {
     return this.registerProvider(provider, "built-in providers")
+  }
+
+  registerProviderFromNpmPackage = (config: ExternalResolverConfig): void => {
+    // eslint-disable-next-line
+    const provider = require(config.package)
+    const providerWithName = config.name
+      ? { ...provider, name: config.name }
+      : provider
+
+    this.registerProvider(providerWithName, `npm package: ${config.package}`)
   }
 
   getRegisteredResolverNames = (): ResolverName[] =>
