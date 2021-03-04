@@ -2,7 +2,7 @@ import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn, Region, ServicePrincipal } from "@takomo/aws-model"
 import { FilePath, LogLevel, Timer, TkmLogger } from "@takomo/util"
 import { Credentials } from "aws-sdk"
-import { TakomoProjectConfig } from "./config"
+import { InternalTakomoProjectConfig, TakomoProjectConfig } from "./config"
 import { Variables } from "./variables"
 
 export type Project = string
@@ -180,13 +180,20 @@ export interface CommandContext {
 /**
  * @hidden
  */
+export interface InternalCommandContext extends CommandContext {
+  readonly projectConfig: InternalTakomoProjectConfig
+}
+
+/**
+ * @hidden
+ */
 export interface CommandHandlerArgs<
   C,
   I extends IO<OUT>,
   IN extends CommandInput,
   OUT extends CommandOutput
 > {
-  readonly ctx: CommandContext
+  readonly ctx: InternalCommandContext
   readonly configRepository: C
   readonly io: I
   readonly input: IN

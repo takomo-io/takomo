@@ -3,7 +3,7 @@ import {
   CredentialManager,
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import { OrganizationConfig } from "@takomo/organization-config"
 import { TkmLogger } from "@takomo/util"
 import { OrganizationConfigRepository } from "./model"
@@ -29,7 +29,7 @@ const getCredentialManagerForOrganizationAdmin = async (
 }
 
 export const buildOrganizationContext = async (
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   configRepository: OrganizationConfigRepository,
   logger: TkmLogger,
 ): Promise<OrganizationContext> => {

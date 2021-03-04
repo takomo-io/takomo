@@ -1,6 +1,6 @@
 import { CliCommandContext } from "@takomo/cli"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets-commands"
 import { DeploymentTargetsConfigRepository } from "@takomo/deployment-targets-context"
 import { createConsoleLogger, createTimer } from "@takomo/util"
@@ -18,7 +18,7 @@ import { createTestCommandContext, ExecuteCommandProps } from "./common"
 import { CreateCtxAndConfigRepositoryProps } from "./stacks"
 
 interface CtxAndConfigRepository {
-  readonly ctx: CommandContext
+  readonly ctx: InternalCommandContext
   readonly configRepository: DeploymentTargetsConfigRepository
 }
 

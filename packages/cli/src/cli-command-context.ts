@@ -1,4 +1,4 @@
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import { FilePath } from "@takomo/util"
 
 export interface ProjectFilePaths {
@@ -24,6 +24,6 @@ export interface ProjectFilePaths {
   readonly defaultOrganizationConfigFileName: string
 }
 
-export interface CliCommandContext extends CommandContext {
+export interface CliCommandContext extends InternalCommandContext {
   readonly filePaths: ProjectFilePaths
 }

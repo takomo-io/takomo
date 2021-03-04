@@ -56,3 +56,18 @@ export interface TakomoProjectConfig {
   readonly organization?: TakomoProjectOrganizationConfig
   readonly regions: ReadonlyArray<Region>
 }
+
+/**
+ * @hidden
+ */
+export interface ExternalResolverConfig {
+  readonly name?: string
+  readonly package: string
+}
+
+/**
+ * @hidden
+ */
+export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
+  readonly resolvers: ReadonlyArray<ExternalResolverConfig>
+}

@@ -2068,6 +2068,16 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@takomo/test-custom-resolver-code@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@takomo/test-custom-resolver-code/-/test-custom-resolver-code-0.0.1.tgz#9179965f9986df2bec9cc3347956f34529a520b6"
+  integrity sha512-Ngk258oCtKX8/Wi+YWliX7jIjuy9CX8jvPGBhWNJ4KiI2FTumTMvRaq+TuOpCxZrFYXJ7WMOgsjHcFPhdZwolg==
+
+"@takomo/test-custom-resolver-name@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@takomo/test-custom-resolver-name/-/test-custom-resolver-name-0.0.1.tgz#173d46115602e47f228ca42e656cd84dd7a1a5f1"
+  integrity sha512-qE5dn49nXnkJN0itNSmNd3dCefwrVxNNlO1/ty2KVYPHhPNjRo4q4xm4ccubc9NYchpOTCqiSS38PghznjXCrw==
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.12"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.12.tgz#4d8e9e51eb265552a7e4f1ff2219ab6133bdfb2d"

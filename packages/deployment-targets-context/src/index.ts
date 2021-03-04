@@ -3,7 +3,7 @@ import {
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
 import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import {
   DeploymentConfig,
   DeploymentGroupConfig,
@@ -18,7 +18,7 @@ export interface DeploymentTargetsConfigRepository
   loadDeploymentConfigFileContents: () => Promise<DeploymentConfig>
 }
 
-export interface DeploymentTargetsContext extends CommandContext {
+export interface DeploymentTargetsContext extends InternalCommandContext {
   readonly deploymentConfig: DeploymentConfig
   readonly rootDeploymentGroups: ReadonlyArray<DeploymentGroupConfig>
   readonly logger: TkmLogger
@@ -28,12 +28,12 @@ export interface DeploymentTargetsContext extends CommandContext {
   ) => DeploymentGroupConfig
   readonly hasDeploymentGroup: (path: DeploymentGroupPath) => boolean
   readonly getConfigSet: (name: ConfigSetName) => ConfigSet
-  readonly commandContext: CommandContext
+  readonly commandContext: InternalCommandContext
   readonly configRepository: DeploymentTargetsConfigRepository
 }
 
 interface CreateDeploymentTargetsContextProps {
-  readonly ctx: CommandContext
+  readonly ctx: InternalCommandContext
   readonly logger: TkmLogger
   readonly configRepository: DeploymentTargetsConfigRepository
 }

@@ -1,4 +1,8 @@
-import { TakomoProjectConfig } from "@takomo/core"
+import {
+  createCommonSchema,
+  ExternalResolverConfig,
+  InternalTakomoProjectConfig,
+} from "@takomo/core"
 import {
   fileExists,
   FilePath,
@@ -32,9 +36,36 @@ const validateRequiredVersion = (
   }
 }
 
+export const parseExternalResolver = (value: any): ExternalResolverConfig => {
+  if (typeof value === "string") {
+    return {
+      package: value,
+    }
+  }
+
+  return {
+    name: value.name,
+    package: value.package,
+  }
+}
+
+export const parseExternalResolvers = (
+  value: any,
+): ReadonlyArray<ExternalResolverConfig> => {
+  if (value === null || value === undefined) {
+    return []
+  }
+
+  if (!Array.isArray(value)) {
+    throw new Error("Expected resolvers to be an array")
+  }
+
+  return value.map(parseExternalResolver)
+}
+
 export const parseProjectConfigFile = async (
   path: FilePath,
-): Promise<TakomoProjectConfig> => {
+): Promise<InternalTakomoProjectConfig> => {
   const contents = await readFileContents(path)
   const parsedFile = (await parseYaml(path, contents)) ?? {}
 
@@ -50,14 +81,19 @@ export const parseProjectConfigFile = async (
 
   const requiredVersion = parsedFile.requiredVersion
   validateRequiredVersion(path, requiredVersion)
+
   const regions = parsedFile.regions ?? DEFAULT_REGIONS
+  const resolvers = parseExternalResolvers(parsedFile.resolvers)
 
   return {
     regions,
     requiredVersion,
+    resolvers,
     organization: parsedFile.organization,
   }
 }
+
+const { variableName } = createCommonSchema()
 
 const accountRepositoryType = Joi.string()
   .min(1)
@@ -68,20 +104,26 @@ const accountRepository = Joi.object({
   type: accountRepositoryType.required(),
 }).unknown(true)
 
+const externalResolver = Joi.object({
+  name: variableName,
+}).unknown(true)
+
 export const takomoProjectConfigFileSchema = Joi.object({
   requiredVersion: Joi.string(),
   organization: Joi.object({
     accountRepository,
   }),
   regions: Joi.array().items(Joi.string()).unique(),
+  resolvers: Joi.array().items(Joi.string(), externalResolver),
 })
 
 export const loadProjectConfig = async (
   pathConfigFile: FilePath,
-): Promise<TakomoProjectConfig> => {
+): Promise<InternalTakomoProjectConfig> => {
   if (!(await fileExists(pathConfigFile))) {
     return {
       regions: DEFAULT_REGIONS.slice(),
+      resolvers: [],
     }
   }
 

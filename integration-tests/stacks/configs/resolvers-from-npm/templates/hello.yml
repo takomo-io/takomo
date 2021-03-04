@@ -1,0 +1,19 @@
+Parameters:
+  Name:
+    Type: String
+  AnotherName:
+    Type: String
+  Code:
+    Type: Number  
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub log-${Name}-${AnotherName}-${Code}
+Outputs:
+  NameOutput:
+    Value: !Ref Name
+  AnotherNameOutput:
+    Value: !Ref AnotherName
+  CodeOutput:
+    Value: !Ref Code

@@ -3,7 +3,7 @@ import {
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import {
   CommandPath,
   createSchemaRegistry,
@@ -37,7 +37,7 @@ import { processConfigTree } from "./process-config-tree"
 
 export interface BuildConfigContextInput {
   readonly configRepository: StacksConfigRepository
-  readonly ctx: CommandContext
+  readonly ctx: InternalCommandContext
   readonly logger: TkmLogger
   readonly overrideCredentialManager?: CredentialManager
   readonly commandPath?: CommandPath
@@ -92,6 +92,10 @@ export const buildStacksContext = async ({
   coreResolverProviders().forEach((p) =>
     resolverRegistry.registerBuiltInProvider(p),
   )
+
+  ctx.projectConfig.resolvers.forEach((config) => {
+    resolverRegistry.registerProviderFromNpmPackage(config)
+  })
 
   const schemaRegistry = createSchemaRegistry(logger)
 

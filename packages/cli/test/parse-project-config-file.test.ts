@@ -12,6 +12,7 @@ describe("#parseProjectConfigFile", () => {
       requiredVersion: undefined,
       organization: undefined,
       regions: DEFAULT_REGIONS,
+      resolvers: [],
     })
   })
 
@@ -21,6 +22,7 @@ describe("#parseProjectConfigFile", () => {
       requiredVersion: undefined,
       organization: undefined,
       regions: ["eu-west-1"],
+      resolvers: [],
     })
   })
 
@@ -30,6 +32,29 @@ describe("#parseProjectConfigFile", () => {
       requiredVersion: undefined,
       organization: undefined,
       regions: ["eu-central-1", "eu-north-1", "us-east-1"],
+      resolvers: [],
+    })
+  })
+
+  test("with resolvers", async () => {
+    const config = await doParseProjectConfigFile("project-config-04.yml")
+    expect(config).toStrictEqual({
+      requiredVersion: undefined,
+      organization: undefined,
+      regions: ["eu-central-1", "us-east-1"],
+      resolvers: [
+        {
+          package: "@takomo/my-example-resolver",
+        },
+        {
+          package: "another-resolver",
+          name: undefined,
+        },
+        {
+          package: "another-resolver-v2",
+          name: "a-better-name",
+        },
+      ],
     })
   })
 })

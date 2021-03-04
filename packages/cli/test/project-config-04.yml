@@ -1,0 +1,8 @@
+regions:
+  - eu-central-1
+  - us-east-1
+resolvers:
+  - "@takomo/my-example-resolver"
+  - package: "another-resolver"
+  - package: another-resolver-v2
+    name: a-better-name

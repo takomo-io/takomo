@@ -1,0 +1,11 @@
+resolvers:
+
+  # Just the package name
+  - "@takomo/test-custom-resolver-name"
+
+  # Package name in property
+  - package: "@takomo/test-custom-resolver-code"
+
+  # Package name in property and overriding name
+  - package: "@takomo/test-custom-resolver-name"
+    name: MyCustomName
