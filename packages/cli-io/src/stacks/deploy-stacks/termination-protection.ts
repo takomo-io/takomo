@@ -34,10 +34,10 @@ export const printTerminationProtection = (
       marginBottom: true,
     })
     io.message({
-      text: `      current value:             ${currentValue}`,
+      text: `  current value:                 ${currentValue}`,
     })
     io.message({
-      text: `      new value:                 ${newValue}`,
+      text: `  new value:                     ${newValue}`,
     })
   }
 }
