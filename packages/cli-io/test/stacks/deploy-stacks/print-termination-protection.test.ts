@@ -40,8 +40,8 @@ describe("#printTerminationProtection", () => {
       
       ${bold("Termination protection:")}
       
-            current value:             ${grey("<undefined>")}
-            new value:                 ${red("disabled")}
+        current value:                 ${grey("<undefined>")}
+        new value:                     ${red("disabled")}
       
       `
 
@@ -54,8 +54,8 @@ describe("#printTerminationProtection", () => {
       
       ${bold("Termination protection:")}
       
-            current value:             ${grey("<undefined>")}
-            new value:                 ${green("enabled")}
+        current value:                 ${grey("<undefined>")}
+        new value:                     ${green("enabled")}
       
       `
 
@@ -68,8 +68,8 @@ describe("#printTerminationProtection", () => {
       
       ${bold("Termination protection:")}
       
-            current value:             enabled
-            new value:                 ${red("disabled")}
+        current value:                 enabled
+        new value:                     ${red("disabled")}
       
       `
 
@@ -82,8 +82,8 @@ describe("#printTerminationProtection", () => {
       
       ${bold("Termination protection:")}
       
-            current value:             disabled
-            new value:                 ${green("enabled")}
+        current value:                 disabled
+        new value:                     ${green("enabled")}
       
       `
 
