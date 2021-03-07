@@ -1,4 +1,4 @@
-import { table } from "../../src"
+import { green, table } from "../../src"
 
 describe("FormattedTable#print", () => {
   test("show headers", () => {
@@ -50,6 +50,27 @@ describe("FormattedTable#print", () => {
         "  -----  ------  ----------------\n" +
         "  1      2       3               \n" +
         "  4      5       6               \n",
+    )
+  })
+
+  test("colored column values", () => {
+    let output = ""
+    const writer = (str = "") => {
+      output += `${str}\n`
+    }
+    table({
+      headers: ["first", "second", "third"],
+    })
+      .row("a", "b", "ccccccccc")
+      .row("d", green("e"), "f")
+      .row("g", "h", "i")
+      .print({ writer })
+    expect(output).toStrictEqual(
+      "first  second  third    \n" +
+        "-----  ------  ---------\n" +
+        "a      b       ccccccccc\n" +
+        `d      ${green("e")}       f        \n` +
+        "g      h       i        \n",
     )
   })
 })
