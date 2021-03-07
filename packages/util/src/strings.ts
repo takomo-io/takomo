@@ -152,8 +152,12 @@ export const table = (props: FormattedTableProps): FormattedTable => ({
     const { headers, rows = [] } = props
 
     const columnObjects = headers.map((header, index) => {
-      const columns = rows.map((row) => `${row[index]}`)
+      const columns = rows
+        .map((row) => row[index])
+        .map((v) => (R.isNil(v) ? "" : `${v}`))
+
       const values = showHeaders ? [header, ...columns] : columns
+
       const width = R.apply(
         Math.max,
         values.map(stripAnsi).map((v) => v.length),
@@ -166,11 +170,12 @@ export const table = (props: FormattedTableProps): FormattedTable => ({
       }
     })
 
+    const marginString = "  "
     if (showHeaders) {
       write(
         columnObjects
           .map(({ header, width }) => header.padEnd(width))
-          .join("  "),
+          .join(marginString),
       )
       write(columnObjects.map(({ width }) => "-".repeat(width)).join("  "))
     }
@@ -178,8 +183,14 @@ export const table = (props: FormattedTableProps): FormattedTable => ({
     for (let row = 0; row < rows.length; row++) {
       write(
         columnObjects
-          .map(({ width, columns }) => columns[row].padEnd(width))
-          .join("  "),
+          .map(({ width, columns }) => {
+            const value = columns[row].padEnd(width)
+            const valueLength = value.length
+            const strippedValueLength = stripAnsi(value).length
+            const extra = valueLength - strippedValueLength
+            return value.padEnd(width + extra)
+          })
+          .join(marginString),
       )
     }
   },
