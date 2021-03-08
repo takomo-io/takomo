@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/takomo-io/takomo/compare/v3.3.0...v3.4.0) (2021-03-08)
+
+
+### Bug Fixes
+
+* fix formatting of tables with colored values ([#165](https://github.com/takomo-io/takomo/issues/165)) ([b4a4ab5](https://github.com/takomo-io/takomo/commit/b4a4ab5ac7cdfa9c905cb2af4eda8f1e630af4eb))
+
+
+
+
+
 # [3.3.0](https://github.com/takomo-io/takomo/compare/v3.2.2...v3.3.0) (2021-02-22)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/takomo-io/takomo/compare/v3.3.0...v3.4.0) (2021-03-08)
+
+
+### Features
+
+* add support to load custom parameter resolvers from NPM packages ([#164](https://github.com/takomo-io/takomo/issues/164)) ([8d1a5e8](https://github.com/takomo-io/takomo/commit/8d1a5e8b8786804b39dd0ade31954c6c2d159385)), closes [#163](https://github.com/takomo-io/takomo/issues/163)
+
+
+
+
+
 # [3.3.0](https://github.com/takomo-io/takomo/compare/v3.2.2...v3.3.0) (2021-02-22)
 
 **Note:** Version bump only for package @takomo/stacks-resolvers

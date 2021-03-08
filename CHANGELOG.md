@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/takomo-io/takomo/compare/v3.3.0...v3.4.0) (2021-03-08)
+
+
+### Bug Fixes
+
+* correct output of termination protection ([79eb950](https://github.com/takomo-io/takomo/commit/79eb950f819bd1dcce55d08222586c40ae9766dc))
+* fix creating of deploy/undeploy plan when interactive command path selection is used ([#167](https://github.com/takomo-io/takomo/issues/167)) ([a406c2d](https://github.com/takomo-io/takomo/commit/a406c2dc53c5d861861d2120f73a8a30530bef7d)), closes [#166](https://github.com/takomo-io/takomo/issues/166)
+* fix formatting of tables with colored values ([#165](https://github.com/takomo-io/takomo/issues/165)) ([b4a4ab5](https://github.com/takomo-io/takomo/commit/b4a4ab5ac7cdfa9c905cb2af4eda8f1e630af4eb))
+
+
+### Features
+
+* add support to load custom parameter resolvers from NPM packages ([#164](https://github.com/takomo-io/takomo/issues/164)) ([8d1a5e8](https://github.com/takomo-io/takomo/commit/8d1a5e8b8786804b39dd0ade31954c6c2d159385)), closes [#163](https://github.com/takomo-io/takomo/issues/163)
+
+
+
+
+
 # [3.3.0](https://github.com/takomo-io/takomo/compare/v3.2.2...v3.3.0) (2021-02-22)
 
 
