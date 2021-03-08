@@ -39,8 +39,8 @@ const undeployStacks = async (
 
   const plan = await buildStacksUndeployPlan(
     ctx.stacks,
-    input.commandPath,
-    input.ignoreDependencies,
+    modifiedInput.commandPath,
+    modifiedInput.ignoreDependencies,
   )
 
   await validateStacksUndeployPlan(plan)

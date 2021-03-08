@@ -3,7 +3,26 @@ import {
   isWithinCommandPath,
   sortStacksForDeploy,
 } from "@takomo/stacks-context"
-import { CommandPath, InternalStack } from "@takomo/stacks-model"
+import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
+import { arrayToMap } from "@takomo/util"
+import uniq from "lodash.uniq"
+
+const collectStackDependencies = (
+  stacksByPath: Map<StackPath, InternalStack>,
+  stack: InternalStack,
+): ReadonlyArray<StackPath> =>
+  stack.dependencies.reduce((collected, dependency) => {
+    const dependencyStack = stacksByPath.get(dependency)
+    if (!dependencyStack) {
+      throw new Error(`Expected stack with path '${dependency}' to exist`)
+    }
+
+    return uniq([
+      dependency,
+      ...collected,
+      ...collectStackDependencies(stacksByPath, dependencyStack),
+    ])
+  }, new Array<StackPath>())
 
 /**
  * @hidden
@@ -70,7 +89,21 @@ export const buildStacksDeployPlan = async (
   commandPath: CommandPath,
   ignoreDependencies: boolean,
 ): Promise<StacksDeployPlan> => {
-  const sortedStacks = sortStacksForDeploy(stacks)
+  const stacksByPath = arrayToMap(stacks, (s) => s.path)
+  const stacksToDeploy = stacks
+    .filter((s) => isWithinCommandPath(s.path, commandPath))
+    .reduce(
+      (collected, stack) =>
+        uniq([
+          stack.path,
+          ...collected,
+          ...collectStackDependencies(stacksByPath, stack),
+        ]),
+      new Array<StackPath>(),
+    )
+    .map((stackPath) => stacksByPath.get(stackPath)!)
+
+  const sortedStacks = sortStacksForDeploy(stacksToDeploy)
   const operations = await Promise.all(sortedStacks.map(convertToOperation))
 
   return {

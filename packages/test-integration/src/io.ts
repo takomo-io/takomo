@@ -37,11 +37,13 @@ import {
   ListStacksIO,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
+import { CommandPath } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
 
 export interface TestDeployStacksIOAnswers {
   confirmDeploy: ConfirmDeployAnswer
   confirmStackDeploy: ConfirmStackDeployAnswer
+  chooseCommandPath: CommandPath
 }
 
 export const createTestDeployStacksIO = (
@@ -50,6 +52,7 @@ export const createTestDeployStacksIO = (
   answers: TestDeployStacksIOAnswers = {
     confirmDeploy: "CANCEL",
     confirmStackDeploy: "CANCEL",
+    chooseCommandPath: "/",
   },
 ): DeployStacksIO => ({
   ...createDeployStacksIO({ logger }),
@@ -59,10 +62,14 @@ export const createTestDeployStacksIO = (
 
   confirmStackDeploy: async (): Promise<ConfirmStackDeployAnswer> =>
     autoConfirmEnabled ? "CONTINUE" : answers.confirmStackDeploy,
+
+  chooseCommandPath: async (): Promise<CommandPath> =>
+    answers.chooseCommandPath,
 })
 
 export interface TestUndeployStacksIOAnswers {
   confirmUndeploy: ConfirmUndeployAnswer
+  chooseCommandPath: CommandPath
 }
 
 export const createTestUndeployStacksIO = (
@@ -70,11 +77,14 @@ export const createTestUndeployStacksIO = (
   autoConfirmEnabled = true,
   answers: TestUndeployStacksIOAnswers = {
     confirmUndeploy: "CANCEL",
+    chooseCommandPath: "/",
   },
 ): UndeployStacksIO => ({
   ...createUndeployStacksIO({ logger }),
   confirmUndeploy: async (): Promise<ConfirmUndeployAnswer> =>
     autoConfirmEnabled ? "CONTINUE" : answers.confirmUndeploy,
+  chooseCommandPath: async (): Promise<CommandPath> =>
+    answers.chooseCommandPath,
 })
 
 export const createTestListStacksIO = (logger: TkmLogger): ListStacksIO =>

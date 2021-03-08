@@ -1,0 +1,2 @@
+template: logs.yml
+depends: /stack4.yml
