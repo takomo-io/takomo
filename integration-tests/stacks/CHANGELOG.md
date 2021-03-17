@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.1](https://github.com/takomo-io/takomo/compare/v3.4.0...v3.4.1) (2021-03-17)
+
+
+### Bug Fixes
+
+* fix reviewing of stack parameters ([#171](https://github.com/takomo-io/takomo/issues/171)) ([d16c6c7](https://github.com/takomo-io/takomo/commit/d16c6c79cdc85723dc8f8a3929e35ea8fd4362de)), closes [#170](https://github.com/takomo-io/takomo/issues/170)
+
+
+
+
+
 # [3.4.0](https://github.com/takomo-io/takomo/compare/v3.3.0...v3.4.0) (2021-03-08)
 
 
