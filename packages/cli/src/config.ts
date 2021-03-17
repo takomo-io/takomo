@@ -121,10 +121,10 @@ const externalResolver = Joi.object({
 export const takomoProjectConfigFileSchema = Joi.object({
   requiredVersion: Joi.string(),
   organization: Joi.object({
-    accountRepository,
+    repository: accountRepository,
   }),
   deploymentTargets: Joi.object({
-    deploymentTargetRepository,
+    repository: deploymentTargetRepository,
   }),
   regions: Joi.array().items(Joi.string()).unique(),
   resolvers: Joi.array().items(Joi.string(), externalResolver),
