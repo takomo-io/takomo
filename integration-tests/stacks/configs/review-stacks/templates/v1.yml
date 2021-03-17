@@ -1,0 +1,16 @@
+Parameters:
+  Name1:
+    Type: String
+    Description: Name 1
+  Name2:
+    Type: String
+    Description: Name 2
+Resources:
+  LogGroup1:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref Name1
+  LogGroup2:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref Name2

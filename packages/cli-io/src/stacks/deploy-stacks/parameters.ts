@@ -6,7 +6,7 @@ import {
   StackParameterNoEcho,
   StackParameterValue,
 } from "@takomo/aws-model"
-import { bold, green, orange, red, yellow } from "@takomo/util"
+import { bold, green, red, yellow } from "@takomo/util"
 import R from "ramda"
 import { BaseIO } from "../../cli-io"
 import { printValue } from "./common"
@@ -200,8 +200,8 @@ export const printParameters = (
           return { order: "1", text: green(`create: ${count}`) }
         case "update":
           return { order: "2", text: yellow(`update: ${count}`) }
-        case "remove":
-          return { order: "3", text: orange(`remove: ${count}`) }
+        case "delete":
+          return { order: "3", text: red(`remove: ${count}`) }
         default:
           throw new Error(`Unsupported parameter operation: '${key}'`)
       }
