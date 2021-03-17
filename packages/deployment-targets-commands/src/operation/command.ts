@@ -1,3 +1,4 @@
+import { Region } from "@takomo/aws-model"
 import { CommandHandler } from "@takomo/core"
 import {
   createDeploymentTargetsContext,
@@ -13,11 +14,11 @@ import {
 } from "./model"
 import { planDeployment } from "./plan"
 
-const inputSchema = () => {
+const inputSchema = (regions: ReadonlyArray<Region>) => {
   const {
     deploymentGroupPath,
     deploymentTargetName,
-  } = createDeploymentTargetsSchemas()
+  } = createDeploymentTargetsSchemas({ regions })
   return Joi.object({
     groups: Joi.array().items(deploymentGroupPath).unique(),
     targets: Joi.array().items(deploymentTargetName).unique(),
@@ -35,7 +36,7 @@ export const deploymentTargetsOperationCommand: CommandHandler<
   configRepository,
   io,
 }): Promise<DeploymentTargetsOperationOutput> =>
-  validateInput(inputSchema(), input)
+  validateInput(inputSchema(ctx.regions), input)
     .then(() =>
       createDeploymentTargetsContext({
         ctx,

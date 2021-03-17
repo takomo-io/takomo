@@ -4,7 +4,9 @@ import {
 } from "@takomo/test-unit"
 import { createDeploymentTargetsSchemas } from "../src"
 
-const { deploymentGroupPath } = createDeploymentTargetsSchemas()
+const { deploymentGroupPath } = createDeploymentTargetsSchemas({
+  regions: ["eu-west-1"],
+})
 
 const valid = [
   "MyGroup",

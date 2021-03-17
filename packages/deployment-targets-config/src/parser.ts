@@ -57,6 +57,8 @@ const parseDeploymentTarget = (
     ...configuredBootstrapConfigSets,
   ])
 
+  console.log(JSON.stringify(value, undefined, 2))
+
   return {
     configSets,
     bootstrapConfigSets,
@@ -106,6 +108,7 @@ const findMissingDirectChildrenPaths = (
 }
 
 const parseDeploymentGroup = (
+  externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   groupPath: DeploymentGroupPath,
   config: any,
   inheritedConfigSets: ConfigSetName[],
@@ -142,11 +145,20 @@ const parseDeploymentGroup = (
     ...missingDirectChildPaths,
     ...directChildPaths,
   ].map((childPath) =>
-    parseDeploymentGroup(childPath, config, configSets, bootstrapConfigSets),
+    parseDeploymentGroup(
+      externalDeploymentTargets,
+      childPath,
+      config,
+      configSets,
+      bootstrapConfigSets,
+    ),
   )
 
+  const externalTargets = externalDeploymentTargets.get(groupPath) ?? []
+  const allTargets = [...(group?.targets ?? []), ...externalTargets]
+
   const targets = parseDeploymentTargets(
-    group?.targets,
+    allTargets,
     configSets,
     bootstrapConfigSets,
   )
@@ -158,8 +170,8 @@ const parseDeploymentGroup = (
     targets,
     configSets,
     bootstrapConfigSets,
-    deploymentRole: parseCommandRole(group?.deploymentRole || null),
-    bootstrapRole: parseCommandRole(group?.bootstrapRole || null),
+    deploymentRole: parseCommandRole(group?.deploymentRole ?? null),
+    bootstrapRole: parseCommandRole(group?.bootstrapRole ?? null),
     path: groupPath,
     description: group?.description || null,
     priority: group?.priority || 0,
@@ -168,18 +180,22 @@ const parseDeploymentGroup = (
   }
 }
 
-const parseDeploymentGroups = (value: any): DeploymentGroupConfig[] => {
+const parseDeploymentGroups = (
+  externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
+  value: any,
+): DeploymentGroupConfig[] => {
   if (value === null || value === undefined) {
     return []
   }
 
   return Object.keys(value).map((rootPath) =>
-    parseDeploymentGroup(rootPath, value, [], []),
+    parseDeploymentGroup(externalDeploymentTargets, rootPath, value, [], []),
   )
 }
 
 export const buildDeploymentConfig = (
   ctx: CommandContext,
+  externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   record: Record<string, unknown>,
 ): Result<DeploymentConfig, ValidationError> => {
   const { error } = createDeploymentTargetsConfigSchema({
@@ -200,7 +216,10 @@ export const buildDeploymentConfig = (
 
   const vars = parseVars(record.vars)
   const configSets = parseConfigSets(record.configSets)
-  const deploymentGroups = parseDeploymentGroups(record.deploymentGroups)
+  const deploymentGroups = parseDeploymentGroups(
+    externalDeploymentTargets,
+    record.deploymentGroups,
+  )
 
   return ok(
     deepFreeze({

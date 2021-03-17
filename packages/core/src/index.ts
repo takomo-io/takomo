@@ -21,12 +21,15 @@ export {
 export {
   AccountRepositoryConfig,
   AccountRepositoryType,
+  DeploymentTargetRepositoryConfig,
+  DeploymentTargetRepositoryType,
   ExternalResolverConfig,
   InternalTakomoProjectConfig,
   parseCommandRole,
   parseRegex,
   parseVars,
   TakomoProjectConfig,
+  TakomoProjectDeploymentTargetsConfig,
   TakomoProjectOrganizationConfig,
 } from "./config"
 export { CommonSchema, createCommonSchema } from "./schema"

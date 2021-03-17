@@ -1,7 +1,7 @@
 {
-  "name": "@takomo/config-repository-fs",
+  "name": "@takomo/deployment-targets-repository",
   "version": "3.4.0",
-  "description": "Takomo Filesystem Config Repository",
+  "description": "Takomo Deployment Targets Repository",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
@@ -30,24 +30,11 @@
     "@takomo/aws-model": "3.4.0",
     "@takomo/core": "3.4.0",
     "@takomo/deployment-targets-config": "3.4.0",
-    "@takomo/deployment-targets-context": "3.4.0",
-    "@takomo/deployment-targets-repository": "3.4.0",
     "@takomo/deployment-targets-model": "3.1.0",
-    "@takomo/init-command": "3.4.0",
-    "@takomo/organization-account-repository": "3.4.0",
-    "@takomo/organization-config": "3.4.0",
-    "@takomo/organization-context": "3.4.0",
-    "@takomo/organization-model": "3.1.0",
-    "@takomo/stacks-config": "3.4.0",
-    "@takomo/stacks-context": "3.4.0",
-    "@takomo/stacks-model": "3.4.0",
-    "@takomo/stacks-resolvers": "3.4.0",
-    "@takomo/stacks-schema": "3.4.0",
+    "@takomo/deployment-targets-schema": "3.4.0",
     "@takomo/util": "3.4.0",
-    "easy-table": "1.1.1",
-    "ramda": "0.27.1",
-    "readdirp": "3.5.0",
-    "ts-dedent": "2.0.0"
+    "joi": "17.2.1",
+    "readdirp": "3.5.0"
   },
   "engines": {
     "node": ">=14.4.0"

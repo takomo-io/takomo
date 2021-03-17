@@ -38,7 +38,6 @@ export const parseRegex = (
 }
 
 export type AccountRepositoryType = string
-
 export interface AccountRepositoryConfig {
   readonly type: AccountRepositoryType
   readonly [key: string]: unknown
@@ -48,12 +47,23 @@ export interface TakomoProjectOrganizationConfig {
   readonly accountRepository?: AccountRepositoryConfig
 }
 
+export type DeploymentTargetRepositoryType = string
+export interface DeploymentTargetRepositoryConfig {
+  readonly type: DeploymentTargetRepositoryType
+  readonly [key: string]: unknown
+}
+
+export interface TakomoProjectDeploymentTargetsConfig {
+  readonly deploymentTargetRepository?: DeploymentTargetRepositoryConfig
+}
+
 /**
  * Takomo project configuration.
  */
 export interface TakomoProjectConfig {
   readonly requiredVersion?: string
   readonly organization?: TakomoProjectOrganizationConfig
+  readonly deploymentTargets?: TakomoProjectDeploymentTargetsConfig
   readonly regions: ReadonlyArray<Region>
 }
 
