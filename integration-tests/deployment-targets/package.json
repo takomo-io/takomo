@@ -1,7 +1,7 @@
 {
   "name": "integration-test-deployment-targets",
   "private": true,
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "integration-test": "jest test --passWithNoTests --runInBand --ci"
   },
   "dependencies": {
-    "@takomo/test-integration": "3.4.0"
+    "@takomo/test-integration": "3.4.1"
   },
   "devDependencies": {
     "dotenv": "8.2.0",

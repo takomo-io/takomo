@@ -7,6 +7,7 @@ cd ..
 
 aws s3 sync \
   --delete \
+  --region eu-west-1 \
   --cache-control "public, max-age=60" \
   --exclude "*" \
   --include "*.html" \
@@ -14,6 +15,7 @@ aws s3 sync \
 
 aws s3 sync \
   --delete \
+  --region eu-west-1 \
   --cache-control "public, max-age=604800" \
   --exclude "*.html" \
   api-docs s3://takomo-website-versioned$DOCS_BASE

@@ -102,11 +102,7 @@ export const executeDeployStacksCommand = (
 
     return deployStacksCommand({
       ...ctxAndConfig,
-      io: createTestDeployStacksIO(
-        logger,
-        props.autoConfirmEnabled,
-        props.answers,
-      ),
+      io: createTestDeployStacksIO(logger, props.answers),
       input: {
         ignoreDependencies,
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
