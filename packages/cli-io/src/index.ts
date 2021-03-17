@@ -15,7 +15,17 @@ export { createUndeployAccountsIO } from "./organization/accounts/undeploy-accou
 export { createCreateOrganizationIO } from "./organization/create-organization-io"
 export { createDeployOrganizationIO } from "./organization/deploy-organization-io"
 export { createDescribeOrganizationIO } from "./organization/describe-organization-io"
-export { createDeployStacksIO } from "./stacks/deploy-stacks/deploy-stacks-io"
+export {
+  CONFIRM_DEPLOY_ANSWER_CANCEL,
+  CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW,
+  CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW,
+  CONFIRM_STACK_DEPLOY_ANSWER_CANCEL,
+  CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE,
+  CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS,
+  CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE,
+  createDeployStacksIO,
+} from "./stacks/deploy-stacks/deploy-stacks-io"
 export { createDependencyGraphIO } from "./stacks/inspect/dependency-graph-io"
 export { createListStacksIO } from "./stacks/list-stacks-io"
 export { createUndeployStacksIO } from "./stacks/undeploy-stacks-io"
+export { UserActions } from "./user-actions"

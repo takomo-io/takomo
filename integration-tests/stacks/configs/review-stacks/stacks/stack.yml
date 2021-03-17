@@ -1,0 +1,5 @@
+regions: eu-north-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+template: {{ var.configVersion }}
+parameters:
+  {{> (lookup var 'configVersion') }}

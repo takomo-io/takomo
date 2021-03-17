@@ -17,6 +17,7 @@ import {
   createUndeployAccountsIO,
   createUndeployStacksIO,
   createUndeployTargetsIO,
+  UserActions,
 } from "@takomo/cli-io"
 import { DeploymentTargetsOperationIO } from "@takomo/deployment-targets-commands"
 import { InitProjectIO } from "@takomo/init-command"
@@ -37,8 +38,9 @@ import {
   ListStacksIO,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
-import { CommandPath } from "@takomo/stacks-model"
+import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
+import { anyArray, anyBoolean, mock } from "jest-mock-extended"
 
 export interface TestDeployStacksIOAnswers {
   confirmDeploy: ConfirmDeployAnswer
@@ -48,24 +50,34 @@ export interface TestDeployStacksIOAnswers {
 
 export const createTestDeployStacksIO = (
   logger: TkmLogger,
-  autoConfirmEnabled = true,
   answers: TestDeployStacksIOAnswers = {
     confirmDeploy: "CANCEL",
     confirmStackDeploy: "CANCEL",
-    chooseCommandPath: "/",
+    chooseCommandPath: ROOT_STACK_GROUP_PATH,
   },
-): DeployStacksIO => ({
-  ...createDeployStacksIO({ logger }),
+): DeployStacksIO => {
+  const actions = mock<UserActions>()
 
-  confirmDeploy: async (): Promise<ConfirmDeployAnswer> =>
-    autoConfirmEnabled ? "CONTINUE_NO_REVIEW" : answers.confirmDeploy,
+  // Mock confirm deploy
+  actions.choose
+    .calledWith("How do you want to continue?", anyArray(), anyBoolean())
+    .mockReturnValue(Promise.resolve(answers.confirmDeploy))
 
-  confirmStackDeploy: async (): Promise<ConfirmStackDeployAnswer> =>
-    autoConfirmEnabled ? "CONTINUE" : answers.confirmStackDeploy,
+  // Mock confirm single stack deploy
+  actions.choose
+    .calledWith(
+      "How do you want to continue the deployment?",
+      anyArray(),
+      anyBoolean(),
+    )
+    .mockReturnValue(Promise.resolve(answers.confirmStackDeploy))
 
-  chooseCommandPath: async (): Promise<CommandPath> =>
-    answers.chooseCommandPath,
-})
+  return {
+    ...createDeployStacksIO({ logger, actions }),
+    chooseCommandPath: async (): Promise<CommandPath> =>
+      answers.chooseCommandPath,
+  }
+}
 
 export interface TestUndeployStacksIOAnswers {
   confirmUndeploy: ConfirmUndeployAnswer
