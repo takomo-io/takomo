@@ -19,7 +19,7 @@ export const createDeploymentTargetsSchemas = (
 ): DeploymentTargetsSchemas => {
   const { vars } = createCommonSchema()
   const { configSetName } = createConfigSetsSchemas({ ...props })
-  const { accountId, iamRoleArn } = createAwsSchemas({ ...props })
+  const { accountId, iamRoleArn, iamRoleName } = createAwsSchemas({ ...props })
 
   const deploymentGroupPath = Joi.string()
     .min(1)
@@ -70,7 +70,9 @@ export const createDeploymentTargetsSchemas = (
     accountId,
     name: deploymentTargetName.required(),
     deploymentRole: iamRoleArn,
+    deploymentRoleName: iamRoleName,
     bootstrapRole: iamRoleArn,
+    bootstrapRoleName: iamRoleName,
     description: Joi.string(),
     status: Joi.string().valid("active", "disabled"),
     configSets: [Joi.array().items(configSetName).unique(), configSetName],

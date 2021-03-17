@@ -43,7 +43,6 @@ export const printFailedStackResults = (
   failed.forEach((r) => {
     io.message({
       text: `- Stack path: ${r.stack.path}`,
-      marginTop: true,
       indent,
     })
     io.message({
@@ -65,6 +64,8 @@ export const printFailedStackResults = (
     if (r.error) {
       printError(io, r.error, logLevel, indent)
     }
+
+    io.print()
   })
 }
 
@@ -99,13 +100,14 @@ export const printStacksOperationOutput = (
 
   io.table({
     marginTop: true,
+    marginBottom: true,
     table: resultsTable,
   })
 
   if (failed.length > 0) {
     io.subheader({
       text: "More information about the failed stacks",
-      marginTop: true,
+      marginBottom: true,
     })
 
     printFailedStackResults(io, failed, logLevel, 0)

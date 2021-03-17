@@ -1,4 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
+import { CallerIdentity } from "@takomo/aws-model"
 import {
   ConfigSet,
   ConfigSetCommandPathOperationResult,
@@ -29,16 +30,47 @@ import { deepCopy, TakomoError, Timer } from "@takomo/util"
 import merge from "lodash.merge"
 import { DeploymentTargetsOperationIO, PlanHolder } from "../model"
 
-const getRoleName = (
+const getDeploymentRole = (
+  currentIdentity: CallerIdentity,
   configSetType: ConfigSetType,
   group: DeploymentGroupConfig,
   target: DeploymentTargetConfig,
 ): CommandRole | undefined => {
   switch (configSetType) {
     case "bootstrap":
-      return target.bootstrapRole || group.bootstrapRole
+      const bootstrapRole = target.bootstrapRole ?? group.bootstrapRole
+      if (bootstrapRole) {
+        return bootstrapRole
+      }
+
+      const bootstrapRoleName =
+        target.bootstrapRoleName ?? group.bootstrapRoleName
+      if (!bootstrapRoleName) {
+        return undefined
+      }
+
+      const bootstrapAccountId = target.accountId ?? currentIdentity.accountId
+
+      return {
+        iamRoleArn: `arn:aws:iam::${bootstrapAccountId}:role/${bootstrapRoleName}`,
+      }
     case "standard":
-      return target.deploymentRole || group.deploymentRole
+      const deploymentRole = target.deploymentRole ?? group.deploymentRole
+      if (deploymentRole) {
+        return deploymentRole
+      }
+
+      const deploymentRoleName =
+        target.deploymentRoleName ?? group.deploymentRoleName
+      if (!deploymentRoleName) {
+        return undefined
+      }
+
+      const deploymentAccountId = target.accountId ?? currentIdentity.accountId
+
+      return {
+        iamRoleArn: `arn:aws:iam::${deploymentAccountId}:role/${deploymentRoleName}`,
+      }
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
   }
@@ -74,8 +106,8 @@ const deploy = async (
 const undeploy = async (
   credentialManager: CredentialManager,
   commandPath: CommandPath,
-  groupPath: string,
-  targetName: string,
+  groupPath: DeploymentGroupPath,
+  targetName: DeploymentTargetName,
   input: StacksOperationInput,
   io: DeploymentTargetsOperationIO,
   configRepository: StacksConfigRepository,
@@ -193,9 +225,19 @@ export const processCommandPath = async (
     env: variables.env,
     var: mergedVars,
     context: variables.context,
+    target: {
+      name: target.name,
+      accountId: target.accountId,
+    },
   }
 
-  const deploymentRole = getRoleName(configSetType, group, target)
+  const currentIdentity = await ctx.credentialManager.getCallerIdentity()
+  const deploymentRole = getDeploymentRole(
+    currentIdentity,
+    configSetType,
+    group,
+    target,
+  )
 
   const credentialManager = deploymentRole
     ? await ctx.credentialManager.createCredentialManagerForRole(

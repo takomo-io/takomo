@@ -57,16 +57,16 @@ const parseDeploymentTarget = (
     ...configuredBootstrapConfigSets,
   ])
 
-  console.log(JSON.stringify(value, undefined, 2))
-
   return {
     configSets,
     bootstrapConfigSets,
-    name: value.name || null,
-    description: value.description || null,
-    accountId: value.accountId || null,
+    name: value.name,
+    description: value.description,
+    accountId: value.accountId,
     deploymentRole: parseCommandRole(value.deploymentRole),
     bootstrapRole: parseCommandRole(value.bootstrapRole),
+    deploymentRoleName: value.deploymentRoleName,
+    bootstrapRoleName: value.bootstrapRoleName,
     status: parseDeploymentStatus(value.status),
     vars: parseVars(value.vars),
   }
@@ -170,10 +170,12 @@ const parseDeploymentGroup = (
     targets,
     configSets,
     bootstrapConfigSets,
-    deploymentRole: parseCommandRole(group?.deploymentRole ?? null),
-    bootstrapRole: parseCommandRole(group?.bootstrapRole ?? null),
+    deploymentRole: parseCommandRole(group?.deploymentRole),
+    bootstrapRole: parseCommandRole(group?.bootstrapRole),
+    deploymentRoleName: group?.deploymentRoleName,
+    bootstrapRoleName: group?.bootstrapRoleName,
     path: groupPath,
-    description: group?.description || null,
+    description: group?.description,
     priority: group?.priority || 0,
     vars: parseVars(group?.vars),
     status: parseDeploymentStatus(group?.status),

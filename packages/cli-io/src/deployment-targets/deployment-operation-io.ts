@@ -62,7 +62,6 @@ export const createDeploymentTargetsOperationIO = (
                   "Status",
                   formatCommandStatus(stackResult.status),
                 )
-                // targetsTable.cell("Reason", stackResult.reason)
                 targetsTable.cell(
                   "Time",
                   prettyMs(stackResult.timer.getSecondsElapsed()),
@@ -104,14 +103,17 @@ export const createDeploymentTargetsOperationIO = (
       io.message({ text: `${group.path}:`, marginTop: true, indent: 2 })
       group.targets.forEach((target) => {
         io.message({
-          text: `- name: ${target.name}`,
+          text: `- name:                 ${target.name}`,
           marginTop: true,
           indent: 4,
         })
-        io.message({
-          text: `description: ${target.description || "-"}`,
-          indent: 6,
-        })
+
+        if (target.description) {
+          io.message({
+            text: `description:          ${target.description}`,
+            indent: 6,
+          })
+        }
         io.message({ text: "config sets:", indent: 6 })
         target.configSets.forEach((configSet) => {
           io.message({ text: `- ${configSet}`, indent: 8 })
