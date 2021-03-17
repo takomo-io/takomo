@@ -60,7 +60,7 @@ jobs:
           key: packages-${{ github.sha }}
 
   unit-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -78,7 +78,7 @@ jobs:
       - run: yarn test
 
   stacks-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -96,7 +96,7 @@ jobs:
       - run: yarn workspace integration-test-stacks integration-test
 
   deployment-targets-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -114,7 +114,7 @@ jobs:
       - run: yarn workspace integration-test-deployment-targets integration-test
 
   organization-creation-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -135,7 +135,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_B_AWS_SECRET_ACCESS_KEY }}
 
   organization-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -156,7 +156,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
 
   organization2-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -177,7 +177,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_3_AWS_SECRET_ACCESS_KEY }}
 
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
     needs:
       - unit-test
