@@ -44,7 +44,7 @@ export interface AccountRepositoryConfig {
 }
 
 export interface TakomoProjectOrganizationConfig {
-  readonly accountRepository?: AccountRepositoryConfig
+  readonly repository?: AccountRepositoryConfig
 }
 
 export type DeploymentTargetRepositoryType = string
@@ -54,7 +54,7 @@ export interface DeploymentTargetRepositoryConfig {
 }
 
 export interface TakomoProjectDeploymentTargetsConfig {
-  readonly deploymentTargetRepository?: DeploymentTargetRepositoryConfig
+  readonly repository?: DeploymentTargetRepositoryConfig
 }
 
 /**

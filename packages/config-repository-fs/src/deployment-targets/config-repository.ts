@@ -46,10 +46,7 @@ const initDeploymentTargetsRepository = async (
   logger: TkmLogger,
   templateEngine: TemplateEngine,
 ): Promise<DeploymentTargetRepository | undefined> => {
-  if (
-    ctx.projectConfig?.deploymentTargets?.deploymentTargetRepository ===
-    undefined
-  ) {
+  if (ctx.projectConfig?.deploymentTargets?.repository === undefined) {
     return undefined
   }
 
@@ -63,7 +60,7 @@ const initDeploymentTargetsRepository = async (
     logger,
     ctx,
     templateEngine,
-    config: ctx.projectConfig.deploymentTargets.deploymentTargetRepository,
+    config: ctx.projectConfig.deploymentTargets.repository,
   })
 }
 
