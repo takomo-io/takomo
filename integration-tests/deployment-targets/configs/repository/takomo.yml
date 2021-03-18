@@ -1,0 +1,4 @@
+deploymentTargets:
+  repository:
+    type: filesystem
+    dir: targets

@@ -14,27 +14,12 @@ export const createDeploymentTargetsConfigSchema = (
 ): ObjectSchema => {
   const {
     deploymentGroupPath,
-    deploymentTargetName,
-  } = createDeploymentTargetsSchemas()
+    deploymentTarget,
+  } = createDeploymentTargetsSchemas({ ...props })
 
   const { configSetName, configSets } = createConfigSetsSchemas({ ...props })
   const { vars } = createCommonSchema()
-  const { accountId, iamRoleArn } = createAwsSchemas({ ...props })
-
-  const deploymentTarget = Joi.object({
-    vars,
-    accountId,
-    name: deploymentTargetName.required(),
-    deploymentRole: iamRoleArn,
-    bootstrapRole: iamRoleArn,
-    description: Joi.string(),
-    status: Joi.string().valid("active", "disabled"),
-    configSets: [Joi.array().items(configSetName).unique(), configSetName],
-    bootstrapConfigSets: [
-      Joi.array().items(configSetName).unique(),
-      configSetName,
-    ],
-  })
+  const { iamRoleArn, iamRoleName } = createAwsSchemas({ ...props })
 
   const targets = Joi.array().items(deploymentTarget)
 
@@ -43,7 +28,9 @@ export const createDeploymentTargetsConfigSchema = (
     targets,
     description: Joi.string(),
     deploymentRole: iamRoleArn,
+    deploymentRoleName: iamRoleName,
     bootstrapRole: iamRoleArn,
+    bootstrapRoleName: iamRoleName,
     status: Joi.string().valid("active", "disabled"),
     priority: Joi.number().integer().min(0),
     configSets: [Joi.array().items(configSetName).unique(), configSetName],

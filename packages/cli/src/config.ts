@@ -90,6 +90,7 @@ export const parseProjectConfigFile = async (
     requiredVersion,
     resolvers,
     organization: parsedFile.organization,
+    deploymentTargets: parsedFile.deploymentTargets,
   }
 }
 
@@ -104,6 +105,15 @@ const accountRepository = Joi.object({
   type: accountRepositoryType.required(),
 }).unknown(true)
 
+const deploymentTargetRepositoryType = Joi.string()
+  .min(1)
+  .max(40)
+  .regex(/^[a-zA-Z0-9-_]+$/)
+
+const deploymentTargetRepository = Joi.object({
+  type: deploymentTargetRepositoryType.required(),
+}).unknown(true)
+
 const externalResolver = Joi.object({
   name: variableName,
 }).unknown(true)
@@ -111,7 +121,10 @@ const externalResolver = Joi.object({
 export const takomoProjectConfigFileSchema = Joi.object({
   requiredVersion: Joi.string(),
   organization: Joi.object({
-    accountRepository,
+    repository: accountRepository,
+  }),
+  deploymentTargets: Joi.object({
+    repository: deploymentTargetRepository,
   }),
   regions: Joi.array().items(Joi.string()).unique(),
   resolvers: Joi.array().items(Joi.string(), externalResolver),

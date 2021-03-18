@@ -11,6 +11,7 @@ describe("#parseProjectConfigFile", () => {
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
+      deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
     })
@@ -21,6 +22,7 @@ describe("#parseProjectConfigFile", () => {
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
+      deploymentTargets: undefined,
       regions: ["eu-west-1"],
       resolvers: [],
     })
@@ -31,6 +33,7 @@ describe("#parseProjectConfigFile", () => {
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
+      deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-north-1", "us-east-1"],
       resolvers: [],
     })
@@ -41,6 +44,7 @@ describe("#parseProjectConfigFile", () => {
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
+      deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
       resolvers: [
         {

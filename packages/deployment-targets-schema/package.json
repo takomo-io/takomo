@@ -30,7 +30,11 @@
     "joi": "17.2.1"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.4.0"
+    "@takomo/test-unit": "3.4.0",
+    "@takomo/aws-model": "3.4.0",
+    "@takomo/aws-schema": "3.4.0",
+    "@takomo/config-sets": "3.4.0",
+    "@takomo/core": "3.4.0"
   },
   "engines": {
     "node": ">=14.4.0"

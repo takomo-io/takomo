@@ -11,19 +11,21 @@ import {
 export interface DeploymentTargetConfig {
   readonly status: DeploymentStatus
   readonly name: DeploymentTargetName
-  readonly description: string
+  readonly description?: string
   readonly vars: Vars
   readonly configSets: ReadonlyArray<ConfigSetName>
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
   readonly deploymentRole?: CommandRole
+  readonly deploymentRoleName?: string
   readonly bootstrapRole?: CommandRole
+  readonly bootstrapRoleName?: string
   readonly accountId?: AccountId
 }
 
 export interface DeploymentGroupConfig {
   readonly name: DeploymentGroupName
   readonly path: DeploymentGroupPath
-  readonly description: string
+  readonly description?: string
   readonly targets: ReadonlyArray<DeploymentTargetConfig>
   readonly priority: number
   readonly status: DeploymentStatus
@@ -32,7 +34,9 @@ export interface DeploymentGroupConfig {
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
   readonly children: ReadonlyArray<DeploymentGroupConfig>
   readonly deploymentRole?: CommandRole
+  readonly deploymentRoleName?: string
   readonly bootstrapRole?: CommandRole
+  readonly bootstrapRoleName?: string
 }
 
 export interface DeploymentConfig {

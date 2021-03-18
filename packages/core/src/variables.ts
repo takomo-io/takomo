@@ -14,4 +14,5 @@ export interface Variables {
   readonly env: EnvVars
   readonly var: Vars
   readonly context: ContextVars
+  readonly [key: string]: unknown
 }

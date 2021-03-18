@@ -1,0 +1,15 @@
+deploymentGroups:
+  development:
+    configSets: developmentLogs
+  production:
+    configSets: productionLogs
+
+configSets:
+  developmentLogs:
+    description: Development logs
+    commandPaths:
+      - /dev/logs.yml
+  productionLogs:
+    description: Production logs
+    commandPaths:
+      - /prod/logs.yml

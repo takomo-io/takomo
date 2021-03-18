@@ -52,7 +52,7 @@ const initAccountRepository = async (
   logger: TkmLogger,
   templateEngine: TemplateEngine,
 ): Promise<AccountRepository | undefined> => {
-  if (ctx.projectConfig?.organization?.accountRepository === undefined) {
+  if (ctx.projectConfig?.organization?.repository === undefined) {
     return undefined
   }
 
@@ -66,7 +66,7 @@ const initAccountRepository = async (
     logger,
     ctx,
     templateEngine,
-    config: ctx.projectConfig.organization.accountRepository,
+    config: ctx.projectConfig.organization.repository,
   })
 }
 

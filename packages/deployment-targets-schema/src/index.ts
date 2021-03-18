@@ -1,11 +1,26 @@
-import Joi, { StringSchema } from "joi"
+import { Region } from "@takomo/aws-model"
+import { createAwsSchemas } from "@takomo/aws-schema"
+import { createConfigSetsSchemas } from "@takomo/config-sets"
+import { createCommonSchema } from "@takomo/core"
+import Joi, { ObjectSchema, StringSchema } from "joi"
 
 export interface DeploymentTargetsSchemas {
   readonly deploymentTargetName: StringSchema
   readonly deploymentGroupPath: StringSchema
+  readonly deploymentTarget: ObjectSchema
 }
 
-export const createDeploymentTargetsSchemas = (): DeploymentTargetsSchemas => {
+interface CreateDeploymentTargetsSchemaProps {
+  readonly regions: ReadonlyArray<Region>
+}
+
+export const createDeploymentTargetsSchemas = (
+  props: CreateDeploymentTargetsSchemaProps,
+): DeploymentTargetsSchemas => {
+  const { vars } = createCommonSchema()
+  const { configSetName } = createConfigSetsSchemas({ ...props })
+  const { accountId, iamRoleArn, iamRoleName } = createAwsSchemas({ ...props })
+
   const deploymentGroupPath = Joi.string()
     .min(1)
     .max(250)
@@ -50,8 +65,26 @@ export const createDeploymentTargetsSchemas = (): DeploymentTargetsSchemas => {
     .max(60)
     .regex(/^[a-zA-Z_]+[a-zA-Z0-9-_]*$/)
 
+  const deploymentTarget = Joi.object({
+    vars,
+    accountId,
+    name: deploymentTargetName.required(),
+    deploymentRole: iamRoleArn,
+    deploymentRoleName: iamRoleName,
+    bootstrapRole: iamRoleArn,
+    bootstrapRoleName: iamRoleName,
+    description: Joi.string(),
+    status: Joi.string().valid("active", "disabled"),
+    configSets: [Joi.array().items(configSetName).unique(), configSetName],
+    bootstrapConfigSets: [
+      Joi.array().items(configSetName).unique(),
+      configSetName,
+    ],
+  })
+
   return {
     deploymentTargetName,
     deploymentGroupPath,
+    deploymentTarget,
   }
 }

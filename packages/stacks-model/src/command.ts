@@ -1,5 +1,5 @@
 import { StackEvent } from "@takomo/aws-model"
-import { CommandStatus, EnvVars, Variables } from "@takomo/core"
+import { CommandStatus, Variables } from "@takomo/core"
 import { Timer } from "@takomo/util"
 import { InternalStack, StackPath } from "./stack"
 import { StackGroupPath } from "./stack-group"
@@ -38,11 +38,6 @@ export interface HookOutputValues {
  * A mutable copy of the current command variables during a stack operation.
  */
 export interface StackOperationVariables extends Variables {
-  /**
-   * Environment variables
-   */
-  readonly env: EnvVars
-
   /**
    * Hook output values
    */

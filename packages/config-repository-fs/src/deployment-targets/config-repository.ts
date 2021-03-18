@@ -1,10 +1,25 @@
+import { CommandContext } from "@takomo/core"
 import {
   buildDeploymentConfig,
   DeploymentConfig,
 } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsConfigRepository } from "@takomo/deployment-targets-context"
-import { dirExists, FilePath, TakomoError } from "@takomo/util"
+import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
+import {
+  createDeploymentTargetConfigItemSchema,
+  createDeploymentTargetRepositoryRegistry,
+  createFileSystemDeploymentTargetRepositoryProvider,
+  DeploymentTargetRepository,
+} from "@takomo/deployment-targets-repository"
+import {
+  dirExists,
+  FilePath,
+  TakomoError,
+  TemplateEngine,
+  TkmLogger,
+} from "@takomo/util"
 import { basename, join } from "path"
+import R from "ramda"
 import {
   createFileSystemStacksConfigRepository,
   FileSystemStacksConfigRepositoryProps,
@@ -25,6 +40,72 @@ const resolveConfigFilePath = (
   pathToConfigFile.startsWith("/")
     ? pathToConfigFile
     : join(deploymentDir, pathToConfigFile)
+
+const initDeploymentTargetsRepository = async (
+  ctx: CommandContext,
+  logger: TkmLogger,
+  templateEngine: TemplateEngine,
+): Promise<DeploymentTargetRepository | undefined> => {
+  if (ctx.projectConfig?.deploymentTargets?.repository === undefined) {
+    return undefined
+  }
+
+  const registry = createDeploymentTargetRepositoryRegistry()
+  registry.registerDeploymentTargetRepositoryProvider(
+    "filesystem",
+    createFileSystemDeploymentTargetRepositoryProvider(),
+  )
+
+  return registry.initDeploymentTargetRepository({
+    logger,
+    ctx,
+    templateEngine,
+    config: ctx.projectConfig.deploymentTargets.repository,
+  })
+}
+
+const loadExternallyPersistedDeploymentTargets = async (
+  ctx: CommandContext,
+  logger: TkmLogger,
+  templateEngine: TemplateEngine,
+): Promise<Map<DeploymentGroupPath, ReadonlyArray<unknown>>> => {
+  const repository = await initDeploymentTargetsRepository(
+    ctx,
+    logger,
+    templateEngine,
+  )
+
+  if (!repository) {
+    return new Map()
+  }
+
+  const deploymentTargets = await repository.listDeploymentTargets()
+
+  const schema = createDeploymentTargetConfigItemSchema({
+    regions: ctx.regions,
+  })
+
+  deploymentTargets.forEach((wrapper) => {
+    const { error } = schema.validate(wrapper.item, { abortEarly: false })
+    if (error) {
+      const details = error.details.map((m) => `  - ${m.message}`).join("\n")
+      throw new TakomoError(
+        `Validation errors in deployment target configuration '${wrapper.source}':\n\n${details}`,
+      )
+    }
+  })
+
+  return new Map(
+    Array.from(
+      Object.entries(
+        R.groupBy(
+          (a) => a.deploymentGroupPath,
+          deploymentTargets.map((w) => w.item),
+        ),
+      ),
+    ),
+  )
+}
 
 export const createFileSystemDeploymentTargetsConfigRepository = async (
   props: FileSystemDeploymentTargetsConfigRepositoryProps,
@@ -64,7 +145,17 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
         configFile,
       )
 
-      const result = buildDeploymentConfig(ctx, parsedFile)
+      const externalDeploymentTargets = await loadExternallyPersistedDeploymentTargets(
+        ctx,
+        logger,
+        stacksConfigRepository.templateEngine,
+      )
+
+      const result = buildDeploymentConfig(
+        ctx,
+        externalDeploymentTargets,
+        parsedFile,
+      )
       if (result.isOk()) {
         return result.value
       }
