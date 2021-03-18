@@ -1,0 +1,20 @@
+deploymentGroups:
+  foobar:
+    configSets: logs2
+    targets:
+      - name: one
+        deploymentRoleName: OrganizationAccountAccessRole
+        accountId: "{{ var.ACCOUNT_1_ID }}"
+        vars:
+          accountId: "{{ var.ACCOUNT_1_ID }}"
+      - name: two
+        deploymentRoleName: OrganizationAccountAccessRole
+        accountId: "{{ var.ACCOUNT_2_ID }}"
+        vars:
+          accountId: "{{ var.ACCOUNT_2_ID }}"
+
+configSets:
+  logs2:
+    description: Logging configs 2
+    commandPaths:
+      - /logs-2.yml

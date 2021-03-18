@@ -9,11 +9,11 @@ import {
 
 const projectDir = "configs/simple"
 
-describe("Deployment with deployment role", () => {
+describe("Deployment with deployment role name", () => {
   test("Deploy all", async () => {
     const { results } = await executeDeployTargetsCommand({
       projectDir,
-      configFile: "targets-2.yml",
+      configFile: "targets-5.yml",
     })
       .expectCommandToSucceed()
       .assert()
@@ -22,20 +22,20 @@ describe("Deployment with deployment role", () => {
 
     const [exampleGroup] = results
 
-    expect(exampleGroup.path).toBe("Example")
+    expect(exampleGroup.path).toBe("foobar")
     expect(exampleGroup.results).toHaveLength(2)
     expect(exampleGroup.success).toBeTruthy()
     expect(exampleGroup.status).toBe("SUCCESS")
 
     const [t1, t2] = exampleGroup.results
-    expect(t1.name).toBe("foo")
-    expect(t2.name).toBe("bar")
+    expect(t1.name).toBe("one")
+    expect(t2.name).toBe("two")
   })
 
   test("Undeploy all", async () => {
     const { results } = await executeUndeployTargetsCommand({
       projectDir,
-      configFile: "targets-2.yml",
+      configFile: "targets-5.yml",
     })
       .expectCommandToSucceed()
       .assert()
@@ -44,13 +44,13 @@ describe("Deployment with deployment role", () => {
 
     const [exampleGroup] = results
 
-    expect(exampleGroup.path).toBe("Example")
+    expect(exampleGroup.path).toBe("foobar")
     expect(exampleGroup.results).toHaveLength(2)
     expect(exampleGroup.success).toBeTruthy()
     expect(exampleGroup.status).toBe("SUCCESS")
 
     const [t1, t2] = exampleGroup.results
-    expect(t1.name).toBe("foo")
-    expect(t2.name).toBe("bar")
+    expect(t1.name).toBe("one")
+    expect(t2.name).toBe("two")
   })
 })

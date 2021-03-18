@@ -10,7 +10,7 @@ import {
 const projectDir = "configs/simple"
 
 describe("Deployment group commands", () => {
-  test("deploy single deployment group", async () => {
+  test("Deploy single deployment group", async () => {
     const { results } = await executeDeployTargetsCommand({
       projectDir,
       groups: ["Environments/Test"],
@@ -33,7 +33,7 @@ describe("Deployment group commands", () => {
     expect(t5.name).toBe("five")
   })
 
-  test("deploy single target", async () => {
+  test("Deploy single target", async () => {
     const { results } = await executeDeployTargetsCommand({
       projectDir,
       targets: ["two"],
@@ -67,7 +67,7 @@ describe("Deployment group commands", () => {
     )
   })
 
-  test("undeploy all", async () => {
+  test("Undeploy all", async () => {
     const { results } = await executeUndeployTargetsCommand({
       projectDir,
     })

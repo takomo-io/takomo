@@ -10,7 +10,7 @@ import {
 const projectDir = "configs/simple"
 
 describe("Bootstrapping", () => {
-  test("bootstrap all", async () => {
+  test("Bootstrap all", async () => {
     const { results } = await executeBootstrapTargetsCommand({
       projectDir,
       configFile: "targets-4.yml",
@@ -31,7 +31,7 @@ describe("Bootstrapping", () => {
     expect(target.name).toBe("two")
   })
 
-  test("tear down all", async () => {
+  test("Tear down all", async () => {
     const { results } = await executeTeardownTargetsCommand({
       configFile: "targets-4.yml",
       projectDir,

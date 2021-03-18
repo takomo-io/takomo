@@ -1,0 +1,6 @@
+name: third
+deploymentGroupPath: production
+deploymentRoleName: OrganizationAccountAccessRole
+accountId: "{{ var.ACCOUNT_2_ID }}"
+vars:
+  logGroupName: thirdLogs
