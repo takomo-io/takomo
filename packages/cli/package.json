@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "Takomo CLI",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.4.0",
-    "@takomo/cli-io": "3.4.1",
+    "@takomo/cli-io": "3.4.2",
     "@takomo/config-repository-fs": "3.4.0",
     "@takomo/config-sets": "3.4.0",
     "@takomo/core": "3.4.0",
