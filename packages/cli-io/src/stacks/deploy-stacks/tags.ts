@@ -174,7 +174,7 @@ export const printTags = (
           return { order: "1", text: green(`create: ${count}`) }
         case "update":
           return { order: "2", text: yellow(`update: ${count}`) }
-        case "remove":
+        case "delete":
           return { order: "3", text: red(`remove: ${count}`) }
         default:
           throw new Error(`Unsupported tag operation: '${key}'`)
