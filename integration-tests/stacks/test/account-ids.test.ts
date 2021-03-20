@@ -1,7 +1,7 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-  withTestAccountIds,
+  withSingleAccountReservation,
 } from "@takomo/test-integration"
 import { TakomoError } from "@takomo/util"
 
@@ -10,7 +10,7 @@ const projectDir = "configs/account-ids"
 describe("Account ids", () => {
   test(
     "Deploy should fail when credentials do not belong to the account given in accountIds",
-    withTestAccountIds((accountId) =>
+    withSingleAccountReservation(({ accountId }) =>
       executeDeployStacksCommand({
         projectDir,
         var: ["OTHER_ACCOUNT_ID=123456789012"],
@@ -26,7 +26,7 @@ describe("Account ids", () => {
 
   test(
     "Successful deploy",
-    withTestAccountIds((accountId) =>
+    withSingleAccountReservation(({ accountId }) =>
       executeDeployStacksCommand({
         projectDir,
         var: [`OTHER_ACCOUNT_ID=${accountId}`],
@@ -48,7 +48,7 @@ describe("Account ids", () => {
 
   test(
     "Deploy again should fail when credentials do not belong to the account given in accountIds",
-    withTestAccountIds((accountId) =>
+    withSingleAccountReservation(({ accountId }) =>
       executeDeployStacksCommand({
         projectDir,
         var: ["OTHER_ACCOUNT_ID=666666666666"],
@@ -78,7 +78,7 @@ describe("Account ids", () => {
 
   test(
     "Undeploy should fail when credentials do not belong to the account given in accountIds",
-    withTestAccountIds((accountId) =>
+    withSingleAccountReservation(({ accountId }) =>
       executeUndeployStacksCommand({
         projectDir,
         var: ["OTHER_ACCOUNT_ID=123412341234"],
@@ -107,7 +107,7 @@ describe("Account ids", () => {
 
   test(
     "Successful undeploy",
-    withTestAccountIds((accountId) =>
+    withSingleAccountReservation(({ accountId }) =>
       executeUndeployStacksCommand({
         projectDir,
         var: [`OTHER_ACCOUNT_ID=${accountId}`],

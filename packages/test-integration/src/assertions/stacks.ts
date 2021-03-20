@@ -1,4 +1,4 @@
-import { StackName, StackStatus } from "@takomo/aws-model"
+import { AccountId, Region, StackName, StackStatus } from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
 import {
   ListStacksOutput,
@@ -6,6 +6,8 @@ import {
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
 import { StackPath, StackResult } from "@takomo/stacks-model"
+import { CloudFormation, Credentials } from "aws-sdk"
+import { aws } from "../aws-api"
 
 export interface ExpectStackResultProps {
   readonly stackPath: StackPath
@@ -51,6 +53,15 @@ export type ExpectStackCreateFailProps = Omit<
   "message"
 >
 
+export interface ExpectDeployedCfStackProps {
+  stackName: StackName
+  region: Region
+  accountId: AccountId
+  credentials: Credentials
+  roleName: string
+  expected: Partial<CloudFormation.Stack>
+}
+
 export interface StackResultsMatcher {
   expectStackResult: (props: ExpectStackResultProps) => StackResultsMatcher
   expectSuccessStackResult: (
@@ -80,6 +91,9 @@ export interface StackResultsMatcher {
   expectSkippedStackResult: (
     props: ExpectSkippedStackResultProps,
   ) => StackResultsMatcher
+  expectDeployedCfStack: (
+    props: ExpectDeployedCfStackProps,
+  ) => StackResultsMatcher
   assert: () => Promise<StacksOperationOutput>
 }
 
@@ -87,6 +101,7 @@ const createStackResultsMatcher = (
   executor: () => Promise<StacksOperationOutput>,
   outputAssertions: (output: StacksOperationOutput) => void,
   stackAssertions: ((stackResult: StackResult) => boolean)[] = [],
+  deployedCfStackAssertions: (() => Promise<() => void>)[] = [],
 ): StackResultsMatcher => {
   const expectStackResult = ({
     stackPath,
@@ -116,10 +131,12 @@ const createStackResultsMatcher = (
       return true
     }
 
-    return createStackResultsMatcher(executor, outputAssertions, [
-      ...stackAssertions,
-      stackResultMatcher,
-    ])
+    return createStackResultsMatcher(
+      executor,
+      outputAssertions,
+      [...stackAssertions, stackResultMatcher],
+      deployedCfStackAssertions,
+    )
   }
 
   const expectSuccessStackResult = (
@@ -241,6 +258,39 @@ const createStackResultsMatcher = (
       message: "Stack update failed",
     })
 
+  const expectDeployedCfStack = ({
+    stackName,
+    credentials,
+    region,
+    accountId,
+    roleName,
+    expected,
+  }: ExpectDeployedCfStackProps): StackResultsMatcher => {
+    const deployedStackMatcher = async (): Promise<() => void> => {
+      const stack: any = await aws.cloudFormation.describeStack({
+        stackName,
+        region,
+        credentials,
+        iamRoleArn: `arn:aws:iam::${accountId}:role/${roleName}`,
+      })
+
+      return () => {
+        for (const [key, value] of Object.entries(expected)) {
+          if (value !== undefined && value !== null) {
+            expect(stack[key]).toStrictEqual(value)
+          }
+        }
+      }
+    }
+
+    return createStackResultsMatcher(
+      executor,
+      outputAssertions,
+      stackAssertions,
+      [...deployedCfStackAssertions, deployedStackMatcher],
+    )
+  }
+
   const assert = async (): Promise<StacksOperationOutput> => {
     const output = await executor()
     outputAssertions(output)
@@ -250,6 +300,15 @@ const createStackResultsMatcher = (
         fail(`Unexpected result for stack with path: ${result.stack.path}`)
       }
     })
+
+    console.log("******************* " + deployedCfStackAssertions.length)
+
+    const deployedCfStackMatchers = await Promise.all(
+      deployedCfStackAssertions.map(async (r) => r()),
+    )
+
+    deployedCfStackMatchers.forEach((r) => r())
+
     return output
   }
 
@@ -265,6 +324,7 @@ const createStackResultsMatcher = (
     expectStackUpdateFail,
     expectStackDeleteSuccess,
     expectFailureStackResult,
+    expectDeployedCfStack,
   }
 }
 

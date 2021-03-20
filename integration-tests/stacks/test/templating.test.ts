@@ -82,16 +82,6 @@ describe("Templating", () => {
     expect(anotherNotDynamicStack.Description).toBe(
       "Another string with handlebars syntax {{ var.hello }}",
     )
-
-    // const sortedOutputs = outputs.sort((a, b) =>
-    //   a.OutputKey!.localeCompare(b.OutputKey!),
-    // )
-    //
-    // expect(sortedOutputs[0].OutputKey).toBe("HelloParam")
-    // expect(sortedOutputs[0].OutputValue).toBe("World")
-    //
-    // expect(sortedOutputs[1].OutputKey).toBe("NumberParam")
-    // expect(sortedOutputs[1].OutputValue).toBe("300")
   })
 
   test("Undeploy", () =>
