@@ -18,7 +18,7 @@ const getValueForLog = (
 export const prepareParameters: StackOperationStep<DetailedCurrentStackHolder> = async (
   state: DetailedCurrentStackHolder,
 ) => {
-  const { stack, ctx, logger, transitions } = state
+  const { stack, ctx, logger, transitions, variables } = state
   const logConfidentialInfo = ctx.confidentialValuesLoggingEnabled
 
   const parameters = await Promise.all(
@@ -28,6 +28,7 @@ export const prepareParameters: StackOperationStep<DetailedCurrentStackHolder> =
           ctx,
           stack,
           parameterName,
+          variables,
           listParameterIndex: 0,
           logger: logger.childLogger(stack.path),
         })

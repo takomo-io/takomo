@@ -1,0 +1,10 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+parameters:
+  Name:
+    resolver: hook-output
+    hook: read-file-contents
+hooks:
+  - name: read-file-contents
+    type: cmd
+    command: cat code.txt
