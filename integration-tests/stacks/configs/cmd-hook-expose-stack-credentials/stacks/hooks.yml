@@ -1,0 +1,7 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-central-1
+hooks:
+  - name: hook1
+    type: cmd
+    command: ./get-caller-identity.sh
+    exposeStackCredentials: {{ var.exposeStackCredentials }}
