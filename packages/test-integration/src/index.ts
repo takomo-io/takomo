@@ -33,7 +33,7 @@ export {
 export { TIMEOUT } from "./constants"
 export {
   TestReservation,
-  withTestAccountIds,
-  withTestReservation,
+  withReservation,
+  withSingleAccountReservation,
 } from "./reservations"
 export * from "./typings"

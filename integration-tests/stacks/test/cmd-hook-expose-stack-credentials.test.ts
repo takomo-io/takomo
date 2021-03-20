@@ -1,10 +1,13 @@
 import {
-  aws,
   executeDeployStacksCommand,
-  withTestReservation,
+  withSingleAccountReservation,
 } from "@takomo/test-integration"
 
 const projectDir = "configs/cmd-hook-expose-stack-credentials"
+const stack = {
+  stackName: "hooks",
+  stackPath: "/hooks.yml/eu-central-1",
+}
 
 describe("Cmd hook that exposes stack credentials", () => {
   test("Deploy without exposing credentials fails", () =>
@@ -14,8 +17,7 @@ describe("Cmd hook that exposes stack credentials", () => {
     })
       .expectCommandToFail("Failed")
       .expectFailureStackResult({
-        stackName: "hooks",
-        stackPath: "/hooks.yml/eu-central-1",
+        ...stack,
         errorMessage:
           "Command failed: ./get-caller-identity.sh\n" +
           'Unable to locate credentials. You can configure credentials by running "aws configure".\n',
@@ -25,8 +27,8 @@ describe("Cmd hook that exposes stack credentials", () => {
 
   test(
     "Deploy with exposing credentials succeeds",
-    withTestReservation(async ({ accountIds, credentials }) => {
-      await executeDeployStacksCommand({
+    withSingleAccountReservation(({ accountId, credentials }) =>
+      executeDeployStacksCommand({
         projectDir,
         var: ["exposeStackCredentials=true"],
       })
@@ -35,18 +37,17 @@ describe("Cmd hook that exposes stack credentials", () => {
           stackName: "hooks",
           stackPath: "/hooks.yml/eu-central-1",
         })
-        .assert()
-
-      const iamRoleArn = `arn:aws:iam::${accountIds[0]}:role/OrganizationAccountAccessRole`
-
-      const stack = await aws.cloudFormation.describeStack({
-        credentials,
-        iamRoleArn,
-        region: "eu-central-1",
-        stackName: "hooks",
-      })
-
-      expect(stack.Description).toBe(`hook1=${accountIds[0]}`)
-    }),
+        .expectDeployedCfStack({
+          ...stack,
+          credentials,
+          accountId,
+          region: "eu-central-1",
+          roleName: "OrganizationAccountAccessRole",
+          expected: {
+            Description: `hook1=${accountId}`,
+          },
+        })
+        .assert(),
+    ),
   )
 })
