@@ -5,6 +5,7 @@ import {
   HookOutput,
   HooksExecutionOutput,
   InternalStacksContext,
+  Stack,
   StackOperationVariables,
 } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
@@ -65,32 +66,31 @@ const createVariables = (): StackOperationVariables => ({
 
 const logger = createConsoleLogger({
   logLevel: "info",
-  concealConfidentialInformation: true,
 })
 
 const executor = (name: string, hook: Hook): HookExecutor =>
   new HookExecutor(
     {
-      operation: null,
-      status: null,
-      stage: null,
       name,
       type: "cmd",
     },
     hook,
   )
 
+const stack = mock<Stack>()
+
 const executeAllHooks = async (
   variables: StackOperationVariables,
   ...executors: HookExecutor[]
 ): Promise<HooksExecutionOutput> =>
-  executeHooks(ctx, variables, executors, "create", "before", logger)
+  executeHooks(ctx, stack, variables, executors, "create", "before", logger)
 
 describe("#executeHooks", () => {
   describe("when no hooks are given", () => {
     test("returns success", async () => {
       const result = await executeHooks(
         ctx,
+        stack,
         createVariables(),
         [],
         "create",
@@ -109,9 +109,6 @@ describe("#executeHooks", () => {
       const hook1 = new TestHook(true)
       const hook1Executor = new HookExecutor(
         {
-          operation: null,
-          status: null,
-          stage: null,
           name: "mock1",
           type: "cmd",
         },
@@ -120,6 +117,7 @@ describe("#executeHooks", () => {
 
       const result = await executeHooks(
         ctx,
+        stack,
         createVariables(),
         [hook1Executor],
         "create",
@@ -141,9 +139,6 @@ describe("#executeHooks", () => {
 
       const hook1Executor = new HookExecutor(
         {
-          operation: null,
-          status: null,
-          stage: null,
           name: "mock1",
           type: "cmd",
         },
@@ -152,6 +147,7 @@ describe("#executeHooks", () => {
 
       const result = await executeHooks(
         ctx,
+        stack,
         createVariables(),
         [hook1Executor],
         "create",
@@ -161,6 +157,7 @@ describe("#executeHooks", () => {
       expect(result).toStrictEqual({
         success: false,
         message: "Error error!",
+        error: undefined,
       })
 
       expect(hook1.executed).toBe(true)
@@ -174,7 +171,6 @@ describe("#executeHooks", () => {
       const hook1Executor = new HookExecutor(
         {
           operation: ["create"],
-          status: null,
           stage: ["before"],
           name: "mock1",
           type: "cmd",
@@ -187,7 +183,6 @@ describe("#executeHooks", () => {
       const hook2Executor = new HookExecutor(
         {
           operation: ["delete"],
-          status: null,
           stage: ["after"],
           name: "mock2",
           type: "cmd",
@@ -199,9 +194,6 @@ describe("#executeHooks", () => {
 
       const hook3Executor = new HookExecutor(
         {
-          operation: null,
-          status: null,
-          stage: null,
           name: "mock3",
           type: "cmd",
         },
@@ -210,6 +202,7 @@ describe("#executeHooks", () => {
 
       const result = await executeHooks(
         ctx,
+        stack,
         createVariables(),
         [hook1Executor, hook2Executor, hook3Executor],
         "delete",
@@ -237,9 +230,6 @@ describe("#executeHooks", () => {
 
       const hook1Executor = new HookExecutor(
         {
-          operation: null,
-          status: null,
-          stage: null,
           name: "mock1",
           type: "cmd",
         },
@@ -248,9 +238,6 @@ describe("#executeHooks", () => {
 
       const hook2Executor = new HookExecutor(
         {
-          operation: null,
-          status: null,
-          stage: null,
           name: "mock2",
           type: "cmd",
         },
@@ -259,9 +246,6 @@ describe("#executeHooks", () => {
 
       const hook3Executor = new HookExecutor(
         {
-          operation: null,
-          status: null,
-          stage: null,
           name: "mock3",
           type: "cmd",
         },
@@ -270,9 +254,6 @@ describe("#executeHooks", () => {
 
       const hook4Executor = new HookExecutor(
         {
-          operation: null,
-          status: null,
-          stage: null,
           name: "mock4",
           type: "cmd",
         },
@@ -283,6 +264,7 @@ describe("#executeHooks", () => {
 
       const result = await executeHooks(
         ctx,
+        stack,
         variables,
         [hook1Executor, hook2Executor, hook3Executor, hook4Executor],
         "delete",

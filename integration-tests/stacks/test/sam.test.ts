@@ -22,6 +22,7 @@ const deploy = (
     answers: {
       confirmStackDeploy: "CONTINUE",
       confirmDeploy: "CONTINUE_AND_REVIEW",
+      chooseCommandPath: "/",
     },
   })
 
@@ -30,7 +31,7 @@ const undeploy = (autoConfirmEnabled: boolean): StacksOperationOutputMatcher =>
     autoConfirmEnabled,
     projectDir: "configs/sam",
     var: [`timeout=1`],
-    answers: { confirmUndeploy: "CONTINUE" },
+    answers: { confirmUndeploy: "CONTINUE", chooseCommandPath: "/" },
   })
 
 const stackName = "sam"

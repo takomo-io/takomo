@@ -11,8 +11,9 @@ export const executeBeforeDeployHooks: StackOperationStep<DetailedCurrentStackHo
 ) => {
   const { stack, operationType, ctx, variables, logger, transitions } = state
 
-  const { success, message } = await executeHooks(
+  const { success, message, error } = await executeHooks(
     ctx,
+    stack,
     variables,
     stack.hooks,
     toHookOperation(operationType),
@@ -22,7 +23,12 @@ export const executeBeforeDeployHooks: StackOperationStep<DetailedCurrentStackHo
 
   if (!success) {
     logger.error(`Before deploy hooks failed with message: ${message}`)
-    return transitions.failStackOperation({ ...state, message, events: [] })
+    return transitions.failStackOperation({
+      ...state,
+      message,
+      error,
+      events: [],
+    })
   }
 
   return transitions.prepareParameters(state)

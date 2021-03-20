@@ -1,4 +1,4 @@
-import { Hook, HookConfig, HookInput, HookOutput } from "@takomo/stacks-model"
+import { Hook, HookInput, HookOutput } from "@takomo/stacks-model"
 import { deepCopy } from "@takomo/util"
 import { exec } from "child_process"
 import { promisify } from "util"
@@ -9,26 +9,25 @@ const execP = promisify(exec)
  * @hidden
  */
 export class CmdHook implements Hook {
-  readonly config: HookConfig
   readonly command: string
-  readonly cwd: string | null
+  readonly cwd?: string
+  readonly exposeStackCredentials: boolean
 
   constructor(config: any) {
-    this.config = config
-
     if (!config.command) {
       throw new Error("command is required property")
     }
 
     this.command = config.command
-    this.cwd = config.cwd || null
+    this.cwd = config.cwd
+    this.exposeStackCredentials = config.exposeStackCredentials ?? false
   }
 
   async execute(input: HookInput): Promise<HookOutput> {
+    const { ctx, status, operation, stage, logger, stack } = input
     try {
-      const { ctx, status, operation, stage } = input
+      const cwd = this.cwd ?? ctx.projectDir
 
-      const cwd = this.cwd || ctx.projectDir
       const env = {
         ...deepCopy(process.env),
         TKM_COMMAND_STAGE: stage,
@@ -39,9 +38,17 @@ export class CmdHook implements Hook {
         env.TKM_COMMAND_STATUS = status
       }
 
+      if (this.exposeStackCredentials) {
+        const credentials = await stack.credentialManager.getCredentials()
+        env.AWS_ACCESS_KEY_ID = credentials.accessKeyId
+        env.AWS_SECRET_ACCESS_KEY = credentials.secretAccessKey
+        env.AWS_SESSION_TOKEN = credentials.sessionToken
+        env.AWS_SECURITY_TOKEN = credentials.sessionToken
+      }
+
       const { stdout } = await execP(this.command, { cwd, env })
 
-      console.log(stdout)
+      logger.infoText("Command output:", stdout)
 
       return {
         message: "Success",
@@ -49,10 +56,11 @@ export class CmdHook implements Hook {
         value: stdout.trim(),
       }
     } catch (e) {
+      logger.infoText("Command output:", e.stdout)
       return {
-        message: e.message,
+        message: "Error",
         success: false,
-        value: null,
+        error: e,
       }
     }
   }

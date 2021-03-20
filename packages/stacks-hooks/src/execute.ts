@@ -5,6 +5,7 @@ import {
   HookStage,
   HookStatus,
   InternalStacksContext,
+  Stack,
   StackOperationVariables,
 } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
@@ -14,6 +15,7 @@ import { TkmLogger } from "@takomo/util"
  */
 export const executeHooks = async (
   ctx: InternalStacksContext,
+  stack: Stack,
   variables: StackOperationVariables,
   hooks: ReadonlyArray<HookExecutor>,
   operation: HookOperation,
@@ -27,10 +29,12 @@ export const executeHooks = async (
 
   const input = {
     ctx,
+    stack,
     variables,
     stage,
     operation,
     status,
+    logger,
   }
 
   const hooksToExecute = hooks.filter((h) => h.match(input))
@@ -55,6 +59,7 @@ export const executeHooks = async (
         return {
           message: output.message || "Failed",
           success: false,
+          error: output.error,
         }
       }
     } catch (e) {
@@ -65,6 +70,7 @@ export const executeHooks = async (
       return {
         message: e.message || "Error",
         success: false,
+        error: e,
       }
     }
   }

@@ -1,5 +1,7 @@
+import { TkmLogger } from "@takomo/util"
 import { StackOperationVariables } from "./command"
 import { StacksContext } from "./context"
+import { Stack } from "./stack"
 
 export type HookInitializer = (props: any) => Promise<Hook>
 
@@ -40,6 +42,11 @@ export interface HooksExecutionOutput {
    * Boolean describing if the action was successful.
    */
   readonly success: boolean
+
+  /**
+   * If an error was thrown during execution it will be stored here.
+   */
+  readonly error?: Error
 }
 
 /**
@@ -47,10 +54,12 @@ export interface HooksExecutionOutput {
  */
 export interface HookInput {
   readonly ctx: StacksContext
+  readonly stack: Stack
   readonly variables: StackOperationVariables
   readonly stage: HookStage
   readonly operation: HookOperation
   readonly status?: HookStatus
+  readonly logger: TkmLogger
 }
 
 /**
@@ -71,6 +80,11 @@ export interface HookOutputObject {
    * Optional return value.
    */
   readonly value?: any
+
+  /**
+   * Optional return value.
+   */
+  readonly error?: Error
 }
 
 /**

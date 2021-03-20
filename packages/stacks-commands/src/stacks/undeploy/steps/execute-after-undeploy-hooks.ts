@@ -10,8 +10,9 @@ export const executeAfterUndeployHooks: StackOperationStep<StackOperationResultH
 ) => {
   const { stack, ctx, variables, logger, transitions, events } = state
 
-  const { success, message } = await executeHooks(
+  const { success, message, error } = await executeHooks(
     ctx,
+    stack,
     variables,
     stack.hooks,
     "delete",
@@ -21,7 +22,7 @@ export const executeAfterUndeployHooks: StackOperationStep<StackOperationResultH
 
   if (!success) {
     logger.error(`After undeploy hooks failed with message: ${message}`)
-    return transitions.failStackOperation({ ...state, message, events })
+    return transitions.failStackOperation({ ...state, message, events, error })
   }
 
   return transitions.completeStackOperation(state)
