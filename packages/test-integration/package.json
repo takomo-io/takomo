@@ -43,7 +43,7 @@
     "@takomo/stacks-context": "3.5.0",
     "@takomo/stacks-model": "3.5.0",
     "@takomo/util": "3.4.0",
-    "aws-sdk": "2.745.0"
+    "aws-sdk": "2.868.0"
   },
   "engines": {
     "node": ">=14.4.0"
