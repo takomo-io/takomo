@@ -40,7 +40,7 @@
     "@takomo/stacks-context": "3.5.0",
     "@takomo/stacks-model": "3.5.0",
     "@takomo/util": "3.4.0",
-    "aws-sdk": "2.745.0",
+    "aws-sdk": "2.868.0",
     "cockatiel": "2.0.0",
     "joi": "17.2.1",
     "lodash.flatten": "4.4.0",

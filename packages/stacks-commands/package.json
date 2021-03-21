@@ -35,7 +35,7 @@
     "@takomo/stacks-model": "3.5.0",
     "@takomo/stacks-schema": "3.5.0",
     "@takomo/util": "3.4.0",
-    "aws-sdk": "2.745.0",
+    "aws-sdk": "2.868.0",
     "joi": "17.2.1",
     "lodash.uniq": "4.5.0",
     "uuid": "3.3.3"

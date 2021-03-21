@@ -39,7 +39,7 @@
     "@takomo/stacks-commands": "3.5.0",
     "@takomo/stacks-model": "3.5.0",
     "@takomo/util": "3.4.0",
-    "aws-sdk": "2.745.0",
+    "aws-sdk": "2.868.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.1.1",
