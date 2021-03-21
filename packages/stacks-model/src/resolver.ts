@@ -2,6 +2,7 @@ import { IamRoleArn, StackParameterKey } from "@takomo/aws-model"
 import { CommandContext } from "@takomo/core"
 import { TkmLogger } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
+import { StackOperationVariables } from "./command"
 import { GetterOrConst } from "./common"
 import { StacksContext } from "./context"
 import { Stack, StackPath } from "./stack"
@@ -78,6 +79,11 @@ export interface ResolverInput {
    * Logger instance.
    */
   readonly logger: TkmLogger
+
+  /**
+   * A mutable copy of the current command variables during the stack operation.
+   */
+  readonly variables: StackOperationVariables
 }
 
 /**

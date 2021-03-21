@@ -301,8 +301,6 @@ const createStackResultsMatcher = (
       }
     })
 
-    console.log("******************* " + deployedCfStackAssertions.length)
-
     const deployedCfStackMatchers = await Promise.all(
       deployedCfStackAssertions.map(async (r) => r()),
     )
