@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-model",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Takomo Stacks Model",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@takomo/aws-clients": "3.4.0",
     "@takomo/aws-model": "3.4.0",
-    "@takomo/core": "3.4.0",
+    "@takomo/core": "3.5.0",
     "@takomo/util": "3.4.0",
     "joi": "17.2.1"
   },

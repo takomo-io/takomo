@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/takomo-io/takomo/compare/v3.4.2...v3.5.0) (2021-03-21)
+
+
+### Features
+
+* **hooks:** add option to expose stack aws crendentials to cmd hook ([#178](https://github.com/takomo-io/takomo/issues/178)) ([497d328](https://github.com/takomo-io/takomo/commit/497d3288b25e5564a1edb89bf504ead97b6ddce1)), closes [#177](https://github.com/takomo-io/takomo/issues/177)
+
+
+
+
+
 # [3.4.0](https://github.com/takomo-io/takomo/compare/v3.3.0...v3.4.0) (2021-03-08)
 
 **Note:** Version bump only for package @takomo/stacks-hooks

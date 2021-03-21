@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/takomo-io/takomo/compare/v3.4.2...v3.5.0) (2021-03-21)
+
+
+### Features
+
+* **hooks:** add option to expose stack aws crendentials to cmd hook ([#178](https://github.com/takomo-io/takomo/issues/178)) ([497d328](https://github.com/takomo-io/takomo/commit/497d3288b25e5564a1edb89bf504ead97b6ddce1)), closes [#177](https://github.com/takomo-io/takomo/issues/177)
+* **resolvers:** implement file-contents parameter resolver ([#180](https://github.com/takomo-io/takomo/issues/180)) ([7cb54e2](https://github.com/takomo-io/takomo/commit/7cb54e223cbe3c848cee3a04d768ab566df8d602)), closes [#179](https://github.com/takomo-io/takomo/issues/179)
+
+
+
+
+
 ## [3.4.2](https://github.com/takomo-io/takomo/compare/v3.4.1...v3.4.2) (2021-03-18)
 
 **Note:** Version bump only for package @takomo/test-integration
