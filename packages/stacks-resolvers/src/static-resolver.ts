@@ -17,7 +17,7 @@ const schema = ({ joi, base }: ResolverProviderSchemaProps): ObjectSchema =>
     value: joi
       .alternatives()
       .try(
-        joi.string(),
+        joi.string().allow(""),
         joi.number(),
         joi.boolean(),
         joi

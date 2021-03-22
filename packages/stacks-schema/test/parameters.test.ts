@@ -15,6 +15,12 @@ describe("parameters validation succeeds", () => {
     })
   })
 
+  test("single parameter with static empty string value", () => {
+    assertNoValidationError({
+      ParamName: "",
+    })
+  })
+
   test("single parameter with static number value", () => {
     assertNoValidationError({
       NumberParam: 10000,
