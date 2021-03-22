@@ -121,7 +121,7 @@ export const createStacksSchemas = (
     Joi.object({ name: Joi.string().required() }).unknown(true),
   ]
 
-  const staticStringParameterValue = Joi.string().required()
+  const staticStringParameterValue = Joi.string().allow("").required()
   const staticNumberParameterValue = Joi.number().required()
   const staticBooleanParameterValue = Joi.boolean().required()
   const resolverParameterValue = Joi.object({

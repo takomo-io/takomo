@@ -27,6 +27,12 @@ describe("StaticResolverProvider", () => {
       })
     })
 
+    test("should succeed when a valid configuration with an empty value is given", () => {
+      expectNoValidationError(schema)({
+        value: "",
+      })
+    })
+
     test("should succeed when a valid configuration with a number value is given", () => {
       expectNoValidationError(schema)({
         value: 9999,
