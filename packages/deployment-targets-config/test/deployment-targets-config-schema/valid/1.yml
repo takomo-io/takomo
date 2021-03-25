@@ -1,0 +1,5 @@
+vars:
+  value: 1
+deploymentGroups:
+  group1: {}
+  group2: {}

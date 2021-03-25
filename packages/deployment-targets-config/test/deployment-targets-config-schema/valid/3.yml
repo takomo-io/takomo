@@ -1,0 +1,7 @@
+deploymentGroups:
+  group1: {}
+configSets:
+  example:
+    description: ok
+    commandPaths:
+      - /path

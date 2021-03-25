@@ -1,0 +1,9 @@
+deploymentGroups:
+  group1:
+    configSets: example
+configSets:
+  example:
+    description: it is ok
+    commandPaths:
+      - /first
+      - /another/cool

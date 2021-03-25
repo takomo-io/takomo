@@ -160,9 +160,9 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
         return result.value
       }
 
-      const details = result.error.messages.map((m) => `- ${m}`).join("\n")
+      const details = result.error.messages.map((m) => `  - ${m}`).join("\n")
       throw new TakomoError(
-        `Validation errors in deployment targets configuration file ${configFile}:\n${details}`,
+        `Validation errors in deployment targets configuration file ${configFile}:\n\n${details}`,
       )
     },
   }

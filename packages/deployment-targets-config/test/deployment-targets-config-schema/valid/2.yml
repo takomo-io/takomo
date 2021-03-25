@@ -1,0 +1,8 @@
+vars:
+  value: 1
+deploymentGroups:
+  group1: {}
+  group2:
+    vars:
+      value: 1
+      array: []

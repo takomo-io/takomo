@@ -1,0 +1,3 @@
+deploymentGroups:
+  group1:
+    deploymentRoleName: admin
