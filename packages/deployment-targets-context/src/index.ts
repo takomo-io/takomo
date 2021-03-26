@@ -58,7 +58,7 @@ export const createDeploymentTargetsContext = async ({
 
   return deepFreeze({
     ...ctx,
-    deploymentConfig: deploymentConfig,
+    deploymentConfig,
     rootDeploymentGroups,
     logger,
     credentialManager,

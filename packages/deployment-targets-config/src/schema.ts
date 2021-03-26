@@ -45,6 +45,7 @@ export const createDeploymentTargetsConfigSchema = (
     .required()
 
   return Joi.object({
+    vars,
     deploymentGroups,
     configSets,
   })

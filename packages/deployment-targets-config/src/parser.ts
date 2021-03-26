@@ -4,7 +4,7 @@ import {
   DeploymentGroupPath,
   DeploymentStatus,
 } from "@takomo/deployment-targets-model"
-import { deepFreeze, ValidationError } from "@takomo/util"
+import { collectFromHierarchy, deepFreeze, ValidationError } from "@takomo/util"
 import uniq from "lodash.uniq"
 import { err, ok, Result } from "neverthrow"
 import {
@@ -222,6 +222,30 @@ export const buildDeploymentConfig = (
     externalDeploymentTargets,
     record.deploymentGroups,
   )
+
+  if (externalDeploymentTargets.size > 0) {
+    const configuredStackGroupPaths = deploymentGroups
+      .map((rootGroup) => collectFromHierarchy(rootGroup, (g) => g.children))
+      .flat()
+      .map((g) => g.path)
+
+    const externalGroupsNotConfigured = Array.from(
+      externalDeploymentTargets.keys(),
+    ).filter((e) => !configuredStackGroupPaths.includes(e))
+
+    if (externalGroupsNotConfigured.length > 0) {
+      const details = externalGroupsNotConfigured.map(
+        (d) =>
+          `Deployment group '${d}' is not found from the configuration file but is referenced in externally configured targets.`,
+      )
+      return err(
+        new ValidationError(
+          "Validation errors in deployment configuration.",
+          details,
+        ),
+      )
+    }
+  }
 
   return ok(
     deepFreeze({
