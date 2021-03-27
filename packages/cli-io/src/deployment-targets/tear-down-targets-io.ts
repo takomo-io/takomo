@@ -9,6 +9,10 @@ export const createTearDownTargetsIO = (
     ...props,
     messages: {
       confirmHeader: "Targets tear down plan",
+      confirmDescription:
+        "A targets tear down plan has been created and is shown below. " +
+        "Targets will be teared down in the order they are listed.",
+      confirmSubheader: "Following targets will be teared down:",
       confirmQuestion: "Continue to tear down targets?",
       outputHeader: "Targets tear down summary",
       outputNoTargets: "No targets teared down",

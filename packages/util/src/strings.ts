@@ -195,3 +195,29 @@ export const table = (props: FormattedTableProps): FormattedTable => ({
     }
   },
 })
+
+/**
+ * @hidden
+ */
+export const splitTextInLines = (
+  lineWidth: number,
+  ...lines: ReadonlyArray<string>
+): ReadonlyArray<string> => {
+  const all = lines.join(" ")
+  if (all.length === 0) {
+    return [all]
+  }
+
+  const [firstWord, ...remainingWords] = all.split(/\s+/g)
+  return remainingWords
+    .reduce(
+      (collected, word) => {
+        const [currentLine, ...rest] = collected
+        return currentLine.length + word.length + 1 > lineWidth
+          ? [word, ...collected]
+          : [`${currentLine} ${word}`, ...rest]
+      },
+      [firstWord],
+    )
+    .reverse()
+}
