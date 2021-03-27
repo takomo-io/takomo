@@ -4,6 +4,7 @@ import {
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets-commands"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+import { splitTextInLines } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import { createBaseIO } from "../cli-io"
@@ -14,6 +15,8 @@ import { createUndeployStacksIO } from "../stacks/undeploy-stacks-io"
 
 export interface Messages {
   confirmHeader: string
+  confirmDescription: string
+  confirmSubheader: string
   confirmQuestion: string
   outputHeader: string
   outputNoTargets: string
@@ -97,7 +100,18 @@ export const createDeploymentTargetsOperationIO = (
   const confirmOperation = async (
     plan: TargetsExecutionPlan,
   ): Promise<boolean> => {
-    io.header({ text: messages.confirmHeader, marginTop: true })
+    io.subheader({ text: messages.confirmHeader, marginTop: true })
+    io.longMessage(
+      splitTextInLines(70, messages.confirmDescription),
+      false,
+      false,
+      0,
+    )
+
+    io.message({
+      text: messages.confirmSubheader,
+      marginTop: true,
+    })
 
     plan.groups.forEach((group) => {
       io.message({ text: `${group.path}:`, marginTop: true, indent: 2 })
@@ -107,7 +121,12 @@ export const createDeploymentTargetsOperationIO = (
           marginTop: true,
           indent: 4,
         })
-
+        if (target.accountId) {
+          io.message({
+            text: `account id:           ${target.description}`,
+            indent: 6,
+          })
+        }
         if (target.description) {
           io.message({
             text: `description:          ${target.description}`,

@@ -33,7 +33,7 @@ export interface BaseIO extends UserActions {
   header: (props: MessageProps) => void
   message: (props: MessageProps) => void
   longMessage: (
-    lines: string[],
+    lines: ReadonlyArray<string>,
     marginTop: boolean,
     marginBottom: boolean,
     indent: number,
@@ -96,7 +96,7 @@ export const createBaseIO = ({
       message({ text: bold("-".repeat(text.length)), indent, marginBottom })
     },
     longMessage: (
-      lines: string[],
+      lines: ReadonlyArray<string>,
       marginTop = false,
       marginBottom = false,
       indent = 0,
