@@ -1,0 +1,5 @@
+deploymentGroups:
+  group1:
+    targets:
+      - name: hello
+      - name: hello

@@ -7,6 +7,7 @@ import {
 import { collectFromHierarchy, deepFreeze, ValidationError } from "@takomo/util"
 import uniq from "lodash.uniq"
 import { err, ok, Result } from "neverthrow"
+import R from "ramda"
 import {
   DeploymentConfig,
   DeploymentGroupConfig,
@@ -200,6 +201,27 @@ export const buildDeploymentConfig = (
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   record: Record<string, unknown>,
 ): Result<DeploymentConfig, ValidationError> => {
+  const externalTargetNames = Array.from(externalDeploymentTargets.values())
+    .map((targets) => targets.map((t) => (t as any).name as string))
+    .flat()
+
+  const nonUniqueExternalTargets = externalTargetNames.filter(
+    (name) => externalTargetNames.filter(R.equals(name)).length > 1,
+  )
+
+  if (nonUniqueExternalTargets.length > 0) {
+    const details = nonUniqueExternalTargets.map(
+      (d) =>
+        `Deployment target '${d}' is specified more than once in the externally configured targets`,
+    )
+    return err(
+      new ValidationError(
+        "Validation errors in deployment configuration.",
+        details,
+      ),
+    )
+  }
+
   const { error } = createDeploymentTargetsConfigSchema({
     regions: ctx.regions,
   }).validate(record, {
@@ -223,11 +245,12 @@ export const buildDeploymentConfig = (
     record.deploymentGroups,
   )
 
+  const configuredStackGroups = deploymentGroups
+    .map((rootGroup) => collectFromHierarchy(rootGroup, (g) => g.children))
+    .flat()
+
   if (externalDeploymentTargets.size > 0) {
-    const configuredStackGroupPaths = deploymentGroups
-      .map((rootGroup) => collectFromHierarchy(rootGroup, (g) => g.children))
-      .flat()
-      .map((g) => g.path)
+    const configuredStackGroupPaths = configuredStackGroups.map(R.prop("path"))
 
     const externalGroupsNotConfigured = Array.from(
       externalDeploymentTargets.keys(),
@@ -245,6 +268,26 @@ export const buildDeploymentConfig = (
         ),
       )
     }
+  }
+
+  const targetNames = configuredStackGroups
+    .map((g) => g.targets.map(R.prop("name")))
+    .flat()
+
+  const nonUniqueTargets = targetNames.filter(
+    (targetName) => targetNames.filter(R.equals(targetName)).length > 1,
+  )
+
+  if (nonUniqueTargets.length > 0) {
+    const details = nonUniqueTargets.map(
+      (d) => `Target '${d}' is defined more than once in the configuration.`,
+    )
+    return err(
+      new ValidationError(
+        "Validation errors in deployment configuration.",
+        details,
+      ),
+    )
   }
 
   return ok(
