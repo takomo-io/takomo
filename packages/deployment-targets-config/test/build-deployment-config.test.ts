@@ -1,4 +1,6 @@
 import { CommandContext } from "@takomo/core"
+import { DeploymentTargetsSchemaRegistry } from "@takomo/deployment-targets-model"
+import { TkmLogger } from "@takomo/util"
 import { parseYaml } from "@takomo/util/src"
 import { readFileSync } from "fs"
 import { mock } from "jest-mock-extended"
@@ -15,25 +17,40 @@ const readConfig = (file: string) =>
     ).toString("utf-8"),
   )
 
+const logger = mock<TkmLogger>()
+const schemaRegistry = mock<DeploymentTargetsSchemaRegistry>()
+
 describe("#buildDeploymentConfig", () => {
-  test("Single deployment group", () => {
+  test("Single deployment group", async () => {
     const externalTargets = new Map()
     const record = readConfig("01.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
     if (result.isErr()) {
       fail("Expected result to be ok")
     }
     expect(result.value.deploymentGroups).toHaveLength(1)
   })
 
-  test("Single deployment group with single external deployment target", () => {
+  test("Single deployment group with single external deployment target", async () => {
     const target1 = {
       deploymentGroupPath: "group1",
       name: "target1",
     }
     const externalTargets = new Map([["group1", [target1]]])
     const record = readConfig("01.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
     if (result.isErr()) {
       fail("Expected result to be ok")
     }
@@ -43,7 +60,7 @@ describe("#buildDeploymentConfig", () => {
     expect(targets).toHaveLength(1)
   })
 
-  test("Single deployment group with multiple external deployment targets", () => {
+  test("Single deployment group with multiple external deployment targets", async () => {
     const target1 = {
       deploymentGroupPath: "group1",
       name: "target1",
@@ -58,7 +75,13 @@ describe("#buildDeploymentConfig", () => {
     }
     const externalTargets = new Map([["group1", [target1, target2, target3]]])
     const record = readConfig("01.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
     if (result.isErr()) {
       fail("Expected result to be ok")
     }
@@ -68,7 +91,7 @@ describe("#buildDeploymentConfig", () => {
     expect(targets).toHaveLength(3)
   })
 
-  test("Deployment groups with multiple external deployment targets", () => {
+  test("Deployment groups with multiple external deployment targets", async () => {
     const target1 = {
       deploymentGroupPath: "group1",
       name: "target1",
@@ -95,7 +118,13 @@ describe("#buildDeploymentConfig", () => {
       ["group3", [target4]],
     ])
     const record = readConfig("02.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
     if (result.isErr()) {
       fail("Expected result to be ok")
     }
@@ -120,7 +149,7 @@ describe("#buildDeploymentConfig", () => {
     expect(group3Targets[0].name).toStrictEqual("target4")
   })
 
-  test("An error is returned if external deployment targets refer to groups not found from the configuration", () => {
+  test("An error is returned if external deployment targets refer to groups not found from the configuration", async () => {
     const target1 = {
       deploymentGroupPath: "group1",
       name: "target1",
@@ -138,7 +167,13 @@ describe("#buildDeploymentConfig", () => {
       ["group3", [target2]],
     ])
     const record = readConfig("01.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
 
     if (result.isOk()) {
       fail("Expected result to be error")
@@ -153,7 +188,7 @@ describe("#buildDeploymentConfig", () => {
     )
   })
 
-  test("An error is returned if external deployment target names are not unique", () => {
+  test("An error is returned if external deployment target names are not unique", async () => {
     const target1 = {
       deploymentGroupPath: "group1",
       name: "target1",
@@ -164,7 +199,13 @@ describe("#buildDeploymentConfig", () => {
     }
     const externalTargets = new Map([["group1", [target1, target2]]])
     const record = readConfig("01.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
 
     if (result.isOk()) {
       fail("Expected result to be error")
@@ -179,10 +220,16 @@ describe("#buildDeploymentConfig", () => {
     )
   })
 
-  test("An error is returned if target names are not unique", () => {
+  test("An error is returned if target names are not unique", async () => {
     const externalTargets = new Map()
     const record = readConfig("03.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
 
     if (result.isOk()) {
       fail("Expected result to be error")
@@ -197,14 +244,20 @@ describe("#buildDeploymentConfig", () => {
     )
   })
 
-  test("An error is returned if target names are not unique #2", () => {
+  test("An error is returned if target names are not unique #2", async () => {
     const target1 = {
       deploymentGroupPath: "group1",
       name: "foobar",
     }
     const externalTargets = new Map([["group1", [target1]]])
     const record = readConfig("04.yml")
-    const result = buildDeploymentConfig(ctx, externalTargets, record)
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      externalTargets,
+      record,
+    )
 
     if (result.isOk()) {
       fail("Expected result to be error")

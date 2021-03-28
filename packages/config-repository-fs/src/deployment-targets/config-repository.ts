@@ -4,13 +4,17 @@ import {
   DeploymentConfig,
 } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsConfigRepository } from "@takomo/deployment-targets-context"
-import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
+import {
+  createDeploymentTargetsSchemaRegistry,
+  DeploymentGroupPath,
+} from "@takomo/deployment-targets-model"
 import {
   createDeploymentTargetConfigItemSchema,
   createDeploymentTargetRepositoryRegistry,
   createFileSystemDeploymentTargetRepositoryProvider,
   DeploymentTargetRepository,
 } from "@takomo/deployment-targets-repository"
+import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   dirExists,
   FilePath,
@@ -123,6 +127,16 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
     ctx,
   } = props
 
+  const hookInitializers = new Map()
+  const resolverRegistry = new ResolverRegistry(logger)
+  const schemaRegistry = createDeploymentTargetsSchemaRegistry(logger)
+
+  await stacksConfigRepository.loadExtensions(
+    resolverRegistry,
+    hookInitializers,
+    schemaRegistry,
+  )
+
   return {
     ...stacksConfigRepository,
     loadDeploymentConfigFileContents: async (): Promise<DeploymentConfig> => {
@@ -151,8 +165,10 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
         stacksConfigRepository.templateEngine,
       )
 
-      const result = buildDeploymentConfig(
+      const result = await buildDeploymentConfig(
         ctx,
+        logger,
+        schemaRegistry,
         externalDeploymentTargets,
         parsedFile,
       )

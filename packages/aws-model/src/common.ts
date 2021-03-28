@@ -50,6 +50,7 @@ export type UserId = string
  * IAM role arn
  */
 export type IamRoleArn = string
+export type IamRoleName = string
 
 export type AccountAlias = string
 export type AccountEmail = string

@@ -1,10 +1,17 @@
 import { ConfigSetName, parseConfigSets } from "@takomo/config-sets"
-import { CommandContext, parseCommandRole, parseVars } from "@takomo/core"
+import { CommandContext, parseCommandRole, parseVars, Vars } from "@takomo/core"
 import {
   DeploymentGroupPath,
   DeploymentStatus,
+  DeploymentTargetsSchemaRegistry,
 } from "@takomo/deployment-targets-model"
-import { collectFromHierarchy, deepFreeze, ValidationError } from "@takomo/util"
+import {
+  collectFromHierarchy,
+  deepCopy,
+  deepFreeze,
+  TkmLogger,
+  ValidationError,
+} from "@takomo/util"
 import uniq from "lodash.uniq"
 import { err, ok, Result } from "neverthrow"
 import R from "ramda"
@@ -12,6 +19,7 @@ import {
   DeploymentConfig,
   DeploymentGroupConfig,
   DeploymentTargetConfig,
+  SchemaConfig,
 } from "./model"
 import { createDeploymentTargetsConfigSchema } from "./schema"
 
@@ -30,6 +38,30 @@ const parseDeploymentStatus = (value: any): DeploymentStatus => {
   }
 }
 
+const parseTargetSchema = (value: unknown): SchemaConfig => {
+  if (typeof value === "string") {
+    return {
+      name: value,
+    }
+  }
+
+  if (typeof value === "object") {
+    return value as SchemaConfig
+  }
+
+  throw new Error(`Expected schema to be of type string or object`)
+}
+
+const parseTargetSchemas = (value: unknown): ReadonlyArray<SchemaConfig> => {
+  if (value === undefined || value === null) {
+    return []
+  }
+
+  return Array.isArray(value)
+    ? value.map(parseTargetSchema)
+    : [parseTargetSchema(value)]
+}
+
 const parseConfigSetNames = (value: any): ConfigSetName[] => {
   if (value === null || value === undefined) {
     return []
@@ -44,8 +76,9 @@ const parseConfigSetNames = (value: any): ConfigSetName[] => {
 
 const parseDeploymentTarget = (
   value: any,
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
+  inheritedVars: Vars,
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
 ): DeploymentTargetConfig => {
   const configuredConfigSets = parseConfigSetNames(value.configSets)
   const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
@@ -58,9 +91,12 @@ const parseDeploymentTarget = (
     ...configuredBootstrapConfigSets,
   ])
 
+  const vars = deepCopy({ ...inheritedVars, ...parseVars(value.vars) })
+
   return {
     configSets,
     bootstrapConfigSets,
+    vars,
     name: value.name,
     description: value.description,
     accountId: value.accountId,
@@ -69,12 +105,12 @@ const parseDeploymentTarget = (
     deploymentRoleName: value.deploymentRoleName,
     bootstrapRoleName: value.bootstrapRoleName,
     status: parseDeploymentStatus(value.status),
-    vars: parseVars(value.vars),
   }
 }
 
 const parseDeploymentTargets = (
   value: any,
+  inheritedVars: Vars,
   inheritedConfigSets: ConfigSetName[],
   inheritedBootstrapConfigSets: ConfigSetName[],
 ): DeploymentTargetConfig[] => {
@@ -85,6 +121,7 @@ const parseDeploymentTargets = (
   return value.map((target: any) =>
     parseDeploymentTarget(
       target,
+      inheritedVars,
       inheritedConfigSets,
       inheritedBootstrapConfigSets,
     ),
@@ -112,8 +149,9 @@ const parseDeploymentGroup = (
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   groupPath: DeploymentGroupPath,
   config: any,
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
+  inheritedVars: Vars,
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
 ): DeploymentGroupConfig => {
   const group = config[groupPath]
   const groupPathDepth = groupPath.split("/").length
@@ -142,6 +180,9 @@ const parseDeploymentGroup = (
     ...configuredBootstrapConfigSets,
   ])
 
+  const targetsSchema = parseTargetSchemas(group?.targetsSchema)
+  const vars = deepCopy({ ...inheritedVars, ...parseVars(group?.vars) })
+
   const children = [
     ...missingDirectChildPaths,
     ...directChildPaths,
@@ -150,6 +191,7 @@ const parseDeploymentGroup = (
       externalDeploymentTargets,
       childPath,
       config,
+      vars,
       configSets,
       bootstrapConfigSets,
     ),
@@ -160,6 +202,7 @@ const parseDeploymentGroup = (
 
   const targets = parseDeploymentTargets(
     allTargets,
+    vars,
     configSets,
     bootstrapConfigSets,
   )
@@ -171,6 +214,8 @@ const parseDeploymentGroup = (
     targets,
     configSets,
     bootstrapConfigSets,
+    targetsSchema,
+    vars,
     deploymentRole: parseCommandRole(group?.deploymentRole),
     bootstrapRole: parseCommandRole(group?.bootstrapRole),
     deploymentRoleName: group?.deploymentRoleName,
@@ -178,7 +223,6 @@ const parseDeploymentGroup = (
     path: groupPath,
     description: group?.description,
     priority: group?.priority || 0,
-    vars: parseVars(group?.vars),
     status: parseDeploymentStatus(group?.status),
   }
 }
@@ -186,21 +230,31 @@ const parseDeploymentGroup = (
 const parseDeploymentGroups = (
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   value: any,
+  inheritedVars: Vars,
 ): DeploymentGroupConfig[] => {
   if (value === null || value === undefined) {
     return []
   }
 
   return Object.keys(value).map((rootPath) =>
-    parseDeploymentGroup(externalDeploymentTargets, rootPath, value, [], []),
+    parseDeploymentGroup(
+      externalDeploymentTargets,
+      rootPath,
+      value,
+      inheritedVars,
+      [],
+      [],
+    ),
   )
 }
 
-export const buildDeploymentConfig = (
+export const buildDeploymentConfig = async (
   ctx: CommandContext,
+  logger: TkmLogger,
+  schemaRegistry: DeploymentTargetsSchemaRegistry,
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   record: Record<string, unknown>,
-): Result<DeploymentConfig, ValidationError> => {
+): Promise<Result<DeploymentConfig, ValidationError>> => {
   const externalTargetNames = Array.from(externalDeploymentTargets.values())
     .map((targets) => targets.map((t) => (t as any).name as string))
     .flat()
@@ -239,10 +293,12 @@ export const buildDeploymentConfig = (
   }
 
   const vars = parseVars(record.vars)
+  const targetsSchema = parseTargetSchemas(record.targetsSchema)
   const configSets = parseConfigSets(record.configSets)
   const deploymentGroups = parseDeploymentGroups(
     externalDeploymentTargets,
     record.deploymentGroups,
+    vars,
   )
 
   const configuredStackGroups = deploymentGroups
@@ -290,11 +346,94 @@ export const buildDeploymentConfig = (
     )
   }
 
+  const validationError = await validateDeploymentTargets(
+    ctx,
+    schemaRegistry,
+    targetsSchema,
+    deploymentGroups,
+  )
+
+  if (validationError) {
+    return err(validationError)
+  }
+
   return ok(
     deepFreeze({
       vars,
       configSets,
       deploymentGroups,
+      targetsSchema,
     }),
   )
+}
+
+const validateDeploymentTargets = async (
+  ctx: CommandContext,
+  schemaRegistry: DeploymentTargetsSchemaRegistry,
+  targetsSchema: ReadonlyArray<SchemaConfig>,
+  deploymentGroups: ReadonlyArray<DeploymentGroupConfig>,
+): Promise<ValidationError | undefined> => {
+  const allTargets = deploymentGroups
+    .reduce((collected, group) => {
+      return [...collected, ...collectFromHierarchy(group, (g) => g.children)]
+    }, new Array<DeploymentGroupConfig>())
+    .map((group) =>
+      group.targets.reduce((collected, target) => {
+        return { ...collected, [`${group.path}/${target.name}`]: target }
+      }, {}),
+    )
+    .flat()
+    .reduce((collected, targets) => {
+      return {
+        ...collected,
+        ...targets,
+      }
+    }, {})
+
+  for (const schemaConfig of targetsSchema) {
+    const schema = await schemaRegistry.initDeploymentTargetsSchema(
+      ctx,
+      "root",
+      schemaConfig.name,
+      schemaConfig,
+    )
+
+    const { error } = schema.validate(allTargets, { abortEarly: false })
+    if (error) {
+      const details = error.details.map(R.prop("message"))
+      return new ValidationError(
+        "Validation errors in deployment configuration",
+        details,
+      )
+    }
+  }
+
+  for (const group of deploymentGroups) {
+    const targets = Array.from(Object.entries(allTargets)).reduce(
+      (collected, [targetPath, target]) => {
+        return targetPath.startsWith(`${group.path}/`)
+          ? { ...collected, [targetPath]: target }
+          : collected
+      },
+      {},
+    )
+
+    for (const schemaConfig of group.targetsSchema) {
+      const schema = await schemaRegistry.initDeploymentTargetsSchema(
+        ctx,
+        group.path,
+        schemaConfig.name,
+        schemaConfig,
+      )
+
+      const { error } = schema.validate(targets, { abortEarly: false })
+      if (error) {
+        const details = error.details.map(R.prop("message"))
+        return new ValidationError(
+          "Validation errors in deployment configuration",
+          details,
+        )
+      }
+    }
+  }
 }

@@ -6,6 +6,7 @@ export * from "./hook"
 export * from "./resolver"
 export {
   createSchemaRegistry,
+  defaultSchema,
   InitSchemaProps,
   SchemaName,
   SchemaProps,

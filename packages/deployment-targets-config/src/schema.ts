@@ -23,9 +23,15 @@ export const createDeploymentTargetsConfigSchema = (
 
   const targets = Joi.array().items(deploymentTarget)
 
+  const targetsSchema = [
+    Joi.string(),
+    Joi.object({ name: Joi.string().required() }).unknown(true),
+  ]
+
   const deploymentGroup = Joi.object({
     vars,
     targets,
+    targetsSchema,
     description: Joi.string(),
     deploymentRole: iamRoleArn,
     deploymentRoleName: iamRoleName,
@@ -45,6 +51,7 @@ export const createDeploymentTargetsConfigSchema = (
     .required()
 
   return Joi.object({
+    targetsSchema,
     vars,
     deploymentGroups,
     configSets,

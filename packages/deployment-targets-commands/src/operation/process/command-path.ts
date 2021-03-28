@@ -219,7 +219,7 @@ export const processCommandPath = async (
   }
 
   const mergedVars = deepCopy(variables.var)
-  merge(mergedVars, deploymentConfig.vars, group.vars, target.vars)
+  merge(mergedVars, target.vars)
 
   const commandPathVariables = {
     env: variables.env,
