@@ -1,0 +1,4 @@
+regions: eu-north-1
+template: logs.yml
+parameters:
+  LogGroupName: {{ var.logGroupName }}
