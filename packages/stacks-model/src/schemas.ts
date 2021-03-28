@@ -59,6 +59,7 @@ export interface SchemaRegistry {
     pathToResolverFile: FilePath,
   ) => Promise<void>
   readonly hasProvider: (name: SchemaName) => boolean
+  readonly getProvider: (name: SchemaName) => SchemaProvider | undefined
 }
 
 /**
@@ -74,6 +75,10 @@ export const defaultSchema = (schemaName: SchemaName): Joi.ObjectSchema =>
  */
 export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
   const schemas = new Map<SchemaName, SchemaProvider>()
+
+  const getProvider = (name: SchemaName): SchemaProvider | undefined =>
+    schemas.get(name)
+
   return deepFreeze({
     registerProviderFromFile: async (
       pathToProviderFile: FilePath,
@@ -125,6 +130,8 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
 
       schemas.set(name, provider)
     },
+
+    getProvider,
 
     initParameterSchema: async (
       ctx: CommandContext,

@@ -1,4 +1,4 @@
-import { AccountId } from "@takomo/aws-model"
+import { AccountId, IamRoleName } from "@takomo/aws-model"
 import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
 import { CommandRole, Vars } from "@takomo/core"
 import {
@@ -8,6 +8,11 @@ import {
   DeploymentTargetName,
 } from "@takomo/deployment-targets-model"
 
+export interface SchemaConfig {
+  readonly name: string
+  readonly [key: string]: unknown
+}
+
 export interface DeploymentTargetConfig {
   readonly status: DeploymentStatus
   readonly name: DeploymentTargetName
@@ -16,9 +21,9 @@ export interface DeploymentTargetConfig {
   readonly configSets: ReadonlyArray<ConfigSetName>
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
   readonly deploymentRole?: CommandRole
-  readonly deploymentRoleName?: string
+  readonly deploymentRoleName?: IamRoleName
   readonly bootstrapRole?: CommandRole
-  readonly bootstrapRoleName?: string
+  readonly bootstrapRoleName?: IamRoleName
   readonly accountId?: AccountId
 }
 
@@ -30,16 +35,18 @@ export interface DeploymentGroupConfig {
   readonly priority: number
   readonly status: DeploymentStatus
   readonly vars: Vars
+  readonly targetsSchema: ReadonlyArray<SchemaConfig>
   readonly configSets: ReadonlyArray<ConfigSetName>
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
   readonly children: ReadonlyArray<DeploymentGroupConfig>
   readonly deploymentRole?: CommandRole
-  readonly deploymentRoleName?: string
+  readonly deploymentRoleName?: IamRoleName
   readonly bootstrapRole?: CommandRole
-  readonly bootstrapRoleName?: string
+  readonly bootstrapRoleName?: IamRoleName
 }
 
 export interface DeploymentConfig {
+  readonly targetsSchema: ReadonlyArray<SchemaConfig>
   readonly configSets: ReadonlyArray<ConfigSet>
   readonly vars: Vars
   readonly deploymentGroups: ReadonlyArray<DeploymentGroupConfig>

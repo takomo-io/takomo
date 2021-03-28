@@ -60,6 +60,7 @@ export {
   Arn,
   ClientRequestToken,
   IamRoleArn,
+  IamRoleName,
   Region,
   ServicePrincipal,
   Tag,
