@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/takomo-io/takomo/compare/v3.5.1...v3.6.0) (2021-03-28)
+
+
+### Features
+
+* **deployment targets:** add support to configure validation schemas for deployment targets ([#190](https://github.com/takomo-io/takomo/issues/190)) ([a8dbbd9](https://github.com/takomo-io/takomo/commit/a8dbbd9186f6a19077d443ff7b5ac2da4ae5a6e5)), closes [#188](https://github.com/takomo-io/takomo/issues/188)
+
+
+
+
+
 # [3.1.0](https://github.com/takomo-io/takomo/compare/v3.0.1...v3.1.0) (2021-02-14)
 
 

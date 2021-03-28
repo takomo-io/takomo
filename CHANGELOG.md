@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/takomo-io/takomo/compare/v3.5.1...v3.6.0) (2021-03-28)
+
+
+### Bug Fixes
+
+* **deployment-targets:** add missing vars to deployment targets config schema ([#187](https://github.com/takomo-io/takomo/issues/187)) ([6b3a387](https://github.com/takomo-io/takomo/commit/6b3a38705b6b9446581d66d188ba8a423f41089b))
+
+
+### Features
+
+* enable support for source maps ([#193](https://github.com/takomo-io/takomo/issues/193)) ([24a1688](https://github.com/takomo-io/takomo/commit/24a1688a78ad8708f1e264431abe2e2f7266020e)), closes [#191](https://github.com/takomo-io/takomo/issues/191)
+* **deployment targets:** add more validation to deployment targets ([7b57ca7](https://github.com/takomo-io/takomo/commit/7b57ca76e6aa67de23cee1dded88c7fcf0eb4eae))
+* **deployment targets:** add support to configure validation schemas for deployment targets ([#190](https://github.com/takomo-io/takomo/issues/190)) ([a8dbbd9](https://github.com/takomo-io/takomo/commit/a8dbbd9186f6a19077d443ff7b5ac2da4ae5a6e5)), closes [#188](https://github.com/takomo-io/takomo/issues/188)
+* **deployment targets:** improve deployment targets plan ([#189](https://github.com/takomo-io/takomo/issues/189)) ([1f62615](https://github.com/takomo-io/takomo/commit/1f6261565b389345584b7efc1e3c5fea85fb1723))
+
+
+
+
+
 ## [3.5.1](https://github.com/takomo-io/takomo/compare/v3.5.0...v3.5.1) (2021-03-22)
 
 

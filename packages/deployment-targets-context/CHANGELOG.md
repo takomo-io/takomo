@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/takomo-io/takomo/compare/v3.5.1...v3.6.0) (2021-03-28)
+
+
+### Bug Fixes
+
+* **deployment-targets:** add missing vars to deployment targets config schema ([#187](https://github.com/takomo-io/takomo/issues/187)) ([6b3a387](https://github.com/takomo-io/takomo/commit/6b3a38705b6b9446581d66d188ba8a423f41089b))
+
+
+
+
+
 ## [3.5.1](https://github.com/takomo-io/takomo/compare/v3.5.0...v3.5.1) (2021-03-22)
 
 **Note:** Version bump only for package @takomo/deployment-targets-context

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/takomo-io/takomo/compare/v3.5.1...v3.6.0) (2021-03-28)
+
+
+### Features
+
+* enable support for source maps ([#193](https://github.com/takomo-io/takomo/issues/193)) ([24a1688](https://github.com/takomo-io/takomo/commit/24a1688a78ad8708f1e264431abe2e2f7266020e)), closes [#191](https://github.com/takomo-io/takomo/issues/191)
+
+
+
+
+
 ## [3.5.1](https://github.com/takomo-io/takomo/compare/v3.5.0...v3.5.1) (2021-03-22)
 
 **Note:** Version bump only for package takomo

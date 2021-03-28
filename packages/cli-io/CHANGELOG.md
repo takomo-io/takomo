@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/takomo-io/takomo/compare/v3.5.1...v3.6.0) (2021-03-28)
+
+
+### Features
+
+* **deployment targets:** improve deployment targets plan ([#189](https://github.com/takomo-io/takomo/issues/189)) ([1f62615](https://github.com/takomo-io/takomo/commit/1f6261565b389345584b7efc1e3c5fea85fb1723))
+
+
+
+
+
 ## [3.5.1](https://github.com/takomo-io/takomo/compare/v3.5.0...v3.5.1) (2021-03-22)
 
 **Note:** Version bump only for package @takomo/cli-io
