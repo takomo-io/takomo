@@ -23,6 +23,22 @@ import {
 } from "./model"
 import { createDeploymentTargetsConfigSchema } from "./schema"
 
+export const fillMissingDeploymentGroups = (
+  value: Record<string, unknown>,
+): Record<string, unknown> => {
+  for (const key of Object.keys(value)) {
+    const parts = key.split("/")
+    for (let i = 1; i <= parts.length; i++) {
+      const subKey = parts.slice(0, i).join("/")
+      if (!(subKey in value)) {
+        value[subKey] = {}
+      }
+    }
+  }
+
+  return value
+}
+
 const parseDeploymentStatus = (value: any): DeploymentStatus => {
   if (!value) {
     return "active"
@@ -128,23 +144,6 @@ const parseDeploymentTargets = (
   )
 }
 
-const findMissingDirectChildrenPaths = (
-  childPaths: string[],
-  depth: number,
-): string[] => {
-  return uniq(
-    childPaths
-      .filter((key) => key.split("/").length >= depth + 2)
-      .map((key) =>
-        key
-          .split("/")
-          .slice(0, depth + 1)
-          .join("/"),
-      )
-      .filter((key) => !childPaths.includes(key)),
-  )
-}
-
 const parseDeploymentGroup = (
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   groupPath: DeploymentGroupPath,
@@ -164,11 +163,6 @@ const parseDeploymentGroup = (
     (key) => key.split("/").length === groupPathDepth + 1,
   )
 
-  const missingDirectChildPaths = findMissingDirectChildrenPaths(
-    childPaths,
-    groupPathDepth,
-  )
-
   const configuredConfigSets = parseConfigSetNames(group?.configSets)
   const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
 
@@ -183,10 +177,7 @@ const parseDeploymentGroup = (
   const targetsSchema = parseTargetSchemas(group?.targetsSchema)
   const vars = deepCopy({ ...inheritedVars, ...parseVars(group?.vars) })
 
-  const children = [
-    ...missingDirectChildPaths,
-    ...directChildPaths,
-  ].map((childPath) =>
+  const children = directChildPaths.map((childPath) =>
     parseDeploymentGroup(
       externalDeploymentTargets,
       childPath,
@@ -222,7 +213,7 @@ const parseDeploymentGroup = (
     bootstrapRoleName: group?.bootstrapRoleName,
     path: groupPath,
     description: group?.description,
-    priority: group?.priority || 0,
+    priority: group?.priority ?? 0,
     status: parseDeploymentStatus(group?.status),
   }
 }
@@ -236,11 +227,16 @@ const parseDeploymentGroups = (
     return []
   }
 
-  return Object.keys(value).map((rootPath) =>
+  const filledValue = fillMissingDeploymentGroups(value)
+  const rootGroupPaths = uniq(
+    Object.keys(filledValue).map((key) => key.split("/")[0]),
+  )
+
+  return rootGroupPaths.map((rootPath) =>
     parseDeploymentGroup(
       externalDeploymentTargets,
       rootPath,
-      value,
+      filledValue,
       inheritedVars,
       [],
       [],

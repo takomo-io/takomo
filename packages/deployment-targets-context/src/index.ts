@@ -11,11 +11,10 @@ import {
 import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { collectFromHierarchy, deepFreeze, TkmLogger } from "@takomo/util"
-import flatten from "lodash.flatten"
 
 export interface DeploymentTargetsConfigRepository
   extends StacksConfigRepository {
-  loadDeploymentConfigFileContents: () => Promise<DeploymentConfig>
+  readonly loadDeploymentConfigFileContents: () => Promise<DeploymentConfig>
 }
 
 export interface DeploymentTargetsContext extends InternalCommandContext {
@@ -48,11 +47,9 @@ export const createDeploymentTargetsContext = async ({
 
   const deploymentConfig = await configRepository.loadDeploymentConfigFileContents()
 
-  const deploymentGroups = flatten(
-    deploymentConfig.deploymentGroups.map((group) =>
-      collectFromHierarchy(group, (o) => o.children),
-    ),
-  )
+  const deploymentGroups = deploymentConfig.deploymentGroups
+    .map((group) => collectFromHierarchy(group, (o) => o.children))
+    .flat()
 
   const rootDeploymentGroups = deploymentConfig.deploymentGroups
 
@@ -77,7 +74,7 @@ export const createDeploymentTargetsContext = async ({
     },
 
     hasDeploymentGroup: (path: DeploymentGroupPath): boolean =>
-      deploymentGroups.find((group) => group.path === path) !== undefined,
+      deploymentGroups.some((group) => group.path === path),
 
     getConfigSet: (name: ConfigSetName): ConfigSet => {
       const configSet = deploymentConfig.configSets.find((r) => r.name === name)

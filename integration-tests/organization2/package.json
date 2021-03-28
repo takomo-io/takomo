@@ -17,7 +17,7 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript",
-    "integration-test": "jest test --passWithNoTests --runInBand --ci"
+    "integration-test": "jest test --passWithNoTests --runInBand --ci --verbose"
   },
   "dependencies": {
     "@takomo/organization-commands": "3.5.1",
