@@ -61,7 +61,10 @@ const describeStack = async ({
   iamRoleArn,
   region,
 }: DescribeStackArgs): Promise<CloudFormation.Stack> => {
-  const cp = await initDefaultCredentialManager(credentials)
+  const cp = await initDefaultCredentialManager(
+    () => Promise.resolve(""),
+    credentials,
+  )
   const stackCp = iamRoleArn
     ? await cp.createCredentialManagerForRole(iamRoleArn)
     : cp

@@ -1,3 +1,4 @@
+import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import {
   AccountAlias,
   AccountId,
@@ -104,8 +105,14 @@ export const executeCreateAccountAliasCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return createAccountAliasCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestCreateAccountAliasIO(logger),
       input: {
         accountId: props.accountId,
@@ -138,8 +145,14 @@ export const executeDeleteAccountAliasCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return deleteAccountAliasCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestDeleteAccountAliasIO(logger),
       input: {
         accountId: props.accountId,
@@ -167,8 +180,14 @@ export const executeDescribeOrganizationCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return describeOrganizationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestDescribeOrganizationIO(logger),
       input: {
         timer: createTimer("total"),
@@ -199,8 +218,14 @@ export const executeCreateOrganizationCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return createOrganizationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestCreateOrganizationIO(logger),
       input: {
         timer: createTimer("total"),
@@ -228,8 +253,14 @@ export const executeListAccountsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return listAccountsCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestListAccountsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -262,8 +293,14 @@ export const executeDeployAccountsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return accountsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestDeployAccountsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -294,8 +331,14 @@ export const executeUndeployAccountsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return accountsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestUndeployAccountsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -326,8 +369,14 @@ export const executeBootstrapAccountsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return accountsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestBootstrapAccountsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -358,8 +407,14 @@ export const executeTeardownAccountsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return accountsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestTeardownAccountsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -390,8 +445,14 @@ export const executeDeployOrganizationCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return deployOrganizationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestDeployOrganizationIO(logger),
       input: {
         timer: createTimer("total"),

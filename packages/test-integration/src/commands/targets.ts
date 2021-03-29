@@ -1,3 +1,4 @@
+import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { CliCommandContext } from "@takomo/cli"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { InternalCommandContext } from "@takomo/core"
@@ -87,8 +88,14 @@ export const executeDeployTargetsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return deploymentTargetsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestDeployTargetsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -120,8 +127,14 @@ export const executeUndeployTargetsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return deploymentTargetsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestUndeployTargetsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -153,8 +166,14 @@ export const executeBootstrapTargetsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return deploymentTargetsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestBootstrapTargetsIO(logger),
       input: {
         timer: createTimer("total"),
@@ -186,8 +205,14 @@ export const executeTeardownTargetsCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return deploymentTargetsOperationCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestTeardownTargetsIO(logger),
       input: {
         timer: createTimer("total"),

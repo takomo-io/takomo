@@ -141,13 +141,23 @@ const isAwsMetaEndpointAvailable = (): Promise<boolean> => {
 }
 
 const initDefaultCredentialProviderChain = async (
+  mfaTokenCodeProvider: (mfaSerial: string) => Promise<string>,
   credentials?: Credentials,
 ): Promise<CredentialProviderChain> => {
+  const tokenCodeFn = (
+    mfaSerial: string,
+    callback: (err?: Error, token?: string) => void,
+  ) => {
+    mfaTokenCodeProvider(mfaSerial)
+      .then((token) => callback(undefined, token))
+      .catch(callback)
+  }
+
   const providers = [
     () => new EnvironmentCredentials("AWS"),
     () => new EnvironmentCredentials("AMAZON"),
     () => new ECSCredentials(),
-    () => new SharedIniFileCredentials(),
+    () => new SharedIniFileCredentials({ tokenCodeFn }),
     () => new ProcessCredentials(),
   ]
 
@@ -164,9 +174,10 @@ const initDefaultCredentialProviderChain = async (
  * @hidden
  */
 export const initDefaultCredentialManager = async (
+  mfaTokenCodeProvider: (mfaSerial: string) => Promise<string>,
   credentials?: Credentials,
 ): Promise<CredentialManager> =>
-  initDefaultCredentialProviderChain(credentials)
+  initDefaultCredentialProviderChain(mfaTokenCodeProvider, credentials)
     .then((credentialProviderChain) =>
       createCredentialManager({
         name: "default",

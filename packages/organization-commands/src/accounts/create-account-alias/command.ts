@@ -82,8 +82,11 @@ export const createAccountAliasCommand: CommandHandler<
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<CreateAccountAliasOutput> =>
   validateInput(inputSchema(ctx), input)
-    .then(() => buildOrganizationContext(ctx, configRepository, io))
+    .then(() =>
+      buildOrganizationContext(ctx, configRepository, io, credentialManager),
+    )
     .then((ctx) => createAccountAlias(ctx, io, input))
     .then(io.printOutput)

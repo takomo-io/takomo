@@ -11,8 +11,14 @@ export const listAccountsCommand: CommandHandler<
   ListAccountsIO,
   ListAccountsInput,
   ListAccountsOutput
-> = async ({ ctx, configRepository, io, input }): Promise<ListAccountsOutput> =>
-  buildOrganizationContext(ctx, configRepository, io)
+> = async ({
+  ctx,
+  configRepository,
+  io,
+  input,
+  credentialManager,
+}): Promise<ListAccountsOutput> =>
+  buildOrganizationContext(ctx, configRepository, io, credentialManager)
     .then((ctx) => listAccounts(ctx))
     .then(({ accounts, masterAccountId }) => {
       const { timer } = input

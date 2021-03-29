@@ -53,8 +53,11 @@ export const createAccountCommand: CommandHandler<
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<CreateAccountOutput> =>
   validateInput(inputSchema(ctx), input)
-    .then(() => buildOrganizationContext(ctx, configRepository, io))
+    .then(() =>
+      buildOrganizationContext(ctx, configRepository, io, credentialManager),
+    )
     .then((ctx) => createAccount(ctx, configRepository, io, input))
     .then(io.printOutput)

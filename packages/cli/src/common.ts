@@ -1,3 +1,4 @@
+import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { formatCommandStatus } from "@takomo/cli-io"
 import {
   CommandContext,
@@ -28,6 +29,7 @@ import { Credentials } from "aws-sdk"
 import dotenv from "dotenv"
 import dotenvExpand from "dotenv-expand"
 import Table from "easy-table"
+import inquirer from "inquirer"
 import merge from "lodash.merge"
 import os from "os"
 import path from "path"
@@ -438,6 +440,18 @@ interface HandleProps<
   executor: CommandHandler<C, I, IN, OUT>
 }
 
+const promptMfaCode = async (mfaSerial: string): Promise<string> => {
+  const { answer } = await inquirer.prompt([
+    {
+      message: `Enter MFA code for ${mfaSerial}`,
+      type: "input",
+      name: "answer",
+    },
+  ])
+
+  return answer
+}
+
 export const handle = async <
   C,
   I extends IO<OUT>,
@@ -455,12 +469,18 @@ export const handle = async <
 
     const input = await props.input(ctx, { timer: createTimer("total") })
     const io = props.io(ctx, logger)
+
     const configRepository = await props.configRepository(ctx, logger)
+    const credentialManager = await initDefaultCredentialManager(
+      promptMfaCode,
+      ctx.credentials,
+    )
     const output = await props.executor({
       ctx,
       configRepository,
       io,
       input,
+      credentialManager,
     })
     onComplete(ctx, output)
   } catch (e) {

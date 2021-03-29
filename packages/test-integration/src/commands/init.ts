@@ -1,3 +1,4 @@
+import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { Region } from "@takomo/aws-model"
 import { createFileSystemProjectConfigRepository } from "@takomo/config-repository-fs"
 import { InternalCommandContext, Project } from "@takomo/core"
@@ -70,8 +71,15 @@ export const executeInitProjectCommand = (
     })
 
     const { project, createSamples, regions } = props
+
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return initProjectCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestInitProjectIO(logger),
       input: {
         timer: createTimer("total"),

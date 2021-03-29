@@ -39,9 +39,12 @@ export const accountsOperationCommand: CommandHandler<
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<AccountsOperationOutput> =>
   validateInput(inputSchema(ctx), input)
-    .then(() => buildOrganizationContext(ctx, configRepository, io))
+    .then(() =>
+      buildOrganizationContext(ctx, configRepository, io, credentialManager),
+    )
     .then((ctx) =>
       executeSteps({
         configRepository,

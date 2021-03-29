@@ -1,7 +1,4 @@
-import {
-  CredentialManager,
-  initDefaultCredentialManager,
-} from "@takomo/aws-clients"
+import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
 import { InternalCommandContext } from "@takomo/core"
 import {
@@ -39,7 +36,7 @@ export interface BuildConfigContextInput {
   readonly configRepository: StacksConfigRepository
   readonly ctx: InternalCommandContext
   readonly logger: TkmLogger
-  readonly overrideCredentialManager?: CredentialManager
+  readonly credentialManager: CredentialManager
   readonly commandPath?: CommandPath
   readonly ignoreDependencies?: boolean
 }
@@ -76,7 +73,7 @@ export const validateCommandPath = (
 export const buildStacksContext = async ({
   ctx,
   logger,
-  overrideCredentialManager,
+  credentialManager,
   commandPath,
   configRepository,
 }: BuildConfigContextInput): Promise<InternalStacksContext> => {
@@ -107,9 +104,9 @@ export const buildStacksContext = async ({
 
   const credentialManagers = new Map<IamRoleArn, CredentialManager>()
 
-  const credentialManager =
-    overrideCredentialManager ||
-    (await initDefaultCredentialManager(ctx.credentials))
+  // const credentialManager =
+  //   overrideCredentialManager ||
+  //   (await initDefaultCredentialManager(ctx.credentials))
 
   const templateEngine = configRepository.templateEngine
 

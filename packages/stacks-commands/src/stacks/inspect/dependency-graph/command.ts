@@ -24,13 +24,20 @@ export const dependencyGraphCommand: CommandHandler<
   DependencyGraphIO,
   DependencyGraphInput,
   DependencyGraphOutput
-> = ({ ctx, io, input, configRepository }): Promise<DependencyGraphOutput> =>
+> = ({
+  ctx,
+  io,
+  input,
+  configRepository,
+  credentialManager,
+}): Promise<DependencyGraphOutput> =>
   validateInput(inputSchema(ctx), input)
     .then((input) =>
       buildStacksContext({
         ...input,
         configRepository,
         ctx,
+        credentialManager,
         logger: io,
       }),
     )

@@ -1,7 +1,4 @@
-import {
-  CredentialManager,
-  initDefaultCredentialManager,
-} from "@takomo/aws-clients"
+import { CredentialManager } from "@takomo/aws-clients"
 import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
 import {
@@ -35,15 +32,20 @@ interface CreateDeploymentTargetsContextProps {
   readonly ctx: InternalCommandContext
   readonly logger: TkmLogger
   readonly configRepository: DeploymentTargetsConfigRepository
+  readonly credentialManager: CredentialManager
 }
 
 export const createDeploymentTargetsContext = async ({
-  logger,
   ctx,
   configRepository,
+  credentialManager,
+  logger,
 }: CreateDeploymentTargetsContextProps): Promise<DeploymentTargetsContext> => {
   const { autoConfirmEnabled, variables, credentials } = ctx
-  const credentialManager = await initDefaultCredentialManager(credentials)
+  // const credentialManager = await initDefaultCredentialManager(
+  //   io.promptMfaToken,
+  //   credentials,
+  // )
 
   const deploymentConfig = await configRepository.loadDeploymentConfigFileContents()
 
