@@ -55,7 +55,7 @@ export const createDeploymentTargetsOperationIO = (
           configSet.results.forEach((result) => {
             if (result.result.results.length > 0) {
               result.result.results.forEach((stackResult) => {
-                targetsTable.cell("Deployment group", group.path)
+                targetsTable.cell("Group", group.path)
                 targetsTable.cell("Target", target.name)
                 targetsTable.cell("Config set", configSet.configSetName)
                 targetsTable.cell("Command path", result.commandPath)
@@ -73,7 +73,7 @@ export const createDeploymentTargetsOperationIO = (
                 targetsTable.newRow()
               })
             } else {
-              targetsTable.cell("Deployment group", group.path)
+              targetsTable.cell("Group", group.path)
               targetsTable.cell("Target", target.name)
               targetsTable.cell("Config set", configSet.configSetName)
               targetsTable.cell("Command path", result.commandPath)
@@ -123,7 +123,7 @@ export const createDeploymentTargetsOperationIO = (
         })
         if (target.accountId) {
           io.message({
-            text: `account id:           ${target.description}`,
+            text: `account id:           ${target.accountId}`,
             indent: 6,
           })
         }
