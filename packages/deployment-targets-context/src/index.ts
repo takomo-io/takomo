@@ -41,11 +41,7 @@ export const createDeploymentTargetsContext = async ({
   credentialManager,
   logger,
 }: CreateDeploymentTargetsContextProps): Promise<DeploymentTargetsContext> => {
-  const { autoConfirmEnabled, variables, credentials } = ctx
-  // const credentialManager = await initDefaultCredentialManager(
-  //   io.promptMfaToken,
-  //   credentials,
-  // )
+  const { autoConfirmEnabled, variables } = ctx
 
   const deploymentConfig = await configRepository.loadDeploymentConfigFileContents()
 

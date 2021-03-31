@@ -23,7 +23,6 @@ export const createOrganization = async (
   const timer = createTimer("total")
   const { featureSet } = input
 
-  // const credentialManager = await initDefaultCredentialManager()
   const identity = await credentialManager.getCallerIdentity()
 
   if (

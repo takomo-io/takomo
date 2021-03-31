@@ -103,11 +103,6 @@ export const buildStacksContext = async ({
   )
 
   const credentialManagers = new Map<IamRoleArn, CredentialManager>()
-
-  // const credentialManager =
-  //   overrideCredentialManager ||
-  //   (await initDefaultCredentialManager(ctx.credentials))
-
   const templateEngine = configRepository.templateEngine
 
   const rootStackGroup = await processConfigTree(

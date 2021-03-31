@@ -33,7 +33,6 @@ export const buildOrganizationContext = async (
   logger: TkmLogger,
   credentialManager: CredentialManager,
 ): Promise<OrganizationContext> => {
-  // const credentialManager = await initDefaultCredentialManager()
   const organizationConfig = await configRepository.getOrganizationConfig()
 
   const organizationAdminCredentialManager = await getCredentialManagerForOrganizationAdmin(
