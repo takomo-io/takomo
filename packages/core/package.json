@@ -1,6 +1,6 @@
 {
   "name": "@takomo/core",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "description": "Takomo Core",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,7 +27,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.6.0",
+    "@takomo/aws-clients": "3.7.0",
     "@takomo/aws-model": "3.6.0",
     "@takomo/util": "3.6.0",
     "aws-sdk": "2.868.0",
