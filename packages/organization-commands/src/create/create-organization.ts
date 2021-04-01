@@ -1,6 +1,6 @@
 import {
   createOrganizationsClient,
-  initDefaultCredentialManager,
+  CredentialManager,
 } from "@takomo/aws-clients"
 import { CommandContext } from "@takomo/core"
 import { OrganizationConfig } from "@takomo/organization-config"
@@ -18,11 +18,11 @@ export const createOrganization = async (
   configRepository: OrganizationConfigRepository,
   input: CreateOrganizationInput,
   io: CreateOrganizationIO,
+  credentialManager: CredentialManager,
 ): Promise<CreateOrganizationOutput> => {
   const timer = createTimer("total")
   const { featureSet } = input
 
-  const credentialManager = await initDefaultCredentialManager()
   const identity = await credentialManager.getCallerIdentity()
 
   if (

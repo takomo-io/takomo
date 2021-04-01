@@ -21,8 +21,9 @@ export const deployOrganizationCommand: CommandHandler<
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<DeployOrganizationOutput> =>
-  buildOrganizationContext(ctx, configRepository, io)
+  buildOrganizationContext(ctx, configRepository, io, credentialManager)
     .then((ctx) =>
       executeSteps({
         ctx,

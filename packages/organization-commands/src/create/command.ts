@@ -31,7 +31,10 @@ export const createOrganizationCommand: CommandHandler<
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<CreateOrganizationOutput> =>
   validateInput(inputSchema(ctx), input)
-    .then(() => createOrganization(ctx, configRepository, input, io))
+    .then(() =>
+      createOrganization(ctx, configRepository, input, io, credentialManager),
+    )
     .then(io.printOutput)

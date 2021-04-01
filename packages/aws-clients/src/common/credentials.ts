@@ -46,7 +46,7 @@ export interface CredentialManager {
 
 interface CredentialManagerProps {
   readonly name: string
-  readonly credentialProviderChain: CredentialProviderChain
+  readonly credentials: Credentials
 }
 
 /**
@@ -54,43 +54,32 @@ interface CredentialManagerProps {
  */
 export const createCredentialManager = ({
   name,
-  credentialProviderChain,
+  credentials,
 }: CredentialManagerProps): CredentialManager => {
-  const sts = new STS({
-    region: "us-east-1",
-    credentials: null,
-    credentialProvider: credentialProviderChain,
-  })
-
-  const getCredentials = (): Promise<Credentials> =>
-    credentialProviderChain.resolvePromise()
+  const getCredentials = async (): Promise<Credentials> => credentials
 
   const createCredentialManagerForRole = async (
     iamRoleArn: IamRoleArn,
-  ): Promise<CredentialManager> => {
-    const masterCredentials = await getCredentials()
-    const credentialProviderChain = new CredentialProviderChain([
-      () =>
-        new ChainableTemporaryCredentials({
-          params: {
-            RoleArn: iamRoleArn,
-            DurationSeconds: 3600,
-            RoleSessionName: "takomo",
-          },
-          masterCredentials,
-        }),
-    ])
-
-    return createCredentialManager({
-      credentialProviderChain,
+  ): Promise<CredentialManager> =>
+    createCredentialManager({
       name: `${name}/${iamRoleArn}`,
+      credentials: new ChainableTemporaryCredentials({
+        params: {
+          RoleArn: iamRoleArn,
+          DurationSeconds: 3600,
+          RoleSessionName: "takomo",
+        },
+        masterCredentials: credentials,
+      }),
     })
-  }
 
   const getCallerIdentity = R.memoizeWith(
     () => "",
     (): Promise<CallerIdentity> =>
-      sts
+      new STS({
+        region: "us-east-1",
+        credentials,
+      })
         .getCallerIdentity({})
         .promise()
         .then((res) => ({
@@ -141,13 +130,23 @@ const isAwsMetaEndpointAvailable = (): Promise<boolean> => {
 }
 
 const initDefaultCredentialProviderChain = async (
+  mfaTokenCodeProvider: (mfaSerial: string) => Promise<string>,
   credentials?: Credentials,
 ): Promise<CredentialProviderChain> => {
+  const tokenCodeFn = (
+    mfaSerial: string,
+    callback: (err?: Error, token?: string) => void,
+  ) => {
+    mfaTokenCodeProvider(mfaSerial)
+      .then((token) => callback(undefined, token))
+      .catch(callback)
+  }
+
   const providers = [
     () => new EnvironmentCredentials("AWS"),
     () => new EnvironmentCredentials("AMAZON"),
     () => new ECSCredentials(),
-    () => new SharedIniFileCredentials(),
+    () => new SharedIniFileCredentials({ tokenCodeFn }),
     () => new ProcessCredentials(),
   ]
 
@@ -164,13 +163,14 @@ const initDefaultCredentialProviderChain = async (
  * @hidden
  */
 export const initDefaultCredentialManager = async (
+  mfaTokenCodeProvider: (mfaSerial: string) => Promise<string>,
   credentials?: Credentials,
 ): Promise<CredentialManager> =>
-  initDefaultCredentialProviderChain(credentials)
-    .then((credentialProviderChain) =>
+  initDefaultCredentialProviderChain(mfaTokenCodeProvider, credentials)
+    .then((credentialProviderChain) => credentialProviderChain.resolvePromise())
+    .then((credentials) =>
       createCredentialManager({
         name: "default",
-        credentialProviderChain,
+        credentials,
       }),
     )
-    .then((cp) => cp.getCallerIdentity().then(() => cp))

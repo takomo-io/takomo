@@ -35,12 +35,14 @@ export const deploymentTargetsOperationCommand: CommandHandler<
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<DeploymentTargetsOperationOutput> =>
   validateInput(inputSchema(ctx.regions), input)
     .then(() =>
       createDeploymentTargetsContext({
         ctx,
         configRepository,
+        credentialManager,
         logger: io,
       }),
     )

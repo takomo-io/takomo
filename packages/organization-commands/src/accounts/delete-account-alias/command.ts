@@ -73,8 +73,11 @@ export const deleteAccountAliasCommand: CommandHandler<
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<DeleteAccountAliasOutput> =>
   validateInput(inputSchema(ctx), input)
-    .then(() => buildOrganizationContext(ctx, configRepository, io))
+    .then(() =>
+      buildOrganizationContext(ctx, configRepository, io, credentialManager),
+    )
     .then((ctx) => deleteAccountAlias(ctx, io, input))
     .then(io.printOutput)

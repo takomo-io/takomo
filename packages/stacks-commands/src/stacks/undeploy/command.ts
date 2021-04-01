@@ -72,7 +72,7 @@ export const undeployStacksCommand: CommandHandler<
         configRepository,
         ctx,
         logger: io,
-        overrideCredentialManager: credentialManager,
+        credentialManager,
       }),
     )
     .then((ctx) => undeployStacks(ctx, configRepository, io, input))

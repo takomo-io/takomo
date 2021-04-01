@@ -1,3 +1,4 @@
+import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { CliCommandContext } from "@takomo/cli"
 import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
 import { InternalCommandContext } from "@takomo/core"
@@ -100,8 +101,14 @@ export const executeDeployStacksCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return deployStacksCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestDeployStacksIO(logger, props.answers),
       input: {
         ignoreDependencies,
@@ -131,8 +138,14 @@ export const executeUndeployStacksCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return undeployStacksCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestUndeployStacksIO(
         logger,
         props.autoConfirmEnabled,
@@ -166,8 +179,14 @@ export const executeListStacksCommand = (
       logLevel,
     })
 
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      ctxAndConfig.ctx.credentials,
+    )
+
     return listStacksCommand({
       ...ctxAndConfig,
+      credentialManager,
       io: createTestListStacksIO(logger),
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,

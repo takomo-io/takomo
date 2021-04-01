@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.6.0",
+    "@takomo/aws-clients": "3.6.0",
     "@takomo/cli-io": "3.6.0",
     "@takomo/config-repository-fs": "3.6.0",
     "@takomo/config-sets": "3.6.0",
@@ -47,7 +48,8 @@
     "lodash.merge": "4.6.2",
     "pretty-ms": "5.1.0",
     "semver": "7.3.4",
-    "yargs": "13.3.0"
+    "yargs": "13.3.0",
+    "inquirer": "7.0.6"
   },
   "engines": {
     "node": ">=14.4.0"

@@ -197,7 +197,7 @@ export interface CommandHandlerArgs<
   readonly configRepository: C
   readonly io: I
   readonly input: IN
-  readonly credentialManager?: CredentialManager
+  readonly credentialManager: CredentialManager
 }
 
 /**

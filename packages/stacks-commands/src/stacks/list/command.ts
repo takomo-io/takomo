@@ -22,11 +22,11 @@ export const listStacksCommand: CommandHandler<
   ListStacksInput,
   ListStacksOutput
 > = ({
-  credentialManager,
   ctx,
   input,
   configRepository,
   io,
+  credentialManager,
 }): Promise<ListStacksOutput> =>
   validateInput(inputSchema(ctx), input)
     .then((input) =>
@@ -35,7 +35,7 @@ export const listStacksCommand: CommandHandler<
         configRepository,
         ctx,
         logger: io,
-        overrideCredentialManager: credentialManager,
+        credentialManager,
       }),
     )
     .then((ctx) => listStacks(ctx, input))
