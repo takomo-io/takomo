@@ -31,7 +31,7 @@
     "@takomo/aws-schema": "3.6.0",
     "@takomo/config-sets": "3.7.0",
     "@takomo/core": "3.7.0",
-    "joi": "17.2.1"
+    "joi": "17.4.0"
   },
   "devDependencies": {
     "@takomo/test-unit": "3.6.0"

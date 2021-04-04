@@ -23,7 +23,7 @@
     "@takomo/stacks-model": "3.7.0",
     "@takomo/test-integration": "3.7.0",
     "@takomo/util": "3.6.0",
-    "aws-sdk": "2.868.0",
+    "aws-sdk": "2.879.0",
     "ramda": "0.27.1",
     "tmp": "0.2.1"
   },

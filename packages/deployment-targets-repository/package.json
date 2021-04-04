@@ -33,7 +33,7 @@
     "@takomo/deployment-targets-model": "3.7.0",
     "@takomo/deployment-targets-schema": "3.7.0",
     "@takomo/util": "3.6.0",
-    "joi": "17.2.1",
+    "joi": "17.4.0",
     "readdirp": "3.5.0"
   },
   "engines": {

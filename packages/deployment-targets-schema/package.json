@@ -27,7 +27,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "joi": "17.2.1"
+    "joi": "17.4.0"
   },
   "devDependencies": {
     "@takomo/aws-model": "3.6.0",
