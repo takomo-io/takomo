@@ -11,7 +11,7 @@ import {
   OrganizationConfig,
 } from "@takomo/organization-config"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { collectFromHierarchy, deepFreeze, TkmLogger } from "@takomo/util"
+import { collectFromHierarchy, deepFreeze, TkmLogger, uuid } from "@takomo/util"
 import { OrganizationConfigRepository } from "./model"
 
 interface AccountConfig {
@@ -90,6 +90,7 @@ export const createOrganizationContext = ({
       region: "us-east-1",
       credentialManager: organizationAdminCredentialManager,
       logger: logger.childLogger("http"),
+      id: uuid(),
     })
 
   const hasOrganizationalUnit = (path: OrganizationalUnitPath): boolean =>

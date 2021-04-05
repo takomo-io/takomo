@@ -4,7 +4,7 @@ import {
 } from "@takomo/aws-clients"
 import { InternalCommandContext } from "@takomo/core"
 import { OrganizationConfig } from "@takomo/organization-config"
-import { TkmLogger } from "@takomo/util"
+import { TkmLogger, uuid } from "@takomo/util"
 import { OrganizationConfigRepository } from "./model"
 import {
   createOrganizationContext,
@@ -45,6 +45,7 @@ export const buildOrganizationContext = async (
     region: "us-east-1",
     credentialManager: organizationAdminCredentialManager,
     logger: logger.childLogger("http"),
+    id: uuid(),
   })
 
   const [callerIdentity, organization] = await Promise.all([
