@@ -37,6 +37,7 @@ export interface CreateCtxAndConfigRepositoryProps {
   readonly autoConfirmEnabled: boolean
   readonly ignoreDependencies: boolean
   readonly logLevel: LogLevel
+  readonly feature: ReadonlyArray<string>
 }
 
 export interface CreateTestStacksConfigRepositoryProps {
@@ -95,6 +96,7 @@ export const executeDeployStacksCommand = (
       autoConfirmEnabled: props.autoConfirmEnabled ?? true,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
     })
 
     const logger = createConsoleLogger({
@@ -131,6 +133,7 @@ export const executeUndeployStacksCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -172,6 +175,7 @@ export const executeListStacksCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 

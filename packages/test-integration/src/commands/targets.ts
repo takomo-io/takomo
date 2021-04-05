@@ -81,6 +81,7 @@ export const executeDeployTargetsCommand = (
       var: props.var ?? [],
       varFile: props.varFile ?? [],
       pathToDeploymentConfigFile: props.configFile,
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -120,6 +121,7 @@ export const executeUndeployTargetsCommand = (
       var: props.var ?? [],
       varFile: props.varFile ?? [],
       pathToDeploymentConfigFile: props.configFile,
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -159,6 +161,7 @@ export const executeBootstrapTargetsCommand = (
       var: props.var ?? [],
       varFile: props.varFile ?? [],
       pathToDeploymentConfigFile: props.configFile,
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -198,6 +201,7 @@ export const executeTeardownTargetsCommand = (
       var: props.var ?? [],
       varFile: props.varFile ?? [],
       pathToDeploymentConfigFile: props.configFile,
+      feature: props.feature ?? [],
       logLevel,
     })
 

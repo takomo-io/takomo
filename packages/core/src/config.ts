@@ -58,6 +58,28 @@ export interface TakomoProjectDeploymentTargetsConfig {
 }
 
 /**
+ * Feature flags.
+ */
+export interface Features {
+  /**
+   * Enable deployment targets undeploy command
+   */
+  readonly deploymentTargetsUndeploy: boolean
+  /**
+   * Enable deployment targets tear down command
+   */
+  readonly deploymentTargetsTearDown: boolean
+}
+
+/**
+ * @hidden
+ */
+export const defaultFeatures = (): Features => ({
+  deploymentTargetsUndeploy: true,
+  deploymentTargetsTearDown: true,
+})
+
+/**
  * Takomo project configuration.
  */
 export interface TakomoProjectConfig {
@@ -80,4 +102,21 @@ export interface ExternalResolverConfig {
  */
 export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly resolvers: ReadonlyArray<ExternalResolverConfig>
+  readonly features: Features
+}
+
+/**
+ * @hidden
+ */
+export class FeatureDisabledError extends TakomoError {
+  constructor(featureName: keyof Features) {
+    super(
+      `Can't execute operation because feature '${featureName}' is not enabled`,
+      {
+        instructions: [
+          `To enable this operation, set features.${featureName} = true in the project configuration`,
+        ],
+      },
+    )
+  }
 }

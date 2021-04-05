@@ -98,6 +98,7 @@ export const executeCreateAccountAliasCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -138,6 +139,7 @@ export const executeDeleteAccountAliasCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -173,6 +175,7 @@ export const executeDescribeOrganizationCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -211,6 +214,7 @@ export const executeCreateOrganizationCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -246,6 +250,7 @@ export const executeListAccountsCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -286,6 +291,7 @@ export const executeDeployAccountsCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -324,6 +330,7 @@ export const executeUndeployAccountsCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -362,6 +369,7 @@ export const executeBootstrapAccountsCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -400,6 +408,7 @@ export const executeTeardownAccountsCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 
@@ -438,6 +447,7 @@ export const executeDeployOrganizationCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 

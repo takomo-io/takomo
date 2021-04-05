@@ -1,9 +1,10 @@
+import { defaultFeatures } from "@takomo/core"
 import { FilePath } from "@takomo/util"
 import { parseProjectConfigFile } from "../src/config"
 import { DEFAULT_REGIONS } from "../src/constants"
 
 const doParseProjectConfigFile = (pathToFile: FilePath): any =>
-  parseProjectConfigFile(`${process.cwd()}/test/${pathToFile}`)
+  parseProjectConfigFile(`${process.cwd()}/test/${pathToFile}`, {})
 
 describe("#parseProjectConfigFile", () => {
   test("with empty file", async () => {
@@ -14,6 +15,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
+      features: defaultFeatures(),
     })
   })
 
@@ -25,6 +27,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: ["eu-west-1"],
       resolvers: [],
+      features: defaultFeatures(),
     })
   })
 
@@ -36,6 +39,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-north-1", "us-east-1"],
       resolvers: [],
+      features: defaultFeatures(),
     })
   })
 
@@ -46,6 +50,7 @@ describe("#parseProjectConfigFile", () => {
       organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
+      features: defaultFeatures(),
       resolvers: [
         {
           package: "@takomo/my-example-resolver",

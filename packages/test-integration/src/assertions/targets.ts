@@ -2,6 +2,8 @@ import { DeploymentTargetsOperationOutput } from "@takomo/deployment-targets-com
 
 export interface TargetsOperationOutputMatcher {
   expectCommandToSucceed: () => TargetsOperationOutputMatcher
+  expectCommandToSkip: () => TargetsOperationOutputMatcher
+  expectCommandToThrow: (error: any) => Promise<void>
   assert: () => Promise<DeploymentTargetsOperationOutput>
 }
 
@@ -17,6 +19,18 @@ export const createTargetsOperationOutputMatcher = (
       expect(output.error).toBeUndefined()
     })
 
+  const expectCommandToSkip = () =>
+    createTargetsOperationOutputMatcher(executor, (output) => {
+      expect(output.status).toEqual("SKIPPED")
+      expect(output.message).toEqual("No targets to deploy")
+      expect(output.success).toEqual(true)
+      expect(output.error).toBeUndefined()
+    })
+
+  const expectCommandToThrow = async (error: any): Promise<void> => {
+    await expect(executor).rejects.toEqual(error)
+  }
+
   const assert = async (): Promise<DeploymentTargetsOperationOutput> => {
     const output = await executor()
     if (outputAssertions) {
@@ -28,6 +42,8 @@ export const createTargetsOperationOutputMatcher = (
 
   return {
     expectCommandToSucceed,
+    expectCommandToSkip,
+    expectCommandToThrow,
     assert,
   }
 }
