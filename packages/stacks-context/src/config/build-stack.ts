@@ -121,6 +121,10 @@ export const buildStack = async (
   return regions
     .map((region) => {
       const exactPath = `${stackPath}/${region}`
+      const stackLogger = logger.childLogger(exactPath)
+      const cloudFormationClient = ctx.awsClientProvider.createCloudFormationClient(
+        { credentialManager, region, id: exactPath, logger: stackLogger },
+      )
 
       const props: StackProps = {
         name,
@@ -134,6 +138,7 @@ export const buildStack = async (
         terminationProtection,
         capabilities,
         accountIds,
+        cloudFormationClient,
         path: exactPath,
         stackGroupPath: stackGroup.path,
         project: stackConfig.project ?? stackGroup.project,
@@ -146,7 +151,7 @@ export const buildStack = async (
         dependents: [],
         templateBucket: stackConfig.templateBucket ?? stackGroup.templateBucket,
         data: deepCopy({ ...stackGroup.data, ...stackConfig.data }),
-        logger: logger.childLogger(exactPath),
+        logger: stackLogger,
       }
 
       stackConfig.tags.forEach((value, key) => {

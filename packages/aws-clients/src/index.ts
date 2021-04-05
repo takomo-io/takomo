@@ -1,4 +1,9 @@
 export {
+  AwsClientProvider,
+  createAwsClientProvider,
+  InternalAwsClientProvider,
+} from "./aws-client-provider"
+export {
   CloudFormationClient,
   createCloudFormationClient,
 } from "./cloudformation/client"

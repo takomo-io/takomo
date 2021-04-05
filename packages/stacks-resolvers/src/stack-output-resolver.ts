@@ -1,4 +1,3 @@
-import { createCloudFormationClient } from "@takomo/aws-clients"
 import { createAwsSchemas } from "@takomo/aws-schema"
 import {
   Resolver,
@@ -23,7 +22,7 @@ export const init = async (props: any): Promise<Resolver> => {
     }: ResolverInput): Promise<any> => {
       logger.debugObject(
         `Resolving value for parameter '${parameterName}' using stack-output resolver:`,
-        { stack: props.stack, output: props.output },
+        () => ({ stack: props.stack, output: props.output }),
       )
 
       const [referencedStack, ...rest] = ctx.getStacksByPath(
@@ -41,13 +40,7 @@ export const init = async (props: any): Promise<Resolver> => {
         throw new Error(`More than one stack found with path: ${props.stack}`)
       }
 
-      const cf = createCloudFormationClient({
-        credentialManager: referencedStack.credentialManager,
-        region: referencedStack.region,
-        logger,
-      })
-
-      const stack = await cf.describeStack(referencedStack.name)
+      const stack = await referencedStack.getCurrentCloudFormationStack()
       if (!stack) {
         throw new Error(`No such stack: ${referencedStack.name}`)
       }

@@ -1,4 +1,3 @@
-import { createCloudFormationClient } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
 import { createAwsSchemas } from "@takomo/aws-schema"
 import {
@@ -7,7 +6,7 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import { deepFreeze } from "@takomo/util"
+import { deepFreeze, uuid } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
 export const init = async (props: any): Promise<Resolver> => {
@@ -38,10 +37,11 @@ export const init = async (props: any): Promise<Resolver> => {
         },
       )
 
-      const cf = createCloudFormationClient({
+      const cf = ctx.awsClientProvider.createCloudFormationClient({
         credentialManager,
         region,
         logger,
+        id: uuid(),
       })
 
       const cfStack = await cf.describeStack(props.stack)

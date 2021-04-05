@@ -1,6 +1,7 @@
 import crypto from "crypto"
 import R from "ramda"
 import stripAnsi from "strip-ansi"
+import { v4 } from "uuid"
 
 /**
  * @hidden
@@ -221,3 +222,8 @@ export const splitTextInLines = (
     )
     .reverse()
 }
+
+/**
+ * @hidden
+ */
+export const uuid = v4

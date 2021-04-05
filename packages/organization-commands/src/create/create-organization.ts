@@ -6,7 +6,7 @@ import { CommandContext } from "@takomo/core"
 import { OrganizationConfig } from "@takomo/organization-config"
 import { OrganizationConfigRepository } from "@takomo/organization-context"
 import { DEFAULT_ORGANIZATION_ROLE_NAME } from "@takomo/organization-model"
-import { createTimer } from "@takomo/util"
+import { createTimer, uuid } from "@takomo/util"
 import {
   CreateOrganizationInput,
   CreateOrganizationIO,
@@ -42,6 +42,7 @@ export const createOrganization = async (
     credentialManager,
     logger: io,
     region: "us-east-1",
+    id: uuid(),
   })
 
   try {

@@ -1,6 +1,6 @@
 import { defaultCapabilities } from "@takomo/stacks-model"
+import { uuid } from "@takomo/util"
 import { ChangeSetType } from "aws-sdk/clients/cloudformation"
-import uuid from "uuid"
 import { StackOperationStep } from "../../common/steps"
 import { StackDeployOperationType } from "../plan"
 import { TemplateSummaryHolder } from "../states"
@@ -36,7 +36,7 @@ export const initiateChangeSetCreate: StackOperationStep<TemplateSummaryHolder> 
     transitions,
   } = state
 
-  const clientToken = uuid.v4()
+  const clientToken = uuid()
   const changeSetName = `change-${clientToken}`
   const changeSetType = resolveChangeSetType(operationType)
   const templateLocation = templateS3Url || templateBody

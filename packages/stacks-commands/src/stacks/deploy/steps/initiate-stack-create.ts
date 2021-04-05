@@ -1,5 +1,5 @@
 import { defaultCapabilities } from "@takomo/stacks-model"
-import uuid from "uuid"
+import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateSummaryHolder } from "../states"
 
@@ -18,7 +18,7 @@ export const initiateStackCreate: StackOperationStep<TemplateSummaryHolder> = as
     transitions,
   } = state
 
-  const clientToken = uuid.v4()
+  const clientToken = uuid()
   const templateLocation = templateS3Url || templateBody
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
   const capabilities = stack.capabilities?.slice() || defaultCapabilities

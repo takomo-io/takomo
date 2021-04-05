@@ -1,8 +1,4 @@
-import {
-  CloudFormationClient,
-  createCloudFormationClient,
-  CredentialManager,
-} from "@takomo/aws-clients"
+import { CloudFormationClient, CredentialManager } from "@takomo/aws-clients"
 import {
   AccountId,
   CloudFormationStack,
@@ -59,6 +55,7 @@ export interface StackProps {
   ignore: boolean
   terminationProtection: boolean
   logger: TkmLogger
+  cloudFormationClient: CloudFormationClient
 }
 
 /**
@@ -173,14 +170,10 @@ export const createStack = (props: StackProps): InternalStack => {
     templateBucket,
     terminationProtection,
     timeout,
+    cloudFormationClient,
   } = props
 
-  const getCloudFormationClient = () =>
-    createCloudFormationClient({
-      credentialManager,
-      region,
-      logger,
-    })
+  const getCloudFormationClient = () => cloudFormationClient
 
   const getCurrentCloudFormationStack = () =>
     getCloudFormationClient().describeStack(name)
