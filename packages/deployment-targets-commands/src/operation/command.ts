@@ -1,5 +1,9 @@
 import { Region } from "@takomo/aws-model"
-import { CommandHandler } from "@takomo/core"
+import {
+  CommandHandler,
+  FeatureDisabledError,
+  InternalCommandContext,
+} from "@takomo/core"
 import {
   createDeploymentTargetsContext,
   DeploymentTargetsConfigRepository,
@@ -25,6 +29,27 @@ const inputSchema = (regions: ReadonlyArray<Region>) => {
   }).unknown(true)
 }
 
+const validateFeatureFlags = (
+  ctx: InternalCommandContext,
+  input: DeploymentTargetsOperationInput,
+): void => {
+  if (
+    input.operation === "undeploy" &&
+    input.configSetType === "standard" &&
+    !ctx.projectConfig.features.deploymentTargetsUndeploy
+  ) {
+    throw new FeatureDisabledError("deploymentTargetsUndeploy")
+  }
+
+  if (
+    input.operation === "undeploy" &&
+    input.configSetType === "bootstrap" &&
+    !ctx.projectConfig.features.deploymentTargetsTearDown
+  ) {
+    throw new FeatureDisabledError("deploymentTargetsTearDown")
+  }
+}
+
 export const deploymentTargetsOperationCommand: CommandHandler<
   DeploymentTargetsConfigRepository,
   DeploymentTargetsOperationIO,
@@ -38,14 +63,15 @@ export const deploymentTargetsOperationCommand: CommandHandler<
   credentialManager,
 }): Promise<DeploymentTargetsOperationOutput> =>
   validateInput(inputSchema(ctx.regions), input)
-    .then(() =>
-      createDeploymentTargetsContext({
+    .then(() => {
+      validateFeatureFlags(ctx, input)
+      return createDeploymentTargetsContext({
         ctx,
         configRepository,
         credentialManager,
         logger: io,
-      }),
-    )
+      })
+    })
     .then((ctx) =>
       planDeployment({
         ctx,

@@ -12,6 +12,7 @@ export interface ExecuteCommandProps {
   readonly ignoreDependencies?: boolean
   readonly commandPath?: CommandPath
   readonly logLevel?: LogLevel
+  readonly feature?: string[]
 }
 
 export const createTestCommandContext = async (
@@ -35,6 +36,7 @@ export const createTestCommandContext = async (
       log: props.logLevel,
       yes: props.autoConfirmEnabled,
       "ignore-dependencies": props.ignoreDependencies,
+      feature: props.feature,
     },
     credentials,
   )

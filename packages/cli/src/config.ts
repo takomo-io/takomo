@@ -1,6 +1,8 @@
 import {
   createCommonSchema,
+  defaultFeatures,
   ExternalResolverConfig,
+  Features,
   InternalTakomoProjectConfig,
 } from "@takomo/core"
 import {
@@ -63,8 +65,18 @@ export const parseExternalResolvers = (
   return value.map(parseExternalResolver)
 }
 
+export const parseFeatures = (value: any): Features => {
+  const defaults = defaultFeatures()
+  if (value === null || value === undefined) {
+    return defaults
+  }
+
+  return { ...defaults, ...value }
+}
+
 export const parseProjectConfigFile = async (
   path: FilePath,
+  overrideFeatures: Partial<Features>,
 ): Promise<InternalTakomoProjectConfig> => {
   const contents = await readFileContents(path)
   const parsedFile = (await parseYaml(path, contents)) ?? {}
@@ -84,11 +96,16 @@ export const parseProjectConfigFile = async (
 
   const regions = parsedFile.regions ?? DEFAULT_REGIONS
   const resolvers = parseExternalResolvers(parsedFile.resolvers)
+  const features = {
+    ...parseFeatures(parsedFile.features),
+    ...overrideFeatures,
+  }
 
   return {
     regions,
     requiredVersion,
     resolvers,
+    features,
     organization: parsedFile.organization,
     deploymentTargets: parsedFile.deploymentTargets,
   }
@@ -118,6 +135,11 @@ const externalResolver = Joi.object({
   name: variableName,
 }).unknown(true)
 
+const features = Joi.object({
+  deploymentTargetsUndeploy: Joi.boolean(),
+  deploymentTargetsTearDown: Joi.boolean(),
+})
+
 export const takomoProjectConfigFileSchema = Joi.object({
   requiredVersion: Joi.string(),
   organization: Joi.object({
@@ -128,17 +150,20 @@ export const takomoProjectConfigFileSchema = Joi.object({
   }),
   regions: Joi.array().items(Joi.string()).unique(),
   resolvers: Joi.array().items(Joi.string(), externalResolver),
+  features,
 })
 
 export const loadProjectConfig = async (
   pathConfigFile: FilePath,
+  overrideFeatures: Partial<Features>,
 ): Promise<InternalTakomoProjectConfig> => {
   if (!(await fileExists(pathConfigFile))) {
     return {
       regions: DEFAULT_REGIONS.slice(),
       resolvers: [],
+      features: { ...defaultFeatures(), ...overrideFeatures },
     }
   }
 
-  return parseProjectConfigFile(pathConfigFile)
+  return parseProjectConfigFile(pathConfigFile, overrideFeatures)
 }

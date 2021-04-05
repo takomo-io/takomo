@@ -20,7 +20,8 @@
     "integration-test": "jest test --passWithNoTests --runInBand --ci --verbose"
   },
   "dependencies": {
-    "@takomo/test-integration": "3.7.0"
+    "@takomo/test-integration": "3.7.0",
+    "@takomo/core": "3.7.0"
   },
   "devDependencies": {
     "dotenv": "8.2.0",

@@ -52,6 +52,9 @@
     "yargs": "13.3.0",
     "ramda": "0.27.1"
   },
+  "devDependencies": {
+    "@takomo/test-unit": "3.6.0"
+  },
   "engines": {
     "node": ">=14.4.0"
   },
