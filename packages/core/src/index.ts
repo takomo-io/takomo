@@ -21,9 +21,12 @@ export {
 export {
   AccountRepositoryConfig,
   AccountRepositoryType,
+  defaultFeatures,
   DeploymentTargetRepositoryConfig,
   DeploymentTargetRepositoryType,
   ExternalResolverConfig,
+  FeatureDisabledError,
+  Features,
   InternalTakomoProjectConfig,
   parseCommandRole,
   parseRegex,

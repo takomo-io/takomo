@@ -73,6 +73,11 @@ export const run = (): void => {
       string: true,
       global: true,
     })
+    .option("feature", {
+      description: "Feature flag",
+      string: true,
+      global: true,
+    })
     .demandCommand(1, "Provide command")
     .strict(true)
     .help().argv

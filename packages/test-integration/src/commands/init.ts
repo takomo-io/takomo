@@ -63,6 +63,7 @@ export const executeInitProjectCommand = (
       ignoreDependencies: props.ignoreDependencies ?? false,
       var: props.var ?? [],
       varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
       logLevel,
     })
 

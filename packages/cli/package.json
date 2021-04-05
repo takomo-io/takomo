@@ -51,6 +51,9 @@
     "semver": "7.3.4",
     "yargs": "13.3.0"
   },
+  "devDependencies": {
+    "@takomo/test-unit": "3.6.0"
+  },
   "engines": {
     "node": ">=14.4.0"
   },
