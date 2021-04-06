@@ -5,7 +5,7 @@ import {
   StackEvent,
   TemplateSummary,
 } from "@takomo/aws-model"
-import { sleep } from "@takomo/util"
+import { sleep, uuid } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import {
   CreateChangeSetInput,
@@ -16,7 +16,6 @@ import {
 } from "aws-sdk/clients/cloudformation"
 import last from "lodash.last"
 import takeRightWhile from "lodash.takerightwhile"
-import uuid from "uuid"
 import { AwsClientProps, createClient } from "../common/client"
 import {
   convertChangeSet,
@@ -264,7 +263,7 @@ export const createCloudFormationClient = (
   const cancelStackUpdate = (stackName: string): Promise<string> => {
     const params = {
       StackName: stackName,
-      ClientRequestToken: uuid.v4(),
+      ClientRequestToken: uuid(),
     }
 
     return withClientPromise(

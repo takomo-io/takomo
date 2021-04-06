@@ -49,7 +49,8 @@
     "lodash.merge": "4.6.2",
     "pretty-ms": "5.1.0",
     "semver": "7.3.4",
-    "yargs": "13.3.0"
+    "yargs": "13.3.0",
+    "ramda": "0.27.1"
   },
   "devDependencies": {
     "@takomo/test-unit": "3.6.0"

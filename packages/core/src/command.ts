@@ -1,4 +1,5 @@
-import { CredentialManager } from "@takomo/aws-clients"
+import { AwsClientProvider, CredentialManager } from "@takomo/aws-clients"
+import { InternalAwsClientProvider } from "@takomo/aws-clients/src/aws-client-provider"
 import { IamRoleArn, Region, ServicePrincipal } from "@takomo/aws-model"
 import { FilePath, LogLevel, Timer, TkmLogger } from "@takomo/util"
 import { Credentials } from "aws-sdk"
@@ -175,6 +176,11 @@ export interface CommandContext {
    * Project configuration.
    */
   readonly projectConfig: TakomoProjectConfig
+
+  /**
+   * AWS client provider.
+   */
+  readonly awsClientProvider: AwsClientProvider
 }
 
 /**
@@ -182,6 +188,7 @@ export interface CommandContext {
  */
 export interface InternalCommandContext extends CommandContext {
   readonly projectConfig: InternalTakomoProjectConfig
+  readonly awsClientProvider: InternalAwsClientProvider
 }
 
 /**

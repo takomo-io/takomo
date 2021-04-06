@@ -1,4 +1,4 @@
-import uuid from "uuid"
+import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { ChangeSetHolder } from "../states"
 
@@ -42,7 +42,7 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
       await cloudFormationClient.waitUntilStackIsDeleted(
         stack.name,
         changeSet.stackId,
-        uuid.v4(),
+        uuid(),
       )
       logger.debug("Temporary stack deleted successfully")
     } else {
@@ -71,7 +71,7 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
     await cloudFormationClient.waitUntilStackIsDeleted(
       stack.name,
       changeSet.stackId,
-      uuid.v4(),
+      uuid(),
     )
     logger.debug("Temporary stack deleted successfully")
   } else {

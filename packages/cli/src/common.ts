@@ -1,12 +1,15 @@
-import { initDefaultCredentialManager } from "@takomo/aws-clients"
+import {
+  createAwsClientProvider,
+  initDefaultCredentialManager,
+} from "@takomo/aws-clients"
 import { formatCommandStatus } from "@takomo/cli-io"
 import {
-  CommandContext,
   CommandHandler,
   CommandInput,
   CommandOutput,
   ContextVars,
   Features,
+  InternalCommandContext,
   IO,
   Variables,
 } from "@takomo/core"
@@ -35,6 +38,7 @@ import merge from "lodash.merge"
 import os from "os"
 import path from "path"
 import prettyMs from "pretty-ms"
+import R from "ramda"
 import { CliCommandContext, ProjectFilePaths } from "./cli-command-context"
 import { loadProjectConfig } from "./config"
 import {
@@ -356,13 +360,16 @@ export const initCommandContext = async (
     overrideFeatures,
   )
 
+  const awsClientProvider = createAwsClientProvider()
+
   return deepFreeze({
-    regions: projectConfig.regions.slice(),
     credentials,
     logLevel,
     variables,
     filePaths,
     projectConfig,
+    awsClientProvider,
+    regions: projectConfig.regions.slice(),
     autoConfirmEnabled: argv.yes === true,
     statisticsEnabled: argv.stats === true,
     confidentialValuesLoggingEnabled: argv["log-confidential-info"] === true,
@@ -418,7 +425,7 @@ const toMB = (bytes: number): number =>
   Math.round((bytes / 1024 / 1024) * 100) / 100
 
 export const onComplete = (
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   output: CommandOutput,
 ): void => {
   if (ctx.statisticsEnabled) {
@@ -451,6 +458,75 @@ export const onComplete = (
     console.log("Execution times:")
     console.log()
     console.log(indentLines(printTimer(output.timer)))
+
+    console.log()
+    console.log("AWS API calls:")
+    console.log()
+
+    const clientsTable = new Table()
+
+    const allApiCalls = ctx.awsClientProvider.getApiCalls()
+
+    ctx.awsClientProvider.getCloudFormationClients().forEach((client, id) => {
+      clientsTable.cell("Id", id)
+      clientsTable.newRow()
+
+      const apiCalls = allApiCalls.filter((a) => a.clientId === id)
+
+      const apiCallsByAction = R.groupBy((a) => a.action, apiCalls)
+      Object.keys(apiCallsByAction)
+        .sort()
+        .forEach((action) => {
+          const calls = apiCallsByAction[action]
+          const times = R.map(R.prop("time"), calls)
+          const totalTime = R.sum(times)
+
+          clientsTable.cell("Id", `  ${action}`)
+          clientsTable.cell("Count", calls.length)
+          clientsTable.cell("Time total", prettyMs(totalTime * 1000))
+          clientsTable.cell("Time min", prettyMs(Math.min(...times) * 1000))
+          clientsTable.cell("Time max", prettyMs(Math.max(...times) * 1000))
+          clientsTable.cell(
+            "Time avg",
+            prettyMs((totalTime / calls.length) * 1000),
+          )
+          clientsTable.cell(
+            "Retries",
+            calls.reduce((sum, { retries }) => sum + retries, 0),
+          )
+          clientsTable.newRow()
+        })
+    })
+
+    clientsTable.newRow()
+    clientsTable.cell("Id", "Total")
+    clientsTable.newRow()
+
+    const totalApiCallsByAction = R.groupBy((a) => a.action, allApiCalls)
+    Object.keys(totalApiCallsByAction)
+      .sort()
+      .forEach((action) => {
+        const calls = totalApiCallsByAction[action]
+        const times = R.map(R.prop("time"), calls)
+        const totalTime = R.sum(times)
+
+        clientsTable.cell("Id", `  ${action}`)
+        clientsTable.cell("Count", calls.length)
+        clientsTable.cell("Time total", prettyMs(totalTime * 1000))
+        clientsTable.cell("Time min", prettyMs(Math.min(...times) * 1000))
+        clientsTable.cell("Time max", prettyMs(Math.max(...times) * 1000))
+        clientsTable.cell(
+          "Time avg",
+          prettyMs((totalTime / calls.length) * 1000),
+        )
+        clientsTable.cell(
+          "Retries",
+          calls.reduce((sum, { retries }) => sum + retries, 0),
+        )
+        clientsTable.newRow()
+      })
+
+    console.log(indentLines(clientsTable.toString()))
   }
 
   console.log()

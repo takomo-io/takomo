@@ -1,7 +1,7 @@
 import { createIamClient, CredentialManager } from "@takomo/aws-clients"
 import { AccountId } from "@takomo/aws-model"
 import { OrganizationContext } from "@takomo/organization-context"
-import { TkmLogger } from "@takomo/util"
+import { TkmLogger, uuid } from "@takomo/util"
 import { Policy } from "cockatiel"
 import { err, ok, Result } from "neverthrow"
 
@@ -32,6 +32,7 @@ export const createAccountAliasInternal = async (
       logger,
       credentialManager,
       region: "us-east-1",
+      id: uuid(),
     })
 
     return ok(await iam.createAccountAlias(alias))
@@ -55,6 +56,7 @@ export const deleteAccountAliasInternal = async (
       logger,
       credentialManager,
       region: "us-east-1",
+      id: uuid(),
     })
 
     const alias = await iam.describeAccountAlias()

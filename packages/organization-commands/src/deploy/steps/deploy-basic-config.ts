@@ -1,4 +1,5 @@
 import { createRamClient } from "@takomo/aws-clients"
+import { uuid } from "@takomo/util"
 import { OrganizationalUnitsPlanHolder } from "../states"
 import { DeployOrganizationStep } from "../steps"
 
@@ -55,6 +56,7 @@ export const deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHo
         region: "us-east-1",
         credentialManager: ctx.credentialManager,
         logger: io,
+        id: uuid(),
       })
 
       await ram.enableSharingWithAwsOrganization()

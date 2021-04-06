@@ -1,4 +1,4 @@
-import uuid from "uuid"
+import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { CurrentStackHolder } from "../states"
 
@@ -10,7 +10,7 @@ export const initiateStackDeletion: StackOperationStep<CurrentStackHolder> = asy
 ) => {
   const { transitions, stack, currentStack } = state
 
-  const clientToken = uuid.v4()
+  const clientToken = uuid()
 
   await stack.getCloudFormationClient().initiateStackDeletion({
     StackName: currentStack.id,

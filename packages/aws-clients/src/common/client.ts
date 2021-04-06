@@ -50,6 +50,8 @@ export interface AwsClientProps {
   readonly credentialManager: CredentialManager
   readonly region: Region
   readonly logger: TkmLogger
+  readonly id: string
+  readonly listener?: ClientListener
 }
 
 /**
@@ -62,11 +64,53 @@ interface ClientProps<C> extends AwsClientProps {
 /**
  * @hidden
  */
+export interface ApiCallProps {
+  readonly clientId: string
+  readonly api: string
+  readonly action: string
+  readonly time: number
+  readonly status: number
+  readonly retries: number
+}
+
+/**
+ * @hidden
+ */
+export interface ClientListener {
+  readonly onApiCall: (props: ApiCallProps) => void
+}
+
+/**
+ * @hidden
+ */
+export const buildApiCallProps = (
+  clientId: string,
+  message: string,
+): ApiCallProps => {
+  // //[AWS cloudformation 200 0.04s 0 retries] describeStackEvents(
+  const [info] = message.substr(1).split("(", 2)
+  const [stats, action] = info.split("] ")
+  const [aws, api, status, time, retries] = stats.split(" ")
+  return {
+    clientId,
+    action,
+    api,
+    status: parseInt(status),
+    time: parseFloat(time),
+    retries: parseInt(retries),
+  }
+}
+
+/**
+ * @hidden
+ */
 export const createClient = <C>({
   credentialManager,
   logger,
   region,
   clientConstructor,
+  listener,
+  id: clientId,
 }: ClientProps<C>): AwsClient<C> => {
   const agent = new https.Agent({
     keepAlive: true,
@@ -104,7 +148,13 @@ export const createClient = <C>({
       agent,
     },
     logger: {
-      log: (...messages: any[]) => messages.forEach((m) => logger.trace(m)),
+      log: (...messages: any[]) =>
+        messages.forEach((m) => {
+          if (listener) {
+            listener.onApiCall(buildApiCallProps(clientId, m))
+          }
+          logger.trace(m)
+        }),
     },
   }
 

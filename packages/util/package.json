@@ -36,7 +36,8 @@
     "js-yaml": "3.14.0",
     "pretty-ms": "5.1.0",
     "ramda": "0.27.1",
-    "strip-ansi": "6.0.0"
+    "strip-ansi": "6.0.0",
+    "uuid": "3.3.3"
   },
   "engines": {
     "node": ">=14.4.0"
