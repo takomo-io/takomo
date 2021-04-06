@@ -1,4 +1,4 @@
-import { CredentialManager } from "@takomo/aws-clients"
+import { CloudFormationClient, CredentialManager } from "@takomo/aws-clients"
 import { StackName } from "@takomo/aws-model"
 import {
   InternalStack,
@@ -92,6 +92,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
       hooks: [],
       name: props.name,
       credentialManager: mock<CredentialManager>(),
+      cloudFormationClient: mock<CloudFormationClient>(),
     }),
     credentialManager: mock<CredentialManager>(),
     getCurrentCloudFormationStack: jest.fn(),
