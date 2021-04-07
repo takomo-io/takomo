@@ -19,11 +19,11 @@ export const initiateStackCreate: StackOperationStep<TemplateSummaryHolder> = as
   } = state
 
   const clientToken = uuid()
-  const templateLocation = templateS3Url || templateBody
+  const templateLocation = templateS3Url ?? templateBody
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
-  const capabilities = stack.capabilities?.slice() || defaultCapabilities
+  const capabilities = stack.capabilities?.slice() ?? defaultCapabilities
 
-  await stack.getCloudFormationClient().createStack({
+  const stackId = await stack.getCloudFormationClient().createStack({
     Capabilities: capabilities,
     ClientRequestToken: clientToken,
     DisableRollback: false,
@@ -42,5 +42,6 @@ export const initiateStackCreate: StackOperationStep<TemplateSummaryHolder> = as
   return transitions.waitStackCreateOrUpdateToComplete({
     ...state,
     clientToken,
+    stackId,
   })
 }

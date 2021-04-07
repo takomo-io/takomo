@@ -190,6 +190,10 @@ export type ResourceStatus =
   | "IMPORT_ROLLBACK_IN_PROGRESS"
   | "IMPORT_ROLLBACK_FAILED"
   | "IMPORT_ROLLBACK_COMPLETE"
+  | "ROLLBACK_COMPLETE"
+  | "ROLLBACK_FAILED"
+  | "UPDATE_ROLLBACK_COMPLETE"
+  | "UPDATE_ROLLBACK_FAILED"
 
 export type EventId = string
 
@@ -283,3 +287,27 @@ export interface BaseChangeSet<P> {
 export type ChangeSet = BaseChangeSet<StackParameter>
 
 export type DetailedChangeSet = BaseChangeSet<DetailedStackParameter>
+
+/**
+ * @hidden
+ */
+export const isTerminalResourceStatus = (status: ResourceStatus): boolean => {
+  switch (status) {
+    case "CREATE_COMPLETE":
+    case "DELETE_COMPLETE":
+    case "ROLLBACK_COMPLETE":
+    case "UPDATE_COMPLETE":
+    case "ROLLBACK_FAILED":
+    case "CREATE_FAILED":
+    case "DELETE_FAILED":
+    case "IMPORT_FAILED":
+    case "IMPORT_COMPLETE":
+    case "IMPORT_ROLLBACK_COMPLETE":
+    case "IMPORT_ROLLBACK_FAILED":
+    case "UPDATE_ROLLBACK_COMPLETE":
+    case "UPDATE_ROLLBACK_FAILED":
+      return true
+    default:
+      return false
+  }
+}

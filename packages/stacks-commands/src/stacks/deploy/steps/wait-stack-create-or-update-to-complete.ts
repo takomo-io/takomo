@@ -1,4 +1,4 @@
-import { StackEvent } from "@takomo/aws-model"
+import R from "ramda"
 import { StackOperationStep } from "../../common/steps"
 import { resolveResultMessage } from "../common"
 import { StackOperationClientTokenHolder } from "../states"
@@ -9,32 +9,42 @@ import { StackOperationClientTokenHolder } from "../states"
 export const waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperationClientTokenHolder> = async (
   state,
 ) => {
-  const { stack, clientToken, operationType, io, logger, transitions } = state
+  const {
+    stack,
+    clientToken,
+    operationType,
+    io,
+    logger,
+    transitions,
+    stackId,
+  } = state
 
-  const cloudFormationClient = stack.getCloudFormationClient()
-
+  const eventListener = R.curry(io.printStackEvent)(stack.path)
   const timeout = operationType === "UPDATE" ? stack.timeout.update : 0
 
-  const {
-    stackStatus,
-    events,
-  } = await cloudFormationClient.waitUntilStackCreateOrUpdateCompletes(
-    stack.name,
+  const waitProps = {
     clientToken,
-    (e: StackEvent) => io.printStackEvent(stack.path, e),
-    {
+    stackId,
+    eventListener,
+    timeoutConfig: {
       timeout,
       startTime: Date.now(),
       timeoutOccurred: false,
     },
-  )
+  }
 
-  logger.info(`Stack deploy completed with status: ${stackStatus}`)
+  const {
+    stackStatus,
+    events,
+  } = await stack.getCloudFormationClient().waitStackDeployToComplete(waitProps)
+
+  logger.info(`Deploy completed with status: ${stackStatus}`)
 
   const success =
     stackStatus === "UPDATE_COMPLETE" || stackStatus === "CREATE_COMPLETE"
   const status = success ? "SUCCESS" : "FAILED"
   const message = resolveResultMessage(operationType, success)
+
   return transitions.executeAfterDeployHooks({
     ...state,
     message,
