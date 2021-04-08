@@ -1,6 +1,6 @@
 {
   "name": "@takomo/aws-clients",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "description": "Takomo AWS Clients",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,8 +27,8 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.6.0",
-    "@takomo/util": "3.6.0",
+    "@takomo/aws-model": "3.8.0",
+    "@takomo/util": "3.8.0",
     "aws-sdk": "2.879.0",
     "lodash.flatten": "4.4.0",
     "lodash.last": "3.0.0",

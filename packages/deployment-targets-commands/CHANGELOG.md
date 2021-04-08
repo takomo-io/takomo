@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/takomo-io/takomo/compare/v3.7.0...v3.8.0) (2021-04-08)
+
+
+### Features
+
+* **deployment targets:** add feature flags to disable undeploy and tear down commands ([#197](https://github.com/takomo-io/takomo/issues/197)) ([61e5031](https://github.com/takomo-io/takomo/commit/61e5031fab497a54073b02b6f78ccb6a58c9c44e)), closes [#196](https://github.com/takomo-io/takomo/issues/196)
+
+
+
+
+
 # [3.7.0](https://github.com/takomo-io/takomo/compare/v3.6.0...v3.7.0) (2021-04-01)
 
 
