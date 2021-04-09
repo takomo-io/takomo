@@ -41,7 +41,7 @@
     "@takomo/stacks-model": "3.8.0",
     "@takomo/util": "3.8.0",
     "aws-sdk": "2.879.0",
-    "cockatiel": "2.0.0",
+    "cockatiel": "2.0.1",
     "joi": "17.4.0",
     "lodash.flatten": "4.4.0",
     "lodash.intersection": "4.4.0",
