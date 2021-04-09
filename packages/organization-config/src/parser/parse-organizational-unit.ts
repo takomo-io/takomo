@@ -3,7 +3,7 @@ import { ConfigSetName } from "@takomo/config-sets"
 import { parseVars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { TkmLogger } from "@takomo/util"
-import uniq from "lodash.uniq"
+import R from "ramda"
 import { OrganizationalUnitConfig } from "../model"
 import { findMissingDirectChildrenPaths } from "./find-missing-direct-child-paths"
 import { parseAccounts } from "./parse-accounts"
@@ -73,17 +73,20 @@ export const parseOrganizationalUnit = async (
   )
   const configuredBackupPolicies = parsePolicyNames(ou?.backupPolicies)
 
-  const serviceControlPolicies = uniq([
+  const serviceControlPolicies = R.uniq([
     ...configuredServiceControlPolicies,
     ...inheritedServiceControlPolicies,
   ])
-  const tagPolicies = uniq([...configuredTagPolicies, ...inheritedTagPolicies])
-  const aiServicesOptOutPolicies = uniq([
+  const tagPolicies = R.uniq([
+    ...configuredTagPolicies,
+    ...inheritedTagPolicies,
+  ])
+  const aiServicesOptOutPolicies = R.uniq([
     ...configuredAiServicesOptOutPolicies,
     ...inheritedAiServicesOptOutPolicies,
   ])
 
-  const backupPolicies = uniq([
+  const backupPolicies = R.uniq([
     ...configuredBackupPolicies,
     ...inheritedBackupPolicies,
   ])
@@ -113,12 +116,12 @@ export const parseOrganizationalUnit = async (
   }
 
   const configuredConfigSets = parseConfigSetNames(ou?.configSets)
-  const configSets = uniq([...configuredConfigSets, ...inheritedConfigSets])
+  const configSets = R.uniq([...configuredConfigSets, ...inheritedConfigSets])
 
   const configuredBootstrapConfigSets = parseConfigSetNames(
     ou?.bootstrapConfigSets,
   )
-  const bootstrapConfigSets = uniq([
+  const bootstrapConfigSets = R.uniq([
     ...configuredBootstrapConfigSets,
     ...inheritedBootstrapConfigSets,
   ])

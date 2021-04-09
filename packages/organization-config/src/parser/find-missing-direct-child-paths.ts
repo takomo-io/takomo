@@ -1,10 +1,10 @@
-import uniq from "lodash.uniq"
+import R from "ramda"
 
 export const findMissingDirectChildrenPaths = (
   childPaths: ReadonlyArray<string>,
   ouPathDepth: number,
-): string[] => {
-  return uniq(
+): string[] =>
+  R.uniq(
     childPaths
       .filter((key) => key.split("/").length >= ouPathDepth + 2)
       .map((key) =>
@@ -15,4 +15,3 @@ export const findMissingDirectChildrenPaths = (
       )
       .filter((key) => !childPaths.includes(key)),
   )
-}

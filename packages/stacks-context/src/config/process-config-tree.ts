@@ -15,8 +15,7 @@ import {
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { arrayToMap, TkmLogger } from "@takomo/util"
-import flatten from "lodash.flatten"
-import uniq from "lodash.uniq"
+import R from "ramda"
 import { isWithinCommandPath } from "../common"
 import {
   checkCyclicDependencies,
@@ -25,7 +24,6 @@ import {
 import { buildStack } from "./build-stack"
 import { ConfigTree, StackGroupConfigNode } from "./config-tree"
 import { doCreateStackGroup } from "./create-stack-group"
-
 class ProcessStatus {
   readonly #stackGroups = new Map<StackGroupPath, StackGroup>()
   readonly #stacks = new Map<StackPath, InternalStack>()
@@ -156,7 +154,7 @@ const processStackGroupConfigNode = async (
     ),
   )
 
-  flatten(processedStacks).forEach(status.setStackProcessed)
+  processedStacks.flat().forEach(status.setStackProcessed)
   const childrenToProcess = node.children.filter((child) =>
     isWithinCommandPath(commandPath, child.path),
   )
@@ -212,18 +210,18 @@ export const processConfigTree = async (
       )
     }
 
-    commandPaths = uniq(
+    commandPaths = R.uniq(
       status
         .getNewlyProcessedStacks()
         .filter((s) => !s.ignore)
         .reduce((collected, stack) => {
-          const parameterDependencies = flatten(
-            Array.from(stack.parameters.values()).map((p) =>
+          const parameterDependencies = Array.from(stack.parameters.values())
+            .map((p) =>
               p
                 .getDependencies()
                 .map((d) => normalizeStackPath(stack.stackGroupPath, d)),
-            ),
-          )
+            )
+            .flat()
 
           return [...collected, ...stack.dependencies, ...parameterDependencies]
         }, new Array<StackPath>()),

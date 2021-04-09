@@ -1,7 +1,7 @@
 import { OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { parseVars } from "@takomo/core"
-import uniq from "lodash.uniq"
+import R from "ramda"
 import { OrganizationAccountConfig } from "../model"
 import { parseAccountStatus } from "./parse-account-status"
 import { parseConfigSetNames } from "./parse-config-set-names"
@@ -56,12 +56,12 @@ const parseComplexAccount = (
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
 ): OrganizationAccountConfig => {
   const configuredConfigSets = parseConfigSetNames(value.configSets)
-  const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
+  const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
 
   const configuredBootstrapConfigSets = parseConfigSetNames(
     value.bootstrapConfigSets,
   )
-  const bootstrapConfigSets = uniq([
+  const bootstrapConfigSets = R.uniq([
     ...configuredBootstrapConfigSets,
     ...inheritedBootstrapConfigSets,
   ])

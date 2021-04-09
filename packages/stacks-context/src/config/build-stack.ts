@@ -17,8 +17,7 @@ import {
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { deepCopy, TakomoError, TkmLogger, validate } from "@takomo/util"
-import flatten from "lodash.flatten"
-import uniq from "lodash.uniq"
+import R from "ramda"
 import { isWithinCommandPath } from "../common"
 import { StackConfigNode } from "./config-tree"
 import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file"
@@ -82,12 +81,12 @@ export const buildStack = async (
     schemaRegistry,
   )
 
-  uniq(
-    flatten(
-      Array.from(parameters.values()).reduce((collected, parameter) => {
+  R.uniq(
+    Array.from(parameters.values())
+      .reduce((collected, parameter) => {
         return [...collected, parameter.getIamRoleArns()]
-      }, new Array<string[]>()),
-    ),
+      }, new Array<string[]>())
+      .flat(),
   )
     .map((iamRoleArn) => ({ iamRoleArn }))
     .forEach((commandRole) => {

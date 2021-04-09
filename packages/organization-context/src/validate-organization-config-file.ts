@@ -10,7 +10,6 @@ import {
   OrganizationPolicyConfig,
 } from "@takomo/organization-config"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
-import flatten from "lodash.flatten"
 import {
   AccountsMissingFromLocalConfigError,
   NonExistingAccountsInLocalConfigError,
@@ -228,12 +227,12 @@ export const validateCommonLocalConfiguration = async (
   ctx: OrganizationContext,
   currentAccounts: ReadonlyArray<OrganizationAccount>,
 ): Promise<void> => {
-  const allAccountsInConfig = flatten(
-    collectFromHierarchy(
-      ctx.getOrganizationalUnit("Root"),
-      (node) => node.children,
-    ).map((ou) => ou.accounts),
+  const allAccountsInConfig = collectFromHierarchy(
+    ctx.getOrganizationalUnit("Root"),
+    (node) => node.children,
   )
+    .map((ou) => ou.accounts)
+    .flat()
 
   const allAccountIdsInConfig = allAccountsInConfig.map((a) => a.id)
 

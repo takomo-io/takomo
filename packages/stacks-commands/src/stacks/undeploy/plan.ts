@@ -4,7 +4,7 @@ import {
   sortStacksForUndeploy,
 } from "@takomo/stacks-context"
 import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
-import uniq from "lodash.uniq"
+import R from "ramda"
 
 /**
  * @hidden
@@ -56,7 +56,7 @@ const collectStackDependents = (
       throw new Error(`Expected stack with path '${dependent}' to exist`)
     }
 
-    return uniq([
+    return R.uniq([
       dependent,
       ...collected,
       ...collectStackDependents(stacksByPath, dependentStack),
@@ -76,7 +76,7 @@ export const buildStacksUndeployPlan = async (
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
       (collected, stack) =>
-        uniq([
+        R.uniq([
           stack.path,
           ...collected,
           ...collectStackDependents(stacksByPath, stack),

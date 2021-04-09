@@ -14,7 +14,6 @@ import {
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { TakomoError, TemplateEngine, Timer } from "@takomo/util"
 import { AnySchema } from "joi"
-import flatten from "lodash.flatten"
 import { ConfigTree } from "./config/config-tree"
 
 /**
@@ -158,10 +157,10 @@ export class ListResolverExecutor implements ResolverExecutor {
   isImmutable = (): boolean => this.#immutable
 
   getDependencies = (): StackPath[] =>
-    flatten(this.#resolvers.map((r) => r.getDependencies()))
+    this.#resolvers.map((r) => r.getDependencies()).flat()
 
   getIamRoleArns = (): IamRoleArn[] =>
-    flatten(this.#resolvers.map((r) => r.getIamRoleArns()))
+    this.#resolvers.map((r) => r.getIamRoleArns()).flat()
 
   getName = (): ResolverName => this.#name
 
