@@ -141,6 +141,8 @@ const findTerminalEvent = (
 
 interface CloudFormationClientProps extends AwsClientProps {
   readonly describeEventsBulkhead: BulkheadPolicy
+  readonly waitStackDeployToCompletePollInterval: number
+  readonly waitStackDeleteToCompletePollInterval: number
 }
 
 /**
@@ -159,7 +161,12 @@ export const createCloudFormationClient = (
     clientConstructor: (config) => new CloudFormation(config),
   })
 
-  const { logger, describeEventsBulkhead } = props
+  const {
+    logger,
+    describeEventsBulkhead,
+    waitStackDeployToCompletePollInterval,
+    waitStackDeleteToCompletePollInterval,
+  } = props
 
   const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
     withClientPromise(
@@ -447,7 +454,7 @@ export const createCloudFormationClient = (
       latestEventId,
     } = props
 
-    await sleep(2000)
+    await sleep(waitStackDeployToCompletePollInterval)
 
     const events = (await describeStackEvents(stackId)).slice().reverse()
     const newEvents = takeRightWhile(
@@ -573,7 +580,7 @@ export const createCloudFormationClient = (
       allEvents = [],
     } = props
 
-    await sleep(2000)
+    await sleep(waitStackDeleteToCompletePollInterval)
 
     const events = (await describeStackEvents(stackId)).slice().reverse()
 

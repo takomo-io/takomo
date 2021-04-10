@@ -58,6 +58,8 @@ export const createAwsClientProvider = (
         listener,
         ...props,
         describeEventsBulkhead,
+        waitStackDeployToCompletePollInterval: 2000,
+        waitStackDeleteToCompletePollInterval: 2000,
       })
       cloudFormationClients.set(props.id, client)
       return client
