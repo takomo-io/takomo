@@ -3,6 +3,7 @@ import { randomInt, TkmLogger } from "@takomo/util"
 import { CognitoIdentityCredentials, Credentials } from "aws-sdk"
 import { AWSError } from "aws-sdk/lib/error"
 import { Request } from "aws-sdk/lib/request"
+import { BulkheadPolicy } from "cockatiel/dist/BulkheadPolicy"
 import https from "https"
 import { CredentialManager } from "./credentials"
 import ClientConfiguration = CognitoIdentityCredentials.ClientConfiguration
@@ -41,11 +42,15 @@ export interface AwsClient<C> {
     extractor: (response: R) => ReadonlyArray<T> | undefined,
     nextToken?: string,
   ) => Promise<ReadonlyArray<T>>
+  readonly pagedOperationBulkhead: <T, P, R extends PagedResponse>(
+    bulkhead: BulkheadPolicy,
+    operation: (params: P) => Request<R, AWSError>,
+    params: P,
+    extractor: (response: R) => ReadonlyArray<T> | undefined,
+    nextToken?: string,
+  ) => Promise<ReadonlyArray<T>>
 }
 
-/**
- * @hidden
- */
 export interface AwsClientProps {
   readonly credentialManager: CredentialManager
   readonly region: Region
@@ -87,7 +92,6 @@ export const buildApiCallProps = (
   clientId: string,
   message: string,
 ): ApiCallProps => {
-  // //[AWS cloudformation 200 0.04s 0 retries] describeStackEvents(
   const [info] = message.substr(1).split("(", 2)
   const [stats, action] = info.split("] ")
   const [aws, api, status, time, retries] = stats.split(" ")
@@ -217,6 +221,37 @@ export const createClient = <C>({
     ]
   }
 
+  const pagedOperationBulkhead = async <T, P, R extends PagedResponse>(
+    bulkhead: BulkheadPolicy,
+    operation: (params: P) => Request<R, AWSError>,
+    params: P,
+    extractor: (response: R) => ReadonlyArray<T> | undefined,
+    nextToken?: string,
+  ): Promise<ReadonlyArray<T>> => {
+    const response = await bulkhead.execute(() =>
+      operation({
+        ...params,
+        NextToken: nextToken,
+      }).promise(),
+    )
+
+    const items = extractor(response) || []
+    if (!response.NextToken) {
+      return items
+    }
+
+    return [
+      ...items,
+      ...(await pagedOperationBulkhead(
+        bulkhead,
+        operation,
+        params,
+        extractor,
+        response.NextToken,
+      )),
+    ]
+  }
+
   return {
     credentialManager,
     region,
@@ -225,5 +260,6 @@ export const createClient = <C>({
     withClient,
     withClientPromise,
     pagedOperation,
+    pagedOperationBulkhead,
   }
 }

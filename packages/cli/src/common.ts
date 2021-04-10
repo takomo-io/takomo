@@ -360,7 +360,9 @@ export const initCommandContext = async (
     overrideFeatures,
   )
 
-  const awsClientProvider = createAwsClientProvider()
+  const logger = createLogger({ logLevel, writer: console.log })
+
+  const awsClientProvider = createAwsClientProvider({ logger })
 
   return deepFreeze({
     credentials,

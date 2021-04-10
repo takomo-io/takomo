@@ -1,3 +1,6 @@
+import { TkmLogger } from "@takomo/util"
+import { Policy } from "cockatiel"
+import { BulkheadPolicy } from "cockatiel/dist/BulkheadPolicy"
 import {
   CloudFormationClient,
   createCloudFormationClient,
@@ -18,12 +21,25 @@ export interface InternalAwsClientProvider extends AwsClientProvider {
   readonly getApiCalls: () => ReadonlyArray<ApiCallProps>
 }
 
+interface AwsClientProviderProps {
+  readonly logger: TkmLogger
+}
+
+const createDescribeEventsBulkhead = (): BulkheadPolicy => {
+  const limit = 2
+  const queue = 1000
+  return Policy.bulkhead(limit, queue)
+}
+
 /**
  * @hidden
  */
-export const createAwsClientProvider = (): InternalAwsClientProvider => {
+export const createAwsClientProvider = (
+  props: AwsClientProviderProps,
+): InternalAwsClientProvider => {
   const cloudFormationClients = new Map<string, CloudFormationClient>()
   const apiCalls = new Array<ApiCallProps>()
+  const describeEventsBulkhead = createDescribeEventsBulkhead()
 
   const listener = {
     onApiCall: (props: ApiCallProps): void => {
@@ -38,7 +54,11 @@ export const createAwsClientProvider = (): InternalAwsClientProvider => {
     createCloudFormationClient: (
       props: AwsClientProps,
     ): CloudFormationClient => {
-      const client = createCloudFormationClient({ listener, ...props })
+      const client = createCloudFormationClient({
+        listener,
+        ...props,
+        describeEventsBulkhead,
+      })
       cloudFormationClients.set(props.id, client)
       return client
     },

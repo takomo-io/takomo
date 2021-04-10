@@ -19,6 +19,7 @@ import {
   UpdateStackInput,
   ValidateTemplateInput,
 } from "aws-sdk/clients/cloudformation"
+import { BulkheadPolicy } from "cockatiel/dist/BulkheadPolicy"
 import last from "lodash.last"
 import takeRightWhile from "lodash.takerightwhile"
 import { AwsClientProps, createClient } from "../common/client"
@@ -138,15 +139,19 @@ const findTerminalEvent = (
       isTerminalResourceStatus(resourceStatus),
   )
 
+interface CloudFormationClientProps extends AwsClientProps {
+  readonly describeEventsBulkhead: BulkheadPolicy
+}
+
 /**
  * @hidden
  */
 export const createCloudFormationClient = (
-  props: AwsClientProps,
+  props: CloudFormationClientProps,
 ): CloudFormationClient => {
   const {
     withClientPromise,
-    pagedOperation,
+    pagedOperationBulkhead,
     withClient,
     getClient,
   } = createClient({
@@ -154,7 +159,7 @@ export const createCloudFormationClient = (
     clientConstructor: (config) => new CloudFormation(config),
   })
 
-  const { logger } = props
+  const { logger, describeEventsBulkhead } = props
 
   const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
     withClientPromise(
@@ -293,7 +298,8 @@ export const createCloudFormationClient = (
     stackName: string,
   ): Promise<ReadonlyArray<StackEvent>> =>
     withClient((c) =>
-      pagedOperation(
+      pagedOperationBulkhead(
+        describeEventsBulkhead,
         (params) => c.describeStackEvents(params),
         { StackName: stackName },
         convertStackEvents,
