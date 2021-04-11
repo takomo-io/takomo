@@ -11,8 +11,7 @@ import {
 } from "@takomo/organization-commands"
 import { collectFromHierarchy, green, red, yellow } from "@takomo/util"
 import Table from "easy-table"
-import flatten from "lodash.flatten"
-import uniq from "lodash.uniq"
+import R from "ramda"
 import { createBaseIO } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus } from "../formatters"
@@ -119,9 +118,9 @@ export const createDeployOrganizationIO = (
 
     const { serviceControl, tag, aiServicesOptOut, backup } = plan
     const allPolicies = [serviceControl, tag, aiServicesOptOut, backup]
-    const policiesToRemove = flatten(allPolicies.map((p) => p.remove))
-    const policiesToAdd = flatten(allPolicies.map((p) => p.add))
-    const policiesToUpdate = flatten(allPolicies.map((p) => p.update))
+    const policiesToRemove = allPolicies.map((p) => p.remove).flat()
+    const policiesToAdd = allPolicies.map((p) => p.add).flat()
+    const policiesToUpdate = allPolicies.map((p) => p.update).flat()
 
     if (policiesToAdd.length > 0) {
       io.message({
@@ -204,7 +203,7 @@ export const createDeployOrganizationIO = (
     inclusions: PolicyOperationsToInclude,
     depth: number,
   ): void => {
-    const attachedAdd = uniq(inclusions.add ? attached.add : []).map(
+    const attachedAdd = R.uniq(inclusions.add ? attached.add : []).map(
       (name) => ({
         name,
         operation: "add",
@@ -213,7 +212,7 @@ export const createDeployOrganizationIO = (
       }),
     )
 
-    const attachedRetain = uniq(inclusions.retain ? attached.retain : []).map(
+    const attachedRetain = R.uniq(inclusions.retain ? attached.retain : []).map(
       (name) => ({
         name,
         operation: "retain",
@@ -222,7 +221,7 @@ export const createDeployOrganizationIO = (
       }),
     )
 
-    const attachedRemove = uniq(inclusions.remove ? attached.remove : []).map(
+    const attachedRemove = R.uniq(inclusions.remove ? attached.remove : []).map(
       (name) => ({
         name,
         operation: "remove",
@@ -237,7 +236,7 @@ export const createDeployOrganizationIO = (
       ...attachedRetain,
     ].map((a) => a.name)
 
-    const inheritedAdd = uniq(inclusions.add ? inherited.add : []).map(
+    const inheritedAdd = R.uniq(inclusions.add ? inherited.add : []).map(
       (name) => ({
         name,
         operation: "add",
@@ -246,23 +245,23 @@ export const createDeployOrganizationIO = (
       }),
     )
 
-    const inheritedRetain = uniq(inclusions.retain ? inherited.retain : []).map(
-      (name) => ({
-        name,
-        operation: "retain",
-        formatter: formatters.retain,
-        type: "inherited",
-      }),
-    )
+    const inheritedRetain = R.uniq(
+      inclusions.retain ? inherited.retain : [],
+    ).map((name) => ({
+      name,
+      operation: "retain",
+      formatter: formatters.retain,
+      type: "inherited",
+    }))
 
-    const inheritedRemove = uniq(inclusions.remove ? inherited.remove : []).map(
-      (name) => ({
-        name,
-        operation: "remove",
-        formatter: formatters.remove,
-        type: "inherited",
-      }),
-    )
+    const inheritedRemove = R.uniq(
+      inclusions.remove ? inherited.remove : [],
+    ).map((name) => ({
+      name,
+      operation: "remove",
+      formatter: formatters.remove,
+      type: "inherited",
+    }))
 
     const all = [
       ...attachedRetain,

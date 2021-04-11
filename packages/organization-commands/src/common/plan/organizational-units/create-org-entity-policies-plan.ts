@@ -6,8 +6,8 @@ import { OrgEntityPoliciesConfig } from "@takomo/organization-config"
 import { OrganizationState, OrgEntityId } from "@takomo/organization-context"
 import { TkmLogger } from "@takomo/util"
 import intersection from "lodash.intersection"
-import uniq from "lodash.uniq"
 import without from "lodash.without"
+import R from "ramda"
 import { EnabledPoliciesPlan } from "../basic-config/model"
 import { OrgEntityPoliciesPlan, OrgEntityPolicyOperations } from "./model"
 
@@ -78,7 +78,7 @@ export const createOrgEntityPoliciesPlanForExistingEntity = (
 
   const attachedServiceControlPolicies = createOrgEntityPolicyOperations(
     currentAttachedServiceControlPolicyNames,
-    uniq([...serviceControl.attached, ...serviceControl.inherited]),
+    R.uniq([...serviceControl.attached, ...serviceControl.inherited]),
     isPolicyTypeEnabled("SERVICE_CONTROL_POLICY"),
   )
 
@@ -179,7 +179,7 @@ export const createOrgEntityPoliciesPlanForNewEntity = (
 
   const attachedServiceControlPolicies = createOrgEntityPolicyOperations(
     [],
-    uniq([...serviceControl.attached, ...serviceControl.inherited]),
+    R.uniq([...serviceControl.attached, ...serviceControl.inherited]),
     isPolicyTypeEnabled("SERVICE_CONTROL_POLICY"),
   )
 

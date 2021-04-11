@@ -10,7 +10,6 @@ import {
 } from "@takomo/organization-context"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { collectFromHierarchy, TkmLogger } from "@takomo/util"
-import flatten from "lodash.flatten"
 import uniqBy from "lodash.uniqby"
 import { AccountsLaunchPlan } from "../model"
 import { OrganizationStateHolder } from "../states"
@@ -46,16 +45,14 @@ const planAccountsDeploy = async (
     return order !== 0 ? order : a.name.localeCompare(b.name)
   }
 
-  const ousToLaunch: OrganizationalUnitConfig[] = flatten(
-    organizationalUnitsToLaunch.map((ou) =>
-      flatten(
-        collectFromHierarchy(ou, (o) => o.children, {
-          sortSiblings: sortOus,
-          filter: (o) => o.status === "active",
-        }),
-      ),
-    ),
-  )
+  const ousToLaunch: OrganizationalUnitConfig[] = organizationalUnitsToLaunch
+    .map((ou) =>
+      collectFromHierarchy(ou, (o) => o.children, {
+        sortSiblings: sortOus,
+        filter: (o) => o.status === "active",
+      }).flat(),
+    )
+    .flat()
 
   const uniqueOusToLaunch = uniqBy(ousToLaunch, (o) => o.path).filter(
     (o) => o.status === "active",

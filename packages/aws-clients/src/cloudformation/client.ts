@@ -20,8 +20,8 @@ import {
   ValidateTemplateInput,
 } from "aws-sdk/clients/cloudformation"
 import { BulkheadPolicy } from "cockatiel/dist/BulkheadPolicy"
-import last from "lodash.last"
 import takeRightWhile from "lodash.takerightwhile"
+import R from "ramda"
 import { AwsClientProps, createClient } from "../common/client"
 import {
   convertChangeSet,
@@ -403,7 +403,7 @@ export const createCloudFormationClient = (
           timeoutConfig,
         }
       default:
-        const latestEvent = last(events)
+        const latestEvent = R.last(events)
         const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
 
         if (timeoutConfig.timeout !== 0) {
@@ -475,13 +475,13 @@ export const createCloudFormationClient = (
       }
     }
 
-    const latestEvent = last(events)
+    const latestEvent = R.last(events)
     const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
 
     if (timeoutConfig.timeout !== 0) {
       const elapsedTime = Date.now() - timeoutConfig.startTime
       if (elapsedTime > timeoutConfig.timeout * 1000) {
-        const latestStackEvent = last(
+        const latestStackEvent = R.last(
           updatedEvents.filter(
             ({ resourceType, physicalResourceId }) =>
               resourceType === "AWS::CloudFormation::Stack" &&
@@ -556,7 +556,7 @@ export const createCloudFormationClient = (
           stackStatus: stack.status,
         }
       default:
-        const latestEvent = last(events)
+        const latestEvent = R.last(events)
         const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
         return waitUntilStackIsDeleted(
           stackName,
@@ -601,7 +601,7 @@ export const createCloudFormationClient = (
       }
     }
 
-    const latestEvent = last(events)
+    const latestEvent = R.last(events)
     const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
     return waitStackDeleteToComplete({
       ...props,

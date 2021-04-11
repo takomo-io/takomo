@@ -3,7 +3,6 @@ import {
   DeploymentTargetConfig,
 } from "@takomo/deployment-targets-config"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
-import flatten from "lodash.flatten"
 import uniqBy from "lodash.uniqby"
 import { confirmOperation } from "./confirm"
 import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"
@@ -44,16 +43,14 @@ export const planDeployment = async (
     return order !== 0 ? order : a.name.localeCompare(b.name)
   }
 
-  const groupsToLaunch: DeploymentGroupConfig[] = flatten(
-    deploymentGroupsToLaunch.map((ou) =>
-      flatten(
-        collectFromHierarchy(ou, (o) => o.children, {
-          sortSiblings: sortGroups,
-          filter: (o) => o.status === "active",
-        }),
-      ),
-    ),
-  )
+  const groupsToLaunch: DeploymentGroupConfig[] = deploymentGroupsToLaunch
+    .map((ou) =>
+      collectFromHierarchy(ou, (o) => o.children, {
+        sortSiblings: sortGroups,
+        filter: (o) => o.status === "active",
+      }).flat(),
+    )
+    .flat()
 
   const uniqueGroupsToLaunch = uniqBy(groupsToLaunch, (o) => o.path).filter(
     (o) => o.status === "active",

@@ -2,7 +2,6 @@ import { OrganizationsClient } from "@takomo/aws-clients"
 import { OrganizationPolicyType } from "@takomo/aws-model"
 import { OrganizationState } from "@takomo/organization-context"
 import { TkmLogger } from "@takomo/util"
-import flatten from "lodash.flatten"
 import { PlannedOrganizationalUnit } from "../../common/plan/organizational-units/model"
 import { OrganizationalUnitDeploymentResult } from "../model"
 import { addOrUpdateOrganizationalUnits } from "./add-or-update-organizational-units"
@@ -45,7 +44,7 @@ export const updateOrganizationalUnit = async (
         status: "FAILED",
         message: "Policies failed",
       },
-      ...flatten(planned.children.map(cancelOrganizationalUnits)),
+      ...planned.children.map(cancelOrganizationalUnits).flat(),
     ]
   }
 
@@ -77,7 +76,7 @@ export const updateOrganizationalUnit = async (
           status: "FAILED",
           message: "Accounts failed",
         },
-        ...flatten(planned.children.map(cancelOrganizationalUnits)),
+        ...planned.children.map(cancelOrganizationalUnits).flat(),
       ]
     }
   }
@@ -109,7 +108,7 @@ export const updateOrganizationalUnit = async (
           status: "FAILED",
           message: "Accounts failed",
         },
-        ...flatten(planned.children.map(cancelOrganizationalUnits)),
+        ...planned.children.map(cancelOrganizationalUnits).flat(),
       ]
     }
   }
