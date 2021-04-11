@@ -3,7 +3,7 @@ import { randomInt, TkmLogger } from "@takomo/util"
 import { CognitoIdentityCredentials, Credentials } from "aws-sdk"
 import { AWSError } from "aws-sdk/lib/error"
 import { Request } from "aws-sdk/lib/request"
-import { BulkheadPolicy } from "cockatiel/dist/BulkheadPolicy"
+import { IPolicy } from "cockatiel"
 import https from "https"
 import { CredentialManager } from "./credentials"
 import ClientConfiguration = CognitoIdentityCredentials.ClientConfiguration
@@ -43,7 +43,7 @@ export interface AwsClient<C> {
     nextToken?: string,
   ) => Promise<ReadonlyArray<T>>
   readonly pagedOperationBulkhead: <T, P, R extends PagedResponse>(
-    bulkhead: BulkheadPolicy,
+    bulkhead: IPolicy,
     operation: (params: P) => Request<R, AWSError>,
     params: P,
     extractor: (response: R) => ReadonlyArray<T> | undefined,
@@ -222,7 +222,7 @@ export const createClient = <C>({
   }
 
   const pagedOperationBulkhead = async <T, P, R extends PagedResponse>(
-    bulkhead: BulkheadPolicy,
+    bulkhead: IPolicy,
     operation: (params: P) => Request<R, AWSError>,
     params: P,
     extractor: (response: R) => ReadonlyArray<T> | undefined,

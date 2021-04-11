@@ -1,6 +1,5 @@
 import { TkmLogger } from "@takomo/util"
-import { Policy } from "cockatiel"
-import { BulkheadPolicy } from "cockatiel/dist/BulkheadPolicy"
+import { IPolicy, Policy } from "cockatiel"
 import {
   CloudFormationClient,
   createCloudFormationClient,
@@ -25,7 +24,7 @@ interface AwsClientProviderProps {
   readonly logger: TkmLogger
 }
 
-const createDescribeEventsBulkhead = (): BulkheadPolicy => {
+const createDescribeEventsBulkhead = (): IPolicy => {
   const limit = 2
   const queue = 1000
   return Policy.bulkhead(limit, queue)

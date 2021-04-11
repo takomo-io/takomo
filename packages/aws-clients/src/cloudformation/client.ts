@@ -19,7 +19,7 @@ import {
   UpdateStackInput,
   ValidateTemplateInput,
 } from "aws-sdk/clients/cloudformation"
-import { BulkheadPolicy } from "cockatiel/dist/BulkheadPolicy"
+import { IPolicy } from "cockatiel"
 import takeRightWhile from "lodash.takerightwhile"
 import R from "ramda"
 import { AwsClientProps, createClient } from "../common/client"
@@ -140,7 +140,7 @@ const findTerminalEvent = (
   )
 
 interface CloudFormationClientProps extends AwsClientProps {
-  readonly describeEventsBulkhead: BulkheadPolicy
+  readonly describeEventsBulkhead: IPolicy
   readonly waitStackDeployToCompletePollInterval: number
   readonly waitStackDeleteToCompletePollInterval: number
 }
