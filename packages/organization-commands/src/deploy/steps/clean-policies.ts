@@ -1,6 +1,5 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
 import { FAILED, SUCCESS } from "@takomo/core"
-import flatten from "lodash.flatten"
 import { PlannedPolicy } from "../../common/plan/policies/model"
 import { PolicyDeploymentResult } from "../model"
 import { OrganizationalUnitsCleanResultHolder } from "../states"
@@ -75,9 +74,9 @@ export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResul
   const client = ctx.getClient()
 
   const allPolicies = [serviceControl, backup, tag, aiServicesOptOut]
-  const policiesToDelete = flatten(
-    allPolicies.map((p) => p.remove.filter((s) => !s.awsManaged)),
-  )
+  const policiesToDelete = allPolicies
+    .map((p) => p.remove.filter((s) => !s.awsManaged))
+    .flat()
 
   io.info(`Delete ${policiesToDelete.length} policies`)
   const results = await deletePolicies(client, policiesToDelete, [])

@@ -20,7 +20,6 @@ import {
   deepFreeze,
   TkmLogger,
 } from "@takomo/util"
-import flatten from "lodash.flatten"
 import { isStackGroupPath } from "../common"
 import {
   CommandPathMatchesNoStacksError,
@@ -55,9 +54,10 @@ export const validateCommandPath = (
   )
 
   const stackGroupPaths = stackGroups.map((s) => s.path)
-  const stackPaths = flatten(stackGroups.map((s) => s.stacks)).map(
-    (s) => s.path,
-  )
+  const stackPaths = stackGroups
+    .map((s) => s.stacks)
+    .flat()
+    .map((s) => s.path)
 
   if (isStackGroupPath(commandPath)) {
     if (!stackGroupPaths.some((s) => s === commandPath)) {

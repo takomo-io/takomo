@@ -6,8 +6,7 @@ import {
   StackProps,
 } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
-import flatten from "lodash.flatten"
-import uniq from "lodash.uniq"
+import R from "ramda"
 
 /**
  * @hidden
@@ -54,7 +53,7 @@ export const collectAllDependencies = (
   stacks: InternalStack[],
 ): StackPath[] => {
   const stack = stacks.find((s) => s.path === stackPath)!
-  return uniq(
+  return R.uniq(
     stack.dependencies.reduce((collected, dependencyPath) => {
       const childDependencies = collectAllDependencies(dependencyPath, stacks)
       return [...collected, ...childDependencies, dependencyPath]
@@ -70,7 +69,7 @@ export const collectAllDependents = (
   stacks: InternalStack[],
 ): StackPath[] => {
   const stack = stacks.find((s) => s.path === stackPath)!
-  return uniq(
+  return R.uniq(
     stack.dependents.reduce((collected, dependentPath) => {
       const childDependents = collectAllDependents(dependentPath, stacks)
       return [...collected, ...childDependents, dependentPath]
@@ -149,13 +148,13 @@ export const processStackDependencies = (
             return matching
           })
 
-        return [...collected, ...flatten(matchingParamDeps)]
+        return [...collected, ...matchingParamDeps.flat()]
       }, new Array<StackPath>())
 
       return {
         ...stack,
-        dependencies: uniq(
-          flatten([...stackDependencies, ...parameterDependencies]),
+        dependencies: R.uniq(
+          [...stackDependencies, ...parameterDependencies].flat(),
         ),
       }
     })

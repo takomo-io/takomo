@@ -1,6 +1,4 @@
 import { resolveCommandOutputBase } from "@takomo/core"
-import { collectFromHierarchy } from "@takomo/util"
-import flatten from "lodash.flatten"
 import { addOrUpdateOrganizationalUnits } from "../deploy/add-or-update-organizational-units"
 import { PoliciesDeploymentResultHolder } from "../states"
 import { DeployOrganizationStep } from "../steps"
@@ -35,13 +33,6 @@ export const deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymen
     ...basicConfigPlan.enabledPolicies.add,
     ...basicConfigPlan.enabledPolicies.retain,
   ]
-
-  const currentOus = flatten(
-    collectFromHierarchy(
-      organizationState.rootOrganizationalUnit,
-      (o) => o.children,
-    ),
-  )
 
   const serviceControlPoliciesJustEnabled = basicConfigPlan.enabledPolicies.add.includes(
     "SERVICE_CONTROL_POLICY",

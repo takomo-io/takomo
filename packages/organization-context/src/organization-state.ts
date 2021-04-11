@@ -11,7 +11,7 @@ import {
 } from "@takomo/aws-model"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { collectFromHierarchy } from "@takomo/util"
-import uniq from "lodash.uniq"
+import R from "ramda"
 import { OrgEntityId } from "./model"
 
 export type PoliciesByTypeByTargetMap = Map<
@@ -183,7 +183,7 @@ export class OrganizationState {
       return []
     }
 
-    return uniq([
+    return R.uniq([
       ...this.getPoliciesAttachedToTarget(policyType, parentId),
       ...this.getPoliciesInheritedByTarget(policyType, parentId),
     ]).sort()

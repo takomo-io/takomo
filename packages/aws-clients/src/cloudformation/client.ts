@@ -1,8 +1,13 @@
 import {
   ChangeSet,
+  ClientRequestToken,
   CloudFormationStack,
   DetailedCloudFormationStack,
+  EventId,
+  isTerminalResourceStatus,
+  ResourceStatus,
   StackEvent,
+  StackId,
   TemplateSummary,
 } from "@takomo/aws-model"
 import { sleep, uuid } from "@takomo/util"
@@ -14,8 +19,9 @@ import {
   UpdateStackInput,
   ValidateTemplateInput,
 } from "aws-sdk/clients/cloudformation"
-import last from "lodash.last"
+import { IPolicy } from "cockatiel"
 import takeRightWhile from "lodash.takerightwhile"
+import R from "ramda"
 import { AwsClientProps, createClient } from "../common/client"
 import {
   convertChangeSet,
@@ -69,7 +75,7 @@ export interface CloudFormationClient {
 
   readonly cancelStackUpdate: (stackName: string) => Promise<string>
 
-  readonly createStack: (params: CreateStackInput) => Promise<string>
+  readonly createStack: (params: CreateStackInput) => Promise<StackId>
 
   readonly updateStack: (params: UpdateStackInput) => Promise<boolean>
 
@@ -78,6 +84,13 @@ export interface CloudFormationClient {
     enable: boolean,
   ) => Promise<boolean>
 
+  /**
+   * Replaced with waitStackDeployToComplete.
+   *
+   * To be removed in Takomo 4.0.0.
+   *
+   * @deprecated
+   */
   readonly waitUntilStackCreateOrUpdateCompletes: (
     stackName: string,
     clientRequestToken: string,
@@ -87,6 +100,13 @@ export interface CloudFormationClient {
     allEvents?: ReadonlyArray<StackEvent>,
   ) => Promise<ChangeSetCompletionResponse>
 
+  /**
+   * Replaced with waitStackDeleteToComplete.
+   *
+   * To be removed in Takomo 4.0.0.
+   *
+   * @deprecated
+   */
   readonly waitUntilStackIsDeleted: (
     stackName: string,
     stackArn: string,
@@ -98,23 +118,55 @@ export interface CloudFormationClient {
   ) => Promise<StackDeleteCompletionResponse>
 
   readonly getNativeClient: () => Promise<CloudFormation>
+
+  readonly waitStackDeployToComplete: (
+    props: WaitStackDeployToCompleteProps,
+  ) => Promise<WaitStackDeployToCompleteResponse>
+
+  readonly waitStackDeleteToComplete: (
+    props: WaitStackDeleteToCompleteProps,
+  ) => Promise<WaitStackDeleteToCompleteResponse>
+}
+
+const findTerminalEvent = (
+  stackId: StackId,
+  events: ReadonlyArray<StackEvent>,
+): StackEvent | undefined =>
+  events.find(
+    ({ resourceType, physicalResourceId, resourceStatus }) =>
+      resourceType === "AWS::CloudFormation::Stack" &&
+      physicalResourceId === stackId &&
+      isTerminalResourceStatus(resourceStatus),
+  )
+
+interface CloudFormationClientProps extends AwsClientProps {
+  readonly describeEventsBulkhead: IPolicy
+  readonly waitStackDeployToCompletePollInterval: number
+  readonly waitStackDeleteToCompletePollInterval: number
 }
 
 /**
  * @hidden
  */
 export const createCloudFormationClient = (
-  props: AwsClientProps,
+  props: CloudFormationClientProps,
 ): CloudFormationClient => {
   const {
     withClientPromise,
-    pagedOperation,
+    pagedOperationBulkhead,
     withClient,
     getClient,
   } = createClient({
     ...props,
     clientConstructor: (config) => new CloudFormation(config),
   })
+
+  const {
+    logger,
+    describeEventsBulkhead,
+    waitStackDeployToCompletePollInterval,
+    waitStackDeleteToCompletePollInterval,
+  } = props
 
   const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
     withClientPromise(
@@ -253,7 +305,8 @@ export const createCloudFormationClient = (
     stackName: string,
   ): Promise<ReadonlyArray<StackEvent>> =>
     withClient((c) =>
-      pagedOperation(
+      pagedOperationBulkhead(
+        describeEventsBulkhead,
         (params) => c.describeStackEvents(params),
         { StackName: stackName },
         convertStackEvents,
@@ -272,7 +325,7 @@ export const createCloudFormationClient = (
     )
   }
 
-  const createStack = (params: CreateStackInput): Promise<string> =>
+  const createStack = (params: CreateStackInput): Promise<StackId> =>
     withClientPromise(
       (c) => c.createStack(params),
       (res) => res.StackId!,
@@ -350,7 +403,7 @@ export const createCloudFormationClient = (
           timeoutConfig,
         }
       default:
-        const latestEvent = last(events)
+        const latestEvent = R.last(events)
         const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
 
         if (timeoutConfig.timeout !== 0) {
@@ -389,6 +442,85 @@ export const createCloudFormationClient = (
     }
   }
 
+  const waitStackDeployToComplete = async (
+    props: WaitStackDeployToCompleteProps,
+  ): Promise<WaitStackDeployToCompleteResponse> => {
+    const {
+      stackId,
+      clientToken,
+      eventListener,
+      timeoutConfig,
+      allEvents = [],
+      latestEventId,
+    } = props
+
+    await sleep(waitStackDeployToCompletePollInterval)
+
+    const events = (await describeStackEvents(stackId)).slice().reverse()
+    const newEvents = takeRightWhile(
+      events,
+      (e) => e.id !== latestEventId,
+    ).filter((e) => e.clientRequestToken === clientToken)
+
+    newEvents.forEach(eventListener)
+
+    const updatedEvents = [...allEvents, ...newEvents]
+    const terminalEvent = findTerminalEvent(stackId, updatedEvents)
+
+    if (terminalEvent) {
+      return {
+        timeoutConfig,
+        events: updatedEvents,
+        stackStatus: terminalEvent.resourceStatus,
+      }
+    }
+
+    const latestEvent = R.last(events)
+    const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
+
+    if (timeoutConfig.timeout !== 0) {
+      const elapsedTime = Date.now() - timeoutConfig.startTime
+      if (elapsedTime > timeoutConfig.timeout * 1000) {
+        const latestStackEvent = R.last(
+          updatedEvents.filter(
+            ({ resourceType, physicalResourceId }) =>
+              resourceType === "AWS::CloudFormation::Stack" &&
+              physicalResourceId === stackId,
+          ),
+        )
+
+        if (!latestStackEvent) {
+          throw new Error(`Expected latest event to exist for stack ${stackId}`)
+        }
+
+        if (latestStackEvent.resourceStatus === "UPDATE_IN_PROGRESS") {
+          const cancelToken = await cancelStackUpdate(stackId)
+          return waitStackDeployToComplete({
+            ...props,
+            clientToken: cancelToken,
+            allEvents: updatedEvents,
+            latestEventId: newLatestEventId,
+            timeoutConfig: {
+              timeout: 0,
+              timeoutOccurred: true,
+              startTime: timeoutConfig.startTime,
+            },
+          })
+        } else {
+          logger.warn(
+            `Timeout exceeded for stack ${stackId} but update can't be cancelled because stack status ${latestStackEvent.resourceStatus} != UPDATE_IN_PROGRESS`,
+          )
+        }
+      }
+    }
+
+    return waitStackDeployToComplete({
+      ...props,
+      allEvents: updatedEvents,
+      latestEventId: newLatestEventId,
+    })
+  }
+
   const waitUntilStackIsDeleted = async (
     stackName: string,
     stackArn: string,
@@ -424,7 +556,7 @@ export const createCloudFormationClient = (
           stackStatus: stack.status,
         }
       default:
-        const latestEvent = last(events)
+        const latestEvent = R.last(events)
         const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
         return waitUntilStackIsDeleted(
           stackName,
@@ -435,6 +567,47 @@ export const createCloudFormationClient = (
           updatedEvents,
         )
     }
+  }
+
+  const waitStackDeleteToComplete = async (
+    props: WaitStackDeleteToCompleteProps,
+  ): Promise<WaitStackDeleteToCompleteResponse> => {
+    const {
+      stackId,
+      latestEventId,
+      clientToken,
+      eventListener,
+      allEvents = [],
+    } = props
+
+    await sleep(waitStackDeleteToCompletePollInterval)
+
+    const events = (await describeStackEvents(stackId)).slice().reverse()
+
+    const newEvents = takeRightWhile(
+      events,
+      (e) => e.id !== latestEventId,
+    ).filter((e) => e.clientRequestToken === clientToken)
+
+    newEvents.forEach(eventListener)
+
+    const updatedEvents = [...allEvents, ...newEvents]
+    const terminalEvent = findTerminalEvent(stackId, updatedEvents)
+
+    if (terminalEvent) {
+      return {
+        events: updatedEvents,
+        stackStatus: terminalEvent.resourceStatus,
+      }
+    }
+
+    const latestEvent = R.last(events)
+    const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
+    return waitStackDeleteToComplete({
+      ...props,
+      latestEventId: newLatestEventId,
+      allEvents: updatedEvents,
+    })
   }
 
   return {
@@ -454,7 +627,9 @@ export const createCloudFormationClient = (
     updateStack,
     updateTerminationProtection,
     waitUntilStackCreateOrUpdateCompletes,
+    waitStackDeployToComplete,
     waitUntilStackIsDeleted,
+    waitStackDeleteToComplete,
     getNativeClient: getClient,
   }
 }
@@ -475,6 +650,46 @@ export interface ChangeSetCompletionResponse {
   readonly events: ReadonlyArray<StackEvent>
   readonly stackStatus: CloudFormation.StackStatus
   readonly timeoutConfig: TimeoutConfig
+}
+
+/**
+ * @hidden
+ */
+export interface WaitStackDeployToCompleteResponse {
+  readonly events: ReadonlyArray<StackEvent>
+  readonly stackStatus: ResourceStatus
+  readonly timeoutConfig: TimeoutConfig
+}
+
+/**
+ * @hidden
+ */
+export interface WaitStackDeployToCompleteProps {
+  readonly stackId: StackId
+  readonly clientToken: ClientRequestToken
+  readonly eventListener: (event: StackEvent) => void
+  readonly timeoutConfig: TimeoutConfig
+  readonly allEvents?: ReadonlyArray<StackEvent>
+  readonly latestEventId?: EventId
+}
+
+/**
+ * @hidden
+ */
+export interface WaitStackDeleteToCompleteResponse {
+  readonly events: ReadonlyArray<StackEvent>
+  readonly stackStatus: ResourceStatus
+}
+
+/**
+ * @hidden
+ */
+export interface WaitStackDeleteToCompleteProps {
+  readonly stackId: StackId
+  readonly clientToken: ClientRequestToken
+  readonly eventListener: (event: StackEvent) => void
+  readonly allEvents?: ReadonlyArray<StackEvent>
+  readonly latestEventId?: EventId
 }
 
 /**

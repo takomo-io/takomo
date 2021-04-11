@@ -1,5 +1,4 @@
 import { FAILED, resolveCommandOutputBase, SUCCESS } from "@takomo/core"
-import flatten from "lodash.flatten"
 import { PolicyDeploymentResult } from "../model"
 import { BasicConfigDeploymentResultHolder } from "../states"
 import { DeployOrganizationStep } from "../steps"
@@ -34,9 +33,9 @@ export const deployPolicies: DeployOrganizationStep<BasicConfigDeploymentResultH
   io.info("Deploy policies")
 
   const allPolicies = [serviceControl, backup, tag, aiServicesOptOut]
-  const policiesToAdd = flatten(allPolicies.map((p) => p.add))
-  const policiesToSkip = flatten(allPolicies.map((p) => p.skip))
-  const policiesToUpdate = flatten(allPolicies.map((p) => p.update))
+  const policiesToAdd = allPolicies.map((p) => p.add).flat()
+  const policiesToSkip = allPolicies.map((p) => p.skip).flat()
+  const policiesToUpdate = allPolicies.map((p) => p.update).flat()
 
   io.info(`Skip ${policiesToSkip.length} policies`)
   const skippedPolicies = policiesToSkip.map((p) => ({

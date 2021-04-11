@@ -29,7 +29,6 @@ import {
   MoveAccountRequest,
   UpdatePolicyRequest,
 } from "aws-sdk/clients/organizations"
-import flatten from "lodash.flatten"
 import { AwsClientProps, createClient } from "../common/client"
 import {
   convertCreateAccountStatus,
@@ -226,13 +225,13 @@ export const createOrganizationsClient = (
   const listAllPoliciesForTarget = async (
     targetId: string,
   ): Promise<ReadonlyArray<OrganizationPolicySummary>> =>
-    flatten(
+    (
       await Promise.all(
         ORGANIZATION_POLICY_TYPES.map((policyType) =>
           listPoliciesForTarget(targetId, policyType),
         ),
-      ),
-    )
+      )
+    ).flat()
 
   const listPoliciesForTarget = async (
     targetId: string,

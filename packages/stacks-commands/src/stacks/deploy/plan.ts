@@ -5,7 +5,7 @@ import {
 } from "@takomo/stacks-context"
 import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
 import { arrayToMap } from "@takomo/util"
-import uniq from "lodash.uniq"
+import R from "ramda"
 
 const collectStackDependencies = (
   stacksByPath: Map<StackPath, InternalStack>,
@@ -17,7 +17,7 @@ const collectStackDependencies = (
       throw new Error(`Expected stack with path '${dependency}' to exist`)
     }
 
-    return uniq([
+    return R.uniq([
       dependency,
       ...collected,
       ...collectStackDependencies(stacksByPath, dependencyStack),
@@ -94,7 +94,7 @@ export const buildStacksDeployPlan = async (
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
       (collected, stack) =>
-        uniq([
+        R.uniq([
           stack.path,
           ...collected,
           ...collectStackDependencies(stacksByPath, stack),

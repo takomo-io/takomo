@@ -17,6 +17,7 @@ export {
   EnableTerminationProtection,
   EvaluationType,
   EventId,
+  isTerminalResourceStatus,
   LastUpdatedTime,
   LogicalResourceId,
   ParameterDeclaration,

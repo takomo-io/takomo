@@ -1,8 +1,10 @@
 import {
+  ClientRequestToken,
   CloudFormationStack,
   DetailedChangeSet,
   DetailedCloudFormationStack,
   StackEvent,
+  StackId,
   TemplateBody,
   TemplateSummary,
 } from "@takomo/aws-model"
@@ -124,7 +126,8 @@ export interface ChangeSetHolder extends ChangeSetNameHolder {
  * @hidden
  */
 export interface StackOperationClientTokenHolder extends TagsHolder {
-  readonly clientToken: string
+  readonly clientToken: ClientRequestToken
+  readonly stackId: StackId
 }
 
 /**

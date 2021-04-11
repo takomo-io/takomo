@@ -1,4 +1,4 @@
-import { StackEvent } from "@takomo/aws-model"
+import R from "ramda"
 import { StackOperationStep } from "../../common/steps"
 import { ClientTokenHolder } from "../states"
 
@@ -10,17 +10,16 @@ export const waitStackDeleteToComplete: StackOperationStep<ClientTokenHolder> = 
 ) => {
   const { transitions, stack, currentStack, clientToken, io } = state
 
+  const eventListener = R.curry(io.printStackEvent)(stack.path)
+
   const {
     events,
     stackStatus,
-  } = await stack
-    .getCloudFormationClient()
-    .waitUntilStackIsDeleted(
-      currentStack.name,
-      currentStack.id,
-      clientToken,
-      (e: StackEvent) => io.printStackEvent(stack.path, e),
-    )
+  } = await stack.getCloudFormationClient().waitStackDeleteToComplete({
+    clientToken,
+    eventListener,
+    stackId: currentStack.id,
+  })
 
   if (stackStatus !== "DELETE_COMPLETE") {
     return transitions.executeAfterUndeployHooks({

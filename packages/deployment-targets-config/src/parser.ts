@@ -12,7 +12,6 @@ import {
   TkmLogger,
   ValidationError,
 } from "@takomo/util"
-import uniq from "lodash.uniq"
 import { err, ok, Result } from "neverthrow"
 import R from "ramda"
 import {
@@ -97,12 +96,12 @@ const parseDeploymentTarget = (
   inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
 ): DeploymentTargetConfig => {
   const configuredConfigSets = parseConfigSetNames(value.configSets)
-  const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
+  const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
 
   const configuredBootstrapConfigSets = parseConfigSetNames(
     value.bootstrapConfigSets,
   )
-  const bootstrapConfigSets = uniq([
+  const bootstrapConfigSets = R.uniq([
     ...inheritedBootstrapConfigSets,
     ...configuredBootstrapConfigSets,
   ])
@@ -164,12 +163,12 @@ const parseDeploymentGroup = (
   )
 
   const configuredConfigSets = parseConfigSetNames(group?.configSets)
-  const configSets = uniq([...inheritedConfigSets, ...configuredConfigSets])
+  const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
 
   const configuredBootstrapConfigSets = parseConfigSetNames(
     group?.bootstrapConfigSets,
   )
-  const bootstrapConfigSets = uniq([
+  const bootstrapConfigSets = R.uniq([
     ...inheritedBootstrapConfigSets,
     ...configuredBootstrapConfigSets,
   ])
@@ -228,7 +227,7 @@ const parseDeploymentGroups = (
   }
 
   const filledValue = fillMissingDeploymentGroups(value)
-  const rootGroupPaths = uniq(
+  const rootGroupPaths = R.uniq(
     Object.keys(filledValue).map((key) => key.split("/")[0]),
   )
 

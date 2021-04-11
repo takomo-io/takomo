@@ -36,8 +36,7 @@
     "@takomo/organization-model": "3.1.0",
     "@takomo/stacks-context": "3.8.0",
     "@takomo/util": "3.8.0",
-    "lodash.flatten": "4.4.0",
-    "lodash.uniq": "4.5.0"
+    "ramda": "0.27.1"
   },
   "engines": {
     "node": ">=14.4.0"
