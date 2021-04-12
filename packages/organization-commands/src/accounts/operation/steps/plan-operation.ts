@@ -10,7 +10,7 @@ import {
 } from "@takomo/organization-context"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { collectFromHierarchy, TkmLogger } from "@takomo/util"
-import uniqBy from "lodash.uniqby"
+import R from "ramda"
 import { AccountsLaunchPlan } from "../model"
 import { OrganizationStateHolder } from "../states"
 import { AccountsOperationStep } from "../steps"
@@ -54,7 +54,7 @@ const planAccountsDeploy = async (
     )
     .flat()
 
-  const uniqueOusToLaunch = uniqBy(ousToLaunch, (o) => o.path).filter(
+  const uniqueOusToLaunch = R.uniqBy(R.prop("path"), ousToLaunch).filter(
     (o) => o.status === "active",
   )
 

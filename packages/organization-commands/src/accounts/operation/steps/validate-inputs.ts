@@ -1,6 +1,6 @@
 import { OrganizationalUnitConfig } from "@takomo/organization-config"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
-import uniqBy from "lodash.uniqby"
+import R from "ramda"
 import { OrganizationStateHolder } from "../states"
 import { AccountsOperationStep } from "../steps"
 
@@ -24,7 +24,7 @@ export const validateInputs: AccountsOperationStep<OrganizationStateHolder> = as
     .map((ou) => collectFromHierarchy(ou, (o) => o.children).flat())
     .flat()
 
-  const uniqueOusToDeploy = uniqBy(ousToDeploy, (o) => o.path).filter(
+  const uniqueOusToDeploy = R.uniqBy(R.prop("path"), ousToDeploy).filter(
     (o) => o.status === "active",
   )
 
