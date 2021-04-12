@@ -3,7 +3,7 @@ import {
   DeploymentTargetConfig,
 } from "@takomo/deployment-targets-config"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
-import uniqBy from "lodash.uniqby"
+import R from "ramda"
 import { confirmOperation } from "./confirm"
 import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"
 
@@ -48,11 +48,11 @@ export const planDeployment = async (
       collectFromHierarchy(ou, (o) => o.children, {
         sortSiblings: sortGroups,
         filter: (o) => o.status === "active",
-      }).flat(),
+      }),
     )
     .flat()
 
-  const uniqueGroupsToLaunch = uniqBy(groupsToLaunch, (o) => o.path).filter(
+  const uniqueGroupsToLaunch = R.uniqBy(R.prop("path"), groupsToLaunch).filter(
     (o) => o.status === "active",
   )
 
