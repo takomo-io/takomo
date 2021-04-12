@@ -1,12 +1,19 @@
 import { StackEvent } from "@takomo/aws-model"
 import { IO } from "@takomo/core"
-import { CommandPath, StackGroup, StackPath } from "@takomo/stacks-model"
+import { CommandPath, Stack, StackGroup, StackPath } from "@takomo/stacks-model"
 import { StacksOperationOutput } from "../../model"
 import { StacksUndeployPlan } from "./plan"
 
 export type ConfirmUndeployAnswer = "CANCEL" | "CONTINUE"
 
-export interface UndeployStacksIO extends IO<StacksOperationOutput> {
+export interface UndeployStacksListener {
+  readonly onStackUndeployBegin: (stack: Stack) => Promise<void>
+  readonly onStackUndeployComplete: (stack: Stack) => Promise<void>
+}
+
+export interface UndeployStacksIO
+  extends IO<StacksOperationOutput>,
+    UndeployStacksListener {
   readonly chooseCommandPath: (
     rootStackGroup: StackGroup,
   ) => Promise<CommandPath>

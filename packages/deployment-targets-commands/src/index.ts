@@ -4,6 +4,7 @@ export {
   undeployTargetsOperationCommandIamPolicy,
 } from "./operation/iam-policy"
 export {
+  ConfirmOperationAnswer,
   DeploymentTargetsOperationInput,
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,

@@ -22,6 +22,13 @@ export const undeployTargetsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(undeployTargetsOperationCommandIamPolicy))
+      .option("concurrent-targets", {
+        description: "Number of targets to undeploy concurrently",
+        number: true,
+        global: false,
+        demandOption: false,
+        default: 1,
+      })
       .option("target", {
         description: "Targets to undeploy",
         string: true,
@@ -44,6 +51,7 @@ export const undeployTargetsCmd = {
         configFile: argv["config-file"] ?? null,
         operation: "undeploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
+        concurrentTargets: argv["concurrent-targets"],
       }),
       io: (ctx, logger) => createUndeployTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

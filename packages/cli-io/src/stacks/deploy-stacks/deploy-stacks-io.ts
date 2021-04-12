@@ -9,6 +9,7 @@ import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
+  DeployStacksListener,
   StackDeployOperationType,
   StacksDeployPlan,
   StacksOperationOutput,
@@ -112,8 +113,21 @@ const formatStackOperationType = (type: StackDeployOperationType): string => {
 const ensureContentsEndsWithLineFeed = (content: string): string =>
   content.endsWith("\n") ? content : content + "\n"
 
-export const createDeployStacksIO = (props: IOProps): DeployStacksIO => {
-  const { logger } = props
+export interface DeployStacksIOProps
+  extends IOProps,
+    Partial<DeployStacksListener> {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noOpListener = async () => {}
+
+export const createDeployStacksIO = (
+  props: DeployStacksIOProps,
+): DeployStacksIO => {
+  const {
+    logger,
+    onStackDeployBegin = noOpListener,
+    onStackDeployComplete = noOpListener,
+  } = props
   const io = createBaseIO(props)
 
   // TODO: Come up some other solution
@@ -356,5 +370,7 @@ export const createDeployStacksIO = (props: IOProps): DeployStacksIO => {
     confirmStackDeploy,
     printOutput,
     printStackEvent,
+    onStackDeployBegin,
+    onStackDeployComplete,
   }
 }

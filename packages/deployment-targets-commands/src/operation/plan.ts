@@ -95,13 +95,18 @@ export const planDeployment = async (
     }
   }
 
+  const selectedTargets = grs.map((g) => g.targets).flat()
+
   const plan = {
     groups: grs,
     hasChanges,
   }
 
+  const listener = io.createDeploymentTargetsListener(selectedTargets.length)
+
   return confirmOperation({
     ...holder,
     plan,
+    listener,
   })
 }

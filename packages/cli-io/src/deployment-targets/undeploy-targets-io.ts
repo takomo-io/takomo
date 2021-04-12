@@ -13,7 +13,11 @@ export const createUndeployTargetsIO = (
         "A targets undeployment plan has been created and is shown below. " +
         "Targets will be undeployed in the order they are listed.",
       confirmSubheader: "Following targets will be undeployed:",
-      confirmQuestion: "Continue to undeploy targets?",
+      confirmAnswerCancel: "cancel undeployment",
+      confirmAnswerContinueAndReview:
+        "continue, but let me review changes to each target",
+      confirmAnswerContinueNoReview:
+        "continue, undeploy all targets without reviewing changes",
       outputHeader: "Targets undeployment summary",
       outputNoTargets: "No targets undeployed",
     },

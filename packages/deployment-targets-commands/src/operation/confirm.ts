@@ -9,16 +9,39 @@ export const confirmOperation = async (
 ): Promise<DeploymentTargetsOperationOutput> => {
   const { io, timer, plan, ctx } = holder
 
-  if (!ctx.autoConfirmEnabled && !(await io.confirmOperation(plan))) {
-    timer.stop()
-    return {
-      results: [],
-      message: "Cancelled",
-      status: "CANCELLED",
-      success: false,
-      timer,
-    }
+  if (ctx.autoConfirmEnabled) {
+    return processOperation(holder)
   }
 
-  return processOperation(holder)
+  const answer = await io.confirmOperation(plan)
+  switch (answer) {
+    case "CANCEL":
+      timer.stop()
+      return {
+        results: [],
+        message: "Cancelled",
+        status: "CANCELLED",
+        success: false,
+        timer,
+      }
+    case "CONTINUE_AND_REVIEW":
+      return processOperation({
+        ...holder,
+        input: { ...holder.input, concurrentTargets: 1 },
+      })
+    case "CONTINUE_NO_REVIEW":
+      return processOperation({
+        ...holder,
+        ctx: {
+          ...holder.ctx,
+          autoConfirmEnabled: true,
+          commandContext: {
+            ...holder.ctx.commandContext,
+            autoConfirmEnabled: true,
+          },
+        },
+      })
+    default:
+      throw new Error(`Unknown answer '${answer}'`)
+  }
 }

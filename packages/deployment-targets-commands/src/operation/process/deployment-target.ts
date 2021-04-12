@@ -40,7 +40,7 @@ export const processDeploymentTarget = async (
   const { io, ctx, input } = holder
 
   io.info(`Execute deployment target: ${target.name}`)
-  const processResults = new Array<ConfigSetOperationResult>()
+  const results = new Array<ConfigSetOperationResult>()
 
   const configSetNames = getConfigSetsToProcess(input.configSetType, target)
 
@@ -55,10 +55,8 @@ export const processDeploymentTarget = async (
       state,
     )
 
-    processResults.push(result)
+    results.push(result)
   }
-
-  const results: ReadonlyArray<ConfigSetOperationResult> = processResults
 
   timer.stop()
 

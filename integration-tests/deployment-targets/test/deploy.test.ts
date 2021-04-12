@@ -28,9 +28,9 @@ describe("Deployment group commands", () => {
     expect(testGroup.status).toBe("SUCCESS")
 
     const [t3, t4, t5] = testGroup.results
-    expect(t3.name).toBe("three")
+    expect(t3.name).toBe("five")
     expect(t4.name).toBe("four")
-    expect(t5.name).toBe("five")
+    expect(t5.name).toBe("three")
   })
 
   test("Deploy single target", async () => {
@@ -92,8 +92,39 @@ describe("Deployment group commands", () => {
     expect(testGroup.status).toBe("SUCCESS")
 
     const [t3, t4, t5] = testGroup.results
-    expect(t3.name).toBe("three")
+    expect(t3.name).toBe("five")
     expect(t4.name).toBe("four")
-    expect(t5.name).toBe("five")
+    expect(t5.name).toBe("three")
+  })
+
+  test("Parallel deploy", async () => {
+    const { results } = await executeDeployTargetsCommand({
+      projectDir,
+      concurrentTargets: 3,
+    })
+      .expectCommandToSucceed()
+      .assert()
+
+    expect(results).toHaveLength(2)
+    const [devGroup, testGroup] = results
+
+    expect(devGroup.path).toBe("Environments/Dev")
+    expect(devGroup.results).toHaveLength(2)
+    expect(devGroup.success).toBeTruthy()
+    expect(devGroup.status).toBe("SUCCESS")
+
+    const [t1, t2] = devGroup.results.map((r) => r.name).sort()
+    expect(t1).toBe("one")
+    expect(t2).toBe("two")
+
+    expect(testGroup.path).toBe("Environments/Test")
+    expect(testGroup.results).toHaveLength(3)
+    expect(testGroup.success).toBeTruthy()
+    expect(testGroup.status).toBe("SUCCESS")
+
+    const [t3, t4, t5] = testGroup.results.map((r) => r.name).sort()
+    expect(t3).toBe("five")
+    expect(t4).toBe("four")
+    expect(t5).toBe("three")
   })
 })

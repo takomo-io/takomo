@@ -1,9 +1,16 @@
 import {
+  ConfirmOperationAnswer,
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets-commands"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+import { DeploymentTargetsListener } from "@takomo/deployment-targets-commands/src/operation/model"
+import {
+  DeployStacksIO,
+  DeployStacksListener,
+  UndeployStacksIO,
+  UndeployStacksListener,
+} from "@takomo/stacks-commands"
 import { splitTextInLines } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
@@ -17,26 +24,70 @@ export interface Messages {
   confirmHeader: string
   confirmDescription: string
   confirmSubheader: string
-  confirmQuestion: string
+  confirmAnswerCancel: string
+  confirmAnswerContinueAndReview: string
+  confirmAnswerContinueNoReview: string
   outputHeader: string
   outputNoTargets: string
 }
 
-interface DeploymentOperationIOProps extends IOProps {
+interface ConfirmOperationAnswerChoice {
+  readonly name: string
+  readonly value: ConfirmOperationAnswer
+}
+
+const makeChoices = ({
+  confirmAnswerCancel,
+  confirmAnswerContinueAndReview,
+  confirmAnswerContinueNoReview,
+}: Messages): Array<ConfirmOperationAnswerChoice> => [
+  {
+    name: confirmAnswerCancel,
+    value: "CANCEL",
+  },
+  {
+    name: confirmAnswerContinueAndReview,
+    value: "CONTINUE_AND_REVIEW",
+  },
+  {
+    name: confirmAnswerContinueNoReview,
+    value: "CONTINUE_NO_REVIEW",
+  },
+]
+
+interface DeploymentOperationIOProps
+  extends IOProps,
+    Partial<UndeployStacksListener>,
+    Partial<DeployStacksListener> {
   readonly messages: Messages
 }
 
 export const createDeploymentTargetsOperationIO = (
   props: DeploymentOperationIOProps,
 ): DeploymentTargetsOperationIO => {
-  const { logger, messages } = props
+  const {
+    logger,
+    messages,
+    onStackDeployBegin,
+    onStackUndeployBegin,
+    onStackDeployComplete,
+    onStackUndeployComplete,
+  } = props
   const io = createBaseIO(props)
 
   const createStackDeployIO = (loggerName: string): DeployStacksIO =>
-    createDeployStacksIO({ logger: logger.childLogger(loggerName) })
+    createDeployStacksIO({
+      logger: logger.childLogger(loggerName),
+      onStackDeployComplete,
+      onStackDeployBegin,
+    })
 
   const createStackUndeployIO = (loggerName: string): UndeployStacksIO =>
-    createUndeployStacksIO({ logger: logger.childLogger(loggerName) })
+    createUndeployStacksIO({
+      logger: logger.childLogger(loggerName),
+      onStackUndeployBegin,
+      onStackUndeployComplete,
+    })
 
   const printOutput = (
     output: DeploymentTargetsOperationOutput,
@@ -99,7 +150,7 @@ export const createDeploymentTargetsOperationIO = (
 
   const confirmOperation = async (
     plan: TargetsExecutionPlan,
-  ): Promise<boolean> => {
+  ): Promise<ConfirmOperationAnswer> => {
     io.subheader({ text: messages.confirmHeader, marginTop: true })
     io.longMessage(
       splitTextInLines(70, messages.confirmDescription),
@@ -140,8 +191,29 @@ export const createDeploymentTargetsOperationIO = (
       })
     })
 
-    return io.confirm(messages.confirmQuestion, true)
+    const choices = makeChoices(messages)
+
+    return io.choose("How do you want to continue?", choices, true)
   }
+
+  let targetsInProgress = 0
+  let targetsCompleted = 0
+  const createDeploymentTargetsListener = (
+    targetCount: number,
+  ): DeploymentTargetsListener => ({
+    onTargetBegin: async () => {
+      targetsInProgress++
+    },
+    onTargetComplete: async () => {
+      targetsInProgress--
+      targetsCompleted++
+      const waitingCount = targetCount - targetsInProgress - targetsCompleted
+      const percentage = ((targetsCompleted / targetCount) * 100).toFixed(1)
+      logger.info(
+        `Targets waiting: ${waitingCount}, in progress: ${targetsInProgress}, completed: ${targetsCompleted}/${targetCount} (${percentage}%)`,
+      )
+    },
+  })
 
   return {
     ...logger,
@@ -149,5 +221,6 @@ export const createDeploymentTargetsOperationIO = (
     createStackUndeployIO,
     confirmOperation,
     printOutput,
+    createDeploymentTargetsListener,
   }
 }

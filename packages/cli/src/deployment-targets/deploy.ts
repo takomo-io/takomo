@@ -22,6 +22,13 @@ export const deployTargetsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(deployTargetsOperationCommandIamPolicy))
+      .option("concurrent-targets", {
+        description: "Number of targets to deploy concurrently",
+        number: true,
+        global: false,
+        demandOption: false,
+        default: 1,
+      })
       .option("target", {
         description: "Targets to deploy",
         string: true,
@@ -44,6 +51,7 @@ export const deployTargetsCmd = {
         configFile: argv["config-file"] ?? null,
         operation: "deploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
+        concurrentTargets: argv["concurrent-targets"],
       }),
       io: (ctx, logger) => createDeployTargetsIO({ logger }),
       configRepository: (ctx, logger) =>
