@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.9.0](https://github.com/takomo-io/takomo/compare/v3.8.0...v3.9.0) (2021-04-12)
+
+
+### Features
+
+* optimize stack event polling to minimize requests towards AWS APIs ([52715a6](https://github.com/takomo-io/takomo/commit/52715a64dfc7d70b3ba4acce07300421a9300ef9))
+
+
+
+
+
 # [3.8.0](https://github.com/takomo-io/takomo/compare/v3.7.0...v3.8.0) (2021-04-08)
 
 **Note:** Version bump only for package @takomo/deployment-targets-config
