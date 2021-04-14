@@ -196,19 +196,18 @@ export const processCommandPath = async (
     input: { operation, configSetType },
   } = holder
 
-  const { deploymentConfig, variables } = ctx
+  const { variables } = ctx
 
   io.info(`Execute command path: ${commandPath}`)
 
   if (state.failed) {
-    const childTimer = timer.startChild("total")
-    childTimer.stop()
+    timer.stop()
     return {
       commandPath,
       result: {
         message: "Cancelled",
         status: "CANCELLED",
-        timer: childTimer,
+        timer,
         success: false,
         results: [],
       },
@@ -262,7 +261,7 @@ export const processCommandPath = async (
       commandPath,
       group.path,
       target.name,
-      timer.startChild("total"),
+      timer,
       io,
       ctx,
     )
@@ -272,15 +271,14 @@ export const processCommandPath = async (
       e,
     )
 
-    const childTimer = timer.startChild("total")
-    childTimer.stop()
+    timer.stop()
 
     return {
       commandPath,
       result: {
         message: e.message,
         status: "FAILED",
-        timer: childTimer,
+        timer,
         success: false,
         results: [],
       },

@@ -22,6 +22,13 @@ export const tearDownTargetsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(undeployTargetsOperationCommandIamPolicy))
+      .option("concurrent-targets", {
+        description: "Number of targets to tear down concurrently",
+        number: true,
+        global: false,
+        demandOption: false,
+        default: 1,
+      })
       .option("target", {
         description: "Targets to tear down",
         string: true,
@@ -44,6 +51,7 @@ export const tearDownTargetsCmd = {
         configFile: argv["config-file"] ?? null,
         operation: "undeploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
+        concurrentTargets: argv["concurrent-targets"],
       }),
       io: (ctx, logger) => createTearDownTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

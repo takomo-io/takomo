@@ -28,8 +28,8 @@ describe("Deployment with deployment role", () => {
     expect(exampleGroup.status).toBe("SUCCESS")
 
     const [t1, t2] = exampleGroup.results
-    expect(t1.name).toBe("foo")
-    expect(t2.name).toBe("bar")
+    expect(t1.name).toBe("bar")
+    expect(t2.name).toBe("foo")
   })
 
   test("Undeploy all", async () => {
@@ -50,7 +50,7 @@ describe("Deployment with deployment role", () => {
     expect(exampleGroup.status).toBe("SUCCESS")
 
     const [t1, t2] = exampleGroup.results
-    expect(t1.name).toBe("foo")
-    expect(t2.name).toBe("bar")
+    expect(t1.name).toBe("bar")
+    expect(t2.name).toBe("foo")
   })
 })

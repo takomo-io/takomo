@@ -126,21 +126,25 @@ const parseDeploymentTarget = (
 const parseDeploymentTargets = (
   value: any,
   inheritedVars: Vars,
-  inheritedConfigSets: ConfigSetName[],
-  inheritedBootstrapConfigSets: ConfigSetName[],
-): DeploymentTargetConfig[] => {
+  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+): ReadonlyArray<DeploymentTargetConfig> => {
   if (value === null || value === undefined) {
     return []
   }
 
-  return value.map((target: any) =>
-    parseDeploymentTarget(
-      target,
-      inheritedVars,
-      inheritedConfigSets,
-      inheritedBootstrapConfigSets,
-    ),
-  )
+  return value
+    .map((target: any) =>
+      parseDeploymentTarget(
+        target,
+        inheritedVars,
+        inheritedConfigSets,
+        inheritedBootstrapConfigSets,
+      ),
+    )
+    .sort((a: DeploymentTargetConfig, b: DeploymentTargetConfig) =>
+      a.name.localeCompare(b.name),
+    )
 }
 
 const parseDeploymentGroup = (

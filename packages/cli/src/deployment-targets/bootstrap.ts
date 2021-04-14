@@ -22,6 +22,13 @@ export const bootstrapTargetsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(deployTargetsOperationCommandIamPolicy))
+      .option("concurrent-targets", {
+        description: "Number of targets to bootstrap concurrently",
+        number: true,
+        global: false,
+        demandOption: false,
+        default: 1,
+      })
       .option("target", {
         description: "Targets to bootstrap",
         string: true,
@@ -44,6 +51,7 @@ export const bootstrapTargetsCmd = {
         configFile: argv["config-file"] ?? null,
         operation: "deploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
+        concurrentTargets: argv["concurrent-targets"],
       }),
       io: (ctx, logger) => createBootstrapTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

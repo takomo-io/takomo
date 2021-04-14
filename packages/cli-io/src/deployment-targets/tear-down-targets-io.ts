@@ -13,7 +13,11 @@ export const createTearDownTargetsIO = (
         "A targets tear down plan has been created and is shown below. " +
         "Targets will be teared down in the order they are listed.",
       confirmSubheader: "Following targets will be teared down:",
-      confirmQuestion: "Continue to tear down targets?",
+      confirmAnswerCancel: "cancel tear down",
+      confirmAnswerContinueAndReview:
+        "continue, but let me review changes to each target",
+      confirmAnswerContinueNoReview:
+        "continue, tear down all targets without reviewing changes",
       outputHeader: "Targets tear down summary",
       outputNoTargets: "No targets teared down",
     },

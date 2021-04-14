@@ -5,6 +5,7 @@ import {
   StacksUndeployPlan,
   StackUndeployOperationType,
   UndeployStacksIO,
+  UndeployStacksListener,
 } from "@takomo/stacks-commands"
 import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
 import { grey, red } from "@takomo/util"
@@ -49,8 +50,21 @@ const formatStackOperation = (
   }
 }
 
-export const createUndeployStacksIO = (props: IOProps): UndeployStacksIO => {
-  const { logger } = props
+export interface UndeployStacksIOProps
+  extends IOProps,
+    Partial<UndeployStacksListener> {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noOpListener = async () => {}
+
+export const createUndeployStacksIO = (
+  props: UndeployStacksIOProps,
+): UndeployStacksIO => {
+  const {
+    logger,
+    onStackUndeployBegin = noOpListener,
+    onStackUndeployComplete = noOpListener,
+  } = props
   const io = createBaseIO(props)
 
   const confirmUndeploy = async ({
@@ -169,6 +183,8 @@ export const createUndeployStacksIO = (props: IOProps): UndeployStacksIO => {
   return {
     ...logger,
     ...io,
+    onStackUndeployBegin,
+    onStackUndeployComplete,
     printOutput,
     chooseCommandPath,
     printStackEvent,

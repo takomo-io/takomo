@@ -13,7 +13,11 @@ export const createDeployTargetsIO = (
         "A targets deployment plan has been created and is shown below. " +
         "Targets will be deployed in the order they are listed.",
       confirmSubheader: "Following targets will be deployed:",
-      confirmQuestion: "Continue to deploy targets?",
+      confirmAnswerCancel: "cancel deployment",
+      confirmAnswerContinueAndReview:
+        "continue, but let me review changes to each target",
+      confirmAnswerContinueNoReview:
+        "continue, deploy all targets without reviewing changes",
       outputHeader: "Targets deployment summary",
       outputNoTargets: "No targets deployed",
     },

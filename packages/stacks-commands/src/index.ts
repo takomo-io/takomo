@@ -5,6 +5,7 @@ export {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
+  DeployStacksListener,
 } from "./stacks/deploy/model"
 export {
   StackDeployOperation,
@@ -30,6 +31,7 @@ export { undeployStacksCommandIamPolicy } from "./stacks/undeploy/iam-policy"
 export {
   ConfirmUndeployAnswer,
   UndeployStacksIO,
+  UndeployStacksListener,
 } from "./stacks/undeploy/model"
 export {
   StacksUndeployPlan,

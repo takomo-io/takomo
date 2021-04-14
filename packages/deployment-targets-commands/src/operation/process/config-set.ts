@@ -31,15 +31,18 @@ export const processConfigSet = async (
   const results = new Array<ConfigSetCommandPathOperationResult>()
 
   for (const commandPath of configSet.commandPaths) {
+    const commandPathTimer = timer.startChild(commandPath)
     const result = await processCommandPath(
       holder,
       group,
       target,
       configSet,
       commandPath,
-      timer.startChild(commandPath),
+      commandPathTimer,
       state,
     )
+
+    commandPathTimer.stop()
     results.push(result)
 
     if (!result.success) {

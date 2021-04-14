@@ -13,6 +13,7 @@ import { IO } from "@takomo/core"
 import {
   CommandPath,
   InternalStack,
+  Stack,
   StackGroup,
   StackPath,
 } from "@takomo/stacks-model"
@@ -31,7 +32,14 @@ export type ConfirmStackDeployAnswer =
   | "CONTINUE"
   | "CONTINUE_AND_SKIP_REMAINING_REVIEWS"
 
-export interface DeployStacksIO extends IO<StacksOperationOutput> {
+export interface DeployStacksListener {
+  readonly onStackDeployBegin: (stack: Stack) => Promise<void>
+  readonly onStackDeployComplete: (stack: Stack) => Promise<void>
+}
+
+export interface DeployStacksIO
+  extends IO<StacksOperationOutput>,
+    DeployStacksListener {
   readonly chooseCommandPath: (
     rootStackGroup: StackGroup,
   ) => Promise<CommandPath>

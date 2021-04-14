@@ -26,6 +26,7 @@ const inputSchema = (regions: ReadonlyArray<Region>) => {
   return Joi.object({
     groups: Joi.array().items(deploymentGroupPath).unique(),
     targets: Joi.array().items(deploymentTargetName).unique(),
+    concurrentTargets: Joi.number().min(1).max(50),
   }).unknown(true)
 }
 

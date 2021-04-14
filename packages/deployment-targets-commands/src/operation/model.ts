@@ -15,9 +15,11 @@ import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
 
-/**
- * @hidden
- */
+export type ConfirmOperationAnswer =
+  | "CANCEL"
+  | "CONTINUE_AND_REVIEW"
+  | "CONTINUE_NO_REVIEW"
+
 export interface TargetsExecutionPlan {
   readonly groups: ReadonlyArray<DeploymentGroupConfig>
   readonly hasChanges: boolean
@@ -28,17 +30,28 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly targets: ReadonlyArray<DeploymentTargetName>
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType
+  readonly concurrentTargets: number
 }
 
 export interface DeploymentTargetsOperationOutput extends CommandOutput {
   readonly results: ReadonlyArray<DeploymentGroupDeployResult>
 }
 
+export interface DeploymentTargetsListener {
+  readonly onTargetBegin: () => Promise<void>
+  readonly onTargetComplete: () => Promise<void>
+}
+
 export interface DeploymentTargetsOperationIO
   extends IO<DeploymentTargetsOperationOutput> {
   readonly createStackDeployIO: (loggerName: string) => DeployStacksIO
   readonly createStackUndeployIO: (loggerName: string) => UndeployStacksIO
-  readonly confirmOperation: (plan: TargetsExecutionPlan) => Promise<boolean>
+  readonly confirmOperation: (
+    plan: TargetsExecutionPlan,
+  ) => Promise<ConfirmOperationAnswer>
+  readonly createDeploymentTargetsListener: (
+    targetCount: number,
+  ) => DeploymentTargetsListener
 }
 
 export interface DeploymentTargetDeployResult extends CommandOutputBase {
@@ -68,4 +81,5 @@ export interface InitialHolder {
  */
 export interface PlanHolder extends InitialHolder {
   readonly plan: TargetsExecutionPlan
+  readonly listener: DeploymentTargetsListener
 }
