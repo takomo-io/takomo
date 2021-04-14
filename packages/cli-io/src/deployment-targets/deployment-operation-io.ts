@@ -1,10 +1,10 @@
 import {
   ConfirmOperationAnswer,
+  DeploymentTargetsListener,
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets-commands"
-import { DeploymentTargetsListener } from "@takomo/deployment-targets-commands/src/operation/model"
 import {
   DeployStacksIO,
   DeployStacksListener,
