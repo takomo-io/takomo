@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/takomo-io/takomo/compare/v3.9.0...v3.10.0) (2021-04-14)
+
+**Note:** Version bump only for package @takomo/cli-io
+
+
+
+
+
 # [3.9.0](https://github.com/takomo-io/takomo/compare/v3.8.0...v3.9.0) (2021-04-12)
 
 
