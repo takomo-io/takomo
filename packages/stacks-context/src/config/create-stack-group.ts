@@ -20,6 +20,7 @@ export const doCreateStackGroup = async (
   const stackGroupVariables = createVariablesForStackGroupConfigFile(
     ctx.variables,
     stackGroupConfig,
+    parent,
   )
 
   return populatePropertiesFromConfigFile(
