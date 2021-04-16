@@ -32,6 +32,9 @@
     "@takomo/stacks-model": "3.9.0",
     "@takomo/util": "3.8.0"
   },
+  "devDependencies": {
+    "aws-sdk": "2.886.0"
+  },
   "engines": {
     "node": ">=14.4.0"
   },

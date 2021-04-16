@@ -12,6 +12,7 @@ export class CmdHook implements Hook {
   readonly command: string
   readonly cwd?: string
   readonly exposeStackCredentials: boolean
+  readonly exposeStackRegion: boolean
 
   constructor(config: any) {
     if (!config.command) {
@@ -21,6 +22,7 @@ export class CmdHook implements Hook {
     this.command = config.command
     this.cwd = config.cwd
     this.exposeStackCredentials = config.exposeStackCredentials ?? false
+    this.exposeStackRegion = config.exposeStackRegion ?? false
   }
 
   async execute(input: HookInput): Promise<HookOutput> {
@@ -44,6 +46,10 @@ export class CmdHook implements Hook {
         env.AWS_SECRET_ACCESS_KEY = credentials.secretAccessKey
         env.AWS_SESSION_TOKEN = credentials.sessionToken
         env.AWS_SECURITY_TOKEN = credentials.sessionToken
+      }
+
+      if (this.exposeStackRegion) {
+        env.AWS_DEFAULT_REGION = stack.region
       }
 
       const { stdout } = await execP(this.command, { cwd, env })
