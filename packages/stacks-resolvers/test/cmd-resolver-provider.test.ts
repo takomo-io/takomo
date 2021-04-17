@@ -21,7 +21,7 @@ describe("CmdResolverProvider", () => {
     expect(provider.name).toBe("cmd")
   })
   describe("#schema validation", () => {
-    test("should succeed when a valid configuration is given", () => {
+    test("should succeed when a minimum valid configuration is given", () => {
       expectNoValidationError(schema)({
         command: "echo 'Hello'",
       })
@@ -52,11 +52,35 @@ describe("CmdResolverProvider", () => {
       })
     })
 
+    test("should succeed when cwd property is given", () => {
+      expectNoValidationError(schema)({
+        command: "echo cool",
+        cwd: "/home/user",
+      })
+    })
+
+    test("should succeed when exposeStackRegion property is given", () => {
+      expectNoValidationError(schema)({
+        command: "echo cool",
+        exposeStackRegion: false,
+      })
+    })
+
+    test("should succeed when exposeStackCredentials property is given", () => {
+      expectNoValidationError(schema)({
+        command: "echo cool",
+        exposeStackCredentials: true,
+      })
+    })
+
     test("should succeed when all supported properties are given", () => {
       expectNoValidationError(schema)({
         command: "echo cool",
         immutable: true,
         confidential: false,
+        cwd: "/tmp",
+        exposeStackRegion: true,
+        exposeStackCredentials: true,
       })
     })
   })
