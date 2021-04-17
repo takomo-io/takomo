@@ -1,9 +1,23 @@
 import { Hook, HookInput, HookOutput } from "@takomo/stacks-model"
 import { deepCopy } from "@takomo/util"
 import { exec } from "child_process"
+import R from "ramda"
 import { promisify } from "util"
 
 const execP = promisify(exec)
+
+type Capture = "last-line" | "all"
+
+const captureValue = (capture: Capture, output: string): string => {
+  switch (capture) {
+    case "all":
+      return output
+    case "last-line":
+      return R.last(output.split("\n")) ?? ""
+    default:
+      throw new Error(`Unknown value for capture: ${capture}`)
+  }
+}
 
 /**
  * @hidden
@@ -13,6 +27,7 @@ export class CmdHook implements Hook {
   readonly cwd?: string
   readonly exposeStackCredentials: boolean
   readonly exposeStackRegion: boolean
+  readonly capture: Capture
 
   constructor(config: any) {
     if (!config.command) {
@@ -23,6 +38,11 @@ export class CmdHook implements Hook {
     this.cwd = config.cwd
     this.exposeStackCredentials = config.exposeStackCredentials ?? false
     this.exposeStackRegion = config.exposeStackRegion ?? false
+    this.capture = config.capture ?? "all"
+
+    if (this.capture !== "all" && this.capture !== "last-line") {
+      throw new Error(`unsupported value for capture: ${this.capture}`)
+    }
   }
 
   async execute(input: HookInput): Promise<HookOutput> {
@@ -56,10 +76,12 @@ export class CmdHook implements Hook {
 
       logger.infoText("Command output:", stdout)
 
+      const value = captureValue(this.capture, stdout.trim())
+
       return {
         message: "Success",
         success: true,
-        value: stdout.trim(),
+        value,
       }
     } catch (e) {
       logger.infoText("Command output:", e.stdout)
