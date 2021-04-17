@@ -2,10 +2,33 @@ import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
 } from "@takomo/deployment-targets-config"
+import { DeploymentTargetNamePattern } from "@takomo/deployment-targets-model"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
 import R from "ramda"
 import { confirmOperation } from "./confirm"
 import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"
+
+type Matcher = (targetName: DeploymentTargetConfig) => boolean
+
+export const createDeploymentTargetNamePatternMatcher = (
+  pattern: DeploymentTargetNamePattern,
+): Matcher => {
+  const prefix = pattern.endsWith("*")
+  const suffix = pattern.startsWith("*")
+  if (prefix && suffix) {
+    const part = pattern.slice(1, -1)
+    return ({ name }) => name.includes(part)
+  }
+  if (prefix) {
+    const part = pattern.slice(0, -1)
+    return ({ name }) => name.startsWith(part)
+  }
+  if (suffix) {
+    const part = pattern.slice(1)
+    return ({ name }) => name.endsWith(part)
+  }
+  return ({ name }) => name === pattern
+}
 
 /**
  * @hidden
@@ -67,15 +90,20 @@ export const planDeployment = async (
     }
   }
 
+  const targetNameMatchers = targets.map(
+    createDeploymentTargetNamePatternMatcher,
+  )
+
+  const targetNameMatches = (target: DeploymentTargetConfig): boolean =>
+    targetNameMatchers.length === 0 || targetNameMatchers.some((m) => m(target))
+
   const grs = uniqueGroupsToLaunch
     .map((ou) => {
       return {
         ...ou,
         targets: ou.targets.filter(
           (a) =>
-            a.status === "active" &&
-            hasConfigSets(a) &&
-            (targets.length === 0 || targets.includes(a.name)),
+            a.status === "active" && hasConfigSets(a) && targetNameMatches(a),
         ),
       }
     })

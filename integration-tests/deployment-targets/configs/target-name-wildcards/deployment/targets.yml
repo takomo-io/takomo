@@ -1,0 +1,25 @@
+vars:
+  accountId: "{{ var.ACCOUNT_1_ID }}"
+
+deploymentGroups:
+  applications:
+    configSets: myConfigs
+    targets:
+      - name: hello
+        vars:
+          name: one
+      - name: hello-world
+        vars:
+          name: two
+      - name: say-hello
+        vars:
+          name: three
+      - name: say-hello-world
+        vars:
+          name: four
+
+configSets:
+  myConfigs:
+    description: Logging configs
+    commandPaths:
+      - /

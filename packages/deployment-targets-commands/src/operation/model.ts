@@ -10,6 +10,7 @@ import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
+  DeploymentTargetNamePattern,
 } from "@takomo/deployment-targets-model"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
@@ -27,7 +28,7 @@ export interface TargetsExecutionPlan {
 
 export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly groups: ReadonlyArray<DeploymentGroupPath>
-  readonly targets: ReadonlyArray<DeploymentTargetName>
+  readonly targets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType
   readonly concurrentTargets: number
