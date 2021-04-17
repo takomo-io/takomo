@@ -30,7 +30,8 @@
     "@takomo/aws-clients": "3.9.0",
     "@takomo/aws-model": "3.9.0",
     "@takomo/stacks-model": "3.9.0",
-    "@takomo/util": "3.8.0"
+    "@takomo/util": "3.8.0",
+    "ramda": "0.27.1"
   },
   "devDependencies": {
     "aws-sdk": "2.886.0"

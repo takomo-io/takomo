@@ -45,6 +45,22 @@ describe("Cmd hook", () => {
     await expectSuccess(hook, input, "HELLO")
   })
 
+  test("Capture all output", async () => {
+    const hook = new CmdHook({
+      command: "echo 'HELLO\nWORLD\nTODAY'",
+      capture: "all",
+    })
+    await expectSuccess(hook, input, "HELLO\nWORLD\nTODAY")
+  })
+
+  test("Capture last line output", async () => {
+    const hook = new CmdHook({
+      command: "echo 'HELLO\nWORLD\nTODAY'",
+      capture: "last-line",
+    })
+    await expectSuccess(hook, input, "TODAY")
+  })
+
   test("Stage is exposed in environment variables", async () => {
     const hook = new CmdHook({ command: "echo $TKM_COMMAND_STAGE" })
 
