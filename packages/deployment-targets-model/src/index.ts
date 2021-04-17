@@ -13,6 +13,7 @@ export type DeploymentTargetName = string
 export type DeploymentTargetNamePattern = string
 export type DeploymentGroupPath = string
 export type DeploymentStatus = "active" | "disabled"
+export type Label = string
 
 /**
  * @hidden

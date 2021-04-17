@@ -25,7 +25,7 @@ deploymentGroups:
   sandbox:
     configSets: others
     targets:
-      - name: tree
+      - name: three
         accountId: "{{ var.ACCOUNT_2_ID }}"
         deploymentRoleName: OrganizationAccountAccessRole
         vars:

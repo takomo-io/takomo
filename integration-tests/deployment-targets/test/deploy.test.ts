@@ -10,121 +10,87 @@ import {
 const projectDir = "configs/simple"
 
 describe("Deployment group commands", () => {
-  test("Deploy single deployment group", async () => {
-    const { results } = await executeDeployTargetsCommand({
+  test("Deploy single deployment group", () =>
+    executeDeployTargetsCommand({
       projectDir,
       groups: ["Environments/Test"],
     })
       .expectCommandToSucceed()
-      .assert()
+      .expectResults({
+        deploymentGroupPath: "Environments/Test",
+        targetResults: [{ name: "five" }, { name: "four" }, { name: "three" }],
+      })
+      .assert())
 
-    expect(results).toHaveLength(1)
-
-    const [testGroup] = results
-
-    expect(testGroup.path).toBe("Environments/Test")
-    expect(testGroup.results).toHaveLength(3)
-    expect(testGroup.success).toBeTruthy()
-    expect(testGroup.status).toBe("SUCCESS")
-
-    const [t3, t4, t5] = testGroup.results
-    expect(t3.name).toBe("five")
-    expect(t4.name).toBe("four")
-    expect(t5.name).toBe("three")
-  })
-
-  test("Deploy single target", async () => {
-    const { results } = await executeDeployTargetsCommand({
+  test("Deploy single target", () =>
+    executeDeployTargetsCommand({
       projectDir,
       targets: ["two"],
     })
       .expectCommandToSucceed()
-      .assert()
+      .expectResults({
+        deploymentGroupPath: "Environments/Dev",
+        targetResults: [
+          {
+            name: "two",
+            configSetResults: [
+              {
+                configSet: "logs",
+                commandPathResults: [
+                  {
+                    commandPath: "/logs.yml",
+                    stackResults: [
+                      { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+      .assert())
 
-    expect(results).toHaveLength(1)
-
-    const [devGroup] = results
-
-    expect(devGroup.path).toBe("Environments/Dev")
-    expect(devGroup.results).toHaveLength(1)
-    expect(devGroup.success).toBeTruthy()
-    expect(devGroup.status).toBe("SUCCESS")
-
-    const [t2] = devGroup.results
-    expect(t2.name).toBe("two")
-    expect(t2.status).toBe("SUCCESS")
-    expect(t2.results).toHaveLength(1)
-
-    const [set1] = t2.results
-    expect(set1.configSetName).toBe("logs")
-    expect(set1.status).toBe("SUCCESS")
-
-    expect(set1.results).toHaveLength(1)
-    expect(set1.results[0].commandPath).toBe("/logs.yml")
-    expect(set1.results[0].result.results).toHaveLength(1)
-    expect(set1.results[0].result.results[0].stack.path).toBe(
-      "/logs.yml/eu-west-1",
-    )
-  })
-
-  test("Undeploy all", async () => {
-    const { results } = await executeUndeployTargetsCommand({
+  test("Undeploy all", () =>
+    executeUndeployTargetsCommand({
       projectDir,
     })
       .expectCommandToSucceed()
-      .assert()
+      .expectResults(
+        {
+          deploymentGroupPath: "Environments/Dev",
+          targetResults: [{ name: "one", status: "SKIPPED" }, { name: "two" }],
+        },
+        {
+          deploymentGroupPath: "Environments/Test",
+          targetResults: [
+            { name: "five" },
+            { name: "four" },
+            { name: "three" },
+          ],
+        },
+      )
+      .assert())
 
-    expect(results).toHaveLength(2)
-    const [devGroup, testGroup] = results
-
-    expect(devGroup.path).toBe("Environments/Dev")
-    expect(devGroup.results).toHaveLength(2)
-    expect(devGroup.success).toBeTruthy()
-    expect(devGroup.status).toBe("SUCCESS")
-
-    const [t1, t2] = devGroup.results
-    expect(t1.name).toBe("one")
-    expect(t2.name).toBe("two")
-
-    expect(testGroup.path).toBe("Environments/Test")
-    expect(testGroup.results).toHaveLength(3)
-    expect(testGroup.success).toBeTruthy()
-    expect(testGroup.status).toBe("SUCCESS")
-
-    const [t3, t4, t5] = testGroup.results
-    expect(t3.name).toBe("five")
-    expect(t4.name).toBe("four")
-    expect(t5.name).toBe("three")
-  })
-
-  test("Parallel deploy", async () => {
-    const { results } = await executeDeployTargetsCommand({
+  test("Parallel deploy", () =>
+    executeDeployTargetsCommand({
       projectDir,
       concurrentTargets: 3,
     })
       .expectCommandToSucceed()
-      .assert()
-
-    expect(results).toHaveLength(2)
-    const [devGroup, testGroup] = results
-
-    expect(devGroup.path).toBe("Environments/Dev")
-    expect(devGroup.results).toHaveLength(2)
-    expect(devGroup.success).toBeTruthy()
-    expect(devGroup.status).toBe("SUCCESS")
-
-    const [t1, t2] = devGroup.results.map((r) => r.name).sort()
-    expect(t1).toBe("one")
-    expect(t2).toBe("two")
-
-    expect(testGroup.path).toBe("Environments/Test")
-    expect(testGroup.results).toHaveLength(3)
-    expect(testGroup.success).toBeTruthy()
-    expect(testGroup.status).toBe("SUCCESS")
-
-    const [t3, t4, t5] = testGroup.results.map((r) => r.name).sort()
-    expect(t3).toBe("five")
-    expect(t4).toBe("four")
-    expect(t5).toBe("three")
-  })
+      .expectResults(
+        {
+          deploymentGroupPath: "Environments/Dev",
+          targetResults: [{ name: "one" }, { name: "two" }],
+        },
+        {
+          deploymentGroupPath: "Environments/Test",
+          targetResults: [
+            { name: "five" },
+            { name: "four" },
+            { name: "three" },
+          ],
+        },
+      )
+      .assert())
 })

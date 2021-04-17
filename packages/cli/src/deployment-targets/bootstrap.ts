@@ -7,14 +7,7 @@ import {
 } from "@takomo/deployment-targets-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
-
-const parseTargets = (value: any): string[] => {
-  if (!value) {
-    return []
-  }
-
-  return Array.isArray(value) ? value : [value]
-}
+import { parseStringArray } from "./common"
 
 export const bootstrapTargetsCmd = {
   command: "bootstrap [groups..]",
@@ -35,6 +28,12 @@ export const bootstrapTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option("label", {
+        description: "Labels to bootstrap",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("config-file", {
         description: "Deployment config file",
         string: true,
@@ -46,12 +45,13 @@ export const bootstrapTargetsCmd = {
       argv,
       input: async (ctx, input) => ({
         ...input,
-        targets: parseTargets(argv.target),
+        targets: parseStringArray(argv.target),
         groups: argv.groups ?? [],
         configFile: argv["config-file"] ?? null,
         operation: "deploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
         concurrentTargets: argv["concurrent-targets"],
+        labels: parseStringArray(argv.label),
       }),
       io: (ctx, logger) => createBootstrapTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

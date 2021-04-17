@@ -4,6 +4,7 @@ import {
   DeploymentGroupPath,
   DeploymentStatus,
   DeploymentTargetsSchemaRegistry,
+  Label,
 } from "@takomo/deployment-targets-model"
 import {
   collectFromHierarchy,
@@ -89,11 +90,24 @@ const parseConfigSetNames = (value: any): ConfigSetName[] => {
   return value
 }
 
+const parseLabels = (value: any): ReadonlyArray<Label> => {
+  if (value === null || value === undefined) {
+    return []
+  }
+
+  if (typeof value === "string") {
+    return [value]
+  }
+
+  return value
+}
+
 const parseDeploymentTarget = (
   value: any,
   inheritedVars: Vars,
   inheritedConfigSets: ReadonlyArray<ConfigSetName>,
   inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedLabels: ReadonlyArray<Label>,
 ): DeploymentTargetConfig => {
   const configuredConfigSets = parseConfigSetNames(value.configSets)
   const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
@@ -106,11 +120,14 @@ const parseDeploymentTarget = (
     ...configuredBootstrapConfigSets,
   ])
 
+  const configuredLabels = parseConfigSetNames(value.labels)
+  const labels = R.uniq([...inheritedLabels, ...configuredLabels])
   const vars = deepCopy({ ...inheritedVars, ...parseVars(value.vars) })
 
   return {
     configSets,
     bootstrapConfigSets,
+    labels,
     vars,
     name: value.name,
     description: value.description,
@@ -128,6 +145,7 @@ const parseDeploymentTargets = (
   inheritedVars: Vars,
   inheritedConfigSets: ReadonlyArray<ConfigSetName>,
   inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedLabels: ReadonlyArray<Label>,
 ): ReadonlyArray<DeploymentTargetConfig> => {
   if (value === null || value === undefined) {
     return []
@@ -140,6 +158,7 @@ const parseDeploymentTargets = (
         inheritedVars,
         inheritedConfigSets,
         inheritedBootstrapConfigSets,
+        inheritedLabels,
       ),
     )
     .sort((a: DeploymentTargetConfig, b: DeploymentTargetConfig) =>
@@ -154,6 +173,7 @@ const parseDeploymentGroup = (
   inheritedVars: Vars,
   inheritedConfigSets: ReadonlyArray<ConfigSetName>,
   inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedLabels: ReadonlyArray<Label>,
 ): DeploymentGroupConfig => {
   const group = config[groupPath]
   const groupPathDepth = groupPath.split("/").length
@@ -177,6 +197,9 @@ const parseDeploymentGroup = (
     ...configuredBootstrapConfigSets,
   ])
 
+  const configuredLabels = parseLabels(group?.labels)
+  const labels = R.uniq([...inheritedLabels, ...configuredLabels])
+
   const targetsSchema = parseTargetSchemas(group?.targetsSchema)
   const vars = deepCopy({ ...inheritedVars, ...parseVars(group?.vars) })
 
@@ -188,6 +211,7 @@ const parseDeploymentGroup = (
       vars,
       configSets,
       bootstrapConfigSets,
+      labels,
     ),
   )
 
@@ -199,6 +223,7 @@ const parseDeploymentGroup = (
     vars,
     configSets,
     bootstrapConfigSets,
+    labels,
   )
   const name = groupPath.split("/").reverse()[0]
 
@@ -208,6 +233,7 @@ const parseDeploymentGroup = (
     targets,
     configSets,
     bootstrapConfigSets,
+    labels,
     targetsSchema,
     vars,
     deploymentRole: parseCommandRole(group?.deploymentRole),
@@ -241,6 +267,7 @@ const parseDeploymentGroups = (
       rootPath,
       filledValue,
       inheritedVars,
+      [],
       [],
       [],
     ),

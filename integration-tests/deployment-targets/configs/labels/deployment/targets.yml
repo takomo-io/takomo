@@ -1,0 +1,34 @@
+vars:
+  accountId: "{{ var.ACCOUNT_1_ID }}"
+
+deploymentGroups:
+  infra:
+    configSets: myConfigs
+    labels: infrastructure
+  infra/networking:
+    labels:
+      - networking
+    targets:
+      - name: networking-1
+        labels: prod
+      - name: networking-2
+        labels: test
+  infra/backups:
+    targets:
+      - name: backups-1
+        labels: other
+  applications:
+    configSets: myConfigs
+    targets:
+      - name: application-1
+        labels:
+          - other
+          - app
+      - name: application-2
+        labels: app
+
+configSets:
+  myConfigs:
+    description: Logging configs
+    commandPaths:
+      - /

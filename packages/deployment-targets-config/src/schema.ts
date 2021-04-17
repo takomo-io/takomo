@@ -15,6 +15,7 @@ export const createDeploymentTargetsConfigSchema = (
   const {
     deploymentGroupPath,
     deploymentTarget,
+    label,
   } = createDeploymentTargetsSchemas({ ...props })
 
   const { configSetName, configSets } = createConfigSetsSchemas({ ...props })
@@ -40,6 +41,7 @@ export const createDeploymentTargetsConfigSchema = (
     status: Joi.string().valid("active", "disabled"),
     priority: Joi.number().integer().min(0),
     configSets: [Joi.array().items(configSetName).unique(), configSetName],
+    labels: [Joi.array().items(label).unique(), label],
     bootstrapConfigSets: [
       Joi.array().items(configSetName).unique(),
       configSetName,
