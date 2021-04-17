@@ -6,6 +6,7 @@ import Joi, { ObjectSchema, StringSchema } from "joi"
 
 export interface DeploymentTargetsSchemas {
   readonly deploymentTargetName: StringSchema
+  readonly deploymentTargetNamePattern: StringSchema
   readonly deploymentGroupPath: StringSchema
   readonly deploymentTarget: ObjectSchema
 }
@@ -65,6 +66,11 @@ export const createDeploymentTargetsSchemas = (
     .max(60)
     .regex(/^[a-zA-Z_]+[a-zA-Z0-9-_]*$/)
 
+  const deploymentTargetNamePattern = Joi.string()
+    .min(1)
+    .max(60)
+    .regex(/^\*?[a-zA-Z_]+[a-zA-Z0-9-_]*\*?$/)
+
   const deploymentTarget = Joi.object({
     vars,
     accountId,
@@ -84,6 +90,7 @@ export const createDeploymentTargetsSchemas = (
 
   return {
     deploymentTargetName,
+    deploymentTargetNamePattern,
     deploymentGroupPath,
     deploymentTarget,
   }

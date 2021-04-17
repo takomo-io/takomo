@@ -10,6 +10,7 @@ import Joi, { AnySchema } from "joi"
 
 export type DeploymentGroupName = string
 export type DeploymentTargetName = string
+export type DeploymentTargetNamePattern = string
 export type DeploymentGroupPath = string
 export type DeploymentStatus = "active" | "disabled"
 
