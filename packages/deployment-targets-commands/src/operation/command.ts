@@ -22,10 +22,12 @@ const inputSchema = (regions: ReadonlyArray<Region>) => {
   const {
     deploymentGroupPath,
     deploymentTargetNamePattern,
+    label,
   } = createDeploymentTargetsSchemas({ regions })
   return Joi.object({
     groups: Joi.array().items(deploymentGroupPath).unique(),
     targets: Joi.array().items(deploymentTargetNamePattern).unique(),
+    labels: Joi.array().items(label).unique(),
     concurrentTargets: Joi.number().min(1).max(50),
   }).unknown(true)
 }

@@ -35,6 +35,7 @@
     "@takomo/core": "3.9.0",
     "@takomo/deployment-targets-commands": "3.10.0",
     "@takomo/deployment-targets-context": "3.10.0",
+    "@takomo/deployment-targets-model": "3.9.0",
     "@takomo/init-command": "3.9.0",
     "@takomo/organization-commands": "3.10.0",
     "@takomo/organization-context": "3.10.0",
@@ -42,6 +43,7 @@
     "@takomo/stacks-commands": "3.10.0",
     "@takomo/stacks-context": "3.9.0",
     "@takomo/stacks-model": "3.9.0",
+    "@takomo/config-sets": "3.10.0",
     "@takomo/util": "3.8.0",
     "aws-sdk": "2.886.0"
   },

@@ -9,13 +9,21 @@ import { executeDeployTargetsCommand } from "@takomo/test-integration"
 const projectDir = "configs/schemas"
 
 describe("Deployment targets schemas", () => {
-  test("Successful deploy", async () => {
-    const { results } = await executeDeployTargetsCommand({
+  test("Successful deploy", () =>
+    executeDeployTargetsCommand({
       projectDir,
     })
       .expectCommandToSucceed()
-      .assert()
-
-    expect(results).toHaveLength(3)
-  })
+      .expectResults(
+        {
+          deploymentGroupPath: "workload/marketing",
+          targetResults: [{ name: "one" }],
+        },
+        {
+          deploymentGroupPath: "workload/analytics",
+          targetResults: [{ name: "two" }],
+        },
+        { deploymentGroupPath: "sandbox", targetResults: [{ name: "three" }] },
+      )
+      .assert())
 })

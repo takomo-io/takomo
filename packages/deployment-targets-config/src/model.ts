@@ -6,6 +6,7 @@ import {
   DeploymentGroupPath,
   DeploymentStatus,
   DeploymentTargetName,
+  Label,
 } from "@takomo/deployment-targets-model"
 
 export interface SchemaConfig {
@@ -20,6 +21,7 @@ export interface DeploymentTargetConfig {
   readonly vars: Vars
   readonly configSets: ReadonlyArray<ConfigSetName>
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
+  readonly labels: ReadonlyArray<Label>
   readonly deploymentRole?: CommandRole
   readonly deploymentRoleName?: IamRoleName
   readonly bootstrapRole?: CommandRole
@@ -38,6 +40,7 @@ export interface DeploymentGroupConfig {
   readonly targetsSchema: ReadonlyArray<SchemaConfig>
   readonly configSets: ReadonlyArray<ConfigSetName>
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
+  readonly labels: ReadonlyArray<Label>
   readonly children: ReadonlyArray<DeploymentGroupConfig>
   readonly deploymentRole?: CommandRole
   readonly deploymentRoleName?: IamRoleName

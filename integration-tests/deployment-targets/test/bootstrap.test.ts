@@ -10,45 +10,31 @@ import {
 const projectDir = "configs/simple"
 
 describe("Bootstrapping", () => {
-  test("Bootstrap all", async () => {
-    const { results } = await executeBootstrapTargetsCommand({
+  test("Bootstrap all", () =>
+    executeBootstrapTargetsCommand({
       projectDir,
       configFile: "targets-4.yml",
     })
       .expectCommandToSucceed()
-      .assert()
+      .expectResults({
+        deploymentGroupPath: "Example",
+        targetResults: [
+          {
+            name: "two",
+          },
+        ],
+      })
+      .assert())
 
-    expect(results).toHaveLength(1)
-
-    const [exampleGroup] = results
-
-    expect(exampleGroup.path).toBe("Example")
-    expect(exampleGroup.results).toHaveLength(1)
-    expect(exampleGroup.success).toBeTruthy()
-    expect(exampleGroup.status).toBe("SUCCESS")
-
-    const [target] = exampleGroup.results
-    expect(target.name).toBe("two")
-  })
-
-  test("Tear down all", async () => {
-    const { results } = await executeTeardownTargetsCommand({
+  test("Tear down all", () =>
+    executeTeardownTargetsCommand({
       configFile: "targets-4.yml",
       projectDir,
     })
       .expectCommandToSucceed()
-      .assert()
-
-    expect(results).toHaveLength(1)
-
-    const [exampleGroup] = results
-
-    expect(exampleGroup.path).toBe("Example")
-    expect(exampleGroup.results).toHaveLength(1)
-    expect(exampleGroup.success).toBeTruthy()
-    expect(exampleGroup.status).toBe("SUCCESS")
-
-    const [target] = exampleGroup.results
-    expect(target.name).toBe("two")
-  })
+      .expectResults({
+        deploymentGroupPath: "Example",
+        targetResults: [{ name: "two" }],
+      })
+      .assert())
 })

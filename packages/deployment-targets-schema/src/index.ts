@@ -8,6 +8,7 @@ export interface DeploymentTargetsSchemas {
   readonly deploymentTargetName: StringSchema
   readonly deploymentTargetNamePattern: StringSchema
   readonly deploymentGroupPath: StringSchema
+  readonly label: StringSchema
   readonly deploymentTarget: ObjectSchema
 }
 
@@ -61,6 +62,11 @@ export const createDeploymentTargetsSchemas = (
       subsequentWhitespace: "{{#label}} must not contain subsequent whitespace",
     })
 
+  const label = Joi.string()
+    .min(1)
+    .max(60)
+    .regex(/^[a-zA-Z_]+[a-zA-Z0-9-_]*$/)
+
   const deploymentTargetName = Joi.string()
     .min(1)
     .max(60)
@@ -82,6 +88,7 @@ export const createDeploymentTargetsSchemas = (
     description: Joi.string(),
     status: Joi.string().valid("active", "disabled"),
     configSets: [Joi.array().items(configSetName).unique(), configSetName],
+    labels: [Joi.array().items(label).unique(), label],
     bootstrapConfigSets: [
       Joi.array().items(configSetName).unique(),
       configSetName,
@@ -90,6 +97,7 @@ export const createDeploymentTargetsSchemas = (
 
   return {
     deploymentTargetName,
+    label,
     deploymentTargetNamePattern,
     deploymentGroupPath,
     deploymentTarget,

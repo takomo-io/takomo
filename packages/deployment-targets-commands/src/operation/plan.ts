@@ -40,7 +40,7 @@ export const planDeployment = async (
     ctx,
     io,
     timer,
-    input: { groups, targets, configSetType },
+    input: { groups, targets, labels, configSetType },
   } = holder
 
   if (groups.length > 0) {
@@ -97,13 +97,19 @@ export const planDeployment = async (
   const targetNameMatches = (target: DeploymentTargetConfig): boolean =>
     targetNameMatchers.length === 0 || targetNameMatchers.some((m) => m(target))
 
+  const labelMatches = (target: DeploymentTargetConfig): boolean =>
+    labels.length === 0 || target.labels.some((l) => labels.includes(l))
+
   const grs = uniqueGroupsToLaunch
     .map((ou) => {
       return {
         ...ou,
         targets: ou.targets.filter(
           (a) =>
-            a.status === "active" && hasConfigSets(a) && targetNameMatches(a),
+            a.status === "active" &&
+            hasConfigSets(a) &&
+            targetNameMatches(a) &&
+            labelMatches(a),
         ),
       }
     })
