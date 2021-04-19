@@ -7,14 +7,29 @@ import {
 import { deepCopy, deepFreeze } from "@takomo/util"
 import { exec } from "child_process"
 import { ObjectSchema } from "joi"
+import R from "ramda"
 import { promisify } from "util"
 
 const execP = promisify(exec)
+
+type Capture = "last-line" | "all"
+
+const captureValue = (capture: Capture, output: string): string => {
+  switch (capture) {
+    case "all":
+      return output
+    case "last-line":
+      return R.last(output.split("\n")) ?? ""
+    default:
+      throw new Error(`Unknown value for capture: ${capture}`)
+  }
+}
 
 export const init = async ({
   command,
   exposeStackCredentials,
   exposeStackRegion,
+  capture = "all",
   cwd,
 }: any): Promise<Resolver> => {
   if (!command) {
@@ -51,7 +66,7 @@ export const init = async ({
         env,
       })
 
-      return (stdout ?? "").trim()
+      return captureValue(capture, (stdout ?? "").trim())
     },
   })
 }
@@ -64,6 +79,7 @@ const schema = ({ joi, base }: ResolverProviderSchemaProps): ObjectSchema =>
     exposeStackCredentials: joi.boolean(),
     exposeStackRegion: joi.boolean(),
     cwd: joi.string(),
+    capture: joi.string().valid("all", "last-line"),
   })
 
 export const createCmdResolverProvider = (): ResolverProvider =>

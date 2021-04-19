@@ -73,6 +73,13 @@ describe("CmdResolverProvider", () => {
       })
     })
 
+    test("should succeed when capture property is given", () => {
+      expectNoValidationError(schema)({
+        command: "echo cool",
+        capture: "all",
+      })
+    })
+
     test("should succeed when all supported properties are given", () => {
       expectNoValidationError(schema)({
         command: "echo cool",
@@ -81,6 +88,7 @@ describe("CmdResolverProvider", () => {
         cwd: "/tmp",
         exposeStackRegion: true,
         exposeStackCredentials: true,
+        capture: "last-line",
       })
     })
   })
