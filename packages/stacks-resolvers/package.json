@@ -34,7 +34,8 @@
     "@takomo/stacks-model": "3.9.0",
     "@takomo/stacks-schema": "3.9.0",
     "@takomo/util": "3.8.0",
-    "joi": "17.4.0"
+    "joi": "17.4.0",
+    "ramda": "0.27.1"
   },
   "devDependencies": {
     "@takomo/test-unit": "3.8.0",

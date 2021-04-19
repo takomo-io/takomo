@@ -35,9 +35,8 @@ const expectSuccess = async (props: any, value: string): Promise<void> => {
 }
 
 describe("Cmd resolver", () => {
-  test("Execute simple command", async () => {
-    await expectSuccess({ command: "echo HELLO" }, "HELLO")
-  })
+  test("Execute simple command", () =>
+    expectSuccess({ command: "echo HELLO" }, "HELLO"))
 
   test("Current working dir", async () => {
     await expectSuccess({ command: "pwd" }, process.cwd())
@@ -93,4 +92,22 @@ describe("Cmd resolver", () => {
       "",
     )
   })
+
+  test("Capture all output", () =>
+    expectSuccess(
+      {
+        command: "echo 'HELLO\nWORLD\nTODAY'",
+        capture: "all",
+      },
+      "HELLO\nWORLD\nTODAY",
+    ))
+
+  test("Capture last line output", () =>
+    expectSuccess(
+      {
+        command: "echo 'HELLO\nWORLD\nTODAY'",
+        capture: "last-line",
+      },
+      "TODAY",
+    ))
 })
