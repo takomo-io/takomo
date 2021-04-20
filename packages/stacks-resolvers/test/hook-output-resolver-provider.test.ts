@@ -5,7 +5,7 @@ import {
 } from "@takomo/test-unit"
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { createHookOutputResolverProvider } from "../dist/hook-output-resolver"
+import { createHookOutputResolverProvider } from "../src/hook-output-resolver"
 import { defaultSchema } from "../src/resolver-registry"
 
 const provider = createHookOutputResolverProvider()
