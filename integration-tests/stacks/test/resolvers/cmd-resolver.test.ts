@@ -1,26 +1,36 @@
 import {
   executeDeployStacksCommand,
-  executeUndeployStacksCommand,
+  withSingleAccountReservation,
 } from "@takomo/test-integration"
 
 const projectDir = "configs/resolvers/cmd"
+const stack = {
+  stackPath: "/vpc.yml/eu-west-1",
+  stackName: "vpc",
+}
 
 describe("Command resolver", () => {
-  test("Deploy", () =>
-    executeDeployStacksCommand({ projectDir })
-      .expectCommandToSucceed()
-      .expectStackCreateSuccess({
-        stackPath: "/vpc.yml/eu-west-1",
-        stackName: "vpc",
-      })
-      .assert())
-
-  test("Undeploy", () =>
-    executeUndeployStacksCommand({ projectDir })
-      .expectCommandToSucceed()
-      .expectStackDeleteSuccess({
-        stackPath: "/vpc.yml/eu-west-1",
-        stackName: "vpc",
-      })
-      .assert())
+  test(
+    "Deploy",
+    withSingleAccountReservation(({ accountId, credentials }) =>
+      executeDeployStacksCommand({ projectDir })
+        .expectCommandToSucceed()
+        .expectStackCreateSuccess(stack)
+        .expectDeployedCfStack({
+          ...stack,
+          credentials,
+          accountId,
+          region: "eu-west-1",
+          roleName: "OrganizationAccountAccessRole",
+          expected: {
+            Outputs: [
+              { OutputKey: "LastLine", OutputValue: "line 6" },
+              { OutputKey: "ConfidentialParamValue", OutputValue: "hello" },
+              { OutputKey: "NonConfidentialParamValue", OutputValue: "world" },
+            ],
+          },
+        })
+        .assert(),
+    ),
+  )
 })

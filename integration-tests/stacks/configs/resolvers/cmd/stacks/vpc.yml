@@ -14,3 +14,7 @@ parameters:
     command: echo world
     confidential: false
     immutable: false
+  LastLine:
+    resolver: cmd
+    command: cat sample.txt
+    capture: last-line

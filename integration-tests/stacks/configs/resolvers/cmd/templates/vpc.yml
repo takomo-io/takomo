@@ -9,15 +9,18 @@ Parameters:
   NonConfidentialParam:
     Type: String
     Description: Non-confidential parameter
+  LastLine:
+    Type: String
+    Description: Last line of command output
 Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref CidrBlock
-      Tags:
-        - Key: Name
-          Value: Example Cmd Resolver VPC
-        - Key: ConfidentialParamValue
-          Value: !Ref ConfidentialParam
-        - Key: NonConfidentialParamValue
-          Value: !Ref NonConfidentialParam
+Outputs:
+  ConfidentialParamValue:
+    Value: !Ref ConfidentialParam
+  NonConfidentialParamValue:
+    Value: !Ref NonConfidentialParam
+  LastLine:
+    Value: !Ref LastLine
