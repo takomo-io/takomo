@@ -1,7 +1,7 @@
 {
   "name": "integration-test-organization2",
   "private": true,
-  "version": "3.10.0",
+  "version": "3.11.0",
   "description": "Takomo integration tests for organization functionalities #2",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -20,8 +20,8 @@
     "integration-test": "jest test --passWithNoTests --runInBand --ci --verbose"
   },
   "dependencies": {
-    "@takomo/organization-commands": "3.10.0",
-    "@takomo/test-integration": "3.10.0",
+    "@takomo/organization-commands": "3.11.0",
+    "@takomo/test-integration": "3.11.0",
     "ts-dedent": "2.0.0"
   },
   "devDependencies": {

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/takomo-io/takomo/compare/v3.10.0...v3.11.0) (2021-04-20)
+
+
+### Features
+
+* **resolvers:** add option to capture the last line of cmd resolver output ([#218](https://github.com/takomo-io/takomo/issues/218)) ([3d1c5e9](https://github.com/takomo-io/takomo/commit/3d1c5e943e3f5cee706a5f95bf99d6b7a7ff4266)), closes [#215](https://github.com/takomo-io/takomo/issues/215)
+* **resolvers:** add option to expose stack region and credentials to cmd resolver ([#213](https://github.com/takomo-io/takomo/issues/213)) ([8f72fc8](https://github.com/takomo-io/takomo/commit/8f72fc8a0762336767cec65947d74ef4440cd25b)), closes [#211](https://github.com/takomo-io/takomo/issues/211)
+
+
+
+
+
 # [3.9.0](https://github.com/takomo-io/takomo/compare/v3.8.0...v3.9.0) (2021-04-12)
 
 **Note:** Version bump only for package @takomo/stacks-resolvers

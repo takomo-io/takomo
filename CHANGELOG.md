@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/takomo-io/takomo/compare/v3.10.0...v3.11.0) (2021-04-20)
+
+
+### Features
+
+* **deployment targets:** add support to select deployment targets by label ([#217](https://github.com/takomo-io/takomo/issues/217)) ([51bd726](https://github.com/takomo-io/takomo/commit/51bd726c2bad8d7bb0b5e5c01e28ae61e5ba44c1)), closes [#206](https://github.com/takomo-io/takomo/issues/206)
+* **deployment targets:** allow wildcards in deployment target names ([#212](https://github.com/takomo-io/takomo/issues/212)) ([e513510](https://github.com/takomo-io/takomo/commit/e51351094910506a2783749121e8f5a71c0c47c1)), closes [#205](https://github.com/takomo-io/takomo/issues/205)
+* **hooks:** add option to capture only the last line written in stdout ([#216](https://github.com/takomo-io/takomo/issues/216)) ([0396198](https://github.com/takomo-io/takomo/commit/0396198d8b2cd6ddc803c76b986f248989ef8e97)), closes [#214](https://github.com/takomo-io/takomo/issues/214)
+* **hooks:** expose stack region to shell command executed by cmd hook ([#210](https://github.com/takomo-io/takomo/issues/210)) ([69f5e0a](https://github.com/takomo-io/takomo/commit/69f5e0a6d49fa733df1c8f40aa2564ec122ea9d2)), closes [#207](https://github.com/takomo-io/takomo/issues/207)
+* **resolvers:** add option to capture the last line of cmd resolver output ([#218](https://github.com/takomo-io/takomo/issues/218)) ([3d1c5e9](https://github.com/takomo-io/takomo/commit/3d1c5e943e3f5cee706a5f95bf99d6b7a7ff4266)), closes [#215](https://github.com/takomo-io/takomo/issues/215)
+* **resolvers:** add option to expose stack region and credentials to cmd resolver ([#213](https://github.com/takomo-io/takomo/issues/213)) ([8f72fc8](https://github.com/takomo-io/takomo/commit/8f72fc8a0762336767cec65947d74ef4440cd25b)), closes [#211](https://github.com/takomo-io/takomo/issues/211)
+* **stacks:** expose stack group parent in stack config file ([#209](https://github.com/takomo-io/takomo/issues/209)) ([b3b8109](https://github.com/takomo-io/takomo/commit/b3b8109d5d9cd6f73ff077b15e9295e38d233ed9)), closes [#208](https://github.com/takomo-io/takomo/issues/208)
+
+
+
+
+
 # [3.10.0](https://github.com/takomo-io/takomo/compare/v3.9.0...v3.10.0) (2021-04-14)
 
 **Note:** Version bump only for package Takomo
