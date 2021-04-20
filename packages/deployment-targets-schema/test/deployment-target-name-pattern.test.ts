@@ -15,15 +15,18 @@ const valid = [
   "_targetA",
   "MY_TARGET",
   "x".repeat(60),
-  "target1*",
-  "*target1",
-  "*target1*",
+  "target1%",
+  "%target1",
+  "%target1%",
+  "%-tst",
+  "tst-%",
+  "%-tst-%",
 ]
 const invalid = [
   ["", '"value" is not allowed to be empty'],
   [
     "no spaces",
-    '"value" with value "no spaces" fails to match the required pattern: /^\\*?[a-zA-Z_]+[a-zA-Z0-9-_]*\\*?$/',
+    '"value" with value "no spaces" fails to match the required pattern: /^%?[a-zA-Z0-9-_]+%?$/',
   ],
   [
     "x".repeat(61),

@@ -22,7 +22,7 @@ describe("Target name wildcards", () => {
   test("With starting wildcard", () =>
     executeDeployTargetsCommand({
       projectDir,
-      targets: ["*hello"],
+      targets: ["%hello"],
     })
       .expectCommandToSucceed()
       .expectResults({
@@ -34,7 +34,7 @@ describe("Target name wildcards", () => {
   test("With ending wildcard", () =>
     executeDeployTargetsCommand({
       projectDir,
-      targets: ["hello*"],
+      targets: ["hello%"],
     })
       .expectCommandToSucceed()
       .expectResults({
@@ -46,7 +46,7 @@ describe("Target name wildcards", () => {
   test("With starting and ending wildcard", () =>
     executeDeployTargetsCommand({
       projectDir,
-      targets: ["*hello*"],
+      targets: ["%hello%"],
     })
       .expectCommandToSucceed()
       .expectResults({

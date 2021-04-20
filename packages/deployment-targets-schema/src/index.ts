@@ -75,7 +75,7 @@ export const createDeploymentTargetsSchemas = (
   const deploymentTargetNamePattern = Joi.string()
     .min(1)
     .max(60)
-    .regex(/^\*?[a-zA-Z_]+[a-zA-Z0-9-_]*\*?$/)
+    .regex(/^%?[a-zA-Z0-9-_]+%?$/)
 
   const deploymentTarget = Joi.object({
     vars,
