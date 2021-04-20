@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-schema",
-  "version": "3.11.0",
+  "version": "3.11.1",
   "description": "Takomo Deployment Targets Schema",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.1](https://github.com/takomo-io/takomo/compare/v3.11.0...v3.11.1) (2021-04-20)
+
+
+### Bug Fixes
+
+* **deployment targets:** change the wildcard character to % because * is a special character in shell ([#220](https://github.com/takomo-io/takomo/issues/220)) ([c701349](https://github.com/takomo-io/takomo/commit/c7013497f07c12dfb51492cd598f685de6fd542c))
+
+
+
+
+
 # [3.11.0](https://github.com/takomo-io/takomo/compare/v3.10.0...v3.11.0) (2021-04-20)
 
 

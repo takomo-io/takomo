@@ -1,7 +1,7 @@
 {
   "name": "integration-test-stacks",
   "private": true,
-  "version": "3.11.0",
+  "version": "3.11.1",
   "description": "Takomo integration tests for stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@takomo/stacks-model": "3.11.0",
-    "@takomo/test-integration": "3.11.0",
+    "@takomo/test-integration": "3.11.1",
     "@takomo/util": "3.8.0",
     "aws-sdk": "2.886.0",
     "ramda": "0.27.1",
