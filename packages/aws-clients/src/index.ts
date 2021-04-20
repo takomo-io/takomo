@@ -7,6 +7,7 @@ export {
   CloudFormationClient,
   createCloudFormationClient,
 } from "./cloudformation/client"
+export { CloudTrailClient, createCloudTrailClient } from "./cloudtrail/client"
 export { AwsClientProps } from "./common/client"
 export {
   CredentialManager,

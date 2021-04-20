@@ -52,6 +52,7 @@ export {
   TemplateBody,
   TemplateSummary,
 } from "./cloudformation"
+export { CloudTrailEvent } from "./cloudtrail"
 export {
   AccountAlias,
   AccountArn,
