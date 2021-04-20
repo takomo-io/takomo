@@ -13,8 +13,8 @@ type Matcher = (targetName: DeploymentTargetConfig) => boolean
 export const createDeploymentTargetNamePatternMatcher = (
   pattern: DeploymentTargetNamePattern,
 ): Matcher => {
-  const prefix = pattern.endsWith("*")
-  const suffix = pattern.startsWith("*")
+  const prefix = pattern.endsWith("%")
+  const suffix = pattern.startsWith("%")
   if (prefix && suffix) {
     const part = pattern.slice(1, -1)
     return ({ name }) => name.includes(part)
