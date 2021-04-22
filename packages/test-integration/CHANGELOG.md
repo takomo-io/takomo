@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.1](https://github.com/takomo-io/takomo/compare/v3.11.0...v3.11.1) (2021-04-20)
+
+**Note:** Version bump only for package @takomo/test-integration
+
+
+
+
+
+# [3.11.0](https://github.com/takomo-io/takomo/compare/v3.10.0...v3.11.0) (2021-04-20)
+
+
+### Features
+
+* **deployment targets:** add support to select deployment targets by label ([#217](https://github.com/takomo-io/takomo/issues/217)) ([51bd726](https://github.com/takomo-io/takomo/commit/51bd726c2bad8d7bb0b5e5c01e28ae61e5ba44c1)), closes [#206](https://github.com/takomo-io/takomo/issues/206)
+
+
+
+
+
 # [3.10.0](https://github.com/takomo-io/takomo/compare/v3.9.0...v3.10.0) (2021-04-14)
 
 **Note:** Version bump only for package @takomo/test-integration

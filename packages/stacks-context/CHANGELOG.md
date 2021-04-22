@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/takomo-io/takomo/compare/v3.10.0...v3.11.0) (2021-04-20)
+
+
+### Features
+
+* **stacks:** expose stack group parent in stack config file ([#209](https://github.com/takomo-io/takomo/issues/209)) ([b3b8109](https://github.com/takomo-io/takomo/commit/b3b8109d5d9cd6f73ff077b15e9295e38d233ed9)), closes [#208](https://github.com/takomo-io/takomo/issues/208)
+
+
+
+
+
 # [3.9.0](https://github.com/takomo-io/takomo/compare/v3.8.0...v3.9.0) (2021-04-12)
 
 

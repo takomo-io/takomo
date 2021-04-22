@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/takomo-io/takomo/compare/v3.10.0...v3.11.0) (2021-04-20)
+
+
+### Features
+
+* **hooks:** add option to capture only the last line written in stdout ([#216](https://github.com/takomo-io/takomo/issues/216)) ([0396198](https://github.com/takomo-io/takomo/commit/0396198d8b2cd6ddc803c76b986f248989ef8e97)), closes [#214](https://github.com/takomo-io/takomo/issues/214)
+* **hooks:** expose stack region to shell command executed by cmd hook ([#210](https://github.com/takomo-io/takomo/issues/210)) ([69f5e0a](https://github.com/takomo-io/takomo/commit/69f5e0a6d49fa733df1c8f40aa2564ec122ea9d2)), closes [#207](https://github.com/takomo-io/takomo/issues/207)
+
+
+
+
+
 # [3.9.0](https://github.com/takomo-io/takomo/compare/v3.8.0...v3.9.0) (2021-04-12)
 
 **Note:** Version bump only for package @takomo/stacks-hooks
