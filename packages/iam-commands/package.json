@@ -29,7 +29,7 @@
   "dependencies": {
     "@takomo/aws-model": "3.9.0",
     "@takomo/aws-schema": "3.9.0",
-    "@takomo/core": "3.9.0",
+    "@takomo/core": "3.11.0",
     "@takomo/util": "3.8.0",
     "joi": "17.4.0",
     "ramda": "0.27.1"

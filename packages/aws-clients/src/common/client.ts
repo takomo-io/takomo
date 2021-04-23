@@ -5,7 +5,6 @@ import { AWSError } from "aws-sdk/lib/error"
 import { Request } from "aws-sdk/lib/request"
 import { IPolicy } from "cockatiel"
 import https from "https"
-import { CredentialManager } from "./credentials"
 import ClientConfiguration = CognitoIdentityCredentials.ClientConfiguration
 
 interface PagedResponse {
@@ -26,7 +25,6 @@ const retryableErrorCodes = [
  * @hidden
  */
 export interface AwsClient<C> {
-  readonly credentialManager: CredentialManager
   readonly region: Region
   readonly logger: TkmLogger
   readonly getClient: () => Promise<C>
@@ -52,7 +50,7 @@ export interface AwsClient<C> {
 }
 
 export interface AwsClientProps {
-  readonly credentialManager: CredentialManager
+  readonly credentials: Credentials
   readonly region: Region
   readonly logger: TkmLogger
   readonly id: string
@@ -109,7 +107,7 @@ export const buildApiCallProps = (
  * @hidden
  */
 export const createClient = <C>({
-  credentialManager,
+  credentials,
   logger,
   region,
   clientConstructor,
@@ -162,19 +160,13 @@ export const createClient = <C>({
     },
   }
 
-  const clientConfiguration = (
-    credentials: Credentials,
-  ): ClientConfiguration => ({
+  const client = clientConstructor({
     ...clientOptions,
     region,
     credentials,
   })
 
-  const getClient = (): Promise<C> =>
-    credentialManager
-      .getCredentials()
-      .then(clientConfiguration)
-      .then(clientConstructor)
+  const getClient = async (): Promise<C> => client
 
   const withClient = <T>(fn: (client: C) => Promise<T>): Promise<T> =>
     getClient().then(fn)
@@ -253,7 +245,6 @@ export const createClient = <C>({
   }
 
   return {
-    credentialManager,
     region,
     logger,
     getClient,

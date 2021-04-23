@@ -87,7 +87,7 @@ export const createAccount = async (
     }
   }
 
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
 
   io.info(`Initiate account creation`)
   const result = await initiateAccountCreation(client, input)

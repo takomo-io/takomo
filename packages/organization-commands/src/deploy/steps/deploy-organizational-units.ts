@@ -38,9 +38,10 @@ export const deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymen
     "SERVICE_CONTROL_POLICY",
   )
 
+  const client = await ctx.getClient()
   const results = await addOrUpdateOrganizationalUnits(
     io,
-    ctx.getClient(),
+    client,
     enabledPolicyTypes,
     serviceControlPoliciesJustEnabled,
     organizationState,

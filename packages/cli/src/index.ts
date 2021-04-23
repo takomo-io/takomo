@@ -80,6 +80,13 @@ export const run = (): void => {
       string: true,
       global: true,
     })
+    .option("show-generate-iam-policies", {
+      description:
+        "Show instructions how to generate IAM policies after the command execution",
+      boolean: true,
+      default: false,
+      global: true,
+    })
     .demandCommand(1, "Provide command")
     .strict(true)
     .help().argv

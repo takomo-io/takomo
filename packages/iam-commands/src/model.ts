@@ -1,4 +1,4 @@
-import { Region } from "@takomo/aws-model"
+import { IamRoleName, Region } from "@takomo/aws-model"
 import { CommandInput, CommandOutput, IO } from "@takomo/core"
 
 export interface GenerateIamPoliciesInput extends CommandInput {
@@ -6,6 +6,7 @@ export interface GenerateIamPoliciesInput extends CommandInput {
   readonly endTime: Date
   readonly identities: ReadonlyArray<string>
   readonly regions: ReadonlyArray<Region>
+  readonly roleName?: IamRoleName
 }
 
 export interface GeneratedPolicy {

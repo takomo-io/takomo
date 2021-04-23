@@ -6,7 +6,7 @@ export const describeOrganization = async (
   ctx: OrganizationContext,
 ): Promise<DescribeOrganizationOutput> => {
   const timer = createTimer("total")
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
   const [organization, roots] = await Promise.all([
     client.describeOrganization(),
     client.listOrganizationRoots(),

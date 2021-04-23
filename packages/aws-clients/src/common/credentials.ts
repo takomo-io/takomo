@@ -1,5 +1,5 @@
 import { CallerIdentity, CredentialsError, IamRoleArn } from "@takomo/aws-model"
-import { deepFreeze } from "@takomo/util"
+import { deepFreeze, TkmLogger } from "@takomo/util"
 import {
   ChainableTemporaryCredentials,
   CredentialProviderChain,
@@ -9,10 +9,10 @@ import {
   EnvironmentCredentials,
   ProcessCredentials,
   SharedIniFileCredentials,
-  STS,
 } from "aws-sdk"
 import http from "http"
 import R from "ramda"
+import { AwsClientProvider } from "../aws-client-provider"
 
 /**
  * Provides AWS credentials that can be used to invoke AWS APIs.
@@ -44,9 +44,18 @@ export interface CredentialManager {
   ) => Promise<CredentialManager>
 }
 
+/**
+ * @hidden
+ */
+export interface InternalCredentialManager extends CredentialManager {
+  readonly children: Map<string, InternalCredentialManager>
+}
+
 interface CredentialManagerProps {
   readonly name: string
   readonly credentials: Credentials
+  readonly awsClientProvider: AwsClientProvider
+  readonly logger: TkmLogger
 }
 
 /**
@@ -55,14 +64,20 @@ interface CredentialManagerProps {
 export const createCredentialManager = ({
   name,
   credentials,
-}: CredentialManagerProps): CredentialManager => {
+  logger,
+  awsClientProvider,
+}: CredentialManagerProps): InternalCredentialManager => {
+  const children = new Map<string, InternalCredentialManager>()
+
   const getCredentials = async (): Promise<Credentials> => credentials
 
   const createCredentialManagerForRole = async (
     iamRoleArn: IamRoleArn,
-  ): Promise<CredentialManager> =>
-    createCredentialManager({
+  ): Promise<CredentialManager> => {
+    const child = createCredentialManager({
       name: `${name}/${iamRoleArn}`,
+      awsClientProvider,
+      logger,
       credentials: new ChainableTemporaryCredentials({
         params: {
           RoleArn: iamRoleArn,
@@ -73,38 +88,38 @@ export const createCredentialManager = ({
       }),
     })
 
+    children.set(`${name}/${iamRoleArn}`, child)
+
+    return child
+  }
+
   const getCallerIdentity = R.memoizeWith(
     () => "",
     (): Promise<CallerIdentity> =>
-      new STS({
-        region: "us-east-1",
-        credentials,
-      })
-        .getCallerIdentity({})
-        .promise()
-        .then((res) => ({
-          accountId: res.Account!,
-          arn: res.Arn!,
-          userId: res.UserId!,
-        }))
+      awsClientProvider
+        .createStsClient({
+          region: "us-east-1",
+          id: "sts",
+          logger,
+          credentials,
+        })
+        .getCallerIdentity()
         .catch((e) => {
           throw new CredentialsError(e)
         }),
   )
 
-  const toString = (): string => name
-
   return deepFreeze({
     name,
+    children,
     createCredentialManagerForRole,
     getCallerIdentity,
     getCredentials,
-    toString,
   })
 }
 
 const isAwsMetaEndpointAvailable = (): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const options = {
       method: "GET",
       host: "169.254.169.254",
@@ -164,13 +179,17 @@ const initDefaultCredentialProviderChain = async (
  */
 export const initDefaultCredentialManager = async (
   mfaTokenCodeProvider: (mfaSerial: string) => Promise<string>,
+  logger: TkmLogger,
+  awsClientProvider: AwsClientProvider,
   credentials?: Credentials,
-): Promise<CredentialManager> =>
+): Promise<InternalCredentialManager> =>
   initDefaultCredentialProviderChain(mfaTokenCodeProvider, credentials)
     .then((credentialProviderChain) => credentialProviderChain.resolvePromise())
     .then((credentials) =>
       createCredentialManager({
         name: "default",
+        logger,
+        awsClientProvider,
         credentials,
       }),
     )

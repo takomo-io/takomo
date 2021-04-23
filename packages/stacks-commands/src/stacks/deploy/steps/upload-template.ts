@@ -1,4 +1,3 @@
-import { createS3Client } from "@takomo/aws-clients"
 import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateBodyHolder } from "../states"
@@ -9,7 +8,7 @@ import { TemplateBodyHolder } from "../states"
 export const uploadTemplate: StackOperationStep<TemplateBodyHolder> = async (
   state,
 ) => {
-  const { stack, templateBody, logger, transitions } = state
+  const { stack, templateBody, logger, transitions, ctx } = state
 
   const templateBucket = stack.templateBucket
 
@@ -23,8 +22,10 @@ export const uploadTemplate: StackOperationStep<TemplateBodyHolder> = async (
 
   logger.debugObject("Template bucket configured:", templateBucket)
 
-  const s3Client = createS3Client({
-    credentialManager: stack.credentialManager,
+  const credentials = await stack.credentialManager.getCredentials()
+
+  const s3Client = ctx.awsClientProvider.createS3Client({
+    credentials,
     region: stack.region,
     id: uuid(),
     logger,

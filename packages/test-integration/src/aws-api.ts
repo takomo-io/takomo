@@ -1,6 +1,11 @@
-import { initDefaultCredentialManager } from "@takomo/aws-clients"
+import {
+  AwsClientProvider,
+  initDefaultCredentialManager,
+} from "@takomo/aws-clients"
+import { TkmLogger } from "@takomo/util"
 import { CloudFormation, Credentials, Organizations } from "aws-sdk"
 import { Organization, PolicyType, Root } from "aws-sdk/clients/organizations"
+import { mock } from "jest-mock-extended"
 
 const organizationsClient = new Organizations({
   region: "us-east-1",
@@ -63,6 +68,8 @@ const describeStack = async ({
 }: DescribeStackArgs): Promise<CloudFormation.Stack> => {
   const cp = await initDefaultCredentialManager(
     () => Promise.resolve(""),
+    mock<TkmLogger>(),
+    mock<AwsClientProvider>(),
     credentials,
   )
   const stackCp = iamRoleArn

@@ -1,4 +1,3 @@
-import { createRamClient } from "@takomo/aws-clients"
 import { uuid } from "@takomo/util"
 import { OrganizationalUnitsPlanHolder } from "../states"
 import { DeployOrganizationStep } from "../steps"
@@ -24,7 +23,7 @@ export const deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHo
 
   io.info("Deploy basic config")
 
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
 
   for (const policy of basicConfigPlan.enabledPolicies.add) {
     io.info(`Enable policy type: ${policy}`)
@@ -50,11 +49,13 @@ export const deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHo
     io.info(`Enable AWS service: ${service}`)
     await client.enableAWSServiceAccess(service)
 
+    const credentials = await ctx.credentialManager.getCredentials()
+
     // TODO: Move this logic elsewhere
     if (service === "ram.amazonaws.com") {
-      const ram = createRamClient({
+      const ram = ctx.awsClientProvider.createRamClient({
         region: "us-east-1",
-        credentialManager: ctx.credentialManager,
+        credentials,
         logger: io,
         id: uuid(),
       })

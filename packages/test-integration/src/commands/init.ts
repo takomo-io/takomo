@@ -75,6 +75,8 @@ export const executeInitProjectCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 

@@ -2,6 +2,7 @@ import {
   createAwsClientProvider,
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
+import { InternalCredentialManager } from "@takomo/aws-clients/src/common/credentials"
 import { formatCommandStatus } from "@takomo/cli-io"
 import {
   CommandHandler,
@@ -14,6 +15,7 @@ import {
   Variables,
 } from "@takomo/core"
 import {
+  collectFromHierarchy,
   createLogger,
   createTimer,
   deepFreeze,
@@ -377,6 +379,8 @@ export const initCommandContext = async (
     confidentialValuesLoggingEnabled: argv["log-confidential-info"] === true,
     organizationServicePrincipals: organizationServicePrincipals.slice(),
     projectDir: filePaths.projectDir,
+    iamGeneratePoliciesInstructionsEnabled:
+      argv["show-generate-iam-policies"] === true,
   })
 }
 
@@ -426,10 +430,21 @@ export const onError = (e: any): void => {
 const toMB = (bytes: number): number =>
   Math.round((bytes / 1024 / 1024) * 100) / 100
 
-export const onComplete = (
-  ctx: InternalCommandContext,
-  output: CommandOutput,
-): void => {
+interface OnCompleteProps {
+  readonly ctx: InternalCommandContext
+  readonly output: CommandOutput
+  readonly credentialManagers: ReadonlyArray<InternalCredentialManager>
+  readonly startTime: Date
+  readonly endTime: Date
+}
+
+export const onComplete = async ({
+  ctx,
+  output,
+  credentialManagers,
+  startTime,
+  endTime,
+}: OnCompleteProps): Promise<void> => {
   if (ctx.statisticsEnabled) {
     const { heapUsed, heapTotal, external, rss } = process.memoryUsage()
 
@@ -469,42 +484,48 @@ export const onComplete = (
 
     const allApiCalls = ctx.awsClientProvider.getApiCalls()
 
-    ctx.awsClientProvider.getCloudFormationClients().forEach((client, id) => {
-      clientsTable.cell("Id", id)
+    const apiCallsByClient = R.groupBy(R.prop("clientId"), allApiCalls)
+    const clientIds = Object.keys(apiCallsByClient).sort()
+    clientIds.forEach((clientId) => {
+      clientsTable.cell("Id", clientId)
       clientsTable.newRow()
+      const clientApiCalls = apiCallsByClient[clientId]
+      const clientApiCallsByAction = R.groupBy(
+        (a) => `${a.api}:${a.action}`,
+        clientApiCalls,
+      )
+      const actionNames = Object.keys(clientApiCallsByAction).sort()
+      actionNames.forEach((actionName) => {
+        const calls = clientApiCallsByAction[actionName]
 
-      const apiCalls = allApiCalls.filter((a) => a.clientId === id)
+        const times = R.map(R.prop("time"), calls)
+        const totalTime = R.sum(times)
 
-      const apiCallsByAction = R.groupBy((a) => a.action, apiCalls)
-      Object.keys(apiCallsByAction)
-        .sort()
-        .forEach((action) => {
-          const calls = apiCallsByAction[action]
-          const times = R.map(R.prop("time"), calls)
-          const totalTime = R.sum(times)
-
-          clientsTable.cell("Id", `  ${action}`)
-          clientsTable.cell("Count", calls.length)
-          clientsTable.cell("Time total", prettyMs(totalTime * 1000))
-          clientsTable.cell("Time min", prettyMs(Math.min(...times) * 1000))
-          clientsTable.cell("Time max", prettyMs(Math.max(...times) * 1000))
-          clientsTable.cell(
-            "Time avg",
-            prettyMs((totalTime / calls.length) * 1000),
-          )
-          clientsTable.cell(
-            "Retries",
-            calls.reduce((sum, { retries }) => sum + retries, 0),
-          )
-          clientsTable.newRow()
-        })
+        clientsTable.cell("Id", `  ${actionName}`)
+        clientsTable.cell("Count", calls.length)
+        clientsTable.cell("Time total", prettyMs(totalTime * 1000))
+        clientsTable.cell("Time min", prettyMs(Math.min(...times) * 1000))
+        clientsTable.cell("Time max", prettyMs(Math.max(...times) * 1000))
+        clientsTable.cell(
+          "Time avg",
+          prettyMs((totalTime / calls.length) * 1000),
+        )
+        clientsTable.cell(
+          "Retries",
+          calls.reduce((sum, { retries }) => sum + retries, 0),
+        )
+        clientsTable.newRow()
+      })
     })
 
     clientsTable.newRow()
     clientsTable.cell("Id", "Total")
     clientsTable.newRow()
 
-    const totalApiCallsByAction = R.groupBy((a) => a.action, allApiCalls)
+    const totalApiCallsByAction = R.groupBy(
+      (a) => `${a.api}:${a.action}`,
+      allApiCalls,
+    )
     Object.keys(totalApiCallsByAction)
       .sort()
       .forEach((action) => {
@@ -529,6 +550,64 @@ export const onComplete = (
       })
 
     console.log(indentLines(clientsTable.toString()))
+
+    const identities = await Promise.all(
+      credentialManagers.map((cm) => cm.getCallerIdentity()),
+    )
+
+    const identityArns = R.uniq(identities.map(R.prop("arn")))
+    if (identityArns.length > 0) {
+      console.log()
+      console.log("AWS identities:")
+      console.log()
+      identityArns.forEach((arn) => {
+        console.log(`  - ${arn}`)
+      })
+    }
+  }
+
+  if (ctx.iamGeneratePoliciesInstructionsEnabled) {
+    const identities = await Promise.all(
+      credentialManagers.map((cm) => cm.getCallerIdentity()),
+    )
+
+    const identityArns = R.uniq(identities.map(R.prop("arn")))
+
+    console.log()
+    console.log("Use this command to generate IAM policies:")
+    console.log()
+    console.log("  tkm iam generate-policies \\")
+    console.log(`    --start-time ${startTime.toISOString()} \\`)
+    console.log(`    --end-time ${endTime.toISOString()} \\`)
+    identityArns.forEach((identity) => {
+      console.log(`    --identity ${identity} \\`)
+    })
+    ctx.awsClientProvider.getRegions().forEach((region) => {
+      console.log(`    --region ${region} \\`)
+    })
+    console.log("    --role-name <ROLE NAME>")
+    console.log()
+    console.log(
+      "* Typically, the performed actions become visible in CloudTrail within 15 minutes.",
+    )
+    console.log(
+      "  You should wait at least that time before running the command shown above to ensure",
+    )
+    console.log("  the generated policies contain all actions.")
+    console.log(
+      "* If you executed actions against multiple AWS accounts, use --role-name option",
+    )
+    console.log(
+      "  to provide a name for the IAM role Takomo should assume to collect events from",
+    )
+    console.log(
+      "  the accounts. The role should have permissions to read from CloudTrail. When",
+    )
+    console.log(
+      "  generating the policies, you must run the command with credentials that have",
+    )
+    console.log("  permissions to assume the reader role.")
+    console.log()
   }
 
   console.log()
@@ -590,8 +669,13 @@ export const handle = async <
     const configRepository = await props.configRepository(ctx, logger)
     const credentialManager = await initDefaultCredentialManager(
       promptMfaCode,
+      logger,
+      ctx.awsClientProvider,
       ctx.credentials,
     )
+
+    const startTime = new Date()
+
     const output = await props.executor({
       ctx,
       configRepository,
@@ -599,7 +683,19 @@ export const handle = async <
       input,
       credentialManager,
     })
-    onComplete(ctx, output)
+
+    const credentialManagers = collectFromHierarchy(credentialManager, (cm) =>
+      Array.from(cm.children.values()),
+    )
+
+    const endTime = new Date()
+    await onComplete({
+      ctx,
+      output,
+      credentialManagers,
+      startTime,
+      endTime,
+    })
   } catch (e) {
     onError(e)
   }

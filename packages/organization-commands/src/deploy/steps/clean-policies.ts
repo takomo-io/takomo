@@ -71,7 +71,7 @@ export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResul
 
   io.info("Clean policies")
 
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
 
   const allPolicies = [serviceControl, backup, tag, aiServicesOptOut]
   const policiesToDelete = allPolicies

@@ -15,6 +15,12 @@ export const generateIamPoliciesCmd = {
         global: false,
         demandOption: true,
       })
+      .option("role-name", {
+        description: "Name of an IAM role used to read events from CloudTrail",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("start-time", {
         description: "Include events after this time",
         string: true,
@@ -28,10 +34,10 @@ export const generateIamPoliciesCmd = {
         demandOption: true,
       })
       .option("region", {
-        description: "Include events from this region",
+        description: "Include events from trail located in this region",
         string: true,
         global: false,
-        demandOption: true,
+        demandOption: false,
       })
       .coerce({
         "start-time": (s: string) => new Date(s),
@@ -47,6 +53,7 @@ export const generateIamPoliciesCmd = {
         regions: parseStringArray(argv.region) as ReadonlyArray<Region>,
         startTime: argv["start-time"],
         endTime: argv["end-time"],
+        roleName: argv["role-name"],
       }),
       io: (ctx, logger) => createGenerateIamPoliciesIO({ logger }),
       configRepository: async () => "",

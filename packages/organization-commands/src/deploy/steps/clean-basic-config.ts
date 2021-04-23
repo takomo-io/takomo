@@ -21,7 +21,7 @@ export const cleanBasicConfig: DeployOrganizationStep<PoliciesCleanResultHolder>
 
   io.info("Clean policies")
 
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
 
   for (const service of basicConfigPlan.trustedServices.remove) {
     io.info(`Disable AWS service: ${service}`)

@@ -1,8 +1,4 @@
-import {
-  createOrganizationsClient,
-  CredentialManager,
-  OrganizationsClient,
-} from "@takomo/aws-clients"
+import { CredentialManager, OrganizationsClient } from "@takomo/aws-clients"
 import { AccountId } from "@takomo/aws-model"
 import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
@@ -50,7 +46,7 @@ const findConfigForAccount = (
 }
 
 export interface OrganizationContext extends InternalCommandContext {
-  getClient: () => OrganizationsClient
+  getClient: () => Promise<OrganizationsClient>
   hasOrganizationalUnit: (path: OrganizationalUnitPath) => boolean
   getOrganizationalUnit: (
     path: OrganizationalUnitPath,
@@ -85,13 +81,15 @@ export const createOrganizationContext = ({
     (o) => o.children,
   )
 
-  const getClient = (): OrganizationsClient =>
-    createOrganizationsClient({
+  const getClient = async (): Promise<OrganizationsClient> => {
+    const credentials = await organizationAdminCredentialManager.getCredentials()
+    return ctx.awsClientProvider.createOrganizationsClient({
       region: "us-east-1",
-      credentialManager: organizationAdminCredentialManager,
+      credentials,
       logger: logger.childLogger("http"),
       id: uuid(),
     })
+  }
 
   const hasOrganizationalUnit = (path: OrganizationalUnitPath): boolean =>
     organizationalUnits.some((ou) => ou.path === path)
