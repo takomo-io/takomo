@@ -39,7 +39,6 @@ export interface AwsClientProvider {
  * @hidden
  */
 export interface InternalAwsClientProvider extends AwsClientProvider {
-  readonly getCloudFormationClients: () => Map<string, CloudFormationClient>
   readonly getApiCalls: () => ReadonlyArray<ApiCallProps>
   readonly getRegions: () => ReadonlyArray<Region>
 }
@@ -60,7 +59,6 @@ const createDescribeEventsBulkhead = (): IPolicy => {
 export const createAwsClientProvider = (
   props: AwsClientProviderProps,
 ): InternalAwsClientProvider => {
-  const cloudFormationClients = new Map<string, CloudFormationClient>()
   const apiCalls = new Array<ApiCallProps>()
   const regions = new Set<Region>()
   const describeEventsBulkhead = createDescribeEventsBulkhead()
@@ -72,8 +70,6 @@ export const createAwsClientProvider = (
   }
 
   return {
-    getCloudFormationClients: (): Map<string, CloudFormationClient> =>
-      new Map(cloudFormationClients),
     getRegions: (): ReadonlyArray<Region> => Array.from(regions),
     getApiCalls: (): ReadonlyArray<ApiCallProps> => apiCalls.slice(),
     createCloudFormationClient: (
@@ -86,7 +82,6 @@ export const createAwsClientProvider = (
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
       })
-      cloudFormationClients.set(props.id, client)
 
       regions.add(props.region)
 

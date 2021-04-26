@@ -1,8 +1,8 @@
 import {
   createAwsClientProvider,
   initDefaultCredentialManager,
+  InternalCredentialManager,
 } from "@takomo/aws-clients"
-import { InternalCredentialManager } from "@takomo/aws-clients/src/common/credentials"
 import { formatCommandStatus } from "@takomo/cli-io"
 import {
   CommandHandler,

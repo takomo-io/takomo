@@ -9,6 +9,7 @@ export { AwsClientProps } from "./common/client"
 export {
   CredentialManager,
   initDefaultCredentialManager,
+  InternalCredentialManager,
 } from "./common/credentials"
 export { IamClient } from "./iam/client"
 export { OrganizationsClient } from "./organizations/client"
