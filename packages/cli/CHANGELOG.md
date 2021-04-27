@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.12.0](https://github.com/takomo-io/takomo/compare/v3.11.1...v3.12.0) (2021-04-27)
+
+
+### Features
+
+* **deployment targets:** load config sets from a separate directory ([#223](https://github.com/takomo-io/takomo/issues/223)) ([f476db7](https://github.com/takomo-io/takomo/commit/f476db78afb85aa1f304caffdfdd54f2a2de0c66)), closes [#222](https://github.com/takomo-io/takomo/issues/222)
+* **iam:** add command to generate a list of IAM actions needed to perform an action ([#221](https://github.com/takomo-io/takomo/issues/221)) ([e89e08f](https://github.com/takomo-io/takomo/commit/e89e08f1afb79a6b4be16f8d5488161115be6527)), closes [#219](https://github.com/takomo-io/takomo/issues/219)
+
+
+
+
+
 ## [3.11.1](https://github.com/takomo-io/takomo/compare/v3.11.0...v3.11.1) (2021-04-20)
 
 **Note:** Version bump only for package @takomo/cli

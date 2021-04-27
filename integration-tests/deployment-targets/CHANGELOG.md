@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.12.0](https://github.com/takomo-io/takomo/compare/v3.11.1...v3.12.0) (2021-04-27)
+
+
+### Features
+
+* **deployment targets:** load config sets from a separate directory ([#223](https://github.com/takomo-io/takomo/issues/223)) ([f476db7](https://github.com/takomo-io/takomo/commit/f476db78afb85aa1f304caffdfdd54f2a2de0c66)), closes [#222](https://github.com/takomo-io/takomo/issues/222)
+
+
+
+
+
 ## [3.11.1](https://github.com/takomo-io/takomo/compare/v3.11.0...v3.11.1) (2021-04-20)
 
 
