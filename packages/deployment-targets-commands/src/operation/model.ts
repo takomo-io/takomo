@@ -25,6 +25,7 @@ export type ConfirmOperationAnswer =
 export interface TargetsExecutionPlan {
   readonly groups: ReadonlyArray<DeploymentGroupConfig>
   readonly hasChanges: boolean
+  readonly configSetType: ConfigSetType
 }
 
 export interface DeploymentTargetsOperationInput extends CommandInput {

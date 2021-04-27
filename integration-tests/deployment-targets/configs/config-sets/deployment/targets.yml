@@ -1,0 +1,41 @@
+deploymentGroups:
+  application:
+    configSets: legacyAll
+    targets:
+      - name: app1
+        vars:
+          accountId: "{{ var.ACCOUNT_1_ID }}"
+  infra:
+    configSets: legacySingle
+    targets:
+      - name: infra1
+        vars:
+          accountId: "{{ var.ACCOUNT_2_ID }}"
+  common:
+    configSets:
+      - logs
+    targets:
+      - name: common1
+        vars:
+          accountId: "{{ var.ACCOUNT_3_ID }}"
+  security:
+    configSets:
+      - network
+    targets:
+      - name: security1
+        vars:
+          accountId: "{{ var.ACCOUNT_4_ID }}"
+
+configSets:
+  legacyAll:
+    description: Legacy config set 1
+    commandPaths:
+      - "/"
+  legacySingle:
+    description: Legacy config set 2
+    commandPaths:
+      - "/a.yml"
+  network:
+    description: New config set 1
+    commandPaths:
+      - "/network2.yml"

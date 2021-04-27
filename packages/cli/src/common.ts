@@ -45,6 +45,7 @@ import { CliCommandContext, ProjectFilePaths } from "./cli-command-context"
 import { loadProjectConfig } from "./config"
 import {
   CONFIG_FILE_EXTENSION,
+  CONFIG_SETS_DIR,
   DEFAULT_DEPLOYMENT_CONFIG_FILE,
   DEFAULT_ORGANIZATION_CONFIG_FILE,
   DEPLOYMENT_DIR,
@@ -331,6 +332,7 @@ export const initCommandContext = async (
     configFileExtension: CONFIG_FILE_EXTENSION,
     defaultDeploymentConfigFileName: DEFAULT_DEPLOYMENT_CONFIG_FILE,
     deploymentDir: path.join(projectDir, DEPLOYMENT_DIR),
+    configSetsDir: path.join(projectDir, CONFIG_SETS_DIR),
     organizationDir: path.join(projectDir, ORGANIZATION_DIR),
     organizationTagPoliciesDir: path.join(
       projectDir,

@@ -1,3 +1,4 @@
+import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import {
   ConfirmOperationAnswer,
   DeploymentTargetsListener,
@@ -5,6 +6,7 @@ import {
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets-commands"
+import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
 import {
   DeployStacksIO,
   DeployStacksListener,
@@ -60,6 +62,31 @@ interface DeploymentOperationIOProps
     Partial<UndeployStacksListener>,
     Partial<DeployStacksListener> {
   readonly messages: Messages
+}
+
+const getConfigSetsByType = (
+  target: DeploymentTargetConfig,
+  type: ConfigSetType,
+): ReadonlyArray<ConfigSetName> => {
+  switch (type) {
+    case "bootstrap":
+      return target.bootstrapConfigSets
+    case "standard":
+      return target.configSets
+    default:
+      throw new Error(`Unknown config set type: ${type}`)
+  }
+}
+
+const getConfigSetNameByType = (type: ConfigSetType): string => {
+  switch (type) {
+    case "bootstrap":
+      return "bootstrap config sets"
+    case "standard":
+      return "config sets"
+    default:
+      throw new Error(`Unknown config set type: ${type}`)
+  }
 }
 
 export const createDeploymentTargetsOperationIO = (
@@ -184,8 +211,11 @@ export const createDeploymentTargetsOperationIO = (
             indent: 6,
           })
         }
-        io.message({ text: "config sets:", indent: 6 })
-        target.configSets.forEach((configSet) => {
+        io.message({
+          text: `${getConfigSetNameByType(plan.configSetType)}:`,
+          indent: 6,
+        })
+        getConfigSetsByType(target, plan.configSetType).forEach((configSet) => {
           io.message({ text: `- ${configSet}`, indent: 8 })
         })
       })
