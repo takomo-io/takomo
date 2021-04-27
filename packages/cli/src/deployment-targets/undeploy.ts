@@ -7,7 +7,7 @@ import {
 } from "@takomo/deployment-targets-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
-import { parseStringArray } from "./common"
+import { parseStringArray } from "../parser"
 
 export const undeployTargetsCmd = {
   command: "undeploy [groups..]",

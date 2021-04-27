@@ -105,6 +105,8 @@ export const executeDeployStacksCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -143,6 +145,8 @@ export const executeUndeployStacksCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -185,6 +189,8 @@ export const executeListStacksCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 

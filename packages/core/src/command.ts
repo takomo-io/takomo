@@ -181,6 +181,11 @@ export interface CommandContext {
    * AWS client provider.
    */
   readonly awsClientProvider: AwsClientProvider
+
+  /**
+   * Show command to generate IAM policies.
+   */
+  readonly iamGeneratePoliciesInstructionsEnabled: boolean
 }
 
 /**

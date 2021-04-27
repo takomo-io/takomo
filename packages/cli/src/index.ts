@@ -1,5 +1,6 @@
 import yargs from "yargs"
 import { deploymentTargetsCmd } from "./deployment-targets"
+import { iamCmd } from "./iam"
 import { initProjectCmd } from "./init"
 import { organizationCmd } from "./organization"
 import { stacksCmd } from "./stacks"
@@ -13,6 +14,7 @@ export const run = (): void => {
     .command(organizationCmd)
     .command(deploymentTargetsCmd)
     .command(initProjectCmd)
+    .command(iamCmd)
     .option("profile", {
       alias: "p",
       description: "AWS profile",
@@ -76,6 +78,13 @@ export const run = (): void => {
     .option("feature", {
       description: "Feature flag",
       string: true,
+      global: true,
+    })
+    .option("show-generate-iam-policies", {
+      description:
+        "Show instructions how to generate IAM policies after the command execution",
+      boolean: true,
+      default: false,
       global: true,
     })
     .demandCommand(1, "Provide command")

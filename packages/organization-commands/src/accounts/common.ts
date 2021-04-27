@@ -1,4 +1,4 @@
-import { createIamClient, CredentialManager } from "@takomo/aws-clients"
+import { CredentialManager } from "@takomo/aws-clients"
 import { AccountId } from "@takomo/aws-model"
 import { OrganizationContext } from "@takomo/organization-context"
 import { TkmLogger, uuid } from "@takomo/util"
@@ -27,10 +27,11 @@ export const createAccountAliasInternal = async (
 
   try {
     const credentialManager = await createCredentialManager(ctx, logger, role)
+    const credentials = await credentialManager.getCredentials()
 
-    const iam = createIamClient({
+    const iam = ctx.awsClientProvider.createIamClient({
       logger,
-      credentialManager,
+      credentials,
       region: "us-east-1",
       id: uuid(),
     })
@@ -51,10 +52,11 @@ export const deleteAccountAliasInternal = async (
 
   try {
     const credentialManager = await createCredentialManager(ctx, logger, role)
+    const credentials = await credentialManager.getCredentials()
 
-    const iam = createIamClient({
+    const iam = ctx.awsClientProvider.createIamClient({
       logger,
-      credentialManager,
+      credentials,
       region: "us-east-1",
       id: uuid(),
     })

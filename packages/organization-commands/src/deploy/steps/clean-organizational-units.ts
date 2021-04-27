@@ -75,7 +75,7 @@ export const cleanOrganizationalUnits: DeployOrganizationStep<OrganizationalUnit
 ) => {
   const { transitions, ctx, io, organizationalUnitsPlan } = state
 
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
 
   if (!organizationalUnitsPlan.hasChanges) {
     io.info("No organizational units to clean")

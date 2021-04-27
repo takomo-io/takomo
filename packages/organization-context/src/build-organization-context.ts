@@ -1,7 +1,4 @@
-import {
-  createOrganizationsClient,
-  CredentialManager,
-} from "@takomo/aws-clients"
+import { CredentialManager } from "@takomo/aws-clients"
 import { InternalCommandContext } from "@takomo/core"
 import { OrganizationConfig } from "@takomo/organization-config"
 import { TkmLogger, uuid } from "@takomo/util"
@@ -41,9 +38,10 @@ export const buildOrganizationContext = async (
     credentialManager,
   )
 
-  const client = createOrganizationsClient({
+  const credentials = await credentialManager.getCredentials()
+  const client = ctx.awsClientProvider.createOrganizationsClient({
+    credentials,
     region: "us-east-1",
-    credentialManager: organizationAdminCredentialManager,
     logger: logger.childLogger("http"),
     id: uuid(),
   })

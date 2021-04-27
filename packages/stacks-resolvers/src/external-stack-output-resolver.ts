@@ -37,8 +37,10 @@ export const init = async (props: any): Promise<Resolver> => {
         },
       )
 
+      const credentials = await credentialManager.getCredentials()
+
       const cf = ctx.awsClientProvider.createCloudFormationClient({
-        credentialManager,
+        credentials,
         region,
         logger,
         id: uuid(),

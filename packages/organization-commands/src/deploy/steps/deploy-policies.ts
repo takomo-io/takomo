@@ -16,7 +16,7 @@ export const deployPolicies: DeployOrganizationStep<BasicConfigDeploymentResultH
     tag,
   } = policiesPlan
 
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
 
   if (!hasChanges) {
     io.info("No changes to policies")

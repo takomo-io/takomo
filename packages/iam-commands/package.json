@@ -1,7 +1,7 @@
 {
-  "name": "@takomo/cli-io",
+  "name": "@takomo/iam-commands",
   "version": "3.11.1",
-  "description": "Takomo CLI IO",
+  "description": "Takomo IAM Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
@@ -28,29 +28,12 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.9.0",
-    "@takomo/config-sets": "3.11.0",
+    "@takomo/aws-clients": "3.11.0",
+    "@takomo/aws-schema": "3.9.0",
     "@takomo/core": "3.11.0",
-    "@takomo/deployment-targets-commands": "3.11.1",
-    "@takomo/init-command": "3.11.0",
-    "@takomo/organization-commands": "3.11.0",
-    "@takomo/organization-config": "3.11.0",
-    "@takomo/organization-model": "3.1.0",
-    "@takomo/stacks-commands": "3.11.0",
-    "@takomo/stacks-model": "3.11.0",
-    "@takomo/iam-commands": "3.11.1",
     "@takomo/util": "3.8.0",
-    "date-and-time": "0.14.2",
-    "diff": "5.0.0",
-    "easy-table": "1.1.1",
-    "inquirer": "7.0.6",
-    "inquirer-autocomplete-prompt": "1.0.2",
     "joi": "17.4.0",
-    "pretty-ms": "5.1.0",
-    "ramda": "0.27.1",
-    "ts-dedent": "2.0.0"
-  },
-  "devDependencies": {
-    "@takomo/test-unit": "3.8.0"
+    "ramda": "0.27.1"
   },
   "engines": {
     "node": ">=14.4.0"

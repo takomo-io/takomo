@@ -137,7 +137,7 @@ export const loadOrganizationState = async (
 ): Promise<OrganizationState> => {
   logger.info("Load organization state")
 
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
   const organization = await client.describeOrganization()
 
   const allFeaturesEnabled = organization.featureSet === "ALL"

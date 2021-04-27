@@ -108,6 +108,8 @@ export const executeCreateAccountAliasCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -149,6 +151,8 @@ export const executeDeleteAccountAliasCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -185,6 +189,8 @@ export const executeDescribeOrganizationCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -224,6 +230,8 @@ export const executeCreateOrganizationCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -260,6 +268,8 @@ export const executeListAccountsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -301,6 +311,8 @@ export const executeDeployAccountsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -340,6 +352,8 @@ export const executeUndeployAccountsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -379,6 +393,8 @@ export const executeBootstrapAccountsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -418,6 +434,8 @@ export const executeTeardownAccountsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -457,6 +475,8 @@ export const executeDeployOrganizationCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 

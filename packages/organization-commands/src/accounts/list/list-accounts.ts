@@ -5,7 +5,7 @@ export const listAccounts = async (
   ctx: OrganizationContext,
 ): Promise<AccountsList> => {
   const organizationConfigFile = ctx.organizationConfig
-  const client = ctx.getClient()
+  const client = await ctx.getClient()
 
   return {
     accounts: await client.listAccounts(),

@@ -117,12 +117,19 @@ export const buildStack = async (
       ? stackConfig.terminationProtection
       : stackGroup.terminationProtection
 
+  const credentials = await credentialManager.getCredentials()
+
   return regions
     .map((region) => {
       const exactPath = `${stackPath}/${region}`
       const stackLogger = logger.childLogger(exactPath)
       const cloudFormationClient = ctx.awsClientProvider.createCloudFormationClient(
-        { credentialManager, region, id: exactPath, logger: stackLogger },
+        {
+          credentials,
+          region,
+          id: exactPath,
+          logger: stackLogger,
+        },
       )
 
       const props: StackProps = {

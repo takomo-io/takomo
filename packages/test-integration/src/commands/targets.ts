@@ -93,6 +93,8 @@ export const executeDeployTargetsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -135,6 +137,8 @@ export const executeUndeployTargetsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -177,6 +181,8 @@ export const executeBootstrapTargetsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
@@ -219,6 +225,8 @@ export const executeTeardownTargetsCommand = (
 
     const credentialManager = await initDefaultCredentialManager(
       () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
       ctxAndConfig.ctx.credentials,
     )
 
