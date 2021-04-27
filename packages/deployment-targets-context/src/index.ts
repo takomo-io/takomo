@@ -11,7 +11,11 @@ import { collectFromHierarchy, deepFreeze, TkmLogger } from "@takomo/util"
 
 export interface DeploymentTargetsConfigRepository
   extends StacksConfigRepository {
-  readonly loadDeploymentConfigFileContents: () => Promise<DeploymentConfig>
+  readonly getDeploymentConfig: () => Promise<DeploymentConfig>
+  readonly createStacksConfigRepository: (
+    configSetName: ConfigSetName,
+    legacy: boolean,
+  ) => Promise<StacksConfigRepository>
 }
 
 export interface DeploymentTargetsContext extends InternalCommandContext {
@@ -43,7 +47,7 @@ export const createDeploymentTargetsContext = async ({
 }: CreateDeploymentTargetsContextProps): Promise<DeploymentTargetsContext> => {
   const { autoConfirmEnabled, variables } = ctx
 
-  const deploymentConfig = await configRepository.loadDeploymentConfigFileContents()
+  const deploymentConfig = await configRepository.getDeploymentConfig()
 
   const deploymentGroups = deploymentConfig.deploymentGroups
     .map((group) => collectFromHierarchy(group, (o) => o.children))

@@ -29,6 +29,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
     if (result.isErr()) {
@@ -49,6 +50,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
     if (result.isErr()) {
@@ -80,6 +82,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
     if (result.isErr()) {
@@ -123,6 +126,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
     if (result.isErr()) {
@@ -172,6 +176,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
 
@@ -204,6 +209,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
 
@@ -228,6 +234,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
 
@@ -256,6 +263,7 @@ describe("#buildDeploymentConfig", () => {
       logger,
       schemaRegistry,
       externalTargets,
+      new Map(),
       record,
     )
 

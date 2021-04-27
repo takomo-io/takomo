@@ -16,6 +16,7 @@ export interface ProjectFilePaths {
   readonly configFileExtension: string
   readonly defaultDeploymentConfigFileName: string
   readonly deploymentDir: FilePath
+  readonly configSetsDir: FilePath
   readonly organizationDir: FilePath
   readonly organizationTagPoliciesDir: FilePath
   readonly organizationBackupPoliciesDir: FilePath

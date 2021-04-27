@@ -132,6 +132,7 @@ export const planDeployment = async (
   const selectedTargets = grs.map((g) => g.targets).flat()
 
   const plan = {
+    configSetType,
     groups: grs,
     hasChanges,
   }

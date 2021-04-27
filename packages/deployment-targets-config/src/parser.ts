@@ -1,4 +1,4 @@
-import { ConfigSetName, parseConfigSets } from "@takomo/config-sets"
+import { ConfigSet, ConfigSetName, parseConfigSets } from "@takomo/config-sets"
 import { CommandContext, parseCommandRole, parseVars, Vars } from "@takomo/core"
 import {
   DeploymentGroupPath,
@@ -274,11 +274,36 @@ const parseDeploymentGroups = (
   )
 }
 
+export const mergeConfigSets = (
+  configSets: ReadonlyArray<ConfigSet>,
+  externalConfigSets: Map<ConfigSetName, ConfigSet>,
+): ReadonlyArray<ConfigSet> => {
+  const mergedConfigSets = configSets.map((configSet) => {
+    const external = externalConfigSets.get(configSet.name)
+    if (external) {
+      return {
+        ...configSet,
+        legacy: false,
+      }
+    }
+
+    return configSet
+  })
+
+  const mergedConfigSetNames = mergedConfigSets.map(R.prop("name"))
+  const notMergedConfigSets = Array.from(externalConfigSets.values()).filter(
+    (e) => !mergedConfigSetNames.includes(e.name),
+  )
+
+  return [...mergedConfigSets, ...notMergedConfigSets]
+}
+
 export const buildDeploymentConfig = async (
   ctx: CommandContext,
   logger: TkmLogger,
   schemaRegistry: DeploymentTargetsSchemaRegistry,
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
+  externalConfigSets: Map<ConfigSetName, ConfigSet>,
   record: Record<string, unknown>,
 ): Promise<Result<DeploymentConfig, ValidationError>> => {
   const externalTargetNames = Array.from(externalDeploymentTargets.values())
@@ -320,7 +345,9 @@ export const buildDeploymentConfig = async (
 
   const vars = parseVars(record.vars)
   const targetsSchema = parseTargetSchemas(record.targetsSchema)
-  const configSets = parseConfigSets(record.configSets)
+  const parsedConfigSets = parseConfigSets(record.configSets)
+  const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
+
   const deploymentGroups = parseDeploymentGroups(
     externalDeploymentTargets,
     record.deploymentGroups,

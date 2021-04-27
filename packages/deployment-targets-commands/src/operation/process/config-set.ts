@@ -24,9 +24,14 @@ export const processConfigSet = async (
   timer: Timer,
   state: OperationState,
 ): Promise<ConfigSetOperationResult> => {
-  const { io } = holder
+  const { io, ctx } = holder
 
   io.info(`Execute config set: ${configSet.name}`)
+
+  const stacksConfigRepository = await ctx.configRepository.createStacksConfigRepository(
+    configSet.name,
+    configSet.legacy,
+  )
 
   const results = new Array<ConfigSetCommandPathOperationResult>()
 
@@ -40,6 +45,7 @@ export const processConfigSet = async (
       commandPath,
       commandPathTimer,
       state,
+      stacksConfigRepository,
     )
 
     commandPathTimer.stop()

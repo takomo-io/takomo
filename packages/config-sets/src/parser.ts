@@ -12,6 +12,7 @@ export const parseConfigSets = (value: any): ReadonlyArray<ConfigSet> => {
       description,
       vars: vars ?? {},
       commandPaths: commandPaths ?? [],
+      legacy: true,
     }
   })
 }

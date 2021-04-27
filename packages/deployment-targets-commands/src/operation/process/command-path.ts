@@ -140,6 +140,7 @@ const deployOrUndeploy = async (
   timer: Timer,
   io: DeploymentTargetsOperationIO,
   ctx: DeploymentTargetsContext,
+  stacksConfigRepository: StacksConfigRepository,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const input = {
     timer,
@@ -162,7 +163,7 @@ const deployOrUndeploy = async (
         target,
         input,
         io,
-        ctx.configRepository,
+        stacksConfigRepository,
         commandContext,
       )
     case "undeploy":
@@ -173,7 +174,7 @@ const deployOrUndeploy = async (
         target,
         input,
         io,
-        ctx.configRepository,
+        stacksConfigRepository,
         commandContext,
       )
     default:
@@ -189,6 +190,7 @@ export const processCommandPath = async (
   commandPath: CommandPath,
   timer: Timer,
   state: OperationState,
+  stacksConfigRepository: StacksConfigRepository,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const {
     io,
@@ -264,6 +266,7 @@ export const processCommandPath = async (
       timer,
       io,
       ctx,
+      stacksConfigRepository,
     )
   } catch (e) {
     io.error(

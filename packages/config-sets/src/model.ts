@@ -9,6 +9,7 @@ export interface ConfigSet {
   readonly name: ConfigSetName
   readonly vars: Vars
   readonly commandPaths: ReadonlyArray<CommandPath>
+  readonly legacy: boolean
 }
 
 export type ConfigSetType = "standard" | "bootstrap"
