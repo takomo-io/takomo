@@ -2,6 +2,7 @@ import {
   OrganizationPolicyName,
   OrganizationPolicyType,
 } from "@takomo/aws-model"
+import { ConfigSetName } from "@takomo/config-sets"
 import { CommandContext } from "@takomo/core"
 import {
   AccountConfigItem,
@@ -16,6 +17,7 @@ import {
 } from "@takomo/organization-config"
 import { OrganizationConfigRepository } from "@takomo/organization-context"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
+import { StacksConfigRepository } from "@takomo/stacks-context"
 import {
   collectFromHierarchy,
   createDir,
@@ -28,9 +30,10 @@ import {
   TemplateEngine,
   TkmLogger,
 } from "@takomo/util"
-import path from "path"
+import path, { join } from "path"
 import R from "ramda"
 import dedent from "ts-dedent"
+import { loadConfigSetsFromConfigSetsDir } from "../config-sets/config-sets-loader"
 import {
   createFileSystemStacksConfigRepository,
   FileSystemStacksConfigRepositoryProps,
@@ -40,6 +43,7 @@ import { parseOrganizationConfigFile } from "./parser"
 interface FileSystemOrganizationConfigRepositoryProps
   extends FileSystemStacksConfigRepositoryProps {
   readonly organizationDir: FilePath
+  readonly configSetsDir: FilePath
   readonly organizationTagPoliciesDir: FilePath
   readonly organizationBackupPoliciesDir: FilePath
   readonly organizationServiceControlPoliciesDir: FilePath
@@ -126,6 +130,8 @@ export const createFileSystemOrganizationConfigRepository = async (
 
   const {
     organizationDir,
+    configSetsDir,
+    stacksDir,
     organizationTagPoliciesDir,
     organizationBackupPoliciesDir,
     organizationServiceControlPoliciesDir,
@@ -173,7 +179,7 @@ export const createFileSystemOrganizationConfigRepository = async (
   }
 
   const getOrganizationConfig = async (): Promise<OrganizationConfig> => {
-    const parsedFile = await loadOrganizationConfig()
+    const record = await loadOrganizationConfig()
 
     const externallyLoadedAccounts = await loadExternallyPersistedAccounts(
       ctx,
@@ -181,12 +187,17 @@ export const createFileSystemOrganizationConfigRepository = async (
       stacksConfigRepository.templateEngine,
     )
 
-    const result = await buildOrganizationConfig(
+    const externalConfigSets = await loadConfigSetsFromConfigSetsDir(
+      configSetsDir,
+    )
+
+    const result = await buildOrganizationConfig({
       logger,
       ctx,
       externallyLoadedAccounts,
-      parsedFile,
-    )
+      externalConfigSets,
+      record,
+    })
 
     if (!result.isOk()) {
       const details = result.error.messages.map((m) => `- ${m}`).join("\n")
@@ -289,8 +300,27 @@ export const createFileSystemOrganizationConfigRepository = async (
     await repository.putAccount(item)
   }
 
+  const createStacksConfigRepository = async (
+    configSetName: ConfigSetName,
+    legacy: boolean,
+  ): Promise<StacksConfigRepository> => {
+    const configSetStacksDir = legacy
+      ? stacksDir
+      : join(configSetsDir, configSetName)
+
+    if (!(await dirExists(configSetStacksDir))) {
+      throw new Error(`Config set directory not found: ${configSetStacksDir}`)
+    }
+
+    return createFileSystemStacksConfigRepository({
+      ...props,
+      stacksDir: configSetStacksDir,
+    })
+  }
+
   return {
     ...stacksConfigRepository,
+    createStacksConfigRepository,
     getOrganizationConfig,
     putOrganizationConfig,
     getOrganizationPolicyContents,

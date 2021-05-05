@@ -1,4 +1,6 @@
-import { AccountId, OrganizationFeatureSet } from "@takomo/aws-model"
+import { AccountId, OrganizationFeatureSet, StackName } from "@takomo/aws-model"
+import { ConfigSetName } from "@takomo/config-sets"
+import { CommandStatus } from "@takomo/core"
 import {
   AccountsOperationOutput,
   CreateAccountAliasOutput,
@@ -8,6 +10,9 @@ import {
   DescribeOrganizationOutput,
   ListAccountsOutput,
 } from "@takomo/organization-commands"
+import { OrganizationalUnitAccountsOperationResult } from "@takomo/organization-commands/src/accounts/operation/model"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
+import { CommandPath, StackPath } from "@takomo/stacks-model"
 
 export interface CreateAccountAliasOutputMatcher {
   expectCommandToSucceed: () => CreateAccountAliasOutputMatcher
@@ -184,22 +189,159 @@ export const createListAccountsOutputMatcher = (
   }
 }
 
-export interface AccountsOperationOutputMatcher {
-  expectCommandToSucceed: () => AccountsOperationOutputMatcher
-  assert: () => Promise<AccountsOperationOutput>
+export interface ExpectStackResultProps {
+  readonly stackPath: StackPath
+  readonly stackName: StackName
 }
 
-export const createAccountsOperationOutputMatcher = (
-  executor: () => Promise<AccountsOperationOutput>,
-  outputAssertions?: (output: AccountsOperationOutput) => void,
-): AccountsOperationOutputMatcher => {
-  const expectCommandToSucceed = () =>
-    createAccountsOperationOutputMatcher(executor, (output) => {
+export interface ExpectCommandPathResultProps {
+  readonly commandPath: CommandPath
+  readonly stackResults?: ReadonlyArray<ExpectStackResultProps>
+}
+
+export interface ExpectConfigSetResultProps {
+  readonly configSet: ConfigSetName
+  readonly commandPathResults?: ReadonlyArray<ExpectCommandPathResultProps>
+}
+
+export interface ExpectAccountResultProps {
+  readonly accountId: AccountId
+  readonly status?: CommandStatus
+  readonly configSetResults?: ReadonlyArray<ExpectConfigSetResultProps>
+}
+
+export interface ExpectOrganizationalUnitResultProps {
+  readonly organizationalUnitPath: OrganizationalUnitPath
+  readonly accountResults: ReadonlyArray<ExpectAccountResultProps>
+}
+
+export interface AccountsOperationOutputMatcher {
+  readonly expectCommandToSucceed: () => AccountsOperationOutputMatcher
+  readonly expectResults: (
+    ...props: ReadonlyArray<ExpectOrganizationalUnitResultProps>
+  ) => AccountsOperationOutputMatcher
+  readonly assert: () => Promise<AccountsOperationOutput>
+}
+
+type OrganizationalUnitResultAssertion = (
+  result: OrganizationalUnitAccountsOperationResult,
+) => boolean
+
+interface CreateAccountsOperationOutputMatcherProps {
+  readonly executor: () => Promise<AccountsOperationOutput>
+  readonly outputAssertions?: (output: AccountsOperationOutput) => void
+  readonly organizationalUnitAssertions: ReadonlyArray<
+    OrganizationalUnitResultAssertion
+  >
+}
+
+export const createAccountsOperationOutputMatcher = ({
+  executor,
+  outputAssertions,
+  organizationalUnitAssertions,
+}: CreateAccountsOperationOutputMatcherProps): AccountsOperationOutputMatcher => {
+  const expectCommandToSucceed = () => {
+    const assertions = (output: AccountsOperationOutput) => {
       expect(output.status).toEqual("SUCCESS")
       expect(output.message).toEqual("Success")
       expect(output.success).toEqual(true)
       expect(output.error).toBeUndefined()
+    }
+
+    return createAccountsOperationOutputMatcher({
+      executor,
+      outputAssertions: assertions,
+      organizationalUnitAssertions: [],
     })
+  }
+
+  const expectResults = (
+    ...props: ReadonlyArray<ExpectOrganizationalUnitResultProps>
+  ): AccountsOperationOutputMatcher => {
+    const assertions = props.map((prop) => {
+      const assertion: OrganizationalUnitResultAssertion = (result) => {
+        if (result.path !== prop.organizationalUnitPath) {
+          return false
+        }
+
+        expect(result.results).toHaveLength(prop.accountResults.length)
+
+        result.results.forEach((accountResult, i) => {
+          const expected = prop.accountResults[i]
+          expect(accountResult.accountId).toStrictEqual(expected.accountId)
+          expect(accountResult.success).toStrictEqual(true)
+          if (expected.status) {
+            expect(accountResult.status).toStrictEqual(expected.status)
+          } else {
+            expect(accountResult.status).toStrictEqual("SUCCESS")
+          }
+
+          if (expected.configSetResults) {
+            expect(accountResult.results).toHaveLength(
+              expected.configSetResults.length,
+            )
+
+            accountResult.results.forEach((configSetResult, j) => {
+              const expectedConfigSetResult = expected.configSetResults![j]
+              expect(configSetResult.configSetName).toStrictEqual(
+                expectedConfigSetResult.configSet,
+              )
+
+              if (expectedConfigSetResult.commandPathResults) {
+                expect(configSetResult.results).toHaveLength(
+                  expectedConfigSetResult.commandPathResults.length,
+                )
+
+                configSetResult.results.forEach((commandPathResult, k) => {
+                  const expectedCommandPathResult = expectedConfigSetResult.commandPathResults![
+                    k
+                  ]
+
+                  expect(commandPathResult.commandPath).toStrictEqual(
+                    expectedCommandPathResult.commandPath,
+                  )
+
+                  if (expectedCommandPathResult.stackResults) {
+                    expect(commandPathResult.result.results).toHaveLength(
+                      expectedCommandPathResult.stackResults.length,
+                    )
+
+                    commandPathResult.result.results.forEach(
+                      (stackResult, n) => {
+                        const expectedStackResult = expectedCommandPathResult.stackResults![
+                          n
+                        ]
+
+                        expect(stackResult.stack.path).toStrictEqual(
+                          expectedStackResult.stackPath,
+                        )
+                        expect(stackResult.stack.name).toStrictEqual(
+                          expectedStackResult.stackName,
+                        )
+                      },
+                    )
+                  }
+                })
+              }
+            })
+          }
+        })
+
+        return true
+      }
+
+      return assertion
+    })
+
+    return createAccountsOperationOutputMatcher({
+      executor,
+      outputAssertions,
+      organizationalUnitAssertions: [
+        ...organizationalUnitAssertions,
+        ...assertions,
+      ],
+    })
+  }
 
   const assert = async (): Promise<AccountsOperationOutput> => {
     const output = await executor()
@@ -207,11 +349,25 @@ export const createAccountsOperationOutputMatcher = (
       outputAssertions(output)
     }
 
+    expect(output.results).toHaveLength(organizationalUnitAssertions.length)
+    if (!output.results) {
+      fail("Expected output results to be defined")
+    }
+
+    output.results.forEach((result) => {
+      if (!organizationalUnitAssertions.some((s) => s(result))) {
+        fail(
+          `Unexpected result for organizational unit result with path: ${result.path}`,
+        )
+      }
+    })
+
     return output
   }
 
   return {
     expectCommandToSucceed,
+    expectResults,
     assert,
   }
 }

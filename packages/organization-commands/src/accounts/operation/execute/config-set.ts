@@ -23,10 +23,15 @@ export const processConfigSet = async (
   state: OperationState,
   configSetType: ConfigSetType,
 ): Promise<ConfigSetOperationResult> => {
-  const { io, ctx } = holder
+  const { io, ctx, configRepository } = holder
 
   io.info(`Process config set: '${configSetName}'`)
   const configSet = ctx.getConfigSet(configSetName)
+  const stacksConfigRepository = await configRepository.createStacksConfigRepository(
+    configSet.name,
+    configSet.legacy,
+  )
+
   const results = new Array<ConfigSetCommandPathOperationResult>()
 
   for (const commandPath of configSet.commandPaths) {
@@ -39,6 +44,7 @@ export const processConfigSet = async (
       configSetTimer.startChild(commandPath),
       state,
       configSetType,
+      stacksConfigRepository,
     )
 
     if (!result.success) {

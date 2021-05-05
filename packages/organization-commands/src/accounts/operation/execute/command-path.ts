@@ -96,6 +96,7 @@ export const processCommandPath = async (
   commandPathTimer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
+  stacksConfigRepository: StacksConfigRepository,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const {
     io,
@@ -162,7 +163,7 @@ export const processCommandPath = async (
         ...ctx.commandContext,
         variables,
       },
-      ctx.configRepository,
+      stacksConfigRepository,
     )
 
     return {

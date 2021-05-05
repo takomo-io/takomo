@@ -1,0 +1,33 @@
+masterAccountId: "{{ env.TKM_ORG_3_MASTER_ACCOUNT_ID }}"
+organizationalUnits:
+  Root/Master:
+    accounts:
+      - "{{ env.TKM_ORG_3_MASTER_ACCOUNT_ID }}"
+  Root/One:
+    configSets: legacySingle
+    accounts:
+      - "{{ env.TKM_ORG_3_ACCOUNT_01_ID }}"
+  Root/Two:
+    configSets:
+      - logs
+    accounts:
+      - "{{ env.TKM_ORG_3_ACCOUNT_02_ID }}"
+  Root/Three:
+    configSets:
+      - network
+    accounts:
+      - "{{ env.TKM_ORG_3_ACCOUNT_03_ID }}"
+
+configSets:
+  legacyAll:
+    description: Legacy config set 1
+    commandPaths:
+      - "/"
+  legacySingle:
+    description: Legacy config set 2
+    commandPaths:
+      - "/a.yml"
+  network:
+    description: New config set 1
+    commandPaths:
+      - "/network2.yml"
