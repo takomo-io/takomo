@@ -1,4 +1,9 @@
-import { parseConfigSets } from "@takomo/config-sets"
+import {
+  ConfigSet,
+  ConfigSetName,
+  mergeConfigSets,
+  parseConfigSets,
+} from "@takomo/config-sets"
 import { CommandContext, parseVars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { buildOrganizationConfigSchema } from "@takomo/organization-schema"
@@ -11,12 +16,28 @@ import { parsePoliciesConfig } from "./parse-policies-config"
 import { parseString } from "./parse-string"
 import { parseTrustedAwsServices } from "./parse-trusted-aws-services"
 
+interface BuildOrganizationConfigProps {
+  readonly logger: TkmLogger
+  readonly ctx: CommandContext
+  readonly externallyLoadedAccounts: Map<
+    OrganizationalUnitPath,
+    ReadonlyArray<unknown>
+  >
+  readonly externalConfigSets: Map<ConfigSetName, ConfigSet>
+  readonly record: Record<string, unknown>
+}
+
 export const buildOrganizationConfig = async (
-  logger: TkmLogger,
-  ctx: CommandContext,
-  externallyLoadedAccounts: Map<OrganizationalUnitPath, ReadonlyArray<unknown>>,
-  record: Record<string, unknown>,
+  props: BuildOrganizationConfigProps,
 ): Promise<Result<OrganizationConfig, ValidationError>> => {
+  const {
+    logger,
+    ctx,
+    externallyLoadedAccounts,
+    externalConfigSets,
+    record,
+  } = props
+
   const organizationConfigFileSchema = buildOrganizationConfigSchema({
     regions: ctx.regions,
     trustedAwsServices: ctx.organizationServicePrincipals,
@@ -37,7 +58,9 @@ export const buildOrganizationConfig = async (
   }
 
   const accountCreation = parseAccountCreationConfig(record.accountCreation)
-  const configSets = parseConfigSets(record.configSets)
+  const parsedConfigSets = parseConfigSets(record.configSets)
+  const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
+
   const serviceControlPolicies = parsePoliciesConfig(
     "SERVICE_CONTROL_POLICY",
     record.serviceControlPolicies,

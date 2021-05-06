@@ -292,165 +292,177 @@ export interface ExecuteAccountsOperationCommandProps
 export const executeDeployAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
-  createAccountsOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "info"
+  createAccountsOperationOutputMatcher({
+    organizationalUnitAssertions: [],
+    executor: async () => {
+      const logLevel = props.logLevel ?? "info"
 
-    const ctxAndConfig = await createCtxAndConfigRepository({
-      projectDir: props.projectDir,
-      autoConfirmEnabled: props.autoConfirmEnabled ?? true,
-      ignoreDependencies: props.ignoreDependencies ?? false,
-      var: props.var ?? [],
-      varFile: props.varFile ?? [],
-      feature: props.feature ?? [],
-      logLevel,
-    })
+      const ctxAndConfig = await createCtxAndConfigRepository({
+        projectDir: props.projectDir,
+        autoConfirmEnabled: props.autoConfirmEnabled ?? true,
+        ignoreDependencies: props.ignoreDependencies ?? false,
+        var: props.var ?? [],
+        varFile: props.varFile ?? [],
+        feature: props.feature ?? [],
+        logLevel,
+      })
 
-    const logger = createConsoleLogger({
-      logLevel,
-    })
+      const logger = createConsoleLogger({
+        logLevel,
+      })
 
-    const credentialManager = await initDefaultCredentialManager(
-      () => Promise.resolve(""),
-      logger,
-      ctxAndConfig.ctx.awsClientProvider,
-      ctxAndConfig.ctx.credentials,
-    )
+      const credentialManager = await initDefaultCredentialManager(
+        () => Promise.resolve(""),
+        logger,
+        ctxAndConfig.ctx.awsClientProvider,
+        ctxAndConfig.ctx.credentials,
+      )
 
-    return accountsOperationCommand({
-      ...ctxAndConfig,
-      credentialManager,
-      io: createTestDeployAccountsIO(logger),
-      input: {
-        timer: createTimer("total"),
-        configSetType: "standard",
-        operation: "deploy",
-        accountIds: props.accountIds ?? [],
-        organizationalUnits: props.organizationalUnits ?? [],
-      },
-    })
+      return accountsOperationCommand({
+        ...ctxAndConfig,
+        credentialManager,
+        io: createTestDeployAccountsIO(logger),
+        input: {
+          timer: createTimer("total"),
+          configSetType: "standard",
+          operation: "deploy",
+          accountIds: props.accountIds ?? [],
+          organizationalUnits: props.organizationalUnits ?? [],
+        },
+      })
+    },
   })
 
 export const executeUndeployAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
-  createAccountsOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "info"
+  createAccountsOperationOutputMatcher({
+    organizationalUnitAssertions: [],
+    executor: async () => {
+      const logLevel = props.logLevel ?? "info"
 
-    const ctxAndConfig = await createCtxAndConfigRepository({
-      projectDir: props.projectDir,
-      autoConfirmEnabled: props.autoConfirmEnabled ?? true,
-      ignoreDependencies: props.ignoreDependencies ?? false,
-      var: props.var ?? [],
-      varFile: props.varFile ?? [],
-      feature: props.feature ?? [],
-      logLevel,
-    })
+      const ctxAndConfig = await createCtxAndConfigRepository({
+        projectDir: props.projectDir,
+        autoConfirmEnabled: props.autoConfirmEnabled ?? true,
+        ignoreDependencies: props.ignoreDependencies ?? false,
+        var: props.var ?? [],
+        varFile: props.varFile ?? [],
+        feature: props.feature ?? [],
+        logLevel,
+      })
 
-    const logger = createConsoleLogger({
-      logLevel,
-    })
+      const logger = createConsoleLogger({
+        logLevel,
+      })
 
-    const credentialManager = await initDefaultCredentialManager(
-      () => Promise.resolve(""),
-      logger,
-      ctxAndConfig.ctx.awsClientProvider,
-      ctxAndConfig.ctx.credentials,
-    )
+      const credentialManager = await initDefaultCredentialManager(
+        () => Promise.resolve(""),
+        logger,
+        ctxAndConfig.ctx.awsClientProvider,
+        ctxAndConfig.ctx.credentials,
+      )
 
-    return accountsOperationCommand({
-      ...ctxAndConfig,
-      credentialManager,
-      io: createTestUndeployAccountsIO(logger),
-      input: {
-        timer: createTimer("total"),
-        configSetType: "standard",
-        operation: "undeploy",
-        accountIds: props.accountIds ?? [],
-        organizationalUnits: props.organizationalUnits ?? [],
-      },
-    })
+      return accountsOperationCommand({
+        ...ctxAndConfig,
+        credentialManager,
+        io: createTestUndeployAccountsIO(logger),
+        input: {
+          timer: createTimer("total"),
+          configSetType: "standard",
+          operation: "undeploy",
+          accountIds: props.accountIds ?? [],
+          organizationalUnits: props.organizationalUnits ?? [],
+        },
+      })
+    },
   })
 
 export const executeBootstrapAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
-  createAccountsOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "info"
+  createAccountsOperationOutputMatcher({
+    organizationalUnitAssertions: [],
+    executor: async () => {
+      const logLevel = props.logLevel ?? "info"
 
-    const ctxAndConfig = await createCtxAndConfigRepository({
-      projectDir: props.projectDir,
-      autoConfirmEnabled: props.autoConfirmEnabled ?? true,
-      ignoreDependencies: props.ignoreDependencies ?? false,
-      var: props.var ?? [],
-      varFile: props.varFile ?? [],
-      feature: props.feature ?? [],
-      logLevel,
-    })
+      const ctxAndConfig = await createCtxAndConfigRepository({
+        projectDir: props.projectDir,
+        autoConfirmEnabled: props.autoConfirmEnabled ?? true,
+        ignoreDependencies: props.ignoreDependencies ?? false,
+        var: props.var ?? [],
+        varFile: props.varFile ?? [],
+        feature: props.feature ?? [],
+        logLevel,
+      })
 
-    const logger = createConsoleLogger({
-      logLevel,
-    })
+      const logger = createConsoleLogger({
+        logLevel,
+      })
 
-    const credentialManager = await initDefaultCredentialManager(
-      () => Promise.resolve(""),
-      logger,
-      ctxAndConfig.ctx.awsClientProvider,
-      ctxAndConfig.ctx.credentials,
-    )
+      const credentialManager = await initDefaultCredentialManager(
+        () => Promise.resolve(""),
+        logger,
+        ctxAndConfig.ctx.awsClientProvider,
+        ctxAndConfig.ctx.credentials,
+      )
 
-    return accountsOperationCommand({
-      ...ctxAndConfig,
-      credentialManager,
-      io: createTestBootstrapAccountsIO(logger),
-      input: {
-        timer: createTimer("total"),
-        configSetType: "bootstrap",
-        operation: "deploy",
-        accountIds: props.accountIds ?? [],
-        organizationalUnits: props.organizationalUnits ?? [],
-      },
-    })
+      return accountsOperationCommand({
+        ...ctxAndConfig,
+        credentialManager,
+        io: createTestBootstrapAccountsIO(logger),
+        input: {
+          timer: createTimer("total"),
+          configSetType: "bootstrap",
+          operation: "deploy",
+          accountIds: props.accountIds ?? [],
+          organizationalUnits: props.organizationalUnits ?? [],
+        },
+      })
+    },
   })
 
 export const executeTeardownAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
-  createAccountsOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "info"
+  createAccountsOperationOutputMatcher({
+    organizationalUnitAssertions: [],
+    executor: async () => {
+      const logLevel = props.logLevel ?? "info"
 
-    const ctxAndConfig = await createCtxAndConfigRepository({
-      projectDir: props.projectDir,
-      autoConfirmEnabled: props.autoConfirmEnabled ?? true,
-      ignoreDependencies: props.ignoreDependencies ?? false,
-      var: props.var ?? [],
-      varFile: props.varFile ?? [],
-      feature: props.feature ?? [],
-      logLevel,
-    })
+      const ctxAndConfig = await createCtxAndConfigRepository({
+        projectDir: props.projectDir,
+        autoConfirmEnabled: props.autoConfirmEnabled ?? true,
+        ignoreDependencies: props.ignoreDependencies ?? false,
+        var: props.var ?? [],
+        varFile: props.varFile ?? [],
+        feature: props.feature ?? [],
+        logLevel,
+      })
 
-    const logger = createConsoleLogger({
-      logLevel,
-    })
+      const logger = createConsoleLogger({
+        logLevel,
+      })
 
-    const credentialManager = await initDefaultCredentialManager(
-      () => Promise.resolve(""),
-      logger,
-      ctxAndConfig.ctx.awsClientProvider,
-      ctxAndConfig.ctx.credentials,
-    )
+      const credentialManager = await initDefaultCredentialManager(
+        () => Promise.resolve(""),
+        logger,
+        ctxAndConfig.ctx.awsClientProvider,
+        ctxAndConfig.ctx.credentials,
+      )
 
-    return accountsOperationCommand({
-      ...ctxAndConfig,
-      credentialManager,
-      io: createTestTeardownAccountsIO(logger),
-      input: {
-        timer: createTimer("total"),
-        configSetType: "bootstrap",
-        operation: "undeploy",
-        accountIds: props.accountIds ?? [],
-        organizationalUnits: props.organizationalUnits ?? [],
-      },
-    })
+      return accountsOperationCommand({
+        ...ctxAndConfig,
+        credentialManager,
+        io: createTestTeardownAccountsIO(logger),
+        input: {
+          timer: createTimer("total"),
+          configSetType: "bootstrap",
+          operation: "undeploy",
+          accountIds: props.accountIds ?? [],
+          organizationalUnits: props.organizationalUnits ?? [],
+        },
+      })
+    },
   })
 
 export const executeDeployOrganizationCommand = (

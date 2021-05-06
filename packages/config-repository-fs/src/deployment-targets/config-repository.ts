@@ -1,4 +1,4 @@
-import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
+import { ConfigSetName } from "@takomo/config-sets"
 import { CommandContext } from "@takomo/core"
 import {
   buildDeploymentConfig,
@@ -16,10 +16,8 @@ import {
   DeploymentTargetRepository,
 } from "@takomo/deployment-targets-repository"
 import { StacksConfigRepository } from "@takomo/stacks-context"
-import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
-  arrayToMap,
   dirExists,
   FilePath,
   TakomoError,
@@ -28,7 +26,7 @@ import {
 } from "@takomo/util"
 import { basename, join } from "path"
 import R from "ramda"
-import readdirp from "readdirp"
+import { loadConfigSetsFromConfigSetsDir } from "../config-sets/config-sets-loader"
 import {
   createFileSystemStacksConfigRepository,
   FileSystemStacksConfigRepositoryProps,
@@ -145,27 +143,6 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
     schemaRegistry,
   )
 
-  const loadConfigSetsFromConfigSetsDir = async (): Promise<
-    Map<ConfigSetName, ConfigSet>
-  > => {
-    const dirs = await readdirp.promise(configSetsDir, {
-      alwaysStat: true,
-      depth: 1,
-      type: "directories",
-    })
-
-    return arrayToMap(
-      dirs.map(R.prop("basename")).map((name) => ({
-        name,
-        description: "",
-        vars: {},
-        commandPaths: [ROOT_STACK_GROUP_PATH],
-        legacy: false,
-      })),
-      R.prop("name"),
-    )
-  }
-
   return {
     ...stacksConfigRepository,
     createStacksConfigRepository: async (
@@ -211,7 +188,9 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
         stacksConfigRepository.templateEngine,
       )
 
-      const externalConfigSets = await loadConfigSetsFromConfigSetsDir()
+      const externalConfigSets = await loadConfigSetsFromConfigSetsDir(
+        configSetsDir,
+      )
 
       const result = await buildDeploymentConfig(
         ctx,
