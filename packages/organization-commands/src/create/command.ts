@@ -13,7 +13,6 @@ import {
 const inputSchema = (ctx: CommandContext): AnySchema => {
   const { featureSet } = createOrganizationSchemas({
     regions: ctx.regions,
-    trustedAwsServices: ctx.organizationServicePrincipals,
   })
 
   return Joi.object({

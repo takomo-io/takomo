@@ -14,7 +14,6 @@ import { parseAccountCreationConfig } from "./parse-account-creation-config"
 import { parseOrganizationalUnitsConfig } from "./parse-organizational-units-config"
 import { parsePoliciesConfig } from "./parse-policies-config"
 import { parseString } from "./parse-string"
-import { parseTrustedAwsServices } from "./parse-trusted-aws-services"
 
 interface BuildOrganizationConfigProps {
   readonly logger: TkmLogger
@@ -40,7 +39,6 @@ export const buildOrganizationConfig = async (
 
   const organizationConfigFileSchema = buildOrganizationConfigSchema({
     regions: ctx.regions,
-    trustedAwsServices: ctx.organizationServicePrincipals,
   })
 
   const { error } = organizationConfigFileSchema.validate(record, {
@@ -81,8 +79,6 @@ export const buildOrganizationConfig = async (
     record.organizationalUnits,
   )
 
-  const trustedAwsServices = parseTrustedAwsServices(record.trustedAwsServices)
-
   return ok(
     deepFreeze({
       accountCreation,
@@ -93,7 +89,6 @@ export const buildOrganizationConfig = async (
       backupPolicies,
       organizationalUnits,
       vars,
-      trustedAwsServices,
       masterAccountId: `${record.masterAccountId}`,
       organizationAdminRoleName: parseString(record.organizationAdminRoleName),
       accountAdminRoleName: parseString(record.accountAdminRoleName),

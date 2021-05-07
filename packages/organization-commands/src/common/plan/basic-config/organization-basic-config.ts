@@ -19,11 +19,7 @@ export const planOrganizationBasicConfig = async (
 ): Promise<OrganizationBasicConfigDeploymentPlan> => {
   const { organizationState, ctx, logger } = props
 
-  const {
-    allFeaturesEnabled,
-    trustedAwsServices,
-    enabledPolicies,
-  } = organizationState
+  const { allFeaturesEnabled, enabledPolicies } = organizationState
 
   const config = ctx.organizationConfig
 
@@ -40,16 +36,9 @@ export const planOrganizationBasicConfig = async (
         retain: [],
         remove: [],
       },
-      trustedServices: {
-        add: [],
-        retain: [],
-        remove: [],
-      },
     }
   }
 
-  const localTrustedAwsServices =
-    config.trustedAwsServices || ctx.organizationServicePrincipals
   const localEnabledPolicies = new Array<OrganizationPolicyType>()
 
   if (config.serviceControlPolicies.enabled) {
@@ -65,30 +54,11 @@ export const planOrganizationBasicConfig = async (
     localEnabledPolicies.push("BACKUP_POLICY")
   }
 
-  const trustedServicesToAdd = without(
-    localTrustedAwsServices,
-    ...trustedAwsServices,
-  )
-  const trustedServiceToRemove = without(
-    trustedAwsServices,
-    ...localTrustedAwsServices,
-  )
-  const trustedServicesToRetain = intersection(
-    localTrustedAwsServices,
-    trustedAwsServices,
-  )
-
   const policiesToAdd = without(localEnabledPolicies, ...enabledPolicies)
   const policiesToRemove = without(enabledPolicies, ...localEnabledPolicies)
   const policiesToRetain = intersection(localEnabledPolicies, enabledPolicies)
 
-  const hasChanges =
-    [
-      ...trustedServicesToAdd,
-      ...trustedServiceToRemove,
-      ...policiesToAdd,
-      ...policiesToRemove,
-    ].length > 0
+  const hasChanges = [...policiesToAdd, ...policiesToRemove].length > 0
 
   return {
     hasChanges,
@@ -97,11 +67,6 @@ export const planOrganizationBasicConfig = async (
       add: policiesToAdd,
       retain: policiesToRetain,
       remove: policiesToRemove,
-    },
-    trustedServices: {
-      add: trustedServicesToAdd,
-      retain: trustedServicesToRetain,
-      remove: trustedServiceToRemove,
     },
   }
 }

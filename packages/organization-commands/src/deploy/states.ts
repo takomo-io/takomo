@@ -65,7 +65,6 @@ export interface DeployOrganizationCompletedState
   extends InitialDeployOrganizationState {
   readonly message: string
   readonly basicConfigDeploymentResult: CommandOutputBase
-  readonly basicConfigCleanResult: CommandOutputBase
   readonly organizationalUnitsCleanResult: CommandOutputBase
   readonly organizationalUnitsDeploymentResult: CommandOutputBase
   readonly policiesDeploymentResult: CommandOutputBase

@@ -64,23 +64,6 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../package.json")
 
-const organizationServicePrincipals = [
-  "aws-artifact-account-sync.amazonaws.com",
-  "backup.amazonaws.com",
-  "cloudtrail.amazonaws.com",
-  "compute-optimizer.amazonaws.com",
-  "config.amazonaws.com",
-  "ds.amazonaws.com",
-  "fms.amazonaws.com",
-  "license-manager.amazonaws.com",
-  "member.org.stacksets.cloudformation.amazonaws.com",
-  "ram.amazonaws.com",
-  "servicecatalog.amazonaws.com",
-  "ssm.amazonaws.com",
-  "sso.amazonaws.com",
-  "tagpolicies.tag.amazonaws.com",
-]
-
 export const readConfigurationFromFiles = async (
   projectDir: FilePath,
   args: any,
@@ -379,7 +362,6 @@ export const initCommandContext = async (
     autoConfirmEnabled: argv.yes === true,
     statisticsEnabled: argv.stats === true,
     confidentialValuesLoggingEnabled: argv["log-confidential-info"] === true,
-    organizationServicePrincipals: organizationServicePrincipals.slice(),
     projectDir: filePaths.projectDir,
     iamGeneratePoliciesInstructionsEnabled:
       argv["show-generate-iam-policies"] === true,

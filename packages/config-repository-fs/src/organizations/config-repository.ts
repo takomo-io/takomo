@@ -89,7 +89,6 @@ const loadExternallyPersistedAccounts = async (
 
   const schema = createAccountConfigItemSchema({
     regions: ctx.regions,
-    trustedAwsServices: ctx.organizationServicePrincipals,
   })
 
   accounts.forEach((wrapper) => {
