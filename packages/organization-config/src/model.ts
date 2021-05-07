@@ -5,7 +5,6 @@ import {
   OrganizationalUnitName,
   OrganizationPolicyName,
   OrganizationPolicyType,
-  ServicePrincipal,
 } from "@takomo/aws-model"
 import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
 import {
@@ -93,7 +92,6 @@ export interface OrganizationConfig {
   readonly aiServicesOptOutPolicies: OrganizationPoliciesConfig
   readonly backupPolicies: OrganizationPoliciesConfig
   readonly organizationalUnits: OrganizationalUnitsConfig
-  readonly trustedAwsServices: ReadonlyArray<ServicePrincipal>
   readonly organizationAdminRoleName?: string
   readonly accountAdminRoleName?: string
   readonly accountBootstrapRoleName?: string

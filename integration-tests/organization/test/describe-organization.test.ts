@@ -24,7 +24,6 @@ describe("Describe organization command", () => {
       message,
       masterAccount,
       enabledPolicies,
-      services,
     } = output
 
     expect(success).toBeTruthy()
@@ -44,14 +43,5 @@ describe("Describe organization command", () => {
     expect(enabledPolicies.slice().sort()).toStrictEqual(
       actualEnabledPolicies.slice().sort(),
     )
-
-    const actualTrustedServices = await aws.organizations.listAWSServiceAccessForOrganization()
-
-    expect(
-      services
-        .filter((s) => s.enabled)
-        .map((s) => s.service)
-        .sort(),
-    ).toStrictEqual(actualTrustedServices.sort())
   })
 })

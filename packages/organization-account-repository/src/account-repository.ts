@@ -38,7 +38,6 @@ export interface AccountRepositoryProvider {
 
 interface CreateAccountConfigItemSchemaProps {
   readonly regions: ReadonlyArray<Region>
-  readonly trustedAwsServices: ReadonlyArray<string>
 }
 
 export const createAccountConfigItemSchema = (

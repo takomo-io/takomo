@@ -13,7 +13,6 @@ const ctx: CommandContext = {
   projectDir: "",
   autoConfirmEnabled: true,
   regions: ["eu-west-1"],
-  organizationServicePrincipals: [],
   logLevel: "info",
   variables: {
     var: {},

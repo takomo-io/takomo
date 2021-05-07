@@ -30,7 +30,6 @@ const ctx: CommandContext = {
     var: {},
   },
   logLevel: "info",
-  organizationServicePrincipals: [],
   regions: [],
   autoConfirmEnabled: true,
   projectDir: "/tmp",

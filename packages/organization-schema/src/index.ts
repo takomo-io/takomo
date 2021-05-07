@@ -6,7 +6,6 @@ import Joi, { ObjectSchema } from "joi"
 
 interface CreateOrganizationSchemasProps {
   readonly regions: ReadonlyArray<Region>
-  readonly trustedAwsServices: ReadonlyArray<string>
 }
 
 export const createOrganizationSchemas = (
@@ -176,16 +175,11 @@ export const createOrganizationSchemas = (
     organizationalUnit,
   )
 
-  const trustedAwsService = Joi.string().valid(...props.trustedAwsServices)
-  const trustedAwsServices = Joi.array().items(trustedAwsService).unique()
-
   const featureSet = Joi.string().valid("ALL", "CONSOLIDATED_BILLING")
 
   return {
     organizationAccount,
     organizationAccountWithoutId,
-    trustedAwsServices,
-    trustedAwsService,
     organizationalUnits,
     policies,
     organizationalUnitPath,
@@ -200,7 +194,6 @@ export const createOrganizationSchemas = (
 
 interface BuildOrganizationConfigFileSchemaProps {
   readonly regions: ReadonlyArray<Region>
-  readonly trustedAwsServices: ReadonlyArray<string>
 }
 
 export const buildOrganizationConfigSchema = (
@@ -214,14 +207,12 @@ export const buildOrganizationConfigSchema = (
     organizationalUnits,
     organizationRoleName,
     policies,
-    trustedAwsServices,
   } = createOrganizationSchemas(props)
 
   return Joi.object({
     vars,
     accountCreation,
     configSets,
-    trustedAwsServices,
     serviceControlPolicies: [policies, Joi.boolean()],
     tagPolicies: [policies, Joi.boolean()],
     aiServicesOptOutPolicies: [policies, Joi.boolean()],

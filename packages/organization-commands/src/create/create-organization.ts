@@ -78,7 +78,6 @@ export const createOrganization = async (
         policies: [],
         policyType: "TAG_POLICY",
       },
-      trustedAwsServices: ctx.organizationServicePrincipals,
       organizationalUnits: {
         Root: {
           name: "Root",
