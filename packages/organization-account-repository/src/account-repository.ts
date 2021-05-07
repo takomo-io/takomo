@@ -1,5 +1,4 @@
-import { AccountId, Region } from "@takomo/aws-model"
-import { createAwsSchemas } from "@takomo/aws-schema"
+import { Region } from "@takomo/aws-model"
 import { AccountRepositoryConfig, CommandContext } from "@takomo/core"
 import { OrganizationAccountConfig } from "@takomo/organization-config"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
@@ -7,10 +6,8 @@ import { createOrganizationSchemas } from "@takomo/organization-schema"
 import { TemplateEngine, TkmLogger } from "@takomo/util"
 import Joi from "joi"
 
-export interface AccountConfigItem {
-  readonly accountId: AccountId
+export interface AccountConfigItem extends Partial<OrganizationAccountConfig> {
   readonly organizationalUnitPath: OrganizationalUnitPath
-  readonly config: Partial<OrganizationAccountConfig>
 }
 
 export interface AccountConfigItemWrapper {
@@ -43,15 +40,12 @@ interface CreateAccountConfigItemSchemaProps {
 export const createAccountConfigItemSchema = (
   props: CreateAccountConfigItemSchemaProps,
 ): Joi.ObjectSchema => {
-  const { accountId } = createAwsSchemas(props)
   const {
     organizationalUnitPath,
     organizationAccount,
   } = createOrganizationSchemas(props)
 
-  return Joi.object({
+  return organizationAccount.keys({
     organizationalUnitPath: organizationalUnitPath.required(),
-    accountId: accountId.required(),
-    config: organizationAccount,
   })
 }

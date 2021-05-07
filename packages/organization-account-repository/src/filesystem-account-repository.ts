@@ -90,10 +90,8 @@ export const createFileSystemAccountRepositoryProvider = (): AccountRepositoryPr
 
       return {
         putAccount: async (item: AccountConfigItem): Promise<void> => {
-          const pathToFile = join(expandedDir, `${item.accountId}.yml`)
-          logger.info(
-            `Persist account '${item.accountId}' to file: ${pathToFile}`,
-          )
+          const pathToFile = join(expandedDir, `${item.id}.yml`)
+          logger.info(`Persist account '${item.id}' to file: ${pathToFile}`)
           const contents = formatYaml(item)
           logger.trace("File contents:", () => contents)
           await createFile(pathToFile, contents)
