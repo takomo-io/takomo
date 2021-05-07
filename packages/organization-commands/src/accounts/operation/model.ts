@@ -18,6 +18,7 @@ export interface AccountsOperationInput extends CommandInput {
   readonly accountIds: ReadonlyArray<AccountId>
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType
+  readonly concurrentAccounts: number
 }
 
 export interface AccountOperationResult extends CommandOutputBase {
@@ -37,10 +38,16 @@ export interface AccountsOperationOutput extends CommandOutput {
   readonly results?: ReadonlyArray<OrganizationalUnitAccountsOperationResult>
 }
 
+export interface AccountsListener {
+  readonly onAccountBegin: () => Promise<void>
+  readonly onAccountComplete: () => Promise<void>
+}
+
 export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
   readonly createStackDeployIO: (accountId: AccountId) => DeployStacksIO
   readonly createStackUndeployIO: (accountId: AccountId) => UndeployStacksIO
   readonly confirmLaunch: (plan: AccountsLaunchPlan) => Promise<ConfirmResult>
+  readonly createAccountsListener: (accountCount: number) => AccountsListener
 }
 
 export interface PlannedLaunchableAccount {

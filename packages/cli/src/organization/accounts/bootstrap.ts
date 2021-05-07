@@ -15,6 +15,13 @@ export const bootstrapAccountsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(accountsDeployOperationCommandIamPolicy))
+      .option("concurrent-accounts", {
+        description: "Number of accounts to bootstrap concurrently",
+        number: true,
+        global: false,
+        demandOption: false,
+        default: 1,
+      })
       .option("account-id", {
         description: "Account id to bootstrap",
         alias: "a",
@@ -29,6 +36,7 @@ export const bootstrapAccountsCmd = {
         ...input,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
+        concurrentAccounts: argv["concurrent-accounts"],
         operation: "deploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
       }),

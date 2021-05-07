@@ -9,22 +9,22 @@ import {
   OrganizationState,
 } from "@takomo/organization-context"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { collectFromHierarchy, TkmLogger } from "@takomo/util"
+import { collectFromHierarchy } from "@takomo/util"
 import R from "ramda"
-import { AccountsLaunchPlan } from "../model"
+import { AccountsLaunchPlan, AccountsOperationIO } from "../model"
 import { OrganizationStateHolder } from "../states"
 import { AccountsOperationStep } from "../steps"
 
 const planAccountsDeploy = async (
   ctx: OrganizationContext,
-  logger: TkmLogger,
+  io: AccountsOperationIO,
   organizationState: OrganizationState,
   organizationalUnits: ReadonlyArray<OrganizationalUnitPath>,
   accountIds: ReadonlyArray<AccountId>,
   configSetType: ConfigSetType,
 ): Promise<AccountsLaunchPlan> => {
   const { accounts } = organizationState
-  logger.debugObject("Plan accounts deploy with parameters:", {
+  io.debugObject("Plan accounts deploy with parameters:", {
     organizationalUnits,
     accountIds,
     configSetType,
@@ -104,7 +104,7 @@ const planAccountsDeploy = async (
       }
     })
 
-  logger.debugObject(
+  io.debugObject(
     `Organizational units to deploy:`,
     ous.map((o) => o.path),
   )
@@ -129,7 +129,7 @@ export const planOperation: AccountsOperationStep<OrganizationStateHolder> = asy
 
   io.info("Plan operation")
 
-  const plan = await planAccountsDeploy(
+  const accountsLaunchPlan = await planAccountsDeploy(
     ctx,
     io,
     organizationState,
@@ -138,10 +138,20 @@ export const planOperation: AccountsOperationStep<OrganizationStateHolder> = asy
     configSetType,
   )
 
-  if (!plan.hasChanges) {
+  if (!accountsLaunchPlan.hasChanges) {
     const message = "No accounts to process"
     return transitions.skipAccountsOperation({ ...state, message })
   }
 
-  return transitions.confirmOperation({ ...state, accountsLaunchPlan: plan })
+  const accountCount = accountsLaunchPlan.organizationalUnits
+    .map((g) => g.accounts)
+    .flat().length
+
+  const accountsListener = io.createAccountsListener(accountCount)
+
+  return transitions.confirmOperation({
+    ...state,
+    accountsLaunchPlan,
+    accountsListener,
+  })
 }
