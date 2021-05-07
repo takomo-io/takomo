@@ -3,6 +3,7 @@ import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import { ConfirmResult } from "@takomo/core"
 import {
   AccountsLaunchPlan,
+  AccountsListener,
   AccountsOperationIO,
   AccountsOperationOutput,
 } from "@takomo/organization-commands"
@@ -108,7 +109,7 @@ export const createAccountsOperationIO = (
           configSet.results.forEach((result) => {
             if (result.result.results.length > 0) {
               result.result.results.forEach((stackResult) => {
-                targetsTable.cell("Organizational unit", ou.path)
+                targetsTable.cell("OU", ou.path)
                 targetsTable.cell("Account", account.accountId)
                 targetsTable.cell("Config set", configSet.configSetName)
                 targetsTable.cell("Command path", result.commandPath)
@@ -126,7 +127,7 @@ export const createAccountsOperationIO = (
                 targetsTable.newRow()
               })
             } else {
-              targetsTable.cell("Organizational unit", ou.path)
+              targetsTable.cell("OU", ou.path)
               targetsTable.cell("Account", account.accountId)
               targetsTable.cell("Config set", configSet.configSetName)
               targetsTable.cell("Command path", result.commandPath)
@@ -207,88 +208,26 @@ export const createAccountsOperationIO = (
           })
       })
     }
-    /*
-      if (failed.length > 0) {
-    io.subheader({
-      text: "More information about the failed stacks",
-      marginTop: true,
-    })
-
-    failed.forEach((r) => {
-      io.message({
-        text: `- Stack path: ${r.stack.path}`,
-        marginTop: true,
-      })
-      io.message({
-        text: `Stack name: ${r.stack.name}`,
-        indent: 2,
-      })
-
-      if (r.events.length > 0) {
-        io.message({
-          text: "Stack events:",
-          marginTop: true,
-          indent: 2,
-        })
-        const fn = (e: StackEvent) =>
-          io.message({ text: formatStackEvent(e), indent: 4 })
-        r.events.forEach(fn)
-      }
-
-      if (r.error) {
-        io.message({
-          text: "Error:",
-          marginTop: true,
-          indent: 2,
-        })
-
-        const error = r.error
-
-        if (error instanceof TakomoError) {
-          io.message({ text: error.message, indent: 4 })
-          if (error.info) {
-            io.message({
-              text: "Additional info:",
-              indent: 4,
-              marginTop: true,
-            })
-
-            io.message({ text: error.info, indent: 6 })
-          }
-
-          if (error.instructions) {
-            io.message({
-              text: "How to fix:",
-              indent: 4,
-              marginTop: true,
-            })
-
-            error.instructions.forEach((instruction) => {
-              io.message({ text: `- ${instruction}`, indent: 6 })
-            })
-          }
-        } else {
-          io.message({ text: `${error}`, indent: 4 })
-        }
-
-        if ((error.stack && logLevel === "debug") || logLevel === "trace") {
-          io.message({
-            text: "Stack trace:",
-            marginTop: true,
-            indent: 4,
-          })
-
-          io.message({
-            text: indentLines(`${error.stack}`, 6),
-          })
-        }
-      }
-    })
-  }
-     */
 
     return output
   }
+
+  let accountsInProgress = 0
+  let accountsCompleted = 0
+  const createAccountsListener = (accountCount: number): AccountsListener => ({
+    onAccountBegin: async () => {
+      accountsInProgress++
+    },
+    onAccountComplete: async () => {
+      accountsInProgress--
+      accountsCompleted++
+      const waitingCount = accountCount - accountsInProgress - accountsCompleted
+      const percentage = ((accountsCompleted / accountCount) * 100).toFixed(1)
+      logger.info(
+        `Accounts waiting: ${waitingCount}, in progress: ${accountsInProgress}, completed: ${accountsCompleted}/${accountCount} (${percentage}%)`,
+      )
+    },
+  })
 
   return {
     ...logger,
@@ -296,5 +235,6 @@ export const createAccountsOperationIO = (
     confirmLaunch,
     createStackDeployIO,
     createStackUndeployIO,
+    createAccountsListener,
   }
 }

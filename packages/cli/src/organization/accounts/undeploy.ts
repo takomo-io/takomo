@@ -15,6 +15,13 @@ export const undeployAccountsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(accountsUndeployOperationCommandIamPolicy))
+      .option("concurrent-accounts", {
+        description: "Number of accounts to undeploy concurrently",
+        number: true,
+        global: false,
+        demandOption: false,
+        default: 1,
+      })
       .option("account-id", {
         description: "Account id to undeploy",
         alias: "a",
@@ -29,6 +36,7 @@ export const undeployAccountsCmd = {
         ...input,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
+        concurrentAccounts: argv["concurrent-accounts"],
         operation: "undeploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
       }),

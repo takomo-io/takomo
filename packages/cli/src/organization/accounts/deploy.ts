@@ -15,6 +15,13 @@ export const deployAccountsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(accountsDeployOperationCommandIamPolicy))
+      .option("concurrent-accounts", {
+        description: "Number of accounts to deploy concurrently",
+        number: true,
+        global: false,
+        demandOption: false,
+        default: 1,
+      })
       .option("account-id", {
         description: "Account id to deploy",
         alias: "a",
@@ -29,6 +36,7 @@ export const deployAccountsCmd = {
         ...input,
         organizationalUnits: argv.organizationalUnits || [],
         accountIds: parseAccountIds(argv["account-id"]),
+        concurrentAccounts: argv["concurrent-accounts"],
         operation: "deploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
       }),

@@ -213,6 +213,8 @@ export interface ExpectAccountResultProps {
 export interface ExpectOrganizationalUnitResultProps {
   readonly organizationalUnitPath: OrganizationalUnitPath
   readonly accountResults: ReadonlyArray<ExpectAccountResultProps>
+  // Do not require accounts to be in specified order
+  readonly unorderedAccounts?: boolean
 }
 
 export interface AccountsOperationOutputMatcher {
@@ -267,7 +269,19 @@ export const createAccountsOperationOutputMatcher = ({
         expect(result.results).toHaveLength(prop.accountResults.length)
 
         result.results.forEach((accountResult, i) => {
-          const expected = prop.accountResults[i]
+          const expected =
+            prop.unorderedAccounts === true
+              ? prop.accountResults.find(
+                  (a) => a.accountId === accountResult.accountId,
+                )
+              : prop.accountResults[i]
+
+          if (!expected) {
+            fail(
+              `Unexpected account ${accountResult.accountId} found under organizational unit ${result.path}`,
+            )
+          }
+
           expect(accountResult.accountId).toStrictEqual(expected.accountId)
           expect(accountResult.success).toStrictEqual(true)
           if (expected.status) {

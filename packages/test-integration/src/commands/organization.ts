@@ -287,6 +287,7 @@ export interface ExecuteAccountsOperationCommandProps
   extends ExecuteCommandProps {
   readonly accountIds?: ReadonlyArray<AccountId>
   readonly organizationalUnits?: ReadonlyArray<OrganizationalUnitPath>
+  readonly concurrentAccounts?: number
 }
 
 export const executeDeployAccountsCommand = (
@@ -328,6 +329,7 @@ export const executeDeployAccountsCommand = (
           operation: "deploy",
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
+          concurrentAccounts: props.concurrentAccounts ?? 1,
         },
       })
     },
@@ -372,6 +374,7 @@ export const executeUndeployAccountsCommand = (
           operation: "undeploy",
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
+          concurrentAccounts: props.concurrentAccounts ?? 1,
         },
       })
     },
@@ -416,6 +419,7 @@ export const executeBootstrapAccountsCommand = (
           operation: "deploy",
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
+          concurrentAccounts: props.concurrentAccounts ?? 1,
         },
       })
     },
@@ -460,6 +464,7 @@ export const executeTeardownAccountsCommand = (
           operation: "undeploy",
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
+          concurrentAccounts: props.concurrentAccounts ?? 1,
         },
       })
     },

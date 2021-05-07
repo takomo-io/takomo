@@ -10,6 +10,7 @@ import { OrganizationalUnitsDeploymentPlan } from "../../common/plan/organizatio
 import { PolicyDeploymentPlan } from "../../common/plan/policies/model"
 import {
   AccountsLaunchPlan,
+  AccountsListener,
   AccountsOperationInput,
   AccountsOperationIO,
   OrganizationalUnitAccountsOperationResult,
@@ -43,6 +44,7 @@ export interface OrganizationalUnitsPlanHolder extends PoliciesPlanHolder {
 
 export interface AccountsOperationPlanHolder extends OrganizationStateHolder {
   readonly accountsLaunchPlan: AccountsLaunchPlan
+  readonly accountsListener: AccountsListener
 }
 
 export interface AccountsOperationFailedState

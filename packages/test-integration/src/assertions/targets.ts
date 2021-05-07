@@ -1,8 +1,10 @@
 import { StackName } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
-import { DeploymentTargetsOperationOutput } from "@takomo/deployment-targets-commands"
-import { DeploymentGroupDeployResult } from "@takomo/deployment-targets-commands/src/operation/model"
+import {
+  DeploymentGroupDeployResult,
+  DeploymentTargetsOperationOutput,
+} from "@takomo/deployment-targets-commands"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
