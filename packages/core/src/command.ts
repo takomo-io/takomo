@@ -1,6 +1,6 @@
 import { AwsClientProvider, CredentialManager } from "@takomo/aws-clients"
 import { InternalAwsClientProvider } from "@takomo/aws-clients/src/aws-client-provider"
-import { IamRoleArn, Region, ServicePrincipal } from "@takomo/aws-model"
+import { IamRoleArn, Region } from "@takomo/aws-model"
 import { FilePath, LogLevel, Timer, TkmLogger } from "@takomo/util"
 import { Credentials } from "aws-sdk"
 import { InternalTakomoProjectConfig, TakomoProjectConfig } from "./config"
@@ -151,11 +151,6 @@ export interface CommandContext {
    * Supported AWS regions.
    */
   readonly regions: ReadonlyArray<Region>
-
-  /**
-   * Supported AWS service principals
-   */
-  readonly organizationServicePrincipals: ReadonlyArray<ServicePrincipal>
 
   /**
    * Credentials used to invoke the current operation.

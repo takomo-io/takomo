@@ -1,10 +1,4 @@
-import { OrganizationPolicyType, ServicePrincipal } from "@takomo/aws-model"
-
-export interface OrganizationTrustedServicesPlan {
-  readonly add: ReadonlyArray<ServicePrincipal>
-  readonly retain: ReadonlyArray<ServicePrincipal>
-  readonly remove: ReadonlyArray<ServicePrincipal>
-}
+import { OrganizationPolicyType } from "@takomo/aws-model"
 
 export interface EnabledPoliciesPlan {
   readonly add: ReadonlyArray<OrganizationPolicyType>
@@ -15,6 +9,5 @@ export interface EnabledPoliciesPlan {
 export interface OrganizationBasicConfigDeploymentPlan {
   readonly skip: boolean
   readonly hasChanges: boolean
-  readonly trustedServices: OrganizationTrustedServicesPlan
   readonly enabledPolicies: EnabledPoliciesPlan
 }

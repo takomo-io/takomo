@@ -25,23 +25,10 @@ export const describeOrganization = async (
     organization.masterAccountId,
   )
 
-  // Listing of AWS service access for organization will
-  // fail if feature set is not "ALL"
-  const trustedServices =
-    organization.featureSet === "ALL"
-      ? await client.listAWSServiceAccessForOrganization()
-      : []
-
-  const services = ctx.organizationServicePrincipals.map((s) => ({
-    service: s,
-    enabled: trustedServices.includes(s),
-  }))
-
   timer.stop()
 
   return {
     organization,
-    services,
     enabledPolicies,
     masterAccount,
     success: true,

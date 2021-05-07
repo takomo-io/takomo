@@ -18,7 +18,6 @@ import { createAccountsOperationTransitions } from "./transitions"
 const inputSchema = (ctx: CommandContext): ObjectSchema => {
   const { organizationalUnitPath } = createOrganizationSchemas({
     regions: ctx.regions,
-    trustedAwsServices: ctx.organizationServicePrincipals,
   })
 
   const { accountId } = createAwsSchemas({ regions: ctx.regions })

@@ -40,40 +40,6 @@ export const createDeployOrganizationIO = (
   const { logger } = props
   const io = createBaseIO(props)
 
-  const printTrustedServicesPlan = (
-    plan: OrganizationBasicConfigDeploymentPlan,
-  ): void => {
-    io.subheader({ text: "Trusted AWS services", marginTop: true })
-
-    const { add, remove } = plan.trustedServices
-    if (add.length + remove.length === 0) {
-      io.message({ text: "No changes to trusted AWS services" })
-      return
-    }
-
-    if (add.length > 0) {
-      io.message({
-        text: `Access for the following ${add.length} service(s) will be enabled:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      add.forEach((s) => {
-        io.message({ text: green(`  - ${s}`) })
-      })
-    }
-
-    if (remove.length > 0) {
-      io.message({
-        text: `Access for the following ${remove.length} service(s) will be disabled:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      remove.forEach((s) => {
-        io.message({ text: red(`  - ${s}`) })
-      })
-    }
-  }
-
   const printEnabledPolicyTypesPlan = (
     plan: OrganizationBasicConfigDeploymentPlan,
   ): void => {
@@ -574,7 +540,6 @@ export const createDeployOrganizationIO = (
       0,
     )
 
-    printTrustedServicesPlan(basicConfigPlan)
     printEnabledPolicyTypesPlan(basicConfigPlan)
     printPoliciesDeploymentPlan(policiesPlan)
     printOrganizationalUnitsDeploymentPlan(organizationalUnitsPlan)
@@ -591,7 +556,6 @@ export const createDeployOrganizationIO = (
       organizationalUnitsDeploymentResult,
       organizationalUnitsCleanResult,
       basicConfigDeploymentResult,
-      basicConfigCleanResult,
       error,
     } = output
 
@@ -632,13 +596,6 @@ export const createDeployOrganizationIO = (
 
     if (policiesCleanResult) {
       results.push({ ...policiesCleanResult, name: "Clean policies" })
-    }
-
-    if (basicConfigCleanResult) {
-      results.push({
-        ...basicConfigCleanResult,
-        name: "Clean basic configuration",
-      })
     }
 
     results.forEach((r) => {

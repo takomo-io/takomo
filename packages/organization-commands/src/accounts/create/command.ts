@@ -21,7 +21,6 @@ const inputSchema = (ctx: CommandContext) => {
 
   const { organizationAccountWithoutId } = createOrganizationSchemas({
     regions: ctx.regions,
-    trustedAwsServices: ctx.organizationServicePrincipals,
   })
 
   const {
@@ -29,7 +28,6 @@ const inputSchema = (ctx: CommandContext) => {
     organizationalUnitPath,
   } = createOrganizationSchemas({
     regions: ctx.regions,
-    trustedAwsServices: ctx.organizationServicePrincipals,
   })
 
   return Joi.object({

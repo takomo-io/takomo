@@ -21,7 +21,6 @@ export interface DeployOrganizationOutput extends CommandOutput {
   readonly organizationalUnitsDeploymentResult?: CommandOutputBase
   readonly organizationalUnitsCleanResult?: CommandOutputBase
   readonly basicConfigDeploymentResult?: CommandOutputBase
-  readonly basicConfigCleanResult?: CommandOutputBase
 }
 
 export interface ConfirmOrganizationDeployProps {

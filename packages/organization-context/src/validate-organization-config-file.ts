@@ -69,12 +69,6 @@ export const validateOrganizationConfigFile = (
         "Local configuration must not contain 'backupPolicies' configuration when the organization does not have all features enabled",
       )
     }
-
-    if (configFile.trustedAwsServices) {
-      throw new TakomoError(
-        "Local configuration must not contain 'trustedAwsServices' configuration when the organization does not have all features enabled",
-      )
-    }
   }
 
   if (organization.featureSet === "ALL" && serviceControlPolicies.enabled) {
