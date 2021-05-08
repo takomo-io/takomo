@@ -53,7 +53,7 @@ describe("Organization commands", () => {
       dedent`
       Validation errors in account configuration '${process.cwd()}/configs/filesystem-account-repository-invalid-account-file/organization/accounts/account01.yml':
 
-        - "accountId" is required
+        - "id" is required
       `,
     ))
   test("Accounts loaded from account repository must not contain OUs not present in the local configuration", () =>

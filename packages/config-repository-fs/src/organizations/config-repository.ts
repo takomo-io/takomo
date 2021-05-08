@@ -101,7 +101,7 @@ const loadExternallyPersistedAccounts = async (
     }
   })
 
-  const accountsByOu = new Map(
+  return new Map(
     Array.from(
       Object.entries(
         R.groupBy(
@@ -110,13 +110,6 @@ const loadExternallyPersistedAccounts = async (
         ),
       ),
     ),
-  )
-
-  return new Map(
-    Array.from(accountsByOu.entries()).map(([ou, configs]) => [
-      ou,
-      configs.map((c) => c.config),
-    ]),
   )
 }
 
@@ -284,7 +277,7 @@ export const createFileSystemOrganizationConfigRepository = async (
   }
 
   const putAccountConfig = async (item: AccountConfigItem): Promise<void> => {
-    logger.debug(`About to persist account '${item.accountId}' configuration`)
+    logger.debug(`About to persist account '${item.id}' configuration`)
     const repository = await initAccountRepository(
       ctx,
       logger,

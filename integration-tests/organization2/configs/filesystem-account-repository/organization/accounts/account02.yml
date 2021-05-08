@@ -1,4 +1,2 @@
-accountId: "{{ env.TKM_ORG_3_ACCOUNT_02_ID }}"
 organizationalUnitPath: Root/Test
-config:
-  id: "{{ env.TKM_ORG_3_ACCOUNT_02_ID }}"
+id: "{{ env.TKM_ORG_3_ACCOUNT_02_ID }}"
