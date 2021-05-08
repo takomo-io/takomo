@@ -8,12 +8,10 @@ import {
   OrganizationalUnitsDeploymentResultHolder,
   OrganizationalUnitsPlanHolder,
   OrganizationStateHolder,
-  PoliciesCleanResultHolder,
   PoliciesDeploymentResultHolder,
   PoliciesPlanHolder,
 } from "./states"
 import { DeployOrganizationStep, StepResult } from "./steps"
-import { cleanBasicConfig } from "./steps/clean-basic-config"
 import { cleanOrganizationalUnits } from "./steps/clean-organizational-units"
 import { cleanPolicies } from "./steps/clean-policies"
 import { confirmDeployment } from "./steps/confirm-deployment"
@@ -84,7 +82,6 @@ export interface DeployOrganizationTransitions {
     OrganizationalUnitsDeploymentResultHolder
   >
   cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResultHolder>
-  cleanBasicConfig: DeployOrganizationStep<PoliciesCleanResultHolder>
 }
 
 export const inProgress = <S extends InitialDeployOrganizationState>(
@@ -138,5 +135,4 @@ export const createDeployOrganizationTransitions = (): DeployOrganizationTransit
     cleanOrganizationalUnits,
   ),
   cleanPolicies: inProgress("clean-policies", cleanPolicies),
-  cleanBasicConfig: inProgress("clean-basic-config", cleanBasicConfig),
 })

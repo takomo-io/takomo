@@ -59,8 +59,9 @@ export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResul
   if (!hasChanges) {
     timer.stop()
     io.info("No policies to clean")
-    return transitions.cleanBasicConfig({
+    return transitions.completeOrganizationDeploy({
       ...state,
+      message: "Success",
       policiesCleanResult: {
         message: "No changes",
         success: true,
@@ -83,8 +84,9 @@ export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResul
   const success = !results.some((r) => !r.success)
   timer.stop()
 
-  return transitions.cleanBasicConfig({
+  return transitions.completeOrganizationDeploy({
     ...state,
+    message: "Success",
     policiesCleanResult: {
       success,
       status: success ? "SUCCESS" : "FAILED",

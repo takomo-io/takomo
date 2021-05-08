@@ -556,7 +556,6 @@ export const createDeployOrganizationIO = (
       organizationalUnitsDeploymentResult,
       organizationalUnitsCleanResult,
       basicConfigDeploymentResult,
-      basicConfigCleanResult,
       error,
     } = output
 
@@ -597,13 +596,6 @@ export const createDeployOrganizationIO = (
 
     if (policiesCleanResult) {
       results.push({ ...policiesCleanResult, name: "Clean policies" })
-    }
-
-    if (basicConfigCleanResult) {
-      results.push({
-        ...basicConfigCleanResult,
-        name: "Clean basic configuration",
-      })
     }
 
     results.forEach((r) => {

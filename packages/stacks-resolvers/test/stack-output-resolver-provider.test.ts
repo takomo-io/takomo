@@ -1,8 +1,10 @@
-import { CommandContext } from "@takomo/core"
+import { AwsClientProvider } from "@takomo/aws-clients/src"
+import { CommandContext, TakomoProjectConfig } from "@takomo/core"
 import {
   expectNoValidationError,
   expectValidationErrors,
 } from "@takomo/test-unit"
+import { mock } from "jest-mock-extended"
 import Joi from "joi"
 import { defaultSchema } from "../src/resolver-registry"
 import { createStackOutputResolverProvider } from "../src/stack-output-resolver"
@@ -23,7 +25,10 @@ const ctx: CommandContext = {
   },
   confidentialValuesLoggingEnabled: false,
   statisticsEnabled: true,
-  projectConfig: {},
+  iamGeneratePoliciesInstructionsEnabled: false,
+  credentials: undefined,
+  projectConfig: mock<TakomoProjectConfig>(),
+  awsClientProvider: mock<AwsClientProvider>(),
 }
 
 const schema = provider.schema!({

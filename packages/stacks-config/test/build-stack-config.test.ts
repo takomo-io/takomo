@@ -1,4 +1,6 @@
-import { CommandContext } from "@takomo/core"
+import { AwsClientProvider } from "@takomo/aws-clients"
+import { CommandContext, TakomoProjectConfig } from "@takomo/core"
+import { mock } from "jest-mock-extended"
 import { buildStackConfig } from "../src"
 
 const emptyStackConfig = {
@@ -34,6 +36,10 @@ const ctx: CommandContext = {
   autoConfirmEnabled: true,
   projectDir: "/tmp",
   statisticsEnabled: false,
+  iamGeneratePoliciesInstructionsEnabled: false,
+  credentials: undefined,
+  projectConfig: mock<TakomoProjectConfig>(),
+  awsClientProvider: mock<AwsClientProvider>(),
 }
 
 describe("#buildStackConfig", () => {
