@@ -190,11 +190,8 @@ export const createAccount = async (
   try {
     await configRepository.putAccountConfig({
       organizationalUnitPath: ou ?? "Root",
-      accountId: createAccountStatus.accountId,
-      config: {
-        ...(config ?? {}),
-        id: createAccountStatus.accountId,
-      },
+      ...(config ?? {}),
+      id: createAccountStatus.accountId,
     })
   } catch (error) {
     io.error("Failed to persist account to account repository", error)
