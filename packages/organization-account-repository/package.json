@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.12.0",
-    "@takomo/aws-schema": "3.12.0",
     "@takomo/core": "3.12.0",
     "@takomo/organization-config": "3.12.0",
     "@takomo/organization-model": "3.1.0",
