@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/takomo-io/takomo/compare/v3.12.0...v3.13.0) (2021-05-09)
+
+
+### Features
+
+* **organizations:** add support for config set dirs ([#224](https://github.com/takomo-io/takomo/issues/224)) ([53f7c97](https://github.com/takomo-io/takomo/commit/53f7c9740e34f708417873e861866c6ed632abf5))
+
+
+
+
+
 # [3.12.0](https://github.com/takomo-io/takomo/compare/v3.11.1...v3.12.0) (2021-04-27)
 
 

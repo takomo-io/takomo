@@ -1,6 +1,6 @@
 {
   "name": "@takomo/util",
-  "version": "3.8.0",
+  "version": "3.13.0",
   "description": "Takomo Util",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -30,6 +30,7 @@
     "chalk": "3.0.0",
     "date-and-time": "0.14.2",
     "deep-freeze-node": "1.1.3",
+    "diff": "5.0.0",
     "easy-table": "1.1.1",
     "handlebars": "4.7.7",
     "joi": "17.4.0",
@@ -37,8 +38,7 @@
     "pretty-ms": "5.1.0",
     "ramda": "0.27.1",
     "strip-ansi": "6.0.0",
-    "uuid": "3.3.3",
-    "diff": "5.0.0"
+    "uuid": "3.3.3"
   },
   "engines": {
     "node": ">=14.4.0"

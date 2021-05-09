@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/takomo-io/takomo/compare/v3.12.0...v3.13.0) (2021-05-09)
+
+
+### Features
+
+* **organizations:** add support for config set dirs ([#224](https://github.com/takomo-io/takomo/issues/224)) ([53f7c97](https://github.com/takomo-io/takomo/commit/53f7c9740e34f708417873e861866c6ed632abf5))
+* **organizations:** remove trusted services from organization management ([#228](https://github.com/takomo-io/takomo/issues/228)) ([eebf3a2](https://github.com/takomo-io/takomo/commit/eebf3a2c7d0b0984d0079fc7448fbc33f60b2d25))
+
+
+
+
+
 # [3.12.0](https://github.com/takomo-io/takomo/compare/v3.11.1...v3.12.0) (2021-04-27)
 
 **Note:** Version bump only for package integration-test-organization

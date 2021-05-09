@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/takomo-io/takomo/compare/v3.12.0...v3.13.0) (2021-05-09)
+
+
+### Features
+
+* **organizations:** improve organization deploy confirm step ([#230](https://github.com/takomo-io/takomo/issues/230)) ([c2b0056](https://github.com/takomo-io/takomo/commit/c2b0056e353c0e351889c639f2aa35696e02ae30))
+
+
+
+
+
 # [3.8.0](https://github.com/takomo-io/takomo/compare/v3.7.0...v3.8.0) (2021-04-08)
 
 **Note:** Version bump only for package @takomo/util
