@@ -69,6 +69,8 @@ export const planOrganizationalUnitDelete = (
       retain: [],
       remove: currentOu.accounts.map((a) => ({
         id: a.id,
+        email: a.email,
+        name: a.name,
         operation: "delete",
         policies: createOrgEntityPoliciesPlan(
           logger,

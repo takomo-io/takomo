@@ -9,7 +9,11 @@ import {
   OrganizationPolicyName,
   OrganizationPolicyType,
 } from "@takomo/aws-model"
-import { OrganizationalUnitPath } from "@takomo/organization-model"
+import {
+  OrganizationalUnitPath,
+  OrganizationHierarchyState,
+  PoliciesState,
+} from "@takomo/organization-model"
 import { collectFromHierarchy } from "@takomo/util"
 import R from "ramda"
 import { OrgEntityId } from "./model"
@@ -164,7 +168,7 @@ export class OrganizationState {
       throw new Error(`Unknown policy type: '${policyType}'`)
     }
 
-    return policiesByType.get(targetId)?.slice() || []
+    return policiesByType.get(targetId)?.slice().sort() || []
   }
 
   /**
@@ -227,6 +231,67 @@ export class OrganizationState {
     }
 
     return ou.ou
+  }
+
+  toOrganizationHierarchyState = (): OrganizationHierarchyState => {
+    const getPolicies = (
+      id: string,
+      type: OrganizationPolicyType,
+    ): PoliciesState | undefined => {
+      const attached = this.getPoliciesAttachedToTarget(type, id)
+      const inherited = this.getPoliciesInheritedByTarget(type, id)
+      if (inherited.length + attached.length === 0) {
+        return undefined
+      }
+
+      return {
+        inherited: inherited.length > 0 ? inherited : undefined,
+        attached: attached.length > 0 ? attached : undefined,
+      }
+    }
+
+    return Array.from(this.#props.organizationalUnitByPath.entries()).reduce(
+      (collected, [ouPath, ou]) => {
+        const accounts =
+          ou.accounts.length === 0
+            ? undefined
+            : ou.accounts.reduce(
+                (collectedAccounts, account) => ({
+                  ...collectedAccounts,
+                  [`${account.name} (${account.id})`]: {
+                    serviceControlPolicies: getPolicies(
+                      account.id,
+                      "SERVICE_CONTROL_POLICY",
+                    ),
+                    aiServicesOptOutPolicies: getPolicies(
+                      account.id,
+                      "AISERVICES_OPT_OUT_POLICY",
+                    ),
+                    backupPolicies: getPolicies(account.id, "BACKUP_POLICY"),
+                    tagPolicies: getPolicies(account.id, "TAG_POLICY"),
+                  },
+                }),
+                {},
+              )
+
+        const ouState = {
+          accounts,
+          serviceControlPolicies: getPolicies(
+            ou.ou.id,
+            "SERVICE_CONTROL_POLICY",
+          ),
+          aiServicesOptOutPolicies: getPolicies(
+            ou.ou.id,
+            "AISERVICES_OPT_OUT_POLICY",
+          ),
+          backupPolicies: getPolicies(ou.ou.id, "BACKUP_POLICY"),
+          tagPolicies: getPolicies(ou.ou.id, "TAG_POLICY"),
+        }
+
+        return { ...collected, [ouPath]: ouState }
+      },
+      {},
+    )
   }
 
   getAsObject = (): unknown => {

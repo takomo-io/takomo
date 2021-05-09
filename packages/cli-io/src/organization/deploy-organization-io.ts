@@ -4,35 +4,93 @@ import {
   DeployOrganizationOutput,
   OrganizationalUnitsDeploymentPlan,
   OrganizationBasicConfigDeploymentPlan,
-  OrgEntityPoliciesPlan,
   OrgEntityPolicyOperationsPlan,
-  PlannedOrganizationalUnit,
   PolicyDeploymentPlan,
 } from "@takomo/organization-commands"
-import { collectFromHierarchy, green, red, yellow } from "@takomo/util"
+import { OrganizationState } from "@takomo/organization-context"
+import {
+  OrganizationHierarchyState,
+  PoliciesState,
+} from "@takomo/organization-model"
+import {
+  collectFromHierarchy,
+  diffStrings,
+  formatYaml,
+  green,
+  grey,
+  red,
+  yellow,
+} from "@takomo/util"
 import Table from "easy-table"
-import R from "ramda"
 import { createBaseIO } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus } from "../formatters"
 import { IOProps } from "../stacks/common"
 
-interface Formatters {
-  readonly header: (value: string) => string
-  readonly add: (value: string) => string
-  readonly remove: (value: string) => string
-  retain: (value: string) => string
-}
+const buildOrganizationHierarchyStateFromPlan = (
+  plan: OrganizationalUnitsDeploymentPlan,
+): OrganizationHierarchyState => {
+  const ous = collectFromHierarchy(plan.root, (node) => node.children)
 
-interface PolicyOperationsToInclude {
-  readonly add: boolean
-  readonly update: boolean
-  readonly remove: boolean
-  readonly retain: boolean
-}
+  const collectPolicies = (
+    policyPlan: OrgEntityPolicyOperationsPlan,
+  ): PoliciesState | undefined => {
+    const inherited = [
+      ...policyPlan.inherited.add,
+      ...policyPlan.inherited.retain,
+    ].sort()
+    const attached = [
+      ...policyPlan.attached.add,
+      ...policyPlan.attached.retain,
+    ].sort()
+    if (inherited.length > 0 || attached.length > 0) {
+      return {
+        inherited: inherited.length > 0 ? inherited : undefined,
+        attached: attached.length > 0 ? attached : undefined,
+      }
+    }
 
-const addFormatter = (s: string) => green(s)
-const deleteFormatter = (s: string) => red(s)
+    return undefined
+  }
+
+  return ous
+    .filter((ou) => ou.operation !== "delete")
+    .reduce((collected, ou) => {
+      const accountsList = [...ou.accounts.add, ...ou.accounts.retain]
+      const accounts =
+        accountsList.length > 0
+          ? accountsList.reduce(
+              (collectedAccounts, account) => ({
+                ...collectedAccounts,
+                [`${account.name} (${account.id})`]: {
+                  serviceControlPolicies: collectPolicies(
+                    account.policies.serviceControl,
+                  ),
+                  tagPolicies: collectPolicies(account.policies.tag),
+                  backupPolicies: collectPolicies(account.policies.backup),
+                  aiServicesOptOutPolicies: collectPolicies(
+                    account.policies.aiServicesOptOut,
+                  ),
+                },
+              }),
+              {},
+            )
+          : undefined
+
+      return {
+        ...collected,
+        [ou.path]: {
+          accounts,
+          serviceControlPolicies: collectPolicies(ou.policies.serviceControl),
+          tagPolicies: collectPolicies(ou.policies.tag),
+          backupPolicies: collectPolicies(ou.policies.backup),
+          aiServicesOptOutPolicies: collectPolicies(
+            ou.policies.aiServicesOptOut,
+          ),
+        },
+      }
+    }, {})
+}
 
 export const createDeployOrganizationIO = (
   props: IOProps,
@@ -43,13 +101,12 @@ export const createDeployOrganizationIO = (
   const printEnabledPolicyTypesPlan = (
     plan: OrganizationBasicConfigDeploymentPlan,
   ): void => {
-    io.subheader({ text: "Policy types", marginTop: true })
     const { add, remove } = plan.enabledPolicies
-
     if (add.length + remove.length === 0) {
-      io.message({ text: "No changes to enabled policy types" })
       return
     }
+
+    io.subheader({ text: "Policy types", marginTop: true })
 
     if (add.length > 0) {
       io.message({
@@ -75,459 +132,108 @@ export const createDeployOrganizationIO = (
   }
 
   const printPoliciesDeploymentPlan = (plan: PolicyDeploymentPlan): void => {
-    io.subheader({ text: "Policies", marginTop: true })
-
     if (!plan.hasChanges) {
-      io.message({ text: "No changes to policies" })
       return
     }
+
+    io.subheader({ text: "Policies", marginTop: true })
 
     const { serviceControl, tag, aiServicesOptOut, backup } = plan
     const allPolicies = [serviceControl, tag, aiServicesOptOut, backup]
-    const policiesToRemove = allPolicies.map((p) => p.remove).flat()
-    const policiesToAdd = allPolicies.map((p) => p.add).flat()
-    const policiesToUpdate = allPolicies.map((p) => p.update).flat()
+    const policiesToRemove = allPolicies
+      .map((p) => p.remove)
+      .flat()
+      .map((policy) => ({ policy, operation: "remove" }))
+    const policiesToAdd = allPolicies
+      .map((p) => p.add)
+      .flat()
+      .map((policy) => ({ policy, operation: "add" }))
+    const policiesToUpdate = allPolicies
+      .map((p) => p.update)
+      .flat()
+      .map((policy) => ({ policy, operation: "update" }))
 
-    if (policiesToAdd.length > 0) {
-      io.message({
-        text: `The following ${policiesToAdd.length} policies will be added:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      policiesToAdd.forEach((p) => {
-        io.message({ text: green(`  - name: ${p.name}`) })
-        io.message({ text: green(`    type: ${p.type}`) })
-      })
-      io.print()
-    }
-
-    if (policiesToUpdate.length > 0) {
-      io.message({
-        text: `The following ${policiesToUpdate.length} policies will be updated:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      policiesToUpdate.forEach((p) => {
-        io.message({ text: yellow(`  - name: ${p.name}`) })
-        io.message({ text: yellow(`    type: ${p.type}`) })
-      })
-      io.print()
-    }
-
-    if (policiesToRemove.length > 0) {
-      io.message({
-        text: `The following ${policiesToRemove.length} policies will be removed:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      policiesToRemove.forEach((p) => {
-        io.message({ text: red(`  - name: ${p.name}`) })
-        io.message({ text: red(`    type: ${p.type}`) })
-      })
-      io.print()
-    }
-  }
-
-  const printOrganizationalUnit = (
-    ou: PlannedOrganizationalUnit,
-    depth: number,
-    printer?: (message: string) => void,
-  ): void => {
-    if (!printer) {
-      switch (ou.operation) {
-        case "delete":
-          printOrganizationalUnit(ou, depth, (message: string) =>
-            io.message({ text: red("- " + "  ".repeat(depth) + message) }),
-          )
-          return
-        case "add":
-          printOrganizationalUnit(ou, depth, (message: string) =>
-            io.message({ text: green("+ " + "  ".repeat(depth) + message) }),
-          )
-          return
-      }
-    }
-
-    const print =
-      printer ||
-      ((message: string) =>
-        io.message({ text: "  ".repeat(depth + 1) + message }))
-
-    print(`${ou.name}:`)
-    if (ou.children.length > 0) {
-      print("  children:")
-      ou.children.forEach((child) => {
-        printOrganizationalUnit(child, depth + 2)
-      })
-    }
-  }
-
-  const printPolicyOperations = (
-    name: string,
-    { inherited, attached }: OrgEntityPolicyOperationsPlan,
-    formatters: Formatters,
-    inclusions: PolicyOperationsToInclude,
-    depth: number,
-  ): void => {
-    const attachedAdd = R.uniq(inclusions.add ? attached.add : []).map(
-      (name) => ({
-        name,
-        operation: "add",
-        formatter: formatters.add,
-        type: "attached",
-      }),
-    )
-
-    const attachedRetain = R.uniq(inclusions.retain ? attached.retain : []).map(
-      (name) => ({
-        name,
-        operation: "retain",
-        formatter: formatters.retain,
-        type: "attached",
-      }),
-    )
-
-    const attachedRemove = R.uniq(inclusions.remove ? attached.remove : []).map(
-      (name) => ({
-        name,
-        operation: "remove",
-        formatter: formatters.remove,
-        type: "attached",
-      }),
-    )
-
-    const attachedNames = [
-      ...attachedAdd,
-      ...attachedRemove,
-      ...attachedRetain,
-    ].map((a) => a.name)
-
-    const inheritedAdd = R.uniq(inclusions.add ? inherited.add : []).map(
-      (name) => ({
-        name,
-        operation: "add",
-        formatter: formatters.add,
-        type: "inherited",
-      }),
-    )
-
-    const inheritedRetain = R.uniq(
-      inclusions.retain ? inherited.retain : [],
-    ).map((name) => ({
-      name,
-      operation: "retain",
-      formatter: formatters.retain,
-      type: "inherited",
-    }))
-
-    const inheritedRemove = R.uniq(
-      inclusions.remove ? inherited.remove : [],
-    ).map((name) => ({
-      name,
-      operation: "remove",
-      formatter: formatters.remove,
-      type: "inherited",
-    }))
-
-    const all = [
-      ...attachedRetain,
-      ...attachedRemove,
-      ...attachedAdd,
-      ...inheritedRetain,
-      ...inheritedRemove,
-      ...inheritedAdd,
+    const policyOperations = [
+      ...policiesToAdd,
+      ...policiesToUpdate,
+      ...policiesToRemove,
     ]
 
-    if (all.length === 0) {
-      return
-    }
-
-    if (all.every((p) => p.operation === "remove")) {
-      io.message({ text: deleteFormatter(`${" ".repeat(depth)}${name}:`) })
-    } else if (all.every((p) => p.operation === "add")) {
-      io.message({ text: addFormatter(`${" ".repeat(depth)}${name}:`) })
-    } else {
-      io.message({ text: formatters.header(`${" ".repeat(depth)}${name}:`) })
-    }
-
-    all
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .forEach(({ name, formatter, type }) => {
-        io.message({
-          text: formatter(`${" ".repeat(depth + 2)}- ${name}   (${type})`),
-        })
-      })
-  }
-
-  const printPolicies = (
-    policies: OrgEntityPoliciesPlan,
-    formatters: Formatters,
-    inclusions: PolicyOperationsToInclude,
-    depth: number,
-  ): void => {
-    const {
-      aiServicesOptOut,
-      backup,
-      tag,
-      serviceControl,
-      hasChanges,
-    } = policies
-
-    if (!hasChanges) {
-      return
-    }
-
-    printPolicyOperations(
-      "serviceControlPolicies",
-      serviceControl,
-      formatters,
-      inclusions,
-      depth,
-    )
-
-    printPolicyOperations("tagPolicies", tag, formatters, inclusions, depth)
-
-    printPolicyOperations(
-      "backupPolicies",
-      backup,
-      formatters,
-      inclusions,
-      depth,
-    )
-
-    printPolicyOperations(
-      "aiServicesOptOutPolicies",
-      aiServicesOptOut,
-      formatters,
-      inclusions,
-      depth,
-    )
-  }
-
-  const printOrganizationalUnitsDeploymentPlan = ({
-    root,
-    hasChanges,
-  }: OrganizationalUnitsDeploymentPlan): void => {
-    io.subheader({ text: "Organizational units", marginTop: true })
-
-    if (!hasChanges) {
-      io.message({ text: "No changes to organizational units" })
-      return
-    }
-
-    const ous = collectFromHierarchy(root, (ou) => ou.children, {
-      sortSiblings: (a, b) => a.path.localeCompare(b.path),
+    io.message({
+      text: `The following ${policyOperations.length} policies will be changed:`,
     })
 
-    const ousToAdd = ous.filter((ou) => ou.operation === "add")
-    const ousToUpdate = ous.filter((ou) => ou.operation === "update")
-    const ousToDelete = ous.filter((ou) => ou.operation === "delete")
-
-    if (ousToAdd.length > 0) {
-      io.message({
-        text: `The following ${ousToAdd.length} organizational unit(s) will be added:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      ousToAdd.forEach((ou) => {
-        io.message({ text: green(`  - path: ${ou.path}`) })
-        io.message({ text: green(`    id: <known after deploy>`) })
-        printPolicies(
-          ou.policies,
-          {
-            add: addFormatter,
-            remove: addFormatter,
-            retain: addFormatter,
-            header: addFormatter,
-          },
-          {
-            add: true,
-            remove: false,
-            update: false,
-            retain: false,
-          },
-          4,
-        )
-
-        if (ou.accounts.add.length > 0) {
-          io.message({ text: green(`    accounts:`) })
-          ou.accounts.add.forEach((a) => {
-            io.message({ text: green(`      - id: ${a.id}`) })
-            printPolicies(
-              a.policies,
-              {
-                add: addFormatter,
-                remove: addFormatter,
-                retain: addFormatter,
-                header: addFormatter,
-              },
-              {
-                add: true,
-                remove: false,
-                update: false,
-                retain: false,
-              },
-              8,
-            )
+    policyOperations.forEach(({ operation, policy }) => {
+      switch (operation) {
+        case "add":
+          io.message({
+            text: `+ ${policy.name}: (policy will be added)`,
+            marginTop: true,
+            indent: 2,
+            transform: green,
           })
-        }
-      })
+          break
+        case "remove":
+          io.message({
+            text: `- ${policy.name}: (policy will be removed)`,
+            marginTop: true,
+            indent: 2,
+            transform: red,
+          })
+          break
+        case "update":
+          io.message({
+            text: `~ ${policy.name}: (policy will be updated)`,
+            marginTop: true,
+            indent: 2,
+            transform: yellow,
+          })
+          break
+        default:
+          throw new Error(`Unsupported policy operation: '${operation}'`)
+      }
 
-      io.print()
+      io.message({ text: `type:      ${policy.type}`, indent: 6 })
+      io.message({
+        text: `id:        ${policy.id ?? grey("<known after deploy>")}`,
+        indent: 6,
+      })
+    })
+  }
+
+  const printOrganizationalUnitsDeploymentPlan = (
+    plan: OrganizationalUnitsDeploymentPlan,
+    organizationState: OrganizationState,
+  ): void => {
+    if (!plan.hasChanges) {
+      return
     }
 
-    if (ousToUpdate.length > 0) {
-      io.message({
-        text: `The following ${ousToUpdate.length} organizational unit(s) will be updated:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      ousToUpdate.forEach((ou) => {
-        io.message({ text: `  - path: ${ou.path}` })
-        io.message({ text: `    id: ${ou.id}` })
-        printPolicies(
-          ou.policies,
-          {
-            add: addFormatter,
-            remove: deleteFormatter,
-            retain: (s: string) => s,
-            header: (s: string) => s,
-          },
-          {
-            add: true,
-            remove: true,
-            update: true,
-            retain: true,
-          },
-          4,
-        )
+    const currentState = organizationState.toOrganizationHierarchyState()
+    const newState = buildOrganizationHierarchyStateFromPlan(plan)
 
-        const { remove, add, retain } = ou.accounts
-        if (remove.length + add.length + retain.length > 0) {
-          io.message({ text: `    accounts:` })
-          add.forEach((a) => {
-            io.message({ text: green(`      - id: ${a.id}`) })
-            printPolicies(
-              a.policies,
-              {
-                add: addFormatter,
-                remove: deleteFormatter,
-                retain: addFormatter,
-                header: addFormatter,
-              },
-              {
-                add: true,
-                remove: false,
-                update: true,
-                retain: true,
-              },
-              8,
-            )
-          })
+    const currentStateYaml = formatYaml(currentState)
+    const newStateYaml = formatYaml(newState)
 
-          retain.forEach((a) => {
-            io.message({ text: `      - id: ${a.id}` })
-            printPolicies(
-              a.policies,
-              {
-                add: addFormatter,
-                remove: deleteFormatter,
-                retain: (s: string) => s,
-                header: (s: string) => s,
-              },
-              {
-                add: true,
-                remove: true,
-                update: true,
-                retain: true,
-              },
-              8,
-            )
-          })
+    io.subheader({
+      text: `Organization hierarchy`,
+      marginTop: true,
+    })
 
-          remove.forEach((a) => {
-            io.message({ text: red(`      - id: ${a.id}`) })
-            printPolicies(
-              a.policies,
-              {
-                add: deleteFormatter,
-                remove: deleteFormatter,
-                retain: deleteFormatter,
-                header: deleteFormatter,
-              },
-              {
-                add: true,
-                remove: true,
-                update: true,
-                retain: true,
-              },
-              8,
-            )
-          })
-        }
-      })
-
-      io.print()
-    }
-
-    if (ousToDelete.length > 0) {
-      io.message({
-        text: `The following ${ousToDelete.length} organizational unit(s) will be deleted:`,
-        marginTop: false,
-        marginBottom: true,
-      })
-      ousToDelete.forEach((ou) => {
-        io.message({ text: red(`  - path: ${ou.path}`) })
-        io.message({ text: red(`    id: ${ou.id}`) })
-        printPolicies(
-          ou.policies,
-          {
-            add: deleteFormatter,
-            remove: deleteFormatter,
-            retain: deleteFormatter,
-            header: deleteFormatter,
-          },
-          {
-            add: false,
-            remove: true,
-            update: false,
-            retain: false,
-          },
-          4,
-        )
-
-        if (ou.accounts.remove.length > 0) {
-          io.message({ text: red(`    accounts:`) })
-          ou.accounts.remove.forEach((a) => {
-            io.message({ text: red(`      - id: ${a.id}`) })
-            printPolicies(
-              a.policies,
-              {
-                add: deleteFormatter,
-                remove: deleteFormatter,
-                retain: deleteFormatter,
-                header: deleteFormatter,
-              },
-              {
-                add: false,
-                remove: true,
-                update: false,
-                retain: false,
-              },
-              8,
-            )
-          })
-        }
-      })
-
-      io.print()
-    }
+    io.message({
+      text: `The organization hierarchy will be modified as follows:`,
+    })
+    io.message({
+      text: diffStrings(currentStateYaml, newStateYaml),
+      marginTop: true,
+    })
   }
 
   const confirmDeploy = async ({
     organizationalUnitsPlan,
     basicConfigPlan,
     policiesPlan,
+    organizationState,
   }: ConfirmOrganizationDeployProps): Promise<boolean> => {
     io.header({ text: "Review organization deployment plan", marginTop: true })
     io.longMessage(
@@ -542,7 +248,10 @@ export const createDeployOrganizationIO = (
 
     printEnabledPolicyTypesPlan(basicConfigPlan)
     printPoliciesDeploymentPlan(policiesPlan)
-    printOrganizationalUnitsDeploymentPlan(organizationalUnitsPlan)
+    printOrganizationalUnitsDeploymentPlan(
+      organizationalUnitsPlan,
+      organizationState,
+    )
 
     return await io.confirm("Continue to deploy the organization?", true)
   }

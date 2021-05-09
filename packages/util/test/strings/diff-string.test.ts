@@ -1,5 +1,4 @@
-import { green, red } from "@takomo/util"
-import { diffTemplate } from "../../../src/stacks/deploy-stacks/template"
+import { diffStrings, green, red } from "../../src"
 
 // old, updated, expected
 const cases = [
@@ -53,6 +52,6 @@ const cases = [
 
 describe("#diffTemplate", () => {
   test.each(cases)("Test case %#", (current, updated, expected) => {
-    expect(diffTemplate(current, updated)).toStrictEqual(expected)
+    expect(diffStrings(current, updated)).toStrictEqual(expected)
   })
 })

@@ -1,4 +1,5 @@
 import {
+  AccountEmail,
   AccountId,
   OrganizationalUnitId,
   OrganizationalUnitName,
@@ -42,6 +43,8 @@ export interface PlannedOrgEntity {
 
 export interface PlannedAccount extends PlannedOrgEntity {
   readonly id: AccountId
+  readonly email: AccountEmail
+  readonly name: AccountEmail
   readonly operation: string
 }
 

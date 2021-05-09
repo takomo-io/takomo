@@ -15,7 +15,7 @@ import {
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
 import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
-import { bold, green, orange, yellow } from "@takomo/util"
+import { bold, diffStrings, green, orange, yellow } from "@takomo/util"
 import R from "ramda"
 import { createBaseIO } from "../../cli-io"
 import { formatStackEvent, formatStackStatus } from "../../formatters"
@@ -28,7 +28,6 @@ import { printOutputs } from "./outputs"
 import { printParameters } from "./parameters"
 import { printResources } from "./resources"
 import { printTags } from "./tags"
-import { diffTemplate } from "./template"
 import { printTerminationProtection } from "./termination-protection"
 
 interface ConfirmStackDeployAnswerChoice {
@@ -305,7 +304,7 @@ export const createDeployStacksIO = (
           indent: 2,
         })
       } else {
-        const diffOutput = diffTemplate(
+        const diffOutput = diffStrings(
           safeCurrentTemplateBody,
           safeTemplateBody,
         )

@@ -9,6 +9,7 @@ import {
   CommandOutputBase,
   IO,
 } from "@takomo/core"
+import { OrganizationState } from "@takomo/organization-context"
 import { OrganizationBasicConfigDeploymentPlan } from "../common/plan/basic-config/model"
 import { OrganizationalUnitsDeploymentPlan } from "../common/plan/organizational-units/model"
 import { PolicyDeploymentPlan } from "../common/plan/policies/model"
@@ -27,6 +28,7 @@ export interface ConfirmOrganizationDeployProps {
   readonly basicConfigPlan: OrganizationBasicConfigDeploymentPlan
   readonly policiesPlan: PolicyDeploymentPlan
   readonly organizationalUnitsPlan: OrganizationalUnitsDeploymentPlan
+  readonly organizationState: OrganizationState
 }
 
 export interface DeployOrganizationIO extends IO<DeployOrganizationOutput> {

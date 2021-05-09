@@ -16,10 +16,9 @@ export const parseYaml = (
   contents: YamlFormattedString,
 ): any => {
   try {
-    return yaml.safeLoad(contents)
+    return yaml.load(contents)
   } catch (e) {
     if (e.name === "YAMLException") {
-      console.log(JSON.stringify(e, null, 2))
       const errorMessage = buildErrorMessage(
         `An error occurred while parsing file: ${filePath}`,
         contents,
@@ -55,4 +54,9 @@ export const parseYamlFile = async (pathToYamlFile: FilePath): Promise<any> =>
  * @hidden
  */
 export const formatYaml = (object: unknown): YamlFormattedString =>
-  yaml.safeDump(object, { skipInvalid: true, lineWidth: 300, noRefs: true })
+  yaml.dump(object, {
+    skipInvalid: true,
+    lineWidth: 300,
+    noRefs: true,
+    sortKeys: true,
+  })
