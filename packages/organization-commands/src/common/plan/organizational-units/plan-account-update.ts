@@ -13,7 +13,7 @@ export const planAccountUpdate = (
   organizationState: OrganizationState,
   enabledPoliciesPlan: EnabledPoliciesPlan,
 ): PlannedAccount => {
-  const id = account.id
+  const { id, email, name } = account
 
   const policies = createOrgEntityPoliciesPlan(
     logger,
@@ -27,6 +27,8 @@ export const planAccountUpdate = (
 
   return {
     id,
+    name,
+    email,
     operation,
     policies,
   }

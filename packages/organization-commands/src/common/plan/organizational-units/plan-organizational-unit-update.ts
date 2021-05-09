@@ -63,11 +63,15 @@ export const planOrganizationalUnitUpdate = (
     )
   })
 
-  const accountsToRemove: PlannedAccount[] = accountIdsToRemove.map((id) => ({
-    id,
-    operation: "skip",
-    policies: createEmptyOrgEntityPoliciesPlan(),
-  }))
+  const accountsToRemove: PlannedAccount[] = accountIdsToRemove
+    .map((id) => organizationState.getAccount(id))
+    .map(({ id, name, email }) => ({
+      id,
+      name,
+      email,
+      operation: "skip",
+      policies: createEmptyOrgEntityPoliciesPlan(),
+    }))
 
   const accountsChanged = (): boolean => {
     if (currentAccountIds.length !== localAccountIds.length) {

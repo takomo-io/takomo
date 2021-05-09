@@ -14,6 +14,7 @@ interface MessageProps {
   readonly marginTop?: boolean
   readonly marginBottom?: boolean
   readonly indent?: number
+  readonly transform?: (msg: string) => string
 }
 
 interface TableProps {
@@ -65,6 +66,7 @@ export const createBaseIO = ({
     marginTop = false,
     marginBottom = false,
     indent = 0,
+    transform = (msg) => msg,
   }: MessageProps): void => {
     if (marginTop) {
       print()
@@ -74,7 +76,7 @@ export const createBaseIO = ({
     text
       .split("\n")
       .map((line) => `${padding}${line}`)
-      .forEach((line) => print(line))
+      .forEach((line) => print(transform(line)))
 
     if (marginBottom) {
       print()
