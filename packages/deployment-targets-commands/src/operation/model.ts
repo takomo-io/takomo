@@ -31,6 +31,7 @@ export interface TargetsExecutionPlan {
 export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly groups: ReadonlyArray<DeploymentGroupPath>
   readonly targets: ReadonlyArray<DeploymentTargetNamePattern>
+  readonly excludeTargets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly labels: ReadonlyArray<Label>
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType

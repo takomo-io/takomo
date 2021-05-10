@@ -65,6 +65,7 @@ const createCtxAndConfigRepository = async (
 export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
   readonly groups?: ReadonlyArray<string>
   readonly targets?: ReadonlyArray<string>
+  readonly excludeTargets?: ReadonlyArray<string>
   readonly labels?: ReadonlyArray<string>
   readonly configFile?: string
   readonly concurrentTargets?: number
@@ -108,6 +109,7 @@ export const executeDeployTargetsCommand = (
         operation: "deploy",
         groups: props.groups ?? [],
         targets: props.targets ?? [],
+        excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
         concurrentTargets: 1,
       },
@@ -152,6 +154,7 @@ export const executeUndeployTargetsCommand = (
         operation: "undeploy",
         groups: props.groups ?? [],
         targets: props.targets ?? [],
+        excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
         concurrentTargets: 1,
       },
@@ -196,6 +199,7 @@ export const executeBootstrapTargetsCommand = (
         operation: "deploy",
         groups: props.groups ?? [],
         targets: props.targets ?? [],
+        excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
         concurrentTargets: 1,
       },
@@ -240,6 +244,7 @@ export const executeTeardownTargetsCommand = (
         operation: "undeploy",
         groups: props.groups ?? [],
         targets: props.targets ?? [],
+        excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
         concurrentTargets: props.concurrentTargets ?? 1,
       },
