@@ -85,4 +85,44 @@ describe("Labels", () => {
     })
       .expectCommandToSkip()
       .assert())
+
+  test("Excluding with labels", () =>
+    executeDeployTargetsCommand({
+      projectDir,
+      excludeLabels: ["other"],
+    })
+      .expectCommandToSucceed()
+      .expectResults(
+        {
+          deploymentGroupPath: "infra/networking",
+          targetResults: [{ name: "networking-1" }, { name: "networking-2" }],
+        },
+        {
+          deploymentGroupPath: "applications",
+          targetResults: [{ name: "application-2" }],
+        },
+      )
+      .assert())
+
+  test("Exclude label takes precedence over inclusive label", () =>
+    executeDeployTargetsCommand({
+      projectDir,
+      labels: ["prod"],
+      excludeLabels: ["prod"],
+    })
+      .expectCommandToSkip()
+      .assert())
+
+  test("Exclude label takes precedence over inclusive target", () =>
+    executeDeployTargetsCommand({
+      projectDir,
+      excludeLabels: ["prod"],
+      targets: ["networking-1", "networking-2"],
+    })
+      .expectCommandToSucceed()
+      .expectResults({
+        deploymentGroupPath: "infra/networking",
+        targetResults: [{ name: "networking-2" }],
+      })
+      .assert())
 })

@@ -67,6 +67,7 @@ export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
   readonly targets?: ReadonlyArray<string>
   readonly excludeTargets?: ReadonlyArray<string>
   readonly labels?: ReadonlyArray<string>
+  readonly excludeLabels?: ReadonlyArray<string>
   readonly configFile?: string
   readonly concurrentTargets?: number
 }
@@ -111,6 +112,7 @@ export const executeDeployTargetsCommand = (
         targets: props.targets ?? [],
         excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
+        excludeLabels: props.excludeLabels ?? [],
         concurrentTargets: 1,
       },
     })
@@ -156,6 +158,7 @@ export const executeUndeployTargetsCommand = (
         targets: props.targets ?? [],
         excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
+        excludeLabels: props.excludeLabels ?? [],
         concurrentTargets: 1,
       },
     })
@@ -201,6 +204,7 @@ export const executeBootstrapTargetsCommand = (
         targets: props.targets ?? [],
         excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
+        excludeLabels: props.excludeLabels ?? [],
         concurrentTargets: 1,
       },
     })
@@ -246,6 +250,7 @@ export const executeTeardownTargetsCommand = (
         targets: props.targets ?? [],
         excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
+        excludeLabels: props.excludeLabels ?? [],
         concurrentTargets: props.concurrentTargets ?? 1,
       },
     })
