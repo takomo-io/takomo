@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/takomo-io/takomo/compare/v3.13.0...v3.14.0) (2021-05-10)
+
+
+### Features
+
+* **deployment targets:** add new option to exclude labels from deployment operations ([#233](https://github.com/takomo-io/takomo/issues/233)) ([68aa4ee](https://github.com/takomo-io/takomo/commit/68aa4eef9f975a0098883f8de3040970db391a58)), closes [#321](https://github.com/takomo-io/takomo/issues/321)
+* **deployment targets:** add new option to exclude targets from deployment operations ([#232](https://github.com/takomo-io/takomo/issues/232)) ([4f750cb](https://github.com/takomo-io/takomo/commit/4f750cb1f8e476cf9373030a44110a200089c287)), closes [#227](https://github.com/takomo-io/takomo/issues/227)
+
+
+
+
+
 # [3.13.0](https://github.com/takomo-io/takomo/compare/v3.12.0...v3.13.0) (2021-05-09)
 
 **Note:** Version bump only for package integration-test-deployment-targets

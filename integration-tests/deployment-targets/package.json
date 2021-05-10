@@ -1,7 +1,7 @@
 {
   "name": "integration-test-deployment-targets",
   "private": true,
-  "version": "3.13.0",
+  "version": "3.14.0",
   "description": "",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@takomo/core": "3.13.0",
-    "@takomo/test-integration": "3.13.0"
+    "@takomo/test-integration": "3.14.0"
   },
   "devDependencies": {
     "dotenv": "8.2.0",
