@@ -28,6 +28,12 @@ export const deployTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option("exclude-target", {
+        description: "Targets exclude from deploy",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("label", {
         description: "Labels to deploy",
         string: true,
@@ -46,6 +52,7 @@ export const deployTargetsCmd = {
       input: async (ctx, input) => ({
         ...input,
         targets: parseStringArray(argv.target),
+        excludeTargets: parseStringArray(argv["exclude-targets"]),
         groups: argv.groups ?? [],
         configFile: argv["config-file"] ?? null,
         operation: "deploy" as DeploymentOperation,

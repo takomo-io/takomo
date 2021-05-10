@@ -40,7 +40,7 @@ export const planDeployment = async (
     ctx,
     io,
     timer,
-    input: { groups, targets, labels, configSetType },
+    input: { groups, targets, excludeTargets, labels, configSetType },
   } = holder
 
   if (groups.length > 0) {
@@ -94,8 +94,15 @@ export const planDeployment = async (
     createDeploymentTargetNamePatternMatcher,
   )
 
+  const excludeTargetNameMatchers = excludeTargets.map(
+    createDeploymentTargetNamePatternMatcher,
+  )
+
   const targetNameMatches = (target: DeploymentTargetConfig): boolean =>
-    targetNameMatchers.length === 0 || targetNameMatchers.some((m) => m(target))
+    (targetNameMatchers.length === 0 ||
+      targetNameMatchers.some((m) => m(target))) &&
+    (excludeTargetNameMatchers.length === 0 ||
+      !excludeTargetNameMatchers.some((m) => m(target)))
 
   const labelMatches = (target: DeploymentTargetConfig): boolean =>
     labels.length === 0 || target.labels.some((l) => labels.includes(l))

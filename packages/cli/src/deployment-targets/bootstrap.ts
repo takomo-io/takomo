@@ -28,6 +28,12 @@ export const bootstrapTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option("exclude-target", {
+        description: "Targets exclude from bootstrap",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("label", {
         description: "Labels to bootstrap",
         string: true,
@@ -46,6 +52,7 @@ export const bootstrapTargetsCmd = {
       input: async (ctx, input) => ({
         ...input,
         targets: parseStringArray(argv.target),
+        excludeTargets: parseStringArray(argv["exclude-targets"]),
         groups: argv.groups ?? [],
         configFile: argv["config-file"] ?? null,
         operation: "deploy" as DeploymentOperation,
