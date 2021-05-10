@@ -40,7 +40,14 @@ export const planDeployment = async (
     ctx,
     io,
     timer,
-    input: { groups, targets, excludeTargets, labels, configSetType },
+    input: {
+      groups,
+      targets,
+      excludeTargets,
+      labels,
+      excludeLabels,
+      configSetType,
+    },
   } = holder
 
   if (groups.length > 0) {
@@ -105,7 +112,9 @@ export const planDeployment = async (
       !excludeTargetNameMatchers.some((m) => m(target)))
 
   const labelMatches = (target: DeploymentTargetConfig): boolean =>
-    labels.length === 0 || target.labels.some((l) => labels.includes(l))
+    (labels.length === 0 || target.labels.some((l) => labels.includes(l))) &&
+    (excludeLabels.length === 0 ||
+      !target.labels.some((l) => excludeLabels.includes(l)))
 
   const grs = uniqueGroupsToLaunch
     .map((ou) => {

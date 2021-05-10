@@ -40,6 +40,12 @@ export const bootstrapTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option("exclude-label", {
+        description: "Labels to exclude from tear down",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("config-file", {
         description: "Deployment config file",
         string: true,
@@ -52,13 +58,14 @@ export const bootstrapTargetsCmd = {
       input: async (ctx, input) => ({
         ...input,
         targets: parseStringArray(argv.target),
-        excludeTargets: parseStringArray(argv["exclude-targets"]),
+        excludeTargets: parseStringArray(argv["exclude-target"]),
         groups: argv.groups ?? [],
         configFile: argv["config-file"] ?? null,
         operation: "deploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
         concurrentTargets: argv["concurrent-targets"],
         labels: parseStringArray(argv.label),
+        excludeLabels: parseStringArray(argv["exclude-label"]),
       }),
       io: (ctx, logger) => createBootstrapTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

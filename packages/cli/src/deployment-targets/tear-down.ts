@@ -40,6 +40,12 @@ export const tearDownTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option("exclude-label", {
+        description: "Labels to exclude from deploy",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("config-file", {
         description: "Deployment config file",
         string: true,
@@ -52,13 +58,14 @@ export const tearDownTargetsCmd = {
       input: async (ctx, input) => ({
         ...input,
         targets: parseStringArray(argv.target),
-        excludeTargets: parseStringArray(argv["exclude-targets"]),
+        excludeTargets: parseStringArray(argv["exclude-target"]),
         groups: argv.groups ?? [],
         configFile: argv["config-file"] ?? null,
         operation: "undeploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
         concurrentTargets: argv["concurrent-targets"],
         labels: parseStringArray(argv.label),
+        excludeLabels: parseStringArray(argv["exclude-label"]),
       }),
       io: (ctx, logger) => createTearDownTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

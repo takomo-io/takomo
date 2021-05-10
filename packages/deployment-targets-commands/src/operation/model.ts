@@ -33,6 +33,7 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly targets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly excludeTargets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly labels: ReadonlyArray<Label>
+  readonly excludeLabels: ReadonlyArray<Label>
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType
   readonly concurrentTargets: number
