@@ -81,10 +81,12 @@ describe("Deployment group commands", () => {
       .expectResults(
         {
           deploymentGroupPath: "Environments/Dev",
+          unorderedTargets: true,
           targetResults: [{ name: "one" }, { name: "two" }],
         },
         {
           deploymentGroupPath: "Environments/Test",
+          unorderedTargets: true,
           targetResults: [
             { name: "five" },
             { name: "four" },

@@ -46,6 +46,18 @@ export const undeployTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option("config-set", {
+        description: "Config set to undeploy",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
+      .option("command-path", {
+        description: "Command path to undeploy",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("config-file", {
         description: "Deployment config file",
         string: true,
@@ -66,6 +78,8 @@ export const undeployTargetsCmd = {
         concurrentTargets: argv["concurrent-targets"],
         labels: parseStringArray(argv.label),
         excludeLabels: parseStringArray(argv["exclude-label"]),
+        commandPath: argv["command-path"],
+        configSet: argv["config-set"],
       }),
       io: (ctx, logger) => createUndeployTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

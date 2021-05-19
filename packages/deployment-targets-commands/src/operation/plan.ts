@@ -47,6 +47,8 @@ export const planDeployment = async (
       labels,
       excludeLabels,
       configSetType,
+      configSetName,
+      commandPath,
     },
   } = holder
 
@@ -56,6 +58,18 @@ export const planDeployment = async (
         throw new TakomoError(`Deployment group '${groupPath}' not found`)
       }
     })
+  }
+
+  if (commandPath && !configSetName) {
+    throw new TakomoError(
+      "If you provide command path, you must provide config set, too",
+    )
+  }
+
+  if (configSetName) {
+    if (!ctx.hasConfigSet(configSetName)) {
+      throw new TakomoError(`Config set '${configSetName}' not found`)
+    }
   }
 
   const deploymentGroupsToLaunch =
@@ -116,6 +130,20 @@ export const planDeployment = async (
     (excludeLabels.length === 0 ||
       !target.labels.some((l) => excludeLabels.includes(l)))
 
+  const configSetNameMatches = (target: DeploymentTargetConfig): boolean => {
+    if (configSetName === undefined) {
+      return true
+    }
+    switch (configSetType) {
+      case "standard":
+        return target.configSets.includes(configSetName)
+      case "bootstrap":
+        return target.bootstrapConfigSets.includes(configSetName)
+      default:
+        throw new Error(`Unsupported config set type: ${configSetType}`)
+    }
+  }
+
   const grs = uniqueGroupsToLaunch
     .map((ou) => {
       return {
@@ -125,7 +153,8 @@ export const planDeployment = async (
             a.status === "active" &&
             hasConfigSets(a) &&
             targetNameMatches(a) &&
-            labelMatches(a),
+            labelMatches(a) &&
+            configSetNameMatches(a),
         ),
       }
     })
@@ -151,6 +180,8 @@ export const planDeployment = async (
     configSetType,
     groups: grs,
     hasChanges,
+    configSetName,
+    commandPath,
   }
 
   const listener = io.createDeploymentTargetsListener(selectedTargets.length)
