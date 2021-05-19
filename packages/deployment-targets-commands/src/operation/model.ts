@@ -1,4 +1,8 @@
-import { ConfigSetOperationResult, ConfigSetType } from "@takomo/config-sets"
+import {
+  ConfigSetName,
+  ConfigSetOperationResult,
+  ConfigSetType,
+} from "@takomo/config-sets"
 import {
   CommandInput,
   CommandOutput,
@@ -14,7 +18,7 @@ import {
   Label,
 } from "@takomo/deployment-targets-model"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { DeploymentOperation } from "@takomo/stacks-model"
+import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
 
 export type ConfirmOperationAnswer =
@@ -26,6 +30,8 @@ export interface TargetsExecutionPlan {
   readonly groups: ReadonlyArray<DeploymentGroupConfig>
   readonly hasChanges: boolean
   readonly configSetType: ConfigSetType
+  readonly commandPath?: CommandPath
+  readonly configSet?: ConfigSetName
 }
 
 export interface DeploymentTargetsOperationInput extends CommandInput {
@@ -37,6 +43,8 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType
   readonly concurrentTargets: number
+  readonly configSetName?: ConfigSetName
+  readonly commandPath?: CommandPath
 }
 
 export interface DeploymentTargetsOperationOutput extends CommandOutput {

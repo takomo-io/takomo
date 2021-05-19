@@ -41,6 +41,7 @@ export interface ExpectDeploymentTargetResultProps {
 export interface ExpectDeploymentGroupResultProps {
   readonly deploymentGroupPath: DeploymentGroupPath
   readonly targetResults: ReadonlyArray<ExpectDeploymentTargetResultProps>
+  readonly unorderedTargets?: boolean
 }
 
 export interface DeploymentGroupResultMatcher {
@@ -70,7 +71,19 @@ const createDeploymentGroupResultMatcher = (
 
         expect(result.results).toHaveLength(prop.targetResults.length)
         result.results.forEach((targetResult, i) => {
-          const expected = prop.targetResults[i]
+          // const expected = prop.targetResults[i]
+
+          const expected =
+            prop.unorderedTargets === true
+              ? prop.targetResults.find((a) => a.name === targetResult.name)
+              : prop.targetResults[i]
+
+          if (!expected) {
+            fail(
+              `Unexpected target ${targetResult.name} found under deployment group ${result.path}`,
+            )
+          }
+
           expect(targetResult.name).toStrictEqual(expected.name)
           expect(targetResult.success).toStrictEqual(true)
           if (expected.status) {
@@ -186,7 +199,11 @@ export const createTargetsOperationOutputMatcher = (
     })
 
   const expectCommandToThrow = async (error: any): Promise<void> => {
-    await expect(executor).rejects.toEqual(error)
+    if (typeof error === "string") {
+      await expect(executor).rejects.toThrow(error)
+    } else {
+      await expect(executor).rejects.toEqual(error)
+    }
   }
 
   return {

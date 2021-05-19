@@ -46,6 +46,18 @@ export const bootstrapTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option("config-set", {
+        description: "Config set to bootstrap",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
+      .option("command-path", {
+        description: "Command path to bootstrap",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option("config-file", {
         description: "Deployment config file",
         string: true,
@@ -66,6 +78,8 @@ export const bootstrapTargetsCmd = {
         concurrentTargets: argv["concurrent-targets"],
         labels: parseStringArray(argv.label),
         excludeLabels: parseStringArray(argv["exclude-label"]),
+        commandPath: argv["command-path"],
+        configSet: argv["config-set"],
       }),
       io: (ctx, logger) => createBootstrapTargetsIO({ logger }),
       configRepository: (ctx, logger) =>

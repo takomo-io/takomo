@@ -24,7 +24,7 @@ export const processConfigSet = async (
   timer: Timer,
   state: OperationState,
 ): Promise<ConfigSetOperationResult> => {
-  const { io, ctx } = holder
+  const { io, ctx, input } = holder
 
   io.info(`Execute config set: ${configSet.name}`)
 
@@ -34,8 +34,11 @@ export const processConfigSet = async (
   )
 
   const results = new Array<ConfigSetCommandPathOperationResult>()
+  const commandPaths = input.commandPath
+    ? [input.commandPath]
+    : configSet.commandPaths
 
-  for (const commandPath of configSet.commandPaths) {
+  for (const commandPath of commandPaths) {
     const commandPathTimer = timer.startChild(commandPath)
     const result = await processCommandPath(
       holder,

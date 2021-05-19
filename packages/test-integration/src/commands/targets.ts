@@ -1,9 +1,11 @@
 import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { CliCommandContext } from "@takomo/cli"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
+import { ConfigSetName } from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets-commands"
 import { DeploymentTargetsConfigRepository } from "@takomo/deployment-targets-context"
+import { CommandPath } from "@takomo/stacks-model"
 import { createConsoleLogger, createTimer } from "@takomo/util"
 import {
   createTargetsOperationOutputMatcher,
@@ -70,6 +72,8 @@ export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
   readonly excludeLabels?: ReadonlyArray<string>
   readonly configFile?: string
   readonly concurrentTargets?: number
+  readonly commandPath?: CommandPath
+  readonly configSetName?: ConfigSetName
 }
 
 export const executeDeployTargetsCommand = (
@@ -113,7 +117,9 @@ export const executeDeployTargetsCommand = (
         excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
         excludeLabels: props.excludeLabels ?? [],
-        concurrentTargets: 1,
+        concurrentTargets: props.concurrentTargets ?? 1,
+        commandPath: props.commandPath,
+        configSetName: props.configSetName,
       },
     })
   })
@@ -159,7 +165,9 @@ export const executeUndeployTargetsCommand = (
         excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
         excludeLabels: props.excludeLabels ?? [],
-        concurrentTargets: 1,
+        concurrentTargets: props.concurrentTargets ?? 1,
+        commandPath: props.commandPath,
+        configSetName: props.configSetName,
       },
     })
   })
@@ -205,7 +213,9 @@ export const executeBootstrapTargetsCommand = (
         excludeTargets: props.excludeTargets ?? [],
         labels: props.labels ?? [],
         excludeLabels: props.excludeLabels ?? [],
-        concurrentTargets: 1,
+        concurrentTargets: props.concurrentTargets ?? 1,
+        commandPath: props.commandPath,
+        configSetName: props.configSetName,
       },
     })
   })
@@ -252,6 +262,8 @@ export const executeTeardownTargetsCommand = (
         labels: props.labels ?? [],
         excludeLabels: props.excludeLabels ?? [],
         concurrentTargets: props.concurrentTargets ?? 1,
+        commandPath: props.commandPath,
+        configSetName: props.configSetName,
       },
     })
   })

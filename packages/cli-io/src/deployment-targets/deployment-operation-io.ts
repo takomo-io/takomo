@@ -191,6 +191,10 @@ export const createDeploymentTargetsOperationIO = (
       marginTop: true,
     })
 
+    const { configSet } = plan
+    const configSetMatches = (cs: ConfigSetName): boolean =>
+      configSet === undefined || configSet === cs
+
     plan.groups.forEach((group) => {
       io.message({ text: `${group.path}:`, marginTop: true, indent: 2 })
       group.targets.forEach((target) => {
@@ -215,9 +219,11 @@ export const createDeploymentTargetsOperationIO = (
           text: `${getConfigSetNameByType(plan.configSetType)}:`,
           indent: 6,
         })
-        getConfigSetsByType(target, plan.configSetType).forEach((configSet) => {
-          io.message({ text: `- ${configSet}`, indent: 8 })
-        })
+        getConfigSetsByType(target, plan.configSetType)
+          .filter(configSetMatches)
+          .forEach((configSet) => {
+            io.message({ text: `- ${configSet}`, indent: 8 })
+          })
       })
     })
 

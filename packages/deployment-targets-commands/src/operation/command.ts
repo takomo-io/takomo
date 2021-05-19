@@ -1,4 +1,5 @@
 import { Region } from "@takomo/aws-model"
+import { createConfigSetsSchemas } from "@takomo/config-sets"
 import {
   CommandHandler,
   FeatureDisabledError,
@@ -9,6 +10,7 @@ import {
   DeploymentTargetsConfigRepository,
 } from "@takomo/deployment-targets-context"
 import { createDeploymentTargetsSchemas } from "@takomo/deployment-targets-schema"
+import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
 import Joi from "joi"
 import {
@@ -19,6 +21,8 @@ import {
 import { planDeployment } from "./plan"
 
 const inputSchema = (regions: ReadonlyArray<Region>) => {
+  const { commandPath } = createStacksSchemas({ regions })
+  const { configSetName } = createConfigSetsSchemas({ regions })
   const {
     deploymentGroupPath,
     deploymentTargetNamePattern,
@@ -29,6 +33,8 @@ const inputSchema = (regions: ReadonlyArray<Region>) => {
     targets: Joi.array().items(deploymentTargetNamePattern).unique(),
     labels: Joi.array().items(label).unique(),
     concurrentTargets: Joi.number().min(1).max(50),
+    configSet: configSetName,
+    commandPath,
   }).unknown(true)
 }
 

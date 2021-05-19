@@ -16,12 +16,16 @@ import { processConfigSet } from "./config-set"
 const getConfigSetsToProcess = (
   configSetType: ConfigSetType,
   target: DeploymentTargetConfig,
+  configSetName?: ConfigSetName,
 ): ReadonlyArray<ConfigSetName> => {
+  const configSetMatches = (cs: ConfigSetName): boolean =>
+    configSetName === undefined || cs === configSetName
+
   switch (configSetType) {
     case "bootstrap":
-      return target.bootstrapConfigSets
+      return target.bootstrapConfigSets.filter(configSetMatches)
     case "standard":
-      return target.configSets
+      return target.configSets.filter(configSetMatches)
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
   }
@@ -42,7 +46,11 @@ export const processDeploymentTarget = async (
   io.info(`Execute deployment target: ${target.name}`)
   const results = new Array<ConfigSetOperationResult>()
 
-  const configSetNames = getConfigSetsToProcess(input.configSetType, target)
+  const configSetNames = getConfigSetsToProcess(
+    input.configSetType,
+    target,
+    input.configSetName,
+  )
 
   for (const configSetName of configSetNames) {
     const configSet = ctx.getConfigSet(configSetName)

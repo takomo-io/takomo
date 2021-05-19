@@ -28,6 +28,7 @@ export interface DeploymentTargetsContext extends InternalCommandContext {
   ) => DeploymentGroupConfig
   readonly hasDeploymentGroup: (path: DeploymentGroupPath) => boolean
   readonly getConfigSet: (name: ConfigSetName) => ConfigSet
+  readonly hasConfigSet: (name: ConfigSetName) => boolean
   readonly commandContext: InternalCommandContext
   readonly configRepository: DeploymentTargetsConfigRepository
 }
@@ -77,7 +78,8 @@ export const createDeploymentTargetsContext = async ({
 
     hasDeploymentGroup: (path: DeploymentGroupPath): boolean =>
       deploymentGroups.some((group) => group.path === path),
-
+    hasConfigSet: (name: ConfigSetName): boolean =>
+      deploymentConfig.configSets.some((r) => r.name === name),
     getConfigSet: (name: ConfigSetName): ConfigSet => {
       const configSet = deploymentConfig.configSets.find((r) => r.name === name)
       if (!configSet) {
