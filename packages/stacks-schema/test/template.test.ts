@@ -11,6 +11,8 @@ const inline = "Resources:\n  LogGroup:\n    Type: AWS::Logs::Group"
 const valid = [
   { template: "vpc.yml" },
   { template: "network/subnets.yml" },
+  { template: { dynamic: true } },
+  { template: { dynamic: false } },
   { template: { filename: "file.yml" } },
   { template: { filename: "file1.yml", dynamic: false } },
   { template: { filename: "file2.yml", dynamic: true } },

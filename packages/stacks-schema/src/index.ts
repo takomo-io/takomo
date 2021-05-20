@@ -118,10 +118,15 @@ export const createStacksSchemas = (
     dynamic: Joi.boolean(),
   })
 
+  const templateDynamicObject = Joi.object({
+    dynamic: Joi.boolean().required(),
+  })
+
   const template = [
     templateFilename,
     templateFilenameObject,
     templateInlineObject,
+    templateDynamicObject,
   ]
 
   const parameterSchema = [
