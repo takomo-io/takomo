@@ -2019,6 +2019,16 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@takomo/test-custom-helper-lowercase@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@takomo/test-custom-helper-lowercase/-/test-custom-helper-lowercase-0.0.1.tgz#b49dabcfe5d5cc1c749459491283b6a8e666e511"
+  integrity sha512-lXa+O4j/sOmkL/Mi0Qd0rJrwZdzHeOGFj++2m8/jlRAMuXY87mP7VxPs4yrtClXcunCdP61eUXJejBnlFdvXVg==
+
+"@takomo/test-custom-helper-uppercase@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@takomo/test-custom-helper-uppercase/-/test-custom-helper-uppercase-0.0.1.tgz#1d2c4ac011ce4e1b018098b5ff86b31cfaadac41"
+  integrity sha512-8BP/aSLF5xJ6ALRd/kgU7nqgq+E5Bi9fnao9wZhPvTWQ4Bo0p3bPowO9USUhiLn1xFFTEzqm+qafMwDEK/sPng==
+
 "@takomo/test-custom-resolver-code@0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@takomo/test-custom-resolver-code/-/test-custom-resolver-code-0.0.1.tgz#9179965f9986df2bec9cc3347956f34529a520b6"

@@ -1,0 +1,11 @@
+helpers:
+
+  # Just the package name
+  - "@takomo/test-custom-helper-uppercase"
+
+  # Package name in property
+  - package: "@takomo/test-custom-helper-lowercase"
+
+  # Package name in property and overriding name
+  - package: "@takomo/test-custom-helper-uppercase"
+    name: to-upper

@@ -15,6 +15,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
+      helpers: [],
       features: defaultFeatures(),
     })
   })
@@ -27,6 +28,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: ["eu-west-1"],
       resolvers: [],
+      helpers: [],
       features: defaultFeatures(),
     })
   })
@@ -39,6 +41,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-north-1", "us-east-1"],
       resolvers: [],
+      helpers: [],
       features: defaultFeatures(),
     })
   })
@@ -50,6 +53,7 @@ describe("#parseProjectConfigFile", () => {
       organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
+      helpers: [],
       features: defaultFeatures(),
       resolvers: [
         {
@@ -61,6 +65,31 @@ describe("#parseProjectConfigFile", () => {
         },
         {
           package: "another-resolver-v2",
+          name: "a-better-name",
+        },
+      ],
+    })
+  })
+
+  test("with helpers", async () => {
+    const config = await doParseProjectConfigFile("project-config-05.yml")
+    expect(config).toStrictEqual({
+      requiredVersion: undefined,
+      organization: undefined,
+      deploymentTargets: undefined,
+      regions: ["eu-central-1", "us-east-1"],
+      resolvers: [],
+      features: defaultFeatures(),
+      helpers: [
+        {
+          package: "@takomo/my-example-helper",
+        },
+        {
+          package: "another-helper",
+          name: undefined,
+        },
+        {
+          package: "another-helper-v2",
           name: "a-better-name",
         },
       ],

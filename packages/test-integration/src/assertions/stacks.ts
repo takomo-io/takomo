@@ -1,4 +1,11 @@
-import { AccountId, Region, StackName, StackStatus } from "@takomo/aws-model"
+import {
+  AccountId,
+  Region,
+  StackName,
+  StackStatus,
+  TagKey,
+  TagValue,
+} from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
 import {
   ListStacksOutput,
@@ -59,7 +66,8 @@ export interface ExpectDeployedCfStackProps {
   accountId: AccountId
   credentials: Credentials
   roleName: string
-  expected: Partial<CloudFormation.Stack>
+  expected?: Partial<CloudFormation.Stack>
+  expectedTags?: Record<TagKey, TagValue>
 }
 
 export interface StackResultsMatcher {
@@ -265,6 +273,7 @@ const createStackResultsMatcher = (
     accountId,
     roleName,
     expected,
+    expectedTags,
   }: ExpectDeployedCfStackProps): StackResultsMatcher => {
     const deployedStackMatcher = async (): Promise<() => void> => {
       const stack: any = await aws.cloudFormation.describeStack({
@@ -275,10 +284,24 @@ const createStackResultsMatcher = (
       })
 
       return () => {
-        for (const [key, value] of Object.entries(expected)) {
-          if (value !== undefined && value !== null) {
-            expect(stack[key]).toStrictEqual(value)
+        if (expected) {
+          for (const [key, value] of Object.entries(expected)) {
+            if (value !== undefined && value !== null) {
+              expect(stack[key]).toStrictEqual(value)
+            }
           }
+        }
+
+        if (expectedTags) {
+          const actual = stack["Tags"].reduce(
+            (collected: any, tag: any) => ({
+              ...collected,
+              [tag.Key!]: tag.Value!,
+            }),
+            {},
+          )
+
+          expect(actual).toStrictEqual(expectedTags)
         }
       }
     }

@@ -100,8 +100,17 @@ export interface ExternalResolverConfig {
 /**
  * @hidden
  */
+export interface ExternalHandlebarsHelperConfig {
+  readonly name?: string
+  readonly package: string
+}
+
+/**
+ * @hidden
+ */
 export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly resolvers: ReadonlyArray<ExternalResolverConfig>
+  readonly helpers: ReadonlyArray<ExternalHandlebarsHelperConfig>
   readonly features: Features
 }
 

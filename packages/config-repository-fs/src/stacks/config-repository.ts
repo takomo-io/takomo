@@ -1,4 +1,4 @@
-import { CommandContext } from "@takomo/core"
+import { InternalCommandContext } from "@takomo/core"
 import { ConfigTree, StacksConfigRepository } from "@takomo/stacks-context"
 import {
   HookInitializersMap,
@@ -13,6 +13,7 @@ import {
   FilePath,
   readFileContents,
   renderTemplate,
+  TakomoError,
   TkmLogger,
 } from "@takomo/util"
 import path from "path"
@@ -25,7 +26,7 @@ import {
 } from "./extensions"
 
 export interface FileSystemStacksConfigRepositoryProps {
-  readonly ctx: CommandContext
+  readonly ctx: InternalCommandContext
   readonly logger: TkmLogger
   readonly projectDir: FilePath
   readonly stacksDir: FilePath
@@ -53,6 +54,31 @@ export const createFileSystemStacksConfigRepository = async ({
   schemasDir,
 }: FileSystemStacksConfigRepositoryProps): Promise<StacksConfigRepository> => {
   const templateEngine = createTemplateEngine()
+
+  ctx.projectConfig.helpers.forEach((config) => {
+    logger.debug(
+      `Register Handlebars helper from NPM package: ${config.package}`,
+    )
+    // eslint-disable-next-line
+    const helper = require(config.package)
+    const helperWithName = config.name
+      ? { ...helper, name: config.name }
+      : helper
+
+    if (typeof helperWithName.fn !== "function") {
+      throw new TakomoError(
+        `Handlebars helper loaded from an NPM package ${config.package} does not export property 'fn' of type function`,
+      )
+    }
+
+    if (typeof helperWithName.name !== "string") {
+      throw new TakomoError(
+        `Handlebars helper loaded from an NPM package ${config.package} does not export property 'name' of type string`,
+      )
+    }
+
+    templateEngine.registerHelper(helperWithName.name, helperWithName.fn)
+  })
 
   await Promise.all([
     loadTemplateHelpers(helpersDir, logger, templateEngine),

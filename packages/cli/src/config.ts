@@ -1,6 +1,7 @@
 import {
   createCommonSchema,
   defaultFeatures,
+  ExternalHandlebarsHelperConfig,
   ExternalResolverConfig,
   Features,
   InternalTakomoProjectConfig,
@@ -51,6 +52,35 @@ export const parseExternalResolver = (value: any): ExternalResolverConfig => {
   }
 }
 
+export const parseExternalHandlebarsHelper = (
+  value: any,
+): ExternalHandlebarsHelperConfig => {
+  if (typeof value === "string") {
+    return {
+      package: value,
+    }
+  }
+
+  return {
+    name: value.name,
+    package: value.package,
+  }
+}
+
+export const parseExternalHandlebarsHelpers = (
+  value: any,
+): ReadonlyArray<ExternalHandlebarsHelperConfig> => {
+  if (value === null || value === undefined) {
+    return []
+  }
+
+  if (!Array.isArray(value)) {
+    throw new Error("Expected helpers to be an array")
+  }
+
+  return value.map(parseExternalHandlebarsHelper)
+}
+
 export const parseExternalResolvers = (
   value: any,
 ): ReadonlyArray<ExternalResolverConfig> => {
@@ -96,6 +126,7 @@ export const parseProjectConfigFile = async (
 
   const regions = parsedFile.regions ?? DEFAULT_REGIONS
   const resolvers = parseExternalResolvers(parsedFile.resolvers)
+  const helpers = parseExternalHandlebarsHelpers(parsedFile.helpers)
   const features = {
     ...parseFeatures(parsedFile.features),
     ...overrideFeatures,
@@ -105,6 +136,7 @@ export const parseProjectConfigFile = async (
     regions,
     requiredVersion,
     resolvers,
+    helpers,
     features,
     organization: parsedFile.organization,
     deploymentTargets: parsedFile.deploymentTargets,
@@ -135,6 +167,10 @@ const externalResolver = Joi.object({
   name: variableName,
 }).unknown(true)
 
+const externalHandlebarsHelper = Joi.object({
+  name: variableName,
+}).unknown(true)
+
 const features = Joi.object({
   deploymentTargetsUndeploy: Joi.boolean(),
   deploymentTargetsTearDown: Joi.boolean(),
@@ -150,6 +186,7 @@ export const takomoProjectConfigFileSchema = Joi.object({
   }),
   regions: Joi.array().items(Joi.string()).unique(),
   resolvers: Joi.array().items(Joi.string(), externalResolver),
+  helpers: Joi.array().items(Joi.string(), externalHandlebarsHelper),
   features,
 })
 
@@ -161,6 +198,7 @@ export const loadProjectConfig = async (
     return {
       regions: DEFAULT_REGIONS.slice(),
       resolvers: [],
+      helpers: [],
       features: { ...defaultFeatures(), ...overrideFeatures },
     }
   }

@@ -24,6 +24,7 @@ export {
   defaultFeatures,
   DeploymentTargetRepositoryConfig,
   DeploymentTargetRepositoryType,
+  ExternalHandlebarsHelperConfig,
   ExternalResolverConfig,
   FeatureDisabledError,
   Features,

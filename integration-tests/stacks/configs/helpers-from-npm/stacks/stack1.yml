@@ -1,0 +1,6 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-north-1
+tags:
+  Tag1: {{ to-upper 'one' }}
+  Tag2: {{ lower-case 'TWO' }}
+  Tag3: {{ upper-case 'three' }}
