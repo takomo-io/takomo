@@ -63,14 +63,10 @@ export const prepareTemplate: StackOperationStep<TagsHolder> = async (
     parameters,
   )
 
-  const { filename, dynamic } = stack.template
-
-  const templateBody = await configRepository.getStackTemplateContents(
-    stack.path,
-    stackVariables,
-    filename,
-    dynamic,
-  )
+  const templateBody = await configRepository.getStackTemplateContents({
+    ...stack.template,
+    variables: stackVariables,
+  })
 
   return transitions.uploadTemplate({
     ...state,

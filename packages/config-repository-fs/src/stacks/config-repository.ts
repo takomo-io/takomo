@@ -1,10 +1,13 @@
 import { InternalCommandContext } from "@takomo/core"
-import { ConfigTree, StacksConfigRepository } from "@takomo/stacks-context"
+import {
+  ConfigTree,
+  StacksConfigRepository,
+  StacksConfigRepositoryProps,
+} from "@takomo/stacks-context"
 import {
   HookInitializersMap,
   ROOT_STACK_GROUP_PATH,
   SchemaRegistry,
-  StackPath,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
@@ -85,6 +88,55 @@ export const createFileSystemStacksConfigRepository = async ({
     loadTemplatePartials(partialsDir, logger, templateEngine),
   ])
 
+  const getStackTemplateContentsFromFile = async (
+    variables: any,
+    filename: string,
+    dynamic: boolean,
+  ): Promise<string> => {
+    const pathToTemplate = path.join(templatesDir, filename)
+    const content = await readFileContents(pathToTemplate)
+
+    if (!dynamic) {
+      return content
+    }
+
+    logger.traceText("Raw template body:", () => content)
+    logger.traceObject("Render template using variables:", () => variables)
+
+    const renderedContent = await renderTemplate(
+      templateEngine,
+      pathToTemplate,
+      content,
+      variables,
+    )
+
+    logger.traceText("Final rendered template:", () => renderedContent)
+    return renderedContent
+  }
+
+  const getStackTemplateContentsFromInline = async (
+    variables: any,
+    content: string,
+    dynamic: boolean,
+  ): Promise<string> => {
+    if (!dynamic) {
+      return content
+    }
+
+    logger.traceText("Raw template body:", () => content)
+    logger.traceObject("Render template using variables:", () => variables)
+
+    const renderedContent = await renderTemplate(
+      templateEngine,
+      "inlined template",
+      content,
+      variables,
+    )
+
+    logger.traceText("Final rendered template:", () => renderedContent)
+    return renderedContent
+  }
+
   return deepFreeze({
     buildConfigTree: async (): Promise<ConfigTree> =>
       buildStackGroupConfigNode(
@@ -111,31 +163,20 @@ export const createFileSystemStacksConfigRepository = async ({
       ])
     },
 
-    getStackTemplateContents: async (
-      stackPath: StackPath,
-      variables: any,
-      filepath: string,
-      dynamic: boolean,
-    ): Promise<string> => {
-      const pathToTemplate = path.join(templatesDir, filepath)
-      const content = await readFileContents(pathToTemplate)
-
-      if (!dynamic) {
-        return content
+    getStackTemplateContents: async ({
+      variables,
+      filename,
+      inline,
+      dynamic,
+    }: StacksConfigRepositoryProps): Promise<string> => {
+      if (filename) {
+        return getStackTemplateContentsFromFile(variables, filename, dynamic)
+      }
+      if (inline) {
+        return getStackTemplateContentsFromInline(variables, inline, dynamic)
       }
 
-      logger.traceText("Raw template body:", () => content)
-      logger.traceObject("Render template using variables:", () => variables)
-
-      const renderedContent = await renderTemplate(
-        templateEngine,
-        pathToTemplate,
-        content,
-        variables,
-      )
-
-      logger.traceText("Final rendered template:", () => renderedContent)
-      return renderedContent
+      throw new Error("Expected either filename or inline to be defined")
     },
 
     templateEngine,

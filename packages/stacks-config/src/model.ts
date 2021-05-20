@@ -70,6 +70,7 @@ export type ParameterConfigs = SingleParameterConfig | ListParameterConfig
 export interface TemplateConfig {
   readonly dynamic: boolean
   readonly filename?: FilePath
+  readonly inline?: string
 }
 
 export interface StackConfig {

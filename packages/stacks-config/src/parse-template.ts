@@ -14,8 +14,19 @@ export const parseTemplate = (value: any): TemplateConfig => {
     }
   }
 
-  return {
-    filename: value.filename,
-    dynamic: value.dynamic ?? true,
+  if (value.filename) {
+    return {
+      filename: value.filename,
+      dynamic: value.dynamic ?? true,
+    }
   }
+
+  if (value.inline) {
+    return {
+      inline: value.inline,
+      dynamic: value.dynamic ?? true,
+    }
+  }
+
+  throw new Error("Invalid template configuration")
 }
