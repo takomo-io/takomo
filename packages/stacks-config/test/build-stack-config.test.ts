@@ -14,7 +14,7 @@ const emptyStackConfig = {
   project: undefined,
   regions: [],
   tags: new Map(),
-  template: { dynamic: true },
+  template: { dynamic: true, filename: undefined, inline: undefined },
   templateBucket: undefined,
   timeout: undefined,
   capabilities: undefined,

@@ -9,4 +9,4 @@ export {
   StackGroupConfigNode,
 } from "./config/config-tree"
 export { sortStacksForDeploy, sortStacksForUndeploy } from "./dependencies"
-export { StacksConfigRepository } from "./model"
+export { StacksConfigRepository, StacksConfigRepositoryProps } from "./model"

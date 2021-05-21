@@ -197,12 +197,16 @@ export interface ResolverExecutor {
   getSchema: () => AnySchema | undefined
 }
 
+export interface StacksConfigRepositoryProps {
+  readonly variables: any
+  readonly filename?: string
+  readonly inline?: string
+  readonly dynamic: boolean
+}
+
 export interface StacksConfigRepository {
   getStackTemplateContents: (
-    stackPath: StackPath,
-    variables: any,
-    templatePath: string,
-    dynamic: boolean,
+    props: StacksConfigRepositoryProps,
   ) => Promise<string>
 
   buildConfigTree: () => Promise<ConfigTree>

@@ -1,0 +1,14 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-north-1
+parameters:
+  Name: Hello
+template:
+  inline: |
+    Parameters:
+      Name:
+        Type: String
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+          LogGroupName: !Ref Name

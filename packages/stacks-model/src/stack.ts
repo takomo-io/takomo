@@ -27,7 +27,8 @@ export type StackPath = string
  */
 export interface Template {
   readonly dynamic: boolean
-  readonly filename: FilePath
+  readonly filename?: FilePath
+  readonly inline?: string
 }
 
 /**

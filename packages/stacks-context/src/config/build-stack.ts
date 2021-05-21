@@ -28,11 +28,20 @@ import { buildParameters } from "./parameters"
 
 const buildTemplate = (
   stackPath: StackPath,
-  { filename, dynamic }: TemplateConfig,
-): Template => ({
-  dynamic,
-  filename: filename ?? stackPath.substr(1),
-})
+  { filename, dynamic, inline }: TemplateConfig,
+): Template => {
+  if (inline) {
+    return {
+      dynamic,
+      inline,
+    }
+  }
+
+  return {
+    dynamic,
+    filename: filename ?? stackPath.substr(1),
+  }
+}
 
 export const buildStack = async (
   ctx: CommandContext,
