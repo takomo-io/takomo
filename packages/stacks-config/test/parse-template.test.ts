@@ -1,4 +1,4 @@
-import { parseTemplate } from "../dist/parse-template"
+import { parseTemplate } from "../src/parse-template"
 
 describe("#parseTemplate", () => {
   test("simple file name", () => {
