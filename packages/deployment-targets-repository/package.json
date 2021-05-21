@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-repository",
-  "version": "3.13.0",
+  "version": "3.15.0",
   "description": "Takomo Deployment Targets Repository",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -28,10 +28,10 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.13.0",
-    "@takomo/core": "3.13.0",
-    "@takomo/deployment-targets-config": "3.13.0",
-    "@takomo/deployment-targets-model": "3.13.0",
-    "@takomo/deployment-targets-schema": "3.13.0",
+    "@takomo/core": "3.15.0",
+    "@takomo/deployment-targets-config": "3.15.0",
+    "@takomo/deployment-targets-model": "3.15.0",
+    "@takomo/deployment-targets-schema": "3.15.0",
     "@takomo/util": "3.13.0",
     "joi": "17.4.0",
     "readdirp": "3.5.0"

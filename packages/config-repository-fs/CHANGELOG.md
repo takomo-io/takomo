@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/takomo-io/takomo/compare/v3.14.0...v3.15.0) (2021-05-21)
+
+
+### Features
+
+* **helpers:** add support to load custom Handlebars helpers from NPM packages ([#235](https://github.com/takomo-io/takomo/issues/235)) ([6e35962](https://github.com/takomo-io/takomo/commit/6e35962b73d6053a4fa3567584b57fb65005238c)), closes [#173](https://github.com/takomo-io/takomo/issues/173)
+* **stacks:** add support to define stack template as inline ([#237](https://github.com/takomo-io/takomo/issues/237)) ([74fd718](https://github.com/takomo-io/takomo/commit/74fd718919f1e57237899ee7525a108c438cb253)), closes [#236](https://github.com/takomo-io/takomo/issues/236)
+
+
+
+
+
 # [3.13.0](https://github.com/takomo-io/takomo/compare/v3.12.0...v3.13.0) (2021-05-09)
 
 

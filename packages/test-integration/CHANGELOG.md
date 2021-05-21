@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/takomo-io/takomo/compare/v3.14.0...v3.15.0) (2021-05-21)
+
+
+### Features
+
+* **deployment targets:** add options to execute operation against a single config set and command path ([#234](https://github.com/takomo-io/takomo/issues/234)) ([26aaf8c](https://github.com/takomo-io/takomo/commit/26aaf8c5d2e75299f669e0b068c3a2a5a6b1653f)), closes [#225](https://github.com/takomo-io/takomo/issues/225)
+* **helpers:** add support to load custom Handlebars helpers from NPM packages ([#235](https://github.com/takomo-io/takomo/issues/235)) ([6e35962](https://github.com/takomo-io/takomo/commit/6e35962b73d6053a4fa3567584b57fb65005238c)), closes [#173](https://github.com/takomo-io/takomo/issues/173)
+
+
+
+
+
 # [3.14.0](https://github.com/takomo-io/takomo/compare/v3.13.0...v3.14.0) (2021-05-10)
 
 
