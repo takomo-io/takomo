@@ -79,7 +79,7 @@ export const tearDownTargetsCmd = {
         labels: parseStringArray(argv.label),
         excludeLabels: parseStringArray(argv["exclude-label"]),
         commandPath: argv["command-path"],
-        configSet: argv["config-set"],
+        configSetName: argv["config-set"],
       }),
       io: (ctx, logger) => createTearDownTargetsIO({ logger }),
       configRepository: (ctx, logger) =>
