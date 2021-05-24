@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.15.1](https://github.com/takomo-io/takomo/compare/v3.15.0...v3.15.1) (2021-05-24)
+
+
+### Bug Fixes
+
+* **deployment targets:** fix config set option ([#239](https://github.com/takomo-io/takomo/issues/239)) ([2f1228d](https://github.com/takomo-io/takomo/commit/2f1228d26f6d3dd4917f9e25a05aaba52906e42c))
+
+
+
+
+
 # [3.15.0](https://github.com/takomo-io/takomo/compare/v3.14.0...v3.15.0) (2021-05-21)
 
 
