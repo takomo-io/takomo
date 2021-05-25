@@ -12,3 +12,12 @@ export {
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "./operation/model"
+export { deploymentTargetsRunCommand } from "./run/command"
+export {
+  DeploymentGroupRunResult,
+  DeploymentTargetRunResult,
+  DeploymentTargetsRunInput,
+  DeploymentTargetsRunIO,
+  DeploymentTargetsRunOutput,
+  TargetsRunPlan,
+} from "./run/model"

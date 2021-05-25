@@ -1,5 +1,6 @@
 export { createBootstrapTargetsIO } from "./deployment-targets/bootstrap-targets-io"
 export { createDeployTargetsIO } from "./deployment-targets/deploy-targets-io"
+export { createRunTargetsIO } from "./deployment-targets/run-targets-io"
 export { createTearDownTargetsIO } from "./deployment-targets/tear-down-targets-io"
 export { createUndeployTargetsIO } from "./deployment-targets/undeploy-targets-io"
 export { formatCommandStatus } from "./formatters"
