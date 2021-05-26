@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli-io",
-  "version": "3.15.0",
+  "version": "3.16.0",
   "description": "Takomo CLI IO",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -30,7 +30,7 @@
     "@takomo/aws-model": "3.13.0",
     "@takomo/config-sets": "3.15.0",
     "@takomo/core": "3.15.0",
-    "@takomo/deployment-targets-commands": "3.15.0",
+    "@takomo/deployment-targets-commands": "3.16.0",
     "@takomo/deployment-targets-config": "3.15.0",
     "@takomo/iam-commands": "3.15.0",
     "@takomo/init-command": "3.15.0",

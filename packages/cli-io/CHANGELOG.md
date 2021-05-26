@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/takomo-io/takomo/compare/v3.15.1...v3.16.0) (2021-05-26)
+
+
+### Features
+
+* **deployment targets:** add new command to run arbitrary commands targeting deployment targets wit ([#241](https://github.com/takomo-io/takomo/issues/241)) ([100fcba](https://github.com/takomo-io/takomo/commit/100fcba890469ad795b5e0d5f7c5172f77df6794)), closes [#240](https://github.com/takomo-io/takomo/issues/240)
+
+
+
+
+
 # [3.15.0](https://github.com/takomo-io/takomo/compare/v3.14.0...v3.15.0) (2021-05-21)
 
 
