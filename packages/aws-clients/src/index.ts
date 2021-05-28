@@ -13,5 +13,4 @@ export {
 } from "./common/credentials"
 export { IamClient } from "./iam/client"
 export { OrganizationsClient } from "./organizations/client"
-export { RamClient } from "./ram/client"
 export { S3Client } from "./s3/client"
