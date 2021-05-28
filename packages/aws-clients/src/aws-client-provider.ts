@@ -12,7 +12,6 @@ import {
   createOrganizationsClient,
   OrganizationsClient,
 } from "./organizations/client"
-import { createRamClient, RamClient } from "./ram/client"
 import { createS3Client, S3Client } from "./s3/client"
 import { createStsClient, StsClient } from "./sts/client"
 
@@ -28,8 +27,6 @@ export interface AwsClientProvider {
   readonly createOrganizationsClient: (
     props: AwsClientProps,
   ) => OrganizationsClient
-
-  readonly createRamClient: (props: AwsClientProps) => RamClient
 
   readonly createS3Client: (props: AwsClientProps) => S3Client
   readonly createStsClient: (props: AwsClientProps) => StsClient
@@ -99,11 +96,6 @@ export const createAwsClientProvider = (
     },
     createOrganizationsClient: (props: AwsClientProps): OrganizationsClient => {
       const client = createOrganizationsClient({ ...props, listener })
-      regions.add(props.region)
-      return client
-    },
-    createRamClient: (props: AwsClientProps): RamClient => {
-      const client = createRamClient({ ...props, listener })
       regions.add(props.region)
       return client
     },
