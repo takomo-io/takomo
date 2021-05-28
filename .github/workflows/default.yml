@@ -1,5 +1,7 @@
 name: Default
 
+concurrency: default
+
 on:
   push:
     branches:
