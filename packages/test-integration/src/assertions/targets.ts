@@ -4,6 +4,7 @@ import { CommandStatus } from "@takomo/core"
 import {
   DeploymentGroupDeployResult,
   DeploymentTargetsOperationOutput,
+  DeploymentTargetsRunOutput,
 } from "@takomo/deployment-targets-commands"
 import {
   DeploymentGroupPath,
@@ -11,6 +12,12 @@ import {
 } from "@takomo/deployment-targets-model"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
 
+export interface TargetsRunOutputMatcher {
+  readonly expectCommandToSucceed: (
+    expectedResult: unknown,
+  ) => TargetsRunOutputMatcher
+  readonly assert: () => Promise<DeploymentTargetsRunOutput>
+}
 export interface TargetsOperationOutputMatcher {
   readonly expectCommandToSucceed: () => DeploymentGroupResultMatcher
   readonly expectCommandToSkip: () => DeploymentGroupResultMatcher
@@ -71,8 +78,6 @@ const createDeploymentGroupResultMatcher = (
 
         expect(result.results).toHaveLength(prop.targetResults.length)
         result.results.forEach((targetResult, i) => {
-          // const expected = prop.targetResults[i]
-
           const expected =
             prop.unorderedTargets === true
               ? prop.targetResults.find((a) => a.name === targetResult.name)
@@ -210,5 +215,33 @@ export const createTargetsOperationOutputMatcher = (
     expectCommandToSucceed,
     expectCommandToSkip,
     expectCommandToThrow,
+  }
+}
+
+export const createTargetsRunOutputMatcher = (
+  executor: () => Promise<DeploymentTargetsRunOutput>,
+  outputAssertions?: (output: DeploymentTargetsRunOutput) => void,
+): TargetsRunOutputMatcher => {
+  const expectCommandToSucceed = (expectedResult: unknown) =>
+    createTargetsRunOutputMatcher(executor, (output) => {
+      expect(output.status).toEqual("SUCCESS")
+      expect(output.message).toEqual("Success")
+      expect(output.success).toEqual(true)
+      expect(output.error).toBeUndefined()
+      expect(output.result).toStrictEqual(expectedResult)
+    })
+
+  const assert = async (): Promise<DeploymentTargetsRunOutput> => {
+    const output = await executor()
+    if (outputAssertions) {
+      outputAssertions(output)
+    }
+
+    return output
+  }
+
+  return {
+    expectCommandToSucceed,
+    assert,
   }
 }
