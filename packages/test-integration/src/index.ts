@@ -27,6 +27,7 @@ export {
 export {
   executeBootstrapTargetsCommand,
   executeDeployTargetsCommand,
+  executeRunTargetsCommand,
   executeTeardownTargetsCommand,
   executeUndeployTargetsCommand,
 } from "./commands/targets"

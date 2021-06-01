@@ -1,19 +1,26 @@
 import { initDefaultCredentialManager } from "@takomo/aws-clients"
+import { IamRoleName } from "@takomo/aws-model"
 import { CliCommandContext } from "@takomo/cli"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetName } from "@takomo/config-sets"
-import { InternalCommandContext } from "@takomo/core"
-import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets-commands"
+import { InternalCommandContext, OutputFormat } from "@takomo/core"
+import {
+  deploymentTargetsOperationCommand,
+  deploymentTargetsRunCommand,
+} from "@takomo/deployment-targets-commands"
 import { DeploymentTargetsConfigRepository } from "@takomo/deployment-targets-context"
 import { CommandPath } from "@takomo/stacks-model"
 import { createConsoleLogger, createTimer } from "@takomo/util"
 import {
   createTargetsOperationOutputMatcher,
+  createTargetsRunOutputMatcher,
   TargetsOperationOutputMatcher,
+  TargetsRunOutputMatcher,
 } from "../assertions/targets"
 import {
   createTestBootstrapTargetsIO,
   createTestDeployTargetsIO,
+  createTestRunTargetsIO,
   createTestTeardownTargetsIO,
   createTestUndeployTargetsIO,
 } from "../io"
@@ -264,6 +271,74 @@ export const executeTeardownTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+      },
+    })
+  })
+
+export interface ExecuteRunTargetsCommandProps extends ExecuteCommandProps {
+  readonly groups?: ReadonlyArray<string>
+  readonly targets?: ReadonlyArray<string>
+  readonly excludeTargets?: ReadonlyArray<string>
+  readonly labels?: ReadonlyArray<string>
+  readonly excludeLabels?: ReadonlyArray<string>
+  readonly configFile?: string
+  readonly concurrentTargets?: number
+  readonly mapCommand: string
+  readonly reduceCommand?: string
+  readonly outputFormat?: OutputFormat
+  readonly roleName?: IamRoleName
+  readonly captureLastLine?: boolean
+  readonly captureAfterLine?: string
+  readonly captureBeforeLine?: string
+}
+
+export const executeRunTargetsCommand = (
+  props: ExecuteRunTargetsCommandProps,
+): TargetsRunOutputMatcher =>
+  createTargetsRunOutputMatcher(async () => {
+    const logLevel = props.logLevel ?? "info"
+
+    const ctxAndConfig = await createCtxAndConfigRepository({
+      projectDir: props.projectDir,
+      autoConfirmEnabled: props.autoConfirmEnabled ?? true,
+      ignoreDependencies: props.ignoreDependencies ?? false,
+      var: props.var ?? [],
+      varFile: props.varFile ?? [],
+      pathToDeploymentConfigFile: props.configFile,
+      feature: props.feature ?? [],
+      logLevel,
+    })
+
+    const logger = createConsoleLogger({
+      logLevel,
+    })
+
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
+      ctxAndConfig.ctx.credentials,
+    )
+
+    return deploymentTargetsRunCommand({
+      ...ctxAndConfig,
+      credentialManager,
+      io: createTestRunTargetsIO(logger),
+      input: {
+        timer: createTimer("total"),
+        groups: props.groups ?? [],
+        targets: props.targets ?? [],
+        excludeTargets: props.excludeTargets ?? [],
+        labels: props.labels ?? [],
+        excludeLabels: props.excludeLabels ?? [],
+        concurrentTargets: props.concurrentTargets ?? 1,
+        mapCommand: props.mapCommand,
+        reduceCommand: props.reduceCommand,
+        outputFormat: props.outputFormat ?? "text",
+        captureLastLine: props.captureLastLine ?? false,
+        captureBeforeLine: props.captureBeforeLine,
+        captureAfterLine: props.captureAfterLine,
+        roleName: props.roleName,
       },
     })
   })

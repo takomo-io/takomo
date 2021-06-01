@@ -13,7 +13,6 @@ import {
   DeploymentTargetsRunOutput,
 } from "./model"
 import { planRun } from "./plan"
-
 const inputSchema = (regions: ReadonlyArray<Region>) => {
   const {
     deploymentGroupPath,

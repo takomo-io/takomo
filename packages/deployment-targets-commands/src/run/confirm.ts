@@ -30,7 +30,8 @@ export const confirmRun = async ({
       success: true,
       status: "CANCELLED",
       message: "Cancelled",
-      results: [],
+      outputFormat: input.outputFormat,
+      result: undefined,
     }
   }
 

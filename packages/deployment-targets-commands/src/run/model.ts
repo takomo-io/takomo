@@ -1,10 +1,10 @@
 import { IamRoleName } from "@takomo/aws-model"
-import { ConfigSetType } from "@takomo/config-sets"
 import {
   CommandInput,
   CommandOutput,
   CommandOutputBase,
   IO,
+  OutputFormat,
 } from "@takomo/core"
 import { DeploymentGroupConfig } from "@takomo/deployment-targets-config"
 import {
@@ -22,14 +22,19 @@ export interface DeploymentTargetsRunInput extends CommandInput {
   readonly excludeTargets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly labels: ReadonlyArray<Label>
   readonly excludeLabels: ReadonlyArray<Label>
-  readonly configSetType: ConfigSetType
   readonly concurrentTargets: number
-  readonly command: string
+  readonly mapCommand: string
+  readonly reduceCommand?: string
   readonly roleName?: IamRoleName
+  readonly captureAfterLine?: string
+  readonly captureBeforeLine?: string
+  readonly captureLastLine: boolean
+  readonly outputFormat: OutputFormat
 }
 
 export interface DeploymentTargetsRunOutput extends CommandOutput {
-  readonly results: ReadonlyArray<DeploymentGroupRunResult>
+  readonly result: unknown
+  readonly outputFormat: OutputFormat
 }
 
 export interface DeploymentTargetsRunIO extends IO<DeploymentTargetsRunOutput> {
@@ -46,6 +51,7 @@ export interface TargetsRunPlan {
 export interface DeploymentTargetRunResult extends CommandOutputBase {
   readonly name: DeploymentTargetName
   readonly timer: Timer
+  readonly value?: unknown
 }
 
 export interface DeploymentGroupRunResult extends CommandOutputBase {

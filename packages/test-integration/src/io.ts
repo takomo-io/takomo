@@ -12,6 +12,7 @@ import {
   createInitProjectIO,
   createListAccountsIO,
   createListStacksIO,
+  createRunTargetsIO,
   createTearDownAccountsIO,
   createTearDownTargetsIO,
   createUndeployAccountsIO,
@@ -19,7 +20,10 @@ import {
   createUndeployTargetsIO,
   UserActions,
 } from "@takomo/cli-io"
-import { DeploymentTargetsOperationIO } from "@takomo/deployment-targets-commands"
+import {
+  DeploymentTargetsOperationIO,
+  DeploymentTargetsRunIO,
+} from "@takomo/deployment-targets-commands"
 import { InitProjectIO } from "@takomo/init-command"
 import {
   AccountsOperationIO,
@@ -133,6 +137,10 @@ export const createTestTeardownTargetsIO = (
 export const createTestBootstrapTargetsIO = (
   logger: TkmLogger,
 ): DeploymentTargetsOperationIO => createBootstrapTargetsIO({ logger })
+
+export const createTestRunTargetsIO = (
+  logger: TkmLogger,
+): DeploymentTargetsRunIO => createRunTargetsIO({ logger })
 
 export const createTestListAccountsIO = (logger: TkmLogger): ListAccountsIO =>
   createListAccountsIO({ logger })

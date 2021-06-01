@@ -4,12 +4,11 @@ import {
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
 } from "@takomo/deployment-targets-commands"
-import { splitTextInLines } from "@takomo/util"
-import Table from "easy-table"
-import prettyMs from "pretty-ms"
+import { formatYaml, splitTextInLines } from "@takomo/util"
+import R from "ramda"
 import { createBaseIO } from "../cli-io"
-import { formatCommandStatus } from "../formatters"
 import { IOProps } from "../stacks/common"
+
 const confirmDescription =
   "A targets run plan has been created and is shown below. " +
   "Targets will be run in the order they are listed."
@@ -38,16 +37,18 @@ export const createRunTargetsIO = (props: IOProps): DeploymentTargetsRunIO => {
     },
   })
 
-  const confirmRun = async (plan: TargetsRunPlan): Promise<boolean> => {
+  const confirmRun = async ({ groups }: TargetsRunPlan): Promise<boolean> => {
     io.subheader({ text: "Targets run plan", marginTop: true })
     io.longMessage(splitTextInLines(70, confirmDescription), false, false, 0)
 
+    const targetCount = R.sum(groups.map((g) => g.targets.length))
+
     io.message({
-      text: "Following targets will be run:",
+      text: `Following ${targetCount} targets will be run:`,
       marginTop: true,
     })
 
-    plan.groups.forEach((group) => {
+    groups.forEach((group) => {
       io.message({ text: `${group.path}:`, marginTop: true, indent: 2 })
       group.targets.forEach((target) => {
         io.message({
@@ -78,24 +79,33 @@ export const createRunTargetsIO = (props: IOProps): DeploymentTargetsRunIO => {
   ): DeploymentTargetsRunOutput => {
     io.header({ text: "Targets run summary", marginTop: true })
 
-    if (output.results.length === 0) {
-      io.message({ text: "No targets run", marginTop: true })
-      return output
+    if (output.result) {
+      if (typeof output.result === "string") {
+        io.message({ text: output.result, marginTop: true })
+      } else if (output.outputFormat === "yaml") {
+        io.message({
+          text: formatYaml(output.result),
+          marginTop: true,
+        })
+      } else if (output.outputFormat === "json") {
+        io.message({
+          text: JSON.stringify(output.result, undefined, 2),
+          marginTop: true,
+        })
+      } else if (Array.isArray(output.result)) {
+        io.message({
+          text: output.result.map((r) => `${r}`).join(""),
+          marginTop: true,
+        })
+      } else {
+        io.message({
+          text: `${output.result}`,
+          marginTop: true,
+        })
+      }
+    } else {
+      io.message({ text: "No output" })
     }
-
-    const targetsTable = new Table()
-    output.results.forEach((group) => {
-      group.results.forEach((target) => {
-        targetsTable
-          .cell("Group", group.path)
-          .cell("Target", target.name)
-          .cell("Status", formatCommandStatus(target.status))
-          .cell("Time", prettyMs(target.timer.getSecondsElapsed()))
-          .newRow()
-      })
-    })
-
-    io.message({ text: targetsTable.toString(), marginTop: true })
 
     return output
   }

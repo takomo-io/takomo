@@ -23,6 +23,11 @@ export interface CommandRole {
 /**
  * @hidden
  */
+export type OutputFormat = "text" | "json" | "yaml"
+
+/**
+ * @hidden
+ */
 export type CommandStatus = "SUCCESS" | "FAILED" | "CANCELLED" | "SKIPPED"
 
 /**

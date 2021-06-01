@@ -12,6 +12,7 @@ export {
   FAILED,
   InternalCommandContext,
   IO,
+  OutputFormat,
   Project,
   resolveCommandOutputBase,
   SKIPPED,
