@@ -1,0 +1,25 @@
+Parameters:
+  One:
+    Type: String
+  Two:
+    Type: String
+  Three:
+    Type: String
+  Four:
+    Type: String
+  Five:
+    Type: String
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+Outputs:
+  OneOutput:
+    Value: !Ref One
+  TwoOutput:
+    Value: !Ref Two
+  ThreeOutput:
+    Value: !Ref Three
+  FourOutput:
+    Value: !Ref Four
+  FiveOutput:
+    Value: !Ref Five

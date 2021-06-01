@@ -13,6 +13,7 @@ import {
   OrganizationsClient,
 } from "./organizations/client"
 import { createS3Client, S3Client } from "./s3/client"
+import { createSsmClient, SsmClient } from "./ssm/client"
 import { createStsClient, StsClient } from "./sts/client"
 
 export interface AwsClientProvider {
@@ -30,6 +31,7 @@ export interface AwsClientProvider {
 
   readonly createS3Client: (props: AwsClientProps) => S3Client
   readonly createStsClient: (props: AwsClientProps) => StsClient
+  readonly createSsmClient: (props: AwsClientProps) => SsmClient
 }
 
 /**
@@ -106,6 +108,11 @@ export const createAwsClientProvider = (
     },
     createStsClient: (props: AwsClientProps): StsClient => {
       const client = createStsClient({ ...props, listener })
+      regions.add(props.region)
+      return client
+    },
+    createSsmClient: (props: AwsClientProps): SsmClient => {
+      const client = createSsmClient({ ...props, listener })
       regions.add(props.region)
       return client
     },
