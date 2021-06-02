@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0](https://github.com/takomo-io/takomo/compare/v3.16.0...v3.17.0) (2021-06-02)
+
+
+### Features
+
+* **deployment targets:** add more options to deployment targets run command ([#244](https://github.com/takomo-io/takomo/issues/244)) ([bd4dd19](https://github.com/takomo-io/takomo/commit/bd4dd1966350aed0cad59ed2e274d984f8a61732)), closes [#242](https://github.com/takomo-io/takomo/issues/242)
+* **resolvers:** implement parameter resolver that reads parameter values from SSM parameters ([#246](https://github.com/takomo-io/takomo/issues/246)) ([a260640](https://github.com/takomo-io/takomo/commit/a260640cca8a217d03664179a980e50dcf02cc33)), closes [#245](https://github.com/takomo-io/takomo/issues/245)
+
+
+
+
+
 # [3.16.0](https://github.com/takomo-io/takomo/compare/v3.15.1...v3.16.0) (2021-05-26)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0](https://github.com/takomo-io/takomo/compare/v3.16.0...v3.17.0) (2021-06-02)
+
+
+### Features
+
+* **resolvers:** implement parameter resolver that reads parameter values from SSM parameters ([#246](https://github.com/takomo-io/takomo/issues/246)) ([a260640](https://github.com/takomo-io/takomo/commit/a260640cca8a217d03664179a980e50dcf02cc33)), closes [#245](https://github.com/takomo-io/takomo/issues/245)
+
+
+
+
+
 # [3.15.0](https://github.com/takomo-io/takomo/compare/v3.14.0...v3.15.0) (2021-05-21)
 
 **Note:** Version bump only for package @takomo/stacks-resolvers

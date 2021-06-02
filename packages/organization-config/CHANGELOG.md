@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0](https://github.com/takomo-io/takomo/compare/v3.16.0...v3.17.0) (2021-06-02)
+
+**Note:** Version bump only for package @takomo/organization-config
+
+
+
+
+
 # [3.15.0](https://github.com/takomo-io/takomo/compare/v3.14.0...v3.15.0) (2021-05-21)
 
 **Note:** Version bump only for package @takomo/organization-config
