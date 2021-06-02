@@ -2,6 +2,8 @@ import {
   AccountId,
   Region,
   StackName,
+  StackOutputKey,
+  StackOutputValue,
   StackStatus,
   TagKey,
   TagValue,
@@ -68,6 +70,7 @@ export interface ExpectDeployedCfStackProps {
   roleName: string
   expected?: Partial<CloudFormation.Stack>
   expectedTags?: Record<TagKey, TagValue>
+  expectedOutputs?: Record<StackOutputKey, StackOutputValue>
 }
 
 export interface StackResultsMatcher {
@@ -274,6 +277,7 @@ const createStackResultsMatcher = (
     roleName,
     expected,
     expectedTags,
+    expectedOutputs,
   }: ExpectDeployedCfStackProps): StackResultsMatcher => {
     const deployedStackMatcher = async (): Promise<() => void> => {
       const stack: any = await aws.cloudFormation.describeStack({
@@ -302,6 +306,18 @@ const createStackResultsMatcher = (
           )
 
           expect(actual).toStrictEqual(expectedTags)
+        }
+
+        if (expectedOutputs) {
+          const actual = stack["Outputs"].reduce(
+            (collected: any, output: any) => ({
+              ...collected,
+              [output.OutputKey!]: output.OutputValue!,
+            }),
+            {},
+          )
+
+          expect(actual).toStrictEqual(expectedOutputs)
         }
       }
     }

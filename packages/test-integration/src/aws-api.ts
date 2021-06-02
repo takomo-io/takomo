@@ -3,13 +3,16 @@ import {
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
 import { TkmLogger } from "@takomo/util"
-import { CloudFormation, Credentials, Organizations } from "aws-sdk"
+import { CloudFormation, Credentials, Organizations, SSM } from "aws-sdk"
 import { Organization, PolicyType, Root } from "aws-sdk/clients/organizations"
 import { mock } from "jest-mock-extended"
 
 const organizationsClient = new Organizations({
   region: "us-east-1",
 })
+
+const ssmClient = (region: string, credentials: Credentials): SSM =>
+  new SSM({ region, credentials })
 
 const cloudFormationClient = (
   region: string,
@@ -82,6 +85,43 @@ const describeStack = async ({
     .then((res) => res.Stacks![0])
 }
 
+export type PutParamArgs = {
+  credentials: Credentials
+  iamRoleArn?: string
+  region: string
+  name: string
+  value: string
+  encrypted: boolean
+}
+
+const putParameter = async ({
+  credentials,
+  region,
+  name,
+  value,
+  encrypted,
+  iamRoleArn,
+}: PutParamArgs): Promise<boolean> => {
+  const cp = await initDefaultCredentialManager(
+    () => Promise.resolve(""),
+    mock<TkmLogger>(),
+    mock<AwsClientProvider>(),
+    credentials,
+  )
+
+  const ssmCp = iamRoleArn
+    ? await cp.createCredentialManagerForRole(iamRoleArn)
+    : cp
+
+  return ssmClient(region, await ssmCp.getCredentials())
+    .putParameter({
+      Name: name,
+      Type: encrypted ? "SecureString" : "String",
+      Value: value,
+    })
+    .promise()
+    .then(() => true)
+}
 export const aws = {
   organizations: {
     describeOrganization,
@@ -93,5 +133,8 @@ export const aws = {
   },
   cloudFormation: {
     describeStack,
+  },
+  ssm: {
+    putParameter,
   },
 }
