@@ -27,6 +27,7 @@ import {
 import { printOutputs } from "./outputs"
 import { printParameters } from "./parameters"
 import { printResources } from "./resources"
+import { printStackPolicy } from "./stack-policy"
 import { printTags } from "./tags"
 import { printTerminationProtection } from "./termination-protection"
 
@@ -213,10 +214,13 @@ export const createDeployStacksIO = (
       .map((o) => o.text)
       .join(", ")
 
-    io.message({
-      text: `  stacks | total: ${operations.length}, ${counts}`,
-      marginTop: true,
-    })
+    if (operations.length > 1) {
+      io.message({
+        text: `stacks | total: ${operations.length}, ${counts}`,
+        marginTop: true,
+        indent: 2,
+      })
+    }
 
     return io.choose(
       "How do you want to continue?",
@@ -265,6 +269,7 @@ export const createDeployStacksIO = (
     )
 
     printTerminationProtection(io, stack, existingStack)
+    printStackPolicy(io, stack, existingStack)
 
     const parametersChanged = printParameters(io, changeSet, existingStack)
     const tagsChanged = printTags(io, changeSet, existingStack)

@@ -11,7 +11,7 @@ interface CreateStackGroupConfigSchemaProps {
 export const createStackGroupConfigSchema = (
   props: CreateStackGroupConfigSchemaProps,
 ): ObjectSchema => {
-  const { project, data } = createCommonSchema()
+  const { project, data, json } = createCommonSchema()
   const {
     regions,
     tags,
@@ -47,6 +47,8 @@ export const createStackGroupConfigSchema = (
     accountIds: [accountId, accountIds],
     commandRole: iamRoleArn,
     capabilities: stackCapabilities,
+    stackPolicy: json,
+    stackPolicyDuringUpdate: json,
   })
 }
 
@@ -57,7 +59,7 @@ interface CreateStackConfigSchemaProps {
 export const createStackConfigSchema = (
   props: CreateStackConfigSchemaProps,
 ): ObjectSchema => {
-  const { project, data } = createCommonSchema()
+  const { project, data, json } = createCommonSchema()
   const {
     regions,
     stackName,
@@ -102,5 +104,7 @@ export const createStackConfigSchema = (
     name: stackName,
     depends: [relativeStackPath, stackPaths],
     capabilities: stackCapabilities,
+    stackPolicy: json,
+    stackPolicyDuringUpdate: json,
   })
 }

@@ -24,4 +24,6 @@ export const createStackGroupFromParent = (
     accountIds: parent.accountIds,
     ignore: parent.ignore,
     terminationProtection: parent.terminationProtection,
+    stackPolicy: parent.stackPolicy,
+    stackPolicyDuringUpdate: parent.stackPolicyDuringUpdate,
   })

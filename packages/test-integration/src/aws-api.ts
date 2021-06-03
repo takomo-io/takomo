@@ -2,6 +2,7 @@ import {
   AwsClientProvider,
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
+import { StackPolicyBody } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
 import { CloudFormation, Credentials, Organizations, SSM } from "aws-sdk"
 import { Organization, PolicyType, Root } from "aws-sdk/clients/organizations"
@@ -85,6 +86,28 @@ const describeStack = async ({
     .then((res) => res.Stacks![0])
 }
 
+const getStackPolicy = async ({
+  credentials,
+  stackName,
+  iamRoleArn,
+  region,
+}: DescribeStackArgs): Promise<StackPolicyBody> => {
+  const cp = await initDefaultCredentialManager(
+    () => Promise.resolve(""),
+    mock<TkmLogger>(),
+    mock<AwsClientProvider>(),
+    credentials,
+  )
+  const stackCp = iamRoleArn
+    ? await cp.createCredentialManagerForRole(iamRoleArn)
+    : cp
+
+  return cloudFormationClient(region, await stackCp.getCredentials())
+    .getStackPolicy({ StackName: stackName })
+    .promise()
+    .then((r) => r.StackPolicyBody!)
+}
+
 export type PutParamArgs = {
   credentials: Credentials
   iamRoleArn?: string
@@ -133,6 +156,7 @@ export const aws = {
   },
   cloudFormation: {
     describeStack,
+    getStackPolicy,
   },
   ssm: {
     putParameter,

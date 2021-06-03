@@ -8,6 +8,7 @@ import { parseData } from "./parse-data"
 import { parseHooks } from "./parse-hooks"
 import { parseIgnore } from "./parse-ignore"
 import { parseRegions } from "./parse-regions"
+import { parseStackPolicy } from "./parse-stack-policy"
 import { parseString } from "./parse-string"
 import { parseTags } from "./parse-tags"
 import { parseTemplateBucket } from "./parse-template-bucket"
@@ -43,6 +44,10 @@ export const buildStackGroupConfig = (
   const terminationProtection = parseTerminationProtection(
     record.terminationProtection,
   )
+  const stackPolicy = parseStackPolicy(record.stackPolicy)
+  const stackPolicyDuringUpdate = parseStackPolicy(
+    record.stackPolicyDuringUpdate,
+  )
 
   return ok({
     hooks,
@@ -51,6 +56,8 @@ export const buildStackGroupConfig = (
     accountIds,
     capabilities,
     data,
+    stackPolicy,
+    stackPolicyDuringUpdate,
     project: parseString(record.project),
     commandRole: parseCommandRole(record.commandRole),
     regions: parseRegions(record.regions),

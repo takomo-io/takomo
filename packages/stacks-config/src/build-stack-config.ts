@@ -10,6 +10,7 @@ import { parseHooks } from "./parse-hooks"
 import { parseIgnore } from "./parse-ignore"
 import { parseParameters } from "./parse-parameters"
 import { parseRegions } from "./parse-regions"
+import { parseStackPolicy } from "./parse-stack-policy"
 import { parseString } from "./parse-string"
 import { parseTags } from "./parse-tags"
 import { parseTemplate } from "./parse-template"
@@ -41,6 +42,10 @@ export const buildStackConfig = (
   const accountIds = parseAccountIds(record.accountIds)
   const ignore = parseIgnore(record.ignore)
   const template = parseTemplate(record.template)
+  const stackPolicy = parseStackPolicy(record.stackPolicy)
+  const stackPolicyDuringUpdate = parseStackPolicy(
+    record.stackPolicyDuringUpdate,
+  )
   const terminationProtection = parseTerminationProtection(
     record.terminationProtection,
   )
@@ -53,6 +58,8 @@ export const buildStackConfig = (
     data,
     hooks,
     template,
+    stackPolicy,
+    stackPolicyDuringUpdate,
     project: parseString(record.project),
     commandRole: parseCommandRole(record.commandRole),
     regions: parseRegions(record.regions),

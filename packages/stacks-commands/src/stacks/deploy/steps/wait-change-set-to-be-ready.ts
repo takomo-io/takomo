@@ -1,9 +1,12 @@
 import {
+  ALLOW_ALL_STACK_POLICY,
   ChangeSet,
   DetailedChangeSet,
+  DetailedCloudFormationStack,
   TemplateSummary,
 } from "@takomo/aws-model"
-import { arrayToMap } from "@takomo/util"
+import { InternalStack } from "@takomo/stacks-model"
+import { arrayToMap, prettyPrintJson } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { ChangeSetNameHolder } from "../states"
 
@@ -31,6 +34,29 @@ const enrichChangeSet = (
   }
 }
 
+const hasStackPolicyChanged = (
+  stack: InternalStack,
+  currentStack?: DetailedCloudFormationStack,
+): boolean => {
+  if (!currentStack && stack.stackPolicy) {
+    return true
+  }
+
+  if (!currentStack && !stack.stackPolicy) {
+    return false
+  }
+
+  if (currentStack!.stackPolicyBody && !stack.stackPolicy) {
+    const reformattedCurrent = prettyPrintJson(currentStack!.stackPolicyBody)
+    const reformattedAllowAll = prettyPrintJson(ALLOW_ALL_STACK_POLICY)
+    if (reformattedCurrent === reformattedAllowAll) {
+      return false
+    }
+  }
+
+  return currentStack?.stackPolicyBody !== stack.stackPolicy
+}
+
 /**
  * @hidden
  */
@@ -53,7 +79,13 @@ export const waitChangeSetToBeReady: StackOperationStep<ChangeSetNameHolder> = a
     ? currentStack.enableTerminationProtection !== stack.terminationProtection
     : false
 
-  if (changeSet === undefined && !terminationProtectionChanged) {
+  const stackPolicyChanged = hasStackPolicyChanged(stack, currentStack)
+
+  if (
+    changeSet === undefined &&
+    !terminationProtectionChanged &&
+    !stackPolicyChanged
+  ) {
     logger.info("Change set contains no changes")
     return transitions.executeAfterDeployHooks({
       ...state,

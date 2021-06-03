@@ -1,4 +1,5 @@
 export {
+  ALLOW_ALL_STACK_POLICY,
   BaseChangeSet,
   CausingEntity,
   Change,
@@ -47,6 +48,7 @@ export {
   StackParameterKey,
   StackParameterNoEcho,
   StackParameterValue,
+  StackPolicyBody,
   StackStatus,
   StackStatusReason,
   TemplateBody,

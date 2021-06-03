@@ -6,6 +6,7 @@ import {
   StackCapability,
   StackName,
   StackParameterKey,
+  StackPolicyBody,
   TagKey,
   TagValue,
 } from "@takomo/aws-model"
@@ -57,6 +58,8 @@ export interface StackProps {
   terminationProtection: boolean
   logger: TkmLogger
   cloudFormationClient: CloudFormationClient
+  stackPolicy?: StackPolicyBody
+  stackPolicyDuringUpdate?: StackPolicyBody
 }
 
 /**
@@ -142,6 +145,8 @@ export interface InternalStack extends Stack {
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly ignore: boolean
   readonly terminationProtection: boolean
+  readonly stackPolicy?: StackPolicyBody
+  readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly toProps: () => StackProps
 }
 
@@ -172,6 +177,8 @@ export const createStack = (props: StackProps): InternalStack => {
     terminationProtection,
     timeout,
     cloudFormationClient,
+    stackPolicy,
+    stackPolicyDuringUpdate,
   } = props
 
   const getCloudFormationClient = () => cloudFormationClient
@@ -203,6 +210,8 @@ export const createStack = (props: StackProps): InternalStack => {
     templateBucket,
     terminationProtection,
     timeout,
+    stackPolicy,
+    stackPolicyDuringUpdate,
     toProps: () => props,
   })
 }

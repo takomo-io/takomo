@@ -4,6 +4,7 @@ import {
   StackCapability,
   StackName,
   StackParameterKey,
+  StackPolicyBody,
   TagKey,
   TagValue,
 } from "@takomo/aws-model"
@@ -90,6 +91,8 @@ export interface StackConfig {
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly ignore?: boolean
   readonly terminationProtection?: boolean
+  readonly stackPolicy?: StackPolicyBody
+  readonly stackPolicyDuringUpdate?: StackPolicyBody
 }
 
 export interface StackGroupConfig {
@@ -105,4 +108,6 @@ export interface StackGroupConfig {
   readonly ignore?: boolean
   readonly terminationProtection?: boolean
   readonly capabilities?: ReadonlyArray<StackCapability>
+  readonly stackPolicy?: StackPolicyBody
+  readonly stackPolicyDuringUpdate?: StackPolicyBody
 }

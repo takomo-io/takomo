@@ -22,6 +22,7 @@
   "dependencies": {
     "@takomo/stacks-model": "3.17.0",
     "@takomo/test-integration": "3.17.0",
+    "@takomo/aws-model": "3.17.0",
     "@takomo/util": "3.17.0",
     "aws-sdk": "2.886.0",
     "ramda": "0.27.1",
