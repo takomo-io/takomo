@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.18.0](https://github.com/takomo-io/takomo/compare/v3.17.0...v3.18.0) (2021-06-04)
+
+
+### Features
+
+* **stacks:** add support for stack policies ([#248](https://github.com/takomo-io/takomo/issues/248)) ([f80657f](https://github.com/takomo-io/takomo/commit/f80657f1af0e2be1eb7fd22530f3016558b81524)), closes [#247](https://github.com/takomo-io/takomo/issues/247)
+
+
+
+
+
 # [3.17.0](https://github.com/takomo-io/takomo/compare/v3.16.0...v3.17.0) (2021-06-02)
 
 **Note:** Version bump only for package @takomo/util
