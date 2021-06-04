@@ -1,0 +1,38 @@
+regions: eu-central-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+{{#if var.case1}}
+stackPolicy: |
+  {
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "NotAction" : "Update:Delete",
+        "Principal": "*",
+        "Resource" : "*"
+      }
+    ]
+  }
+{{/if}}
+{{#if var.case2}}
+stackPolicy:
+  Statement:
+    - Effect: Deny
+      Action: "Update:*"
+      Principal: "*"
+      Resource: "*"
+{{/if}}
+{{#if var.case3}}
+stackPolicyDuringUpdate:
+  Statement:
+    - Effect: Allow
+      Action: "Update:*"
+      Principal: "*"
+      Resource: "*"
+{{/if}}
+template:
+  inline: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+          RetentionInDays: {{var.retentionDays}}

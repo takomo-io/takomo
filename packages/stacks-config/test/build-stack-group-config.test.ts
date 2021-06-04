@@ -16,6 +16,8 @@ const emptyStackGroupConfig = {
   capabilities: undefined,
   ignore: undefined,
   terminationProtection: undefined,
+  stackPolicy: undefined,
+  stackPolicyDuringUpdate: undefined,
 }
 
 const ctx: CommandContext = {
@@ -72,6 +74,8 @@ describe("#buildStackGroupConfig", () => {
       ]),
       templateBucket: undefined,
       terminationProtection: undefined,
+      stackPolicy: undefined,
+      stackPolicyDuringUpdate: undefined,
       timeout: {
         update: 10,
         create: 5,

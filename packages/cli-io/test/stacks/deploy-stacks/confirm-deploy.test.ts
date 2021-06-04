@@ -96,8 +96,6 @@ describe("DeployStacksIO#confirmDeploy", () => {
               arn:                     arn:aws:iam::123456789012:user/reiner-braun
             dependencies:              none
 
-        stacks | total: 1, ${green("create: 1")}
-      
     `
     expect(output).toBe(expected)
   })
@@ -133,8 +131,6 @@ describe("DeployStacksIO#confirmDeploy", () => {
               arn:                     arn:aws:iam::123456789012:user/reiner-braun
             dependencies:              none
 
-        stacks | total: 1, ${yellow("update: 1")}
-      
     `
     expect(output).toBe(expected)
   })
@@ -170,8 +166,6 @@ describe("DeployStacksIO#confirmDeploy", () => {
               arn:                     arn:aws:iam::123456789012:user/reiner-braun
             dependencies:              none
 
-        stacks | total: 1, ${orange("replace: 1")}
-      
     `
     expect(output).toBe(expected)
   })

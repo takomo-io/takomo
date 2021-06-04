@@ -126,6 +126,10 @@ export const buildStack = async (
       ? stackConfig.terminationProtection
       : stackGroup.terminationProtection
 
+  const stackPolicy = stackConfig.stackPolicy ?? stackGroup.stackPolicy
+  const stackPolicyDuringUpdate =
+    stackConfig.stackPolicyDuringUpdate ?? stackGroup.stackPolicyDuringUpdate
+
   const credentials = await credentialManager.getCredentials()
 
   return regions
@@ -154,6 +158,8 @@ export const buildStack = async (
         capabilities,
         accountIds,
         cloudFormationClient,
+        stackPolicy,
+        stackPolicyDuringUpdate,
         path: exactPath,
         stackGroupPath: stackGroup.path,
         project: stackConfig.project ?? stackGroup.project,

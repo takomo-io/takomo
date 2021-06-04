@@ -8,6 +8,7 @@ import {
   ResourceStatus,
   StackEvent,
   StackId,
+  StackPolicyBody,
   TemplateSummary,
 } from "@takomo/aws-model"
 import { sleep, uuid } from "@takomo/util"
@@ -126,6 +127,10 @@ export interface CloudFormationClient {
   readonly waitStackDeleteToComplete: (
     props: WaitStackDeleteToCompleteProps,
   ) => Promise<WaitStackDeleteToCompleteResponse>
+
+  readonly getStackPolicy: (
+    stackName: string,
+  ) => Promise<StackPolicyBody | undefined>
 }
 
 const findTerminalEvent = (
@@ -168,6 +173,14 @@ export const createCloudFormationClient = (
     waitStackDeleteToCompletePollInterval,
   } = props
 
+  const getStackPolicy = (
+    stackName: string,
+  ): Promise<StackPolicyBody | undefined> =>
+    withClientPromise(
+      (c) => c.getStackPolicy({ StackName: stackName }),
+      (r) => r.StackPolicyBody!,
+    )
+
   const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
     withClientPromise(
       (c) => c.validateTemplate(input),
@@ -194,11 +207,13 @@ export const createCloudFormationClient = (
   const enrichStack = async (
     stack: CloudFormationStack,
   ): Promise<DetailedCloudFormationStack> => {
-    const summary = await getTemplateSummary({
-      StackName: stack.name,
-    })
-
-    const templateBody = await getCurrentTemplate(stack.name)
+    const [summary, templateBody, stackPolicyBody] = await Promise.all([
+      getTemplateSummary({
+        StackName: stack.name,
+      }),
+      getCurrentTemplate(stack.name),
+      getStackPolicy(stack.name),
+    ])
 
     const parameterMap = new Map(stack.parameters.map((p) => [p.key, p]))
     const parameters = summary.parameters.map((declaration) => {
@@ -216,6 +231,7 @@ export const createCloudFormationClient = (
     return {
       ...stack,
       templateBody,
+      stackPolicyBody,
       parameters,
     }
   }
@@ -630,6 +646,7 @@ export const createCloudFormationClient = (
     waitStackDeployToComplete,
     waitUntilStackIsDeleted,
     waitStackDeleteToComplete,
+    getStackPolicy,
     getNativeClient: getClient,
   }
 }

@@ -157,11 +157,17 @@ export type CloudFormationStack = BaseCloudFormationStack<StackParameter>
 export type TemplateBody = string
 
 /**
+ * CloudFormation stack policy.
+ */
+export type StackPolicyBody = string
+
+/**
  * Detailed CloudFormation stack.
  */
 export interface DetailedCloudFormationStack
   extends BaseCloudFormationStack<DetailedStackParameter> {
   readonly templateBody: TemplateBody
+  readonly stackPolicyBody?: StackPolicyBody
 }
 
 export interface TemplateSummary {
@@ -311,3 +317,18 @@ export const isTerminalResourceStatus = (status: ResourceStatus): boolean => {
       return false
   }
 }
+
+/**
+ * @hidden
+ */
+export const ALLOW_ALL_STACK_POLICY = `{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "Update:*",
+      "Principal": "*",
+      "Resource": "*"
+    }
+  ]
+}
+`

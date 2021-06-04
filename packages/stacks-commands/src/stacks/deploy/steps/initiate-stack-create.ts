@@ -36,6 +36,7 @@ export const initiateStackCreate: StackOperationStep<TemplateSummaryHolder> = as
     Tags: tags.map((t) => ({ Key: t.key, Value: t.value })),
     StackName: stack.name,
     TimeoutInMinutes: stack.timeout.create || undefined,
+    StackPolicyBody: stack.stackPolicy,
     [templateKey]: templateLocation,
   })
 

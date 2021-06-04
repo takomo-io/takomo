@@ -20,6 +20,8 @@ const emptyStackConfig = {
   capabilities: undefined,
   ignore: undefined,
   terminationProtection: undefined,
+  stackPolicy: undefined,
+  stackPolicyDuringUpdate: undefined,
 }
 
 const ctx: CommandContext = {

@@ -4,6 +4,7 @@ import {
   StackName,
   StackOutputKey,
   StackOutputValue,
+  StackPolicyBody,
   StackStatus,
   TagKey,
   TagValue,
@@ -15,6 +16,7 @@ import {
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
 import { StackPath, StackResult } from "@takomo/stacks-model"
+import { prettyPrintJson } from "@takomo/util"
 import { CloudFormation, Credentials } from "aws-sdk"
 import { aws } from "../aws-api"
 
@@ -71,6 +73,7 @@ export interface ExpectDeployedCfStackProps {
   expected?: Partial<CloudFormation.Stack>
   expectedTags?: Record<TagKey, TagValue>
   expectedOutputs?: Record<StackOutputKey, StackOutputValue>
+  expectedStackPolicy?: StackPolicyBody
 }
 
 export interface StackResultsMatcher {
@@ -278,14 +281,20 @@ const createStackResultsMatcher = (
     expected,
     expectedTags,
     expectedOutputs,
+    expectedStackPolicy,
   }: ExpectDeployedCfStackProps): StackResultsMatcher => {
     const deployedStackMatcher = async (): Promise<() => void> => {
-      const stack: any = await aws.cloudFormation.describeStack({
+      const params = {
         stackName,
         region,
         credentials,
         iamRoleArn: `arn:aws:iam::${accountId}:role/${roleName}`,
-      })
+      }
+
+      const [stack, stackPolicy]: [any, any] = await Promise.all([
+        aws.cloudFormation.describeStack(params),
+        aws.cloudFormation.getStackPolicy(params),
+      ])
 
       return () => {
         if (expected) {
@@ -318,6 +327,17 @@ const createStackResultsMatcher = (
           )
 
           expect(actual).toStrictEqual(expectedOutputs)
+        }
+
+        if (expectedStackPolicy) {
+          const prettyExpectedStackPolicy = prettyPrintJson(expectedStackPolicy)
+          const prettyActualStackPolicy = stackPolicy
+            ? prettyPrintJson(stackPolicy)
+            : undefined
+
+          expect(prettyActualStackPolicy).toStrictEqual(
+            prettyExpectedStackPolicy,
+          )
         }
       }
     }

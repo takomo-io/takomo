@@ -2,6 +2,7 @@ import {
   AccountId,
   Region,
   StackCapability,
+  StackPolicyBody,
   TagKey,
   TagValue,
 } from "@takomo/aws-model"
@@ -35,6 +36,8 @@ export interface StackGroupProps {
   capabilities?: ReadonlyArray<StackCapability>
   ignore: boolean
   terminationProtection: boolean
+  stackPolicy?: StackPolicyBody
+  stackPolicyDuringUpdate?: StackPolicyBody
 }
 
 /**
@@ -59,6 +62,8 @@ export interface StackGroup {
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly ignore: boolean
   readonly terminationProtection: boolean
+  readonly stackPolicy?: StackPolicyBody
+  readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly toProps: () => StackGroupProps
 }
 
@@ -84,6 +89,8 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     templateBucket,
     terminationProtection,
     timeout,
+    stackPolicy,
+    stackPolicyDuringUpdate,
   } = props
 
   return deepFreeze({
@@ -104,6 +111,8 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     templateBucket,
     terminationProtection,
     timeout,
+    stackPolicy,
+    stackPolicyDuringUpdate,
     root: parentPath === undefined,
     toProps: () => props,
   })

@@ -140,11 +140,13 @@ export const createUndeployStacksIO = (
       .map((o) => o.text)
       .join(", ")
 
-    io.message({
-      text: `stacks | total: ${operations.length}, ${counts}`,
-      marginTop: true,
-      indent: 2,
-    })
+    if (operations.length > 1) {
+      io.message({
+        text: `stacks | total: ${operations.length}, ${counts}`,
+        marginTop: true,
+        indent: 2,
+      })
+    }
 
     return await io.choose(
       "Continue to undeploy the stacks?",

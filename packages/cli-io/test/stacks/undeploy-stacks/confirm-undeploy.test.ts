@@ -90,8 +90,6 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
               arn:                     arn:aws:iam::123456789012:user/reiner-braun
             dependents:                none
 
-        stacks | total: 1, ${red("remove: 1")}
-      
     `
     expect(output).toBe(expected)
   })
@@ -129,8 +127,6 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
               arn:                     arn:aws:iam::123456789012:user/reiner-braun
             dependents:                none
 
-        stacks | total: 1, ${grey("skip: 1")}
-      
     `
     expect(output).toBe(expected)
   })

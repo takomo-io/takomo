@@ -50,6 +50,14 @@ export const populatePropertiesFromConfigFile = async (
     props.terminationProtection = configFile.terminationProtection
   }
 
+  if (configFile.stackPolicy) {
+    props.stackPolicy = configFile.stackPolicy
+  }
+
+  if (configFile.stackPolicyDuringUpdate) {
+    props.stackPolicyDuringUpdate = configFile.stackPolicyDuringUpdate
+  }
+
   if (configFile.timeout !== null) {
     props.timeout = configFile.timeout
   }
