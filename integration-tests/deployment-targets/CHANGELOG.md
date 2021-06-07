@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.19.0](https://github.com/takomo-io/takomo/compare/v3.18.0...v3.19.0) (2021-06-07)
+
+**Note:** Version bump only for package integration-test-deployment-targets
+
+
+
+
+
 # [3.18.0](https://github.com/takomo-io/takomo/compare/v3.17.0...v3.18.0) (2021-06-04)
 
 **Note:** Version bump only for package integration-test-deployment-targets

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli",
-  "version": "3.18.0",
+  "version": "3.19.0",
   "description": "Takomo CLI",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,11 +29,11 @@
   "dependencies": {
     "@takomo/aws-clients": "3.18.0",
     "@takomo/aws-model": "3.18.0",
-    "@takomo/cli-io": "3.18.0",
+    "@takomo/cli-io": "3.19.0",
     "@takomo/config-repository-fs": "3.18.0",
     "@takomo/config-sets": "3.18.0",
     "@takomo/core": "3.18.0",
-    "@takomo/deployment-targets-commands": "3.18.0",
+    "@takomo/deployment-targets-commands": "3.19.0",
     "@takomo/iam-commands": "3.18.0",
     "@takomo/init-command": "3.18.0",
     "@takomo/organization-commands": "3.18.0",

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-commands",
-  "version": "3.18.0",
+  "version": "3.19.0",
   "description": "Takomo Deployment Targets Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -40,11 +40,11 @@
     "@takomo/stacks-model": "3.18.0",
     "@takomo/stacks-schema": "3.18.0",
     "@takomo/util": "3.18.0",
+    "aws-sdk": "2.886.0",
     "cockatiel": "2.0.1",
     "joi": "17.4.0",
     "lodash.merge": "4.6.2",
-    "ramda": "0.27.1",
-    "aws-sdk": "2.886.0"
+    "ramda": "0.27.1"
   },
   "engines": {
     "node": ">=14.4.0"
