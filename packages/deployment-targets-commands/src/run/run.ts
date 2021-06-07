@@ -1,5 +1,9 @@
 import { CallerIdentity, IamRoleName } from "@takomo/aws-model"
-import { CommandRole, resolveCommandOutputBase } from "@takomo/core"
+import {
+  CommandRole,
+  CommandStatus,
+  resolveCommandOutputBase,
+} from "@takomo/core"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
@@ -13,6 +17,7 @@ import {
   Timer,
   TkmLogger,
 } from "@takomo/util"
+import { Credentials } from "aws-sdk"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
 import R from "ramda"
@@ -26,10 +31,33 @@ import {
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
 } from "./model"
+import ProcessEnv = NodeJS.ProcessEnv
 
 const execP = promisify(exec)
 
 type DeploymentTargetRunOperation = () => Promise<DeploymentTargetRunResult>
+
+const runChildProcess = async (
+  command: string,
+  cwd: string,
+  env: ProcessEnv,
+  inputs: ReadonlyArray<unknown>,
+): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const child = exec(command, { cwd, env }, (error, stdout, stderr) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(stdout)
+      }
+    })
+
+    inputs.forEach((r) => {
+      child.stdin?.write(`${r}`)
+    })
+
+    child.stdin?.end()
+  })
 
 const getDeploymentRole = (
   currentIdentity: CallerIdentity,
@@ -89,6 +117,118 @@ const captureValue = (
     .join("")
 }
 
+interface RunMapCommandProps {
+  readonly ctx: DeploymentTargetsContext
+  readonly group: DeploymentGroupConfig
+  readonly target: DeploymentTargetConfig
+  readonly logger: TkmLogger
+  readonly credentials: Credentials
+  readonly mapCommand: string
+}
+
+const runJsMapFunction = async ({
+  ctx,
+  mapCommand,
+  group,
+  target,
+  logger,
+  credentials,
+}: RunMapCommandProps): Promise<unknown> => {
+  const mapFunctionFullPath = expandFilePath(ctx.projectDir, mapCommand)
+  logger.debug(`Run map function from file: ${mapFunctionFullPath}`)
+
+  // eslint-disable-next-line
+  const mapperFn = require(mapFunctionFullPath)
+
+  return mapperFn({
+    credentials,
+    target: target,
+    deploymentGroupPath: group.path,
+  })
+}
+
+const runMapProcessCommand = async ({
+  ctx,
+  mapCommand,
+  group,
+  target,
+  logger,
+  credentials,
+}: RunMapCommandProps): Promise<unknown> => {
+  logger.debug(`Run map command: ${mapCommand}`)
+
+  const targetJson = JSON.stringify(target)
+  const env = {
+    ...deepCopy(process.env),
+    TKM_TARGET_NAME: target.name,
+    TKM_TARGET_JSON: targetJson,
+    TKM_DEPLOYMENT_GROUP_PATH: group.path,
+    AWS_ACCESS_KEY_ID: credentials.accessKeyId,
+    AWS_SECRET_ACCESS_KEY: credentials.secretAccessKey,
+    AWS_SESSION_TOKEN: credentials.sessionToken,
+    AWS_SECURITY_TOKEN: credentials.sessionToken,
+  }
+
+  return runChildProcess(mapCommand, ctx.projectDir, env, [targetJson])
+}
+
+const runMapCommand = (props: RunMapCommandProps): Promise<unknown> =>
+  props.mapCommand.startsWith("js:")
+    ? runJsMapFunction({ ...props, mapCommand: props.mapCommand.substr(3) })
+    : runMapProcessCommand(props)
+
+interface RunReduceCommandProps {
+  readonly reduceCommand: string
+  readonly ctx: DeploymentTargetsContext
+  readonly logger: TkmLogger
+  readonly credentials: Credentials
+  readonly targetResults: ReadonlyArray<unknown>
+}
+
+const runReduceProcessCommand = ({
+  credentials,
+  ctx,
+  reduceCommand,
+  targetResults,
+}: RunReduceCommandProps): Promise<unknown> => {
+  const env = {
+    ...deepCopy(process.env),
+    AWS_ACCESS_KEY_ID: credentials.accessKeyId,
+    AWS_SECRET_ACCESS_KEY: credentials.secretAccessKey,
+    AWS_SESSION_TOKEN: credentials.sessionToken,
+    AWS_SECURITY_TOKEN: credentials.sessionToken,
+  }
+
+  return runChildProcess(reduceCommand, ctx.projectDir, env, targetResults)
+}
+
+const runJsReduceFunction = ({
+  credentials,
+  ctx,
+  reduceCommand,
+  targetResults,
+}: RunReduceCommandProps): Promise<unknown> => {
+  const fullReduceFunctionPath = expandFilePath(ctx.projectDir, reduceCommand)
+
+  // eslint-disable-next-line
+  const reduceFn = require(fullReduceFunctionPath)
+
+  return reduceFn({
+    credentials,
+    targets: targetResults,
+  })
+}
+
+const runReduceCommand = async (
+  props: RunReduceCommandProps,
+): Promise<unknown> =>
+  props.reduceCommand.startsWith("js:")
+    ? runJsReduceFunction({
+        ...props,
+        reduceCommand: props.reduceCommand.substr(3),
+      })
+    : runReduceProcessCommand(props)
+
 export const processDeploymentTarget = async (
   props: RunProps,
   group: DeploymentGroupConfig,
@@ -97,7 +237,10 @@ export const processDeploymentTarget = async (
   state: OperationState,
   logger: TkmLogger,
 ): Promise<DeploymentTargetRunResult> => {
-  const { ctx, input } = props
+  const {
+    ctx,
+    input: { mapCommand, mapRoleName },
+  } = props
 
   if (state.failed) {
     timer.stop()
@@ -117,7 +260,7 @@ export const processDeploymentTarget = async (
     currentIdentity,
     group,
     target,
-    input.roleName,
+    mapRoleName,
   )
 
   const credentialManager = deploymentRole
@@ -136,81 +279,34 @@ export const processDeploymentTarget = async (
   }
 
   const credentials = await credentialManager.getCredentials()
-  const cwd = ctx.projectDir
 
   try {
-    if (input.mapCommand.startsWith("js:")) {
-      const mapFunctionPath = input.mapCommand.substr(3)
-      const mapFunctionFullPath = expandFilePath(
-        ctx.projectDir,
-        mapFunctionPath,
-      )
-      logger.debug(`Run map function from file: ${mapFunctionFullPath}`)
-
-      // eslint-disable-next-line
-      const mapperFn = require(mapFunctionFullPath)
-
-      const value = await mapperFn({
-        credentials,
-        target: target.name,
-        group: group.path,
-        accountId: target.accountId,
-      })
-
-      timer.stop()
-
-      return {
-        status: "SUCCESS",
-        name: target.name,
-        success: true,
-        message: "Success",
-        value,
-        timer,
-      }
-    } else {
-      const env = {
-        ...deepCopy(process.env),
-        TKM_TARGET: target.name,
-        TKM_GROUP: group.path,
-        AWS_ACCESS_KEY_ID: credentials.accessKeyId,
-        AWS_SECRET_ACCESS_KEY: credentials.secretAccessKey,
-        AWS_SESSION_TOKEN: credentials.sessionToken,
-        AWS_SECURITY_TOKEN: credentials.sessionToken,
-      }
-
-      logger.debug(`Run map command: ${input.mapCommand}`)
-      const { stdout } = await execP(input.mapCommand, { cwd, env })
-      logger.debugText("Map command full output:", () => stdout)
-      const value = captureValue(input, stdout)
-      logger.debugText("Captured command output:", () => value)
-
-      timer.stop()
-
-      return {
-        status: "SUCCESS",
-        name: target.name,
-        success: true,
-        message: "Success",
-        value,
-        timer,
-      }
-    }
-
-    throw new Error("No handler")
-  } catch (e) {
-    state.failed = true
-    logger.error(
-      `An error occurred while running map command for target ${target.name}`,
-    )
-    logger.infoText("Command stdout:", e.stdout)
-    logger.infoText("Command stderr:", e.stderr)
+    const value = await runMapCommand({
+      mapCommand,
+      ctx,
+      logger,
+      target,
+      group,
+      credentials,
+    })
     timer.stop()
     return {
-      status: "FAILED",
+      status: "SUCCESS" as CommandStatus,
+      name: target.name,
+      success: true,
+      message: "Success",
+      value,
+      timer,
+    }
+  } catch (error) {
+    timer.stop()
+    logger.error(`Map command failed for target '${target.name}'`, error)
+    return {
+      status: "FAILED" as CommandStatus,
       name: target.name,
       success: false,
       message: "Error",
-      error: e,
+      error,
       timer,
     }
   }
@@ -296,7 +392,7 @@ interface RunProps {
 export const run = async (
   props: RunProps,
 ): Promise<DeploymentTargetsRunOutput> => {
-  const { input, plan, listener, ctx } = props
+  const { input, plan, listener, ctx, io } = props
   const childTimer = input.timer.startChild("run")
   const results = new Array<DeploymentGroupRunResult>()
 
@@ -330,76 +426,40 @@ export const run = async (
     }
   }
 
-  if (input.reduceCommand.startsWith("js:")) {
-    const reduceFunctionPath = input.reduceCommand.substr(3)
-    const fullReduceFunctionPath = expandFilePath(
-      ctx.projectDir,
-      reduceFunctionPath,
-    )
-
-    // eslint-disable-next-line
-    const reduceFn = require(fullReduceFunctionPath)
-
-    try {
-      const result = await reduceFn(targetResults)
-      childTimer.stop()
-      return {
-        ...outputBase,
-        result,
-        timer: childTimer,
-        outputFormat: input.outputFormat,
-      }
-    } catch (error) {
-      childTimer.stop()
-      return {
-        error,
-        result: error,
-        message: "Reduce command failed",
-        success: false,
-        status: "FAILED",
-        timer: childTimer,
-        outputFormat: input.outputFormat,
-      }
-    }
-  } else {
-    const env = {
-      ...deepCopy(process.env),
-    }
-
-    const cwd = ctx.projectDir
-
-    return new Promise((resolve) => {
-      const child = exec(
-        input.reduceCommand!,
-        { cwd, env },
-        (error, stdout) => {
-          childTimer.stop()
-          if (error) {
-            resolve({
-              error,
-              result: error,
-              message: "Reduce command failed",
-              success: false,
-              status: "FAILED",
-              timer: childTimer,
-              outputFormat: input.outputFormat,
-            })
-          } else {
-            resolve({
-              ...outputBase,
-              result: stdout,
-              timer: childTimer,
-              outputFormat: input.outputFormat,
-            })
-          }
-        },
+  const reduceCredentialManager = input.reduceRoleArn
+    ? await ctx.credentialManager.createCredentialManagerForRole(
+        input.reduceRoleArn,
       )
+    : ctx.credentialManager
 
-      targetResults.forEach((r) => {
-        child.stdin?.write(`${r}`)
-      })
+  const reduceCredentials = await reduceCredentialManager.getCredentials()
 
-      child.stdin?.end()
+  try {
+    const result = await runReduceCommand({
+      targetResults,
+      ctx,
+      credentials: reduceCredentials,
+      reduceCommand: input.reduceCommand,
+      logger: io,
     })
+    childTimer.stop()
+    return {
+      ...outputBase,
+      result,
+      timer: childTimer,
+      outputFormat: input.outputFormat,
+    }
+  } catch (error) {
+    childTimer.stop()
+    io.error(`Reduce command failed`, error)
+    return {
+      error,
+      result: undefined,
+      message: "Reduce command failed",
+      success: false,
+      status: "FAILED",
+      timer: childTimer,
+      outputFormat: input.outputFormat,
+    }
   }
 }

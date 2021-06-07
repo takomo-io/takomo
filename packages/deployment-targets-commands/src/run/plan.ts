@@ -31,12 +31,6 @@ export const planRun = async ({
     labels,
     excludeLabels,
     timer,
-    mapCommand,
-    reduceCommand,
-    captureAfterLine,
-    captureBeforeLine,
-    captureLastLine,
-    roleName,
   } = input
 
   if (groups.length > 0) {

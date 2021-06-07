@@ -1,4 +1,4 @@
-import { IamRoleName } from "@takomo/aws-model"
+import { IamRoleArn, IamRoleName } from "@takomo/aws-model"
 import {
   CommandInput,
   CommandOutput,
@@ -25,7 +25,8 @@ export interface DeploymentTargetsRunInput extends CommandInput {
   readonly concurrentTargets: number
   readonly mapCommand: string
   readonly reduceCommand?: string
-  readonly roleName?: IamRoleName
+  readonly mapRoleName?: IamRoleName
+  readonly reduceRoleArn?: IamRoleArn
   readonly captureAfterLine?: string
   readonly captureBeforeLine?: string
   readonly captureLastLine: boolean

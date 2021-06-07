@@ -94,7 +94,7 @@ export const createRunTargetsIO = (props: IOProps): DeploymentTargetsRunIO => {
         })
       } else if (Array.isArray(output.result)) {
         io.message({
-          text: output.result.map((r) => `${r}`).join(""),
+          text: output.result.map((r) => `${r}`).join("\n"),
           marginTop: true,
         })
       } else {

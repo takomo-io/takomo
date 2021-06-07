@@ -12,7 +12,8 @@ const LABEL_OPT = "label"
 const CONFIG_FILE_OPT = "config-file"
 const REDUCE_OPT = "reduce"
 const MAP_OPT = "map"
-const ROLE_NAME_OPT = "role-name"
+const MAP_ROLE_NAME_OPT = "map-role-name"
+const REDUCE_ROLE_ARN_OPT = "reduce-role-arn"
 const OUTPUT_OPT = "output"
 const CAPTURE_AFTER_OPT = "capture-after"
 const CAPTURE_BEFORE_OPT = "capture-before"
@@ -99,8 +100,16 @@ export const runTargetsCmd = {
         global: false,
         demandOption: false,
       })
-      .option(ROLE_NAME_OPT, {
-        description: "Name of an IAM role to assume from each target",
+      .option(MAP_ROLE_NAME_OPT, {
+        description:
+          "Name of an IAM role to assume from each target when executing the map command",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
+      .option(REDUCE_ROLE_ARN_OPT, {
+        description:
+          "ARN of an IAM role to use when executing the reduce command",
         string: true,
         global: false,
         demandOption: false,
@@ -131,11 +140,12 @@ export const runTargetsCmd = {
         concurrentTargets: argv[CONCURRENT_TARGETS_OPT],
         labels: parseStringArray(argv[LABEL_OPT]),
         excludeLabels: parseStringArray(argv[EXCLUDE_LABEL_OPT]),
-        roleName: argv[ROLE_NAME_OPT],
+        roleName: argv[MAP_ROLE_NAME_OPT],
         captureBeforeLine: argv[CAPTURE_BEFORE_OPT],
         captureAfterLine: argv[CAPTURE_AFTER_OPT],
         captureLastLine: argv[CAPTURE_LAST_LINE_OPT],
         mapCommand: argv[MAP_OPT],
+        reduceRoleArn: argv[REDUCE_ROLE_ARN_OPT],
         reduceCommand: argv[REDUCE_OPT],
         outputFormat: argv[OUTPUT_OPT],
       }),

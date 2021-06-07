@@ -43,7 +43,8 @@
     "cockatiel": "2.0.1",
     "joi": "17.4.0",
     "lodash.merge": "4.6.2",
-    "ramda": "0.27.1"
+    "ramda": "0.27.1",
+    "aws-sdk": "2.886.0"
   },
   "engines": {
     "node": ">=14.4.0"

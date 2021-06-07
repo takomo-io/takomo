@@ -338,7 +338,7 @@ export const executeRunTargetsCommand = (
         captureLastLine: props.captureLastLine ?? false,
         captureBeforeLine: props.captureBeforeLine,
         captureAfterLine: props.captureAfterLine,
-        roleName: props.roleName,
+        mapRoleName: props.roleName,
       },
     })
   })
