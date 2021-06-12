@@ -246,7 +246,7 @@ export const createCloudFormationClient = (
 
   const getCurrentTemplate = (stackName: string): Promise<string> =>
     withClientPromise(
-      (c) => c.getTemplate({ StackName: stackName }),
+      (c) => c.getTemplate({ StackName: stackName, TemplateStage: "Original" }),
       (res) => res.TemplateBody!,
     )
 
