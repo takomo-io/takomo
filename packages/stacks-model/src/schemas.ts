@@ -3,6 +3,7 @@ import { CommandContext } from "@takomo/core"
 import { deepFreeze, FilePath, TakomoError, TkmLogger } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
 import { StackPath } from "./stack"
+import { StackGroupPath } from "./stack-group"
 
 export type SchemaName = string
 
@@ -52,6 +53,30 @@ export interface SchemaRegistry {
     ctx: CommandContext,
     stackPath: StackPath,
     parameterName: StackParameterKey,
+    name: SchemaName,
+    props: Record<string, unknown>,
+  ) => Promise<AnySchema>
+  readonly initStackGroupDataSchema: (
+    ctx: CommandContext,
+    stackGroupPath: StackGroupPath,
+    name: SchemaName,
+    props: Record<string, unknown>,
+  ) => Promise<AnySchema>
+  readonly initStackGroupTagsSchema: (
+    ctx: CommandContext,
+    stackGroupPath: StackGroupPath,
+    name: SchemaName,
+    props: Record<string, unknown>,
+  ) => Promise<AnySchema>
+  readonly initStackDataSchema: (
+    ctx: CommandContext,
+    stackPath: StackPath,
+    name: SchemaName,
+    props: Record<string, unknown>,
+  ) => Promise<AnySchema>
+  readonly initStackTagsSchema: (
+    ctx: CommandContext,
+    stackPath: StackPath,
     name: SchemaName,
     props: Record<string, unknown>,
   ) => Promise<AnySchema>
@@ -180,6 +205,194 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
       })
     },
 
+    initStackGroupTagsSchema: (
+      ctx: CommandContext,
+      stackGroupPath: StackGroupPath,
+      name: SchemaName,
+      props: Record<string, unknown>,
+    ): Promise<AnySchema> => {
+      logger.debug(
+        `Initialize tags schema '${name}' for stack group '${stackGroupPath}'`,
+      )
+      const provider = schemas.get(name)
+      if (!provider) {
+        throw new Error(`Provider not found for schema '${name}'`)
+      }
+
+      if (provider.schema) {
+        const schema = provider.schema({
+          ctx,
+          joi: Joi.defaults((schema) => schema),
+          base: defaultSchema(name),
+        })
+
+        if (!Joi.isSchema(schema)) {
+          throw new TakomoError(
+            `Error initializing tags schema for stack group '${stackGroupPath}':\n\n` +
+              `  - value returned from schema function is not a Joi schema object`,
+          )
+        }
+
+        const { error } = schema.validate(props, { abortEarly: false })
+        if (error) {
+          const details = error.details
+            .map((d) => `  - ${d.message}`)
+            .join("\n")
+          throw new TakomoError(
+            `${error.details.length} validation error(s) in tags schema configuration of stack group '${stackGroupPath}':\n\n${details}`,
+          )
+        }
+      }
+
+      return provider.init({
+        joi: Joi.defaults((schema) => schema),
+        ctx,
+        props,
+      })
+    },
+
+    initStackGroupDataSchema: (
+      ctx: CommandContext,
+      stackGroupPath: StackGroupPath,
+      name: SchemaName,
+      props: Record<string, unknown>,
+    ): Promise<AnySchema> => {
+      logger.debug(
+        `Initialize data schema '${name}' for stack group '${stackGroupPath}'`,
+      )
+      const provider = schemas.get(name)
+      if (!provider) {
+        throw new Error(`Provider not found for schema '${name}'`)
+      }
+
+      if (provider.schema) {
+        const schema = provider.schema({
+          ctx,
+          joi: Joi.defaults((schema) => schema),
+          base: defaultSchema(name),
+        })
+
+        if (!Joi.isSchema(schema)) {
+          throw new TakomoError(
+            `Error initializing data schema for stack group '${stackGroupPath}':\n\n` +
+              `  - value returned from schema function is not a Joi schema object`,
+          )
+        }
+
+        const { error } = schema.validate(props, { abortEarly: false })
+        if (error) {
+          const details = error.details
+            .map((d) => `  - ${d.message}`)
+            .join("\n")
+          throw new TakomoError(
+            `${error.details.length} validation error(s) in data schema configuration of stack group '${stackGroupPath}':\n\n${details}`,
+          )
+        }
+      }
+
+      return provider.init({
+        joi: Joi.defaults((schema) => schema),
+        ctx,
+        props,
+      })
+    },
+
+    initStackDataSchema: (
+      ctx: CommandContext,
+      stackPath: StackPath,
+      name: SchemaName,
+      props: Record<string, unknown>,
+    ): Promise<AnySchema> => {
+      logger.debug(`Initialize data schema '${name}' for stack '${stackPath}'`)
+      const provider = schemas.get(name)
+      if (!provider) {
+        throw new Error(`Provider not found for schema '${name}'`)
+      }
+
+      if (provider.schema) {
+        const schema = provider.schema({
+          ctx,
+          joi: Joi.defaults((schema) => schema),
+          base: defaultSchema(name),
+        })
+
+        if (!Joi.isSchema(schema)) {
+          throw new TakomoError(
+            `Error initializing data schema for stack '${stackPath}':\n\n` +
+              `  - value returned from schema function is not a Joi schema object`,
+          )
+        }
+
+        const { error } = schema.validate(props, { abortEarly: false })
+        if (error) {
+          const details = error.details
+            .map((d) => `  - ${d.message}`)
+            .join("\n")
+          throw new TakomoError(
+            `${error.details.length} validation error(s) in data schema configuration of stack '${stackPath}':\n\n${details}`,
+          )
+        }
+      }
+
+      return provider.init({
+        joi: Joi.defaults((schema) => schema),
+        ctx,
+        props,
+      })
+    },
+
+    initStackTagsSchema: (
+      ctx: CommandContext,
+      stackPath: StackPath,
+      name: SchemaName,
+      props: Record<string, unknown>,
+    ): Promise<AnySchema> => {
+      logger.debug(`Initialize tags schema '${name}' for stack '${stackPath}'`)
+      const provider = schemas.get(name)
+      if (!provider) {
+        throw new Error(`Provider not found for schema '${name}'`)
+      }
+
+      if (provider.schema) {
+        const schema = provider.schema({
+          ctx,
+          joi: Joi.defaults((schema) => schema),
+          base: defaultSchema(name),
+        })
+
+        if (!Joi.isSchema(schema)) {
+          throw new TakomoError(
+            `Error initializing tags schema for stack '${stackPath}':\n\n` +
+              `  - value returned from schema function is not a Joi schema object`,
+          )
+        }
+
+        const { error } = schema.validate(props, { abortEarly: false })
+        if (error) {
+          const details = error.details
+            .map((d) => `  - ${d.message}`)
+            .join("\n")
+          throw new TakomoError(
+            `${error.details.length} validation error(s) in tags schema configuration of stack '${stackPath}':\n\n${details}`,
+          )
+        }
+      }
+
+      return provider.init({
+        joi: Joi.defaults((schema) => schema),
+        ctx,
+        props,
+      })
+    },
+
     hasProvider: (name: SchemaName): boolean => schemas.has(name),
   })
+}
+
+/**
+ * @hidden
+ */
+export interface Schemas {
+  readonly data: ReadonlyArray<AnySchema>
+  readonly tags: ReadonlyArray<AnySchema>
 }

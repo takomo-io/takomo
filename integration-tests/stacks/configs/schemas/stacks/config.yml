@@ -1,0 +1,12 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+schemas:
+  data:
+    - name: person
+      maxAge: 40
+  tags: myTags
+data:
+  name: Roger
+  age: {{ var.age }}
+tags:
+  environment: {{ var.environment }}
+  costCenter: {{ var.stackGroupCostCenter }}

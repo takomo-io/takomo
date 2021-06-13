@@ -16,6 +16,7 @@ import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { ROOT_STACK_GROUP_PATH } from "./constants"
 import { HookExecutor } from "./hook"
 import { ResolverExecutor } from "./resolver"
+import { Schemas } from "./schemas"
 import { StackGroupName, StackGroupPath } from "./stack-group"
 
 /**
@@ -60,6 +61,7 @@ export interface StackProps {
   cloudFormationClient: CloudFormationClient
   stackPolicy?: StackPolicyBody
   stackPolicyDuringUpdate?: StackPolicyBody
+  schemas?: Schemas
 }
 
 /**
@@ -147,6 +149,7 @@ export interface InternalStack extends Stack {
   readonly terminationProtection: boolean
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
+  readonly schemas?: Schemas
   readonly toProps: () => StackProps
 }
 
@@ -179,6 +182,7 @@ export const createStack = (props: StackProps): InternalStack => {
     cloudFormationClient,
     stackPolicy,
     stackPolicyDuringUpdate,
+    schemas,
   } = props
 
   const getCloudFormationClient = () => cloudFormationClient
@@ -212,6 +216,7 @@ export const createStack = (props: StackProps): InternalStack => {
     timeout,
     stackPolicy,
     stackPolicyDuringUpdate,
+    schemas,
     toProps: () => props,
   })
 }

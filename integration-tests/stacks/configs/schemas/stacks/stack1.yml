@@ -1,0 +1,11 @@
+regions: eu-west-1
+schemas:
+  data: greeting
+template:
+  inline: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+data:
+  greeting: {{ var.greeting }}
+  costCenter: {{ var.stackCostCenter }}

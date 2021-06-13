@@ -10,6 +10,7 @@ import { CommandRole, Project, Vars } from "@takomo/core"
 import { deepFreeze } from "@takomo/util"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { HookConfig } from "./hook"
+import { Schemas } from "./schemas"
 import { InternalStack } from "./stack"
 
 export type StackGroupPath = string
@@ -38,6 +39,7 @@ export interface StackGroupProps {
   terminationProtection: boolean
   stackPolicy?: StackPolicyBody
   stackPolicyDuringUpdate?: StackPolicyBody
+  schemas?: Schemas
 }
 
 /**
@@ -65,6 +67,7 @@ export interface StackGroup {
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly toProps: () => StackGroupProps
+  readonly schemas?: Schemas
 }
 
 /**
@@ -91,6 +94,7 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     timeout,
     stackPolicy,
     stackPolicyDuringUpdate,
+    schemas,
   } = props
 
   return deepFreeze({
@@ -113,6 +117,7 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     timeout,
     stackPolicy,
     stackPolicyDuringUpdate,
+    schemas,
     root: parentPath === undefined,
     toProps: () => props,
   })
