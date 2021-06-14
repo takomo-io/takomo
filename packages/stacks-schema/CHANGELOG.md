@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.20.0](https://github.com/takomo-io/takomo/compare/v3.19.0...v3.20.0) (2021-06-14)
+
+
+### Features
+
+* **stacks:** add support for custom schemas for tags and data ([#251](https://github.com/takomo-io/takomo/issues/251)) ([cfaf951](https://github.com/takomo-io/takomo/commit/cfaf95168a5ec5f9048a8ac783818e0cea1b347e)), closes [#186](https://github.com/takomo-io/takomo/issues/186)
+
+
+
+
+
 # [3.18.0](https://github.com/takomo-io/takomo/compare/v3.17.0...v3.18.0) (2021-06-04)
 
 **Note:** Version bump only for package @takomo/stacks-schema

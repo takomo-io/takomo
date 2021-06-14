@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.20.0](https://github.com/takomo-io/takomo/compare/v3.19.0...v3.20.0) (2021-06-14)
+
+
+### Bug Fixes
+
+* **stacks:** fix reviewing of stack template when transform is used ([#250](https://github.com/takomo-io/takomo/issues/250)) ([baa601e](https://github.com/takomo-io/takomo/commit/baa601e29f534cd86e0bf9cd61663f5b37e5d7c1)), closes [#249](https://github.com/takomo-io/takomo/issues/249)
+
+
+
+
+
 # [3.18.0](https://github.com/takomo-io/takomo/compare/v3.17.0...v3.18.0) (2021-06-04)
 
 
