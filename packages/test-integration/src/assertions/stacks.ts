@@ -435,7 +435,7 @@ export const createStacksOperationOutputMatcher = (
     })
 
   const expectCommandToThrow = async (error: any): Promise<void> => {
-    await expect(executor).rejects.toEqual(error)
+    await expect(executor).rejects.toThrow(error)
   }
 
   return {

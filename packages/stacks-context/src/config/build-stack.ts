@@ -1,7 +1,7 @@
 import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
 import { createAwsSchemas } from "@takomo/aws-schema"
-import { CommandContext } from "@takomo/core"
+import { CommandContext, Vars } from "@takomo/core"
 import { TemplateConfig } from "@takomo/stacks-config"
 import {
   CommandPath,
@@ -16,7 +16,14 @@ import {
   Template,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
-import { deepCopy, TakomoError, TkmLogger, validate } from "@takomo/util"
+import {
+  deepCopy,
+  mapToObject,
+  TakomoError,
+  TkmLogger,
+  validate,
+} from "@takomo/util"
+import { AnySchema } from "joi"
 import R from "ramda"
 import { isWithinCommandPath } from "../common"
 import { StackConfigNode } from "./config-tree"
@@ -24,6 +31,7 @@ import { createVariablesForStackConfigFile } from "./create-variables-for-stack-
 import { getCredentialManager } from "./get-credential-provider"
 import { initializeHooks } from "./hooks"
 import { makeStackName } from "./make-stack-name"
+import { mergeStackSchemas } from "./merge-stack-schemas"
 import { buildParameters } from "./parameters"
 
 const buildTemplate = (
@@ -41,6 +49,39 @@ const buildTemplate = (
     dynamic,
     filename: filename ?? stackPath.substr(1),
   }
+}
+
+const validateData = (
+  stackPath: StackPath,
+  schemas: ReadonlyArray<AnySchema>,
+  data: Vars,
+): void => {
+  schemas.forEach((schema) => {
+    const { error } = schema.validate(data, { abortEarly: false })
+    if (error) {
+      const details = error.details.map((d) => `  - ${d.message}`).join("\n")
+      throw new TakomoError(
+        `Validation errors in data configuration of stack ${stackPath}:\n\n${details}`,
+      )
+    }
+  })
+}
+
+const validateTags = (
+  stackPath: StackPath,
+  schemas: ReadonlyArray<AnySchema>,
+  tags: Map<string, string>,
+): void => {
+  schemas.forEach((schema) => {
+    const tagsObject = mapToObject(tags)
+    const { error } = schema.validate(tagsObject, { abortEarly: false })
+    if (error) {
+      const details = error.details.map((d) => `  - ${d.message}`).join("\n")
+      throw new TakomoError(
+        `Validation errors in tags configuration of stack ${stackPath}:\n\n${details}`,
+      )
+    }
+  })
 }
 
 export const buildStack = async (
@@ -131,9 +172,8 @@ export const buildStack = async (
     stackConfig.stackPolicyDuringUpdate ?? stackGroup.stackPolicyDuringUpdate
 
   const credentials = await credentialManager.getCredentials()
-
-  return regions
-    .map((region) => {
+  const stacks = await Promise.all(
+    regions.map(async (region) => {
       const exactPath = `${stackPath}/${region}`
       const stackLogger = logger.childLogger(exactPath)
       const cloudFormationClient = ctx.awsClientProvider.createCloudFormationClient(
@@ -143,6 +183,14 @@ export const buildStack = async (
           id: exactPath,
           logger: stackLogger,
         },
+      )
+
+      const schemas = await mergeStackSchemas(
+        ctx,
+        schemaRegistry,
+        exactPath,
+        stackGroup.schemas,
+        stackConfig.schemas,
       )
 
       const props: StackProps = {
@@ -173,13 +221,19 @@ export const buildStack = async (
         templateBucket: stackConfig.templateBucket ?? stackGroup.templateBucket,
         data: deepCopy({ ...stackGroup.data, ...stackConfig.data }),
         logger: stackLogger,
+        schemas,
       }
 
       stackConfig.tags.forEach((value, key) => {
         props.tags.set(key, value)
       })
 
+      validateData(exactPath, schemas?.data ?? [], props.data)
+      validateTags(exactPath, schemas?.tags ?? [], props.tags)
+
       return createStack(props)
-    })
-    .filter((s) => isWithinCommandPath(commandPath, s.path))
+    }),
+  )
+
+  return stacks.filter((s) => isWithinCommandPath(commandPath, s.path))
 }

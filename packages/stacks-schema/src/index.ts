@@ -30,6 +30,7 @@ export interface StacksSchemas {
   hookResult: StringSchema
   hookOperation: StringSchema
   templateBucket: ObjectSchema
+  schemas: ObjectSchema
 }
 
 export const createStacksSchemas = (
@@ -265,6 +266,22 @@ export const createStacksSchemas = (
         '{{#label}} with value "{{#value}}" has invalid region "{{#region}}". The region must be one of [{{#regions}}]',
     })
 
+  const schemaName = Joi.string()
+  const schemaObject = Joi.object({ name: schemaName.required() }).unknown(true)
+
+  const schemas = Joi.object({
+    data: [
+      schemaName,
+      schemaObject,
+      Joi.array().items(schemaName, schemaObject),
+    ],
+    tags: [
+      schemaName,
+      schemaObject,
+      Joi.array().items(schemaName, schemaObject),
+    ],
+  })
+
   return {
     commandPath,
     stackGroupPath,
@@ -283,5 +300,6 @@ export const createStacksSchemas = (
     hookStage,
     hookResult,
     templateBucket,
+    schemas,
   }
 }

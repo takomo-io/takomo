@@ -22,6 +22,7 @@ const emptyStackConfig = {
   terminationProtection: undefined,
   stackPolicy: undefined,
   stackPolicyDuringUpdate: undefined,
+  schemas: undefined,
 }
 
 const ctx: CommandContext = {

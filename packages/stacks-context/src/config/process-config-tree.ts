@@ -120,7 +120,13 @@ const processStackGroupConfigNode = async (
       ? status.getStackGroup(node.parentPath)
       : undefined
 
-    const stackGroup = await doCreateStackGroup(ctx, logger, node, parent)
+    const stackGroup = await doCreateStackGroup(
+      ctx,
+      logger,
+      node,
+      schemaRegistry,
+      parent,
+    )
 
     status.setStackGroupProcessed(stackGroup)
   } else {

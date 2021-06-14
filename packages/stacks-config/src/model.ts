@@ -23,6 +23,11 @@ export interface SchemaConfig {
   readonly [key: string]: unknown
 }
 
+export interface SchemasConfig {
+  readonly data: ReadonlyArray<SchemaConfig>
+  readonly tags: ReadonlyArray<SchemaConfig>
+}
+
 export interface ParameterConfig {
   readonly resolver: ResolverName
   readonly confidential?: boolean
@@ -93,6 +98,7 @@ export interface StackConfig {
   readonly terminationProtection?: boolean
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
+  readonly schemas?: SchemasConfig
 }
 
 export interface StackGroupConfig {
@@ -110,4 +116,5 @@ export interface StackGroupConfig {
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
+  readonly schemas?: SchemasConfig
 }

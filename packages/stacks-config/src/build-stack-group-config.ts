@@ -8,6 +8,7 @@ import { parseData } from "./parse-data"
 import { parseHooks } from "./parse-hooks"
 import { parseIgnore } from "./parse-ignore"
 import { parseRegions } from "./parse-regions"
+import { parseSchemas } from "./parse-schemas"
 import { parseStackPolicy } from "./parse-stack-policy"
 import { parseString } from "./parse-string"
 import { parseTags } from "./parse-tags"
@@ -36,6 +37,7 @@ export const buildStackGroupConfig = (
     )
   }
 
+  const schemas = parseSchemas(record.schemas)
   const data = parseData(record.data)
   const hooks = parseHooks(record.hooks)
   const capabilities = parseCapabilities(record.capabilities)
@@ -58,6 +60,7 @@ export const buildStackGroupConfig = (
     data,
     stackPolicy,
     stackPolicyDuringUpdate,
+    schemas,
     project: parseString(record.project),
     commandRole: parseCommandRole(record.commandRole),
     regions: parseRegions(record.regions),
