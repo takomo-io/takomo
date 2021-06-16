@@ -1,3 +1,4 @@
+import { CredentialManager } from "@takomo/aws-clients"
 import { CallerIdentity, IamRoleName } from "@takomo/aws-model"
 import {
   CommandRole,
@@ -21,7 +22,6 @@ import { Credentials } from "aws-sdk"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
 import R from "ramda"
-import { promisify } from "util"
 import { DeploymentTargetsListener } from "../operation/model"
 import {
   DeploymentGroupRunResult,
@@ -32,8 +32,6 @@ import {
   TargetsRunPlan,
 } from "./model"
 import ProcessEnv = NodeJS.ProcessEnv
-
-const execP = promisify(exec)
 
 type DeploymentTargetRunOperation = () => Promise<DeploymentTargetRunResult>
 
@@ -124,6 +122,7 @@ interface RunMapCommandProps {
   readonly logger: TkmLogger
   readonly credentials: Credentials
   readonly mapCommand: string
+  readonly input: DeploymentTargetsRunInput
 }
 
 const runJsMapFunction = async ({
@@ -154,6 +153,7 @@ const runMapProcessCommand = async ({
   target,
   logger,
   credentials,
+  input,
 }: RunMapCommandProps): Promise<unknown> => {
   logger.debug(`Run map command: ${mapCommand}`)
 
@@ -169,7 +169,11 @@ const runMapProcessCommand = async ({
     AWS_SECURITY_TOKEN: credentials.sessionToken,
   }
 
-  return runChildProcess(mapCommand, ctx.projectDir, env, [targetJson])
+  const output = await runChildProcess(mapCommand, ctx.projectDir, env, [
+    targetJson,
+  ])
+
+  return captureValue(input, output)
 }
 
 const runMapCommand = (props: RunMapCommandProps): Promise<unknown> =>
@@ -229,6 +233,16 @@ const runReduceCommand = async (
       })
     : runReduceProcessCommand(props)
 
+const getCredentialManager = async (
+  ctx: DeploymentTargetsContext,
+  deploymentRole?: CommandRole,
+): Promise<CredentialManager> =>
+  deploymentRole
+    ? await ctx.credentialManager.createCredentialManagerForRole(
+        deploymentRole.iamRoleArn,
+      )
+    : ctx.credentialManager
+
 export const processDeploymentTarget = async (
   props: RunProps,
   group: DeploymentGroupConfig,
@@ -237,10 +251,9 @@ export const processDeploymentTarget = async (
   state: OperationState,
   logger: TkmLogger,
 ): Promise<DeploymentTargetRunResult> => {
-  const {
-    ctx,
-    input: { mapCommand, mapRoleName },
-  } = props
+  const { ctx, input } = props
+
+  const { mapCommand, mapRoleName } = input
 
   if (state.failed) {
     timer.stop()
@@ -255,32 +268,28 @@ export const processDeploymentTarget = async (
 
   logger.info("Start run")
 
-  const currentIdentity = await ctx.credentialManager.getCallerIdentity()
-  const deploymentRole = getDeploymentRole(
-    currentIdentity,
-    group,
-    target,
-    mapRoleName,
-  )
-
-  const credentialManager = deploymentRole
-    ? await ctx.credentialManager.createCredentialManagerForRole(
-        deploymentRole.iamRoleArn,
-      )
-    : ctx.credentialManager
-
-  if (target.accountId) {
-    const identity = await credentialManager.getCallerIdentity()
-    if (identity.accountId !== target.accountId) {
-      throw new TakomoError(
-        `Current credentials belong to AWS account ${identity.accountId}, but the deployment target can be run only against account: ${target.accountId}`,
-      )
-    }
-  }
-
-  const credentials = await credentialManager.getCredentials()
-
   try {
+    const currentIdentity = await ctx.credentialManager.getCallerIdentity()
+    const deploymentRole = getDeploymentRole(
+      currentIdentity,
+      group,
+      target,
+      mapRoleName,
+    )
+
+    const credentialManager = await getCredentialManager(ctx, deploymentRole)
+
+    if (target.accountId) {
+      const identity = await credentialManager.getCallerIdentity()
+      if (identity.accountId !== target.accountId) {
+        throw new TakomoError(
+          `Current credentials belong to AWS account ${identity.accountId}, but the deployment target can be run only against account: ${target.accountId}`,
+        )
+      }
+    }
+
+    const credentials = await credentialManager.getCredentials()
+
     const value = await runMapCommand({
       mapCommand,
       ctx,
@@ -288,6 +297,7 @@ export const processDeploymentTarget = async (
       target,
       group,
       credentials,
+      input,
     })
     timer.stop()
     return {
@@ -312,30 +322,32 @@ export const processDeploymentTarget = async (
   }
 }
 
-const convertToOperation = (
-  props: RunProps,
-  group: DeploymentGroupConfig,
-  timer: Timer,
-  state: OperationState,
-  target: DeploymentTargetConfig,
-  results: Array<DeploymentTargetRunResult>,
-  policy: IPolicy,
-  listener: DeploymentTargetsListener,
-): DeploymentTargetRunOperation => () =>
-  policy.execute(async () => {
-    await listener.onTargetBegin()
-    const result = await processDeploymentTarget(
-      props,
-      group,
-      target,
-      timer.startChild(target.name),
-      state,
-      props.io.childLogger(target.name),
-    )
-    results.push(result)
-    await listener.onTargetComplete()
-    return result
-  })
+const convertToOperation =
+  (
+    props: RunProps,
+    group: DeploymentGroupConfig,
+    timer: Timer,
+    state: OperationState,
+    target: DeploymentTargetConfig,
+    results: Array<DeploymentTargetRunResult>,
+    policy: IPolicy,
+    listener: DeploymentTargetsListener,
+  ): DeploymentTargetRunOperation =>
+  () =>
+    policy.execute(async () => {
+      await listener.onTargetBegin()
+      const result = await processDeploymentTarget(
+        props,
+        group,
+        target,
+        timer.startChild(target.name),
+        state,
+        props.io.childLogger(target.name),
+      )
+      results.push(result)
+      await listener.onTargetComplete()
+      return result
+    })
 
 /**
  * @hidden
