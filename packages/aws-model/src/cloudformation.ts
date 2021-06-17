@@ -144,6 +144,7 @@ interface BaseCloudFormationStack<P> {
   readonly lastUpdatedTime?: LastUpdatedTime
   readonly outputs: ReadonlyArray<StackOutput>
   readonly tags: ReadonlyArray<Tag>
+  readonly driftInformation: StackDriftInformation
 }
 
 /**
@@ -332,3 +333,26 @@ export const ALLOW_ALL_STACK_POLICY = `{
   ]
 }
 `
+
+export type StackDriftDetectionId = string
+export type StackDriftDetectionStatusReason = string
+export type StackDriftStatus = "DRIFTED" | "IN_SYNC" | "UNKNOWN" | "NOT_CHECKED"
+export type StackDriftDetectionStatus =
+  | "DETECTION_IN_PROGRESS"
+  | "DETECTION_FAILED"
+  | "DETECTION_COMPLETE"
+
+export interface StackDriftDetectionStatusOutput {
+  readonly stackId: StackId
+  readonly stackDriftDetectionId: StackDriftDetectionId
+  readonly stackDriftStatus: StackDriftStatus
+  readonly detectionStatus: StackDriftDetectionStatus
+  readonly detectionStatusReason: StackDriftDetectionStatusReason
+  readonly driftedStackResourceCount: number
+  readonly timestamp: Date
+}
+
+export interface StackDriftInformation {
+  stackDriftStatus: StackDriftStatus
+  lastCheckTimestamp?: Date
+}

@@ -12,6 +12,14 @@ export {
   StackDeployOperationType,
   StacksDeployPlan,
 } from "./stacks/deploy/plan"
+export { detectDriftCommand } from "./stacks/drift/command"
+export { detectDriftCommandIamPolicy } from "./stacks/drift/iam-policy"
+export {
+  DetectDriftInput,
+  DetectDriftIO,
+  DetectDriftOutput,
+  StackDriftInfo,
+} from "./stacks/drift/model"
 export { dependencyGraphCommand } from "./stacks/inspect/dependency-graph/command"
 export {
   DependencyGraphInput,

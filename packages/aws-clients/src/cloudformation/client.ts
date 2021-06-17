@@ -6,8 +6,11 @@ import {
   EventId,
   isTerminalResourceStatus,
   ResourceStatus,
+  StackDriftDetectionId,
+  StackDriftDetectionStatusOutput,
   StackEvent,
   StackId,
+  StackName,
   StackPolicyBody,
   TemplateSummary,
 } from "@takomo/aws-model"
@@ -27,6 +30,7 @@ import { AwsClientProps, createClient } from "../common/client"
 import {
   convertChangeSet,
   convertStack,
+  convertStackDriftDetectionStatus,
   convertStackEvents,
   convertTemplateSummary,
 } from "./convert"
@@ -131,6 +135,16 @@ export interface CloudFormationClient {
   readonly getStackPolicy: (
     stackName: string,
   ) => Promise<StackPolicyBody | undefined>
+
+  readonly detectDrift: (stackName: StackName) => Promise<StackDriftDetectionId>
+
+  readonly describeStackDriftDetectionStatus: (
+    id: StackDriftDetectionId,
+  ) => Promise<StackDriftDetectionStatusOutput>
+
+  readonly waitDriftDetectionToComplete: (
+    id: StackDriftDetectionId,
+  ) => Promise<StackDriftDetectionStatusOutput>
 }
 
 const findTerminalEvent = (
@@ -156,15 +170,11 @@ interface CloudFormationClientProps extends AwsClientProps {
 export const createCloudFormationClient = (
   props: CloudFormationClientProps,
 ): CloudFormationClient => {
-  const {
-    withClientPromise,
-    pagedOperationBulkhead,
-    withClient,
-    getClient,
-  } = createClient({
-    ...props,
-    clientConstructor: (config) => new CloudFormation(config),
-  })
+  const { withClientPromise, pagedOperationBulkhead, withClient, getClient } =
+    createClient({
+      ...props,
+      clientConstructor: (config) => new CloudFormation(config),
+    })
 
   const {
     logger,
@@ -180,6 +190,34 @@ export const createCloudFormationClient = (
       (c) => c.getStackPolicy({ StackName: stackName }),
       (r) => r.StackPolicyBody!,
     )
+
+  const detectDrift = (stackName: StackName): Promise<StackDriftDetectionId> =>
+    withClientPromise(
+      (c) => c.detectStackDrift({ StackName: stackName }),
+      (r) => r.StackDriftDetectionId,
+    )
+
+  const describeStackDriftDetectionStatus = (
+    id: StackDriftDetectionId,
+  ): Promise<StackDriftDetectionStatusOutput> =>
+    withClientPromise(
+      (c) => c.describeStackDriftDetectionStatus({ StackDriftDetectionId: id }),
+      convertStackDriftDetectionStatus,
+    )
+
+  const waitDriftDetectionToComplete = async (
+    id: StackDriftDetectionId,
+  ): Promise<StackDriftDetectionStatusOutput> => {
+    const status = await describeStackDriftDetectionStatus(id)
+    switch (status.detectionStatus) {
+      case "DETECTION_COMPLETE":
+      case "DETECTION_FAILED":
+        return status
+      default:
+        await sleep(5000)
+        return waitDriftDetectionToComplete(id)
+    }
+  }
 
   const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
     withClientPromise(
@@ -647,6 +685,9 @@ export const createCloudFormationClient = (
     waitUntilStackIsDeleted,
     waitStackDeleteToComplete,
     getStackPolicy,
+    detectDrift,
+    describeStackDriftDetectionStatus,
+    waitDriftDetectionToComplete,
     getNativeClient: getClient,
   }
 }

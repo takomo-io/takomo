@@ -1,12 +1,8 @@
 import { ListStacksIO, ListStacksOutput } from "@takomo/stacks-commands"
 import { table } from "@takomo/util"
-import date from "date-and-time"
 import { createBaseIO } from "../cli-io"
 import { formatStackStatus } from "../formatters"
-import { IOProps } from "./common"
-
-const formatDate = (d: any): string =>
-  d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
+import { formatDate, IOProps } from "./common"
 
 export const createListStacksIO = (props: IOProps): ListStacksIO => {
   const { logger } = props

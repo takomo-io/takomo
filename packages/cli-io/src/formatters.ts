@@ -1,6 +1,7 @@
 import {
   AccountStatus,
   ResourceStatus,
+  StackDriftStatus,
   StackEvent,
   StackStatus,
 } from "@takomo/aws-model"
@@ -75,6 +76,21 @@ export const formatStackStatus = (status?: StackStatus): string => {
       return green(status)
     default:
       return status
+  }
+}
+
+export const formatDriftStatus = (status?: StackDriftStatus): string => {
+  if (!status) {
+    return grey("NOT_CHECKED")
+  }
+
+  switch (status) {
+    case "DRIFTED":
+      return red(status)
+    case "IN_SYNC":
+      return green(status)
+    default:
+      return grey(status)
   }
 }
 

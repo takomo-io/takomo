@@ -27,6 +27,7 @@ export {
   CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE,
   createDeployStacksIO,
 } from "./stacks/deploy-stacks/deploy-stacks-io"
+export { createDetectDriftIO } from "./stacks/detect-drift-io"
 export { createDependencyGraphIO } from "./stacks/inspect/dependency-graph-io"
 export { createListStacksIO } from "./stacks/list-stacks-io"
 export { createUndeployStacksIO } from "./stacks/undeploy-stacks-io"
