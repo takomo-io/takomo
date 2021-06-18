@@ -536,7 +536,8 @@ interface ExpectDriftProps {
 }
 
 export interface DetectDriftOutputMatcher {
-  expectOutputToBeSuccessful: () => DetectDriftOutputMatcher
+  expectCommandToSucceed: () => DetectDriftOutputMatcher
+  expectCommandToFail: () => DetectDriftOutputMatcher
   expectStack: (props: ExpectDriftProps) => DetectDriftOutputMatcher
   assert: () => Promise<DetectDriftOutput>
 }
@@ -546,11 +547,19 @@ export const createDetectDriftOutputMatcher = (
   stackAssertions: ((stackResult: StackDriftInfo) => boolean)[] = [],
   outputAssertions?: (output: DetectDriftOutput) => void,
 ): DetectDriftOutputMatcher => {
-  const expectOutputToBeSuccessful = () =>
+  const expectCommandToSucceed = () =>
     createDetectDriftOutputMatcher(executor, stackAssertions, (output) => {
       expect(output.status).toEqual("SUCCESS")
       expect(output.message).toEqual("Success")
       expect(output.success).toEqual(true)
+      expect(output.error).toBeUndefined()
+    })
+
+  const expectCommandToFail = () =>
+    createDetectDriftOutputMatcher(executor, stackAssertions, (output) => {
+      expect(output.status).toEqual("FAILED")
+      expect(output.message).toEqual("Failed")
+      expect(output.success).toEqual(false)
       expect(output.error).toBeUndefined()
     })
 
@@ -646,7 +655,8 @@ export const createDetectDriftOutputMatcher = (
   }
 
   return {
-    expectOutputToBeSuccessful,
+    expectCommandToSucceed,
+    expectCommandToFail,
     expectStack,
     assert,
   }

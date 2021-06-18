@@ -12,7 +12,7 @@ const stackPath = "/vpc.yml/eu-central-1",
 describe("Detect drift", () => {
   test("Of pending stacks", () =>
     executeDetectDriftCommand({ projectDir })
-      .expectOutputToBeSuccessful()
+      .expectCommandToSucceed()
       .expectStack({
         stackPath,
         stackName,
@@ -29,7 +29,7 @@ describe("Detect drift", () => {
       .assert()
 
     await executeDetectDriftCommand({ projectDir })
-      .expectOutputToBeSuccessful()
+      .expectCommandToSucceed()
       .expectStack({
         stackPath,
         stackName,
@@ -54,7 +54,7 @@ describe("Detect drift", () => {
       })
 
       return executeDetectDriftCommand({ projectDir })
-        .expectOutputToBeSuccessful()
+        .expectCommandToFail()
         .expectStack({
           stackPath,
           stackName,

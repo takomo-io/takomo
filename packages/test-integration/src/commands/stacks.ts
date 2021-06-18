@@ -17,6 +17,7 @@ import {
   LogLevel,
 } from "@takomo/util"
 import {
+  createDetectDriftOutputMatcher,
   createListStacksOutputMatcher,
   createStacksOperationOutputMatcher,
   DetectDriftOutputMatcher,
@@ -211,7 +212,7 @@ export const executeListStacksCommand = (
 export const executeDetectDriftCommand = (
   props: ExecuteCommandProps,
 ): DetectDriftOutputMatcher =>
-  createListStacksOutputMatcher(async () => {
+  createDetectDriftOutputMatcher(async () => {
     const logLevel = props.logLevel ?? "info"
 
     const ctxAndConfig = await createCtxAndConfigRepository({

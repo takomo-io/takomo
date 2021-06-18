@@ -611,7 +611,7 @@ interface HandleProps<
   C,
   I extends IO<OUT>,
   IN extends CommandInput,
-  OUT extends CommandOutput
+  OUT extends CommandOutput,
 > {
   argv: any
   input: (ctx: CliCommandContext, input: CommandInput) => Promise<IN>
@@ -636,7 +636,7 @@ export const handle = async <
   C,
   I extends IO<OUT>,
   IN extends CommandInput,
-  OUT extends CommandOutput
+  OUT extends CommandOutput,
 >(
   props: HandleProps<C, I, IN, OUT>,
 ): Promise<void> => {

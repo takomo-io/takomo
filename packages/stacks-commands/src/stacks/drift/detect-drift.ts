@@ -32,10 +32,14 @@ export const detectDrift = async (
 
   timer.stop()
 
+  const driftFound = stacks.some(
+    (s) => s.driftDetectionStatus?.stackDriftStatus === "DRIFTED",
+  )
+
   return {
-    success: true,
-    status: "SUCCESS",
-    message: "Success",
+    success: !driftFound,
+    status: driftFound ? "FAILED" : "SUCCESS",
+    message: driftFound ? "Failed" : "Success",
     timer,
     stacks,
   }
