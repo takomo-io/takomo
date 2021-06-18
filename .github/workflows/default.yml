@@ -178,34 +178,33 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_3_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_3_AWS_SECRET_ACCESS_KEY }}
 
-# Typedoc doesn't support the latest Typescript version
-#  docs:
-#    runs-on: ubuntu-18.04
-#    if: github.ref == 'refs/heads/master'
-#    needs:
-#      - unit-test
-#      - stacks-test
-#      - deployment-targets-test
-#      - organization-creation-test
-#      - organization-test
-#      - organization2-test
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#        with:
-#          node-version: 14.4.0
-#      - uses: actions/cache@v1
-#        with:
-#          path: node_modules
-#          key: npm-${{ hashFiles('yarn.lock') }}
-#      - uses: actions/cache@v1
-#        with:
-#          path: packages
-#          key: packages-${{ github.sha }}
-#      - name: Build API docs
-#        run: yarn api-docs
-#      - run: ./ci/publish-api-docs.sh
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
-#          DOCS_BASE: /api-docs/release/next/
+  docs:
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - unit-test
+      - stacks-test
+      - deployment-targets-test
+      - organization-creation-test
+      - organization-test
+      - organization2-test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - name: Build API docs
+        run: yarn api-docs
+      - run: ./ci/publish-api-docs.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+          DOCS_BASE: /api-docs/release/next/

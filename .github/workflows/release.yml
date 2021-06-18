@@ -28,21 +28,18 @@ jobs:
         run: yarn publish-packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-# Typedoc doesn't support the latest Typescript version
-#      - run: echo "RELEASE_VERSION=$(node ci/get-current-version.js)" >> $GITHUB_ENV
-#      - run: echo "DOCS_BASE=$(echo /api-docs/release/v$RELEASE_VERSION/ | tr '.' '-')" >> $GITHUB_ENV
-#      - name: Build API docs
-#        run: yarn api-docs --name "Takomo v$RELEASE_VERSION"
-#      - run: ./ci/publish-api-docs.sh
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
-#
-#      - name: Build API docs
-#        run: yarn api-docs --name "Takomo v$RELEASE_VERSION"
-#      - run: ./ci/publish-api-docs.sh
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
-#          DOCS_BASE: /api-docs/release/latest/
+      - run: echo "RELEASE_VERSION=$(node ci/get-current-version.js)" >> $GITHUB_ENV
+      - run: echo "DOCS_BASE=$(echo /api-docs/release/v$RELEASE_VERSION/ | tr '.' '-')" >> $GITHUB_ENV
+      - name: Build API docs
+        run: yarn api-docs --name "Takomo v$RELEASE_VERSION"
+      - run: ./ci/publish-api-docs.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+      - name: Build API docs
+        run: yarn api-docs --name "Takomo v$RELEASE_VERSION"
+      - run: ./ci/publish-api-docs.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+          DOCS_BASE: /api-docs/release/latest/

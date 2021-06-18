@@ -4,10 +4,10 @@ import { createFileSystemStacksConfigRepository } from "@takomo/config-repositor
 import { InternalCommandContext } from "@takomo/core"
 import {
   deployStacksCommand,
+  detectDriftCommand,
   listStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { detectDriftCommand } from "@takomo/stacks-commands/dist/stacks/drift/command"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import {
