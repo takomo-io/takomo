@@ -7,6 +7,7 @@ import {
   listStacksCommand,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
+import { detectDriftCommand } from "@takomo/stacks-commands/dist/stacks/drift/command"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import {
@@ -18,11 +19,13 @@ import {
 import {
   createListStacksOutputMatcher,
   createStacksOperationOutputMatcher,
+  DetectDriftOutputMatcher,
   ListStacksOutputMatcher,
   StacksOperationOutputMatcher,
 } from "../assertions/stacks"
 import {
   createTestDeployStacksIO,
+  createTestDetectDriftIO,
   createTestListStacksIO,
   createTestUndeployStacksIO,
   TestDeployStacksIOAnswers,
@@ -198,6 +201,44 @@ export const executeListStacksCommand = (
       ...ctxAndConfig,
       credentialManager,
       io: createTestListStacksIO(logger),
+      input: {
+        commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
+        timer: createTimer("total"),
+      },
+    })
+  })
+
+export const executeDetectDriftCommand = (
+  props: ExecuteCommandProps,
+): DetectDriftOutputMatcher =>
+  createListStacksOutputMatcher(async () => {
+    const logLevel = props.logLevel ?? "info"
+
+    const ctxAndConfig = await createCtxAndConfigRepository({
+      projectDir: props.projectDir,
+      autoConfirmEnabled: props.autoConfirmEnabled ?? true,
+      ignoreDependencies: props.ignoreDependencies ?? false,
+      var: props.var ?? [],
+      varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
+      logLevel,
+    })
+
+    const logger = createConsoleLogger({
+      logLevel,
+    })
+
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
+      ctxAndConfig.ctx.credentials,
+    )
+
+    return detectDriftCommand({
+      ...ctxAndConfig,
+      credentialManager,
+      io: createTestDetectDriftIO(logger),
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
         timer: createTimer("total"),

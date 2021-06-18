@@ -2,6 +2,7 @@ import { StackEvent } from "@takomo/aws-model"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath, StackGroup, StackResult } from "@takomo/stacks-model"
 import { collectFromHierarchy, LogLevel, table, TkmLogger } from "@takomo/util"
+import date from "date-and-time"
 import prettyMs from "pretty-ms"
 import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
@@ -122,3 +123,9 @@ export const printStacksOperationOutput = (
 export interface IOProps extends BaseIOProps {
   readonly logger: TkmLogger
 }
+
+/**
+ * @hidden
+ */
+export const formatDate = (d: any): string =>
+  d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"

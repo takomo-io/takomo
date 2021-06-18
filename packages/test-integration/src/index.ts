@@ -20,6 +20,7 @@ export {
 export {
   executeDeployStacksCommand,
   ExecuteDeployStacksCommandProps,
+  executeDetectDriftCommand,
   executeListStacksCommand,
   executeUndeployStacksCommand,
   ExecuteUndeployStacksCommandProps,

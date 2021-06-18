@@ -25,6 +25,11 @@ import {
   ResourceTargetDefinition,
   ResourceType,
   StackCapability,
+  StackDriftDetectionId,
+  StackDriftDetectionStatus,
+  StackDriftDetectionStatusOutput,
+  StackDriftDetectionStatusReason,
+  StackDriftStatus,
   StackEvent,
   StackId,
   StackName,
@@ -43,6 +48,7 @@ import {
 } from "@takomo/aws-model"
 import {
   DescribeChangeSetOutput,
+  DescribeStackDriftDetectionStatusOutput,
   DescribeStackEventsOutput,
   DescribeStacksOutput,
   GetTemplateSummaryOutput,
@@ -73,7 +79,8 @@ export const convertStack = ({
     })),
     status: s.StackStatus as StackStatus,
     statusReason: s.StackStatusReason as StackStatusReason,
-    enableTerminationProtection: s.EnableTerminationProtection as EnableTerminationProtection,
+    enableTerminationProtection:
+      s.EnableTerminationProtection as EnableTerminationProtection,
     capabilities: s.Capabilities as StackCapability[],
     creationTime: s.CreationTime,
     lastUpdatedTime: s.LastUpdatedTime,
@@ -86,6 +93,11 @@ export const convertStack = ({
       key: t.Key as TagKey,
       value: t.Value as TagValue,
     })),
+    driftInformation: {
+      stackDriftStatus: s.DriftInformation!
+        .StackDriftStatus as StackDriftStatus,
+      lastCheckTimestamp: s.DriftInformation?.LastCheckTimestamp,
+    },
   }
 }
 
@@ -175,3 +187,19 @@ export const convertStackEvents = ({
     stackName: e.StackName as StackName,
     timestamp: e.Timestamp,
   }))
+
+/**
+ * @hidden
+ */
+export const convertStackDriftDetectionStatus = (
+  d: DescribeStackDriftDetectionStatusOutput,
+): StackDriftDetectionStatusOutput => ({
+  detectionStatus: d.DetectionStatus as StackDriftDetectionStatus,
+  detectionStatusReason:
+    d.DetectionStatusReason as StackDriftDetectionStatusReason,
+  stackDriftDetectionId: d.StackDriftDetectionId as StackDriftDetectionId,
+  stackDriftStatus: d.StackDriftStatus as StackDriftStatus,
+  stackId: d.StackId as StackId,
+  driftedStackResourceCount: d.DriftedStackResourceCount!,
+  timestamp: d.Timestamp!,
+})

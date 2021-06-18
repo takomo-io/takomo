@@ -1,6 +1,9 @@
 import {
   AccountId,
   Region,
+  StackDriftDetectionStatus,
+  StackDriftDetectionStatusReason,
+  StackDriftStatus,
   StackName,
   StackOutputKey,
   StackOutputValue,
@@ -11,7 +14,9 @@ import {
 } from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
 import {
+  DetectDriftOutput,
   ListStacksOutput,
+  StackDriftInfo,
   StackInfo,
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
@@ -500,6 +505,133 @@ export const createListStacksOutputMatcher = (
   }
 
   const assert = async (): Promise<ListStacksOutput> => {
+    const output = await executor()
+    if (outputAssertions) {
+      outputAssertions(output)
+    }
+    expect(output.stacks).toHaveLength(stackAssertions.length)
+    output.stacks.forEach((result) => {
+      if (!stackAssertions.some((s) => s(result))) {
+        fail(`Unexpected stack with path: ${result.stack.path}`)
+      }
+    })
+    return output
+  }
+
+  return {
+    expectOutputToBeSuccessful,
+    expectStack,
+    assert,
+  }
+}
+
+interface ExpectDriftProps {
+  readonly stackName: StackName
+  readonly stackPath: StackPath
+  readonly status?: StackStatus
+  readonly detectionStatus?: StackDriftDetectionStatus
+  readonly detectionStatusReason?: StackDriftDetectionStatusReason
+  readonly driftedStackResourceCount?: number
+  readonly stackDriftStatus?: StackDriftStatus
+}
+
+export interface DetectDriftOutputMatcher {
+  expectOutputToBeSuccessful: () => DetectDriftOutputMatcher
+  expectStack: (props: ExpectDriftProps) => DetectDriftOutputMatcher
+  assert: () => Promise<DetectDriftOutput>
+}
+
+export const createDetectDriftOutputMatcher = (
+  executor: () => Promise<DetectDriftOutput>,
+  stackAssertions: ((stackResult: StackDriftInfo) => boolean)[] = [],
+  outputAssertions?: (output: DetectDriftOutput) => void,
+): DetectDriftOutputMatcher => {
+  const expectOutputToBeSuccessful = () =>
+    createDetectDriftOutputMatcher(executor, stackAssertions, (output) => {
+      expect(output.status).toEqual("SUCCESS")
+      expect(output.message).toEqual("Success")
+      expect(output.success).toEqual(true)
+      expect(output.error).toBeUndefined()
+    })
+
+  const expectStack = ({
+    stackName,
+    stackPath,
+    status,
+    detectionStatus,
+    detectionStatusReason,
+    driftedStackResourceCount,
+    stackDriftStatus,
+  }: ExpectDriftProps): DetectDriftOutputMatcher => {
+    const stackMatcher = (stackResult: StackDriftInfo): boolean => {
+      if (stackResult.stack.path !== stackPath) {
+        return false
+      }
+
+      expect(stackResult.stack.path).toEqual(stackPath)
+      expect(stackResult.stack.name).toEqual(stackName)
+
+      if (status) {
+        if (stackResult.current) {
+          expect(stackResult.current.status).toEqual(status)
+        } else {
+          fail("Expected current stack to be defined")
+        }
+      } else {
+        expect(stackResult.current).toBeUndefined()
+      }
+
+      if (detectionStatusReason) {
+        if (stackResult.driftDetectionStatus) {
+          expect(
+            stackResult.driftDetectionStatus.detectionStatusReason,
+          ).toEqual(detectionStatusReason)
+        } else {
+          fail("Expected drift detection status to be defined")
+        }
+      }
+
+      if (detectionStatus) {
+        if (stackResult.driftDetectionStatus) {
+          expect(stackResult.driftDetectionStatus.detectionStatus).toEqual(
+            detectionStatus,
+          )
+        } else {
+          fail("Expected drift detection status to be defined")
+        }
+      }
+
+      if (driftedStackResourceCount) {
+        if (stackResult.driftDetectionStatus) {
+          expect(
+            stackResult.driftDetectionStatus.driftedStackResourceCount,
+          ).toEqual(driftedStackResourceCount)
+        } else {
+          fail("Expected drift detection status to be defined")
+        }
+      }
+
+      if (stackDriftStatus) {
+        if (stackResult.driftDetectionStatus) {
+          expect(stackResult.driftDetectionStatus.stackDriftStatus).toEqual(
+            stackDriftStatus,
+          )
+        } else {
+          fail("Expected drift detection status to be defined")
+        }
+      }
+
+      return true
+    }
+
+    return createDetectDriftOutputMatcher(
+      executor,
+      [...stackAssertions, stackMatcher],
+      outputAssertions,
+    )
+  }
+
+  const assert = async (): Promise<DetectDriftOutput> => {
     const output = await executor()
     if (outputAssertions) {
       outputAssertions(output)

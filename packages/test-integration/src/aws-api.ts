@@ -4,7 +4,7 @@ import {
 } from "@takomo/aws-clients"
 import { StackPolicyBody } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
-import { CloudFormation, Credentials, Organizations, SSM } from "aws-sdk"
+import { CloudFormation, Credentials, EC2, Organizations, SSM } from "aws-sdk"
 import { Organization, PolicyType, Root } from "aws-sdk/clients/organizations"
 import { mock } from "jest-mock-extended"
 
@@ -14,6 +14,9 @@ const organizationsClient = new Organizations({
 
 const ssmClient = (region: string, credentials: Credentials): SSM =>
   new SSM({ region, credentials })
+
+const ec2Client = (region: string, credentials: Credentials): EC2 =>
+  new EC2({ region, credentials })
 
 const cloudFormationClient = (
   region: string,
@@ -117,6 +120,15 @@ export type PutParamArgs = {
   encrypted: boolean
 }
 
+export type TagVpcArgs = {
+  credentials: Credentials
+  iamRoleArn?: string
+  region: string
+  tagKey: string
+  tagValue: string
+  cidr: string
+}
+
 const putParameter = async ({
   credentials,
   region,
@@ -145,6 +157,46 @@ const putParameter = async ({
     .promise()
     .then(() => true)
 }
+
+const tagVpc = async ({
+  tagKey,
+  tagValue,
+  cidr,
+  credentials,
+  iamRoleArn,
+  region,
+}: TagVpcArgs): Promise<boolean> => {
+  const cp = await initDefaultCredentialManager(
+    () => Promise.resolve(""),
+    mock<TkmLogger>(),
+    mock<AwsClientProvider>(),
+    credentials,
+  )
+
+  const ec2Cp = iamRoleArn
+    ? await cp.createCredentialManagerForRole(iamRoleArn)
+    : cp
+
+  const client = ec2Client(region, await ec2Cp.getCredentials())
+
+  return client
+    .describeVpcs({})
+    .promise()
+    .then(
+      ({ Vpcs }) =>
+        Vpcs!.filter(({ CidrBlock }) => CidrBlock === cidr)[0].VpcId!,
+    )
+    .then((vpcId) =>
+      client
+        .createTags({
+          Tags: [{ Key: tagKey, Value: tagValue }],
+          Resources: [vpcId],
+        })
+        .promise(),
+    )
+    .then(() => true)
+}
+
 export const aws = {
   organizations: {
     describeOrganization,
@@ -161,4 +213,5 @@ export const aws = {
   ssm: {
     putParameter,
   },
+  ec2: { tagVpc },
 }
