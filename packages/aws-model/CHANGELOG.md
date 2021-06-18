@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.21.0](https://github.com/takomo-io/takomo/compare/v3.20.0...v3.21.0) (2021-06-18)
+
+
+### Features
+
+* **stacks:** add command to detect stack drift ([#255](https://github.com/takomo-io/takomo/issues/255)) ([cb81d48](https://github.com/takomo-io/takomo/commit/cb81d484066561fea40f405e360c1088a0ba492c)), closes [#252](https://github.com/takomo-io/takomo/issues/252)
+
+
+
+
+
 # [3.18.0](https://github.com/takomo-io/takomo/compare/v3.17.0...v3.18.0) (2021-06-04)
 
 

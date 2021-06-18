@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.21.0](https://github.com/takomo-io/takomo/compare/v3.20.0...v3.21.0) (2021-06-18)
+
+
+### Features
+
+* **deployment targets:** enhancements to run deployment targets command ([#253](https://github.com/takomo-io/takomo/issues/253)) ([bf4beaa](https://github.com/takomo-io/takomo/commit/bf4beaa54a7d5febf5710bacc46e19d7a3dd375f))
+* **stacks:** add command to detect stack drift ([#255](https://github.com/takomo-io/takomo/issues/255)) ([cb81d48](https://github.com/takomo-io/takomo/commit/cb81d484066561fea40f405e360c1088a0ba492c)), closes [#252](https://github.com/takomo-io/takomo/issues/252)
+* **stacks:** exit process with error code if drift is detected ([ca5d377](https://github.com/takomo-io/takomo/commit/ca5d377c3f47c1e127ee2d0252494a35e643ac0a))
+
+
+
+
+
 # [3.20.0](https://github.com/takomo-io/takomo/compare/v3.19.0...v3.20.0) (2021-06-14)
 
 
