@@ -28,10 +28,11 @@ export const processConfigSet = async (
 
   io.info(`Execute config set: ${configSet.name}`)
 
-  const stacksConfigRepository = await ctx.configRepository.createStacksConfigRepository(
-    configSet.name,
-    configSet.legacy,
-  )
+  const stacksConfigRepository =
+    await ctx.configRepository.createStacksConfigRepository(
+      configSet.name,
+      configSet.legacy,
+    )
 
   const results = new Array<ConfigSetCommandPathOperationResult>()
   const commandPaths = input.commandPath
@@ -40,22 +41,45 @@ export const processConfigSet = async (
 
   for (const commandPath of commandPaths) {
     const commandPathTimer = timer.startChild(commandPath)
-    const result = await processCommandPath(
-      holder,
-      group,
-      target,
-      configSet,
-      commandPath,
-      commandPathTimer,
-      state,
-      stacksConfigRepository,
-    )
 
-    commandPathTimer.stop()
-    results.push(result)
+    try {
+      const result = await processCommandPath(
+        holder,
+        group,
+        target,
+        configSet,
+        commandPath,
+        commandPathTimer,
+        state,
+        stacksConfigRepository,
+      )
 
-    if (!result.success) {
+      commandPathTimer.stop()
+      results.push(result)
+
+      if (!result.success) {
+        state.failed = true
+      }
+    } catch (e) {
+      io.error(
+        `Unhandled error when executing group: ${group.path}, target: ${target.name}, config set: ${configSet.name}, command path: ${commandPath}`,
+        e,
+      )
+
       state.failed = true
+      results.push({
+        commandPath,
+        result: {
+          message: e.message,
+          status: "FAILED",
+          timer,
+          success: false,
+          results: [],
+        },
+        success: false,
+        status: "FAILED",
+        message: "Failed",
+      })
     }
   }
 

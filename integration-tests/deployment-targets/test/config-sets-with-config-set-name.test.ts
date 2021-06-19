@@ -41,9 +41,31 @@ describe("Deployment targets", () => {
       projectDir,
       configSetName: "bbb",
       commandPath: "/trololoo",
-    }).expectCommandToThrow(
-      "No stacks found within the given command path: /trololoo\n\nAvailable stack paths:\n\n  - /logs.yml",
-    ))
+    })
+      .expectCommandToFail()
+      .expectResults({
+        deploymentGroupPath: "all",
+        targetResults: [
+          {
+            name: "first",
+            success: false,
+            status: "FAILED",
+            configSetResults: [
+              {
+                configSet: "bbb",
+                commandPathResults: [
+                  {
+                    commandPath: "/trololoo",
+                    message: "Failed",
+                    stackResults: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+      .assert())
 
   test("Deploy with non-existing config set name", () =>
     executeDeployTargetsCommand({

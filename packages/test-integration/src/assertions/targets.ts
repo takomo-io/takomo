@@ -20,6 +20,7 @@ export interface TargetsRunOutputMatcher {
 }
 export interface TargetsOperationOutputMatcher {
   readonly expectCommandToSucceed: () => DeploymentGroupResultMatcher
+  readonly expectCommandToFail: () => DeploymentGroupResultMatcher
   readonly expectCommandToSkip: () => DeploymentGroupResultMatcher
   readonly expectCommandToThrow: (error: any) => Promise<void>
 }
@@ -32,6 +33,7 @@ export interface ExpectStackResultProps {
 export interface ExpectCommandPathResultProps {
   readonly commandPath: CommandPath
   readonly stackResults?: ReadonlyArray<ExpectStackResultProps>
+  readonly message?: string
 }
 
 export interface ExpectConfigSetResultProps {
@@ -42,6 +44,7 @@ export interface ExpectConfigSetResultProps {
 export interface ExpectDeploymentTargetResultProps {
   readonly name: DeploymentTargetName
   readonly status?: CommandStatus
+  readonly success?: boolean
   readonly configSetResults?: ReadonlyArray<ExpectConfigSetResultProps>
 }
 
@@ -90,7 +93,12 @@ const createDeploymentGroupResultMatcher = (
           }
 
           expect(targetResult.name).toStrictEqual(expected.name)
-          expect(targetResult.success).toStrictEqual(true)
+          if (expected.success !== undefined) {
+            expect(targetResult.success).toStrictEqual(expected.success)
+          } else {
+            expect(targetResult.success).toStrictEqual(true)
+          }
+
           if (expected.status) {
             expect(targetResult.status).toStrictEqual(expected.status)
           } else {
@@ -114,13 +122,18 @@ const createDeploymentGroupResultMatcher = (
                 )
 
                 configSetResult.results.forEach((commandPathResult, k) => {
-                  const expectedCommandPathResult = expectedConfigSetResult.commandPathResults![
-                    k
-                  ]
+                  const expectedCommandPathResult =
+                    expectedConfigSetResult.commandPathResults![k]
 
                   expect(commandPathResult.commandPath).toStrictEqual(
                     expectedCommandPathResult.commandPath,
                   )
+
+                  if (expectedCommandPathResult.message) {
+                    expect(commandPathResult.message).toStrictEqual(
+                      expectedCommandPathResult.message,
+                    )
+                  }
 
                   if (expectedCommandPathResult.stackResults) {
                     expect(commandPathResult.result.results).toHaveLength(
@@ -129,9 +142,8 @@ const createDeploymentGroupResultMatcher = (
 
                     commandPathResult.result.results.forEach(
                       (stackResult, n) => {
-                        const expectedStackResult = expectedCommandPathResult.stackResults![
-                          n
-                        ]
+                        const expectedStackResult =
+                          expectedCommandPathResult.stackResults![n]
 
                         expect(stackResult.stack.path).toStrictEqual(
                           expectedStackResult.stackPath,
@@ -195,6 +207,14 @@ export const createTargetsOperationOutputMatcher = (
       expect(output.error).toBeUndefined()
     })
 
+  const expectCommandToFail = () =>
+    createDeploymentGroupResultMatcher(executor, (output) => {
+      expect(output.status).toEqual("FAILED")
+      expect(output.message).toEqual("Failed")
+      expect(output.success).toEqual(false)
+      expect(output.error).toBeUndefined()
+    })
+
   const expectCommandToSkip = () =>
     createDeploymentGroupResultMatcher(executor, (output) => {
       expect(output.status).toEqual("SKIPPED")
@@ -213,6 +233,7 @@ export const createTargetsOperationOutputMatcher = (
 
   return {
     expectCommandToSucceed,
+    expectCommandToFail,
     expectCommandToSkip,
     expectCommandToThrow,
   }
