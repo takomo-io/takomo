@@ -1,0 +1,6 @@
+name: this-is-ok
+template:
+  inline: |
+    Resources:
+      Logs:
+        Type: AWS::Logs::LogGroup

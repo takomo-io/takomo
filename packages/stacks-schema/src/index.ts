@@ -280,6 +280,16 @@ export const createStacksSchemas = (
       schemaObject,
       Joi.array().items(schemaName, schemaObject),
     ],
+    name: [
+      schemaName,
+      schemaObject,
+      Joi.array().items(schemaName, schemaObject),
+    ],
+    parameters: [
+      schemaName,
+      schemaObject,
+      Joi.array().items(schemaName, schemaObject),
+    ],
   })
 
   return {

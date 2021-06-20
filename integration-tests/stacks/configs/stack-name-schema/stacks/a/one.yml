@@ -1,0 +1,8 @@
+name: this-is-too-long-name
+schemas:
+  name: length
+template:
+  inline: |
+    Resources:
+      Logs:
+        Type: AWS::Logs::LogGroup
