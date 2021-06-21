@@ -173,7 +173,7 @@ export const createUndeployStacksIO = (
       }
 
       const padding = " ".repeat(depth)
-      const end = dependent.dependencies.length > 0 ? ":" : ""
+      const end = dependent.dependents.length > 0 ? ":" : ""
       io.message({ text: `${padding}- ${dependentPath}${end}` })
       printStackDependents(dependent, stacksMap, depth + 2)
     })

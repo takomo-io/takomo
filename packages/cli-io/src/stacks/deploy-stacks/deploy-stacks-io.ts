@@ -41,41 +41,46 @@ interface ConfirmDeployAnswerChoice {
   readonly value: ConfirmDeployAnswer
 }
 
-export const CONFIRM_STACK_DEPLOY_ANSWER_CANCEL: ConfirmStackDeployAnswerChoice = {
-  name: "cancel deploy of this stack and all remaining stacks",
-  value: "CANCEL",
-}
+export const CONFIRM_STACK_DEPLOY_ANSWER_CANCEL: ConfirmStackDeployAnswerChoice =
+  {
+    name: "cancel deploy of this stack and all remaining stacks",
+    value: "CANCEL",
+  }
 
-export const CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE: ConfirmStackDeployAnswerChoice = {
-  name: "review changes in the stack template",
-  value: "REVIEW_TEMPLATE",
-}
+export const CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE: ConfirmStackDeployAnswerChoice =
+  {
+    name: "review changes in the stack template",
+    value: "REVIEW_TEMPLATE",
+  }
 
-export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE: ConfirmStackDeployAnswerChoice = {
-  name: "continue to deploy the stack, then let me review the remaining stacks",
-  value: "CONTINUE",
-}
+export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE: ConfirmStackDeployAnswerChoice =
+  {
+    name: "continue to deploy the stack, then let me review the remaining stacks",
+    value: "CONTINUE",
+  }
 
-export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS: ConfirmStackDeployAnswerChoice = {
-  name:
-    "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
-  value: "CONTINUE_AND_SKIP_REMAINING_REVIEWS",
-}
+export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS: ConfirmStackDeployAnswerChoice =
+  {
+    name: "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
+    value: "CONTINUE_AND_SKIP_REMAINING_REVIEWS",
+  }
 
 export const CONFIRM_DEPLOY_ANSWER_CANCEL: ConfirmDeployAnswerChoice = {
   name: "cancel deployment",
   value: "CANCEL",
 }
 
-export const CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW: ConfirmDeployAnswerChoice = {
-  name: "continue, but let me review changes to each stack",
-  value: "CONTINUE_AND_REVIEW",
-}
+export const CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW: ConfirmDeployAnswerChoice =
+  {
+    name: "continue, but let me review changes to each stack",
+    value: "CONTINUE_AND_REVIEW",
+  }
 
-export const CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW: ConfirmDeployAnswerChoice = {
-  name: "continue, deploy all stacks without reviewing changes",
-  value: "CONTINUE_NO_REVIEW",
-}
+export const CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW: ConfirmDeployAnswerChoice =
+  {
+    name: "continue, deploy all stacks without reviewing changes",
+    value: "CONTINUE_NO_REVIEW",
+  }
 
 const formatStackOperation = (
   stackPath: StackPath,
@@ -295,9 +300,8 @@ export const createDeployStacksIO = (
         .getCloudFormationClient()
         .getCurrentTemplate(stack.name)
 
-      const safeCurrentTemplateBody = ensureContentsEndsWithLineFeed(
-        currentTemplateBody,
-      )
+      const safeCurrentTemplateBody =
+        ensureContentsEndsWithLineFeed(currentTemplateBody)
       const safeTemplateBody = ensureContentsEndsWithLineFeed(templateBody)
 
       io.message({ text: bold("Changes to template:"), marginTop: true })
