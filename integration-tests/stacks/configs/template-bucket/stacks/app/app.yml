@@ -1,0 +1,5 @@
+template:
+  inline: |
+    Resources:
+      Log:
+        Type: AWS::Logs::LogGroup
