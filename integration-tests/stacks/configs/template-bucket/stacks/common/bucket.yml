@@ -1,0 +1,12 @@
+parameters:
+  Name: {{ var.name }}
+template:
+  inline: |
+    Parameters:
+      Name:
+        Type: String
+    Resources:
+      Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          BucketName: !Ref Name
