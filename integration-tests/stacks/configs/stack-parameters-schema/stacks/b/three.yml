@@ -1,0 +1,13 @@
+parameters:
+  CostCenter: 1234
+  Environment: dev
+template:
+  inline: |
+    Parameters:
+      CostCenter:
+        Type: String
+      Environment:
+        Type: String
+    Resources:
+      Logs:
+        Type: AWS::Logs::LogGroup

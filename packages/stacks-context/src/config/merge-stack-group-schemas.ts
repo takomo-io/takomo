@@ -34,8 +34,35 @@ export const mergeStackGroupSchemas = async (
     ),
   )
 
+  const parametersSchemas = await Promise.all(
+    schemasConfig.parameters.map((schemaConfig) =>
+      schemaRegistry.initStackGroupParametersSchema(
+        ctx,
+        stackGroup.path,
+        schemaConfig.name,
+        schemaConfig,
+      ),
+    ),
+  )
+
+  const nameSchemas = await Promise.all(
+    schemasConfig.name.map((schemaConfig) =>
+      schemaRegistry.initStackGroupNameSchema(
+        ctx,
+        stackGroup.path,
+        schemaConfig.name,
+        schemaConfig,
+      ),
+    ),
+  )
+
   return {
     data: [...(stackGroup.schemas?.data ?? []), ...dataSchemas],
     tags: [...(stackGroup.schemas?.tags ?? []), ...tagsSchemas],
+    parameters: [
+      ...(stackGroup.schemas?.parameters ?? []),
+      ...parametersSchemas,
+    ],
+    name: [...(stackGroup.schemas?.name ?? []), ...nameSchemas],
   }
 }

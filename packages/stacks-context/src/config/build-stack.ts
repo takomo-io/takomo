@@ -1,5 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { IamRoleArn } from "@takomo/aws-model"
+import { IamRoleArn, StackName } from "@takomo/aws-model"
 import { createAwsSchemas } from "@takomo/aws-schema"
 import { CommandContext, Vars } from "@takomo/core"
 import { TemplateConfig } from "@takomo/stacks-config"
@@ -79,6 +79,22 @@ const validateTags = (
       const details = error.details.map((d) => `  - ${d.message}`).join("\n")
       throw new TakomoError(
         `Validation errors in tags configuration of stack ${stackPath}:\n\n${details}`,
+      )
+    }
+  })
+}
+
+const validateName = (
+  stackPath: StackPath,
+  schemas: ReadonlyArray<AnySchema>,
+  name: StackName,
+): void => {
+  schemas.forEach((schema) => {
+    const { error } = schema.label("name").validate(name, { abortEarly: false })
+    if (error) {
+      const details = error.details.map((d) => `  - ${d.message}`).join("\n")
+      throw new TakomoError(
+        `Validation errors in name of stack ${stackPath}:\n\n${details}`,
       )
     }
   })
@@ -176,14 +192,13 @@ export const buildStack = async (
     regions.map(async (region) => {
       const exactPath = `${stackPath}/${region}`
       const stackLogger = logger.childLogger(exactPath)
-      const cloudFormationClient = ctx.awsClientProvider.createCloudFormationClient(
-        {
+      const cloudFormationClient =
+        ctx.awsClientProvider.createCloudFormationClient({
           credentials,
           region,
           id: exactPath,
           logger: stackLogger,
-        },
-      )
+        })
 
       const schemas = await mergeStackSchemas(
         ctx,
@@ -230,6 +245,7 @@ export const buildStack = async (
 
       validateData(exactPath, schemas?.data ?? [], props.data)
       validateTags(exactPath, schemas?.tags ?? [], props.tags)
+      validateName(exactPath, schemas?.name ?? [], name)
 
       return createStack(props)
     }),

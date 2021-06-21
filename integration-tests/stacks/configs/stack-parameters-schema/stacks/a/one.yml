@@ -1,0 +1,12 @@
+schemas:
+  parameters: MyParams
+parameters:
+  CostCenter: 1234
+template:
+  inline: |
+    Parameters:
+      CostCenter:
+        Type: String
+    Resources:
+      Logs:
+        Type: AWS::Logs::LogGroup

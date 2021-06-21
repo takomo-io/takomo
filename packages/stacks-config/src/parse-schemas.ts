@@ -24,5 +24,7 @@ export const parseSchemas = (value: unknown): SchemasConfig | undefined => {
   return {
     data: parseSchemaConfig(obj.data),
     tags: parseSchemaConfig(obj.tags),
+    name: parseSchemaConfig(obj.name),
+    parameters: parseSchemaConfig(obj.parameters),
   }
 }

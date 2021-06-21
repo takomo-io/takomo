@@ -26,6 +26,8 @@ export interface SchemaConfig {
 export interface SchemasConfig {
   readonly data: ReadonlyArray<SchemaConfig>
   readonly tags: ReadonlyArray<SchemaConfig>
+  readonly name: ReadonlyArray<SchemaConfig>
+  readonly parameters: ReadonlyArray<SchemaConfig>
 }
 
 export interface ParameterConfig {

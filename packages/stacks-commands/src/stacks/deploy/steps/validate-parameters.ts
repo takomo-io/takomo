@@ -1,4 +1,6 @@
-import { TakomoError } from "@takomo/util"
+import { Schemas } from "@takomo/stacks-model"
+import { arrayToObject, TakomoError } from "@takomo/util"
+import R from "ramda"
 import { StackOperationStep } from "../../common/steps"
 import { resolveResultMessage } from "../common"
 import { StackParameterInfo } from "../model"
@@ -26,6 +28,40 @@ export class ImmutableNoEchoParameterError extends TakomoError {
   }
 }
 
+const validateParameterSchemas = (
+  parameters: ReadonlyArray<StackParameterInfo>,
+  schemas?: Schemas,
+): ReadonlyArray<string> => {
+  const validationErrors = parameters.reduce((collected, parameter) => {
+    if (parameter.schema) {
+      const { error } = parameter.schema.validate(parameter.value, {
+        abortEarly: false,
+      })
+
+      if (error) {
+        return [...collected, ...error.details.map((d) => d.message)]
+      }
+    }
+
+    return collected
+  }, new Array<string>())
+
+  if (!schemas) {
+    return validationErrors
+  }
+
+  const paramsObject = arrayToObject(parameters, R.prop("key"), R.prop("value"))
+
+  return schemas.parameters.reduce((collected, schema) => {
+    const { error } = schema.validate(paramsObject, { abortEarly: false })
+    if (error) {
+      return [...collected, ...error.details.map((d) => d.message)]
+    }
+
+    return collected
+  }, validationErrors)
+}
+
 export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
   input,
 ) => {
@@ -35,6 +71,7 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
     parameters,
     currentStack,
     templateSummary,
+    stack,
   } = input
 
   parameters.forEach((parameter) => {
@@ -63,19 +100,7 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
       }
     })
 
-  const validationErrors = parameters.reduce((collected, parameter) => {
-    if (parameter.schema) {
-      const { error } = parameter.schema.validate(parameter.value, {
-        abortEarly: false,
-      })
-
-      if (error) {
-        return [...collected, ...error.details.map((d) => d.message)]
-      }
-    }
-
-    return collected
-  }, new Array<string>())
+  const validationErrors = validateParameterSchemas(parameters, stack.schemas)
 
   if (validationErrors.length > 0) {
     const message = validationErrors.map((e) => `  - ${e}`).join("\n")
