@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/takomo-io/takomo/compare/v3.21.0...v3.22.0) (2021-06-22)
+
+
+### Bug Fixes
+
+* **stacks:** fix formatting of stack dependents on stack undeploy review ([e9a064e](https://github.com/takomo-io/takomo/commit/e9a064e1e5c8a8c5954c4d18f0c95403a15122c9))
+
+
+### Features
+
+* **deployment targets:** improve error handling of deplyment targets ([#256](https://github.com/takomo-io/takomo/issues/256)) ([e84bfed](https://github.com/takomo-io/takomo/commit/e84bfed5061e94f5bf5742b89002da73e78eae62))
+* **stacks:** add support for stack name and parameters schemas ([#257](https://github.com/takomo-io/takomo/issues/257)) ([f30c7ac](https://github.com/takomo-io/takomo/commit/f30c7ac19d4489f110310ae239977a5f55694a12))
+
+
+
+
+
 # [3.21.0](https://github.com/takomo-io/takomo/compare/v3.20.0...v3.21.0) (2021-06-18)
 
 

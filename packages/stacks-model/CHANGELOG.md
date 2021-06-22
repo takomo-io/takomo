@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/takomo-io/takomo/compare/v3.21.0...v3.22.0) (2021-06-22)
+
+
+### Features
+
+* **stacks:** add support for stack name and parameters schemas ([#257](https://github.com/takomo-io/takomo/issues/257)) ([f30c7ac](https://github.com/takomo-io/takomo/commit/f30c7ac19d4489f110310ae239977a5f55694a12))
+
+
+
+
+
 # [3.21.0](https://github.com/takomo-io/takomo/compare/v3.20.0...v3.21.0) (2021-06-18)
 
 **Note:** Version bump only for package @takomo/stacks-model

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/takomo-io/takomo/compare/v3.21.0...v3.22.0) (2021-06-22)
+
+
+### Features
+
+* **deployment targets:** improve error handling of deplyment targets ([#256](https://github.com/takomo-io/takomo/issues/256)) ([e84bfed](https://github.com/takomo-io/takomo/commit/e84bfed5061e94f5bf5742b89002da73e78eae62))
+
+
+
+
+
 # [3.21.0](https://github.com/takomo-io/takomo/compare/v3.20.0...v3.21.0) (2021-06-18)
 
 **Note:** Version bump only for package integration-test-deployment-targets
