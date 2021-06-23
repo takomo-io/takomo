@@ -13,6 +13,7 @@ const CONFIG_FILE_OPT = "config-file"
 const REDUCE_OPT = "reduce"
 const MAP_OPT = "map"
 const MAP_ROLE_NAME_OPT = "map-role-name"
+const DISABLE_MAP_ROLE_OPT = "disable-map-role"
 const REDUCE_ROLE_ARN_OPT = "reduce-role-arn"
 const OUTPUT_OPT = "output"
 const CAPTURE_AFTER_OPT = "capture-after"
@@ -122,6 +123,14 @@ export const runTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option(DISABLE_MAP_ROLE_OPT, {
+        description:
+          "Do not assume role from each target when executing the map command",
+        boolean: true,
+        default: false,
+        global: false,
+        demandOption: false,
+      })
       .option(CONFIG_FILE_OPT, {
         description: "Deployment config file",
         string: true,
@@ -140,7 +149,8 @@ export const runTargetsCmd = {
         concurrentTargets: argv[CONCURRENT_TARGETS_OPT],
         labels: parseStringArray(argv[LABEL_OPT]),
         excludeLabels: parseStringArray(argv[EXCLUDE_LABEL_OPT]),
-        roleName: argv[MAP_ROLE_NAME_OPT],
+        mapRoleName: argv[MAP_ROLE_NAME_OPT],
+        disableMapRole: argv[DISABLE_MAP_ROLE_OPT],
         captureBeforeLine: argv[CAPTURE_BEFORE_OPT],
         captureAfterLine: argv[CAPTURE_AFTER_OPT],
         captureLastLine: argv[CAPTURE_LAST_LINE_OPT],

@@ -1,5 +1,5 @@
-import { CredentialManager } from "@takomo/aws-clients"
-import { CallerIdentity, IamRoleName } from "@takomo/aws-model"
+import { CredentialManager, prepareAwsEnvVariables } from "@takomo/aws-clients"
+import { CallerIdentity, IamRoleArn, IamRoleName } from "@takomo/aws-model"
 import {
   CommandRole,
   CommandStatus,
@@ -11,13 +11,7 @@ import {
 } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import { OperationState } from "@takomo/stacks-model"
-import {
-  deepCopy,
-  expandFilePath,
-  TakomoError,
-  Timer,
-  TkmLogger,
-} from "@takomo/util"
+import { expandFilePath, Timer, TkmLogger } from "@takomo/util"
 import { Credentials } from "aws-sdk"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
@@ -61,8 +55,13 @@ const getDeploymentRole = (
   currentIdentity: CallerIdentity,
   group: DeploymentGroupConfig,
   target: DeploymentTargetConfig,
+  disableMapRole: boolean,
   roleName?: IamRoleName,
 ): CommandRole | undefined => {
+  if (disableMapRole) {
+    return undefined
+  }
+
   const deploymentRole = target.deploymentRole ?? group.deploymentRole
   if (deploymentRole) {
     return deploymentRole
@@ -158,16 +157,17 @@ const runMapProcessCommand = async ({
   logger.debug(`Run map command: ${mapCommand}`)
 
   const targetJson = JSON.stringify(target)
-  const env = {
-    ...deepCopy(process.env),
+  const additionalVariables = {
     TKM_TARGET_NAME: target.name,
     TKM_TARGET_JSON: targetJson,
     TKM_DEPLOYMENT_GROUP_PATH: group.path,
-    AWS_ACCESS_KEY_ID: credentials.accessKeyId,
-    AWS_SECRET_ACCESS_KEY: credentials.secretAccessKey,
-    AWS_SESSION_TOKEN: credentials.sessionToken,
-    AWS_SECURITY_TOKEN: credentials.sessionToken,
   }
+
+  const env = prepareAwsEnvVariables({
+    env: process.env,
+    credentials,
+    additionalVariables,
+  })
 
   const output = await runChildProcess(mapCommand, ctx.projectDir, env, [
     targetJson,
@@ -195,14 +195,7 @@ const runReduceProcessCommand = ({
   reduceCommand,
   targetResults,
 }: RunReduceCommandProps): Promise<unknown> => {
-  const env = {
-    ...deepCopy(process.env),
-    AWS_ACCESS_KEY_ID: credentials.accessKeyId,
-    AWS_SECRET_ACCESS_KEY: credentials.secretAccessKey,
-    AWS_SESSION_TOKEN: credentials.sessionToken,
-    AWS_SECURITY_TOKEN: credentials.sessionToken,
-  }
-
+  const env = prepareAwsEnvVariables({ env: process.env, credentials })
   return runChildProcess(reduceCommand, ctx.projectDir, env, targetResults)
 }
 
@@ -243,6 +236,42 @@ const getCredentialManager = async (
       )
     : ctx.credentialManager
 
+const getCredentialsForMapCommand = async (
+  { ctx, input: { mapRoleName, disableMapRole } }: RunProps,
+  group: DeploymentGroupConfig,
+  target: DeploymentTargetConfig,
+): Promise<Credentials> =>
+  ctx.credentialManager
+    .getCallerIdentity()
+    .then((currentIdentity) =>
+      getDeploymentRole(
+        currentIdentity,
+        group,
+        target,
+        disableMapRole,
+        mapRoleName,
+      ),
+    )
+    .then((deploymentRole) => getCredentialManager(ctx, deploymentRole))
+    .then((c) => c.getCredentials())
+    .then(async (c) => {
+      await c.getPromise()
+      return c
+    })
+
+const getCredentialsForReduceCommand = async (
+  ctx: DeploymentTargetsContext,
+  reduceRoleArn?: IamRoleArn,
+): Promise<Credentials> => {
+  const credentialManager = reduceRoleArn
+    ? await ctx.credentialManager.createCredentialManagerForRole(reduceRoleArn)
+    : ctx.credentialManager
+
+  const credentials = await credentialManager.getCredentials()
+  await credentials.getPromise()
+  return credentials
+}
+
 export const processDeploymentTarget = async (
   props: RunProps,
   group: DeploymentGroupConfig,
@@ -252,8 +281,7 @@ export const processDeploymentTarget = async (
   logger: TkmLogger,
 ): Promise<DeploymentTargetRunResult> => {
   const { ctx, input } = props
-
-  const { mapCommand, mapRoleName } = input
+  const { mapCommand } = input
 
   if (state.failed) {
     timer.stop()
@@ -269,26 +297,7 @@ export const processDeploymentTarget = async (
   logger.info("Start run")
 
   try {
-    const currentIdentity = await ctx.credentialManager.getCallerIdentity()
-    const deploymentRole = getDeploymentRole(
-      currentIdentity,
-      group,
-      target,
-      mapRoleName,
-    )
-
-    const credentialManager = await getCredentialManager(ctx, deploymentRole)
-
-    if (target.accountId) {
-      const identity = await credentialManager.getCallerIdentity()
-      if (identity.accountId !== target.accountId) {
-        throw new TakomoError(
-          `Current credentials belong to AWS account ${identity.accountId}, but the deployment target can be run only against account: ${target.accountId}`,
-        )
-      }
-    }
-
-    const credentials = await credentialManager.getCredentials()
+    const credentials = await getCredentialsForMapCommand(props, group, target)
 
     const value = await runMapCommand({
       mapCommand,
@@ -438,13 +447,10 @@ export const run = async (
     }
   }
 
-  const reduceCredentialManager = input.reduceRoleArn
-    ? await ctx.credentialManager.createCredentialManagerForRole(
-        input.reduceRoleArn,
-      )
-    : ctx.credentialManager
-
-  const reduceCredentials = await reduceCredentialManager.getCredentials()
+  const reduceCredentials = await getCredentialsForReduceCommand(
+    ctx,
+    input.reduceRoleArn,
+  )
 
   try {
     const result = await runReduceCommand({

@@ -1,5 +1,5 @@
 import { initDefaultCredentialManager } from "@takomo/aws-clients"
-import { IamRoleName } from "@takomo/aws-model"
+import { IamRoleArn, IamRoleName } from "@takomo/aws-model"
 import { CliCommandContext } from "@takomo/cli"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetName } from "@takomo/config-sets"
@@ -40,9 +40,7 @@ export interface CreateTestDeploymentTargetsConfigRepositoryProps {
 export const createTestDeploymentTargetsConfigRepository = async ({
   ctx,
   pathToDeploymentConfigFile,
-}: CreateTestDeploymentTargetsConfigRepositoryProps): Promise<
-  DeploymentTargetsConfigRepository
-> =>
+}: CreateTestDeploymentTargetsConfigRepositoryProps): Promise<DeploymentTargetsConfigRepository> =>
   createFileSystemDeploymentTargetsConfigRepository({
     ...ctx.filePaths,
     ctx,
@@ -290,6 +288,8 @@ export interface ExecuteRunTargetsCommandProps extends ExecuteCommandProps {
   readonly captureLastLine?: boolean
   readonly captureAfterLine?: string
   readonly captureBeforeLine?: string
+  readonly disableMapRole?: boolean
+  readonly reduceRoleArn?: IamRoleArn
 }
 
 export const executeRunTargetsCommand = (
@@ -339,6 +339,8 @@ export const executeRunTargetsCommand = (
         captureBeforeLine: props.captureBeforeLine,
         captureAfterLine: props.captureAfterLine,
         mapRoleName: props.roleName,
+        disableMapRole: props.disableMapRole ?? false,
+        reduceRoleArn: props.reduceRoleArn,
       },
     })
   })

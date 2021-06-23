@@ -249,7 +249,12 @@ export const createTargetsRunOutputMatcher = (
       expect(output.message).toEqual("Success")
       expect(output.success).toEqual(true)
       expect(output.error).toBeUndefined()
-      expect(output.result).toStrictEqual(expectedResult)
+
+      if (typeof expectedResult === "function") {
+        expectedResult(output.result)
+      } else {
+        expect(output.result).toStrictEqual(expectedResult)
+      }
     })
 
   const assert = async (): Promise<DeploymentTargetsRunOutput> => {

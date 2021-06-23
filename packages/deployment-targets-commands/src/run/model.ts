@@ -26,6 +26,7 @@ export interface DeploymentTargetsRunInput extends CommandInput {
   readonly mapCommand: string
   readonly reduceCommand?: string
   readonly mapRoleName?: IamRoleName
+  readonly disableMapRole: boolean
   readonly reduceRoleArn?: IamRoleArn
   readonly captureAfterLine?: string
   readonly captureBeforeLine?: string
