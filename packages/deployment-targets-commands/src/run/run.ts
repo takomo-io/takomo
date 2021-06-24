@@ -37,6 +37,7 @@ const runChildProcess = async (
 ): Promise<string> =>
   new Promise((resolve, reject) => {
     const child = exec(command, { cwd, env }, (error, stdout, stderr) => {
+      child.stdin?.end()
       if (error) {
         reject(error)
       } else {
@@ -47,8 +48,6 @@ const runChildProcess = async (
     inputs.forEach((r) => {
       child.stdin?.write(`${r}`)
     })
-
-    child.stdin?.end()
   })
 
 const getDeploymentRole = (
