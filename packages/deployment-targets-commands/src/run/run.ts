@@ -29,16 +29,26 @@ import ProcessEnv = NodeJS.ProcessEnv
 
 type DeploymentTargetRunOperation = () => Promise<DeploymentTargetRunResult>
 
-const runChildProcess = async (
-  command: string,
-  cwd: string,
-  env: ProcessEnv,
-  inputs: ReadonlyArray<unknown>,
-): Promise<string> =>
+interface RunChildProcessProps {
+  readonly logger: TkmLogger
+  readonly command: string
+  readonly cwd: string
+  readonly env: ProcessEnv
+  readonly inputs: ReadonlyArray<unknown>
+}
+
+const runChildProcess = async ({
+  command,
+  cwd,
+  env,
+  inputs,
+  logger,
+}: RunChildProcessProps): Promise<string> =>
   new Promise((resolve, reject) => {
     const child = exec(command, { cwd, env }, (error, stdout, stderr) => {
-      child.stdin?.end()
       if (error) {
+        logger.error("Child process failed with an error", error)
+        logger.error(stderr)
         reject(error)
       } else {
         resolve(stdout)
@@ -47,6 +57,10 @@ const runChildProcess = async (
 
     inputs.forEach((r) => {
       child.stdin?.write(`${r}`)
+    })
+
+    child.on("close", (code) => {
+      child.stdin?.end()
     })
   })
 
@@ -168,9 +182,13 @@ const runMapProcessCommand = async ({
     additionalVariables,
   })
 
-  const output = await runChildProcess(mapCommand, ctx.projectDir, env, [
-    targetJson,
-  ])
+  const output = await runChildProcess({
+    env,
+    logger,
+    command: mapCommand,
+    cwd: ctx.projectDir,
+    inputs: [targetJson],
+  })
 
   return captureValue(input, output)
 }
@@ -193,9 +211,16 @@ const runReduceProcessCommand = ({
   ctx,
   reduceCommand,
   targetResults,
+  logger,
 }: RunReduceCommandProps): Promise<unknown> => {
   const env = prepareAwsEnvVariables({ env: process.env, credentials })
-  return runChildProcess(reduceCommand, ctx.projectDir, env, targetResults)
+  return runChildProcess({
+    env,
+    logger,
+    command: reduceCommand,
+    cwd: ctx.projectDir,
+    inputs: targetResults,
+  })
 }
 
 const runJsReduceFunction = ({
