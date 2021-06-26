@@ -56,12 +56,14 @@ const runChildProcess = async ({
     })
 
     inputs.forEach((r) => {
-      child.stdin?.write(`${r}`)
+      const line = `${r}`
+      const lineToWrite = line.endsWith("\n") ? line : `${line}\n`
+      if (child.stdin?.writable) {
+        child.stdin?.write(lineToWrite)
+      }
     })
 
-    child.on("close", (code) => {
-      child.stdin?.end()
-    })
+    child.stdin?.end()
   })
 
 const getDeploymentRole = (
@@ -484,6 +486,8 @@ export const run = async (
       reduceCommand: input.reduceCommand,
       logger: io,
     })
+    console.log("=======___-----")
+    console.log(result)
     childTimer.stop()
     return {
       ...outputBase,

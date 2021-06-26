@@ -226,4 +226,20 @@ describe("Run", () => {
     })
       .expectCommandToSucceed("five,four,one,three,two")
       .assert())
+
+  test("Simple reduce command that reads from stdin", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      mapCommand: "js:get-target-name.js",
+      reduceCommand: "./read-from-stdin.sh",
+    })
+      .expectCommandToSucceed(
+        "reading: one\n" +
+          "reading: two\n" +
+          "reading: five\n" +
+          "reading: four\n" +
+          "reading: three\n",
+      )
+      .assert())
 })
