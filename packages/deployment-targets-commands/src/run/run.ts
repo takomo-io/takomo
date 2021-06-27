@@ -55,23 +55,18 @@ const runChildProcess = async ({
       }
     })
 
-    child.on("error", (err: any) => {
-      if (err.code !== "EPIPE") {
-        // Ignore EPIPE errors
-        throw err
-      }
-    })
-
-    let closed = false
-    child.on("close", () => {
-      closed = true
-    })
-
     inputs.forEach((r) => {
       const line = `${r}`
       const lineToWrite = line.endsWith("\n") ? line : `${line}\n`
-      if (!closed && child.stdin?.writable) {
-        child.stdin?.write(lineToWrite)
+      if (child.stdin?.writable) {
+        try {
+          child.stdin?.write(lineToWrite)
+        } catch (err) {
+          if (err.code !== "EPIPE") {
+            // Ignore EPIPE errors
+            throw err
+          }
+        }
       }
     })
 
