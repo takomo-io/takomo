@@ -12,34 +12,18 @@ const tree: ConfigTree = {
         getConfig: jest.fn(),
         name: "dev",
         parentPath: undefined,
-        // dir: {
-        //   basename: "dev",
-        //   fullPath: "/tmp/dev",
-        // },
         stacks: [
           {
             path: "/dev/stack-x.yml",
             getConfig: jest.fn(),
-            // file: {
-            //   fullPath: "/tmp/dev/stack-x.yml",
-            //   basename: "stack-x.yml",
-            // },
           },
         ],
       },
     ],
-    // dir: {
-    //   basename: "tmp",
-    //   fullPath: "/tmp",
-    // },
     getConfig: jest.fn(),
     stacks: [
       {
         path: "/stack-a.yml",
-        // file: {
-        //   fullPath: "/tmp/stack-a.yml",
-        //   basename: "stack-a.yml",
-        // },
         getConfig: jest.fn(),
       },
     ],

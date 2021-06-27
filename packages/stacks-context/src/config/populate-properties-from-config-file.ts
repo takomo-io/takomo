@@ -1,46 +1,12 @@
-import { CommandContext, Vars } from "@takomo/core"
+import { CommandContext } from "@takomo/core"
 import {
   createStackGroup,
   SchemaRegistry,
   StackGroup,
 } from "@takomo/stacks-model"
-import { mapToObject, TakomoError, TkmLogger } from "@takomo/util"
-import { AnySchema } from "joi"
+import { TkmLogger } from "@takomo/util"
 import { StackGroupConfigNode } from "./config-tree"
 import { mergeStackGroupSchemas } from "./merge-stack-group-schemas"
-
-const validateData = (
-  stackGroup: StackGroup,
-  schemas: ReadonlyArray<AnySchema>,
-  data: Vars,
-): void => {
-  schemas.forEach((schema) => {
-    const { error } = schema.validate(data, { abortEarly: false })
-    if (error) {
-      const details = error.details.map((d) => `  - ${d.message}`).join("\n")
-      throw new TakomoError(
-        `Validation errors in data configuration of stack group ${stackGroup.path}:\n\n${details}`,
-      )
-    }
-  })
-}
-
-const validateTags = (
-  stackGroup: StackGroup,
-  schemas: ReadonlyArray<AnySchema>,
-  tags: Map<string, string>,
-): void => {
-  const tagsObject = mapToObject(tags)
-  schemas.forEach((schema) => {
-    const { error } = schema.validate(tagsObject, { abortEarly: false })
-    if (error) {
-      const details = error.details.map((d) => `  - ${d.message}`).join("\n")
-      throw new TakomoError(
-        `Validation errors in tags configuration of stack group ${stackGroup.path}:\n\n${details}`,
-      )
-    }
-  })
-}
 
 export const populatePropertiesFromConfigFile = async (
   ctx: CommandContext,
@@ -114,9 +80,6 @@ export const populatePropertiesFromConfigFile = async (
     stackGroup,
     configFile.schemas,
   )
-
-  validateData(stackGroup, props.schemas?.data ?? [], props.data)
-  validateTags(stackGroup, props.schemas?.tags ?? [], props.tags)
 
   return createStackGroup(props)
 }
