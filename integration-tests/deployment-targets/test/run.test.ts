@@ -227,19 +227,13 @@ describe("Run", () => {
       .expectCommandToSucceed("five,four,one,three,two")
       .assert())
 
-  test("Simple reduce command that reads from stdin", () =>
+  test("Simple reduce command that prints target results json", () =>
     executeRunTargetsCommand({
       projectDir,
       disableMapRole: true,
       mapCommand: "js:get-target-name.js",
-      reduceCommand: "./read-from-stdin.sh",
+      reduceCommand: "echo $TKM_TARGET_RESULTS_JSON",
     })
-      .expectCommandToSucceed(
-        "reading: one\n" +
-          "reading: two\n" +
-          "reading: five\n" +
-          "reading: four\n" +
-          "reading: three\n",
-      )
+      .expectCommandToSucceed('["one","two","five","four","three"]\n')
       .assert())
 })

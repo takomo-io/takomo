@@ -16,6 +16,7 @@ import { Credentials } from "aws-sdk"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
 import R from "ramda"
+import { promisify } from "util"
 import { DeploymentTargetsListener } from "../operation/model"
 import {
   DeploymentGroupRunResult,
@@ -25,62 +26,10 @@ import {
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
 } from "./model"
-import ProcessEnv = NodeJS.ProcessEnv
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const eoepipe = require("exit-on-epipe")
+const execP = promisify(exec)
 
 type DeploymentTargetRunOperation = () => Promise<DeploymentTargetRunResult>
-
-interface RunChildProcessProps {
-  readonly logger: TkmLogger
-  readonly command: string
-  readonly cwd: string
-  readonly env: ProcessEnv
-  readonly inputs: ReadonlyArray<unknown>
-}
-
-const runChildProcess = async ({
-  command,
-  cwd,
-  env,
-  inputs,
-  logger,
-}: RunChildProcessProps): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const child = exec(command, { cwd, env }, (error, stdout, stderr) => {
-      if (error) {
-        logger.error("Child process failed with an error", error)
-        logger.error(stderr)
-        reject(error)
-      } else {
-        resolve(stdout)
-      }
-    })
-
-    eoepipe(child.stdin, (e: any) => {
-      console.log("Handle error:", e)
-    })
-
-    inputs.forEach((r) => {
-      const line = `${r}`
-      const lineToWrite = line.endsWith("\n") ? line : `${line}\n`
-      if (child.stdin?.writable) {
-        // try {
-        child.stdin?.write(lineToWrite)
-        // } catch (err) {
-        //   console.log("-------ERROR")
-        //   console.log(err)
-        //   if (err.code !== "EPIPE") {
-        //     // Ignore EPIPE errors
-        //     throw err
-        //   }
-        // }
-      }
-    })
-
-    child.stdin?.end()
-  })
 
 const getDeploymentRole = (
   currentIdentity: CallerIdentity,
@@ -200,15 +149,12 @@ const runMapProcessCommand = async ({
     additionalVariables,
   })
 
-  const output = await runChildProcess({
+  const { stdout } = await execP(mapCommand, {
     env,
-    logger,
-    command: mapCommand,
     cwd: ctx.projectDir,
-    inputs: [targetJson],
   })
 
-  return captureValue(input, output)
+  return captureValue(input, stdout)
 }
 
 const runMapCommand = (props: RunMapCommandProps): Promise<unknown> =>
@@ -219,26 +165,32 @@ const runMapCommand = (props: RunMapCommandProps): Promise<unknown> =>
 interface RunReduceCommandProps {
   readonly reduceCommand: string
   readonly ctx: DeploymentTargetsContext
-  readonly logger: TkmLogger
   readonly credentials: Credentials
   readonly targetResults: ReadonlyArray<unknown>
 }
 
-const runReduceProcessCommand = ({
+const runReduceProcessCommand = async ({
   credentials,
   ctx,
   reduceCommand,
   targetResults,
-  logger,
 }: RunReduceCommandProps): Promise<unknown> => {
-  const env = prepareAwsEnvVariables({ env: process.env, credentials })
-  return runChildProcess({
-    env,
-    logger,
-    command: reduceCommand,
-    cwd: ctx.projectDir,
-    inputs: targetResults,
+  const additionalVariables = {
+    TKM_TARGET_RESULTS_JSON: JSON.stringify(targetResults),
+  }
+
+  const env = prepareAwsEnvVariables({
+    env: process.env,
+    credentials,
+    additionalVariables,
   })
+
+  const { stdout } = await execP(reduceCommand, {
+    env,
+    cwd: ctx.projectDir,
+  })
+
+  return stdout
 }
 
 const runJsReduceFunction = ({
@@ -500,10 +452,7 @@ export const run = async (
       ctx,
       credentials: reduceCredentials,
       reduceCommand: input.reduceCommand,
-      logger: io,
     })
-    console.log("=======___-----")
-    console.log(result)
     childTimer.stop()
     return {
       ...outputBase,
