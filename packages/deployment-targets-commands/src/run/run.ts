@@ -62,6 +62,8 @@ const runChildProcess = async ({
         try {
           child.stdin?.write(lineToWrite)
         } catch (err) {
+          console.log("-------ERROR")
+          console.log(err)
           if (err.code !== "EPIPE") {
             // Ignore EPIPE errors
             throw err
