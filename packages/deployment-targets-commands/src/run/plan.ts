@@ -24,14 +24,8 @@ export const planRun = async ({
   input,
   io,
 }: PlanRunProps): Promise<DeploymentTargetsRunOutput> => {
-  const {
-    groups,
-    targets,
-    excludeTargets,
-    labels,
-    excludeLabels,
-    timer,
-  } = input
+  const { groups, targets, excludeTargets, labels, excludeLabels, timer } =
+    input
 
   if (groups.length > 0) {
     groups.forEach((groupPath) => {

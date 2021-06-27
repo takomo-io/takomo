@@ -648,6 +648,7 @@ export const handle = async <
     })
 
     const input = await props.input(ctx, { timer: createTimer("total") })
+    logger.debugObject("Input arguments:", () => input)
     const io = props.io(ctx, logger)
 
     const configRepository = await props.configRepository(ctx, logger)

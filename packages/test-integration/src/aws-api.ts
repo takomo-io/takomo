@@ -2,9 +2,16 @@ import {
   AwsClientProvider,
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
-import { StackPolicyBody } from "@takomo/aws-model"
+import { CallerIdentity, StackPolicyBody } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
-import { CloudFormation, Credentials, EC2, Organizations, SSM } from "aws-sdk"
+import {
+  CloudFormation,
+  Credentials,
+  EC2,
+  Organizations,
+  SSM,
+  STS,
+} from "aws-sdk"
 import { Organization, PolicyType, Root } from "aws-sdk/clients/organizations"
 import { mock } from "jest-mock-extended"
 
@@ -17,6 +24,9 @@ const ssmClient = (region: string, credentials: Credentials): SSM =>
 
 const ec2Client = (region: string, credentials: Credentials): EC2 =>
   new EC2({ region, credentials })
+
+const stsClient = (credentials: Credentials): STS =>
+  new STS({ region: "us-east-1", credentials })
 
 const cloudFormationClient = (
   region: string,
@@ -197,6 +207,14 @@ const tagVpc = async ({
     .then(() => true)
 }
 
+const getCallerIdentity = async (
+  credentials: Credentials,
+): Promise<CallerIdentity> =>
+  stsClient(credentials)
+    .getCallerIdentity({})
+    .promise()
+    .then((r) => ({ accountId: r.Account!, arn: r.Arn!, userId: r.UserId! }))
+
 export const aws = {
   organizations: {
     describeOrganization,
@@ -214,4 +232,5 @@ export const aws = {
     putParameter,
   },
   ec2: { tagVpc },
+  sts: { getCallerIdentity },
 }
