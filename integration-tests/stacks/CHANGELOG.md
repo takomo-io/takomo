@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.23.0](https://github.com/takomo-io/takomo/compare/v3.22.0...v3.23.0) (2021-06-27)
+
+
+### Features
+
+* **stacks:** do not validate schemas in stack groups ([#261](https://github.com/takomo-io/takomo/issues/261)) ([f930fd9](https://github.com/takomo-io/takomo/commit/f930fd9609b5a180d70d78a459a952f283b16a12))
+
+
+
+
+
 # [3.22.0](https://github.com/takomo-io/takomo/compare/v3.21.0...v3.22.0) (2021-06-22)
 
 
