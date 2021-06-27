@@ -27,6 +27,9 @@ import {
 } from "./model"
 import ProcessEnv = NodeJS.ProcessEnv
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const eoepipe = require("exit-on-epipe")
+
 type DeploymentTargetRunOperation = () => Promise<DeploymentTargetRunResult>
 
 interface RunChildProcessProps {
@@ -55,20 +58,24 @@ const runChildProcess = async ({
       }
     })
 
+    eoepipe(child.stdin, (e: any) => {
+      console.log("Handle error:", e)
+    })
+
     inputs.forEach((r) => {
       const line = `${r}`
       const lineToWrite = line.endsWith("\n") ? line : `${line}\n`
       if (child.stdin?.writable) {
-        try {
-          child.stdin?.write(lineToWrite)
-        } catch (err) {
-          console.log("-------ERROR")
-          console.log(err)
-          if (err.code !== "EPIPE") {
-            // Ignore EPIPE errors
-            throw err
-          }
-        }
+        // try {
+        child.stdin?.write(lineToWrite)
+        // } catch (err) {
+        //   console.log("-------ERROR")
+        //   console.log(err)
+        //   if (err.code !== "EPIPE") {
+        //     // Ignore EPIPE errors
+        //     throw err
+        //   }
+        // }
       }
     })
 
