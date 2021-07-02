@@ -1,8 +1,8 @@
 import { Region } from "@takomo/aws-model"
 import { createGenerateIamPoliciesIO } from "@takomo/cli-io"
+import { parseStringArray, parseTypedArrayFromString } from "@takomo/core"
 import { generateIamPoliciesCommand } from "@takomo/iam-commands"
 import { handle } from "../common"
-import { parseStringArray } from "../parser"
 
 export const generateIamPoliciesCmd = {
   command: "generate-policies",
@@ -50,7 +50,7 @@ export const generateIamPoliciesCmd = {
         ...input,
         ...ctx.filePaths,
         identities: parseStringArray(argv.identity),
-        regions: parseStringArray(argv.region) as ReadonlyArray<Region>,
+        regions: parseTypedArrayFromString<Region>(argv.region),
         startTime: argv["start-time"],
         endTime: argv["end-time"],
         roleName: argv["role-name"],

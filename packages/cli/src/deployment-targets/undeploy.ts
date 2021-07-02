@@ -1,13 +1,13 @@
 import { createUndeployTargetsIO } from "@takomo/cli-io"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
+import { parseStringArray } from "@takomo/core"
 import {
   deploymentTargetsOperationCommand,
   undeployTargetsOperationCommandIamPolicy,
 } from "@takomo/deployment-targets-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
-import { parseStringArray } from "../parser"
 
 export const undeployTargetsCmd = {
   command: "undeploy [groups..]",

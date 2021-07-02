@@ -1,13 +1,13 @@
 import { createBootstrapAccountsIO } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
+import { parseStringArray } from "@takomo/core"
 import {
   accountsDeployOperationCommandIamPolicy,
   accountsOperationCommand,
 } from "@takomo/organization-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../../common"
-import { parseAccountIds } from "./fn"
 
 export const bootstrapAccountsCmd = {
   command: "bootstrap [organizationalUnits..]",
@@ -35,7 +35,7 @@ export const bootstrapAccountsCmd = {
       input: async (ctx, input) => ({
         ...input,
         organizationalUnits: argv.organizationalUnits || [],
-        accountIds: parseAccountIds(argv["account-id"]),
+        accountIds: parseStringArray(argv["account-id"]),
         concurrentAccounts: argv["concurrent-accounts"],
         operation: "deploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,

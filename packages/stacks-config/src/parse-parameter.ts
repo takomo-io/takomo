@@ -1,3 +1,4 @@
+import { parseOptionalBoolean } from "@takomo/core"
 import {
   ListParameterConfig,
   ParameterConfig,
@@ -5,18 +6,6 @@ import {
   SingleParameterConfig,
 } from "./model"
 import { parseSchema } from "./parse-schema"
-
-const parseConfidential = (value: unknown): boolean | undefined => {
-  if (value === null || value === undefined) {
-    return undefined
-  }
-
-  if (typeof value !== "boolean") {
-    throw new Error("Expected confidential to be boolean")
-  }
-
-  return value
-}
 
 const parseImmutable = (value: unknown): boolean => {
   if (value === null || value === undefined) {
@@ -61,7 +50,7 @@ const parseParameterConfig = (value: unknown): ParameterConfig => {
   return {
     ...objValue,
     resolver,
-    confidential: parseConfidential(objValue.confidential),
+    confidential: parseOptionalBoolean(objValue.confidential),
     immutable: parseImmutable(objValue.immutable),
     schema: parseSchema(objValue.schema),
   }
@@ -98,7 +87,7 @@ export const parseParameter = (value: unknown): ParameterConfigs => {
     }
 
     if (Array.isArray(objValue.value)) {
-      const confidential = parseConfidential(objValue.confidential)
+      const confidential = parseOptionalBoolean(objValue.confidential)
       const immutable = parseImmutable(objValue.immutable)
       const items = objValue.value.map(parseParameterConfig)
       const schema = parseSchema(objValue.schema)
@@ -108,7 +97,7 @@ export const parseParameter = (value: unknown): ParameterConfigs => {
     return new SingleParameterConfig(
       parseParameterConfig({
         ...objValue,
-        confidential: parseConfidential(objValue.confidential),
+        confidential: parseOptionalBoolean(objValue.confidential),
         immutable: parseImmutable(objValue.immutable),
         schema: parseSchema(objValue.schema),
         resolver: "static",

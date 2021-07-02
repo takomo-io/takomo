@@ -1,11 +1,9 @@
 import { OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
-import { parseVars } from "@takomo/core"
+import { parseStringArray, parseVars } from "@takomo/core"
 import R from "ramda"
 import { OrganizationAccountConfig } from "../model"
 import { parseAccountStatus } from "./parse-account-status"
-import { parseConfigSetNames } from "./parse-config-set-names"
-import { parsePolicyNames } from "./parse-policy-names"
 
 const parseSimpleAccount = (
   id: string,
@@ -55,10 +53,10 @@ const parseComplexAccount = (
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
 ): OrganizationAccountConfig => {
-  const configuredConfigSets = parseConfigSetNames(value.configSets)
+  const configuredConfigSets = parseStringArray(value.configSets)
   const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
 
-  const configuredBootstrapConfigSets = parseConfigSetNames(
+  const configuredBootstrapConfigSets = parseStringArray(
     value.bootstrapConfigSets,
   )
   const bootstrapConfigSets = R.uniq([
@@ -66,15 +64,15 @@ const parseComplexAccount = (
     ...inheritedBootstrapConfigSets,
   ])
 
-  const serviceControlPolicies = parsePolicyNames(value.serviceControlPolicies)
+  const serviceControlPolicies = parseStringArray(value.serviceControlPolicies)
 
-  const tagPolicies = parsePolicyNames(value.tagPolicies)
+  const tagPolicies = parseStringArray(value.tagPolicies)
 
-  const aiServicesOptOutPolicies = parsePolicyNames(
+  const aiServicesOptOutPolicies = parseStringArray(
     value.aiServicesOptOutPolicies,
   )
 
-  const backupPolicies = parsePolicyNames(value.backupPolicies)
+  const backupPolicies = parseStringArray(value.backupPolicies)
 
   const policies = {
     serviceControl: {

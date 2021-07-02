@@ -30,12 +30,19 @@ export {
   FeatureDisabledError,
   Features,
   InternalTakomoProjectConfig,
-  parseCommandRole,
-  parseRegex,
-  parseVars,
   TakomoProjectConfig,
   TakomoProjectDeploymentTargetsConfig,
   TakomoProjectOrganizationConfig,
 } from "./config"
+export {
+  parseCommandRole,
+  parseOptionalBoolean,
+  parseOptionalString,
+  parseOptionalStringArray,
+  parseRegex,
+  parseStringArray,
+  parseTypedArrayFromString,
+  parseVars,
+} from "./parser"
 export { CommonSchema, createCommonSchema } from "./schema"
 export { ContextVars, EnvVars, Variables, Vars } from "./variables"

@@ -1,8 +1,8 @@
 import { createRunTargetsIO } from "@takomo/cli-io"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
+import { parseStringArray } from "@takomo/core"
 import { deploymentTargetsRunCommand } from "@takomo/deployment-targets-commands"
 import { commonEpilog, handle } from "../common"
-import { parseStringArray } from "../parser"
 
 const CONCURRENT_TARGETS_OPT = "concurrent-targets"
 const EXCLUDE_TARGET_OPT = "exclude-target"

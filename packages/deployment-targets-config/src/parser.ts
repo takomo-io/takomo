@@ -4,7 +4,13 @@ import {
   mergeConfigSets,
   parseConfigSets,
 } from "@takomo/config-sets"
-import { CommandContext, parseCommandRole, parseVars, Vars } from "@takomo/core"
+import {
+  CommandContext,
+  parseCommandRole,
+  parseStringArray,
+  parseVars,
+  Vars,
+} from "@takomo/core"
 import {
   DeploymentGroupPath,
   DeploymentStatus,
@@ -83,30 +89,6 @@ const parseTargetSchemas = (value: unknown): ReadonlyArray<SchemaConfig> => {
     : [parseTargetSchema(value)]
 }
 
-const parseConfigSetNames = (value: any): ConfigSetName[] => {
-  if (value === null || value === undefined) {
-    return []
-  }
-
-  if (typeof value === "string") {
-    return [value]
-  }
-
-  return value
-}
-
-const parseLabels = (value: any): ReadonlyArray<Label> => {
-  if (value === null || value === undefined) {
-    return []
-  }
-
-  if (typeof value === "string") {
-    return [value]
-  }
-
-  return value
-}
-
 const parseDeploymentTarget = (
   value: any,
   inheritedVars: Vars,
@@ -114,10 +96,10 @@ const parseDeploymentTarget = (
   inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
   inheritedLabels: ReadonlyArray<Label>,
 ): DeploymentTargetConfig => {
-  const configuredConfigSets = parseConfigSetNames(value.configSets)
+  const configuredConfigSets = parseStringArray(value.configSets)
   const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
 
-  const configuredBootstrapConfigSets = parseConfigSetNames(
+  const configuredBootstrapConfigSets = parseStringArray(
     value.bootstrapConfigSets,
   )
   const bootstrapConfigSets = R.uniq([
@@ -125,7 +107,7 @@ const parseDeploymentTarget = (
     ...configuredBootstrapConfigSets,
   ])
 
-  const configuredLabels = parseConfigSetNames(value.labels)
+  const configuredLabels = parseStringArray(value.labels)
   const labels = R.uniq([...inheritedLabels, ...configuredLabels])
   const vars = deepCopy({ ...inheritedVars, ...parseVars(value.vars) })
 
@@ -191,10 +173,10 @@ const parseDeploymentGroup = (
     (key) => key.split("/").length === groupPathDepth + 1,
   )
 
-  const configuredConfigSets = parseConfigSetNames(group?.configSets)
+  const configuredConfigSets = parseStringArray(group?.configSets)
   const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
 
-  const configuredBootstrapConfigSets = parseConfigSetNames(
+  const configuredBootstrapConfigSets = parseStringArray(
     group?.bootstrapConfigSets,
   )
   const bootstrapConfigSets = R.uniq([
@@ -202,7 +184,7 @@ const parseDeploymentGroup = (
     ...configuredBootstrapConfigSets,
   ])
 
-  const configuredLabels = parseLabels(group?.labels)
+  const configuredLabels = parseStringArray(group?.labels)
   const labels = R.uniq([...inheritedLabels, ...configuredLabels])
 
   const targetsSchema = parseTargetSchemas(group?.targetsSchema)

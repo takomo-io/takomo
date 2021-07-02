@@ -1,13 +1,13 @@
 import { createTearDownAccountsIO } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
+import { parseStringArray } from "@takomo/core"
 import {
   accountsOperationCommand,
   accountsUndeployOperationCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../../common"
-import { parseAccountIds } from "./fn"
 
 export const tearDownAccountsCmd = {
   command: "tear-down [organizationalUnits..]",
@@ -35,7 +35,7 @@ export const tearDownAccountsCmd = {
       input: async (ctx, input) => ({
         ...input,
         organizationalUnits: argv.organizationalUnits || [],
-        accountIds: parseAccountIds(argv["account-id"]),
+        accountIds: parseStringArray(argv["account-id"]),
         concurrentAccounts: argv["concurrent-accounts"],
         operation: "undeploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,
