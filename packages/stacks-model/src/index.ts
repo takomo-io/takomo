@@ -30,3 +30,4 @@ export {
   StackGroupPath,
   StackGroupProps,
 } from "./stack-group"
+export { getStackPaths } from "./util"

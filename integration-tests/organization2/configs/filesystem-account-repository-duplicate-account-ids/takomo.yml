@@ -1,0 +1,4 @@
+organization:
+  repository:
+    type: filesystem
+    dir: organization/accounts

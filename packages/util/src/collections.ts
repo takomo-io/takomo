@@ -66,3 +66,15 @@ export const arrayToMap = <T>(
   items: ReadonlyArray<T>,
   keyExtractor: (item: T) => string,
 ): Map<string, T> => new Map(items.map((item) => [keyExtractor(item), item]))
+
+type Primitive = string | number | boolean
+
+/**
+ * @hidden
+ */
+export const findNonUniques = <Primitive>(
+  items: ReadonlyArray<Primitive>,
+): ReadonlyArray<Primitive> =>
+  R.uniq(
+    items.filter((item) => items.filter((i) => i === item).length > 1),
+  ).sort()
