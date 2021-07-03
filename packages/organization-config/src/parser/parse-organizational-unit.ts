@@ -1,15 +1,13 @@
 import { OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
-import { parseVars } from "@takomo/core"
+import { parseStringArray, parseVars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { TkmLogger } from "@takomo/util"
 import R from "ramda"
 import { OrganizationalUnitConfig } from "../model"
 import { findMissingDirectChildrenPaths } from "./find-missing-direct-child-paths"
 import { parseAccounts } from "./parse-accounts"
-import { parseConfigSetNames } from "./parse-config-set-names"
 import { parseOrganizationalUnitStatus } from "./parse-organizational-unit-status"
-import { parsePolicyNames } from "./parse-policy-names"
 
 const extractOrganizationalUnitName = (
   ouPath: OrganizationalUnitPath,
@@ -64,14 +62,14 @@ export const parseOrganizationalUnit = async (
   logger.debugObject("Missing direct child paths:", missingDirectChildPaths)
 
   const ou = config[ouPath]
-  const configuredServiceControlPolicies = parsePolicyNames(
+  const configuredServiceControlPolicies = parseStringArray(
     ou?.serviceControlPolicies,
   )
-  const configuredTagPolicies = parsePolicyNames(ou?.tagPolicies)
-  const configuredAiServicesOptOutPolicies = parsePolicyNames(
+  const configuredTagPolicies = parseStringArray(ou?.tagPolicies)
+  const configuredAiServicesOptOutPolicies = parseStringArray(
     ou?.aiServicesOptOutPolicies,
   )
-  const configuredBackupPolicies = parsePolicyNames(ou?.backupPolicies)
+  const configuredBackupPolicies = parseStringArray(ou?.backupPolicies)
 
   const serviceControlPolicies = R.uniq([
     ...configuredServiceControlPolicies,
@@ -115,10 +113,10 @@ export const parseOrganizationalUnit = async (
     },
   }
 
-  const configuredConfigSets = parseConfigSetNames(ou?.configSets)
+  const configuredConfigSets = parseStringArray(ou?.configSets)
   const configSets = R.uniq([...configuredConfigSets, ...inheritedConfigSets])
 
-  const configuredBootstrapConfigSets = parseConfigSetNames(
+  const configuredBootstrapConfigSets = parseStringArray(
     ou?.bootstrapConfigSets,
   )
   const bootstrapConfigSets = R.uniq([

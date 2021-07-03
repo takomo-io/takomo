@@ -4,7 +4,7 @@ import {
   mergeConfigSets,
   parseConfigSets,
 } from "@takomo/config-sets"
-import { CommandContext, parseVars } from "@takomo/core"
+import { CommandContext, parseOptionalString, parseVars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { buildOrganizationConfigSchema } from "@takomo/organization-schema"
 import { deepFreeze, TkmLogger, ValidationError } from "@takomo/util"
@@ -13,7 +13,6 @@ import { OrganizationConfig } from "../model"
 import { parseAccountCreationConfig } from "./parse-account-creation-config"
 import { parseOrganizationalUnitsConfig } from "./parse-organizational-units-config"
 import { parsePoliciesConfig } from "./parse-policies-config"
-import { parseString } from "./parse-string"
 
 interface BuildOrganizationConfigProps {
   readonly logger: TkmLogger
@@ -29,13 +28,8 @@ interface BuildOrganizationConfigProps {
 export const buildOrganizationConfig = async (
   props: BuildOrganizationConfigProps,
 ): Promise<Result<OrganizationConfig, ValidationError>> => {
-  const {
-    logger,
-    ctx,
-    externallyLoadedAccounts,
-    externalConfigSets,
-    record,
-  } = props
+  const { logger, ctx, externallyLoadedAccounts, externalConfigSets, record } =
+    props
 
   const organizationConfigFileSchema = buildOrganizationConfigSchema({
     regions: ctx.regions,
@@ -90,9 +84,11 @@ export const buildOrganizationConfig = async (
       organizationalUnits,
       vars,
       masterAccountId: `${record.masterAccountId}`,
-      organizationAdminRoleName: parseString(record.organizationAdminRoleName),
-      accountAdminRoleName: parseString(record.accountAdminRoleName),
-      accountBootstrapRoleName: parseString(
+      organizationAdminRoleName: parseOptionalString(
+        record.organizationAdminRoleName,
+      ),
+      accountAdminRoleName: parseOptionalString(record.accountAdminRoleName),
+      accountBootstrapRoleName: parseOptionalString(
         record.accountBootstrapAdminRoleName,
       ),
     }),

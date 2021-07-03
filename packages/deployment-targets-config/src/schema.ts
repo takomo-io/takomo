@@ -12,11 +12,8 @@ interface CreateDeploymentTargetsConfigSchemaProps {
 export const createDeploymentTargetsConfigSchema = (
   props: CreateDeploymentTargetsConfigSchemaProps,
 ): ObjectSchema => {
-  const {
-    deploymentGroupPath,
-    deploymentTarget,
-    label,
-  } = createDeploymentTargetsSchemas({ ...props })
+  const { deploymentGroupPath, deploymentTarget, label } =
+    createDeploymentTargetsSchemas({ ...props })
 
   const { configSetName, configSets } = createConfigSetsSchemas({ ...props })
   const { vars } = createCommonSchema()
