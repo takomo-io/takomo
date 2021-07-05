@@ -13,8 +13,7 @@ export class AccountsMissingFromLocalConfigError extends TakomoError {
         )
         .join("\n")}`,
       {
-        info:
-          "All active organization accounts need to be present in the local configuration.",
+        info: "All active organization accounts need to be present in the local configuration.",
         instructions: [
           "Add missing accounts under the appropriate organizational units.",
         ],
@@ -32,8 +31,7 @@ export class SuspendedAccountsInLocalConfigError extends TakomoError {
         .map((id) => `  - ${id}`)
         .join("\n")}`,
       {
-        info:
-          "All suspended accounts must be marked as suspended in the local configuration.",
+        info: "All suspended accounts must be marked as suspended in the local configuration.",
         instructions: [
           "Mark the suspended accounts in the local configuration with 'suspended: true'",
         ],
@@ -51,8 +49,7 @@ export class NonExistingAccountsInLocalConfigError extends TakomoError {
         .map((id) => `  - ${id}`)
         .join("\n")}`,
       {
-        info:
-          "The local configuration must contain only accounts that are found from the organization.",
+        info: "The local configuration must contain only accounts that are found from the organization.",
         instructions: ["Remove unknown accounts from the local configuration."],
       },
     )

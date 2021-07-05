@@ -9,7 +9,6 @@ export * from "./random"
 export * from "./rules"
 export * from "./strings"
 export * from "./system"
-export * from "./templating"
 export {
   createTemplateEngine,
   renderTemplate,

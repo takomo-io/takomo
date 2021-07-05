@@ -32,11 +32,12 @@ export const buildOrganizationContext = async (
 ): Promise<OrganizationContext> => {
   const organizationConfig = await configRepository.getOrganizationConfig()
 
-  const organizationAdminCredentialManager = await getCredentialManagerForOrganizationAdmin(
-    logger,
-    organizationConfig,
-    credentialManager,
-  )
+  const organizationAdminCredentialManager =
+    await getCredentialManagerForOrganizationAdmin(
+      logger,
+      organizationConfig,
+      credentialManager,
+    )
 
   const credentials = await credentialManager.getCredentials()
   const client = ctx.awsClientProvider.createOrganizationsClient({

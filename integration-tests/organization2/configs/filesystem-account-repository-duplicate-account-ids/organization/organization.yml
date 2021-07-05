@@ -1,0 +1,8 @@
+masterAccountId: "{{ env.TKM_ORG_3_MASTER_ACCOUNT_ID }}"
+organizationalUnits:
+  Root/Master:
+    accounts:
+      - "{{ env.TKM_ORG_3_MASTER_ACCOUNT_ID }}"
+  Root/Test:
+    accounts:
+      - "{{ env.TKM_ORG_3_ACCOUNT_02_ID }}"

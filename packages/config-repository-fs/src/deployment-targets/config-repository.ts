@@ -182,11 +182,12 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
         configFile,
       )
 
-      const externalDeploymentTargets = await loadExternallyPersistedDeploymentTargets(
-        ctx,
-        logger,
-        stacksConfigRepository.templateEngine,
-      )
+      const externalDeploymentTargets =
+        await loadExternallyPersistedDeploymentTargets(
+          ctx,
+          logger,
+          stacksConfigRepository.templateEngine,
+        )
 
       const externalConfigSets = await loadConfigSetsFromConfigSetsDir(
         configSetsDir,

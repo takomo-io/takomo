@@ -82,7 +82,8 @@ export const createOrganizationContext = ({
   )
 
   const getClient = async (): Promise<OrganizationsClient> => {
-    const credentials = await organizationAdminCredentialManager.getCredentials()
+    const credentials =
+      await organizationAdminCredentialManager.getCredentials()
     return ctx.awsClientProvider.createOrganizationsClient({
       region: "us-east-1",
       credentials,

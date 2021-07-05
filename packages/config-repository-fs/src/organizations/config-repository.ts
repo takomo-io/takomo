@@ -19,7 +19,6 @@ import { OrganizationConfigRepository } from "@takomo/organization-context"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import {
-  collectFromHierarchy,
   createDir,
   createFile,
   dirExists,
@@ -192,31 +191,13 @@ export const createFileSystemOrganizationConfigRepository = async (
     })
 
     if (!result.isOk()) {
-      const details = result.error.messages.map((m) => `- ${m}`).join("\n")
+      const details = result.error.messages.map((m) => `  - ${m}`).join("\n")
       throw new TakomoError(
-        `Validation errors in organization configuration file ${pathToOrganizationConfigFile}:\n${details}`,
+        `Validation errors in organization configuration file ${pathToOrganizationConfigFile}:\n\n${details}`,
       )
     }
 
-    const organizationConfig = result.value
-
-    const ouPaths = collectFromHierarchy(
-      organizationConfig.organizationalUnits.Root,
-      (n) => n.children,
-    ).map((ou) => ou.path)
-
-    const unknownOUs = Array.from(externallyLoadedAccounts.keys()).filter(
-      (ou) => !ouPaths.includes(ou),
-    )
-
-    if (unknownOUs.length > 0) {
-      throw new TakomoError(
-        `Accounts loaded from account repository contain ${unknownOUs.length} organizational units that do not exists in organization configuration file:\n\n` +
-          unknownOUs.map((ou) => `  - ${ou}`).join("\n"),
-      )
-    }
-
-    return organizationConfig
+    return result.value
   }
 
   const putOrganizationConfig = async (

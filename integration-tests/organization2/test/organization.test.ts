@@ -5,6 +5,7 @@ import {
   ORG_3_ACCOUNT_01_EMAIL,
   ORG_3_ACCOUNT_01_ID,
   ORG_3_ACCOUNT_01_NAME,
+  ORG_3_ACCOUNT_02_ID,
 } from "./env"
 
 const deployOrganizationSucceeds = async (
@@ -60,9 +61,24 @@ describe("Organization commands", () => {
     deployOrganizationThrows(
       "configs/filesystem-account-repository-unknown-ou",
       dedent`
-      Accounts loaded from account repository contain 1 organizational units that do not exists in organization configuration file:
+      Validation errors in organization configuration file ${process.cwd()}/configs/filesystem-account-repository-unknown-ou/organization/organization.yml:
       
-        - Root/Unknown
-      `,
+        - Organizational unit 'Root/Unknown' is not found from the configuration file but is referenced in externally configured accounts.`,
+    ))
+  test("Accounts loaded from account repository must not contain duplicate account ids", () =>
+    deployOrganizationThrows(
+      "configs/filesystem-account-repository-duplicate-external-account-ids",
+      dedent`
+      Validation errors in organization configuration file ${process.cwd()}/configs/filesystem-account-repository-duplicate-external-account-ids/organization/organization.yml:
+      
+        - Account '${ORG_3_ACCOUNT_01_ID}' is specified more than once in the externally configured accounts`,
+    ))
+  test("Accounts loaded from account repository must not contain account ids found from the configuration file", () =>
+    deployOrganizationThrows(
+      "configs/filesystem-account-repository-duplicate-account-ids",
+      dedent`
+      Validation errors in organization configuration file ${process.cwd()}/configs/filesystem-account-repository-duplicate-account-ids/organization/organization.yml:
+      
+        - Account '${ORG_3_ACCOUNT_02_ID}' is defined more than once in the configuration.`,
     ))
 })
