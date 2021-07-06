@@ -16,46 +16,45 @@ export interface DeploymentTargetRepositoryRegistry {
   ) => void
 }
 
-export const createDeploymentTargetRepositoryRegistry = (): DeploymentTargetRepositoryRegistry => {
-  const providers = new Map<
-    DeploymentTargetRepositoryType,
-    DeploymentTargetRepositoryProvider
-  >()
-  return {
-    registerDeploymentTargetRepositoryProvider: (
-      type: DeploymentTargetRepositoryType,
-      provider: DeploymentTargetRepositoryProvider,
-    ): void => {
-      if (providers.has(type)) {
-        throw new TakomoError(
-          `Deployment target repository provider already registered for type '${type}'`,
-        )
-      }
+export const createDeploymentTargetRepositoryRegistry =
+  (): DeploymentTargetRepositoryRegistry => {
+    const providers = new Map<
+      DeploymentTargetRepositoryType,
+      DeploymentTargetRepositoryProvider
+    >()
+    return {
+      registerDeploymentTargetRepositoryProvider: (
+        type: DeploymentTargetRepositoryType,
+        provider: DeploymentTargetRepositoryProvider,
+      ): void => {
+        if (providers.has(type)) {
+          throw new TakomoError(
+            `Deployment target repository provider already registered for type '${type}'`,
+          )
+        }
 
-      providers.set(type, provider)
-    },
+        providers.set(type, provider)
+      },
 
-    initDeploymentTargetRepository: ({
-      ctx,
-      config,
-      logger,
-      templateEngine,
-    }: InitDeploymentTargetRepositoryProps): Promise<
-      DeploymentTargetRepository
-    > => {
-      const provider = providers.get(config.type)
-      if (!provider) {
-        throw new TakomoError(
-          `Unknown account repository type: '${config.type}'`,
-        )
-      }
-
-      return provider.initDeploymentTargetRepository({
+      initDeploymentTargetRepository: ({
         ctx,
         config,
-        templateEngine,
         logger,
-      })
-    },
+        templateEngine,
+      }: InitDeploymentTargetRepositoryProps): Promise<DeploymentTargetRepository> => {
+        const provider = providers.get(config.type)
+        if (!provider) {
+          throw new TakomoError(
+            `Unknown account repository type: '${config.type}'`,
+          )
+        }
+
+        return provider.initDeploymentTargetRepository({
+          ctx,
+          config,
+          templateEngine,
+          logger,
+        })
+      },
+    }
   }
-}

@@ -1,0 +1,4 @@
+name: d
+accountId: "{{ var.ACCOUNT_2_ID }}"
+vars:
+  logGroupName: fourthLogs

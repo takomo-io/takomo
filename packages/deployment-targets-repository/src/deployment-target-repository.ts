@@ -45,10 +45,8 @@ interface CreateDeploymentTargetConfigItemSchemaProps {
 export const createDeploymentTargetConfigItemSchema = (
   props: CreateDeploymentTargetConfigItemSchemaProps,
 ): Joi.ObjectSchema => {
-  const {
-    deploymentGroupPath,
-    deploymentTarget,
-  } = createDeploymentTargetsSchemas(props)
+  const { deploymentGroupPath, deploymentTarget } =
+    createDeploymentTargetsSchemas(props)
 
   return deploymentTarget.keys({
     deploymentGroupPath: deploymentGroupPath.required(),
