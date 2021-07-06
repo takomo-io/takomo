@@ -1,0 +1,11 @@
+deploymentGroups:
+  development:
+    deploymentRoleName: OrganizationAccountAccessRole
+    configSets: dev
+  production:
+    deploymentRoleName: OrganizationAccountAccessRole
+    configSets: prod
+  nested/group:
+    deploymentRoleName: OrganizationAccountAccessRole
+    configSets: common
+
