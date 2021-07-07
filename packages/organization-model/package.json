@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-model",
-  "version": "3.21.0",
+  "version": "3.24.0",
   "description": "Takomo Organization Model",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -34,7 +34,7 @@
     "linux"
   ],
   "dependencies": {
-    "@takomo/aws-model": "3.21.0"
+    "@takomo/aws-model": "3.24.0"
   },
   "publishConfig": {
     "access": "public"

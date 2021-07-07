@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.24.0](https://github.com/takomo-io/takomo/compare/v3.23.0...v3.24.0) (2021-07-07)
+
+
+### Features
+
+* **deployment targets:** add option to infer deployment group path from target's file path ([#264](https://github.com/takomo-io/takomo/issues/264)) ([816514e](https://github.com/takomo-io/takomo/commit/816514e8c84a4121f2a7ee99e784e3ee5da82ad0))
+
+
+
+
+
 # [3.23.0](https://github.com/takomo-io/takomo/compare/v3.22.0...v3.23.0) (2021-06-27)
 
 

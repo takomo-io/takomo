@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.24.0](https://github.com/takomo-io/takomo/compare/v3.23.0...v3.24.0) (2021-07-07)
+
+
+### Features
+
+* **organizations:** imporove organization configuration validation ([#263](https://github.com/takomo-io/takomo/issues/263)) ([5009bc2](https://github.com/takomo-io/takomo/commit/5009bc290258b0526bb6dbf7e6648488ae39b5f1))
+
+
+
+
+
 # [3.23.0](https://github.com/takomo-io/takomo/compare/v3.22.0...v3.23.0) (2021-06-27)
 
 **Note:** Version bump only for package @takomo/organization-config
