@@ -41,6 +41,10 @@ describe("Organization commands", () => {
     deployOrganizationSucceeds("configs/simple"))
   test("Load accounts using filesystem account repository", () =>
     deployOrganizationSucceeds("configs/filesystem-account-repository"))
+  test("Load accounts using filesystem account repository with infer OU path", () =>
+    deployOrganizationSucceeds(
+      "configs/filesystem-account-repository-infer-ou-path",
+    ))
   test("All accounts must be present in local config", () =>
     deployOrganizationFails(
       "configs/all-accounts-not-present-in-local-config",

@@ -34,7 +34,8 @@
     "@takomo/organization-schema": "3.24.0",
     "@takomo/util": "3.24.0",
     "joi": "17.4.0",
-    "readdirp": "3.5.0"
+    "readdirp": "3.5.0",
+    "ramda": "0.27.1"
   },
   "engines": {
     "node": ">=14.4.0"
