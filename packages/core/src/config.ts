@@ -1,5 +1,5 @@
 import { Region } from "@takomo/aws-model"
-import { TakomoError } from "@takomo/util"
+import { FilePath, TakomoError } from "@takomo/util"
 
 export type AccountRepositoryType = string
 export interface AccountRepositoryConfig {
@@ -76,6 +76,7 @@ export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly resolvers: ReadonlyArray<ExternalResolverConfig>
   readonly helpers: ReadonlyArray<ExternalHandlebarsHelperConfig>
   readonly features: Features
+  readonly varFiles: ReadonlyArray<FilePath>
 }
 
 /**

@@ -16,6 +16,7 @@ describe("#parseProjectConfigFile", () => {
       regions: DEFAULT_REGIONS,
       resolvers: [],
       helpers: [],
+      varFiles: [],
       features: defaultFeatures(),
     })
   })
@@ -29,6 +30,7 @@ describe("#parseProjectConfigFile", () => {
       regions: ["eu-west-1"],
       resolvers: [],
       helpers: [],
+      varFiles: [],
       features: defaultFeatures(),
     })
   })
@@ -42,6 +44,7 @@ describe("#parseProjectConfigFile", () => {
       regions: ["eu-central-1", "eu-north-1", "us-east-1"],
       resolvers: [],
       helpers: [],
+      varFiles: [],
       features: defaultFeatures(),
     })
   })
@@ -54,6 +57,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
       helpers: [],
+      varFiles: [],
       features: defaultFeatures(),
       resolvers: [
         {
@@ -79,6 +83,7 @@ describe("#parseProjectConfigFile", () => {
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
       resolvers: [],
+      varFiles: [],
       features: defaultFeatures(),
       helpers: [
         {
@@ -93,6 +98,20 @@ describe("#parseProjectConfigFile", () => {
           name: "a-better-name",
         },
       ],
+    })
+  })
+
+  test("with var files", async () => {
+    const config = await doParseProjectConfigFile("project-config-06.yml")
+    expect(config).toStrictEqual({
+      requiredVersion: undefined,
+      organization: undefined,
+      deploymentTargets: undefined,
+      regions: DEFAULT_REGIONS,
+      resolvers: [],
+      helpers: [],
+      varFiles: ["file1.json", "file2.yml"],
+      features: defaultFeatures(),
     })
   })
 })

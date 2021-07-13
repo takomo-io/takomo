@@ -108,14 +108,8 @@ const readVariablesFromFile = async (
 
 export const parseVarFileArgs = async (
   projectDir: string,
-  varFileArgs: any,
+  varsArray: ReadonlyArray<string>,
 ): Promise<any> => {
-  const varsArray = varFileArgs
-    ? Array.isArray(varFileArgs)
-      ? varFileArgs
-      : [varFileArgs]
-    : []
-
   const vars = {}
   for (const varArg of varsArray) {
     if (/^([a-zA-Z][a-zA-Z0-9_]+)=/.test(varArg)) {
@@ -196,7 +190,7 @@ const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
 
 export const parseVariables = async (
   projectDir: string,
-  varFileArgs: any,
+  varFileArgs: ReadonlyArray<string>,
   varArgs: any,
   envFileArgs: any,
 ): Promise<Variables> => {
@@ -293,13 +287,6 @@ export const initCommandContext = async (
   const projectDir = resolveProjectDir(argv.dir)
   const logLevel = resolveLogLevel(argv.log)
 
-  const variables = await parseVariables(
-    projectDir,
-    argv["var-file"],
-    argv.var,
-    argv["env-file"],
-  )
-
   const filePaths: ProjectFilePaths = {
     projectDir,
     hooksDir: path.join(projectDir, HOOKS_DIR),
@@ -345,6 +332,20 @@ export const initCommandContext = async (
   const projectConfig = await loadProjectConfig(
     filePaths.projectConfigFile,
     overrideFeatures,
+  )
+
+  const varFileArgs = argv["var-file"]
+  const varFileArray = varFileArgs
+    ? Array.isArray(varFileArgs)
+      ? varFileArgs
+      : [varFileArgs]
+    : []
+
+  const variables = await parseVariables(
+    projectDir,
+    [...projectConfig.varFiles, ...varFileArray],
+    argv.var,
+    argv["env-file"],
   )
 
   const logger = createLogger({ logLevel, writer: console.log })
