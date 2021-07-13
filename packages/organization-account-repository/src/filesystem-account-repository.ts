@@ -13,6 +13,7 @@ import {
   TemplateEngine,
 } from "@takomo/util"
 import { dirname, join, relative } from "path"
+import R from "ramda"
 import readdirp from "readdirp"
 import {
   AccountConfigItem,
@@ -141,9 +142,20 @@ export const createFileSystemAccountRepositoryProvider =
 
         return {
           putAccount: async (item: AccountConfigItem): Promise<void> => {
-            const pathToFile = join(expandedDir, `${item.id}.yml`)
+            const pathToFile = inferOUPathFromDirName
+              ? join(
+                  expandedDir,
+                  `${item.organizationalUnitPath}/${item.id}.yml`,
+                )
+              : join(expandedDir, `${item.id}.yml`)
+
             logger.info(`Persist account '${item.id}' to file: ${pathToFile}`)
-            const contents = formatYaml(item)
+
+            const preparedItem = inferOUPathFromDirName
+              ? R.omit(["organizationalUnitPath"], item)
+              : item
+
+            const contents = formatYaml(preparedItem)
             logger.trace("File contents:", () => contents)
             await createFile(pathToFile, contents)
           },
