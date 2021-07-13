@@ -1,8 +1,8 @@
 import { parseVariables } from "../src/common"
 
 describe("parse var args", () => {
-  test("populates only env when null var args are given", async () => {
-    const { var: vars } = await parseVariables("test", null, null, null)
+  test("populates only env when empty var args are given", async () => {
+    const { var: vars } = await parseVariables("test", [], null, null)
     expect(vars).toStrictEqual({})
   })
 

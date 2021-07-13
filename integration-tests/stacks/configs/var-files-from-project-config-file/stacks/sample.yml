@@ -1,0 +1,16 @@
+regions: eu-west-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+parameters:
+  Color: {{ var.color }}
+tags:
+  Code: {{ var.code }}
+template:
+  inline: |
+    Parameters:
+      Color:
+        Type: String
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+          LogGroupName: !Ref Color

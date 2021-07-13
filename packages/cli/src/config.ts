@@ -5,6 +5,7 @@ import {
   ExternalResolverConfig,
   Features,
   InternalTakomoProjectConfig,
+  parseStringArray,
 } from "@takomo/core"
 import {
   fileExists,
@@ -131,6 +132,7 @@ export const parseProjectConfigFile = async (
     ...parseFeatures(parsedFile.features),
     ...overrideFeatures,
   }
+  const varFiles = parseStringArray(parsedFile.varFiles)
 
   return {
     regions,
@@ -138,6 +140,7 @@ export const parseProjectConfigFile = async (
     resolvers,
     helpers,
     features,
+    varFiles,
     organization: parsedFile.organization,
     deploymentTargets: parsedFile.deploymentTargets,
   }
@@ -176,6 +179,8 @@ const features = Joi.object({
   deploymentTargetsTearDown: Joi.boolean(),
 })
 
+const varFiles = [Joi.string(), Joi.array().items(Joi.string())]
+
 export const takomoProjectConfigFileSchema = Joi.object({
   requiredVersion: Joi.string(),
   organization: Joi.object({
@@ -187,6 +192,7 @@ export const takomoProjectConfigFileSchema = Joi.object({
   regions: Joi.array().items(Joi.string()).unique(),
   resolvers: Joi.array().items(Joi.string(), externalResolver),
   helpers: Joi.array().items(Joi.string(), externalHandlebarsHelper),
+  varFiles,
   features,
 })
 
@@ -199,6 +205,7 @@ export const loadProjectConfig = async (
       regions: DEFAULT_REGIONS.slice(),
       resolvers: [],
       helpers: [],
+      varFiles: [],
       features: { ...defaultFeatures(), ...overrideFeatures },
     }
   }

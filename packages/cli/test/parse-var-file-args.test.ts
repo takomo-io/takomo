@@ -1,16 +1,6 @@
 import { parseVarFileArgs } from "../src/common"
 
 describe("parse var file args", () => {
-  test("returns an empty object when null is given", async () => {
-    const vars = await parseVarFileArgs(".", null)
-    expect(vars).toStrictEqual({})
-  })
-
-  test("returns an empty object when undefined is given", async () => {
-    const vars = await parseVarFileArgs(".", undefined)
-    expect(vars).toStrictEqual({})
-  })
-
   test("returns an empty object when empty array is given", async () => {
     const vars = await parseVarFileArgs(".", [])
     expect(vars).toStrictEqual({})
