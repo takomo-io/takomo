@@ -140,7 +140,7 @@ export const createTemplateEngine = (): TemplateEngine => {
 
   const renderTemplate = (string: string, variables: any): string => {
     const template = instance.compile(string, {
-      noEscape: false,
+      noEscape: true,
       strict: true,
     })
 
