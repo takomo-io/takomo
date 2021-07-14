@@ -54,6 +54,7 @@ export const createOrganizationSchemas = (
   const policy = Joi.object({
     description: Joi.string().min(1).max(512).required(),
     awsManaged: Joi.boolean(),
+    dynamic: Joi.boolean(),
   })
 
   const organizationAccountWithoutId = Joi.object({

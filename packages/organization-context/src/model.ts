@@ -15,6 +15,7 @@ export interface OrganizationConfigRepository extends StacksConfigRepository {
   readonly getOrganizationPolicyContents: (
     policyType: OrganizationPolicyType,
     policyName: OrganizationPolicyName,
+    dynamic: boolean,
   ) => Promise<string>
   readonly putAccountConfig: (config: AccountConfigItem) => Promise<void>
   readonly createStacksConfigRepository: (
