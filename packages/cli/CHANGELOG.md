@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.25.0](https://github.com/takomo-io/takomo/compare/v3.24.0...v3.25.0) (2021-07-14)
+
+
+### Features
+
+* **stacks:** add option to specify variable files in takomo.yml file ([#266](https://github.com/takomo-io/takomo/issues/266)) ([e7918e6](https://github.com/takomo-io/takomo/commit/e7918e6cdcf36e40cdea15e24f5a54820ec7d834)), closes [#265](https://github.com/takomo-io/takomo/issues/265)
+
+
+
+
+
 # [3.24.0](https://github.com/takomo-io/takomo/compare/v3.23.0...v3.24.0) (2021-07-07)
 
 **Note:** Version bump only for package @takomo/cli
