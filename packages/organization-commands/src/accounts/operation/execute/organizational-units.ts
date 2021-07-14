@@ -27,32 +27,34 @@ interface ConvertToOperationProps {
   readonly accountsListener: AccountsListener
 }
 
-const convertToOperation = ({
-  holder,
-  organizationalUnit,
-  timer,
-  policy,
-  account,
-  state,
-  configSetType,
-  results,
-  accountsListener,
-}: ConvertToOperationProps): AccountOperation => () =>
-  policy.execute(async () => {
-    await accountsListener.onAccountBegin()
-    const result = await processAccount(
-      holder,
-      organizationalUnit,
-      account,
-      timer.startChild(account.account.id),
-      state,
-      configSetType,
-    )
+const convertToOperation =
+  ({
+    holder,
+    organizationalUnit,
+    timer,
+    policy,
+    account,
+    state,
+    configSetType,
+    results,
+    accountsListener,
+  }: ConvertToOperationProps): AccountOperation =>
+  () =>
+    policy.execute(async () => {
+      await accountsListener.onAccountBegin()
+      const result = await processAccount(
+        holder,
+        organizationalUnit,
+        account,
+        timer.startChild(account.account.id),
+        state,
+        configSetType,
+      )
 
-    results.push(result)
-    await accountsListener.onAccountComplete()
-    return result
-  })
+      results.push(result)
+      await accountsListener.onAccountComplete()
+      return result
+    })
 
 export const processOrganizationalUnit = async (
   holder: AccountsOperationPlanHolder,

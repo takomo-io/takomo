@@ -43,54 +43,59 @@ const deletePolicies = async (
   return deletePolicies(client, rest, [...results, result])
 }
 
-export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResultHolder> = async (
-  state,
-) => {
-  const {
-    transitions,
-    ctx,
-    io,
-    totalTimer,
-    policiesPlan: { hasChanges, aiServicesOptOut, tag, backup, serviceControl },
-  } = state
+export const cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResultHolder> =
+  async (state) => {
+    const {
+      transitions,
+      ctx,
+      io,
+      totalTimer,
+      policiesPlan: {
+        hasChanges,
+        aiServicesOptOut,
+        tag,
+        backup,
+        serviceControl,
+      },
+    } = state
 
-  const timer = totalTimer.startChild("clean-policies")
+    const timer = totalTimer.startChild("clean-policies")
 
-  if (!hasChanges) {
+    if (!hasChanges) {
+      timer.stop()
+      io.info("No policies to clean")
+      return transitions.completeOrganizationDeploy({
+        ...state,
+        message: "Success",
+        policiesCleanResult: {
+          message: "No changes",
+          success: true,
+          status: "SUCCESS",
+        },
+      })
+    }
+
+    io.info("Clean policies")
+
+    const client = await ctx.getClient()
+
+    const allPolicies = [serviceControl, backup, tag, aiServicesOptOut]
+    const policiesToDelete = allPolicies
+      .map((p) => p.remove.filter((s) => !s.awsManaged))
+      .flat()
+
+    io.info(`Delete ${policiesToDelete.length} policies`)
+    const results = await deletePolicies(client, policiesToDelete, [])
+    const success = !results.some((r) => !r.success)
     timer.stop()
-    io.info("No policies to clean")
+
     return transitions.completeOrganizationDeploy({
       ...state,
       message: "Success",
       policiesCleanResult: {
-        message: "No changes",
-        success: true,
-        status: "SUCCESS",
+        success,
+        status: success ? "SUCCESS" : "FAILED",
+        message: success ? "Clean succeeded" : "Clean failed",
       },
     })
   }
-
-  io.info("Clean policies")
-
-  const client = await ctx.getClient()
-
-  const allPolicies = [serviceControl, backup, tag, aiServicesOptOut]
-  const policiesToDelete = allPolicies
-    .map((p) => p.remove.filter((s) => !s.awsManaged))
-    .flat()
-
-  io.info(`Delete ${policiesToDelete.length} policies`)
-  const results = await deletePolicies(client, policiesToDelete, [])
-  const success = !results.some((r) => !r.success)
-  timer.stop()
-
-  return transitions.completeOrganizationDeploy({
-    ...state,
-    message: "Success",
-    policiesCleanResult: {
-      success,
-      status: success ? "SUCCESS" : "FAILED",
-      message: success ? "Clean succeeded" : "Clean failed",
-    },
-  })
-}

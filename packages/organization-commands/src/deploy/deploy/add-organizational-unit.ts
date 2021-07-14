@@ -59,12 +59,8 @@ export const addOrganizationalUnit = async (
 
   logger.info(`Create new organizational unit with path '${planned.path}'`)
 
-  const addedOu: OrganizationalUnitDeploymentResult = await createOrganizationalUnit(
-    logger,
-    client,
-    planned,
-    parentId,
-  )
+  const addedOu: OrganizationalUnitDeploymentResult =
+    await createOrganizationalUnit(logger, client, planned, parentId)
 
   if (!addedOu.success) {
     logger.warn(
@@ -101,31 +97,34 @@ export const addOrganizationalUnit = async (
   const initialAiServicesOptOutPolicies = initialPolicies.filter(
     (p) => p.type === "AISERVICES_OPT_OUT_POLICY",
   )
-  const initialAiServicesOptOutPolicyNames = initialAiServicesOptOutPolicies.map(
-    (p) => p.name,
-  )
+  const initialAiServicesOptOutPolicyNames =
+    initialAiServicesOptOutPolicies.map((p) => p.name)
   const initialBackupPolicies = initialPolicies.filter(
     (p) => p.type === "BACKUP_POLICY",
   )
   const initialBackupPolicyNames = initialBackupPolicies.map((p) => p.name)
-  const serviceControlPoliciesToAttach = planned.policies.serviceControl.attached.add.filter(
-    (p) => !initialServiceControlPolicyNames.includes(p),
-  )
-  const serviceControlPoliciesToDetach = initialServiceControlPolicyNames.filter(
-    (p) => !planned.policies.serviceControl.attached.add.includes(p),
-  )
+  const serviceControlPoliciesToAttach =
+    planned.policies.serviceControl.attached.add.filter(
+      (p) => !initialServiceControlPolicyNames.includes(p),
+    )
+  const serviceControlPoliciesToDetach =
+    initialServiceControlPolicyNames.filter(
+      (p) => !planned.policies.serviceControl.attached.add.includes(p),
+    )
   const tagPoliciesToAttach = planned.policies.tag.attached.add.filter(
     (p) => !initialTagPolicyNames.includes(p),
   )
   const tagPoliciesToDetach = initialTagPolicyNames.filter(
     (p) => !planned.policies.tag.attached.add.includes(p),
   )
-  const aiServicesOptOutPoliciesToAttach = planned.policies.aiServicesOptOut.attached.add.filter(
-    (p) => !initialAiServicesOptOutPolicyNames.includes(p),
-  )
-  const aiServicesOptOutPoliciesToDetach = initialAiServicesOptOutPolicyNames.filter(
-    (p) => !planned.policies.aiServicesOptOut.attached.add.includes(p),
-  )
+  const aiServicesOptOutPoliciesToAttach =
+    planned.policies.aiServicesOptOut.attached.add.filter(
+      (p) => !initialAiServicesOptOutPolicyNames.includes(p),
+    )
+  const aiServicesOptOutPoliciesToDetach =
+    initialAiServicesOptOutPolicyNames.filter(
+      (p) => !planned.policies.aiServicesOptOut.attached.add.includes(p),
+    )
   const backupPoliciesToAttach = planned.policies.backup.attached.add.filter(
     (p) => !initialAiServicesOptOutPolicyNames.includes(p),
   )

@@ -46,32 +46,31 @@ const validateAccountsLaunchConfiguration = (
   }
 }
 
-export const validateOrganizationState: AccountsOperationStep<OrganizationalUnitsPlanHolder> = async (
-  state,
-) => {
-  const {
-    transitions,
-    ctx,
-    io,
-    input: { organizationalUnits, accountIds },
-    policiesPlan,
-    organizationalUnitsPlan,
-    organizationBasicConfigPlan,
-  } = state
+export const validateOrganizationState: AccountsOperationStep<OrganizationalUnitsPlanHolder> =
+  async (state) => {
+    const {
+      transitions,
+      ctx,
+      io,
+      input: { organizationalUnits, accountIds },
+      policiesPlan,
+      organizationalUnitsPlan,
+      organizationBasicConfigPlan,
+    } = state
 
-  io.info("Validate configuration")
+    io.info("Validate configuration")
 
-  if (
-    policiesPlan.hasChanges ||
-    organizationalUnitsPlan.hasChanges ||
-    organizationBasicConfigPlan.hasChanges
-  ) {
-    throw new TakomoError(
-      `Local configuration does not match with the current organization state`,
-    )
+    if (
+      policiesPlan.hasChanges ||
+      organizationalUnitsPlan.hasChanges ||
+      organizationBasicConfigPlan.hasChanges
+    ) {
+      throw new TakomoError(
+        `Local configuration does not match with the current organization state`,
+      )
+    }
+
+    validateAccountsLaunchConfiguration(ctx, organizationalUnits, accountIds)
+
+    return transitions.planOperation(state)
   }
-
-  validateAccountsLaunchConfiguration(ctx, organizationalUnits, accountIds)
-
-  return transitions.planOperation(state)
-}

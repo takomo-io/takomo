@@ -2,26 +2,25 @@ import { planOrganizationalUnitsDeploy } from "../../../common/plan/organization
 import { PoliciesPlanHolder } from "../states"
 import { AccountsOperationStep } from "../steps"
 
-export const planOrganizationalUnits: AccountsOperationStep<PoliciesPlanHolder> = async (
-  state,
-) => {
-  const {
-    transitions,
-    organizationState,
-    ctx,
-    io,
-    organizationBasicConfigPlan,
-  } = state
+export const planOrganizationalUnits: AccountsOperationStep<PoliciesPlanHolder> =
+  async (state) => {
+    const {
+      transitions,
+      organizationState,
+      ctx,
+      io,
+      organizationBasicConfigPlan,
+    } = state
 
-  const organizationalUnitsPlan = await planOrganizationalUnitsDeploy({
-    ctx,
-    basicConfigPlan: organizationBasicConfigPlan,
-    organizationState,
-    logger: io,
-  })
+    const organizationalUnitsPlan = await planOrganizationalUnitsDeploy({
+      ctx,
+      basicConfigPlan: organizationBasicConfigPlan,
+      organizationState,
+      logger: io,
+    })
 
-  return transitions.validateOrganizationState({
-    ...state,
-    organizationalUnitsPlan,
-  })
-}
+    return transitions.validateOrganizationState({
+      ...state,
+      organizationalUnitsPlan,
+    })
+  }

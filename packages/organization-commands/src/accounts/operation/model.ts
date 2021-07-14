@@ -66,8 +66,6 @@ export interface PlannedAccountDeploymentOrganizationalUnit {
 
 export interface AccountsLaunchPlan {
   readonly hasChanges: boolean
-  readonly organizationalUnits: ReadonlyArray<
-    PlannedAccountDeploymentOrganizationalUnit
-  >
+  readonly organizationalUnits: ReadonlyArray<PlannedAccountDeploymentOrganizationalUnit>
   readonly configSetType: ConfigSetType
 }

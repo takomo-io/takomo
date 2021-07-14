@@ -2,20 +2,19 @@ import { planOrganizationPolicies } from "../../common/plan/policies/plan-organi
 import { BasicConfigPlanHolder } from "../states"
 import { DeployOrganizationStep } from "../steps"
 
-export const planPolicies: DeployOrganizationStep<BasicConfigPlanHolder> = async (
-  state,
-) => {
-  const { transitions, organizationState, ctx, configRepository, io } = state
+export const planPolicies: DeployOrganizationStep<BasicConfigPlanHolder> =
+  async (state) => {
+    const { transitions, organizationState, ctx, configRepository, io } = state
 
-  const policiesPlan = await planOrganizationPolicies({
-    logger: io,
-    configRepository,
-    ctx,
-    organizationState,
-  })
+    const policiesPlan = await planOrganizationPolicies({
+      logger: io,
+      configRepository,
+      ctx,
+      organizationState,
+    })
 
-  return transitions.planOrganizationalUnits({
-    ...state,
-    policiesPlan,
-  })
-}
+    return transitions.planOrganizationalUnits({
+      ...state,
+      policiesPlan,
+    })
+  }

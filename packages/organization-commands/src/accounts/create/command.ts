@@ -23,12 +23,10 @@ const inputSchema = (ctx: CommandContext) => {
     regions: ctx.regions,
   })
 
-  const {
-    organizationRoleName,
-    organizationalUnitPath,
-  } = createOrganizationSchemas({
-    regions: ctx.regions,
-  })
+  const { organizationRoleName, organizationalUnitPath } =
+    createOrganizationSchemas({
+      regions: ctx.regions,
+    })
 
   return Joi.object({
     name: accountName.required(),

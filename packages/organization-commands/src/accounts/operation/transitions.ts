@@ -36,7 +36,7 @@ export class AccountsOperationCompleted {
 }
 
 interface AccountsOperationInProgressProps<
-  S extends InitialAccountsOperationState
+  S extends InitialAccountsOperationState,
 > {
   readonly stepName: string
   readonly step: AccountsOperationStep<S>
@@ -44,7 +44,7 @@ interface AccountsOperationInProgressProps<
 }
 
 export class AccountsOperationInProgress<
-  S extends InitialAccountsOperationState
+  S extends InitialAccountsOperationState,
 > {
   readonly completed = false
   readonly stepName: string
@@ -66,9 +66,7 @@ export interface AccountsOperationTransitions {
   planPolicies: AccountsOperationStep<BasicConfigPlanHolder>
   planOrganizationalUnits: AccountsOperationStep<PoliciesPlanHolder>
 
-  validateOrganizationState: AccountsOperationStep<
-    OrganizationalUnitsPlanHolder
-  >
+  validateOrganizationState: AccountsOperationStep<OrganizationalUnitsPlanHolder>
 
   validateInputs: AccountsOperationStep<OrganizationStateHolder>
 
@@ -76,76 +74,75 @@ export interface AccountsOperationTransitions {
   confirmOperation: AccountsOperationStep<AccountsOperationPlanHolder>
 
   executeOperation: AccountsOperationStep<AccountsOperationPlanHolder>
-  cancelAccountsOperation: AccountsOperationStep<
-    AccountsOperationCancelledState
-  >
+  cancelAccountsOperation: AccountsOperationStep<AccountsOperationCancelledState>
   skipAccountsOperation: AccountsOperationStep<AccountsOperationSkippedState>
   failAccountsOperation: AccountsOperationStep<AccountsOperationFailedState>
-  completeAccountsOperation: AccountsOperationStep<
-    AccountsOperationCompletedState
-  >
+  completeAccountsOperation: AccountsOperationStep<AccountsOperationCompletedState>
 }
 
-export const inProgress = <S extends InitialAccountsOperationState>(
-  stepName: string,
-  step: AccountsOperationStep<S>,
-): AccountsOperationStep<S> => async (state: S) =>
-  new AccountsOperationInProgress({
-    state,
-    stepName,
-    step,
+export const inProgress =
+  <S extends InitialAccountsOperationState>(
+    stepName: string,
+    step: AccountsOperationStep<S>,
+  ): AccountsOperationStep<S> =>
+  async (state: S) =>
+    new AccountsOperationInProgress({
+      state,
+      stepName,
+      step,
+    })
+
+export const createAccountsOperationTransitions =
+  (): AccountsOperationTransitions => ({
+    start: inProgress("load-organization-data", loadOrganizationData),
+    validateOrganizationState: inProgress(
+      "validate-organization-state",
+      validateOrganizationState,
+    ),
+    planOperation: inProgress("plan-operation", planOperation),
+    confirmOperation: inProgress("confirm-operation", confirmOperation),
+    executeOperation: inProgress("execute-operation", executeOperation),
+    planBasicConfig: inProgress("plan-basic-config", planBasicConfig),
+    planOrganizationalUnits: inProgress(
+      "plan-organizational-units",
+      planOrganizationalUnits,
+    ),
+    planPolicies: inProgress("plan-policies", planPolicies),
+    validateInputs: inProgress("validate-inputs", validateInputs),
+    validateConfiguration: inProgress(
+      "validate-configuration",
+      validateConfiguration,
+    ),
+
+    cancelAccountsOperation: async (
+      state: AccountsOperationCancelledState,
+    ): Promise<StepResult> =>
+      new AccountsOperationCompleted({
+        message: state.message,
+        success: false,
+        status: CANCELLED,
+      }),
+
+    completeAccountsOperation: async (
+      state: AccountsOperationCompletedState,
+    ): Promise<StepResult> => new AccountsOperationCompleted(state),
+
+    failAccountsOperation: async (
+      state: AccountsOperationFailedState,
+    ): Promise<StepResult> =>
+      new AccountsOperationCompleted({
+        ...state,
+        success: false,
+        status: FAILED,
+        error: state.error,
+      }),
+
+    skipAccountsOperation: async (
+      state: AccountsOperationSkippedState,
+    ): Promise<StepResult> =>
+      new AccountsOperationCompleted({
+        ...state,
+        success: true,
+        status: SKIPPED,
+      }),
   })
-
-export const createAccountsOperationTransitions = (): AccountsOperationTransitions => ({
-  start: inProgress("load-organization-data", loadOrganizationData),
-  validateOrganizationState: inProgress(
-    "validate-organization-state",
-    validateOrganizationState,
-  ),
-  planOperation: inProgress("plan-operation", planOperation),
-  confirmOperation: inProgress("confirm-operation", confirmOperation),
-  executeOperation: inProgress("execute-operation", executeOperation),
-  planBasicConfig: inProgress("plan-basic-config", planBasicConfig),
-  planOrganizationalUnits: inProgress(
-    "plan-organizational-units",
-    planOrganizationalUnits,
-  ),
-  planPolicies: inProgress("plan-policies", planPolicies),
-  validateInputs: inProgress("validate-inputs", validateInputs),
-  validateConfiguration: inProgress(
-    "validate-configuration",
-    validateConfiguration,
-  ),
-
-  cancelAccountsOperation: async (
-    state: AccountsOperationCancelledState,
-  ): Promise<StepResult> =>
-    new AccountsOperationCompleted({
-      message: state.message,
-      success: false,
-      status: CANCELLED,
-    }),
-
-  completeAccountsOperation: async (
-    state: AccountsOperationCompletedState,
-  ): Promise<StepResult> => new AccountsOperationCompleted(state),
-
-  failAccountsOperation: async (
-    state: AccountsOperationFailedState,
-  ): Promise<StepResult> =>
-    new AccountsOperationCompleted({
-      ...state,
-      success: false,
-      status: FAILED,
-      error: state.error,
-    }),
-
-  skipAccountsOperation: async (
-    state: AccountsOperationSkippedState,
-  ): Promise<StepResult> =>
-    new AccountsOperationCompleted({
-      ...state,
-      success: true,
-      status: SKIPPED,
-    }),
-})

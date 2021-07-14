@@ -70,38 +70,37 @@ const removeOrganizationalUnits = async (
   return results
 }
 
-export const cleanOrganizationalUnits: DeployOrganizationStep<OrganizationalUnitsDeploymentResultHolder> = async (
-  state,
-) => {
-  const { transitions, ctx, io, organizationalUnitsPlan } = state
+export const cleanOrganizationalUnits: DeployOrganizationStep<OrganizationalUnitsDeploymentResultHolder> =
+  async (state) => {
+    const { transitions, ctx, io, organizationalUnitsPlan } = state
 
-  const client = await ctx.getClient()
+    const client = await ctx.getClient()
 
-  if (!organizationalUnitsPlan.hasChanges) {
-    io.info("No organizational units to clean")
+    if (!organizationalUnitsPlan.hasChanges) {
+      io.info("No organizational units to clean")
+      return transitions.cleanPolicies({
+        ...state,
+        organizationalUnitsCleanResult: {
+          message: "No changes",
+          status: "SUCCESS",
+          success: true,
+        },
+      })
+    }
+
+    io.info("Clean organizational units")
+    const results = await removeOrganizationalUnits(
+      client,
+      organizationalUnitsPlan.root!,
+    )
+
+    const success = !results.some((r) => !r.success)
     return transitions.cleanPolicies({
       ...state,
       organizationalUnitsCleanResult: {
-        message: "No changes",
-        status: "SUCCESS",
-        success: true,
+        success,
+        status: success ? "SUCCESS" : "FAILED",
+        message: success ? "Clean succeeded" : "Clean failed",
       },
     })
   }
-
-  io.info("Clean organizational units")
-  const results = await removeOrganizationalUnits(
-    client,
-    organizationalUnitsPlan.root!,
-  )
-
-  const success = !results.some((r) => !r.success)
-  return transitions.cleanPolicies({
-    ...state,
-    organizationalUnitsCleanResult: {
-      success,
-      status: success ? "SUCCESS" : "FAILED",
-      message: success ? "Clean succeeded" : "Clean failed",
-    },
-  })
-}

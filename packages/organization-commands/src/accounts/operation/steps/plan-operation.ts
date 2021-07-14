@@ -116,42 +116,41 @@ const planAccountsDeploy = async (
   }
 }
 
-export const planOperation: AccountsOperationStep<OrganizationStateHolder> = async (
-  state,
-) => {
-  const {
-    transitions,
-    io,
-    ctx,
-    organizationState,
-    input: { organizationalUnits, accountIds, configSetType },
-  } = state
+export const planOperation: AccountsOperationStep<OrganizationStateHolder> =
+  async (state) => {
+    const {
+      transitions,
+      io,
+      ctx,
+      organizationState,
+      input: { organizationalUnits, accountIds, configSetType },
+    } = state
 
-  io.info("Plan operation")
+    io.info("Plan operation")
 
-  const accountsLaunchPlan = await planAccountsDeploy(
-    ctx,
-    io,
-    organizationState,
-    organizationalUnits,
-    accountIds,
-    configSetType,
-  )
+    const accountsLaunchPlan = await planAccountsDeploy(
+      ctx,
+      io,
+      organizationState,
+      organizationalUnits,
+      accountIds,
+      configSetType,
+    )
 
-  if (!accountsLaunchPlan.hasChanges) {
-    const message = "No accounts to process"
-    return transitions.skipAccountsOperation({ ...state, message })
+    if (!accountsLaunchPlan.hasChanges) {
+      const message = "No accounts to process"
+      return transitions.skipAccountsOperation({ ...state, message })
+    }
+
+    const accountCount = accountsLaunchPlan.organizationalUnits
+      .map((g) => g.accounts)
+      .flat().length
+
+    const accountsListener = io.createAccountsListener(accountCount)
+
+    return transitions.confirmOperation({
+      ...state,
+      accountsLaunchPlan,
+      accountsListener,
+    })
   }
-
-  const accountCount = accountsLaunchPlan.organizationalUnits
-    .map((g) => g.accounts)
-    .flat().length
-
-  const accountsListener = io.createAccountsListener(accountCount)
-
-  return transitions.confirmOperation({
-    ...state,
-    accountsLaunchPlan,
-    accountsListener,
-  })
-}

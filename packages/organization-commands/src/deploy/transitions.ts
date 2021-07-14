@@ -36,7 +36,7 @@ export class OrganizationDeployCompleted {
 }
 
 interface OrganizationDeployInProgressProps<
-  S extends InitialDeployOrganizationState
+  S extends InitialDeployOrganizationState,
 > {
   readonly stepName: string
   readonly step: DeployOrganizationStep<S>
@@ -44,7 +44,7 @@ interface OrganizationDeployInProgressProps<
 }
 
 export class OrganizationDeployInProgress<
-  S extends InitialDeployOrganizationState
+  S extends InitialDeployOrganizationState,
 > {
   readonly completed = false
   readonly stepName: string
@@ -62,9 +62,7 @@ export interface DeployOrganizationTransitions {
   start: DeployOrganizationStep<InitialDeployOrganizationState>
   validateConfiguration: DeployOrganizationStep<OrganizationStateHolder>
   cancelOrganizationDeploy: DeployOrganizationStep<OrganizationStateHolder>
-  completeOrganizationDeploy: DeployOrganizationStep<
-    DeployOrganizationCompletedState
-  >
+  completeOrganizationDeploy: DeployOrganizationStep<DeployOrganizationCompletedState>
 
   planBasicConfig: DeployOrganizationStep<OrganizationStateHolder>
   planPolicies: DeployOrganizationStep<BasicConfigPlanHolder>
@@ -74,65 +72,64 @@ export interface DeployOrganizationTransitions {
 
   deployBasicConfig: DeployOrganizationStep<OrganizationalUnitsPlanHolder>
   deployPolicies: DeployOrganizationStep<BasicConfigDeploymentResultHolder>
-  deployOrganizationalUnits: DeployOrganizationStep<
-    PoliciesDeploymentResultHolder
-  >
+  deployOrganizationalUnits: DeployOrganizationStep<PoliciesDeploymentResultHolder>
 
-  cleanOrganizationalUnits: DeployOrganizationStep<
-    OrganizationalUnitsDeploymentResultHolder
-  >
+  cleanOrganizationalUnits: DeployOrganizationStep<OrganizationalUnitsDeploymentResultHolder>
   cleanPolicies: DeployOrganizationStep<OrganizationalUnitsCleanResultHolder>
 }
 
-export const inProgress = <S extends InitialDeployOrganizationState>(
-  stepName: string,
-  step: DeployOrganizationStep<S>,
-): DeployOrganizationStep<S> => async (state: S) =>
-  new OrganizationDeployInProgress({
-    state,
-    stepName,
-    step,
-  })
+export const inProgress =
+  <S extends InitialDeployOrganizationState>(
+    stepName: string,
+    step: DeployOrganizationStep<S>,
+  ): DeployOrganizationStep<S> =>
+  async (state: S) =>
+    new OrganizationDeployInProgress({
+      state,
+      stepName,
+      step,
+    })
 
-export const createDeployOrganizationTransitions = (): DeployOrganizationTransitions => ({
-  cancelOrganizationDeploy: async (
-    state: OrganizationStateHolder,
-  ): Promise<StepResult> =>
-    new OrganizationDeployCompleted({
-      ...state,
-      message: "Cancelled",
-      success: false,
-      status: "CANCELLED",
-    }),
-  completeOrganizationDeploy: async (
-    state: DeployOrganizationCompletedState,
-  ): Promise<StepResult> =>
-    new OrganizationDeployCompleted({
-      ...state,
-      success: true,
-      status: "SUCCESS",
-    }),
-  start: inProgress("load-organization-data", loadOrganizationData),
-  validateConfiguration: inProgress(
-    "validate-configuration",
-    validateConfiguration,
-  ),
-  planBasicConfig: inProgress("plan-basic-config", planBasicConfig),
-  planPolicies: inProgress("plan-policies", planPolicies),
-  planOrganizationalUnits: inProgress(
-    "plan-organizational-unuts",
-    planOrganizationalUnits,
-  ),
-  confirmDeployment: inProgress("confirm-deployment", confirmDeployment),
-  deployBasicConfig: inProgress("deploy-basic-config", deployBasicConfig),
-  deployPolicies: inProgress("deploy-policies", deployPolicies),
-  deployOrganizationalUnits: inProgress(
-    "deploy-organizational-units",
-    deployOrganizationalUnits,
-  ),
-  cleanOrganizationalUnits: inProgress(
-    "clean-organizational-units",
-    cleanOrganizationalUnits,
-  ),
-  cleanPolicies: inProgress("clean-policies", cleanPolicies),
-})
+export const createDeployOrganizationTransitions =
+  (): DeployOrganizationTransitions => ({
+    cancelOrganizationDeploy: async (
+      state: OrganizationStateHolder,
+    ): Promise<StepResult> =>
+      new OrganizationDeployCompleted({
+        ...state,
+        message: "Cancelled",
+        success: false,
+        status: "CANCELLED",
+      }),
+    completeOrganizationDeploy: async (
+      state: DeployOrganizationCompletedState,
+    ): Promise<StepResult> =>
+      new OrganizationDeployCompleted({
+        ...state,
+        success: true,
+        status: "SUCCESS",
+      }),
+    start: inProgress("load-organization-data", loadOrganizationData),
+    validateConfiguration: inProgress(
+      "validate-configuration",
+      validateConfiguration,
+    ),
+    planBasicConfig: inProgress("plan-basic-config", planBasicConfig),
+    planPolicies: inProgress("plan-policies", planPolicies),
+    planOrganizationalUnits: inProgress(
+      "plan-organizational-unuts",
+      planOrganizationalUnits,
+    ),
+    confirmDeployment: inProgress("confirm-deployment", confirmDeployment),
+    deployBasicConfig: inProgress("deploy-basic-config", deployBasicConfig),
+    deployPolicies: inProgress("deploy-policies", deployPolicies),
+    deployOrganizationalUnits: inProgress(
+      "deploy-organizational-units",
+      deployOrganizationalUnits,
+    ),
+    cleanOrganizationalUnits: inProgress(
+      "clean-organizational-units",
+      cleanOrganizationalUnits,
+    ),
+    cleanPolicies: inProgress("clean-policies", cleanPolicies),
+  })

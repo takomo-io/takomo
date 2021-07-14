@@ -2,19 +2,18 @@ import { planOrganizationBasicConfig } from "../../../common/plan/basic-config/o
 import { OrganizationStateHolder } from "../states"
 import { AccountsOperationStep } from "../steps"
 
-export const planBasicConfig: AccountsOperationStep<OrganizationStateHolder> = async (
-  state,
-) => {
-  const { transitions, ctx, organizationState, io } = state
+export const planBasicConfig: AccountsOperationStep<OrganizationStateHolder> =
+  async (state) => {
+    const { transitions, ctx, organizationState, io } = state
 
-  const organizationBasicConfigPlan = await planOrganizationBasicConfig({
-    ctx,
-    logger: io,
-    organizationState,
-  })
+    const organizationBasicConfigPlan = await planOrganizationBasicConfig({
+      ctx,
+      logger: io,
+      organizationState,
+    })
 
-  return transitions.planPolicies({
-    ...state,
-    organizationBasicConfigPlan,
-  })
-}
+    return transitions.planPolicies({
+      ...state,
+      organizationBasicConfigPlan,
+    })
+  }

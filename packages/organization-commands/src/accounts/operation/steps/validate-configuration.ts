@@ -49,22 +49,21 @@ const validateAccountsLaunchConfiguration = (
   }
 }
 
-export const validateConfiguration: AccountsOperationStep<OrganizationStateHolder> = async (
-  state,
-) => {
-  const {
-    transitions,
-    ctx,
-    io,
-    input: { organizationalUnits, accountIds },
-    organizationState,
-  } = state
+export const validateConfiguration: AccountsOperationStep<OrganizationStateHolder> =
+  async (state) => {
+    const {
+      transitions,
+      ctx,
+      io,
+      input: { organizationalUnits, accountIds },
+      organizationState,
+    } = state
 
-  io.info("Validate configuration")
+    io.info("Validate configuration")
 
-  await validateCommonLocalConfiguration(ctx, organizationState.accounts)
+    await validateCommonLocalConfiguration(ctx, organizationState.accounts)
 
-  validateAccountsLaunchConfiguration(ctx, organizationalUnits, accountIds)
+    validateAccountsLaunchConfiguration(ctx, organizationalUnits, accountIds)
 
-  return transitions.planOperation(state)
-}
+    return transitions.planOperation(state)
+  }

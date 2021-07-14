@@ -27,10 +27,11 @@ export const processConfigSet = async (
 
   io.info(`Process config set: '${configSetName}'`)
   const configSet = ctx.getConfigSet(configSetName)
-  const stacksConfigRepository = await configRepository.createStacksConfigRepository(
-    configSet.name,
-    configSet.legacy,
-  )
+  const stacksConfigRepository =
+    await configRepository.createStacksConfigRepository(
+      configSet.name,
+      configSet.legacy,
+    )
 
   const results = new Array<ConfigSetCommandPathOperationResult>()
 
