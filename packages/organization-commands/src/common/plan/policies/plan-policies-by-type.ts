@@ -48,10 +48,10 @@ export const planPoliciesByType = async (
       )
     }
 
-    // const policyFilePath = path.join(policiesDir, `${localPolicy.name}.json`)
     const policyContent = await configLoader.getOrganizationPolicyContents(
       type,
       localPolicy.name,
+      localPolicy.dynamic,
     )
     const newContent = compactJson(policyContent)
 

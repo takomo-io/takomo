@@ -32,6 +32,7 @@ export interface OrganizationPolicyConfig {
   readonly name: string
   readonly awsManaged: boolean
   readonly description: string
+  readonly dynamic: boolean
 }
 
 export interface OrganizationPoliciesConfig {

@@ -10,5 +10,6 @@ export const parsePolicies = (
     name: policyName,
     description: value[policyName].description,
     awsManaged: value[policyName].awsManaged === true,
+    dynamic: value[policyName].dynamic !== false,
   }))
 }

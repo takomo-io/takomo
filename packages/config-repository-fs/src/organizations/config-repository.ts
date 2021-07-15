@@ -25,6 +25,7 @@ import {
   fileExists,
   FilePath,
   readFileContents,
+  renderTemplate,
   TakomoError,
   TemplateEngine,
   TkmLogger,
@@ -245,16 +246,33 @@ export const createFileSystemOrganizationConfigRepository = async (
     }
   }
 
-  const getOrganizationPolicyContents = (
+  const getOrganizationPolicyContents = async (
     policyType: OrganizationPolicyType,
     policyName: OrganizationPolicyName,
+    dynamic: boolean,
   ): Promise<string> => {
     const policyFilePath = path.join(
       getOrganizationPolicyDir(policyType),
       `${policyName}.json`,
     )
 
-    return readFileContents(policyFilePath)
+    const contents = await readFileContents(policyFilePath)
+    logger.traceText(`Contents of raw policy file ${policyFilePath}:`, contents)
+
+    if (!dynamic) {
+      return contents
+    }
+
+    const rendered = await renderTemplate(
+      stacksConfigRepository.templateEngine,
+      policyFilePath,
+      contents,
+      ctx.variables,
+    )
+
+    logger.traceText(`Final rendered policy file ${policyFilePath}:`, rendered)
+
+    return rendered
   }
 
   const putAccountConfig = async (item: AccountConfigItem): Promise<void> => {
