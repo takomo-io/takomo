@@ -11,6 +11,7 @@ export interface Timer {
   readonly stop: (stopTime?: number) => void
   readonly getSecondsElapsed: () => number
   readonly withChildren: (visitor: (child: Timer) => void) => void
+  readonly getFormattedTimeElapsed: () => string
 }
 
 /**
@@ -43,12 +44,15 @@ export const createTimer = (name: string): Timer => {
     children.forEach(visitor)
   }
 
+  const getFormattedTimeElapsed = (): string => prettyMs(getSecondsElapsed())
+
   return {
     name,
     startChild,
     startTime,
     stop,
     getSecondsElapsed,
+    getFormattedTimeElapsed,
     withChildren,
   }
 }

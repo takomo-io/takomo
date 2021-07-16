@@ -2,6 +2,7 @@ import { CredentialManager } from "@takomo/aws-clients"
 import {
   ConfigSetCommandPathOperationResult,
   ConfigSetName,
+  ConfigSetStage,
   ConfigSetType,
 } from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
@@ -97,6 +98,7 @@ export const processCommandPath = async (
   state: OperationState,
   configSetType: ConfigSetType,
   stacksConfigRepository: StacksConfigRepository,
+  stage?: ConfigSetStage,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const {
     io,
@@ -115,6 +117,7 @@ export const processCommandPath = async (
 
     return {
       commandPath,
+      stage: stage ?? "default",
       result: {
         timer,
         message: "Cancelled",
@@ -169,6 +172,7 @@ export const processCommandPath = async (
     return {
       result,
       commandPath,
+      stage: stage ?? "default",
       status: result.status,
       success: result.success,
       message: result.message,
@@ -185,6 +189,7 @@ export const processCommandPath = async (
     return {
       commandPath,
       error,
+      stage: stage ?? "default",
       result: {
         timer,
         message: "Error",

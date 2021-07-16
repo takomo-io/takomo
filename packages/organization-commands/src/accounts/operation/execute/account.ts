@@ -1,6 +1,7 @@
 import {
   ConfigSetName,
   ConfigSetOperationResult,
+  ConfigSetStage,
   ConfigSetType,
 } from "@takomo/config-sets"
 import { resolveCommandOutputBase } from "@takomo/core"
@@ -17,12 +18,17 @@ import { processConfigSet } from "./config-set"
 const getConfigSetsToProcess = (
   configSetType: ConfigSetType,
   account: PlannedLaunchableAccount,
+  stage?: ConfigSetStage,
 ): ReadonlyArray<ConfigSetName> => {
   switch (configSetType) {
     case "bootstrap":
       return account.config.bootstrapConfigSets
+        .filter((c) => c.stage === stage)
+        .map((c) => c.name)
     case "standard":
       return account.config.configSets
+        .filter((c) => c.stage === stage)
+        .map((c) => c.name)
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
   }
@@ -35,6 +41,7 @@ export const processAccount = async (
   accountTimer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
+  stage?: ConfigSetStage,
 ): Promise<AccountOperationResult> => {
   const { io } = holder
 
@@ -42,7 +49,11 @@ export const processAccount = async (
   io.info(`Process account: '${account.id}'`)
   const results = new Array<ConfigSetOperationResult>()
 
-  const configSetNames = getConfigSetsToProcess(configSetType, plannedAccount)
+  const configSetNames = getConfigSetsToProcess(
+    configSetType,
+    plannedAccount,
+    stage,
+  )
 
   for (const configSetName of configSetNames) {
     const result = await processConfigSet(
@@ -53,6 +64,7 @@ export const processAccount = async (
       accountTimer.startChild(configSetName),
       state,
       configSetType,
+      stage,
     )
     results.push(result)
   }

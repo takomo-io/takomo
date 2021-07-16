@@ -1,6 +1,6 @@
 import { CredentialManager, OrganizationsClient } from "@takomo/aws-clients"
 import { AccountId } from "@takomo/aws-model"
-import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
+import { ConfigSet, ConfigSetName, ConfigSetStage } from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
 import {
   OrganizationalUnitConfig,
@@ -57,6 +57,7 @@ export interface OrganizationContext extends InternalCommandContext {
   configRepository: OrganizationConfigRepository
   credentialManager: CredentialManager
   commandContext: InternalCommandContext
+  getStages: () => ReadonlyArray<ConfigSetStage> | undefined
 }
 
 export interface OrganizationContextProps {
@@ -131,6 +132,9 @@ export const createOrganizationContext = ({
     return configSet
   }
 
+  const getStages = (): ReadonlyArray<ConfigSetStage> | undefined =>
+    organizationConfig.stages?.slice()
+
   return deepFreeze({
     ...ctx,
     getClient,
@@ -141,6 +145,7 @@ export const createOrganizationContext = ({
     getConfigSet,
     configRepository,
     credentialManager,
+    getStages,
     commandContext: ctx,
   })
 }

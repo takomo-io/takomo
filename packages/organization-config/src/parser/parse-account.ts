@@ -1,14 +1,15 @@
 import { OrganizationPolicyName } from "@takomo/aws-model"
-import { ConfigSetName } from "@takomo/config-sets"
+import { ConfigSetInstruction } from "@takomo/config-sets"
 import { parseStringArray, parseVars } from "@takomo/core"
-import R from "ramda"
 import { OrganizationAccountConfig } from "../model"
+import { mergeConfigSetInstructions } from "./merge-config-set-instructions"
 import { parseAccountStatus } from "./parse-account-status"
+import { parseConfigSetInstructions } from "./parse-config-set-instructions"
 
 const parseSimpleAccount = (
   id: string,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
@@ -46,23 +47,26 @@ const parseSimpleAccount = (
 
 const parseComplexAccount = (
   value: any,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
 ): OrganizationAccountConfig => {
-  const configuredConfigSets = parseStringArray(value.configSets)
-  const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
+  const configuredConfigSets = parseConfigSetInstructions(value.configSets)
+  const configSets = mergeConfigSetInstructions(
+    inheritedConfigSets,
+    configuredConfigSets,
+  )
 
-  const configuredBootstrapConfigSets = parseStringArray(
+  const configuredBootstrapConfigSets = parseConfigSetInstructions(
     value.bootstrapConfigSets,
   )
-  const bootstrapConfigSets = R.uniq([
-    ...configuredBootstrapConfigSets,
-    ...inheritedBootstrapConfigSets,
-  ])
+  const bootstrapConfigSets = mergeConfigSetInstructions(
+    configuredBootstrapConfigSets,
+    inheritedBootstrapConfigSets,
+  )
 
   const serviceControlPolicies = parseStringArray(value.serviceControlPolicies)
 
@@ -116,8 +120,8 @@ const parseComplexAccount = (
 
 export const parseAccount = (
   value: any,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,

@@ -1,4 +1,6 @@
 import { AccountId, OrganizationAccount } from "@takomo/aws-model"
+import { ConfigSetName } from "@takomo/config-sets"
+import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { TakomoError } from "@takomo/util"
 
 export class AccountsMissingFromLocalConfigError extends TakomoError {
@@ -52,6 +54,38 @@ export class NonExistingAccountsInLocalConfigError extends TakomoError {
         info: "The local configuration must contain only accounts that are found from the organization.",
         instructions: ["Remove unknown accounts from the local configuration."],
       },
+    )
+  }
+}
+
+export class AccountRefersToNonExistingConfigSet extends TakomoError {
+  constructor(accountId: AccountId, ouPath: ConfigSetName) {
+    super(
+      `Account '${accountId}' refers to a non-existing config set '${ouPath}'`,
+    )
+  }
+}
+
+export class AccountRefersToNonExistingBootstrapConfigSet extends TakomoError {
+  constructor(accountId: AccountId, ouPath: ConfigSetName) {
+    super(
+      `Account '${accountId}' refers to a non-existing bootstrap config set '${ouPath}'`,
+    )
+  }
+}
+
+export class OuRefersToNonExistingConfigSet extends TakomoError {
+  constructor(ouPath: OrganizationalUnitPath, name: ConfigSetName) {
+    super(
+      `Organizational unit '${ouPath}' refers to a non-existing config set '${name}'`,
+    )
+  }
+}
+
+export class OuRefersToNonExistingBootstrapConfigSet extends TakomoError {
+  constructor(ouPath: OrganizationalUnitPath, name: ConfigSetName) {
+    super(
+      `Organizational unit '${ouPath}' refers to a non-existing bootstrap config set '${name}'`,
     )
   }
 }

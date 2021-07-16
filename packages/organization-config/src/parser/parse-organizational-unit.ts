@@ -1,12 +1,14 @@
 import { OrganizationPolicyName } from "@takomo/aws-model"
-import { ConfigSetName } from "@takomo/config-sets"
+import { ConfigSetInstruction } from "@takomo/config-sets"
 import { parseStringArray, parseVars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { TkmLogger } from "@takomo/util"
 import R from "ramda"
 import { OrganizationalUnitConfig } from "../model"
 import { findMissingDirectChildrenPaths } from "./find-missing-direct-child-paths"
+import { mergeConfigSetInstructions } from "./merge-config-set-instructions"
 import { parseAccounts } from "./parse-accounts"
+import { parseConfigSetInstructions } from "./parse-config-set-instructions"
 import { parseOrganizationalUnitStatus } from "./parse-organizational-unit-status"
 
 const extractOrganizationalUnitName = (
@@ -40,8 +42,8 @@ export const parseOrganizationalUnit = async (
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
 ): Promise<OrganizationalUnitConfig> => {
   const name = extractOrganizationalUnitName(ouPath)
   const ouPathDepth = resolveOrganizationalUnitDepth(ouPath)
@@ -113,16 +115,19 @@ export const parseOrganizationalUnit = async (
     },
   }
 
-  const configuredConfigSets = parseStringArray(ou?.configSets)
-  const configSets = R.uniq([...configuredConfigSets, ...inheritedConfigSets])
+  const configuredConfigSets = parseConfigSetInstructions(ou?.configSets)
+  const configSets = mergeConfigSetInstructions(
+    configuredConfigSets,
+    inheritedConfigSets,
+  )
 
-  const configuredBootstrapConfigSets = parseStringArray(
+  const configuredBootstrapConfigSets = parseConfigSetInstructions(
     ou?.bootstrapConfigSets,
   )
-  const bootstrapConfigSets = R.uniq([
-    ...configuredBootstrapConfigSets,
-    ...inheritedBootstrapConfigSets,
-  ])
+  const bootstrapConfigSets = mergeConfigSetInstructions(
+    configuredBootstrapConfigSets,
+    inheritedBootstrapConfigSets,
+  )
 
   const children = await Promise.all(
     [...missingDirectChildPaths, ...directChildPaths].map(async (childPath) =>

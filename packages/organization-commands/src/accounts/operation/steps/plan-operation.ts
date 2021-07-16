@@ -1,5 +1,9 @@
 import { AccountId } from "@takomo/aws-model"
-import { ConfigSetType } from "@takomo/config-sets"
+import {
+  ConfigSetInstruction,
+  ConfigSetStage,
+  ConfigSetType,
+} from "@takomo/config-sets"
 import {
   OrganizationAccountConfig,
   OrganizationalUnitConfig,
@@ -9,7 +13,7 @@ import {
   OrganizationState,
 } from "@takomo/organization-context"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { collectFromHierarchy } from "@takomo/util"
+import { arrayToMap, collectFromHierarchy } from "@takomo/util"
 import R from "ramda"
 import { AccountsLaunchPlan, AccountsOperationIO } from "../model"
 import { OrganizationStateHolder } from "../states"
@@ -58,7 +62,7 @@ const planAccountsDeploy = async (
     (o) => o.status === "active",
   )
 
-  const accountsById = new Map(accounts.map((a) => [a.id, a]))
+  const accountsById = arrayToMap(accounts, R.prop("id"))
 
   const hasConfigSets = (a: OrganizationAccountConfig) => {
     switch (configSetType) {
@@ -66,6 +70,33 @@ const planAccountsDeploy = async (
         return a.bootstrapConfigSets.length > 0
       case "standard":
         return a.configSets.length > 0
+      default:
+        throw new Error(`Unsupported config set type: ${configSetType}`)
+    }
+  }
+
+  const hasConfigSetsWithStage = (
+    a: OrganizationAccountConfig,
+    stage?: ConfigSetStage,
+  ) => {
+    switch (configSetType) {
+      case "bootstrap":
+        return a.bootstrapConfigSets.some((c) => c.stage === stage)
+      case "standard":
+        return a.configSets.some((c) => c.stage === stage)
+      default:
+        throw new Error(`Unsupported config set type: ${configSetType}`)
+    }
+  }
+
+  const getConfigSets = (
+    a: OrganizationAccountConfig,
+  ): ReadonlyArray<ConfigSetInstruction> => {
+    switch (configSetType) {
+      case "bootstrap":
+        return a.bootstrapConfigSets
+      case "standard":
+        return a.configSets
       default:
         throw new Error(`Unsupported config set type: ${configSetType}`)
     }
@@ -104,14 +135,27 @@ const planAccountsDeploy = async (
       }
     })
 
-  io.debugObject(
-    `Organizational units to deploy:`,
-    ous.map((o) => o.path),
-  )
+  const stageNames = ctx.getStages() ?? [undefined]
+
+  const stages = stageNames
+    .map((stage) => {
+      return {
+        stage,
+        organizationalUnits: ous
+          .map((ou) => ({
+            ...ou,
+            accounts: ou.accounts.filter((a) =>
+              hasConfigSetsWithStage(a.config, stage),
+            ),
+          }))
+          .filter((ou) => ou.accounts.length > 0),
+      }
+    })
+    .filter((s) => s.organizationalUnits.length > 0)
 
   return {
-    hasChanges: ous.length > 0,
-    organizationalUnits: ous,
+    hasChanges: stages.length > 0,
+    stages,
     configSetType,
   }
 }
@@ -142,15 +186,8 @@ export const planOperation: AccountsOperationStep<OrganizationStateHolder> =
       return transitions.skipAccountsOperation({ ...state, message })
     }
 
-    const accountCount = accountsLaunchPlan.organizationalUnits
-      .map((g) => g.accounts)
-      .flat().length
-
-    const accountsListener = io.createAccountsListener(accountCount)
-
     return transitions.confirmOperation({
       ...state,
       accountsLaunchPlan,
-      accountsListener,
     })
   }
