@@ -3,6 +3,12 @@ import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath } from "@takomo/stacks-model"
 
 export type ConfigSetName = string
+export type ConfigSetStage = string
+
+export interface ConfigSetInstruction {
+  readonly name: ConfigSetName
+  readonly stage?: ConfigSetStage
+}
 
 export interface ConfigSet {
   readonly description: string
@@ -16,6 +22,7 @@ export type ConfigSetType = "standard" | "bootstrap"
 
 export interface ConfigSetCommandPathOperationResult extends CommandOutputBase {
   readonly commandPath: CommandPath
+  readonly stage?: ConfigSetStage
   readonly result: StacksOperationOutput
 }
 

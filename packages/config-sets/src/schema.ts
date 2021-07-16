@@ -11,13 +11,14 @@ export interface ConfigSetsSchemas {
   readonly configSets: ObjectSchema
   readonly configSet: ObjectSchema
   readonly configSetName: StringSchema
+  readonly configSetInstruction: ObjectSchema
 }
 
 export const createConfigSetsSchemas = (
   props: CreateConfigSetsSchemasProps,
 ): ConfigSetsSchemas => {
   const { commandPath } = createStacksSchemas({ ...props })
-  const { vars } = createCommonSchema()
+  const { vars, variableName } = createCommonSchema()
 
   const configSetName = Joi.string()
     .min(1)
@@ -32,9 +33,15 @@ export const createConfigSetsSchemas = (
 
   const configSets = Joi.object().pattern(configSetName, configSet)
 
+  const configSetInstruction = Joi.object({
+    name: configSetName.required(),
+    stage: variableName,
+  })
+
   return {
     configSets,
     configSet,
     configSetName,
+    configSetInstruction,
   }
 }

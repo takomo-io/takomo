@@ -31,9 +31,9 @@ const getConfigSets = (
 ): ReadonlyArray<ConfigSetName> => {
   switch (configSetType) {
     case "standard":
-      return account.configSets
+      return account.configSets.map((c) => c.name)
     case "bootstrap":
-      return account.bootstrapConfigSets
+      return account.bootstrapConfigSets.map((c) => c.name)
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
   }
@@ -71,16 +71,26 @@ export const createAccountsOperationIO = (
   ): Promise<ConfirmResult> => {
     io.header({ text: messages.confirmHeader, marginTop: true })
 
-    plan.organizationalUnits.forEach((ou) => {
-      io.message({ text: `  ${ou.path}:`, marginTop: true })
-      ou.accounts.forEach(({ account, config }) => {
-        io.message({ text: `    - id:       ${config.id}`, marginTop: true })
-        io.message({ text: `      name:     ${account.name}` })
-        io.message({ text: `      email:    ${account.email}` })
-        io.message({ text: `      ${getConfigSetsName(plan.configSetType)}:` })
+    plan.stages.forEach((stage) => {
+      io.message({ text: `stage: ${stage.stage}`, indent: 2, marginTop: true })
+      stage.organizationalUnits.forEach((ou) => {
+        io.message({ text: `${ou.path}:`, indent: 4, marginTop: true })
+        ou.accounts.forEach(({ account, config }) => {
+          io.message({
+            text: `- id:       ${config.id}`,
+            marginTop: true,
+            indent: 6,
+          })
+          io.message({ text: `name:     ${account.name}`, indent: 8 })
+          io.message({ text: `email:    ${account.email}`, indent: 8 })
+          io.message({
+            text: `${getConfigSetsName(plan.configSetType)}:`,
+            indent: 8,
+          })
 
-        getConfigSets(plan.configSetType, config).forEach((configSet) => {
-          io.message({ text: `        - ${configSet}` })
+          getConfigSets(plan.configSetType, config).forEach((configSet) => {
+            io.message({ text: `- ${configSet}`, indent: 10 })
+          })
         })
       })
     })
@@ -214,7 +224,10 @@ export const createAccountsOperationIO = (
 
   let accountsInProgress = 0
   let accountsCompleted = 0
-  const createAccountsListener = (accountCount: number): AccountsListener => ({
+  const createAccountsListener = (
+    stageInfo: string,
+    accountCount: number,
+  ): AccountsListener => ({
     onAccountBegin: async () => {
       accountsInProgress++
     },
@@ -224,7 +237,7 @@ export const createAccountsOperationIO = (
       const waitingCount = accountCount - accountsInProgress - accountsCompleted
       const percentage = ((accountsCompleted / accountCount) * 100).toFixed(1)
       logger.info(
-        `Accounts waiting: ${waitingCount}, in progress: ${accountsInProgress}, completed: ${accountsCompleted}/${accountCount} (${percentage}%)`,
+        `${stageInfo} Accounts waiting: ${waitingCount}, in progress: ${accountsInProgress}, completed: ${accountsCompleted}/${accountCount} (${percentage}%)`,
       )
     },
   })

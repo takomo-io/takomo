@@ -133,35 +133,35 @@ export const validateOrganizationConfigFile = (
       }
     })
 
-    ou.configSets.forEach((configSetName) => {
-      if (!configSetNames.includes(configSetName)) {
+    ou.configSets.forEach(({ name }) => {
+      if (!configSetNames.includes(name)) {
         throw new TakomoError(
-          `Organizational unit '${ou.path}' refers to a non-existing config set '${configSetName}'`,
+          `Organizational unit '${ou.path}' refers to a non-existing config set '${name}'`,
         )
       }
     })
 
-    ou.bootstrapConfigSets.forEach((configSetName) => {
-      if (!configSetNames.includes(configSetName)) {
+    ou.bootstrapConfigSets.forEach(({ name }) => {
+      if (!configSetNames.includes(name)) {
         throw new TakomoError(
-          `Organizational unit '${ou.path}' refers to a non-existing bootstrap config set '${configSetName}'`,
+          `Organizational unit '${ou.path}' refers to a non-existing bootstrap config set '${name}'`,
         )
       }
     })
 
     ou.accounts.forEach((account) => {
-      account.configSets.forEach((configSetName) => {
-        if (!configSetNames.includes(configSetName)) {
+      account.configSets.forEach(({ name }) => {
+        if (!configSetNames.includes(name)) {
           throw new TakomoError(
-            `Account '${account.id}' refers to a non-existing config set '${configSetName}'`,
+            `Account '${account.id}' refers to a non-existing config set '${name}'`,
           )
         }
       })
 
-      account.bootstrapConfigSets.forEach((configSetName) => {
-        if (!configSetNames.includes(configSetName)) {
+      account.bootstrapConfigSets.forEach(({ name }) => {
+        if (!configSetNames.includes(name)) {
           throw new TakomoError(
-            `Account '${account.id}' refers to a non-existing bootstrap config set '${configSetName}'`,
+            `Account '${account.id}' refers to a non-existing bootstrap config set '${name}'`,
           )
         }
       })

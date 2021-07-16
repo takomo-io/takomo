@@ -13,7 +13,9 @@ export const createOrganizationSchemas = (
 ) => {
   const { vars } = createCommonSchema()
   const { accountId } = createAwsSchemas({ ...props })
-  const { configSetName } = createConfigSetsSchemas({ ...props })
+  const { configSetName, configSetInstruction } = createConfigSetsSchemas({
+    ...props,
+  })
 
   const accountName = Joi.string().min(1).max(50)
 
@@ -151,10 +153,15 @@ export const createOrganizationSchemas = (
     accountAdminRoleName: organizationRoleName,
     status: Joi.string().valid("active", "disabled"),
     priority: Joi.number().integer().min(0),
-    configSets: [Joi.array().items(configSetName).unique(), configSetName],
-    bootstrapConfigSets: [
-      Joi.array().items(configSetName).unique(),
+    configSets: [
+      Joi.array().items(configSetName, configSetInstruction),
       configSetName,
+      configSetInstruction,
+    ],
+    bootstrapConfigSets: [
+      Joi.array().items(configSetName, configSetInstruction),
+      configSetName,
+      configSetInstruction,
     ],
     accounts: Joi.array().items(organizationAccount, accountId),
     serviceControlPolicies: [

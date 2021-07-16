@@ -19,16 +19,31 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
 
     const state = { failed: false }
 
-    for (const organizationalUnit of plan.organizationalUnits) {
-      const result = await processOrganizationalUnit(
-        state1,
-        organizationalUnit,
-        totalTimer.startChild(organizationalUnit.path),
-        state,
-        configSetType,
+    for (const [i, stage] of plan.stages.entries()) {
+      io.info(`Begin stage: ${stage.stage}`)
+
+      const accountCount = stage.organizationalUnits
+        .map((g) => g.accounts)
+        .flat().length
+
+      const accountsListener = io.createAccountsListener(
+        `[${stage.stage} ${i + 1}/${plan.stages.length}]`,
+        accountCount,
       )
 
-      results.push(result)
+      for (const organizationalUnit of stage.organizationalUnits) {
+        const result = await processOrganizationalUnit(
+          accountsListener,
+          state1,
+          organizationalUnit,
+          totalTimer.startChild(organizationalUnit.path),
+          state,
+          configSetType,
+          stage.stage,
+        )
+
+        results.push(result)
+      }
     }
 
     return transitions.completeAccountsOperation({
