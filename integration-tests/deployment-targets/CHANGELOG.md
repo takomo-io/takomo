@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.26.0](https://github.com/takomo-io/takomo/compare/v3.25.0...v3.26.0) (2021-07-21)
+
+
+### Features
+
+* **deployment targets:** add --map-args option to run deployment targets command ([#272](https://github.com/takomo-io/takomo/issues/272)) ([fd784c7](https://github.com/takomo-io/takomo/commit/fd784c7fee48c7e4458e00f6ce9f600c6ed54618))
+
+
+
+
+
 # [3.25.0](https://github.com/takomo-io/takomo/compare/v3.24.0...v3.25.0) (2021-07-14)
 
 **Note:** Version bump only for package integration-test-deployment-targets

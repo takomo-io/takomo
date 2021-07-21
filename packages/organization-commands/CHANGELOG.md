@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.26.0](https://github.com/takomo-io/takomo/compare/v3.25.0...v3.26.0) (2021-07-21)
+
+
+### Features
+
+* **organization:** add support for config set stages ([#271](https://github.com/takomo-io/takomo/issues/271)) ([b04070b](https://github.com/takomo-io/takomo/commit/b04070b12404ba4cceb8cf15228c2bb882d7503b))
+* **organization:** treat organization policy files as dynamic handlebars templates ([#270](https://github.com/takomo-io/takomo/issues/270)) ([d9c430b](https://github.com/takomo-io/takomo/commit/d9c430b8b257cc240be6fb46d9a1c4e360651ff6))
+
+
+
+
+
 # [3.25.0](https://github.com/takomo-io/takomo/compare/v3.24.0...v3.25.0) (2021-07-14)
 
 **Note:** Version bump only for package @takomo/organization-commands

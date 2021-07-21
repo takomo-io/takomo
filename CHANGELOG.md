@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.26.0](https://github.com/takomo-io/takomo/compare/v3.25.0...v3.26.0) (2021-07-21)
+
+
+### Features
+
+* **deployment targets:** add --map-args option to run deployment targets command ([#272](https://github.com/takomo-io/takomo/issues/272)) ([fd784c7](https://github.com/takomo-io/takomo/commit/fd784c7fee48c7e4458e00f6ce9f600c6ed54618))
+* **organization:** add support for config set stages ([#271](https://github.com/takomo-io/takomo/issues/271)) ([b04070b](https://github.com/takomo-io/takomo/commit/b04070b12404ba4cceb8cf15228c2bb882d7503b))
+* **organization:** treat organization policy files as dynamic handlebars templates ([#270](https://github.com/takomo-io/takomo/issues/270)) ([d9c430b](https://github.com/takomo-io/takomo/commit/d9c430b8b257cc240be6fb46d9a1c4e360651ff6))
+* **templating:** disable html escaping of dynamic Handlebars templates ([b6d0adf](https://github.com/takomo-io/takomo/commit/b6d0adfe977c771617e509cd5f1bfd8816b760a4))
+
+
+
+
+
 # [3.25.0](https://github.com/takomo-io/takomo/compare/v3.24.0...v3.25.0) (2021-07-14)
 
 
