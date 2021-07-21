@@ -13,7 +13,10 @@ export const createOrganizationSchemas = (
 ) => {
   const { vars } = createCommonSchema()
   const { accountId } = createAwsSchemas({ ...props })
-  const { configSetName } = createConfigSetsSchemas({ ...props })
+  const { configSetName, configSetInstruction, stageName } =
+    createConfigSetsSchemas({
+      ...props,
+    })
 
   const accountName = Joi.string().min(1).max(50)
 
@@ -61,10 +64,15 @@ export const createOrganizationSchemas = (
     name: Joi.string(),
     email: Joi.string().email(),
     accountAdminRoleName: organizationRoleName,
-    configSets: [Joi.array().items(configSetName).unique(), configSetName],
-    bootstrapConfigSets: [
-      Joi.array().items(configSetName).unique(),
+    configSets: [
+      Joi.array().items(configSetName, configSetInstruction),
       configSetName,
+      configSetInstruction,
+    ],
+    bootstrapConfigSets: [
+      Joi.array().items(configSetName, configSetInstruction),
+      configSetName,
+      configSetInstruction,
     ],
     serviceControlPolicies: [
       policyName,
@@ -151,10 +159,15 @@ export const createOrganizationSchemas = (
     accountAdminRoleName: organizationRoleName,
     status: Joi.string().valid("active", "disabled"),
     priority: Joi.number().integer().min(0),
-    configSets: [Joi.array().items(configSetName).unique(), configSetName],
-    bootstrapConfigSets: [
-      Joi.array().items(configSetName).unique(),
+    configSets: [
+      Joi.array().items(configSetName, configSetInstruction),
       configSetName,
+      configSetInstruction,
+    ],
+    bootstrapConfigSets: [
+      Joi.array().items(configSetName, configSetInstruction),
+      configSetName,
+      configSetInstruction,
     ],
     accounts: Joi.array().items(organizationAccount, accountId),
     serviceControlPolicies: [
@@ -178,6 +191,8 @@ export const createOrganizationSchemas = (
 
   const featureSet = Joi.string().valid("ALL", "CONSOLIDATED_BILLING")
 
+  const stages = Joi.array().items(stageName).unique()
+
   return {
     organizationAccount,
     organizationAccountWithoutId,
@@ -190,6 +205,7 @@ export const createOrganizationSchemas = (
     accountName,
     accountEmail,
     featureSet,
+    stages,
   }
 }
 
@@ -201,7 +217,7 @@ export const buildOrganizationConfigSchema = (
   props: BuildOrganizationConfigFileSchemaProps,
 ): ObjectSchema => {
   const { vars } = createCommonSchema()
-  const { configSets } = createConfigSetsSchemas({ ...props })
+  const { configSets, stageName } = createConfigSetsSchemas({ ...props })
   const { accountId } = createAwsSchemas({ ...props })
   const {
     accountCreation,
@@ -210,10 +226,13 @@ export const buildOrganizationConfigSchema = (
     policies,
   } = createOrganizationSchemas(props)
 
+  const stages = Joi.array().items(stageName).unique()
+
   return Joi.object({
     vars,
     accountCreation,
     configSets,
+    stages,
     serviceControlPolicies: [policies, Joi.boolean()],
     tagPolicies: [policies, Joi.boolean()],
     aiServicesOptOutPolicies: [policies, Joi.boolean()],

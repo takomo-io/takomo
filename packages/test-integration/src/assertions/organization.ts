@@ -1,5 +1,5 @@
 import { AccountId, OrganizationFeatureSet, StackName } from "@takomo/aws-model"
-import { ConfigSetName } from "@takomo/config-sets"
+import { ConfigSetName, ConfigSetStage } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
 import {
   AccountsOperationOutput,
@@ -137,9 +137,7 @@ export const createCreateOrganizationOutputMatcher = (
   const assert = async ({
     featureSet,
     masterAccountId,
-  }: ExpectCreateOrganizationOutputProps): Promise<
-    CreateOrganizationOutput
-  > => {
+  }: ExpectCreateOrganizationOutputProps): Promise<CreateOrganizationOutput> => {
     const output = await executor()
     if (outputAssertions) {
       outputAssertions(output)
@@ -212,6 +210,7 @@ export interface ExpectAccountResultProps {
 
 export interface ExpectOrganizationalUnitResultProps {
   readonly organizationalUnitPath: OrganizationalUnitPath
+  readonly stage?: ConfigSetStage
   readonly accountResults: ReadonlyArray<ExpectAccountResultProps>
   // Do not require accounts to be in specified order
   readonly unorderedAccounts?: boolean
@@ -232,9 +231,7 @@ type OrganizationalUnitResultAssertion = (
 interface CreateAccountsOperationOutputMatcherProps {
   readonly executor: () => Promise<AccountsOperationOutput>
   readonly outputAssertions?: (output: AccountsOperationOutput) => void
-  readonly organizationalUnitAssertions: ReadonlyArray<
-    OrganizationalUnitResultAssertion
-  >
+  readonly organizationalUnitAssertions: ReadonlyArray<OrganizationalUnitResultAssertion>
 }
 
 export const createAccountsOperationOutputMatcher = ({
@@ -266,6 +263,10 @@ export const createAccountsOperationOutputMatcher = ({
           return false
         }
 
+        if (prop.stage) {
+          expect(result.stage).toStrictEqual(prop.stage)
+        }
+
         expect(result.results).toHaveLength(prop.accountResults.length)
 
         result.results.forEach((accountResult, i) => {
@@ -284,6 +285,7 @@ export const createAccountsOperationOutputMatcher = ({
 
           expect(accountResult.accountId).toStrictEqual(expected.accountId)
           expect(accountResult.success).toStrictEqual(true)
+
           if (expected.status) {
             expect(accountResult.status).toStrictEqual(expected.status)
           } else {
@@ -307,9 +309,8 @@ export const createAccountsOperationOutputMatcher = ({
                 )
 
                 configSetResult.results.forEach((commandPathResult, k) => {
-                  const expectedCommandPathResult = expectedConfigSetResult.commandPathResults![
-                    k
-                  ]
+                  const expectedCommandPathResult =
+                    expectedConfigSetResult.commandPathResults![k]
 
                   expect(commandPathResult.commandPath).toStrictEqual(
                     expectedCommandPathResult.commandPath,
@@ -322,9 +323,8 @@ export const createAccountsOperationOutputMatcher = ({
 
                     commandPathResult.result.results.forEach(
                       (stackResult, n) => {
-                        const expectedStackResult = expectedCommandPathResult.stackResults![
-                          n
-                        ]
+                        const expectedStackResult =
+                          expectedCommandPathResult.stackResults![n]
 
                         expect(stackResult.stack.path).toStrictEqual(
                           expectedStackResult.stackPath,

@@ -11,6 +11,8 @@ export interface ConfigSetsSchemas {
   readonly configSets: ObjectSchema
   readonly configSet: ObjectSchema
   readonly configSetName: StringSchema
+  readonly stageName: StringSchema
+  readonly configSetInstruction: ObjectSchema
 }
 
 export const createConfigSetsSchemas = (
@@ -32,9 +34,21 @@ export const createConfigSetsSchemas = (
 
   const configSets = Joi.object().pattern(configSetName, configSet)
 
+  const stageName = Joi.string()
+    .min(1)
+    .max(60)
+    .regex(/^[a-zA-Z_]+[a-zA-Z0-9-_]*$/)
+
+  const configSetInstruction = Joi.object({
+    name: configSetName.required(),
+    stage: stageName,
+  })
+
   return {
     configSets,
     configSet,
     configSetName,
+    configSetInstruction,
+    stageName,
   }
 }

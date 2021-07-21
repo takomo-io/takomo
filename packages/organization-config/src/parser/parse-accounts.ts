@@ -1,12 +1,12 @@
 import { OrganizationPolicyName } from "@takomo/aws-model"
-import { ConfigSetName } from "@takomo/config-sets"
+import { ConfigSetInstruction } from "@takomo/config-sets"
 import { OrganizationAccountConfig } from "../model"
 import { parseAccount } from "./parse-account"
 
 export const parseAccounts = (
   value: any,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,

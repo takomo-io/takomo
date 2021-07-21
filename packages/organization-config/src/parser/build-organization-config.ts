@@ -5,7 +5,12 @@ import {
   mergeConfigSets,
   parseConfigSets,
 } from "@takomo/config-sets"
-import { CommandContext, parseOptionalString, parseVars } from "@takomo/core"
+import {
+  CommandContext,
+  parseOptionalString,
+  parseOptionalStringArray,
+  parseVars,
+} from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { buildOrganizationConfigSchema } from "@takomo/organization-schema"
 import {
@@ -91,6 +96,7 @@ export const buildOrganizationConfig = async (
   const accountCreation = parseAccountCreationConfig(record.accountCreation)
   const parsedConfigSets = parseConfigSets(record.configSets)
   const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
+  const stages = parseOptionalStringArray(record.stages)
 
   const serviceControlPolicies = parsePoliciesConfig(
     "SERVICE_CONTROL_POLICY",
@@ -163,6 +169,7 @@ export const buildOrganizationConfig = async (
       backupPolicies,
       organizationalUnits,
       vars,
+      stages,
       masterAccountId: `${record.masterAccountId}`,
       organizationAdminRoleName: parseOptionalString(
         record.organizationAdminRoleName,

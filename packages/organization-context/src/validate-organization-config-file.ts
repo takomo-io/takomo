@@ -2,8 +2,9 @@ import {
   CallerIdentity,
   Organization,
   OrganizationAccount,
+  OrganizationPolicyName,
 } from "@takomo/aws-model"
-import { ConfigSet } from "@takomo/config-sets"
+import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
 import {
   OrganizationalUnitConfig,
   OrganizationConfig,
@@ -11,19 +12,23 @@ import {
 } from "@takomo/organization-config"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
 import {
+  AccountRefersToNonExistingBootstrapConfigSet,
+  AccountRefersToNonExistingConfigSet,
   AccountsMissingFromLocalConfigError,
   NonExistingAccountsInLocalConfigError,
+  OuRefersToNonExistingBootstrapConfigSet,
+  OuRefersToNonExistingConfigSet,
   SuspendedAccountsInLocalConfigError,
 } from "./error"
 import { OrganizationContext } from "./organization-context"
 
 const collectPolicyNames = (
   policies: ReadonlyArray<OrganizationPolicyConfig> | undefined,
-): string[] => (policies ? policies.map((p) => p.name) : [])
+): OrganizationPolicyName[] => (policies ? policies.map((p) => p.name) : [])
 
 const collectConfigSetNames = (
   configSets: ReadonlyArray<ConfigSet>,
-): ReadonlyArray<string> => configSets.map((r) => r.name)
+): ReadonlyArray<ConfigSetName> => configSets.map((r) => r.name)
 
 export const validateOrganizationConfigFile = (
   configFile: OrganizationConfig,
@@ -100,6 +105,9 @@ export const validateOrganizationConfigFile = (
   const backupPolicyNames = collectPolicyNames(backupPolicies.policies)
   const configSetNames = collectConfigSetNames(configSets)
 
+  const stages = configFile.stages ?? []
+  const stagesDefined = stages.length > 0
+
   const validateOu = (ou: OrganizationalUnitConfig): void => {
     ou.policies.serviceControl.attached.forEach((policyName) => {
       if (!serviceControlPolicyNames.includes(policyName)) {
@@ -133,35 +141,70 @@ export const validateOrganizationConfigFile = (
       }
     })
 
-    ou.configSets.forEach((configSetName) => {
-      if (!configSetNames.includes(configSetName)) {
+    ou.configSets.forEach(({ name, stage }) => {
+      if (!configSetNames.includes(name)) {
+        throw new OuRefersToNonExistingConfigSet(ou.path, name)
+      }
+      if (stage && !stages.includes(stage)) {
         throw new TakomoError(
-          `Organizational unit '${ou.path}' refers to a non-existing config set '${configSetName}'`,
+          `Config set '${name}' in organizational unit '${ou.path}' refers to a non-existing stage '${stage}'`,
+        )
+      }
+      if (stagesDefined && !stage) {
+        throw new TakomoError(
+          `Config set '${name}' in organizational unit '${ou.path}' doesn't specify stage which is required if the organization config has stages defined`,
         )
       }
     })
 
-    ou.bootstrapConfigSets.forEach((configSetName) => {
-      if (!configSetNames.includes(configSetName)) {
+    ou.bootstrapConfigSets.forEach(({ name, stage }) => {
+      if (!configSetNames.includes(name)) {
+        throw new OuRefersToNonExistingBootstrapConfigSet(ou.path, name)
+      }
+      if (stage && !stages.includes(stage)) {
         throw new TakomoError(
-          `Organizational unit '${ou.path}' refers to a non-existing bootstrap config set '${configSetName}'`,
+          `Bootstrap config set '${name}' in organizational unit '${ou.path}' refers to a non-existing stage '${stage}'`,
+        )
+      }
+      if (stagesDefined && !stage) {
+        throw new TakomoError(
+          `Bootstrap config set '${name}' in organizational unit '${ou.path}' doesn't specify stage which is required if the organization config has stages defined`,
         )
       }
     })
 
     ou.accounts.forEach((account) => {
-      account.configSets.forEach((configSetName) => {
-        if (!configSetNames.includes(configSetName)) {
+      account.configSets.forEach(({ name, stage }) => {
+        if (!configSetNames.includes(name)) {
+          throw new AccountRefersToNonExistingConfigSet(account.id, name)
+        }
+        if (stage && !stages.includes(stage)) {
           throw new TakomoError(
-            `Account '${account.id}' refers to a non-existing config set '${configSetName}'`,
+            `Config set '${name}' in account '${account.id}' refers to a non-existing stage '${stage}'`,
+          )
+        }
+        if (stagesDefined && !stage) {
+          throw new TakomoError(
+            `Config set '${name}' in account '${account.id}' doesn't specify stage which is required if the organization config has stages defined`,
           )
         }
       })
 
-      account.bootstrapConfigSets.forEach((configSetName) => {
-        if (!configSetNames.includes(configSetName)) {
+      account.bootstrapConfigSets.forEach(({ name, stage }) => {
+        if (!configSetNames.includes(name)) {
+          throw new AccountRefersToNonExistingBootstrapConfigSet(
+            account.id,
+            name,
+          )
+        }
+        if (stage && !stages.includes(stage)) {
           throw new TakomoError(
-            `Account '${account.id}' refers to a non-existing bootstrap config set '${configSetName}'`,
+            `Bootstrap config set '${name}' in account '${account.id}' refers to a non-existing stage '${stage}'`,
+          )
+        }
+        if (stagesDefined && !stage) {
+          throw new TakomoError(
+            `Bootstrap config set '${name}' in account '${account.id}' doesn't specify stage which is required if the organization config has stages defined`,
           )
         }
       })

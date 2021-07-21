@@ -2,6 +2,7 @@ import {
   ConfigSetCommandPathOperationResult,
   ConfigSetName,
   ConfigSetOperationResult,
+  ConfigSetStage,
   ConfigSetType,
 } from "@takomo/config-sets"
 import { resolveCommandOutputBase } from "@takomo/core"
@@ -22,6 +23,7 @@ export const processConfigSet = async (
   configSetTimer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
+  stage?: ConfigSetStage,
 ): Promise<ConfigSetOperationResult> => {
   const { io, ctx, configRepository } = holder
 
@@ -46,6 +48,7 @@ export const processConfigSet = async (
       state,
       configSetType,
       stacksConfigRepository,
+      stage,
     )
 
     if (!result.success) {

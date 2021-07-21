@@ -1,4 +1,4 @@
-import { ConfigSetType } from "@takomo/config-sets"
+import { ConfigSetStage, ConfigSetType } from "@takomo/config-sets"
 import { resolveCommandOutputBase } from "@takomo/core"
 import { OperationState } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
@@ -25,6 +25,7 @@ interface ConvertToOperationProps {
   readonly configSetType: ConfigSetType
   readonly results: Array<AccountOperationResult>
   readonly accountsListener: AccountsListener
+  readonly stage?: ConfigSetStage
 }
 
 const convertToOperation =
@@ -38,6 +39,7 @@ const convertToOperation =
     configSetType,
     results,
     accountsListener,
+    stage,
   }: ConvertToOperationProps): AccountOperation =>
   () =>
     policy.execute(async () => {
@@ -49,6 +51,7 @@ const convertToOperation =
         timer.startChild(account.account.id),
         state,
         configSetType,
+        stage,
       )
 
       results.push(result)
@@ -57,16 +60,17 @@ const convertToOperation =
     })
 
 export const processOrganizationalUnit = async (
+  accountsListener: AccountsListener,
   holder: AccountsOperationPlanHolder,
   organizationalUnit: PlannedAccountDeploymentOrganizationalUnit,
   timer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
+  stage?: ConfigSetStage,
 ): Promise<OrganizationalUnitAccountsOperationResult> => {
   const {
     io,
     input: { concurrentAccounts },
-    accountsListener,
   } = holder
 
   io.info(
@@ -87,6 +91,7 @@ export const processOrganizationalUnit = async (
       results,
       state,
       accountsListener,
+      stage,
     }),
   )
 
@@ -96,6 +101,7 @@ export const processOrganizationalUnit = async (
   return {
     ...resolveCommandOutputBase(results),
     path: organizationalUnit.path,
+    stage,
     results,
     timer,
   }
