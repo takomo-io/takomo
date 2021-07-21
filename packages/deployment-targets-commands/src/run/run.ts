@@ -11,10 +11,18 @@ import {
 } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import { OperationState } from "@takomo/stacks-model"
-import { expandFilePath, Timer, TkmLogger } from "@takomo/util"
+import {
+  expandFilePath,
+  FilePath,
+  parseYaml,
+  readFileContents,
+  Timer,
+  TkmLogger,
+} from "@takomo/util"
 import { Credentials } from "aws-sdk"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
+import { extname } from "path"
 import R from "ramda"
 import { promisify } from "util"
 import { DeploymentTargetsListener } from "../operation/model"
@@ -102,6 +110,7 @@ interface RunMapCommandProps {
   readonly credentials: Credentials
   readonly mapCommand: string
   readonly input: DeploymentTargetsRunInput
+  readonly mapArgs: unknown
 }
 
 const runJsMapFunction = async ({
@@ -111,6 +120,7 @@ const runJsMapFunction = async ({
   target,
   logger,
   credentials,
+  mapArgs,
 }: RunMapCommandProps): Promise<unknown> => {
   const mapFunctionFullPath = expandFilePath(ctx.projectDir, mapCommand)
   logger.debug(`Run map function from file: ${mapFunctionFullPath}`)
@@ -122,6 +132,7 @@ const runJsMapFunction = async ({
     credentials,
     target: target,
     deploymentGroupPath: group.path,
+    args: mapArgs,
   })
 }
 
@@ -133,6 +144,7 @@ const runMapProcessCommand = async ({
   logger,
   credentials,
   input,
+  mapArgs,
 }: RunMapCommandProps): Promise<unknown> => {
   logger.debug(`Run map command: ${mapCommand}`)
 
@@ -141,6 +153,12 @@ const runMapProcessCommand = async ({
     TKM_TARGET_NAME: target.name,
     TKM_TARGET_JSON: targetJson,
     TKM_DEPLOYMENT_GROUP_PATH: group.path,
+    TKM_MAP_ARGS: "",
+  }
+
+  if (mapArgs) {
+    additionalVariables.TKM_MAP_ARGS =
+      typeof mapArgs === "string" ? mapArgs : JSON.stringify(mapArgs)
   }
 
   const env = prepareAwsEnvVariables({
@@ -273,6 +291,7 @@ export const processDeploymentTarget = async (
   timer: Timer,
   state: OperationState,
   logger: TkmLogger,
+  mapArgs: unknown,
 ): Promise<DeploymentTargetRunResult> => {
   const { ctx, input } = props
   const { mapCommand } = input
@@ -301,6 +320,7 @@ export const processDeploymentTarget = async (
       group,
       credentials,
       input,
+      mapArgs,
     })
     timer.stop()
     return {
@@ -335,6 +355,7 @@ const convertToOperation =
     results: Array<DeploymentTargetRunResult>,
     policy: IPolicy,
     listener: DeploymentTargetsListener,
+    mapArgs: unknown,
   ): DeploymentTargetRunOperation =>
   () =>
     policy.execute(async () => {
@@ -346,6 +367,7 @@ const convertToOperation =
         timer.startChild(target.name),
         state,
         props.io.childLogger(target.name),
+        mapArgs,
       )
       results.push(result)
       await listener.onTargetComplete()
@@ -361,6 +383,7 @@ export const processDeploymentGroup = async (
   timer: Timer,
   state: OperationState,
   listener: DeploymentTargetsListener,
+  mapArgs: unknown,
 ): Promise<DeploymentGroupRunResult> => {
   const { io, input } = props
 
@@ -381,6 +404,7 @@ export const processDeploymentGroup = async (
       results,
       deploymentPolicy,
       listener,
+      mapArgs,
     ),
   )
 
@@ -404,12 +428,41 @@ interface RunProps {
   readonly listener: DeploymentTargetsListener
 }
 
+const convertArgs = async (
+  projectDir: FilePath,
+  args?: string,
+): Promise<unknown> => {
+  if (!args) {
+    return undefined
+  }
+
+  if (args.startsWith("file:")) {
+    const filePath = args.substr(5)
+    const fullFilePath = expandFilePath(projectDir, filePath)
+    const contents = await readFileContents(fullFilePath)
+    switch (extname(filePath)) {
+      case ".json":
+        return JSON.parse(contents)
+      case ".yml":
+      case ".yaml":
+        return parseYaml(fullFilePath, contents)
+      default:
+        return contents
+    }
+  }
+
+  return args
+}
+
 export const run = async (
   props: RunProps,
 ): Promise<DeploymentTargetsRunOutput> => {
   const { input, plan, listener, ctx, io } = props
   const childTimer = input.timer.startChild("run")
+
   const results = new Array<DeploymentGroupRunResult>()
+
+  const mapArgs = await convertArgs(ctx.projectDir, input.mapArgs)
 
   const state = { failed: false }
 
@@ -420,6 +473,7 @@ export const run = async (
       childTimer.startChild(group.name),
       state,
       listener,
+      mapArgs,
     )
     results.push(result)
   }

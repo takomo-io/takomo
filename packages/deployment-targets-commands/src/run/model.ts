@@ -24,6 +24,7 @@ export interface DeploymentTargetsRunInput extends CommandInput {
   readonly excludeLabels: ReadonlyArray<Label>
   readonly concurrentTargets: number
   readonly mapCommand: string
+  readonly mapArgs?: string
   readonly reduceCommand?: string
   readonly mapRoleName?: IamRoleName
   readonly disableMapRole: boolean

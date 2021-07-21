@@ -282,6 +282,7 @@ export interface ExecuteRunTargetsCommandProps extends ExecuteCommandProps {
   readonly configFile?: string
   readonly concurrentTargets?: number
   readonly mapCommand: string
+  readonly mapArgs?: string
   readonly reduceCommand?: string
   readonly outputFormat?: OutputFormat
   readonly roleName?: IamRoleName
@@ -333,6 +334,7 @@ export const executeRunTargetsCommand = (
         excludeLabels: props.excludeLabels ?? [],
         concurrentTargets: props.concurrentTargets ?? 1,
         mapCommand: props.mapCommand,
+        mapArgs: props.mapArgs,
         reduceCommand: props.reduceCommand,
         outputFormat: props.outputFormat ?? "text",
         captureLastLine: props.captureLastLine ?? false,

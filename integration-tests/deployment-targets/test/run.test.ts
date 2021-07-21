@@ -53,6 +53,94 @@ describe("Run", () => {
     }),
   )
 
+  test("Simple map command with map args of type string", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "hello-partner",
+      mapCommand: "echo $TKM_MAP_ARGS",
+    })
+      .expectCommandToSucceed(["hello-partner\n"])
+      .assert())
+
+  test("Simple map command with map args from a .txt file", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "file:message.txt",
+      mapCommand: "echo $TKM_MAP_ARGS",
+    })
+      .expectCommandToSucceed(["Rick and Morty rules!\n"])
+      .assert())
+
+  test("Simple map command with map args from a .json file", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "file:args.json",
+      mapCommand: "echo $TKM_MAP_ARGS",
+    })
+      .expectCommandToSucceed([`{"hello":"world"}\n`])
+      .assert())
+
+  test("Simple map command with map args from a .yml file", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "file:my-dir/args.yml",
+      mapCommand: "echo $TKM_MAP_ARGS",
+    })
+      .expectCommandToSucceed([`{"name":"James Bond","age":44}\n`])
+      .assert())
+
+  test("JS map command with map args of type string", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "nothing-to-see-here",
+      mapCommand: "js:get-args.js",
+    })
+      .expectCommandToSucceed(["nothing-to-see-here"])
+      .assert())
+
+  test("JS map command with map args from a .txt file", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "file:message.txt",
+      mapCommand: "js:get-args.js",
+    })
+      .expectCommandToSucceed(["Rick and Morty rules!"])
+      .assert())
+
+  test("JS map command with map args from a .json file", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "file:args.json",
+      mapCommand: "js:get-args.js",
+    })
+      .expectCommandToSucceed([{ hello: "world" }])
+      .assert())
+
+  test("JS map command with map args from a .yml file", () =>
+    executeRunTargetsCommand({
+      projectDir,
+      disableMapRole: true,
+      targets: ["three"],
+      mapArgs: "file:my-dir/args.yml",
+      mapCommand: "js:get-args.js",
+    })
+      .expectCommandToSucceed([{ name: "James Bond", age: 44 }])
+      .assert())
+
   test(
     "Simple map command with deployment role and disable map role option",
     withReservation(async ({ credentials }) => {

@@ -12,6 +12,7 @@ const LABEL_OPT = "label"
 const CONFIG_FILE_OPT = "config-file"
 const REDUCE_OPT = "reduce"
 const MAP_OPT = "map"
+const MAP_ARGS_OPT = "map-args"
 const MAP_ROLE_NAME_OPT = "map-role-name"
 const DISABLE_MAP_ROLE_OPT = "disable-map-role"
 const REDUCE_ROLE_ARN_OPT = "reduce-role-arn"
@@ -19,7 +20,6 @@ const OUTPUT_OPT = "output"
 const CAPTURE_AFTER_OPT = "capture-after"
 const CAPTURE_BEFORE_OPT = "capture-before"
 const CAPTURE_LAST_LINE_OPT = "capture-last-line"
-
 const desc =
   "For each deployment target, run a map command, then optionally invoke a " +
   "reduce command with the results from the map command."
@@ -108,6 +108,12 @@ export const runTargetsCmd = {
         global: false,
         demandOption: false,
       })
+      .option(MAP_ARGS_OPT, {
+        description: "Additional arguments passed to the map command",
+        string: true,
+        global: false,
+        demandOption: false,
+      })
       .option(REDUCE_ROLE_ARN_OPT, {
         description:
           "ARN of an IAM role to use when executing the reduce command",
@@ -155,6 +161,7 @@ export const runTargetsCmd = {
         captureAfterLine: argv[CAPTURE_AFTER_OPT],
         captureLastLine: argv[CAPTURE_LAST_LINE_OPT],
         mapCommand: argv[MAP_OPT],
+        mapArgs: argv[MAP_ARGS_OPT],
         reduceRoleArn: argv[REDUCE_ROLE_ARN_OPT],
         reduceCommand: argv[REDUCE_OPT],
         outputFormat: argv[OUTPUT_OPT],
