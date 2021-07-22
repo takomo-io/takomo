@@ -123,6 +123,7 @@ export const executeDeployStacksCommand = (
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
         timer: createTimer("total"),
         interactive: props.interactive ?? false,
+        outputFormat: "text",
       },
     })
   })
@@ -167,6 +168,7 @@ export const executeUndeployStacksCommand = (
         timer: createTimer("total"),
         ignoreDependencies: props.ignoreDependencies ?? false,
         interactive: props.interactive ?? false,
+        outputFormat: "text",
       },
     })
   })
@@ -205,6 +207,7 @@ export const executeListStacksCommand = (
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
         timer: createTimer("total"),
+        outputFormat: "text",
       },
     })
   })
@@ -243,6 +246,7 @@ export const executeDetectDriftCommand = (
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
         timer: createTimer("total"),
+        outputFormat: "text",
       },
     })
   })

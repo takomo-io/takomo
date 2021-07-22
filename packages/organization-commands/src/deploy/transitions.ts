@@ -100,6 +100,7 @@ export const createDeployOrganizationTransitions =
         message: "Cancelled",
         success: false,
         status: "CANCELLED",
+        outputFormat: state.input.outputFormat,
       }),
     completeOrganizationDeploy: async (
       state: DeployOrganizationCompletedState,
@@ -108,6 +109,7 @@ export const createDeployOrganizationTransitions =
         ...state,
         success: true,
         status: "SUCCESS",
+        outputFormat: state.input.outputFormat,
       }),
     start: inProgress("load-organization-data", loadOrganizationData),
     validateConfiguration: inProgress(

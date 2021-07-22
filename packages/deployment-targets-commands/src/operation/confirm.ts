@@ -7,7 +7,7 @@ import { processOperation } from "./process"
 export const confirmOperation = async (
   holder: PlanHolder,
 ): Promise<DeploymentTargetsOperationOutput> => {
-  const { io, timer, plan, ctx } = holder
+  const { io, timer, plan, ctx, input } = holder
 
   if (ctx.autoConfirmEnabled) {
     return processOperation(holder)
@@ -19,6 +19,7 @@ export const confirmOperation = async (
       timer.stop()
       return {
         results: [],
+        outputFormat: input.outputFormat,
         message: "Cancelled",
         status: "CANCELLED",
         success: false,

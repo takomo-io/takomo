@@ -71,6 +71,7 @@ export interface CommandOutputBase extends SuccessHolder {
  */
 export interface CommandOutput extends CommandOutputBase {
   readonly timer: Timer
+  readonly outputFormat: OutputFormat
 }
 
 /**
@@ -78,6 +79,7 @@ export interface CommandOutput extends CommandOutputBase {
  */
 export interface CommandInput {
   readonly timer: Timer
+  readonly outputFormat: OutputFormat
 }
 
 /**
@@ -173,6 +175,16 @@ export interface CommandContext {
   readonly logLevel: LogLevel
 
   /**
+   * Suppress all logging but the actual command results.
+   */
+  readonly quiet: boolean
+
+  /**
+   * Output format.
+   */
+  readonly outputFormat: OutputFormat
+
+  /**
    * Project configuration.
    */
   readonly projectConfig: TakomoProjectConfig
@@ -203,7 +215,7 @@ export interface CommandHandlerArgs<
   C,
   I extends IO<OUT>,
   IN extends CommandInput,
-  OUT extends CommandOutput
+  OUT extends CommandOutput,
 > {
   readonly ctx: InternalCommandContext
   readonly configRepository: C
@@ -219,5 +231,5 @@ export type CommandHandler<
   C,
   I extends IO<OUT>,
   IN extends CommandInput,
-  OUT extends CommandOutput
+  OUT extends CommandOutput,
 > = (args: CommandHandlerArgs<C, I, IN, OUT>) => Promise<OUT>

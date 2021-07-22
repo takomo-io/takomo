@@ -27,6 +27,7 @@ const executeStep = async <S extends InitialAccountsOperationState>(
     return new AccountsOperationCompleted({
       ...state,
       results: [],
+      outputFormat: state.input.outputFormat,
       error,
       message: "Error",
       status: FAILED,

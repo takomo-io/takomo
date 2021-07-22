@@ -35,6 +35,7 @@ const deleteAccountAlias = async (
         message: "Cancelled",
         success: false,
         status: "CANCELLED",
+        outputFormat: input.outputFormat,
         timer,
       }
     }
@@ -50,6 +51,7 @@ const deleteAccountAlias = async (
       message: "Failed",
       success: false,
       status: "FAILED",
+      outputFormat: input.outputFormat,
       timer,
     }
   }
@@ -59,6 +61,7 @@ const deleteAccountAlias = async (
     message: "Success",
     success: true,
     status: "SUCCESS",
+    outputFormat: input.outputFormat,
     timer,
   }
 }

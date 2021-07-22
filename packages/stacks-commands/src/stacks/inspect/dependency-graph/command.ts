@@ -50,6 +50,7 @@ export const dependencyGraphCommand: CommandHandler<
         message: "Success",
         timer,
         stacks: ctx.stacks,
+        outputFormat: input.outputFormat,
       }
 
       return output

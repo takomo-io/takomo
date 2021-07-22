@@ -8,7 +8,7 @@ import { Timer } from "@takomo/util"
 import { OrganizationBasicConfigDeploymentPlan } from "../common/plan/basic-config/model"
 import { OrganizationalUnitsDeploymentPlan } from "../common/plan/organizational-units/model"
 import { PolicyDeploymentPlan } from "../common/plan/policies/model"
-import { DeployOrganizationIO } from "./model"
+import { DeployOrganizationInput, DeployOrganizationIO } from "./model"
 import { DeployOrganizationTransitions } from "./transitions"
 
 export interface InitialDeployOrganizationState {
@@ -17,6 +17,7 @@ export interface InitialDeployOrganizationState {
   readonly ctx: OrganizationContext
   readonly configRepository: OrganizationConfigRepository
   readonly io: DeployOrganizationIO
+  readonly input: DeployOrganizationInput
 }
 
 export interface OrganizationStateHolder

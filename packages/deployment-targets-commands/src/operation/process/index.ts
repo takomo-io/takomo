@@ -12,7 +12,7 @@ import { processDeploymentGroup } from "./deployment-group"
 export const processOperation = async (
   holder: PlanHolder,
 ): Promise<DeploymentTargetsOperationOutput> => {
-  const { timer, io, plan } = holder
+  const { timer, io, plan, input } = holder
   const childTimer = timer.startChild("process")
   const results = new Array<DeploymentGroupDeployResult>()
 
@@ -35,6 +35,7 @@ export const processOperation = async (
   return {
     ...resolveCommandOutputBase(results),
     results,
+    outputFormat: input.outputFormat,
     timer: childTimer,
   }
 }

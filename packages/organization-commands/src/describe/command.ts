@@ -19,8 +19,9 @@ export const describeOrganizationCommand: CommandHandler<
   ctx,
   configRepository,
   io,
+  input,
   credentialManager,
 }): Promise<DescribeOrganizationOutput> =>
   buildOrganizationContext(ctx, configRepository, io, credentialManager)
-    .then(describeOrganization)
+    .then((ctx) => describeOrganization(ctx, input))
     .then(io.printOutput)

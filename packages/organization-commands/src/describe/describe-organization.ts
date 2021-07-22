@@ -1,9 +1,10 @@
 import { OrganizationContext } from "@takomo/organization-context"
 import { createTimer } from "@takomo/util"
-import { DescribeOrganizationOutput } from "./model"
+import { DescribeOrganizationInput, DescribeOrganizationOutput } from "./model"
 
 export const describeOrganization = async (
   ctx: OrganizationContext,
+  input: DescribeOrganizationInput,
 ): Promise<DescribeOrganizationOutput> => {
   const timer = createTimer("total")
   const client = await ctx.getClient()
@@ -31,6 +32,7 @@ export const describeOrganization = async (
     organization,
     enabledPolicies,
     masterAccount,
+    outputFormat: input.outputFormat,
     success: true,
     timer,
     status: "SUCCESS",

@@ -73,6 +73,7 @@ export const processConfigSet = async (
           message: e.message,
           status: "FAILED",
           timer,
+          outputFormat: input.outputFormat,
           success: false,
           results: [],
         },
@@ -87,8 +88,9 @@ export const processConfigSet = async (
 
   return {
     ...resolveCommandOutputBase(results),
-    results,
+    outputFormat: input.outputFormat,
     configSetName: configSet.name,
+    results,
     timer,
   }
 }

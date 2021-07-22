@@ -125,6 +125,7 @@ export const executeDeployTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        outputFormat: "text",
       },
     })
   })
@@ -173,6 +174,7 @@ export const executeUndeployTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        outputFormat: "text",
       },
     })
   })
@@ -221,6 +223,7 @@ export const executeBootstrapTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        outputFormat: "text",
       },
     })
   })
@@ -269,6 +272,7 @@ export const executeTeardownTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        outputFormat: "text",
       },
     })
   })

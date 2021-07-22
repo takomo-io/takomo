@@ -86,6 +86,7 @@ export const executeInitProjectCommand = (
       io: createTestInitProjectIO(logger),
       input: {
         timer: createTimer("total"),
+        outputFormat: "text",
         project,
         createSamples,
         regions,

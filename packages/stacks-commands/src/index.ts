@@ -20,6 +20,12 @@ export {
   DetectDriftOutput,
   StackDriftInfo,
 } from "./stacks/drift/model"
+export { showConfigurationCommand } from "./stacks/inspect/configuration/command"
+export {
+  ShowConfigurationInput,
+  ShowConfigurationIO,
+  ShowConfigurationOutput,
+} from "./stacks/inspect/configuration/model"
 export { dependencyGraphCommand } from "./stacks/inspect/dependency-graph/command"
 export {
   DependencyGraphInput,

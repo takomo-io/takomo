@@ -12,6 +12,7 @@ import {
   Features,
   InternalCommandContext,
   IO,
+  OutputFormat,
   Variables,
 } from "@takomo/core"
 import {
@@ -222,7 +223,11 @@ const resolveProjectDir = (projectDirArg: any): string => {
   return process.cwd()
 }
 
-const resolveLogLevel = (log: string): LogLevel => {
+const resolveLogLevel = (log: string, quiet: boolean): LogLevel => {
+  if (quiet) {
+    return "none"
+  }
+
   switch (log) {
     case "trace":
       return "trace"
@@ -234,8 +239,27 @@ const resolveLogLevel = (log: string): LogLevel => {
       return "warn"
     case "error":
       return "error"
+    case "none":
+      return "none"
     default:
       return "info"
+  }
+}
+
+const resolveOutputFormat = (format?: string): OutputFormat => {
+  if (!format) {
+    return "text"
+  }
+
+  switch (format) {
+    case "text":
+      return "text"
+    case "yaml":
+      return "yaml"
+    case "json":
+      return "json"
+    default:
+      return "text"
   }
 }
 
@@ -284,8 +308,10 @@ export const initCommandContext = async (
     process.env.AWS_SDK_LOAD_CONFIG = "true"
   }
 
+  const quiet = argv.quiet === true
   const projectDir = resolveProjectDir(argv.dir)
-  const logLevel = resolveLogLevel(argv.log)
+  const logLevel = resolveLogLevel(argv.log, quiet)
+  const outputFormat = resolveOutputFormat(argv.output)
 
   const filePaths: ProjectFilePaths = {
     projectDir,
@@ -359,6 +385,8 @@ export const initCommandContext = async (
     filePaths,
     projectConfig,
     awsClientProvider,
+    quiet,
+    outputFormat,
     regions: projectConfig.regions.slice(),
     autoConfirmEnabled: argv.yes === true,
     statisticsEnabled: argv.stats === true,
@@ -595,13 +623,15 @@ export const onComplete = async ({
     console.log()
   }
 
-  console.log()
-  console.log(
-    `Completed in ${prettyMs(
-      output.timer.getSecondsElapsed(),
-    )} with status: ${formatCommandStatus(output.status)}`,
-  )
-  console.log()
+  if (output.outputFormat === "text") {
+    console.log()
+    console.log(
+      `Completed in ${prettyMs(
+        output.timer.getSecondsElapsed(),
+      )} with status: ${formatCommandStatus(output.status)}`,
+    )
+    console.log()
+  }
 
   if (!output.success) {
     process.exit(1)
@@ -648,7 +678,11 @@ export const handle = async <
       logLevel: ctx.logLevel,
     })
 
-    const input = await props.input(ctx, { timer: createTimer("total") })
+    const input = await props.input(ctx, {
+      timer: createTimer("total"),
+      outputFormat: ctx.outputFormat,
+    })
+
     logger.debugObject("Input arguments:", () => input)
     const io = props.io(ctx, logger)
 

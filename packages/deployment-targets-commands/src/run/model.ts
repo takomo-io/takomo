@@ -4,7 +4,6 @@ import {
   CommandOutput,
   CommandOutputBase,
   IO,
-  OutputFormat,
 } from "@takomo/core"
 import { DeploymentGroupConfig } from "@takomo/deployment-targets-config"
 import {
@@ -32,12 +31,10 @@ export interface DeploymentTargetsRunInput extends CommandInput {
   readonly captureAfterLine?: string
   readonly captureBeforeLine?: string
   readonly captureLastLine: boolean
-  readonly outputFormat: OutputFormat
 }
 
 export interface DeploymentTargetsRunOutput extends CommandOutput {
   readonly result: unknown
-  readonly outputFormat: OutputFormat
 }
 
 export interface DeploymentTargetsRunIO extends IO<DeploymentTargetsRunOutput> {

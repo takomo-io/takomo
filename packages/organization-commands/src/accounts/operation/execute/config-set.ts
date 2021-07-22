@@ -25,7 +25,7 @@ export const processConfigSet = async (
   configSetType: ConfigSetType,
   stage?: ConfigSetStage,
 ): Promise<ConfigSetOperationResult> => {
-  const { io, ctx, configRepository } = holder
+  const { io, ctx, configRepository, input } = holder
 
   io.info(`Process config set: '${configSetName}'`)
   const configSet = ctx.getConfigSet(configSetName)
@@ -63,6 +63,7 @@ export const processConfigSet = async (
     ...resolveCommandOutputBase(results),
     configSetName,
     results,
+    outputFormat: input.outputFormat,
     timer: configSetTimer,
   }
 }

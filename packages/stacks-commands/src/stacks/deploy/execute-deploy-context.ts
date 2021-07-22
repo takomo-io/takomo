@@ -1,4 +1,4 @@
-import { resolveCommandOutputBase } from "@takomo/core"
+import { OutputFormat, resolveCommandOutputBase } from "@takomo/core"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import {
   InternalStacksContext,
@@ -36,6 +36,7 @@ const executeStacksInParallel = async (
   ignoreDependencies: boolean,
   map: Map<StackPath, Promise<StackResult>>,
   configRepository: StacksConfigRepository,
+  outputFormat: OutputFormat,
 ): Promise<StacksOperationOutput> => {
   const executions = operations.reduce((executions, operation) => {
     const { stack, type, currentStack } = operation
@@ -72,6 +73,7 @@ const executeStacksInParallel = async (
   timer.stop()
   return {
     ...resolveCommandOutputBase(results),
+    outputFormat,
     results,
     timer,
   }
@@ -107,6 +109,7 @@ export const executeDeployContext = async (
   if (confirmAnswer === "CANCEL") {
     timer.stop()
     return {
+      outputFormat: input.outputFormat,
       success: false,
       results: [],
       status: "CANCELLED",
@@ -129,6 +132,7 @@ export const executeDeployContext = async (
       ignoreDependencies,
       new Map(),
       configRepository,
+      input.outputFormat,
     )
   }
 
@@ -189,6 +193,7 @@ export const executeDeployContext = async (
         ignoreDependencies,
         promisedExecutions,
         configRepository,
+        input.outputFormat,
       )
     }
   }
@@ -199,6 +204,7 @@ export const executeDeployContext = async (
 
   return {
     ...resolveCommandOutputBase(results),
+    outputFormat: input.outputFormat,
     results,
     timer,
   }
