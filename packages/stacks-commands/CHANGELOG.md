@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.27.0](https://github.com/takomo-io/takomo/compare/v3.26.0...v3.27.0) (2021-07-22)
+
+
+### Features
+
+* **stacks:** add command to inspect stack configurations ([#273](https://github.com/takomo-io/takomo/issues/273)) ([ac95f22](https://github.com/takomo-io/takomo/commit/ac95f22bd75761dc6240f102aa8d31164dec87ba))
+
+
+
+
+
 # [3.26.0](https://github.com/takomo-io/takomo/compare/v3.25.0...v3.26.0) (2021-07-21)
 
 **Note:** Version bump only for package @takomo/stacks-commands

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/iam-commands",
-  "version": "3.26.0",
+  "version": "3.27.0",
   "description": "Takomo IAM Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,11 +27,11 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.26.0",
-    "@takomo/aws-model": "3.26.0",
-    "@takomo/aws-schema": "3.26.0",
-    "@takomo/core": "3.26.0",
-    "@takomo/util": "3.26.0",
+    "@takomo/aws-clients": "3.27.0",
+    "@takomo/aws-model": "3.27.0",
+    "@takomo/aws-schema": "3.27.0",
+    "@takomo/core": "3.27.0",
+    "@takomo/util": "3.27.0",
     "joi": "17.4.0",
     "ramda": "0.27.1"
   },
