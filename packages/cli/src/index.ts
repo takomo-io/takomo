@@ -25,7 +25,13 @@ export const run = (): void => {
       description: "Set logging level",
       string: true,
       default: "info",
-      choices: ["trace", "debug", "info", "warn", "error"],
+      choices: ["trace", "debug", "info", "warn", "error", "none"],
+      global: true,
+    })
+    .option("quiet", {
+      alias: "q",
+      description: "Suppress all console output expect the command result",
+      boolean: true,
       global: true,
     })
     .option("log-confidential-info", {

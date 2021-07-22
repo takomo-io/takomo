@@ -40,6 +40,7 @@ export const detectDrift = async (
     success: !driftFound,
     status: driftFound ? "FAILED" : "SUCCESS",
     message: driftFound ? "Failed" : "Success",
+    outputFormat: input.outputFormat,
     timer,
     stacks,
   }

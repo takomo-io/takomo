@@ -14,33 +14,34 @@ import {
 } from "../model"
 import { processDeploymentTarget } from "./deployment-target"
 
-type DeploymentTargetDeployOperation = () => Promise<
-  DeploymentTargetDeployResult
->
+type DeploymentTargetDeployOperation =
+  () => Promise<DeploymentTargetDeployResult>
 
-const convertToOperation = (
-  holder: PlanHolder,
-  group: DeploymentGroupConfig,
-  timer: Timer,
-  state: OperationState,
-  target: DeploymentTargetConfig,
-  results: Array<DeploymentTargetDeployResult>,
-  policy: IPolicy,
-  listener: DeploymentTargetsListener,
-): DeploymentTargetDeployOperation => () =>
-  policy.execute(async () => {
-    await listener.onTargetBegin()
-    const result = await processDeploymentTarget(
-      holder,
-      group,
-      target,
-      timer.startChild(target.name),
-      state,
-    )
-    results.push(result)
-    await listener.onTargetComplete()
-    return result
-  })
+const convertToOperation =
+  (
+    holder: PlanHolder,
+    group: DeploymentGroupConfig,
+    timer: Timer,
+    state: OperationState,
+    target: DeploymentTargetConfig,
+    results: Array<DeploymentTargetDeployResult>,
+    policy: IPolicy,
+    listener: DeploymentTargetsListener,
+  ): DeploymentTargetDeployOperation =>
+  () =>
+    policy.execute(async () => {
+      await listener.onTargetBegin()
+      const result = await processDeploymentTarget(
+        holder,
+        group,
+        target,
+        timer.startChild(target.name),
+        state,
+      )
+      results.push(result)
+      await listener.onTargetComplete()
+      return result
+    })
 
 /**
  * @hidden

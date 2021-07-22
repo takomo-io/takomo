@@ -7,7 +7,11 @@ import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
 import { arrayToMap } from "@takomo/util"
 import R from "ramda"
 
-const collectStackDependencies = (
+/**
+ * TODO: Move somewhere else
+ * @hidden
+ */
+export const collectStackDependencies = (
   stacksByPath: Map<StackPath, InternalStack>,
   stack: InternalStack,
 ): ReadonlyArray<StackPath> =>

@@ -29,6 +29,7 @@ export {
 } from "./stacks/deploy-stacks/deploy-stacks-io"
 export { createDetectDriftIO } from "./stacks/detect-drift-io"
 export { createDependencyGraphIO } from "./stacks/inspect/dependency-graph-io"
+export { createShowConfigurationIO } from "./stacks/inspect/show-configuration-io"
 export { createListStacksIO } from "./stacks/list-stacks-io"
 export { createUndeployStacksIO } from "./stacks/undeploy-stacks-io"
 export { UserActions } from "./user-actions"

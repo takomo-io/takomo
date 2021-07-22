@@ -28,6 +28,7 @@ const createAccountAlias = async (
         message: "Cancelled",
         success: false,
         status: "CANCELLED",
+        outputFormat: input.outputFormat,
         timer,
       }
     }
@@ -49,6 +50,7 @@ const createAccountAlias = async (
       message: "Failed",
       success: false,
       status: "FAILED",
+      outputFormat: input.outputFormat,
       timer,
     }
   }
@@ -58,6 +60,7 @@ const createAccountAlias = async (
     message: "Success",
     success: true,
     status: "SUCCESS",
+    outputFormat: input.outputFormat,
     timer,
   }
 }

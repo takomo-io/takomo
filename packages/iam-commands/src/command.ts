@@ -184,6 +184,7 @@ const generateIamPolicies = async (
     message: "Success",
     status: "SUCCESS",
     success: true,
+    outputFormat: input.outputFormat,
     timer,
   }
 }

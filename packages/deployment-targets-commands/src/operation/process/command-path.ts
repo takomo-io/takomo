@@ -5,7 +5,12 @@ import {
   ConfigSetCommandPathOperationResult,
   ConfigSetType,
 } from "@takomo/config-sets"
-import { CommandRole, InternalCommandContext, Variables } from "@takomo/core"
+import {
+  CommandRole,
+  InternalCommandContext,
+  OutputFormat,
+  Variables,
+} from "@takomo/core"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
@@ -141,12 +146,14 @@ const deployOrUndeploy = async (
   io: DeploymentTargetsOperationIO,
   ctx: DeploymentTargetsContext,
   stacksConfigRepository: StacksConfigRepository,
+  outputFormat: OutputFormat,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const input = {
     timer,
     commandPath,
     ignoreDependencies: false,
     interactive: false,
+    outputFormat,
   }
 
   const commandContext = {
@@ -195,7 +202,7 @@ export const processCommandPath = async (
   const {
     io,
     ctx,
-    input: { operation, configSetType },
+    input: { operation, configSetType, outputFormat },
   } = holder
 
   const { variables } = ctx
@@ -209,6 +216,7 @@ export const processCommandPath = async (
       result: {
         message: "Cancelled",
         status: "CANCELLED",
+        outputFormat,
         timer,
         success: false,
         results: [],
@@ -267,6 +275,7 @@ export const processCommandPath = async (
       io,
       ctx,
       stacksConfigRepository,
+      outputFormat,
     )
   } catch (e) {
     io.error(
@@ -281,6 +290,7 @@ export const processCommandPath = async (
       result: {
         message: e.message,
         status: "FAILED",
+        outputFormat,
         timer,
         success: false,
         results: [],

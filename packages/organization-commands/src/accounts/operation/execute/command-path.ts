@@ -103,7 +103,7 @@ export const processCommandPath = async (
   const {
     io,
     ctx,
-    input: { operation },
+    input: { operation, outputFormat },
   } = holder
   const account = plannedAccount.config
   const credentialManager = ctx.credentialManager
@@ -123,6 +123,7 @@ export const processCommandPath = async (
         message: "Cancelled",
         status: "CANCELLED",
         success: false,
+        outputFormat,
         results: [],
       },
       status: "CANCELLED",
@@ -140,6 +141,7 @@ export const processCommandPath = async (
 
   const input = {
     commandPath,
+    outputFormat,
     timer: createTimer("total"),
     ignoreDependencies: false,
     interactive: false,
@@ -192,6 +194,7 @@ export const processCommandPath = async (
       stage: stage ?? "default",
       result: {
         timer,
+        outputFormat,
         message: "Error",
         status: "FAILED",
         success: false,

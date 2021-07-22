@@ -49,6 +49,7 @@ export const planDeployment = async (
       configSetType,
       configSetName,
       commandPath,
+      outputFormat,
     },
   } = holder
 
@@ -166,8 +167,9 @@ export const planDeployment = async (
     timer.stop()
     io.info("No targets to deploy")
     return {
-      results: [],
       timer,
+      outputFormat,
+      results: [],
       success: true,
       status: "SKIPPED",
       message: "No targets to deploy",

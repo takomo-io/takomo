@@ -32,6 +32,7 @@ export const createOrganization = async (
       message: "Cancelled",
       status: "CANCELLED",
       success: true,
+      outputFormat: input.outputFormat,
     }
   }
 
@@ -120,6 +121,7 @@ export const createOrganization = async (
       message: "Success",
       status: "SUCCESS",
       success: true,
+      outputFormat: input.outputFormat,
       organization,
       timer,
     }
@@ -130,6 +132,7 @@ export const createOrganization = async (
       message: e.message,
       status: "FAILED",
       success: false,
+      outputFormat: input.outputFormat,
       timer,
     }
   }

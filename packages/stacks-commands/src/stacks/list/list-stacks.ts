@@ -24,6 +24,7 @@ export const listStacks = async (
     success: true,
     status: "SUCCESS",
     message: "Success",
+    outputFormat: input.outputFormat,
     timer,
     stacks,
   }

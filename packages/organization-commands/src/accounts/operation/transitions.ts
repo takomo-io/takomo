@@ -121,11 +121,16 @@ export const createAccountsOperationTransitions =
         message: state.message,
         success: false,
         status: CANCELLED,
+        outputFormat: state.input.outputFormat,
       }),
 
     completeAccountsOperation: async (
       state: AccountsOperationCompletedState,
-    ): Promise<StepResult> => new AccountsOperationCompleted(state),
+    ): Promise<StepResult> =>
+      new AccountsOperationCompleted({
+        ...state,
+        outputFormat: state.input.outputFormat,
+      }),
 
     failAccountsOperation: async (
       state: AccountsOperationFailedState,
@@ -135,6 +140,7 @@ export const createAccountsOperationTransitions =
         success: false,
         status: FAILED,
         error: state.error,
+        outputFormat: state.input.outputFormat,
       }),
 
     skipAccountsOperation: async (
@@ -144,5 +150,6 @@ export const createAccountsOperationTransitions =
         ...state,
         success: true,
         status: SKIPPED,
+        outputFormat: state.input.outputFormat,
       }),
   })

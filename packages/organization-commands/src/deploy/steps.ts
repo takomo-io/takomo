@@ -35,6 +35,7 @@ const executeStep = async <S extends InitialDeployOrganizationState>(
       message: "Error",
       status: "FAILED",
       success: false,
+      outputFormat: state.input.outputFormat,
     })
   } finally {
     timer.stop()

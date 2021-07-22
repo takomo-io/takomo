@@ -29,6 +29,7 @@ export const deployOrganizationCommand: CommandHandler<
         ctx,
         configRepository,
         io,
+        input,
         totalTimer: input.timer,
         transitions: createDeployOrganizationTransitions(),
       }),

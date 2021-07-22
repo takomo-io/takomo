@@ -38,6 +38,7 @@ export const executeUndeployContext = async (
       status: "CANCELLED",
       message: "Cancelled",
       results: [],
+      outputFormat: input.outputFormat,
       timer,
     }
   }
@@ -64,6 +65,7 @@ export const executeUndeployContext = async (
 
   return {
     ...resolveCommandOutputBase(results),
+    outputFormat: input.outputFormat,
     results,
     timer,
   }

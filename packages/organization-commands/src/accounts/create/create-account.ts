@@ -84,6 +84,7 @@ export const createAccount = async (
       success: false,
       status: "CANCELLED",
       message: "Cancelled",
+      outputFormat: input.outputFormat,
     }
   }
 
@@ -98,6 +99,7 @@ export const createAccount = async (
       success: false,
       status: "FAILED",
       message: result.error.message,
+      outputFormat: input.outputFormat,
     }
   }
 
@@ -123,6 +125,7 @@ export const createAccount = async (
       message,
       status,
       timer,
+      outputFormat: input.outputFormat,
     }
   }
 
@@ -151,6 +154,7 @@ export const createAccount = async (
         success: false,
         status: "FAILED",
         message: createAliasResult.error.message,
+        outputFormat: input.outputFormat,
       }
     }
 
@@ -183,6 +187,7 @@ export const createAccount = async (
         success: false,
         status: "FAILED",
         message: "Failed to set account OU",
+        outputFormat: input.outputFormat,
       }
     }
   }
@@ -203,6 +208,7 @@ export const createAccount = async (
       success: false,
       status: "FAILED",
       message: "Failed to persist account to account repository",
+      outputFormat: input.outputFormat,
     }
   }
 
@@ -213,5 +219,6 @@ export const createAccount = async (
     success: true,
     message: "Success",
     status: "SUCCESS",
+    outputFormat: input.outputFormat,
   }
 }

@@ -5,7 +5,7 @@ import { formatYaml } from "./yaml"
 /**
  * Logging level.
  */
-export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
+export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "none"
 
 /**
  * Logger.
@@ -173,6 +173,8 @@ const getNumericLogLevel = (logLevel: LogLevel): number => {
       return 3
     case "error":
       return 4
+    case "none":
+      return 5
     default:
       throw new Error(`Unknown log level: ${logLevel}`)
   }

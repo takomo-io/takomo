@@ -59,9 +59,7 @@ interface CtxAndConfigRepository {
 
 export const createTestOrganizationConfigRepository = async ({
   ctx,
-}: CreateTestStacksConfigRepositoryProps): Promise<
-  OrganizationConfigRepository
-> =>
+}: CreateTestStacksConfigRepositoryProps): Promise<OrganizationConfigRepository> =>
   createFileSystemOrganizationConfigRepository({
     ...ctx.filePaths,
     ctx,
@@ -121,6 +119,7 @@ export const executeCreateAccountAliasCommand = (
         accountId: props.accountId,
         alias: props.alias,
         timer: createTimer("total"),
+        outputFormat: "text",
       },
     })
   })
@@ -163,6 +162,7 @@ export const executeDeleteAccountAliasCommand = (
       input: {
         accountId: props.accountId,
         timer: createTimer("total"),
+        outputFormat: "text",
       },
     })
   })
@@ -200,6 +200,7 @@ export const executeDescribeOrganizationCommand = (
       io: createTestDescribeOrganizationIO(logger),
       input: {
         timer: createTimer("total"),
+        outputFormat: "text",
       },
     })
   })
@@ -242,6 +243,7 @@ export const executeCreateOrganizationCommand = (
       input: {
         timer: createTimer("total"),
         featureSet: props.featureSet,
+        outputFormat: "text",
       },
     })
   })
@@ -279,6 +281,7 @@ export const executeListAccountsCommand = (
       io: createTestListAccountsIO(logger),
       input: {
         timer: createTimer("total"),
+        outputFormat: "text",
       },
     })
   })
@@ -330,6 +333,7 @@ export const executeDeployAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          outputFormat: "text",
         },
       })
     },
@@ -375,6 +379,7 @@ export const executeUndeployAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          outputFormat: "text",
         },
       })
     },
@@ -420,6 +425,7 @@ export const executeBootstrapAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          outputFormat: "text",
         },
       })
     },
@@ -465,6 +471,7 @@ export const executeTeardownAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          outputFormat: "text",
         },
       })
     },
@@ -503,6 +510,7 @@ export const executeDeployOrganizationCommand = (
       io: createTestDeployOrganizationIO(logger),
       input: {
         timer: createTimer("total"),
+        outputFormat: "text",
       },
     })
   })

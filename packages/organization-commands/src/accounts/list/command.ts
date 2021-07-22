@@ -29,6 +29,7 @@ export const listAccountsCommand: CommandHandler<
         success: true,
         message: "Success",
         status: "SUCCESS",
+        outputFormat: input.outputFormat,
         timer,
       } as ListAccountsOutput
     })
