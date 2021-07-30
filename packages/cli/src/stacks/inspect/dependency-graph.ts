@@ -3,12 +3,13 @@ import { createFileSystemStacksConfigRepository } from "@takomo/config-repositor
 import { dependencyGraphCommand } from "@takomo/stacks-commands"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { handle } from "../../common"
+import { COMMAND_PATH_POSITIONAL } from "../../constants"
 
-const command = "dependency-graph [commandPath]"
+const command = `dependency-graph [${COMMAND_PATH_POSITIONAL}]`
 const desc = "Show dependency graph of stacks within the given command path"
 
 const builder = (yargs: any) =>
-  yargs.positional("commandPath", {
+  yargs.positional(COMMAND_PATH_POSITIONAL, {
     describe: "Show dependency graph within this path",
     default: ROOT_STACK_GROUP_PATH,
   })

@@ -6,14 +6,15 @@ import {
 } from "@takomo/stacks-commands"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
+import { COMMAND_PATH_POSITIONAL } from "../constants"
 
 export const listStacksCmd = {
-  command: "list [commandPath]",
+  command: `list [${COMMAND_PATH_POSITIONAL}]`,
   desc: "List stack within the given command path",
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(listStacksCommandIamPolicy))
-      .positional("commandPath", {
+      .positional(COMMAND_PATH_POSITIONAL, {
         describe: "List stacks within this path",
         default: ROOT_STACK_GROUP_PATH,
       }),

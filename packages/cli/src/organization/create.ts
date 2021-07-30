@@ -5,6 +5,7 @@ import {
   createOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../common"
+import { FEATURE_SET_OPT } from "../constants"
 
 const command = "create"
 const desc = "Create a new organization"
@@ -12,7 +13,7 @@ const desc = "Create a new organization"
 const builder = (yargs: any) =>
   yargs
     .epilog(commonEpilog(createOrganizationCommandIamPolicy))
-    .option("feature-set", {
+    .option(FEATURE_SET_OPT, {
       description: "Feature set",
       string: true,
       global: false,
@@ -25,7 +26,7 @@ const handler = (argv: any) =>
     argv,
     input: async (ctx, input) => ({
       ...input,
-      featureSet: argv["feature-set"],
+      featureSet: argv[FEATURE_SET_OPT],
     }),
     io: (ctx, logger) => createCreateOrganizationIO({ logger }),
     configRepository: (ctx, logger) =>

@@ -3,8 +3,11 @@ import { createFileSystemStacksConfigRepository } from "@takomo/config-repositor
 import { showConfigurationCommand } from "@takomo/stacks-commands"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { handle } from "../../common"
-
-const OUTPUT_OPT = "output"
+import {
+  INTERACTIVE_ALIAS_OPT,
+  INTERACTIVE_OPT,
+  OUTPUT_OPT,
+} from "../../constants"
 
 const command = "configuration [commandPath]"
 const desc = "Show configuration of stacks within the given command path"
@@ -23,8 +26,8 @@ const builder = (yargs: any) =>
       global: false,
       demandOption: false,
     })
-    .option("interactive", {
-      alias: "i",
+    .option(INTERACTIVE_OPT, {
+      alias: INTERACTIVE_ALIAS_OPT,
       description: "Interactive selecting of command path",
       boolean: true,
       global: false,

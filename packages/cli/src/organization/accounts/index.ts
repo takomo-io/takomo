@@ -19,7 +19,8 @@ export const accountsCmd = {
       .command(bootstrapAccountsCmd)
       .command(tearDownAccountsCmd)
       .command(createAccountAliasCmd)
-      .command(deleteAccountAliasCmd),
+      .command(deleteAccountAliasCmd)
+      .demandCommand(1, "Provide command"),
   // eslint-disable-next-line
   handler: (argv: any) => {},
 }

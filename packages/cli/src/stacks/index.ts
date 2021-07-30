@@ -13,7 +13,8 @@ export const stacksCmd = {
       .command(deployStacksCmd)
       .command(undeployStacksCmd)
       .command(inspectCmd)
-      .command(detectDriftCmd),
+      .command(detectDriftCmd)
+      .demandCommand(1, "Provide command"),
   // eslint-disable-next-line
   handler: (argv: any) => {},
 }

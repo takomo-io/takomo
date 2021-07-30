@@ -11,7 +11,8 @@ export const organizationCmd = {
       .command(deployOrganizationCmd)
       .command(describeOrganizationCmd)
       .command(createOrganizationCmd)
-      .command(accountsCmd),
+      .command(accountsCmd)
+      .demandCommand(1, "Provide command"),
   // eslint-disable-next-line
   handler: (argv: any) => {},
 }

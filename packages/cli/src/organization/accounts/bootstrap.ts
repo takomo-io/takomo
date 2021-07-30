@@ -8,6 +8,7 @@ import {
 } from "@takomo/organization-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../../common"
+import { ACCOUNT_ID_ALIAS_OPT, ACCOUNT_ID_OPT } from "../../constants"
 
 export const bootstrapAccountsCmd = {
   command: "bootstrap [organizationalUnits..]",
@@ -22,9 +23,9 @@ export const bootstrapAccountsCmd = {
         demandOption: false,
         default: 1,
       })
-      .option("account-id", {
+      .option(ACCOUNT_ID_OPT, {
         description: "Account id to bootstrap",
-        alias: "a",
+        alias: ACCOUNT_ID_ALIAS_OPT,
         string: true,
         global: false,
         demandOption: false,
@@ -35,7 +36,7 @@ export const bootstrapAccountsCmd = {
       input: async (ctx, input) => ({
         ...input,
         organizationalUnits: argv.organizationalUnits || [],
-        accountIds: parseStringArray(argv["account-id"]),
+        accountIds: parseStringArray(argv[ACCOUNT_ID_OPT]),
         concurrentAccounts: argv["concurrent-accounts"],
         operation: "deploy" as DeploymentOperation,
         configSetType: "bootstrap" as ConfigSetType,

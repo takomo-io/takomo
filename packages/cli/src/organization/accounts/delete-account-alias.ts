@@ -5,6 +5,7 @@ import {
   deleteAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../../common"
+import { ACCOUNT_ID_OPT } from "../../constants"
 
 const command = "delete-alias"
 const desc = "Delete account alias"
@@ -12,7 +13,7 @@ const desc = "Delete account alias"
 const builder = (yargs: any) =>
   yargs
     .epilog(commonEpilog(deleteAccountAliasCommandIamPolicy))
-    .option("account-id", {
+    .option(ACCOUNT_ID_OPT, {
       description: "Account id",
       string: true,
       global: false,
@@ -23,7 +24,7 @@ const handler = (argv: any) =>
     argv,
     input: async (ctx, input) => ({
       ...input,
-      accountId: argv["account-id"],
+      accountId: argv[ACCOUNT_ID_OPT],
     }),
     configRepository: (ctx, logger) =>
       createFileSystemOrganizationConfigRepository({

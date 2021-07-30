@@ -94,6 +94,7 @@ export const run = (): void => {
       global: true,
     })
     .demandCommand(1, "Provide command")
+    .recommendCommands()
     .strict(true)
     .help().argv
 }

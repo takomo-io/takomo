@@ -6,9 +6,15 @@ import {
 } from "@takomo/stacks-commands"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
+import {
+  COMMAND_PATH_POSITIONAL,
+  IGNORE_DEPENDENCIES_OPT,
+  INTERACTIVE_ALIAS_OPT,
+  INTERACTIVE_OPT,
+} from "../constants"
 
 export const deployStacksCmd = {
-  command: "deploy [commandPath]",
+  command: `deploy [${COMMAND_PATH_POSITIONAL}]`,
   desc: "Deploy stacks within the given command path",
   builder: (yargs: any) =>
     yargs
@@ -18,22 +24,22 @@ export const deployStacksCmd = {
         "$0 deploy /networking/vpc.yml",
         "Deploy only the /networking/vpc.yml stack",
       )
-      .option("ignore-dependencies", {
+      .option(IGNORE_DEPENDENCIES_OPT, {
         description: "Ignore stack dependencies",
         boolean: true,
         global: false,
         default: false,
         demandOption: false,
       })
-      .option("interactive", {
-        alias: "i",
+      .option(INTERACTIVE_OPT, {
+        alias: INTERACTIVE_ALIAS_OPT,
         description: "Interactive selecting of command path",
         boolean: true,
         global: false,
         default: false,
         demandOption: false,
       })
-      .positional("commandPath", {
+      .positional(COMMAND_PATH_POSITIONAL, {
         describe: "Deploy stacks within this path",
         default: ROOT_STACK_GROUP_PATH,
       }),
@@ -42,7 +48,7 @@ export const deployStacksCmd = {
       argv,
       input: async (ctx, input) => ({
         ...input,
-        ignoreDependencies: argv["ignore-dependencies"],
+        ignoreDependencies: argv[IGNORE_DEPENDENCIES_OPT],
         commandPath: argv.commandPath,
         interactive: argv.interactive,
       }),

@@ -3,12 +3,14 @@ import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/confi
 import { parseStringArray } from "@takomo/core"
 import { deploymentTargetsRunCommand } from "@takomo/deployment-targets-commands"
 import { commonEpilog, handle } from "../common"
+import {
+  CONCURRENT_TARGETS_OPT,
+  EXCLUDE_LABEL_OPT,
+  EXCLUDE_TARGET_OPT,
+  LABEL_OPT,
+  TARGET_OPT,
+} from "../constants"
 
-const CONCURRENT_TARGETS_OPT = "concurrent-targets"
-const EXCLUDE_TARGET_OPT = "exclude-target"
-const TARGET_OPT = "target"
-const EXCLUDE_LABEL_OPT = "exclude-label"
-const LABEL_OPT = "label"
 const CONFIG_FILE_OPT = "config-file"
 const REDUCE_OPT = "reduce"
 const MAP_OPT = "map"

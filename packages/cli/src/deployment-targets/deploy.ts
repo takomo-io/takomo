@@ -8,6 +8,13 @@ import {
 } from "@takomo/deployment-targets-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
+import {
+  CONCURRENT_TARGETS_OPT,
+  EXCLUDE_LABEL_OPT,
+  EXCLUDE_TARGET_OPT,
+  LABEL_OPT,
+  TARGET_OPT,
+} from "../constants"
 
 export const deployTargetsCmd = {
   command: "deploy [groups..]",
@@ -15,32 +22,32 @@ export const deployTargetsCmd = {
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(deployTargetsOperationCommandIamPolicy))
-      .option("concurrent-targets", {
+      .option(CONCURRENT_TARGETS_OPT, {
         description: "Number of targets to deploy concurrently",
         number: true,
         global: false,
         demandOption: false,
         default: 1,
       })
-      .option("target", {
+      .option(TARGET_OPT, {
         description: "Targets to deploy",
         string: true,
         global: false,
         demandOption: false,
       })
-      .option("exclude-target", {
+      .option(EXCLUDE_TARGET_OPT, {
         description: "Targets exclude from deploy",
         string: true,
         global: false,
         demandOption: false,
       })
-      .option("label", {
+      .option(LABEL_OPT, {
         description: "Labels to deploy",
         string: true,
         global: false,
         demandOption: false,
       })
-      .option("exclude-label", {
+      .option(EXCLUDE_LABEL_OPT, {
         description: "Labels to exclude from deploy",
         string: true,
         global: false,
@@ -70,14 +77,14 @@ export const deployTargetsCmd = {
       input: async (ctx, input) => ({
         ...input,
         targets: parseStringArray(argv.target),
-        excludeTargets: parseStringArray(argv["exclude-target"]),
+        excludeTargets: parseStringArray(argv[EXCLUDE_TARGET_OPT]),
         groups: argv.groups ?? [],
         configFile: argv["config-file"] ?? null,
         operation: "deploy" as DeploymentOperation,
         configSetType: "standard" as ConfigSetType,
-        concurrentTargets: argv["concurrent-targets"],
+        concurrentTargets: argv[CONCURRENT_TARGETS_OPT],
         labels: parseStringArray(argv.label),
-        excludeLabels: parseStringArray(argv["exclude-label"]),
+        excludeLabels: parseStringArray(argv[EXCLUDE_LABEL_OPT]),
         commandPath: argv["command-path"],
         configSetName: argv["config-set"],
       }),

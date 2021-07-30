@@ -6,14 +6,15 @@ import {
 } from "@takomo/stacks-commands"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { commonEpilog, handle } from "../common"
+import { COMMAND_PATH_POSITIONAL } from "../constants"
 
 export const detectDriftCmd = {
-  command: "detect-drift [commandPath]",
+  command: `detect-drift [${COMMAND_PATH_POSITIONAL}]`,
   desc: "Detect drift within the given command path",
   builder: (yargs: any) =>
     yargs
       .epilog(commonEpilog(detectDriftCommandIamPolicy))
-      .positional("commandPath", {
+      .positional(COMMAND_PATH_POSITIONAL, {
         describe: "Detect drift from stacks within this path",
         default: ROOT_STACK_GROUP_PATH,
       }),

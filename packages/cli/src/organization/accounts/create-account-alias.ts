@@ -5,6 +5,7 @@ import {
   createAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { commonEpilog, handle } from "../../common"
+import { ACCOUNT_ID_OPT } from "../../constants"
 
 const command = "create-alias"
 const desc = "Create account alias"
@@ -17,7 +18,7 @@ const builder = (yargs: any) =>
       string: true,
       global: false,
     })
-    .option("account-id", {
+    .option(ACCOUNT_ID_OPT, {
       description: "Account id",
       string: true,
       global: false,
@@ -28,7 +29,7 @@ const handler = (argv: any) =>
     argv,
     input: async (ctx, input) => ({
       ...input,
-      accountId: argv["account-id"],
+      accountId: argv[ACCOUNT_ID_OPT],
       alias: argv.alias,
     }),
     configRepository: (ctx, logger) =>

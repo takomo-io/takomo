@@ -13,7 +13,8 @@ export const deploymentTargetsCmd = {
       .command(undeployTargetsCmd)
       .command(bootstrapTargetsCmd)
       .command(tearDownTargetsCmd)
-      .command(runTargetsCmd),
+      .command(runTargetsCmd)
+      .demandCommand(1, "Provide command"),
   // eslint-disable-next-line
   handler: (argv: any) => {},
 }

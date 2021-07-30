@@ -42,3 +42,17 @@ export const DEFAULT_REGIONS: ReadonlyArray<Region> = [
   "us-west-1",
   "us-west-2",
 ]
+
+export const OUTPUT_OPT = "output"
+export const INTERACTIVE_OPT = "interactive"
+export const INTERACTIVE_ALIAS_OPT = "i"
+export const IGNORE_DEPENDENCIES_OPT = "ignore-dependencies"
+export const FEATURE_SET_OPT = "feature-set"
+export const ACCOUNT_ID_OPT = "account-id"
+export const ACCOUNT_ID_ALIAS_OPT = "a"
+export const COMMAND_PATH_POSITIONAL = "commandPath"
+export const CONCURRENT_TARGETS_OPT = "concurrent-targets"
+export const TARGET_OPT = "target"
+export const EXCLUDE_TARGET_OPT = "exclude-target"
+export const LABEL_OPT = "label"
+export const EXCLUDE_LABEL_OPT = "exclude-label"
