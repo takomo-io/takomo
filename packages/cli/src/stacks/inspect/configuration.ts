@@ -2,6 +2,7 @@ import { createShowConfigurationIO } from "@takomo/cli-io"
 import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
 import { showConfigurationCommand } from "@takomo/stacks-commands"
 import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
+import { CommandModule } from "yargs"
 import { handle } from "../../common"
 import {
   INTERACTIVE_ALIAS_OPT,
@@ -10,7 +11,7 @@ import {
 } from "../../constants"
 
 const command = "configuration [commandPath]"
-const desc = "Show configuration of stacks within the given command path"
+const describe = "Show configuration of stacks within the given command path"
 
 const builder = (yargs: any) =>
   yargs
@@ -53,9 +54,9 @@ const handler = (argv: any) =>
     executor: showConfigurationCommand,
   })
 
-export const configurationCmd = {
+export const configurationCmd: CommandModule = {
   command,
-  desc,
+  describe,
   builder,
   handler,
 }

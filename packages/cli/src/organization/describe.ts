@@ -4,10 +4,11 @@ import {
   describeOrganizationCommand,
   describeOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
+import { CommandModule } from "yargs"
 import { commonEpilog, handle } from "../common"
 
 const command = "describe"
-const desc = "Describe organization"
+const describe = "Describe organization"
 
 const builder = (yargs: any) =>
   yargs.epilog(commonEpilog(describeOrganizationCommandIamPolicy))
@@ -26,9 +27,9 @@ const handler = (argv: any) =>
     executor: describeOrganizationCommand,
   })
 
-export const describeOrganizationCmd = {
+export const describeOrganizationCmd: CommandModule = {
   command,
-  desc,
+  describe,
   builder,
   handler,
 }

@@ -4,11 +4,12 @@ import {
   deleteAccountAliasCommand,
   deleteAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
+import { CommandModule } from "yargs"
 import { commonEpilog, handle } from "../../common"
 import { ACCOUNT_ID_OPT } from "../../constants"
 
 const command = "delete-alias"
-const desc = "Delete account alias"
+const describe = "Delete account alias"
 
 const builder = (yargs: any) =>
   yargs
@@ -36,9 +37,9 @@ const handler = (argv: any) =>
     executor: deleteAccountAliasCommand,
   })
 
-export const deleteAccountAliasCmd = {
+export const deleteAccountAliasCmd: CommandModule = {
   command,
-  desc,
+  describe,
   builder,
   handler,
 }

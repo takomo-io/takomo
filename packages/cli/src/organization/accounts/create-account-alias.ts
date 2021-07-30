@@ -4,11 +4,12 @@ import {
   createAccountAliasCommand,
   createAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
+import { CommandModule } from "yargs"
 import { commonEpilog, handle } from "../../common"
 import { ACCOUNT_ID_OPT } from "../../constants"
 
 const command = "create-alias"
-const desc = "Create account alias"
+const describe = "Create account alias"
 
 const builder = (yargs: any) =>
   yargs
@@ -42,9 +43,9 @@ const handler = (argv: any) =>
     executor: createAccountAliasCommand,
   })
 
-export const createAccountAliasCmd = {
+export const createAccountAliasCmd: CommandModule = {
   command,
-  desc,
+  describe,
   builder,
   handler,
 }

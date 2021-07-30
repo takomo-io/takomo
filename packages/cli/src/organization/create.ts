@@ -4,11 +4,12 @@ import {
   createOrganizationCommand,
   createOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
+import { CommandModule } from "yargs"
 import { commonEpilog, handle } from "../common"
 import { FEATURE_SET_OPT } from "../constants"
 
 const command = "create"
-const desc = "Create a new organization"
+const describe = "Create a new organization"
 
 const builder = (yargs: any) =>
   yargs
@@ -38,9 +39,9 @@ const handler = (argv: any) =>
     executor: createOrganizationCommand,
   })
 
-export const createOrganizationCmd = {
+export const createOrganizationCmd: CommandModule = {
   command,
-  desc,
+  describe,
   builder,
   handler,
 }
