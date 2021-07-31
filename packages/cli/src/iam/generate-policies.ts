@@ -14,7 +14,7 @@ const IDENTITY_OPT = "identity"
 type CommandArgs = {
   readonly [START_TIME_OPT]: string
   readonly [END_TIME_OPT]: string
-  readonly [REGION_OPT]: ReadonlyArray<string>
+  readonly [REGION_OPT]: ReadonlyArray<Region>
   readonly [IDENTITY_OPT]: ReadonlyArray<string>
   readonly [ROLE_NAME_OPT]: IamRoleName | undefined
 }
@@ -23,7 +23,7 @@ const dateSchema = Joi.string().isoDate().required()
 const validateDate = (optionName: string, d: string): void => {
   if (dateSchema.validate(d).error) {
     throw new Error(
-      `option ${optionName} has invalid value - '${d}' is not a valid ISO 8601 date`,
+      `option --${optionName} has invalid value - '${d}' is not a valid ISO 8601 date`,
     )
   }
 }
@@ -99,7 +99,7 @@ const handler = (argv: Arguments<CommandArgs>) =>
       ...input,
       ...ctx.filePaths,
       identities: argv.identity,
-      regions: argv.region as ReadonlyArray<Region>,
+      regions: argv.region,
       startTime: new Date(argv[START_TIME_OPT]),
       endTime: new Date(argv[END_TIME_OPT]),
       roleName: argv[ROLE_NAME_OPT],

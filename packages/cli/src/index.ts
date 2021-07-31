@@ -11,7 +11,7 @@ export { initCommandContext } from "./common"
 
 export const run = (props: RunProps = { showHelpOnFail: true }): void => {
   yargs
-    .command(stacksCmd)
+    .command(stacksCmd(props))
     .command(organizationCmd)
     .command(deploymentTargetsCmd)
     .command(initProjectCmd)

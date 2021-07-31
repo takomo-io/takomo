@@ -6,7 +6,7 @@ import {
 } from "@takomo/stacks-commands"
 import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { commonEpilog, handle } from "../common"
+import { commonEpilog, handle, RunProps } from "../common"
 import {
   COMMAND_PATH_OPT,
   IGNORE_DEPENDENCIES_OPT,
@@ -36,7 +36,7 @@ const builder = (yargs: Argv<CommandArgs>) =>
     )
     .option(IGNORE_DEPENDENCIES_OPT, {
       description: "Ignore stack dependencies",
-      type: "boolean",
+      boolean: true,
       global: false,
       default: false,
       demandOption: false,
@@ -44,14 +44,14 @@ const builder = (yargs: Argv<CommandArgs>) =>
     .option(INTERACTIVE_OPT, {
       alias: INTERACTIVE_ALIAS_OPT,
       description: "Interactive selecting of command path",
-      type: "boolean",
+      boolean: true,
       global: false,
       default: false,
       demandOption: false,
     })
     .positional(COMMAND_PATH_OPT, {
       describe: "Undeploy stacks within this path",
-      type: "string",
+      string: true,
       default: ROOT_STACK_GROUP_PATH,
     })
 
@@ -74,9 +74,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: undeployStacksCommand,
   })
 
-export const undeployStacksCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const undeployStacksCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

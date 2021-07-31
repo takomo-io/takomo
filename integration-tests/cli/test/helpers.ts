@@ -25,3 +25,10 @@ export const expectFailure = async (
   command: string,
   expectedError: string,
 ): Promise<void> => expect(execute(command)).rejects.toThrow(expectedError)
+
+export const executors = (base: string) => ({
+  expectSuccess: (command = "", expectedStdout?: string) =>
+    expectSuccess(`${base} ${command}`, expectedStdout),
+  expectFailure: (command = "", expectedError: string) =>
+    expectFailure(`${base} ${command}`, expectedError),
+})
