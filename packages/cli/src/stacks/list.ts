@@ -4,28 +4,33 @@ import {
   listStacksCommand,
   listStacksCommandIamPolicy,
 } from "@takomo/stacks-commands"
-import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
-import { CommandModule } from "yargs"
+import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle } from "../common"
-import { COMMAND_PATH_POSITIONAL } from "../constants"
+import { COMMAND_PATH_OPT } from "../constants"
 
-const command = `list [${COMMAND_PATH_POSITIONAL}]`
+type CommandArgs = {
+  readonly [COMMAND_PATH_OPT]: CommandPath
+}
+
+const command = `list [${COMMAND_PATH_OPT}]`
 const describe = "List stack within the given command path"
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(listStacksCommandIamPolicy))
-    .positional(COMMAND_PATH_POSITIONAL, {
+    .positional(COMMAND_PATH_OPT, {
       describe: "List stacks within this path",
+      type: "string",
       default: ROOT_STACK_GROUP_PATH,
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
       ...input,
-      commandPath: argv.commandPath,
+      commandPath: argv[COMMAND_PATH_OPT],
     }),
     io: (ctx, logger) => createListStacksIO({ logger }),
     configRepository: (ctx, logger) =>
@@ -37,7 +42,7 @@ const handler = (argv: any) =>
     executor: listStacksCommand,
   })
 
-export const listStacksCmd: CommandModule = {
+export const listStacksCmd: CommandModule<CommandArgs, CommandArgs> = {
   command,
   describe,
   builder,

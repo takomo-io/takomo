@@ -1,0 +1,32 @@
+{
+  "name": "integration-test-cli",
+  "private": true,
+  "version": "3.27.0",
+  "description": "Takomo integration tests for CLI",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build-if-changed": "../../ci/build-if-changed.sh",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript",
+    "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose"
+  },
+  "dependencies": {
+    "@takomo/cli": "3.27.0",
+    "yargs": "17.0.1",
+    "source-map-support": "0.5.19"
+  },
+  "devDependencies": {
+    "dotenv": "8.2.0"
+  }
+}

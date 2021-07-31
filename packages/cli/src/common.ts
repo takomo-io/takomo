@@ -42,6 +42,7 @@ import os from "os"
 import path from "path"
 import prettyMs from "pretty-ms"
 import R from "ramda"
+import { Arguments } from "yargs"
 import { CliCommandContext, ProjectFilePaths } from "./cli-command-context"
 import { loadProjectConfig } from "./config"
 import {
@@ -61,6 +62,11 @@ import {
   TAKOMO_PROJECT_CONFIG_FILE_NAME,
   TEMPLATES_DIR,
 } from "./constants"
+
+export interface RunProps {
+  readonly overridingHandler?: (args: Arguments) => void
+  readonly showHelpOnFail?: boolean
+}
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../package.json")
@@ -645,7 +651,7 @@ interface HandleProps<
   OUT extends CommandOutput,
 > {
   argv: any
-  input: (ctx: CliCommandContext, input: CommandInput) => Promise<IN>
+  input?: (ctx: CliCommandContext, input: CommandInput) => Promise<IN>
   io: (ctx: CliCommandContext, logger: TkmLogger) => I
   configRepository: (ctx: CliCommandContext, logger: TkmLogger) => Promise<C>
   executor: CommandHandler<C, I, IN, OUT>
@@ -663,6 +669,11 @@ const promptMfaCode = async (mfaSerial: string): Promise<string> => {
   return answer
 }
 
+const defaultInputBuilder = async <IN extends CommandInput>(
+  ctx: CliCommandContext,
+  input: CommandInput,
+): Promise<IN> => input as IN
+
 export const handle = async <
   C,
   I extends IO<OUT>,
@@ -678,10 +689,14 @@ export const handle = async <
       logLevel: ctx.logLevel,
     })
 
-    const input = await props.input(ctx, {
+    const baseInput = {
       timer: createTimer("total"),
       outputFormat: ctx.outputFormat,
-    })
+    }
+
+    const { input: inputBuilder = defaultInputBuilder } = props
+
+    const input = await inputBuilder(ctx, baseInput)
 
     logger.debugObject("Input arguments:", () => input)
     const io = props.io(ctx, logger)

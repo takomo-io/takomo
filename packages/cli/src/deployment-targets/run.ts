@@ -2,17 +2,17 @@ import { createRunTargetsIO } from "@takomo/cli-io"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { parseStringArray } from "@takomo/core"
 import { deploymentTargetsRunCommand } from "@takomo/deployment-targets-commands"
-import { CommandModule } from "yargs"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle } from "../common"
 import {
   CONCURRENT_TARGETS_OPT,
+  CONFIG_FILE_OPT,
   EXCLUDE_LABEL_OPT,
   EXCLUDE_TARGET_OPT,
   LABEL_OPT,
   TARGET_OPT,
 } from "../constants"
 
-const CONFIG_FILE_OPT = "config-file"
 const REDUCE_OPT = "reduce"
 const MAP_OPT = "map"
 const MAP_ARGS_OPT = "map-args"
@@ -24,12 +24,14 @@ const CAPTURE_AFTER_OPT = "capture-after"
 const CAPTURE_BEFORE_OPT = "capture-before"
 const CAPTURE_LAST_LINE_OPT = "capture-last-line"
 
+type CommandArgs = any
+
 const command = "run [groups..]"
 const describe =
   "For each deployment target, run a map command, then optionally invoke a " +
   "reduce command with the results from the map command."
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(() => ""))
     .option(CONCURRENT_TARGETS_OPT, {
@@ -146,7 +148,7 @@ const builder = (yargs: any) =>
       demandOption: false,
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
@@ -180,7 +182,7 @@ const handler = (argv: any) =>
     executor: deploymentTargetsRunCommand,
   })
 
-export const runTargetsCmd: CommandModule = {
+export const runTargetsCmd: CommandModule<CommandArgs, CommandArgs> = {
   command,
   describe,
   builder,

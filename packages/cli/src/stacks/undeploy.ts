@@ -4,20 +4,26 @@ import {
   undeployStacksCommand,
   undeployStacksCommandIamPolicy,
 } from "@takomo/stacks-commands"
-import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
-import { CommandModule } from "yargs"
+import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle } from "../common"
 import {
-  COMMAND_PATH_POSITIONAL,
+  COMMAND_PATH_OPT,
   IGNORE_DEPENDENCIES_OPT,
   INTERACTIVE_ALIAS_OPT,
   INTERACTIVE_OPT,
 } from "../constants"
 
-const command = `undeploy [${COMMAND_PATH_POSITIONAL}]`
+type CommandArgs = {
+  readonly [COMMAND_PATH_OPT]: CommandPath
+  readonly [IGNORE_DEPENDENCIES_OPT]: boolean
+  readonly [INTERACTIVE_OPT]: boolean
+}
+
+const command = `undeploy [${COMMAND_PATH_OPT}]`
 const describe = "Undeploy stacks within the given command path"
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(undeployStacksCommandIamPolicy))
     .example(
@@ -30,7 +36,7 @@ const builder = (yargs: any) =>
     )
     .option(IGNORE_DEPENDENCIES_OPT, {
       description: "Ignore stack dependencies",
-      boolean: true,
+      type: "boolean",
       global: false,
       default: false,
       demandOption: false,
@@ -38,17 +44,18 @@ const builder = (yargs: any) =>
     .option(INTERACTIVE_OPT, {
       alias: INTERACTIVE_ALIAS_OPT,
       description: "Interactive selecting of command path",
-      boolean: true,
+      type: "boolean",
       global: false,
       default: false,
       demandOption: false,
     })
-    .positional(COMMAND_PATH_POSITIONAL, {
+    .positional(COMMAND_PATH_OPT, {
       describe: "Undeploy stacks within this path",
+      type: "string",
       default: ROOT_STACK_GROUP_PATH,
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     configRepository: (ctx, logger) =>
@@ -60,14 +67,14 @@ const handler = (argv: any) =>
     input: async (ctx, input) => ({
       ...input,
       ignoreDependencies: argv[IGNORE_DEPENDENCIES_OPT],
-      commandPath: argv.commandPath,
+      commandPath: argv[COMMAND_PATH_OPT],
       interactive: argv.interactive,
     }),
     io: (ctx, logger) => createUndeployStacksIO({ logger }),
     executor: undeployStacksCommand,
   })
 
-export const undeployStacksCmd: CommandModule = {
+export const undeployStacksCmd: CommandModule<CommandArgs, CommandArgs> = {
   command,
   describe,
   builder,

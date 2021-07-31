@@ -1,72 +1,96 @@
+import {
+  AccountAlias,
+  AccountEmail,
+  AccountName,
+  IamRoleName,
+} from "@takomo/aws-model"
 import { createCreateAccountIO } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   createAccountCommand,
   createAccountCommandIamPolicy,
 } from "@takomo/organization-commands"
-import { DEFAULT_ORGANIZATION_ROLE_NAME } from "@takomo/organization-model"
-import { CommandModule } from "yargs"
+import {
+  DEFAULT_ORGANIZATION_ROLE_NAME,
+  OrganizationalUnitPath,
+} from "@takomo/organization-model"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle, readConfigurationFromFiles } from "../../common"
+import { ALIAS_OPT, CONFIG_FILE_OPT, ROLE_NAME_OPT } from "../../constants"
+
+export const NAME_OPT = "name"
+export const EMAIL_OPT = "email"
+export const OU_OPT = "ou"
+export const IAM_USER_ACCESS_TO_BILLING_OPT = "iam-user-access-to-billing"
+
+type CommandArgs = {
+  readonly [NAME_OPT]: AccountName
+  readonly [EMAIL_OPT]: AccountEmail
+  readonly [IAM_USER_ACCESS_TO_BILLING_OPT]: boolean
+  readonly [ROLE_NAME_OPT]: IamRoleName
+  readonly [ALIAS_OPT]?: AccountAlias
+  readonly [OU_OPT]?: OrganizationalUnitPath
+}
 
 const command = "create"
 const describe = "Create account"
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(createAccountCommandIamPolicy))
-    .option("name", {
+    .option(NAME_OPT, {
       description: "Account name",
-      string: true,
+      type: "string",
       global: false,
       demandOption: true,
     })
-    .option("email", {
+    .option(EMAIL_OPT, {
       description: "Account email",
-      string: true,
+      type: "string",
       global: false,
       demandOption: true,
     })
-    .option("iam-user-access-to-billing", {
+    .option(IAM_USER_ACCESS_TO_BILLING_OPT, {
       description: "Enable IAM users to access account billing information",
-      boolean: true,
+      type: "boolean",
       global: false,
       default: true,
     })
-    .option("role-name", {
+    .option(ROLE_NAME_OPT, {
       description: "Name of the IAM role used to manage the new account",
-      string: true,
+      type: "string",
       global: false,
       default: DEFAULT_ORGANIZATION_ROLE_NAME,
     })
-    .option("alias", {
+    .option(ALIAS_OPT, {
       description: "Account alias",
-      string: true,
+      type: "string",
       global: false,
     })
-    .option("ou", {
+    .option(OU_OPT, {
       description: "Organizational unit",
-      string: true,
+      type: "string",
       global: false,
     })
-    .option("config-file", {
+    .option(CONFIG_FILE_OPT, {
       description: "Config file",
-      string: true,
+      type: "string",
       global: false,
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
       ...input,
       email: argv.email,
       name: argv.name,
-      iamUserAccessToBilling: argv["iam-user-access-to-billing"],
-      roleName: argv["role-name"],
+      iamUserAccessToBilling: argv[IAM_USER_ACCESS_TO_BILLING_OPT],
+      roleName: argv[ROLE_NAME_OPT],
       alias: argv.alias,
       ou: argv.ou,
       config: await readConfigurationFromFiles(
         ctx.projectDir,
-        argv["config-file"],
+        argv[CONFIG_FILE_OPT],
       ),
     }),
     io: (ctx, logger) => createCreateAccountIO({ logger }),
@@ -79,7 +103,7 @@ const handler = (argv: any) =>
     executor: createAccountCommand,
   })
 
-export const createAccountCmd: CommandModule = {
+export const createAccountCmd: CommandModule<CommandArgs, CommandArgs> = {
   command,
   describe,
   builder,

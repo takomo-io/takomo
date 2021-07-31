@@ -178,6 +178,24 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_3_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_3_AWS_SECRET_ACCESS_KEY }}
 
+  cli-test:
+    runs-on: ubuntu-18.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v1
+        with:
+          path: packages
+          key: packages-${{ github.sha }}
+      - run: yarn workspace integration-test-cli integration-test
+
   docs:
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
@@ -188,6 +206,7 @@ jobs:
       - organization-creation-test
       - organization-test
       - organization2-test
+      - cli-test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

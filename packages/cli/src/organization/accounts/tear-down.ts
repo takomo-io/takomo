@@ -1,25 +1,32 @@
 import { createTearDownAccountsIO } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetType } from "@takomo/config-sets"
-import { parseStringArray } from "@takomo/core"
 import {
   accountsOperationCommand,
   accountsUndeployOperationCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
-import { CommandModule } from "yargs"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle } from "../../common"
-import { ACCOUNT_ID_ALIAS_OPT, ACCOUNT_ID_OPT } from "../../constants"
+import {
+  ACCOUNT_ID_ALIAS_OPT,
+  ACCOUNT_ID_OPT,
+  CONCURRENT_ACCOUNTS_OPT,
+  ORGANIZATIONAL_UNITS_OPT,
+} from "../../constants"
+import { AccountOperationCommandArgs } from "./common"
 
-const command = "tear-down [organizationalUnits..]"
+type CommandArgs = AccountOperationCommandArgs
+
+const command = `tear-down [${ORGANIZATIONAL_UNITS_OPT}..]`
 const describe = "Tear down accounts"
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(accountsUndeployOperationCommandIamPolicy))
-    .option("concurrent-accounts", {
+    .option(CONCURRENT_ACCOUNTS_OPT, {
       description: "Number of accounts to tear down concurrently",
-      number: true,
+      type: "number",
       global: false,
       demandOption: false,
       default: 1,
@@ -27,19 +34,25 @@ const builder = (yargs: any) =>
     .option(ACCOUNT_ID_OPT, {
       description: "Account id to tear down",
       alias: ACCOUNT_ID_ALIAS_OPT,
-      string: true,
+      type: "array",
       global: false,
       demandOption: false,
+      default: [],
+    })
+    .positional(ORGANIZATIONAL_UNITS_OPT, {
+      describe: "Tear down accounts that belong to this OU",
+      type: "string",
+      default: [],
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
       ...input,
-      organizationalUnits: argv.organizationalUnits || [],
-      accountIds: parseStringArray(argv[ACCOUNT_ID_OPT]),
-      concurrentAccounts: argv["concurrent-accounts"],
+      organizationalUnits: argv[ORGANIZATIONAL_UNITS_OPT],
+      accountIds: argv[ACCOUNT_ID_OPT],
+      concurrentAccounts: argv[CONCURRENT_ACCOUNTS_OPT],
       operation: "undeploy" as DeploymentOperation,
       configSetType: "bootstrap" as ConfigSetType,
     }),
@@ -53,7 +66,7 @@ const handler = (argv: any) =>
     executor: accountsOperationCommand,
   })
 
-export const tearDownAccountsCmd: CommandModule = {
+export const tearDownAccountsCmd: CommandModule<CommandArgs, CommandArgs> = {
   command,
   describe,
   builder,

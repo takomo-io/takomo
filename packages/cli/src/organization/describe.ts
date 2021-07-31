@@ -4,19 +4,20 @@ import {
   describeOrganizationCommand,
   describeOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
-import { CommandModule } from "yargs"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle } from "../common"
+
+type CommandArgs = unknown
 
 const command = "describe"
 const describe = "Describe organization"
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs.epilog(commonEpilog(describeOrganizationCommandIamPolicy))
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
-    input: async (ctx, input) => input,
     io: (ctx, logger) => createDescribeOrganizationIO({ logger }),
     configRepository: (ctx, logger) =>
       createFileSystemOrganizationConfigRepository({
@@ -27,9 +28,10 @@ const handler = (argv: any) =>
     executor: describeOrganizationCommand,
   })
 
-export const describeOrganizationCmd: CommandModule = {
-  command,
-  describe,
-  builder,
-  handler,
-}
+export const describeOrganizationCmd: CommandModule<CommandArgs, CommandArgs> =
+  {
+    command,
+    describe,
+    builder,
+    handler,
+  }

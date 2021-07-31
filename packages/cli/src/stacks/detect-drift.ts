@@ -4,28 +4,33 @@ import {
   detectDriftCommand,
   detectDriftCommandIamPolicy,
 } from "@takomo/stacks-commands"
-import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
-import { CommandModule } from "yargs"
+import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle } from "../common"
-import { COMMAND_PATH_POSITIONAL } from "../constants"
+import { COMMAND_PATH_OPT } from "../constants"
 
-const command = `detect-drift [${COMMAND_PATH_POSITIONAL}]`
+type CommandArgs = {
+  readonly [COMMAND_PATH_OPT]: CommandPath
+}
+
+const command = `detect-drift [${COMMAND_PATH_OPT}]`
 const describe = "Detect drift within the given command path"
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(detectDriftCommandIamPolicy))
-    .positional(COMMAND_PATH_POSITIONAL, {
+    .positional(COMMAND_PATH_OPT, {
       describe: "Detect drift from stacks within this path",
+      type: "string",
       default: ROOT_STACK_GROUP_PATH,
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
       ...input,
-      commandPath: argv.commandPath,
+      commandPath: argv[COMMAND_PATH_OPT],
     }),
     io: (ctx, logger) => createDetectDriftIO({ logger }),
     configRepository: (ctx, logger) =>
@@ -37,7 +42,7 @@ const handler = (argv: any) =>
     executor: detectDriftCommand,
   })
 
-export const detectDriftCmd: CommandModule = {
+export const detectDriftCmd: CommandModule<CommandArgs, CommandArgs> = {
   command,
   describe,
   builder,

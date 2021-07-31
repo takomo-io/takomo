@@ -1,31 +1,39 @@
+import { AccountAlias, AccountId } from "@takomo/aws-model"
 import { createCreateAccountAliasIO } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   createAccountAliasCommand,
   createAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
-import { CommandModule } from "yargs"
+import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle } from "../../common"
-import { ACCOUNT_ID_OPT } from "../../constants"
+import { ACCOUNT_ID_OPT, ALIAS_OPT } from "../../constants"
+
+type CommandArgs = {
+  readonly [ALIAS_OPT]: AccountAlias
+  readonly [ACCOUNT_ID_OPT]: AccountId
+}
 
 const command = "create-alias"
 const describe = "Create account alias"
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(createAccountAliasCommandIamPolicy))
-    .option("alias", {
+    .option(ALIAS_OPT, {
       description: "Account alias",
       string: true,
       global: false,
+      demandOption: true,
     })
     .option(ACCOUNT_ID_OPT, {
       description: "Account id",
       string: true,
       global: false,
+      demandOption: true,
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
@@ -43,7 +51,7 @@ const handler = (argv: any) =>
     executor: createAccountAliasCommand,
   })
 
-export const createAccountAliasCmd: CommandModule = {
+export const createAccountAliasCmd: CommandModule<CommandArgs, CommandArgs> = {
   command,
   describe,
   builder,
