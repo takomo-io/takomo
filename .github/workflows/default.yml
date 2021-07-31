@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         id: node_modules
         with:
           path: node_modules
@@ -56,9 +56,11 @@ jobs:
         run: yarn depcheck
       - name: Build
         run: yarn build
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
 
   unit-test:
@@ -69,13 +71,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - run: yarn test
 
@@ -87,13 +91,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-stacks integration-test
 
@@ -105,13 +111,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-deployment-targets integration-test
 
@@ -123,13 +131,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-organization-creation integration-test
         env:
@@ -144,13 +154,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-organization integration-test
         env:
@@ -165,13 +177,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-organization2 integration-test
         env:
@@ -186,13 +200,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-cli integration-test
 
@@ -212,13 +228,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.4.0
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
-          path: packages
+          path: |
+            packages
+            integration-tests
           key: packages-${{ github.sha }}
       - name: Build API docs
         run: yarn api-docs
