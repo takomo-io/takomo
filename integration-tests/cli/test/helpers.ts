@@ -32,3 +32,5 @@ export const executors = (base: string) => ({
   expectFailure: (command = "", expectedError: string) =>
     expectFailure(`${base} ${command}`, expectedError),
 })
+
+export const basicCommandPaths = ["", "/", "/dev", "/prod/app"]

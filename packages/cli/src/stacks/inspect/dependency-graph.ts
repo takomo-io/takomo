@@ -3,7 +3,7 @@ import { createFileSystemStacksConfigRepository } from "@takomo/config-repositor
 import { dependencyGraphCommand } from "@takomo/stacks-commands"
 import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { handle } from "../../common"
+import { handle, RunProps } from "../../common"
 import { COMMAND_PATH_OPT } from "../../constants"
 
 type CommandArgs = {
@@ -16,7 +16,7 @@ const describe = "Show dependency graph of stacks within the given command path"
 const builder = (yargs: Argv<CommandArgs>) =>
   yargs.positional(COMMAND_PATH_OPT, {
     describe: "Show dependency graph within this path",
-    type: "string",
+    string: true,
     default: ROOT_STACK_GROUP_PATH,
   })
 
@@ -37,9 +37,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: dependencyGraphCommand,
   })
 
-export const dependencyGraphCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const dependencyGraphCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

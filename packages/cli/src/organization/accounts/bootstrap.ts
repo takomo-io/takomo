@@ -7,7 +7,7 @@ import {
 } from "@takomo/organization-commands"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { commonEpilog, handle } from "../../common"
+import { commonEpilog, handle, RunProps } from "../../common"
 import {
   ACCOUNT_ID_ALIAS_OPT,
   ACCOUNT_ID_OPT,
@@ -65,9 +65,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: accountsOperationCommand,
   })
 
-export const bootstrapAccountsCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const bootstrapAccountsCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

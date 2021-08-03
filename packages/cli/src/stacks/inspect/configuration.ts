@@ -3,7 +3,7 @@ import { createFileSystemStacksConfigRepository } from "@takomo/config-repositor
 import { showConfigurationCommand } from "@takomo/stacks-commands"
 import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { handle } from "../../common"
+import { handle, RunProps } from "../../common"
 import {
   COMMAND_PATH_OPT,
   INTERACTIVE_ALIAS_OPT,
@@ -16,12 +16,12 @@ type CommandArgs = {
   readonly [INTERACTIVE_OPT]: boolean
 }
 
-const command = "configuration [commandPath]"
+const command = `configuration [${COMMAND_PATH_OPT}]`
 const describe = "Show configuration of stacks within the given command path"
 
 const builder = (yargs: Argv<CommandArgs>) =>
   yargs
-    .positional("commandPath", {
+    .positional(COMMAND_PATH_OPT, {
       describe: "Show configuration within this path",
       default: ROOT_STACK_GROUP_PATH,
     })
@@ -29,14 +29,14 @@ const builder = (yargs: Argv<CommandArgs>) =>
       description: "Output format",
       choices: ["text", "json", "yaml"],
       default: "text",
-      type: "string",
+      string: true,
       global: false,
       demandOption: false,
     })
     .option(INTERACTIVE_OPT, {
       alias: INTERACTIVE_ALIAS_OPT,
       description: "Interactive selecting of command path",
-      type: "boolean",
+      boolean: true,
       global: false,
       default: false,
       demandOption: false,
@@ -60,9 +60,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: showConfigurationCommand,
   })
 
-export const configurationCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const configurationCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

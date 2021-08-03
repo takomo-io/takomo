@@ -1,6 +1,6 @@
 import { basicCommandPaths, executors } from "./helpers"
 
-const { expectFailure, expectSuccess } = executors("stacks undeploy")
+const { expectFailure, expectSuccess } = executors("targets deploy")
 
 // const failures = [
 //   [
@@ -27,7 +27,8 @@ const { expectFailure, expectSuccess } = executors("stacks undeploy")
 
 const successCases = [...basicCommandPaths]
 
-describe("tkm stacks undeploy", () => {
+describe("tkm targets deploy", () => {
   // test.each(failures)("failure %#", expectFailure)
+  //test("success", () => expectSuccess())
   test.each(successCases)("success %#", expectSuccess)
 })

@@ -6,7 +6,7 @@ import {
   createOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { commonEpilog, handle } from "../common"
+import { commonEpilog, handle, RunProps } from "../common"
 import { FEATURE_SET_OPT } from "../constants"
 
 type CommandArgs = {
@@ -24,6 +24,7 @@ const builder = (yargs: Argv<CommandArgs>) =>
       type: "string",
       global: false,
       default: "ALL",
+      choices: ["ALL", "CONSOLIDATED_BILLING"],
       demandOption: false,
     })
 
@@ -44,9 +45,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: createOrganizationCommand,
   })
 
-export const createOrganizationCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const createOrganizationCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

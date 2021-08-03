@@ -15,7 +15,12 @@ import {
   OrganizationalUnitPath,
 } from "@takomo/organization-model"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { commonEpilog, handle, readConfigurationFromFiles } from "../../common"
+import {
+  commonEpilog,
+  handle,
+  readConfigurationFromFiles,
+  RunProps,
+} from "../../common"
 import { ALIAS_OPT, CONFIG_FILE_OPT, ROLE_NAME_OPT } from "../../constants"
 
 export const NAME_OPT = "name"
@@ -103,9 +108,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: createAccountCommand,
   })
 
-export const createAccountCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const createAccountCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

@@ -5,7 +5,7 @@ import {
   listAccountsCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { commonEpilog, handle } from "../../common"
+import { commonEpilog, handle, RunProps } from "../../common"
 
 type CommandArgs = unknown
 
@@ -28,9 +28,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: listAccountsCommand,
   })
 
-export const listAccountsCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const listAccountsCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

@@ -10,11 +10,11 @@ export const stacksCmd = (props: RunProps) => ({
   desc: "Manage stacks",
   builder: (yargs: any) =>
     yargs
-      .command(listStacksCmd)
+      .command(listStacksCmd(props))
       .command(deployStacksCmd(props))
       .command(undeployStacksCmd(props))
-      .command(inspectCmd)
-      .command(detectDriftCmd)
+      .command(inspectCmd(props))
+      .command(detectDriftCmd(props))
       .demandCommand(1, "Provide command"),
   // eslint-disable-next-line
   handler: (argv: any) => {},

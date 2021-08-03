@@ -6,7 +6,7 @@ import {
 } from "@takomo/stacks-commands"
 import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { commonEpilog, handle } from "../common"
+import { commonEpilog, handle, RunProps } from "../common"
 import { COMMAND_PATH_OPT } from "../constants"
 
 type CommandArgs = {
@@ -21,7 +21,7 @@ const builder = (yargs: Argv<CommandArgs>) =>
     .epilog(commonEpilog(detectDriftCommandIamPolicy))
     .positional(COMMAND_PATH_OPT, {
       describe: "Detect drift from stacks within this path",
-      type: "string",
+      string: true,
       default: ROOT_STACK_GROUP_PATH,
     })
 
@@ -42,9 +42,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: detectDriftCommand,
   })
 
-export const detectDriftCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const detectDriftCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

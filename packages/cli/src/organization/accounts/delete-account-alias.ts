@@ -6,7 +6,7 @@ import {
   deleteAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
 import { Arguments, Argv, CommandModule } from "yargs"
-import { commonEpilog, handle } from "../../common"
+import { commonEpilog, handle, RunProps } from "../../common"
 import { ACCOUNT_ID_OPT } from "../../constants"
 
 type CommandArgs = {
@@ -43,9 +43,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
     executor: deleteAccountAliasCommand,
   })
 
-export const deleteAccountAliasCmd: CommandModule<CommandArgs, CommandArgs> = {
+export const deleteAccountAliasCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
   describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})
