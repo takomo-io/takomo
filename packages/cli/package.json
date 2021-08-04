@@ -40,6 +40,7 @@
     "@takomo/organization-model": "3.27.0",
     "@takomo/stacks-commands": "3.27.0",
     "@takomo/stacks-model": "3.27.0",
+    "@takomo/deployment-targets-model": "3.27.0",
     "@takomo/util": "3.27.0",
     "aws-sdk": "2.886.0",
     "dotenv": "8.2.0",
