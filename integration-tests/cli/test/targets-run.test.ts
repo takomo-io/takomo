@@ -1,4 +1,4 @@
-import { basicCommandPaths, executors } from "./helpers"
+import { executors } from "./helpers"
 
 const { expectFailure, expectSuccess } = executors("targets run")
 
@@ -25,7 +25,7 @@ const { expectFailure, expectSuccess } = executors("targets run")
 //   ],
 // ]
 
-const successCases = [...basicCommandPaths]
+const successCases = ["--map 'echo hello'"]
 
 describe("tkm targets run", () => {
   // test.each(failures)("failure %#", expectFailure)

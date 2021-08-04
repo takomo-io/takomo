@@ -51,7 +51,7 @@ type CommandArgs = {
   readonly [CAPTURE_LAST_LINE_OPT]: boolean
 }
 
-const command = "run [groups..]"
+const command = `run [${GROUPS_OPT}..]`
 const describe =
   "For each deployment target, run a map command, then optionally invoke a " +
   "reduce command with the results from the map command."
