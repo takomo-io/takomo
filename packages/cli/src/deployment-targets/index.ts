@@ -14,7 +14,7 @@ export const deploymentTargetsCmd = (props: RunProps) => ({
       .command(undeployTargetsCmd(props))
       .command(bootstrapTargetsCmd(props))
       .command(tearDownTargetsCmd(props))
-      .command(runTargetsCmd)
+      .command(runTargetsCmd(props))
       .demandCommand(1, "Provide command"),
   // eslint-disable-next-line
   handler: (argv: any) => {},

@@ -34,3 +34,13 @@ export const executors = (base: string) => ({
 })
 
 export const basicCommandPaths = ["", "/", "/dev", "/prod/app"]
+export const accountOperations = [
+  ...basicCommandPaths,
+  "-a 123456789012",
+  "-a 123456789012 -a 123456789013",
+  "--account-id 123456789012",
+  "--account-id 123456789012 --account-id 123456789013",
+  "--concurrent-accounts 5",
+  "--concurrent-accounts 5 --account-id 123456789012",
+  "--concurrent-accounts 5 -a 123456789013",
+]
