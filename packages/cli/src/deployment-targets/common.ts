@@ -1,4 +1,4 @@
-import { IOProps } from "@takomo/cli-io/src/stacks/common"
+import { IOProps } from "@takomo/cli-io"
 import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
 import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import {
