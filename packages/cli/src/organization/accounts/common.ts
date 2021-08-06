@@ -28,7 +28,7 @@ const accountsOperationBuilder = (yargs: Argv<AccountOperationCommandArgs>) =>
     .options({
       [CONCURRENT_ACCOUNTS_OPT]: {
         description: "Number of accounts to process concurrently",
-        type: "number",
+        number: true,
         global: false,
         demandOption: false,
         default: 1,
@@ -36,7 +36,8 @@ const accountsOperationBuilder = (yargs: Argv<AccountOperationCommandArgs>) =>
       [ACCOUNT_ID_OPT]: {
         description: "Account to include in the operation",
         alias: ACCOUNT_ID_ALIAS_OPT,
-        type: "array",
+        array: true,
+        string: true,
         global: false,
         demandOption: false,
         default: [],
@@ -44,7 +45,7 @@ const accountsOperationBuilder = (yargs: Argv<AccountOperationCommandArgs>) =>
     })
     .positional(ORGANIZATIONAL_UNITS_OPT, {
       describe: "Include accounts that belong to this OU",
-      type: "string",
+      string: true,
       default: [],
     })
 
