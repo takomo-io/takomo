@@ -16,6 +16,7 @@ import {
   EXCLUDE_LABEL_OPT,
   EXCLUDE_TARGET_OPT,
   LABEL_OPT,
+  outputFormatOptions,
   TARGET_OPT,
 } from "../constants"
 import { GROUPS_OPT } from "./common"
@@ -60,6 +61,7 @@ const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(() => ""))
     .options({
+      ...outputFormatOptions,
       [CONCURRENT_TARGETS_OPT]: {
         description: "Number of targets to process concurrently",
         number: true,
@@ -157,14 +159,6 @@ const builder = (yargs: Argv<CommandArgs>) =>
       [REDUCE_ROLE_ARN_OPT]: {
         description:
           "ARN of an IAM role to use when executing the reduce command",
-        string: true,
-        global: false,
-        demandOption: false,
-      },
-      [OUTPUT_OPT]: {
-        description: "Output format",
-        choices: ["text", "json", "yaml"],
-        default: "text",
         string: true,
         global: false,
         demandOption: false,

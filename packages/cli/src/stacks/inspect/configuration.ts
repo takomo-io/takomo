@@ -6,10 +6,10 @@ import { Arguments, Argv, CommandModule } from "yargs"
 import { handle, RunProps } from "../../common"
 import {
   COMMAND_PATH_OPT,
-  INTERACTIVE_ALIAS_OPT,
   INTERACTIVE_OPT,
-  OUTPUT_OPT,
+  outputFormatOptions,
 } from "../../constants"
+import { interactiveCommandPathSelectionOptions } from "../common"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath
@@ -25,21 +25,9 @@ const builder = (yargs: Argv<CommandArgs>) =>
       describe: "Show configuration within this path",
       default: ROOT_STACK_GROUP_PATH,
     })
-    .option(OUTPUT_OPT, {
-      description: "Output format",
-      choices: ["text", "json", "yaml"],
-      default: "text",
-      string: true,
-      global: false,
-      demandOption: false,
-    })
-    .option(INTERACTIVE_OPT, {
-      alias: INTERACTIVE_ALIAS_OPT,
-      description: "Interactive selecting of command path",
-      boolean: true,
-      global: false,
-      default: false,
-      demandOption: false,
+    .options({
+      ...interactiveCommandPathSelectionOptions,
+      ...outputFormatOptions,
     })
 
 const handler = (argv: Arguments<CommandArgs>) =>

@@ -20,28 +20,27 @@ const command = "init"
 const describe = "Initialize a new Takomo project"
 
 const builder = (yargs: Argv<CommandArgs>) =>
-  yargs
-    .option(PROJECT_OPT, {
+  yargs.options({
+    [PROJECT_OPT]: {
       description: "Project name",
-      type: "string",
+      string: true,
       global: false,
       demandOption: false,
-    })
-    .option(REGIONS_OPT, {
+    },
+    [REGIONS_OPT]: {
       description: "Project regions",
-      type: "array",
+      array: true,
+      string: true,
       global: false,
       demandOption: false,
-    })
-    .option(CREATE_SAMPLES_OPT, {
+    },
+    [CREATE_SAMPLES_OPT]: {
       description: "Create sample stacks",
-      type: "boolean",
+      boolean: true,
       global: false,
       demandOption: false,
-    })
-    .coerce(REGIONS_OPT, (val: unknown): ReadonlyArray<Region> | undefined => {
-      return val ? (val as ReadonlyArray<Region>) : undefined
-    })
+    },
+  })
 
 const handler = (argv: Arguments<CommandArgs>) =>
   handle({

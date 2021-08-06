@@ -17,14 +17,14 @@ const command = "delete-alias"
 const describe = "Delete account alias"
 
 const builder = (yargs: Argv<CommandArgs>) =>
-  yargs
-    .epilog(commonEpilog(deleteAccountAliasCommandIamPolicy))
-    .option(ACCOUNT_ID_OPT, {
+  yargs.epilog(commonEpilog(deleteAccountAliasCommandIamPolicy)).options({
+    [ACCOUNT_ID_OPT]: {
       description: "Account id",
       demandOption: true,
       string: true,
       global: false,
-    })
+    },
+  })
 
 const handler = (argv: Arguments<CommandArgs>) =>
   handle({

@@ -18,20 +18,20 @@ const command = "create-alias"
 const describe = "Create account alias"
 
 const builder = (yargs: Argv<CommandArgs>) =>
-  yargs
-    .epilog(commonEpilog(createAccountAliasCommandIamPolicy))
-    .option(ALIAS_OPT, {
+  yargs.epilog(commonEpilog(createAccountAliasCommandIamPolicy)).options({
+    [ALIAS_OPT]: {
       description: "Account alias",
       string: true,
       global: false,
       demandOption: true,
-    })
-    .option(ACCOUNT_ID_OPT, {
+    },
+    [ACCOUNT_ID_OPT]: {
       description: "Account id",
       string: true,
       global: false,
       demandOption: true,
-    })
+    },
+  })
 
 const handler = (argv: Arguments<CommandArgs>) =>
   handle({

@@ -10,9 +10,9 @@ import { commonEpilog, handle, RunProps } from "../common"
 import {
   COMMAND_PATH_OPT,
   IGNORE_DEPENDENCIES_OPT,
-  INTERACTIVE_ALIAS_OPT,
   INTERACTIVE_OPT,
 } from "../constants"
+import { stackOperationOptions } from "./common"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath
@@ -34,21 +34,7 @@ const builder = (yargs: Argv<CommandArgs>) =>
       "$0 undeploy /networking/vpc.yml",
       "Undeploy only the /networking/vpc.yml stack",
     )
-    .option(IGNORE_DEPENDENCIES_OPT, {
-      description: "Ignore stack dependencies",
-      boolean: true,
-      global: false,
-      default: false,
-      demandOption: false,
-    })
-    .option(INTERACTIVE_OPT, {
-      alias: INTERACTIVE_ALIAS_OPT,
-      description: "Interactive selecting of command path",
-      boolean: true,
-      global: false,
-      default: false,
-      demandOption: false,
-    })
+    .options(stackOperationOptions)
     .positional(COMMAND_PATH_OPT, {
       describe: "Undeploy stacks within this path",
       string: true,

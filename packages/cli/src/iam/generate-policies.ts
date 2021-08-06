@@ -47,44 +47,46 @@ const describe =
 
 const builder = (args: Argv) =>
   args
-    .option(ROLE_NAME_OPT, {
-      description: "Name of an IAM role used to read events from CloudTrail",
-      string: true,
-      global: false,
-      requiresArg: true,
-      demandOption: false,
-    })
-    .option(IDENTITY_OPT, {
-      description: "Include events by this identity",
-      array: true,
-      string: true,
-      global: false,
-      requiresArg: true,
-      demandOption: true,
-    })
-    .option(START_TIME_OPT, {
-      description:
-        "Include events occurred after this time, must be in ISO 8601 format, e.g. 2021-10-05T16:48:00.000Z",
-      string: true,
-      global: false,
-      demandOption: true,
-      requiresArg: true,
-    })
-    .option(END_TIME_OPT, {
-      description:
-        "Include events occurred before this time, must be in ISO 8601 format, e.g. 2021-10-05T16:48:00.000Z",
-      string: true,
-      global: false,
-      demandOption: true,
-      requiresArg: true,
-    })
-    .option(REGION_OPT, {
-      description: "Include events from a trail located in this region",
-      array: true,
-      string: true,
-      global: false,
-      requiresArg: true,
-      demandOption: true,
+    .options({
+      [ROLE_NAME_OPT]: {
+        description: "Name of an IAM role used to read events from CloudTrail",
+        string: true,
+        global: false,
+        requiresArg: true,
+        demandOption: false,
+      },
+      [IDENTITY_OPT]: {
+        description: "Include events by this identity",
+        array: true,
+        string: true,
+        global: false,
+        requiresArg: true,
+        demandOption: true,
+      },
+      [START_TIME_OPT]: {
+        description:
+          "Include events occurred after this time, must be in ISO 8601 format, e.g. 2021-10-05T16:48:00.000Z",
+        string: true,
+        global: false,
+        demandOption: true,
+        requiresArg: true,
+      },
+      [END_TIME_OPT]: {
+        description:
+          "Include events occurred before this time, must be in ISO 8601 format, e.g. 2021-10-05T16:48:00.000Z",
+        string: true,
+        global: false,
+        demandOption: true,
+        requiresArg: true,
+      },
+      [REGION_OPT]: {
+        description: "Include events from a trail located in this region",
+        array: true,
+        string: true,
+        global: false,
+        requiresArg: true,
+        demandOption: true,
+      },
     })
     .check((argv) => {
       validateDate(START_TIME_OPT, argv[START_TIME_OPT])

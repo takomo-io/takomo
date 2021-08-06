@@ -17,16 +17,16 @@ const command = "create"
 const describe = "Create a new organization"
 
 const builder = (yargs: Argv<CommandArgs>) =>
-  yargs
-    .epilog(commonEpilog(createOrganizationCommandIamPolicy))
-    .option(FEATURE_SET_OPT, {
+  yargs.epilog(commonEpilog(createOrganizationCommandIamPolicy)).options({
+    [FEATURE_SET_OPT]: {
       description: "Feature set",
       type: "string",
       global: false,
       default: "ALL",
       choices: ["ALL", "CONSOLIDATED_BILLING"],
       demandOption: false,
-    })
+    },
+  })
 
 const handler = (argv: Arguments<CommandArgs>) =>
   handle({

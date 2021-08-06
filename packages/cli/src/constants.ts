@@ -62,3 +62,14 @@ export const ROLE_NAME_OPT = "role-name"
 export const ALIAS_OPT = "alias"
 export const CONFIG_FILE_OPT = "config-file"
 export const CONFIG_SET_OPT = "config-set"
+
+export const outputFormatOptions = {
+  [OUTPUT_OPT]: {
+    description: "Output format",
+    choices: ["text", "json", "yaml"],
+    default: "text",
+    string: true,
+    global: false,
+    demandOption: false,
+  },
+}

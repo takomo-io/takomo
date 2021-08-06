@@ -48,38 +48,40 @@ const builder = (yargs: Argv<CommandArgs>) =>
       global: false,
       demandOption: true,
     })
-    .option(EMAIL_OPT, {
-      description: "Account email",
-      type: "string",
-      global: false,
-      demandOption: true,
-    })
-    .option(IAM_USER_ACCESS_TO_BILLING_OPT, {
-      description: "Enable IAM users to access account billing information",
-      type: "boolean",
-      global: false,
-      default: true,
-    })
-    .option(ROLE_NAME_OPT, {
-      description: "Name of the IAM role used to manage the new account",
-      type: "string",
-      global: false,
-      default: DEFAULT_ORGANIZATION_ROLE_NAME,
-    })
-    .option(ALIAS_OPT, {
-      description: "Account alias",
-      type: "string",
-      global: false,
-    })
-    .option(OU_OPT, {
-      description: "Organizational unit",
-      type: "string",
-      global: false,
-    })
-    .option(CONFIG_FILE_OPT, {
-      description: "Config file",
-      type: "string",
-      global: false,
+    .options({
+      [EMAIL_OPT]: {
+        description: "Account email",
+        type: "string",
+        global: false,
+        demandOption: true,
+      },
+      [IAM_USER_ACCESS_TO_BILLING_OPT]: {
+        description: "Enable IAM users to access account billing information",
+        type: "boolean",
+        global: false,
+        default: true,
+      },
+      [ROLE_NAME_OPT]: {
+        description: "Name of the IAM role used to manage the new account",
+        type: "string",
+        global: false,
+        default: DEFAULT_ORGANIZATION_ROLE_NAME,
+      },
+      [ALIAS_OPT]: {
+        description: "Account alias",
+        type: "string",
+        global: false,
+      },
+      [OU_OPT]: {
+        description: "Organizational unit",
+        type: "string",
+        global: false,
+      },
+      [CONFIG_FILE_OPT]: {
+        description: "Config file",
+        type: "string",
+        global: false,
+      },
     })
 
 const handler = (argv: Arguments<CommandArgs>) =>
