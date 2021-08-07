@@ -103,6 +103,26 @@ jobs:
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-stacks integration-test
 
+  stacks2-test:
+    runs-on: ubuntu-18.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            packages
+            integration-tests
+          key: packages-${{ github.sha }}
+      - run: yarn workspace integration-test-stacks2 integration-test
+
   deployment-targets-test:
     runs-on: ubuntu-18.04
     needs: build
