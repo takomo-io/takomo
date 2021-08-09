@@ -1,10 +1,13 @@
-import { CloudFormationStack } from "@takomo/aws-model"
+import { StackName, StackStatus } from "@takomo/aws-model"
 import { CommandInput, CommandOutput, IO } from "@takomo/core"
-import { CommandPath, InternalStack } from "@takomo/stacks-model"
+import { CommandPath, StackPath } from "@takomo/stacks-model"
 
 export interface StackInfo {
-  readonly current?: CloudFormationStack
-  readonly stack: InternalStack
+  readonly path: StackPath
+  readonly name: StackName
+  readonly status?: StackStatus
+  readonly createdTime?: Date
+  readonly updatedTime?: Date
 }
 
 export interface ListStacksInput extends CommandInput {

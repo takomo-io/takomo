@@ -22,24 +22,24 @@ export const createShowConfigurationIO = (
       case "json":
         io.message({
           text: toPrettyJson({
+            stacks,
             status: output.status,
             success: output.success,
-            stacks: output.stacks,
             message: output.message,
             error: output.error,
-            secondsElapsed: output.timer.getSecondsElapsed(),
+            time: output.timer.getSecondsElapsed(),
           }),
         })
         break
       case "yaml":
         io.message({
           text: formatYaml({
+            stacks,
             status: output.status,
             success: output.success,
-            stacks: output.stacks,
             message: output.message,
             error: output.error,
-            secondsElapsed: output.timer.getSecondsElapsed(),
+            time: output.timer.getSecondsElapsed(),
           }),
         })
         break

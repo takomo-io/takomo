@@ -9,8 +9,8 @@ import {
   DeployOrganizationOutput,
   DescribeOrganizationOutput,
   ListAccountsOutput,
+  OrganizationalUnitAccountsOperationResult,
 } from "@takomo/organization-commands"
-import { OrganizationalUnitAccountsOperationResult } from "@takomo/organization-commands/src/accounts/operation/model"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
 

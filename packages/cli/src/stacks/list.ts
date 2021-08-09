@@ -7,7 +7,7 @@ import {
 import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle, RunProps } from "../common"
-import { COMMAND_PATH_OPT } from "../constants"
+import { COMMAND_PATH_OPT, outputFormatOptions } from "../constants"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath
@@ -19,6 +19,7 @@ const describe = "List stack within the given command path"
 const builder = (yargs: Argv<CommandArgs>) =>
   yargs
     .epilog(commonEpilog(listStacksCommandIamPolicy))
+    .options(outputFormatOptions)
     .positional(COMMAND_PATH_OPT, {
       describe: "List stacks within this path",
       string: true,

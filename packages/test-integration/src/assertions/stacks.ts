@@ -477,21 +477,17 @@ export const createListStacksOutputMatcher = (
     status,
   }: ExpectStackProps): ListStacksOutputMatcher => {
     const stackMatcher = (stackResult: StackInfo): boolean => {
-      if (stackResult.stack.path !== stackPath) {
+      if (stackResult.path !== stackPath) {
         return false
       }
 
-      expect(stackResult.stack.path).toEqual(stackPath)
-      expect(stackResult.stack.name).toEqual(stackName)
+      expect(stackResult.path).toEqual(stackPath)
+      expect(stackResult.name).toEqual(stackName)
 
       if (status) {
-        if (stackResult.current) {
-          expect(stackResult.current.status).toEqual(status)
-        } else {
-          fail("Expected current stack to be defined")
-        }
+        expect(stackResult.status).toEqual(status)
       } else {
-        expect(stackResult.current).toBeUndefined()
+        expect(stackResult.status).toBeUndefined()
       }
 
       return true
@@ -512,7 +508,7 @@ export const createListStacksOutputMatcher = (
     expect(output.stacks).toHaveLength(stackAssertions.length)
     output.stacks.forEach((result) => {
       if (!stackAssertions.some((s) => s(result))) {
-        fail(`Unexpected stack with path: ${result.stack.path}`)
+        fail(`Unexpected stack with path: ${result.path}`)
       }
     })
     return output
