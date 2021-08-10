@@ -2,6 +2,7 @@ import {
   IGNORE_DEPENDENCIES_OPT,
   INTERACTIVE_ALIAS_OPT,
   INTERACTIVE_OPT,
+  outputFormatOptions,
 } from "../constants"
 
 export const interactiveCommandPathSelectionOptions = {
@@ -17,6 +18,7 @@ export const interactiveCommandPathSelectionOptions = {
 
 export const stackOperationOptions = {
   ...interactiveCommandPathSelectionOptions,
+  ...outputFormatOptions,
   [IGNORE_DEPENDENCIES_OPT]: {
     description: "Ignore stack dependencies",
     boolean: true,

@@ -1,7 +1,20 @@
-import { StackEvent } from "@takomo/aws-model"
+import { StackEvent, StackName } from "@takomo/aws-model"
+import { CommandStatus } from "@takomo/core"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
-import { CommandPath, StackGroup, StackResult } from "@takomo/stacks-model"
-import { collectFromHierarchy, LogLevel, table, TkmLogger } from "@takomo/util"
+import {
+  CommandPath,
+  StackGroup,
+  StackPath,
+  StackResult,
+} from "@takomo/stacks-model"
+import {
+  collectFromHierarchy,
+  formatYaml,
+  LogLevel,
+  table,
+  TkmLogger,
+  toPrettyJson,
+} from "@takomo/util"
 import date from "date-and-time"
 import prettyMs from "pretty-ms"
 import { BaseIO, BaseIOProps } from "../cli-io"
@@ -70,6 +83,22 @@ export const printFailedStackResults = (
   })
 }
 
+interface OutputStackResult {
+  readonly path: StackPath
+  readonly name: StackName
+  readonly status: CommandStatus
+  readonly time: number
+  readonly message: string
+}
+
+const toOutputStackResult = (result: StackResult): OutputStackResult => ({
+  path: result.stack.path,
+  name: result.stack.name,
+  status: result.status,
+  time: result.timer.getSecondsElapsed(),
+  message: result.message,
+})
+
 /**
  * @hidden
  */
@@ -78,6 +107,37 @@ export const printStacksOperationOutput = (
   output: StacksOperationOutput,
   logLevel: LogLevel,
 ): StacksOperationOutput => {
+  const { outputFormat, results } = output
+  const stacks = results.map(toOutputStackResult)
+
+  if (outputFormat === "json") {
+    io.message({
+      text: toPrettyJson({
+        stacks,
+        status: output.status,
+        success: output.success,
+        message: output.message,
+        error: output.error,
+        time: output.timer.getSecondsElapsed(),
+      }),
+    })
+    return output
+  }
+
+  if (outputFormat === "yaml") {
+    io.message({
+      text: formatYaml({
+        stacks,
+        status: output.status,
+        success: output.success,
+        message: output.message,
+        error: output.error,
+        time: output.timer.getSecondsElapsed(),
+      }),
+    })
+    return output
+  }
+
   if (output.results.length === 0) {
     return output
   }

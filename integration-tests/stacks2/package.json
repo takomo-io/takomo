@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.27.0",
-    "@takomo/aws-clients": "3.27.0",
     "@takomo/stacks-model": "3.27.0",
     "@takomo/test-integration": "3.27.0",
     "@takomo/util": "3.27.0",
