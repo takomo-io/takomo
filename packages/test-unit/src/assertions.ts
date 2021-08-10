@@ -85,12 +85,15 @@ const assertRecursivelyInternal = (
     const unexpectedKeys = Object.keys(actual).filter(
       (k) => !expectedKeys.includes(k),
     )
+
     if (unexpectedKeys.length > 0) {
+      const keyValuePairs = unexpectedKeys
+        .map((key) => `  ${key} = ${actual[key]}`)
+        .join("\n")
+
       return `Found ${
         unexpectedKeys.length
-      } unexpected properties in path ${path.join(".")}: ${unexpectedKeys.join(
-        ", ",
-      )}`
+      } unexpected properties in path ${path.join(".")}:\n${keyValuePairs}`
     }
   } else if (expectedType === "function") {
     const error = expected(actual)

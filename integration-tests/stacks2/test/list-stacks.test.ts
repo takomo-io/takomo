@@ -1,17 +1,11 @@
 import {
   executeDeployStacksCommand,
   executeListStacksCommand,
-  withSingleAccountReservation,
+  executeWithCli,
 } from "@takomo/test-integration"
 import { isDefined, isNumber } from "@takomo/test-unit"
-import { cliExecutors } from "./helpers"
 
 const projectDir = "configs/list-stacks"
-
-const {
-  executeWithCliAndExpectSuccessAsJson,
-  executeWithCliAndExpectSuccessAsYaml,
-} = cliExecutors("stacks list")
 
 describe("List stacks", () => {
   test("List all stacks before deploy", () =>
@@ -29,41 +23,36 @@ describe("List stacks", () => {
       })
       .assert())
 
-  test(
-    "List all stacks before deploy with cli",
-    withSingleAccountReservation(async ({ accountId, credentials }) => {
-      const expected = {
-        status: "SUCCESS",
-        success: true,
-        message: "Success",
-        time: isNumber,
-        stacks: [
-          {
-            path: "/security-groups1.yml/eu-west-1",
-            name: "security-groups1",
-            status: undefined,
-            createdTime: undefined,
-          },
-          {
-            path: "/vpc1.yml/eu-west-1",
-            name: "vpc1",
-            status: undefined,
-            createdTime: undefined,
-          },
-        ],
-      }
-      await executeWithCliAndExpectSuccessAsJson({
-        command: `--output json --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
-        expected,
-        credentials,
-      })
-      await executeWithCliAndExpectSuccessAsYaml({
-        command: `--output yaml --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
-        expected,
-        credentials,
-      })
-    }),
-  )
+  test("List all stacks before deploy with cli", async () => {
+    const expected = {
+      status: "SUCCESS",
+      success: true,
+      message: "Success",
+      time: isNumber,
+      stacks: [
+        {
+          path: "/security-groups1.yml/eu-west-1",
+          name: "security-groups1",
+        },
+        {
+          path: "/vpc1.yml/eu-west-1",
+          name: "vpc1",
+        },
+      ],
+    }
+
+    await executeWithCli(
+      `./bin/tkm stacks list --output json --quiet -d ${projectDir}`,
+    )
+      .expectJson(expected)
+      .assert()
+
+    await executeWithCli(
+      `./bin/tkm stacks list --output yaml --quiet -d ${projectDir}`,
+    )
+      .expectYaml(expected)
+      .assert()
+  })
 
   test("Deploy", () =>
     executeDeployStacksCommand({ projectDir })
@@ -93,41 +82,40 @@ describe("List stacks", () => {
       })
       .assert())
 
-  test(
-    "List all stacks with cli",
-    withSingleAccountReservation(async ({ accountId, credentials }) => {
-      const expected = {
-        status: "SUCCESS",
-        success: true,
-        message: "Success",
-        time: isNumber,
-        stacks: [
-          {
-            path: "/security-groups1.yml/eu-west-1",
-            name: "security-groups1",
-            status: "CREATE_COMPLETE",
-            createdTime: isDefined,
-          },
-          {
-            path: "/vpc1.yml/eu-west-1",
-            name: "vpc1",
-            status: "CREATE_COMPLETE",
-            createdTime: isDefined,
-          },
-        ],
-      }
-      await executeWithCliAndExpectSuccessAsJson({
-        command: `--output json --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
-        expected,
-        credentials,
-      })
-      await executeWithCliAndExpectSuccessAsYaml({
-        command: `--output yaml --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
-        expected,
-        credentials,
-      })
-    }),
-  )
+  test("List all stacks with cli", async () => {
+    const expected = {
+      status: "SUCCESS",
+      success: true,
+      message: "Success",
+      time: isNumber,
+      stacks: [
+        {
+          path: "/security-groups1.yml/eu-west-1",
+          name: "security-groups1",
+          status: "CREATE_COMPLETE",
+          createdTime: isDefined,
+        },
+        {
+          path: "/vpc1.yml/eu-west-1",
+          name: "vpc1",
+          status: "CREATE_COMPLETE",
+          createdTime: isDefined,
+        },
+      ],
+    }
+
+    await executeWithCli(
+      `./bin/tkm stacks list --output json --quiet -d ${projectDir}`,
+    )
+      .expectJson(expected)
+      .assert()
+
+    await executeWithCli(
+      `./bin/tkm stacks list --output yaml --quiet -d ${projectDir}`,
+    )
+      .expectYaml(expected)
+      .assert()
+  })
 
   test("List stacks by path", () =>
     executeListStacksCommand({
@@ -142,33 +130,32 @@ describe("List stacks", () => {
       })
       .assert())
 
-  test(
-    "List all stacks by path with cli",
-    withSingleAccountReservation(async ({ accountId, credentials }) => {
-      const expected = {
-        status: "SUCCESS",
-        success: true,
-        message: "Success",
-        time: isNumber,
-        stacks: [
-          {
-            path: "/security-groups1.yml/eu-west-1",
-            name: "security-groups1",
-            status: "CREATE_COMPLETE",
-            createdTime: isDefined,
-          },
-        ],
-      }
-      await executeWithCliAndExpectSuccessAsJson({
-        command: `/security-groups1.yml --output json --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
-        expected,
-        credentials,
-      })
-      await executeWithCliAndExpectSuccessAsYaml({
-        command: `/security-groups1.yml --output yaml --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
-        expected,
-        credentials,
-      })
-    }),
-  )
+  test("List all stacks by path with cli", async () => {
+    const expected = {
+      status: "SUCCESS",
+      success: true,
+      message: "Success",
+      time: isNumber,
+      stacks: [
+        {
+          path: "/security-groups1.yml/eu-west-1",
+          name: "security-groups1",
+          status: "CREATE_COMPLETE",
+          createdTime: isDefined,
+        },
+      ],
+    }
+
+    await executeWithCli(
+      `./bin/tkm stacks list /security-groups1.yml --output json --quiet -d ${projectDir}`,
+    )
+      .expectJson(expected)
+      .assert()
+
+    await executeWithCli(
+      `./bin/tkm stacks list /security-groups1.yml --output yaml --quiet -d ${projectDir}`,
+    )
+      .expectYaml(expected)
+      .assert()
+  })
 })
