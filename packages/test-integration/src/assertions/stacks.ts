@@ -79,6 +79,7 @@ export interface ExpectDeployedCfStackProps {
   expectedTags?: Record<TagKey, TagValue>
   expectedOutputs?: Record<StackOutputKey, StackOutputValue>
   expectedStackPolicy?: StackPolicyBody
+  expectedDescription?: string
 }
 
 export interface StackResultsMatcher {
@@ -286,6 +287,7 @@ const createStackResultsMatcher = (
     expected,
     expectedTags,
     expectedOutputs,
+    expectedDescription,
     expectedStackPolicy,
   }: ExpectDeployedCfStackProps): StackResultsMatcher => {
     const deployedStackMatcher = async (): Promise<() => void> => {
@@ -308,6 +310,10 @@ const createStackResultsMatcher = (
               expect(stack[key]).toStrictEqual(value)
             }
           }
+        }
+
+        if (expectedDescription) {
+          expect(stack["Description"]).toStrictEqual(expectedDescription)
         }
 
         if (expectedTags) {

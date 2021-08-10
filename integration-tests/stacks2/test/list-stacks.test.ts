@@ -18,13 +18,13 @@ describe("List stacks", () => {
     executeListStacksCommand({ projectDir })
       .expectOutputToBeSuccessful()
       .expectStack({
-        stackPath: "/vpc.yml/eu-west-1",
-        stackName: "vpc",
+        stackPath: "/vpc1.yml/eu-west-1",
+        stackName: "vpc1",
         status: undefined,
       })
       .expectStack({
-        stackPath: "/security-groups.yml/eu-west-1",
-        stackName: "security-groups",
+        stackPath: "/security-groups1.yml/eu-west-1",
+        stackName: "security-groups1",
         status: undefined,
       })
       .assert())
@@ -39,14 +39,14 @@ describe("List stacks", () => {
         time: isNumber,
         stacks: [
           {
-            path: "/security-groups.yml/eu-west-1",
-            name: "security-groups",
+            path: "/security-groups1.yml/eu-west-1",
+            name: "security-groups1",
             status: undefined,
             createdTime: undefined,
           },
           {
-            path: "/vpc.yml/eu-west-1",
-            name: "vpc",
+            path: "/vpc1.yml/eu-west-1",
+            name: "vpc1",
             status: undefined,
             createdTime: undefined,
           },
@@ -69,12 +69,12 @@ describe("List stacks", () => {
     executeDeployStacksCommand({ projectDir })
       .expectCommandToSucceed()
       .expectStackCreateSuccess({
-        stackPath: "/security-groups.yml/eu-west-1",
-        stackName: "security-groups",
+        stackPath: "/security-groups1.yml/eu-west-1",
+        stackName: "security-groups1",
       })
       .expectStackCreateSuccess({
-        stackPath: "/vpc.yml/eu-west-1",
-        stackName: "vpc",
+        stackPath: "/vpc1.yml/eu-west-1",
+        stackName: "vpc1",
       })
       .assert())
 
@@ -82,13 +82,13 @@ describe("List stacks", () => {
     executeListStacksCommand({ projectDir })
       .expectOutputToBeSuccessful()
       .expectStack({
-        stackPath: "/vpc.yml/eu-west-1",
-        stackName: "vpc",
+        stackPath: "/vpc1.yml/eu-west-1",
+        stackName: "vpc1",
         status: "CREATE_COMPLETE",
       })
       .expectStack({
-        stackPath: "/security-groups.yml/eu-west-1",
-        stackName: "security-groups",
+        stackPath: "/security-groups1.yml/eu-west-1",
+        stackName: "security-groups1",
         status: "CREATE_COMPLETE",
       })
       .assert())
@@ -103,14 +103,14 @@ describe("List stacks", () => {
         time: isNumber,
         stacks: [
           {
-            path: "/security-groups.yml/eu-west-1",
-            name: "security-groups",
+            path: "/security-groups1.yml/eu-west-1",
+            name: "security-groups1",
             status: "CREATE_COMPLETE",
             createdTime: isDefined,
           },
           {
-            path: "/vpc.yml/eu-west-1",
-            name: "vpc",
+            path: "/vpc1.yml/eu-west-1",
+            name: "vpc1",
             status: "CREATE_COMPLETE",
             createdTime: isDefined,
           },
@@ -132,12 +132,12 @@ describe("List stacks", () => {
   test("List stacks by path", () =>
     executeListStacksCommand({
       projectDir,
-      commandPath: "/security-groups.yml",
+      commandPath: "/security-groups1.yml",
     })
       .expectOutputToBeSuccessful()
       .expectStack({
-        stackPath: "/security-groups.yml/eu-west-1",
-        stackName: "security-groups",
+        stackPath: "/security-groups1.yml/eu-west-1",
+        stackName: "security-groups1",
         status: "CREATE_COMPLETE",
       })
       .assert())
@@ -152,20 +152,20 @@ describe("List stacks", () => {
         time: isNumber,
         stacks: [
           {
-            path: "/security-groups.yml/eu-west-1",
-            name: "security-groups",
+            path: "/security-groups1.yml/eu-west-1",
+            name: "security-groups1",
             status: "CREATE_COMPLETE",
             createdTime: isDefined,
           },
         ],
       }
       await executeWithCliAndExpectSuccessAsJson({
-        command: `/security-groups.yml --output json --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
+        command: `/security-groups1.yml --output json --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
         expected,
         credentials,
       })
       await executeWithCliAndExpectSuccessAsYaml({
-        command: `/security-groups.yml --output yaml --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
+        command: `/security-groups1.yml --output yaml --quiet -d ${projectDir} --var ACCOUNT_1_ID=${accountId}`,
         expected,
         credentials,
       })

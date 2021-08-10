@@ -1,0 +1,8 @@
+parameters:
+  ParamA: one
+  ParamB: two
+  ParamC: three
+  ParamD:
+    - foo
+    - bar
+    - baz

@@ -1,5 +1,5 @@
 parameters:
   VpcId:
     resolver: stack-output
-    stack: /vpc.yml
+    stack: /vpc1.yml
     output: MyVpcId
