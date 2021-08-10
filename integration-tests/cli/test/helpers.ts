@@ -27,7 +27,7 @@ export const expectFailure = async (
 ): Promise<void> => expect(execute(command)).rejects.toThrow(expectedError)
 
 export const executors = (base: string) => ({
-  executeCliAndExpectSuccess: (command = "", expectedStdout?: string) =>
+  expectSuccess: (command = "", expectedStdout?: string) =>
     expectSuccess(`${base} ${command}`, expectedStdout),
   expectFailure: (command = "", expectedError: string) =>
     expectFailure(`${base} ${command}`, expectedError),
