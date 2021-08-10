@@ -6,7 +6,7 @@ import {
 import { isDefined, isNumber } from "@takomo/test-unit"
 import { cliExecutors } from "./helpers"
 
-const projectDir = "configs/resolvers/stack-output-with-confidential"
+const projectDir = "configs/list-stacks"
 
 const {
   executeWithCliAndExpectSuccessAsJson,
