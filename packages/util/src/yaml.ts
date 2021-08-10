@@ -11,6 +11,12 @@ export type YamlFormattedString = string
 /**
  * @hidden
  */
+export const parseYamlString = (contents: YamlFormattedString): unknown =>
+  yaml.load(contents)
+
+/**
+ * @hidden
+ */
 export const parseYaml = (
   filePath: FilePath,
   contents: YamlFormattedString,

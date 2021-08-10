@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@takomo/cli": "3.27.0",
+    "@takomo/test-unit": "3.27.0",
     "source-map-support": "0.5.19",
     "@takomo/test-custom-helper-lowercase": "0.0.1",
     "@takomo/test-custom-helper-uppercase": "0.0.1",
