@@ -1,4 +1,5 @@
 import yargs from "yargs"
+import { RunProps } from "./common"
 import { deploymentTargetsCmd } from "./deployment-targets"
 import { iamCmd } from "./iam"
 import { initProjectCmd } from "./init"
@@ -8,13 +9,13 @@ import { stacksCmd } from "./stacks"
 export { CliCommandContext } from "./cli-command-context"
 export { initCommandContext } from "./common"
 
-export const run = (): void => {
+export const run = (props: RunProps = { showHelpOnFail: true }): void => {
   yargs
-    .command(stacksCmd)
-    .command(organizationCmd)
-    .command(deploymentTargetsCmd)
+    .command(stacksCmd(props))
+    .command(organizationCmd(props))
+    .command(deploymentTargetsCmd(props))
     .command(initProjectCmd)
-    .command(iamCmd)
+    .command(iamCmd(props))
     .option("profile", {
       alias: "p",
       description: "AWS profile",
@@ -94,6 +95,8 @@ export const run = (): void => {
       global: true,
     })
     .demandCommand(1, "Provide command")
+    .recommendCommands()
     .strict(true)
+    .showHelpOnFail(props?.showHelpOnFail === true)
     .help().argv
 }

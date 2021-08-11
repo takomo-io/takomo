@@ -1,0 +1,42 @@
+{
+  "name": "integration-test-stacks2",
+  "private": true,
+  "version": "3.27.0",
+  "description": "Takomo integration tests for stacks",
+  "author": "henri@takomo.io",
+  "license": "MIT",
+  "homepage": "https://takomo.io",
+  "bugs": "https://github.com/takomo-io/takomo/issues",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takomo-io/takomo.git"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build-if-changed": "../../ci/build-if-changed.sh",
+    "clean:dist": "rm -rf dist",
+    "clean:deps": "rm -rf node_modules",
+    "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
+    "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript,@takomo/test-custom-resolver-name,@takomo/test-custom-resolver-code,@takomo/test-custom-helper-uppercase,@takomo/test-custom-helper-lowercase",
+    "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose"
+  },
+  "dependencies": {
+    "@takomo/aws-model": "3.27.0",
+    "@takomo/stacks-model": "3.27.0",
+    "@takomo/test-integration": "3.27.0",
+    "@takomo/util": "3.27.0",
+    "aws-sdk": "2.886.0"
+  },
+  "devDependencies": {
+    "@takomo/cli": "3.27.0",
+    "@takomo/test-unit": "3.27.0",
+    "source-map-support": "0.5.19",
+    "@takomo/test-custom-helper-lowercase": "0.0.1",
+    "@takomo/test-custom-helper-uppercase": "0.0.1",
+    "@takomo/test-custom-resolver-code": "0.0.1",
+    "@takomo/test-custom-resolver-name": "0.0.1",
+    "dotenv": "8.2.0",
+    "jest-environment-testenv-recycler": "0.0.12"
+  }
+}

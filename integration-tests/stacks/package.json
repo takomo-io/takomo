@@ -13,6 +13,8 @@
     "url": "https://github.com/takomo-io/takomo.git"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build-if-changed": "../../ci/build-if-changed.sh",
     "clean:dist": "rm -rf dist",
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
@@ -20,11 +22,11 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.27.0",
+    "@takomo/cli": "3.27.0",
+    "source-map-support": "0.5.19",
     "@takomo/stacks-model": "3.27.0",
     "@takomo/test-integration": "3.27.0",
     "@takomo/util": "3.27.0",
-    "aws-sdk": "2.886.0",
     "ramda": "0.27.1",
     "tmp": "0.2.1"
   },

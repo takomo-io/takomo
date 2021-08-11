@@ -1,31 +1,39 @@
+import { OrganizationFeatureSet } from "@takomo/aws-model"
 import { createCreateOrganizationIO } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   createOrganizationCommand,
   createOrganizationCommandIamPolicy,
 } from "@takomo/organization-commands"
-import { commonEpilog, handle } from "../common"
+import { Arguments, Argv, CommandModule } from "yargs"
+import { commonEpilog, handle, RunProps } from "../common"
+import { FEATURE_SET_OPT } from "../constants"
+
+type CommandArgs = {
+  readonly [FEATURE_SET_OPT]: string
+}
 
 const command = "create"
-const desc = "Create a new organization"
+const describe = "Create a new organization"
 
-const builder = (yargs: any) =>
-  yargs
-    .epilog(commonEpilog(createOrganizationCommandIamPolicy))
-    .option("feature-set", {
+const builder = (yargs: Argv<CommandArgs>) =>
+  yargs.epilog(commonEpilog(createOrganizationCommandIamPolicy)).options({
+    [FEATURE_SET_OPT]: {
       description: "Feature set",
-      string: true,
+      type: "string",
       global: false,
       default: "ALL",
+      choices: ["ALL", "CONSOLIDATED_BILLING"],
       demandOption: false,
-    })
+    },
+  })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
       ...input,
-      featureSet: argv["feature-set"],
+      featureSet: argv[FEATURE_SET_OPT] as OrganizationFeatureSet,
     }),
     io: (ctx, logger) => createCreateOrganizationIO({ logger }),
     configRepository: (ctx, logger) =>
@@ -37,9 +45,11 @@ const handler = (argv: any) =>
     executor: createOrganizationCommand,
   })
 
-export const createOrganizationCmd = {
+export const createOrganizationCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
-  desc,
+  describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

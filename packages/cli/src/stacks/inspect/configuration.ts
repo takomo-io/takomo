@@ -1,44 +1,42 @@
 import { createShowConfigurationIO } from "@takomo/cli-io"
 import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
 import { showConfigurationCommand } from "@takomo/stacks-commands"
-import { ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
-import { handle } from "../../common"
+import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
+import { Arguments, Argv, CommandModule } from "yargs"
+import { handle, RunProps } from "../../common"
+import {
+  COMMAND_PATH_OPT,
+  INTERACTIVE_OPT,
+  outputFormatOptions,
+} from "../../constants"
+import { interactiveCommandPathSelectionOptions } from "../common"
 
-const OUTPUT_OPT = "output"
+type CommandArgs = {
+  readonly [COMMAND_PATH_OPT]: CommandPath
+  readonly [INTERACTIVE_OPT]: boolean
+}
 
-const command = "configuration [commandPath]"
-const desc = "Show configuration of stacks within the given command path"
+const command = `configuration [${COMMAND_PATH_OPT}]`
+const describe = "Show configuration of stacks within the given command path"
 
-const builder = (yargs: any) =>
+const builder = (yargs: Argv<CommandArgs>) =>
   yargs
-    .positional("commandPath", {
+    .positional(COMMAND_PATH_OPT, {
       describe: "Show configuration within this path",
       default: ROOT_STACK_GROUP_PATH,
     })
-    .option(OUTPUT_OPT, {
-      description: "Output format",
-      choices: ["text", "json", "yaml"],
-      default: "text",
-      string: true,
-      global: false,
-      demandOption: false,
-    })
-    .option("interactive", {
-      alias: "i",
-      description: "Interactive selecting of command path",
-      boolean: true,
-      global: false,
-      default: false,
-      demandOption: false,
+    .options({
+      ...interactiveCommandPathSelectionOptions,
+      ...outputFormatOptions,
     })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     io: (ctx, logger) => createShowConfigurationIO({ logger }),
     input: async (ctx, input) => ({
       ...input,
-      commandPath: argv.commandPath,
+      commandPath: argv[COMMAND_PATH_OPT],
       interactive: argv.interactive,
     }),
     configRepository: (ctx, logger) =>
@@ -50,9 +48,11 @@ const handler = (argv: any) =>
     executor: showConfigurationCommand,
   })
 
-export const configurationCmd = {
+export const configurationCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
-  desc,
+  describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

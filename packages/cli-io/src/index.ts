@@ -17,6 +17,7 @@ export { createUndeployAccountsIO } from "./organization/accounts/undeploy-accou
 export { createCreateOrganizationIO } from "./organization/create-organization-io"
 export { createDeployOrganizationIO } from "./organization/deploy-organization-io"
 export { createDescribeOrganizationIO } from "./organization/describe-organization-io"
+export { IOProps } from "./stacks/common"
 export {
   CONFIRM_DEPLOY_ANSWER_CANCEL,
   CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW,

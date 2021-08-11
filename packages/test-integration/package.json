@@ -27,6 +27,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
+    "@takomo/test-unit": "3.27.0",
     "@takomo/aws-clients": "3.27.0",
     "@takomo/aws-model": "3.27.0",
     "@takomo/cli": "3.27.0",

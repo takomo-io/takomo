@@ -1,4 +1,5 @@
 import yaml from "js-yaml"
+import stringify from "json-stable-stringify"
 import { TakomoError } from "./errors"
 import { FilePath, readFileContents } from "./files"
 import { buildErrorMessage } from "./templating"
@@ -7,6 +8,12 @@ import { buildErrorMessage } from "./templating"
  * @hidden
  */
 export type YamlFormattedString = string
+
+/**
+ * @hidden
+ */
+export const parseYamlString = (contents: YamlFormattedString): unknown =>
+  yaml.load(contents)
 
 /**
  * @hidden
@@ -54,7 +61,7 @@ export const parseYamlFile = async (pathToYamlFile: FilePath): Promise<any> =>
  * @hidden
  */
 export const formatYaml = (object: unknown): YamlFormattedString =>
-  yaml.dump(object, {
+  yaml.dump(JSON.parse(stringify(object)), {
     skipInvalid: true,
     lineWidth: 300,
     noRefs: true,

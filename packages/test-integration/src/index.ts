@@ -3,6 +3,7 @@ export {
   StacksOperationOutputMatcher,
 } from "./assertions/stacks"
 export { aws } from "./aws-api"
+export { executeWithCli } from "./cli/execute"
 export { ExecuteCommandProps } from "./commands/common"
 export { executeInitProjectCommand } from "./commands/init"
 export {

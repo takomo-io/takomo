@@ -1,29 +1,37 @@
+import { AccountId } from "@takomo/aws-model"
 import { createDeleteAccountAliasIO } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
 import {
   deleteAccountAliasCommand,
   deleteAccountAliasCommandIamPolicy,
 } from "@takomo/organization-commands"
-import { commonEpilog, handle } from "../../common"
+import { Arguments, Argv, CommandModule } from "yargs"
+import { commonEpilog, handle, RunProps } from "../../common"
+import { ACCOUNT_ID_OPT } from "../../constants"
+
+type CommandArgs = {
+  readonly [ACCOUNT_ID_OPT]: AccountId
+}
 
 const command = "delete-alias"
-const desc = "Delete account alias"
+const describe = "Delete account alias"
 
-const builder = (yargs: any) =>
-  yargs
-    .epilog(commonEpilog(deleteAccountAliasCommandIamPolicy))
-    .option("account-id", {
+const builder = (yargs: Argv<CommandArgs>) =>
+  yargs.epilog(commonEpilog(deleteAccountAliasCommandIamPolicy)).options({
+    [ACCOUNT_ID_OPT]: {
       description: "Account id",
+      demandOption: true,
       string: true,
       global: false,
-    })
+    },
+  })
 
-const handler = (argv: any) =>
+const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
     input: async (ctx, input) => ({
       ...input,
-      accountId: argv["account-id"],
+      accountId: argv[ACCOUNT_ID_OPT],
     }),
     configRepository: (ctx, logger) =>
       createFileSystemOrganizationConfigRepository({
@@ -35,9 +43,11 @@ const handler = (argv: any) =>
     executor: deleteAccountAliasCommand,
   })
 
-export const deleteAccountAliasCmd = {
+export const deleteAccountAliasCmd = ({
+  overridingHandler,
+}: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,
-  desc,
+  describe,
   builder,
-  handler,
-}
+  handler: overridingHandler ?? handler,
+})

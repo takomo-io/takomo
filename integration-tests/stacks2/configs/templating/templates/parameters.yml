@@ -1,0 +1,22 @@
+Parameters:
+  ParamA:
+    Type: String
+  ParamB:
+    Type: String
+  ParamC:
+    Type: String
+  ParamD:
+    Type: List<String>
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+
+Outputs:
+  {{#each stack.parameters}}
+  {{key}}:
+    Value: {{value}}
+  {{/each}}
+
+  OutMap:
+    Value: {{stack.parametersMap.ParamD}}
