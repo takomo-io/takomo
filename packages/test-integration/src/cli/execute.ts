@@ -22,6 +22,7 @@ const createCliAssertions = (
 ): CliAssertions => {
   const expectJson = (expected: unknown): CliAssertions => {
     const assertion = (stdout: string) => {
+      console.log(`stdout:\n${stdout}`)
       const actual = JSON.parse(stdout)
       assertRecursively(actual, expected)
     }
@@ -34,6 +35,7 @@ const createCliAssertions = (
 
   const expectYaml = (expected: unknown): CliAssertions => {
     const assertion = (stdout: string) => {
+      console.log(`stdout:\n${stdout}`)
       const actual = parseYamlString(stdout)
       assertRecursively(actual, expected)
     }

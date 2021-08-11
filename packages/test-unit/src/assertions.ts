@@ -1,3 +1,4 @@
+import { toPrettyJson } from "@takomo/util"
 import { AnySchema } from "joi"
 
 type ExpectedValidationErrorAssertion = (
@@ -111,11 +112,9 @@ export const assertRecursively = (actual: unknown, expected: unknown): void => {
   const error = assertRecursivelyInternal(["$"], actual, expected)
   if (error) {
     fail(
-      `${error}\n\nactual:\n${JSON.stringify(
+      `${error}\n\nactual:\n${toPrettyJson(
         actual,
-        undefined,
-        2,
-      )}\n\nexpected:\n${JSON.stringify(expected, undefined, 2)}`,
+      )}\n\nexpected:\n${toPrettyJson(expected)}`,
     )
   }
 }
