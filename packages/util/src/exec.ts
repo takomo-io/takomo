@@ -20,6 +20,15 @@ interface RunShellCommandOutput {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = (data: string): void => {}
 
+class ShellCommandError extends Error {
+  readonly stderr: string
+  constructor(message: string, stderr: string) {
+    super(message)
+    this.stderr = stderr
+    Object.setPrototypeOf(this, new.target.prototype)
+  }
+}
+
 export const executeShellCommand = ({
   command,
   env,
@@ -64,7 +73,10 @@ export const executeShellCommand = ({
           command,
           stdout,
           stderr,
-          error: new Error(`Command exited with signal ${signal}`),
+          error: new ShellCommandError(
+            `Command exited with signal ${signal}.`,
+            stderr,
+          ),
           code: code ?? undefined,
           success: false,
         })
@@ -73,7 +85,10 @@ export const executeShellCommand = ({
           command,
           stdout,
           stderr,
-          error: new Error(`Command exited with code ${code}`),
+          error: new ShellCommandError(
+            `Command exited with code ${code}.`,
+            stderr,
+          ),
           code: code ?? undefined,
           success: false,
         })

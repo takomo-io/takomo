@@ -74,8 +74,8 @@ export class CmdHook implements Hook {
         cwd,
         env,
         command: this.command,
-        stdoutListener: (data) => logger.info(data),
-        stderrListener: (data) => logger.error(data),
+        stdoutListener: (data: string) => logger.info(data),
+        stderrListener: (data: string) => logger.error(data),
       })
 
       if (success) {
