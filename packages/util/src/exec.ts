@@ -2,7 +2,7 @@ import { spawn } from "child_process"
 interface RunShellCommandProps {
   readonly command: string
   readonly cwd: string
-  readonly env: Record<string, string>
+  readonly env: any
   readonly stdoutListener?: (data: string) => void
   readonly stderrListener?: (data: string) => void
 }
@@ -27,7 +27,7 @@ export const executeShellCommand = ({
   stdoutListener = noop,
   stderrListener = noop,
 }: RunShellCommandProps): Promise<RunShellCommandOutput> => {
-  const child = spawn(command, {
+  const child = spawn(command, [], {
     shell: true,
     env,
     cwd,
@@ -45,7 +45,7 @@ export const executeShellCommand = ({
   child.stderr.on("data", (data) => {
     const str = data.toString()
     stderr += str
-    str.split("\n").forEach((s: string) => stdoutListener(s))
+    str.split("\n").forEach((s: string) => stderrListener(s))
   })
 
   return new Promise((resolve) => {
