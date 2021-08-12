@@ -1,4 +1,5 @@
 import { spawn } from "child_process"
+
 interface RunShellCommandProps {
   readonly command: string
   readonly cwd: string
@@ -19,15 +20,6 @@ interface RunShellCommandOutput {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = (data: string): void => {}
-
-class ShellCommandError extends Error {
-  readonly stderr: string
-  constructor(message: string, stderr: string) {
-    super(message)
-    this.stderr = stderr
-    Object.setPrototypeOf(this, new.target.prototype)
-  }
-}
 
 export const executeShellCommand = ({
   command,
@@ -73,9 +65,8 @@ export const executeShellCommand = ({
           command,
           stdout,
           stderr,
-          error: new ShellCommandError(
-            `Command exited with signal ${signal}.`,
-            stderr,
+          error: new Error(
+            `Shell command exited with signal ${signal}.\n\nstderr:\n${stderr}`,
           ),
           code: code ?? undefined,
           success: false,
@@ -85,9 +76,8 @@ export const executeShellCommand = ({
           command,
           stdout,
           stderr,
-          error: new ShellCommandError(
-            `Command exited with code ${code}.`,
-            stderr,
+          error: new Error(
+            `Shell command exited with code ${code}.\n\nstderr:\n${stderr}`,
           ),
           code: code ?? undefined,
           success: false,
