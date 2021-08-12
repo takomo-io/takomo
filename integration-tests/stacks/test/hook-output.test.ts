@@ -1,7 +1,7 @@
 import { executeDeployStacksCommand } from "@takomo/test-integration/src"
 
 const projectDir = "configs/hook-outputs",
-  stackPath = "/stack.yml/eu-north-1",
+  stackPath = "/stack.yml/eu-west-1",
   stackName = "stack"
 
 describe("Hook outputs", () => {
