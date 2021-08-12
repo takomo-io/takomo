@@ -4,17 +4,16 @@ import { CurrentStackHolder } from "../states"
 /**
  * @hidden
  */
-export const enrichCurrentStack: StackOperationStep<CurrentStackHolder> = async (
-  state,
-) => {
-  const { stack, transitions, currentStack } = state
+export const enrichCurrentStack: StackOperationStep<CurrentStackHolder> =
+  async (state) => {
+    const { stack, transitions, currentStack } = state
 
-  const detailedStack = await stack
-    .getCloudFormationClient()
-    .enrichStack(currentStack)
+    const detailedStack = await stack
+      .getCloudFormationClient()
+      .enrichStack(currentStack)
 
-  return transitions.executeBeforeDeployHooks({
-    ...state,
-    currentStack: detailedStack,
-  })
-}
+    return transitions.executeBeforeDeployHooks({
+      ...state,
+      currentStack: detailedStack,
+    })
+  }

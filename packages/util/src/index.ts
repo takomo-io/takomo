@@ -1,6 +1,7 @@
 export * from "./collections"
 export * from "./colors"
 export { TakomoError, TakomoErrorProps, ValidationError } from "./errors"
+export { executeShellCommand } from "./exec"
 export * from "./files"
 export * from "./json"
 export * from "./logging"
