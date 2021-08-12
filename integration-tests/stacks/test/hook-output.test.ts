@@ -6,12 +6,11 @@ const projectDir = "configs/hook-outputs",
 
 describe("Hook outputs", () => {
   test("Large output should work", () =>
-    test("Deploy", () =>
-      executeDeployStacksCommand({ projectDir })
-        .expectCommandToSucceed()
-        .expectStackCreateSuccess({
-          stackName,
-          stackPath,
-        })
-        .assert()))
+    executeDeployStacksCommand({ projectDir })
+      .expectCommandToSucceed()
+      .expectStackCreateSuccess({
+        stackName,
+        stackPath,
+      })
+      .assert())
 })
