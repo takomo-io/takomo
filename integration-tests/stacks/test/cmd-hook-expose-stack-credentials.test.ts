@@ -19,7 +19,8 @@ describe("Cmd hook that exposes stack credentials", () => {
       .expectFailureStackResult({
         ...stack,
         errorMessage:
-          "Command failed: ./get-caller-identity.sh\n\n" +
+          "Command failed: aws sts get-caller-identity --output text --query Account\n" +
+          "\n" +
           'Unable to locate credentials. You can configure credentials by running "aws configure".\n',
         message: "Error",
       })
