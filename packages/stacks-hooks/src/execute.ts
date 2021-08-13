@@ -47,7 +47,10 @@ export const executeHooks = async (
     )
 
     try {
-      const output = await hook.execute(input)
+      const output = await hook.execute({
+        ...input,
+        logger: logger.childLogger(`hook:${stage}:${hook.config.name}`),
+      })
 
       logger.debug(
         `Hook (name: ${hook.config.name}, type: ${hook.config.type}) executed with success: ${output.success}, message: ${output.message}`,

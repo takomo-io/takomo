@@ -1,10 +1,6 @@
 import { Hook, HookInput, HookOutput } from "@takomo/stacks-model"
-import { deepCopy } from "@takomo/util"
-import { exec } from "child_process"
+import { deepCopy, executeShellCommand, expandFilePath } from "@takomo/util"
 import R from "ramda"
-import { promisify } from "util"
-
-const execP = promisify(exec)
 
 type Capture = "last-line" | "all"
 
@@ -48,7 +44,9 @@ export class CmdHook implements Hook {
   async execute(input: HookInput): Promise<HookOutput> {
     const { ctx, status, operation, stage, logger, stack } = input
     try {
-      const cwd = this.cwd ?? ctx.projectDir
+      const cwd = this.cwd
+        ? expandFilePath(ctx.projectDir, this.cwd)
+        : ctx.projectDir
 
       const env = {
         ...deepCopy(process.env),
@@ -72,23 +70,33 @@ export class CmdHook implements Hook {
         env.AWS_DEFAULT_REGION = stack.region
       }
 
-      const { stdout } = await execP(this.command, { cwd, env })
+      const { stdout, success, error } = await executeShellCommand({
+        cwd,
+        env,
+        command: this.command,
+        stdoutListener: (data: string) => logger.info(data),
+        stderrListener: (data: string) => logger.error(data),
+      })
 
-      logger.infoText("Command output:", stdout)
-
-      const value = captureValue(this.capture, stdout.trim())
-
-      return {
-        message: "Success",
-        success: true,
-        value,
+      if (success) {
+        const value = captureValue(this.capture, stdout.trim())
+        return {
+          message: "Success",
+          success: true,
+          value,
+        }
       }
-    } catch (e) {
-      logger.infoText("Command output:", e.stdout)
+
       return {
         message: "Error",
         success: false,
-        error: e,
+        error,
+      }
+    } catch (error) {
+      return {
+        message: "Error",
+        success: false,
+        error,
       }
     }
   }

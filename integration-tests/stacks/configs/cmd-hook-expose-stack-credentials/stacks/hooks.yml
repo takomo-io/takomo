@@ -3,5 +3,5 @@ regions: eu-central-1
 hooks:
   - name: hook1
     type: cmd
-    command: ./get-caller-identity.sh
+    command: aws sts get-caller-identity --output text --query Account
     exposeStackCredentials: {{ var.exposeStackCredentials }}

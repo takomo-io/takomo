@@ -19,7 +19,9 @@ describe("Cmd hook that exposes stack credentials", () => {
       .expectFailureStackResult({
         ...stack,
         errorMessage:
-          "Command failed: ./get-caller-identity.sh\n" +
+          "Shell command exited with code 255.\n" +
+          "\n" +
+          "stderr:\n" +
           'Unable to locate credentials. You can configure credentials by running "aws configure".\n',
         message: "Error",
       })

@@ -1,4 +1,4 @@
-import { toPrettyJson } from "../../dist"
+import { toPrettyJson } from "../../src"
 
 describe("#toPrettyJson", () => {
   test("Simple object", () => {

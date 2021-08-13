@@ -1,0 +1,14 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+template:
+  inline: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+hooks:
+  - name: test
+    type: cmd
+    stage: before
+    operation: create
+    command: ./install.sh
+    cwd: app

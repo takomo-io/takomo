@@ -1,4 +1,4 @@
-import { formatYaml } from "../../dist"
+import { formatYaml } from "../../src"
 
 describe("#formatYaml", () => {
   test("Simple", () => {
