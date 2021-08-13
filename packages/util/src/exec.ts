@@ -28,7 +28,7 @@ export const executeShellCommand = ({
   stdoutListener = noop,
   stderrListener = noop,
 }: RunShellCommandProps): Promise<RunShellCommandOutput> => {
-  const child = spawn(command, [], {
+  const child = spawn(command, {
     shell: true,
     env,
     cwd,
