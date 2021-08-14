@@ -40,10 +40,8 @@ interface CreateAccountConfigItemSchemaProps {
 export const createAccountConfigItemSchema = (
   props: CreateAccountConfigItemSchemaProps,
 ): Joi.ObjectSchema => {
-  const {
-    organizationalUnitPath,
-    organizationAccount,
-  } = createOrganizationSchemas(props)
+  const { organizationalUnitPath, organizationAccount } =
+    createOrganizationSchemas(props)
 
   return organizationAccount.keys({
     organizationalUnitPath: organizationalUnitPath.required(),

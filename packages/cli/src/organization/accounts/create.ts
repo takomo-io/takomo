@@ -44,42 +44,42 @@ const builder = (yargs: Argv<CommandArgs>) =>
     .epilog(commonEpilog(createAccountCommandIamPolicy))
     .option(NAME_OPT, {
       description: "Account name",
-      type: "string",
+      string: true,
       global: false,
       demandOption: true,
     })
     .options({
       [EMAIL_OPT]: {
         description: "Account email",
-        type: "string",
+        string: true,
         global: false,
         demandOption: true,
       },
       [IAM_USER_ACCESS_TO_BILLING_OPT]: {
         description: "Enable IAM users to access account billing information",
-        type: "boolean",
+        boolean: true,
         global: false,
         default: true,
       },
       [ROLE_NAME_OPT]: {
         description: "Name of the IAM role used to manage the new account",
-        type: "string",
+        string: true,
         global: false,
         default: DEFAULT_ORGANIZATION_ROLE_NAME,
       },
       [ALIAS_OPT]: {
         description: "Account alias",
-        type: "string",
+        string: true,
         global: false,
       },
       [OU_OPT]: {
         description: "Organizational unit",
-        type: "string",
+        string: true,
         global: false,
       },
       [CONFIG_FILE_OPT]: {
         description: "Config file",
-        type: "string",
+        string: true,
         global: false,
       },
     })

@@ -16,41 +16,45 @@ export interface AccountRepositoryRegistry {
   ) => void
 }
 
-export const createAccountRepositoryRegistry = (): AccountRepositoryRegistry => {
-  const providers = new Map<AccountRepositoryType, AccountRepositoryProvider>()
-  return {
-    registerAccountRepositoryProvider: (
-      type: AccountRepositoryType,
-      provider: AccountRepositoryProvider,
-    ): void => {
-      if (providers.has(type)) {
-        throw new TakomoError(
-          `Account repository provider already registered for type '${type}'`,
-        )
-      }
+export const createAccountRepositoryRegistry =
+  (): AccountRepositoryRegistry => {
+    const providers = new Map<
+      AccountRepositoryType,
+      AccountRepositoryProvider
+    >()
+    return {
+      registerAccountRepositoryProvider: (
+        type: AccountRepositoryType,
+        provider: AccountRepositoryProvider,
+      ): void => {
+        if (providers.has(type)) {
+          throw new TakomoError(
+            `Account repository provider already registered for type '${type}'`,
+          )
+        }
 
-      providers.set(type, provider)
-    },
+        providers.set(type, provider)
+      },
 
-    initAccountRepository: ({
-      ctx,
-      config,
-      logger,
-      templateEngine,
-    }: InitAccountRepositoryProps): Promise<AccountRepository> => {
-      const provider = providers.get(config.type)
-      if (!provider) {
-        throw new TakomoError(
-          `Unknown account repository type: '${config.type}'`,
-        )
-      }
-
-      return provider.initAccountRepository({
+      initAccountRepository: ({
         ctx,
         config,
-        templateEngine,
         logger,
-      })
-    },
+        templateEngine,
+      }: InitAccountRepositoryProps): Promise<AccountRepository> => {
+        const provider = providers.get(config.type)
+        if (!provider) {
+          throw new TakomoError(
+            `Unknown account repository type: '${config.type}'`,
+          )
+        }
+
+        return provider.initAccountRepository({
+          ctx,
+          config,
+          templateEngine,
+          logger,
+        })
+      },
+    }
   }
-}

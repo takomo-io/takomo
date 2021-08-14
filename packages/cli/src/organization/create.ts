@@ -20,7 +20,7 @@ const builder = (yargs: Argv<CommandArgs>) =>
   yargs.epilog(commonEpilog(createOrganizationCommandIamPolicy)).options({
     [FEATURE_SET_OPT]: {
       description: "Feature set",
-      type: "string",
+      string: true,
       global: false,
       default: "ALL",
       choices: ["ALL", "CONSOLIDATED_BILLING"],

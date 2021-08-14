@@ -166,15 +166,11 @@ export interface OrganizationsClient {
 export const createOrganizationsClient = (
   props: AwsClientProps,
 ): OrganizationsClient => {
-  const {
-    withClient,
-    pagedOperation,
-    withClientPromise,
-    logger,
-  } = createClient({
-    ...props,
-    clientConstructor: (configuration) => new Organizations(configuration),
-  })
+  const { withClient, pagedOperation, withClientPromise, logger } =
+    createClient({
+      ...props,
+      clientConstructor: (configuration) => new Organizations(configuration),
+    })
 
   const listAccounts = async (): Promise<ReadonlyArray<OrganizationAccount>> =>
     withClient((c) =>

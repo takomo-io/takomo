@@ -14,11 +14,8 @@ import {
 } from "./model"
 import { planRun } from "./plan"
 const inputSchema = (regions: ReadonlyArray<Region>) => {
-  const {
-    deploymentGroupPath,
-    deploymentTargetNamePattern,
-    label,
-  } = createDeploymentTargetsSchemas({ regions })
+  const { deploymentGroupPath, deploymentTargetNamePattern, label } =
+    createDeploymentTargetsSchemas({ regions })
   return Joi.object({
     groups: Joi.array().items(deploymentGroupPath).unique(),
     targets: Joi.array().items(deploymentTargetNamePattern).unique(),

@@ -23,11 +23,8 @@ import { planDeployment } from "./plan"
 const inputSchema = (regions: ReadonlyArray<Region>) => {
   const { commandPath } = createStacksSchemas({ regions })
   const { configSetName } = createConfigSetsSchemas({ regions })
-  const {
-    deploymentGroupPath,
-    deploymentTargetNamePattern,
-    label,
-  } = createDeploymentTargetsSchemas({ regions })
+  const { deploymentGroupPath, deploymentTargetNamePattern, label } =
+    createDeploymentTargetsSchemas({ regions })
   return Joi.object({
     groups: Joi.array().items(deploymentGroupPath).unique(),
     targets: Joi.array().items(deploymentTargetNamePattern).unique(),
