@@ -1,12 +1,15 @@
 import { CommandStatus } from "@takomo/core"
-import { HookOperation, HookStatus } from "@takomo/stacks-model"
-import { StackDeployOperationType } from "../deploy/plan"
+import {
+  HookOperation,
+  HookStatus,
+  StackOperationType,
+} from "@takomo/stacks-model"
 
 /**
  * @hidden
  */
 export const toHookOperation = (
-  operationType: StackDeployOperationType,
+  operationType: StackOperationType,
 ): HookOperation => {
   switch (operationType) {
     case "CREATE":

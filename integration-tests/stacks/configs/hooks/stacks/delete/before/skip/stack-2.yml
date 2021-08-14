@@ -1,0 +1,7 @@
+template: hooks.yml
+hooks:
+  - name: hook-1
+    type: skip
+    stage: before
+    operation: delete
+depends: stack-1.yml

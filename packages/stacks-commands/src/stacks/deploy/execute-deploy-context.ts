@@ -154,6 +154,8 @@ export const executeDeployContext = async (
         success: false,
         events: [],
         message: "Cancelled",
+        operationType: operation.type,
+        stackExistedBeforeOperation: operation.currentStack !== undefined,
       })
       continue
     }

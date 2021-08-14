@@ -15,11 +15,12 @@ import {
   InternalStack,
   Stack,
   StackGroup,
+  StackOperationType,
   StackPath,
 } from "@takomo/stacks-model"
 import { AnySchema } from "joi"
 import { StacksOperationOutput } from "../../model"
-import { StackDeployOperationType, StacksDeployPlan } from "./plan"
+import { StacksDeployPlan } from "./plan"
 
 export type ConfirmDeployAnswer =
   | "CANCEL"
@@ -47,7 +48,7 @@ export interface DeployStacksIO
     stack: InternalStack,
     templateBody: TemplateBody,
     templateSummary: TemplateSummary,
-    operationType: StackDeployOperationType,
+    operationType: StackOperationType,
     existingStack?: DetailedCloudFormationStack,
     changeSet?: DetailedChangeSet,
   ) => Promise<ConfirmStackDeployAnswer>

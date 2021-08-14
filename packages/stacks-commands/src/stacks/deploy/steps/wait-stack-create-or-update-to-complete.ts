@@ -6,50 +6,48 @@ import { StackOperationClientTokenHolder } from "../states"
 /**
  * @hidden
  */
-export const waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperationClientTokenHolder> = async (
-  state,
-) => {
-  const {
-    stack,
-    clientToken,
-    operationType,
-    io,
-    logger,
-    transitions,
-    stackId,
-  } = state
+export const waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperationClientTokenHolder> =
+  async (state) => {
+    const {
+      stack,
+      clientToken,
+      operationType,
+      io,
+      logger,
+      transitions,
+      stackId,
+    } = state
 
-  const eventListener = R.curry(io.printStackEvent)(stack.path)
-  const timeout = operationType === "UPDATE" ? stack.timeout.update : 0
+    const eventListener = R.curry(io.printStackEvent)(stack.path)
+    const timeout = operationType === "UPDATE" ? stack.timeout.update : 0
 
-  const waitProps = {
-    clientToken,
-    stackId,
-    eventListener,
-    timeoutConfig: {
-      timeout,
-      startTime: Date.now(),
-      timeoutOccurred: false,
-    },
+    const waitProps = {
+      clientToken,
+      stackId,
+      eventListener,
+      timeoutConfig: {
+        timeout,
+        startTime: Date.now(),
+        timeoutOccurred: false,
+      },
+    }
+
+    const { stackStatus, events } = await stack
+      .getCloudFormationClient()
+      .waitStackDeployToComplete(waitProps)
+
+    logger.info(`Deploy completed with status: ${stackStatus}`)
+
+    const success =
+      stackStatus === "UPDATE_COMPLETE" || stackStatus === "CREATE_COMPLETE"
+    const status = success ? "SUCCESS" : "FAILED"
+    const message = resolveResultMessage(operationType, success)
+
+    return transitions.executeAfterDeployHooks({
+      ...state,
+      message,
+      status,
+      events,
+      success,
+    })
   }
-
-  const {
-    stackStatus,
-    events,
-  } = await stack.getCloudFormationClient().waitStackDeployToComplete(waitProps)
-
-  logger.info(`Deploy completed with status: ${stackStatus}`)
-
-  const success =
-    stackStatus === "UPDATE_COMPLETE" || stackStatus === "CREATE_COMPLETE"
-  const status = success ? "SUCCESS" : "FAILED"
-  const message = resolveResultMessage(operationType, success)
-
-  return transitions.executeAfterDeployHooks({
-    ...state,
-    message,
-    status,
-    events,
-    success,
-  })
-}

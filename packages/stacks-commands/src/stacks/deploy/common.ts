@@ -1,10 +1,10 @@
-import { StackDeployOperationType } from "./plan"
+import { StackOperationType } from "@takomo/stacks-model"
 
 /**
  * @hidden
  */
 export const resolveResultMessage = (
-  operationType: StackDeployOperationType,
+  operationType: StackOperationType,
   success: boolean,
 ): string => {
   if (operationType === "UPDATE" && success) return "Stack update succeeded"

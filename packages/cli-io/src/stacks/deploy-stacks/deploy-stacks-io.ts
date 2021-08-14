@@ -10,11 +10,15 @@ import {
   ConfirmStackDeployAnswer,
   DeployStacksIO,
   DeployStacksListener,
-  StackDeployOperationType,
   StacksDeployPlan,
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
-import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
+import {
+  InternalStack,
+  StackGroup,
+  StackOperationType,
+  StackPath,
+} from "@takomo/stacks-model"
 import { bold, diffStrings, green, orange, yellow } from "@takomo/util"
 import R from "ramda"
 import { createBaseIO } from "../../cli-io"
@@ -84,7 +88,7 @@ export const CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW: ConfirmDeployAnswerChoice
 
 const formatStackOperation = (
   stackPath: StackPath,
-  type: StackDeployOperationType,
+  type: StackOperationType,
   columnLength: number,
 ): string => {
   switch (type) {
@@ -102,7 +106,7 @@ const formatStackOperation = (
   }
 }
 
-const formatStackOperationType = (type: StackDeployOperationType): string => {
+const formatStackOperationType = (type: StackOperationType): string => {
   switch (type) {
     case "CREATE":
       return green("CREATE")
@@ -245,7 +249,7 @@ export const createDeployStacksIO = (
     stack: InternalStack,
     templateBody: TemplateBody,
     templateSummary: TemplateSummary,
-    operationType: StackDeployOperationType,
+    operationType: StackOperationType,
     existingStack?: DetailedCloudFormationStack,
     changeSet?: DetailedChangeSet,
   ): Promise<ConfirmStackDeployAnswer> => {

@@ -64,6 +64,8 @@ const executeStep = async <S extends InitialStackOperationState>(
     logger.error(`Unhandled error in step '${stepName}':`, error)
     return new StackOperationCompleted({
       stack: state.stack,
+      stackExistedBeforeOperation: state.stackExistedBeforeOperation,
+      operationType: state.operationType,
       message: "Error",
       status: "FAILED",
       events: [],
