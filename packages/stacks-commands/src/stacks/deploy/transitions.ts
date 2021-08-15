@@ -49,9 +49,7 @@ import { waitStackCreateOrUpdateToComplete } from "./steps/wait-stack-create-or-
 export interface DeployStackTransitions extends StackOperationTransitions {
   initiateFailedStackDelete: StackOperationStep<CurrentStackHolder>
 
-  waitFailedStackDeleteToComplete: StackOperationStep<
-    DeleteFailedStackClientTokenHolder
-  >
+  waitFailedStackDeleteToComplete: StackOperationStep<DeleteFailedStackClientTokenHolder>
 
   enrichCurrentStack: StackOperationStep<CurrentStackHolder>
 
@@ -85,9 +83,7 @@ export interface DeployStackTransitions extends StackOperationTransitions {
 
   initiateStackUpdate: StackOperationStep<UpdateStackHolder>
 
-  waitStackCreateOrUpdateToComplete: StackOperationStep<
-    StackOperationClientTokenHolder
-  >
+  waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperationClientTokenHolder>
 
   executeAfterDeployHooks: StackOperationStep<StackOperationResultHolder>
 }
@@ -204,22 +200,22 @@ export const createDeployStackTransitions = (): DeployStackTransitions => ({
 /**
  * @hidden
  */
-export const executeAfterDeployHooksOnError = <
-  S extends InitialDeployStackState
->(
-  step: StackOperationStep<S>,
-): StackOperationStep<S> => async (state: S) => {
-  try {
-    return await step(state)
-  } catch (error) {
-    state.logger.error("An error occurred", error)
-    return state.transitions.executeAfterDeployHooks({
-      events: [],
-      ...state,
-      error,
-      success: false,
-      status: "FAILED",
-      message: resolveResultMessage(state.operationType, false),
-    })
+export const executeAfterDeployHooksOnError =
+  <S extends InitialDeployStackState>(
+    step: StackOperationStep<S>,
+  ): StackOperationStep<S> =>
+  async (state: S) => {
+    try {
+      return await step(state)
+    } catch (error) {
+      state.logger.error("An error occurred", error)
+      return state.transitions.executeAfterDeployHooks({
+        events: [],
+        ...state,
+        error,
+        success: false,
+        status: "FAILED",
+        message: resolveResultMessage(state.operationType, false),
+      })
+    }
   }
-}

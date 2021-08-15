@@ -3,12 +3,12 @@ import { StacksConfigRepository } from "@takomo/stacks-context"
 import {
   InternalStack,
   InternalStacksContext,
+  StackOperationType,
   StackResult,
 } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
 import { executeSteps } from "../common/steps"
 import { DeployStacksIO, DeployState } from "./model"
-import { StackDeployOperationType } from "./plan"
 import { InitialDeployStackState } from "./states"
 import { createDeployStackTransitions } from "./transitions"
 
@@ -22,7 +22,7 @@ export const deployStack = async (
   state: DeployState,
   stack: InternalStack,
   dependencies: Promise<StackResult>[],
-  operationType: StackDeployOperationType,
+  operationType: StackOperationType,
   configRepository: StacksConfigRepository,
   currentStack?: CloudFormationStack,
 ): Promise<StackResult> => {
@@ -52,6 +52,7 @@ export const deployStack = async (
     currentStack,
     ctx,
     configRepository,
+    stackExistedBeforeOperation: currentStack !== undefined,
     totalTimer: timer.startChild(stack.path),
     transitions: createDeployStackTransitions(),
   }

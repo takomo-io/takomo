@@ -32,6 +32,11 @@ export type HookOutput = HookOutputObject | Error | boolean
 /**
  * @hidden
  */
+export type HookExecutionResult = "continue" | "abort" | "skip"
+
+/**
+ * @hidden
+ */
 export interface HooksExecutionOutput {
   /**
    * Message describing the outcome of the action.
@@ -39,9 +44,9 @@ export interface HooksExecutionOutput {
   readonly message: string
 
   /**
-   * Boolean describing if the action was successful.
+   * Hook execution result.
    */
-  readonly success: boolean
+  readonly result: HookExecutionResult
 
   /**
    * If an error was thrown during execution it will be stored here.
@@ -82,9 +87,17 @@ export interface HookOutputObject {
   readonly value?: any
 
   /**
-   * Optional return value.
+   * Optional error.
    */
   readonly error?: Error
+
+  /**
+   * Optional boolean that can be returned from hooks executed
+   * before the stack operation to indicate that the operation
+   * should be skipped and all the remaining before hooks should
+   * be ignored.
+   */
+  readonly skip?: boolean
 }
 
 /**

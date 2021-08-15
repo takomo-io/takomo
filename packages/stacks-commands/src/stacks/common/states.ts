@@ -1,6 +1,6 @@
 import { StackEvent } from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
-import { InternalStack } from "@takomo/stacks-model"
+import { InternalStack, StackOperationType } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
 import { StackOperationTransitions } from "./transitions"
 
@@ -9,6 +9,8 @@ import { StackOperationTransitions } from "./transitions"
  */
 export interface InitialStackOperationState {
   readonly stack: InternalStack
+  readonly stackExistedBeforeOperation: boolean
+  readonly operationType: StackOperationType
   readonly totalTimer: Timer
   readonly transitions: StackOperationTransitions
 }

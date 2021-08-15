@@ -21,7 +21,7 @@ class ThrowingHook implements Hook {
     this.error = error
   }
 
-  execute = async (input: HookInput): Promise<HookOutput> => {
+  execute = async (): Promise<HookOutput> => {
     this.executed = true
     throw this.error
   }
@@ -35,9 +35,21 @@ class TestHook implements Hook {
     this.output = output
   }
 
-  execute = async (input: HookInput): Promise<HookOutput> => {
+  execute = async (): Promise<HookOutput> => {
     this.executed = true
     return this.output
+  }
+}
+
+class SkipHook implements Hook {
+  executed = false
+
+  execute = async (): Promise<HookOutput> => {
+    this.executed = true
+    return {
+      skip: true,
+      success: true,
+    }
   }
 }
 
@@ -83,22 +95,30 @@ const executeAllHooks = async (
   variables: StackOperationVariables,
   ...executors: HookExecutor[]
 ): Promise<HooksExecutionOutput> =>
-  executeHooks(ctx, stack, variables, executors, "create", "before", logger)
+  executeHooks({
+    ctx,
+    stack,
+    variables,
+    logger,
+    hooks: executors,
+    operation: "create",
+    stage: "before",
+  })
 
 describe("#executeHooks", () => {
   describe("when no hooks are given", () => {
     test("returns success", async () => {
-      const result = await executeHooks(
+      const result = await executeHooks({
         ctx,
         stack,
-        createVariables(),
-        [],
-        "create",
-        "before",
         logger,
-      )
+        variables: createVariables(),
+        hooks: [],
+        operation: "create",
+        stage: "before",
+      })
       expect(result).toStrictEqual({
-        success: true,
+        result: "continue",
         message: "Success",
       })
     })
@@ -115,17 +135,17 @@ describe("#executeHooks", () => {
         hook1,
       )
 
-      const result = await executeHooks(
+      const result = await executeHooks({
         ctx,
         stack,
-        createVariables(),
-        [hook1Executor],
-        "create",
-        "before",
         logger,
-      )
+        variables: createVariables(),
+        hooks: [hook1Executor],
+        operation: "create",
+        stage: "before",
+      })
       expect(result).toStrictEqual({
-        success: true,
+        result: "continue",
         message: "Success",
       })
 
@@ -145,17 +165,17 @@ describe("#executeHooks", () => {
         hook1,
       )
 
-      const result = await executeHooks(
+      const result = await executeHooks({
         ctx,
         stack,
-        createVariables(),
-        [hook1Executor],
-        "create",
-        "before",
         logger,
-      )
+        variables: createVariables(),
+        hooks: [hook1Executor],
+        operation: "create",
+        stage: "before",
+      })
       expect(result).toStrictEqual({
-        success: false,
+        result: "abort",
         message: "Error error!",
         error: undefined,
       })
@@ -200,18 +220,18 @@ describe("#executeHooks", () => {
         hook3,
       )
 
-      const result = await executeHooks(
+      const result = await executeHooks({
         ctx,
         stack,
-        createVariables(),
-        [hook1Executor, hook2Executor, hook3Executor],
-        "delete",
-        "after",
         logger,
-      )
+        variables: createVariables(),
+        hooks: [hook1Executor, hook2Executor, hook3Executor],
+        operation: "delete",
+        stage: "after",
+      })
 
       expect(result).toStrictEqual({
-        success: true,
+        result: "continue",
         message: "Success",
       })
 
@@ -262,17 +282,17 @@ describe("#executeHooks", () => {
 
       const variables = createVariables()
 
-      const result = await executeHooks(
+      const result = await executeHooks({
         ctx,
         stack,
         variables,
-        [hook1Executor, hook2Executor, hook3Executor, hook4Executor],
-        "delete",
-        "after",
+        hooks: [hook1Executor, hook2Executor, hook3Executor, hook4Executor],
+        operation: "delete",
+        stage: "after",
         logger,
-      )
+      })
 
-      expect(result.success).toBeFalsy()
+      expect(result.result).toStrictEqual("abort")
       expect(hook1.executed).toBeTruthy()
       expect(hook2.executed).toBeTruthy()
       expect(hook3.executed).toBeFalsy()
@@ -285,6 +305,70 @@ describe("#executeHooks", () => {
     })
   })
 
+  describe("when a hook returns skip", () => {
+    test("the remaining hooks are not executed", async () => {
+      const hook1 = new TestHook({ success: true, value: "A" })
+      const hook2 = new SkipHook()
+      const hook3 = new TestHook({ success: true, value: "C" })
+      const hook4 = new TestHook({ success: true, value: "D" })
+
+      const hook1Executor = new HookExecutor(
+        {
+          name: "mock1",
+          type: "cmd",
+        },
+        hook1,
+      )
+
+      const hook2Executor = new HookExecutor(
+        {
+          name: "mock2",
+          type: "cmd",
+        },
+        hook2,
+      )
+
+      const hook3Executor = new HookExecutor(
+        {
+          name: "mock3",
+          type: "cmd",
+        },
+        hook3,
+      )
+
+      const hook4Executor = new HookExecutor(
+        {
+          name: "mock4",
+          type: "cmd",
+        },
+        hook4,
+      )
+
+      const variables = createVariables()
+
+      const result = await executeHooks({
+        ctx,
+        stack,
+        variables,
+        hooks: [hook1Executor, hook2Executor, hook3Executor, hook4Executor],
+        operation: "create",
+        stage: "before",
+        logger,
+      })
+
+      expect(result.result).toStrictEqual("skip")
+      expect(hook1.executed).toBeTruthy()
+      expect(hook2.executed).toBeTruthy()
+      expect(hook3.executed).toBeFalsy()
+      expect(hook4.executed).toBeFalsy()
+
+      expect(variables.hooks).toStrictEqual({
+        mock1: "A",
+        mock2: undefined,
+      })
+    })
+  })
+
   describe("returned value should be correct", () => {
     test("when a hook returns primitive false", async () => {
       const hook = new TestHook(false)
@@ -292,7 +376,7 @@ describe("#executeHooks", () => {
 
       const result = await executeAllHooks(variables, executor("hook1", hook))
 
-      expect(result.success).toBe(false)
+      expect(result.result).toStrictEqual("abort")
       expect(result.message).toBe("Failed")
       expect(variables.hooks["hook1"]).toBe(false)
     })
@@ -303,7 +387,7 @@ describe("#executeHooks", () => {
 
       const result = await executeAllHooks(variables, executor("hook2", hook))
 
-      expect(result.success).toBe(true)
+      expect(result.result).toStrictEqual("continue")
       expect(result.message).toBe("Success")
       expect(variables.hooks["hook2"]).toBe(true)
     })
@@ -315,7 +399,7 @@ describe("#executeHooks", () => {
 
       const result = await executeAllHooks(variables, executor("hook3", hook))
 
-      expect(result.success).toBe(false)
+      expect(result.result).toStrictEqual("abort")
       expect(result.message).toBe("My error")
       expect(variables.hooks["hook3"]).toBe(err)
     })
@@ -326,7 +410,7 @@ describe("#executeHooks", () => {
 
       const result = await executeAllHooks(variables, executor("hook4", hook))
 
-      expect(result.success).toBe(true)
+      expect(result.result).toStrictEqual("continue")
       expect(result.message).toBe("Success")
       expect(variables.hooks["hook4"]).toBe("X")
     })
@@ -336,14 +420,12 @@ describe("#executeHooks", () => {
     test("subsequent hooks should be able to see output values of prior hooks", async () => {
       const hook1 = new TestHook({ success: true, value: "Hello XXXX!" })
       const hook2 = new TestHook({ success: true, value: "Frodo" })
-      const hook3 = new HandlerHook(
-        (input: HookInput): Promise<HookOutput> => {
-          const greeting = input.variables.hooks["hook1"]
-          const name = input.variables.hooks["hook2"]
-          const value = greeting.replace("XXXX", name)
-          return Promise.resolve({ success: true, value })
-        },
-      )
+      const hook3 = new HandlerHook((input: HookInput): Promise<HookOutput> => {
+        const greeting = input.variables.hooks["hook1"]
+        const name = input.variables.hooks["hook2"]
+        const value = greeting.replace("XXXX", name)
+        return Promise.resolve({ success: true, value })
+      })
 
       const variables = createVariables()
 

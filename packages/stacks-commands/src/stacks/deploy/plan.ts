@@ -3,7 +3,12 @@ import {
   isWithinCommandPath,
   sortStacksForDeploy,
 } from "@takomo/stacks-context"
-import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
+import {
+  CommandPath,
+  InternalStack,
+  StackOperationType,
+  StackPath,
+} from "@takomo/stacks-model"
 import { arrayToMap } from "@takomo/util"
 import R from "ramda"
 
@@ -31,14 +36,9 @@ export const collectStackDependencies = (
 /**
  * @hidden
  */
-export type StackDeployOperationType = "CREATE" | "RECREATE" | "UPDATE"
-
-/**
- * @hidden
- */
 export interface StackDeployOperation {
   readonly stack: InternalStack
-  readonly type: StackDeployOperationType
+  readonly type: StackOperationType
   readonly currentStack?: CloudFormationStack
 }
 
@@ -54,7 +54,7 @@ export interface StacksDeployPlan {
  */
 export const resolveOperationType = (
   status?: StackStatus,
-): StackDeployOperationType => {
+): StackOperationType => {
   if (status === undefined) {
     return "CREATE"
   }

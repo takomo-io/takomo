@@ -5,20 +5,19 @@ import { CurrentStackHolder } from "../states"
 /**
  * @hidden
  */
-export const initiateStackDeletion: StackOperationStep<CurrentStackHolder> = async (
-  state,
-) => {
-  const { transitions, stack, currentStack } = state
+export const initiateStackDeletion: StackOperationStep<CurrentStackHolder> =
+  async (state) => {
+    const { transitions, stack, currentStack } = state
 
-  const clientToken = uuid()
+    const clientToken = uuid()
 
-  await stack.getCloudFormationClient().initiateStackDeletion({
-    StackName: currentStack.id,
-    ClientRequestToken: clientToken,
-  })
+    await stack.getCloudFormationClient().initiateStackDeletion({
+      StackName: currentStack.id,
+      ClientRequestToken: clientToken,
+    })
 
-  return transitions.waitStackDeleteToComplete({
-    ...state,
-    clientToken,
-  })
-}
+    return transitions.waitStackDeleteToComplete({
+      ...state,
+      clientToken,
+    })
+  }

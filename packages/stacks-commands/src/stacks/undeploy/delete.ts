@@ -32,6 +32,8 @@ export const deleteStack = async (
     variables,
     dependents,
     currentStack,
+    stackExistedBeforeOperation: currentStack !== undefined,
+    operationType: "DELETE",
     totalTimer: timer.startChild(stack.path),
     transitions: createUndeployStackTransitions(),
   }

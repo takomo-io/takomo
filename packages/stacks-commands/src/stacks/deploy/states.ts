@@ -12,6 +12,7 @@ import { CommandStatus } from "@takomo/core"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import {
   InternalStacksContext,
+  StackOperationType,
   StackOperationVariables,
   StackResult,
 } from "@takomo/stacks-model"
@@ -23,7 +24,6 @@ import {
   StackParameterInfo,
   StackTagInfo,
 } from "./model"
-import { StackDeployOperationType } from "./plan"
 import { DeployStackTransitions } from "./transitions"
 
 /**
@@ -37,7 +37,7 @@ export interface InitialDeployStackState extends InitialStackOperationState {
   readonly logger: TkmLogger
   readonly currentStack?: CloudFormationStack
   readonly dependencies: ReadonlyArray<Promise<StackResult>>
-  readonly operationType: StackDeployOperationType
+  readonly operationType: StackOperationType
   readonly state: DeployState
   readonly transitions: DeployStackTransitions
 }

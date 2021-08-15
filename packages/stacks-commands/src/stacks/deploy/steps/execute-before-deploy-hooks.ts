@@ -10,23 +10,33 @@ export const executeBeforeDeployHooks: StackOperationStep<DetailedCurrentStackHo
   async (state) => {
     const { stack, operationType, ctx, variables, logger, transitions } = state
 
-    const { success, message, error } = await executeHooks(
+    const { result, message, error } = await executeHooks({
       ctx,
       stack,
       variables,
-      stack.hooks,
-      toHookOperation(operationType),
-      "before",
+      hooks: stack.hooks,
+      operation: toHookOperation(operationType),
+      stage: "before",
       logger,
-    )
+    })
 
-    if (!success) {
+    if (result === "abort") {
       logger.error(`Before deploy hooks failed with message: ${message}`)
       return transitions.failStackOperation({
         ...state,
         message,
         error,
         events: [],
+      })
+    }
+
+    if (result === "skip") {
+      logger.info(
+        `Before deploy hooks returned 'skip' result with message: ${message}`,
+      )
+      return transitions.skipStackOperation({
+        ...state,
+        message,
       })
     }
 

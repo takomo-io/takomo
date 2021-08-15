@@ -60,45 +60,47 @@ const hasStackPolicyChanged = (
 /**
  * @hidden
  */
-export const waitChangeSetToBeReady: StackOperationStep<ChangeSetNameHolder> = async (
-  state,
-) => {
-  const {
-    stack,
-    changeSetName,
-    logger,
-    currentStack,
-    templateSummary,
-    transitions,
-  } = state
-  const changeSet = await stack
-    .getCloudFormationClient()
-    .waitUntilChangeSetIsReady(stack.name, changeSetName)
+export const waitChangeSetToBeReady: StackOperationStep<ChangeSetNameHolder> =
+  async (state) => {
+    const {
+      stack,
+      changeSetName,
+      logger,
+      currentStack,
+      templateSummary,
+      transitions,
+    } = state
+    const changeSet = await stack
+      .getCloudFormationClient()
+      .waitUntilChangeSetIsReady(stack.name, changeSetName)
 
-  const terminationProtectionChanged = currentStack
-    ? currentStack.enableTerminationProtection !== stack.terminationProtection
-    : false
+    const terminationProtectionChanged = currentStack
+      ? currentStack.enableTerminationProtection !== stack.terminationProtection
+      : false
 
-  const stackPolicyChanged = hasStackPolicyChanged(stack, currentStack)
+    const stackPolicyChanged = hasStackPolicyChanged(stack, currentStack)
 
-  if (
-    changeSet === undefined &&
-    !terminationProtectionChanged &&
-    !stackPolicyChanged
-  ) {
-    logger.info("Change set contains no changes")
-    return transitions.executeAfterDeployHooks({
+    if (
+      changeSet === undefined &&
+      !terminationProtectionChanged &&
+      !stackPolicyChanged
+    ) {
+      logger.info("Change set contains no changes")
+      return transitions.executeAfterDeployHooks({
+        ...state,
+        message: "No changes",
+        status: "SUCCESS",
+        events: [],
+        success: true,
+      })
+    }
+
+    const detailedChangeSet = changeSet
+      ? enrichChangeSet(changeSet, templateSummary)
+      : undefined
+
+    return transitions.reviewChangeSet({
       ...state,
-      message: "No changes",
-      status: "SUCCESS",
-      events: [],
-      success: true,
+      changeSet: detailedChangeSet,
     })
   }
-
-  const detailedChangeSet = changeSet
-    ? enrichChangeSet(changeSet, templateSummary)
-    : undefined
-
-  return transitions.reviewChangeSet({ ...state, changeSet: detailedChangeSet })
-}

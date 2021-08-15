@@ -1,0 +1,2 @@
+template: hooks.yml
+depends: stack-2.yml

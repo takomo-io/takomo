@@ -26,28 +26,35 @@ export interface StackOperationTransitions {
 /**
  * @hidden
  */
-export const inProgress = <S extends InitialStackOperationState>(
-  stepName: string,
-  step: StackOperationStep<S>,
-): StackOperationStep<S> => async (state: S) =>
-  new StackOperationInProgress({
-    state,
-    stepName,
-    step,
-  })
+export const inProgress =
+  <S extends InitialStackOperationState>(
+    stepName: string,
+    step: StackOperationStep<S>,
+  ): StackOperationStep<S> =>
+  async (state: S) =>
+    new StackOperationInProgress({
+      state,
+      stepName,
+      step,
+    })
 
 /**
  * @hidden
  */
 export const defaultStackOperationTransitions = {
-  cancelStackOperation: async (
-    state: StackOperationCancelledState,
-  ): Promise<StepResult> =>
+  cancelStackOperation: async ({
+    message,
+    stack,
+    operationType,
+    stackExistedBeforeOperation,
+  }: StackOperationCancelledState): Promise<StepResult> =>
     new StackOperationCompleted({
-      message: state.message,
+      message,
+      stack,
+      operationType,
+      stackExistedBeforeOperation,
       success: false,
       status: "CANCELLED",
-      stack: state.stack,
       events: [],
     }),
 
@@ -55,26 +62,38 @@ export const defaultStackOperationTransitions = {
     state: StackOperationCompletedState,
   ): Promise<StepResult> => new StackOperationCompleted(state),
 
-  failStackOperation: async (
-    state: StackOperationFailedState,
-  ): Promise<StepResult> =>
+  failStackOperation: async ({
+    message,
+    stack,
+    events,
+    error,
+    operationType,
+    stackExistedBeforeOperation,
+  }: StackOperationFailedState): Promise<StepResult> =>
     new StackOperationCompleted({
-      message: state.message,
+      message,
+      stack,
+      events,
+      error,
+      operationType,
+      stackExistedBeforeOperation,
       success: false,
       status: "FAILED",
-      stack: state.stack,
-      events: state.events,
-      error: state.error,
     }),
 
-  skipStackOperation: async (
-    state: StackOperationSkippedState,
-  ): Promise<StepResult> =>
+  skipStackOperation: async ({
+    message,
+    stack,
+    operationType,
+    stackExistedBeforeOperation,
+  }: StackOperationSkippedState): Promise<StepResult> =>
     new StackOperationCompleted({
-      message: state.message,
+      message,
+      stack,
+      operationType,
+      stackExistedBeforeOperation,
       success: true,
       status: "SKIPPED",
-      stack: state.stack,
       events: [],
     }),
 }

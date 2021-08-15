@@ -54,5 +54,12 @@ export interface StackResult {
   readonly events: ReadonlyArray<StackEvent>
   readonly success: boolean
   readonly timer: Timer
+  readonly operationType: StackOperationType
+  readonly stackExistedBeforeOperation: boolean
   readonly error?: Error
 }
+
+/**
+ * @hidden
+ */
+export type StackOperationType = "CREATE" | "RECREATE" | "UPDATE" | "DELETE"

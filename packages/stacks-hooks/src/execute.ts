@@ -10,19 +10,30 @@ import {
 } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
 
+interface ExecuteHooksProps {
+  readonly ctx: InternalStacksContext
+  readonly stack: Stack
+  readonly variables: StackOperationVariables
+  readonly hooks: ReadonlyArray<HookExecutor>
+  readonly operation: HookOperation
+  readonly stage: HookStage
+  readonly logger: TkmLogger
+  readonly status?: HookStatus
+}
+
 /**
  * @hidden
  */
-export const executeHooks = async (
-  ctx: InternalStacksContext,
-  stack: Stack,
-  variables: StackOperationVariables,
-  hooks: ReadonlyArray<HookExecutor>,
-  operation: HookOperation,
-  stage: HookStage,
-  logger: TkmLogger,
-  status?: HookStatus,
-): Promise<HooksExecutionOutput> => {
+export const executeHooks = async ({
+  ctx,
+  stack,
+  variables,
+  hooks,
+  operation,
+  stage,
+  logger,
+  status,
+}: ExecuteHooksProps): Promise<HooksExecutionOutput> => {
   logger.debug(
     `About to execute hooks (operation: ${operation}, stage: ${stage}, status: ${status})`,
   )
@@ -53,33 +64,40 @@ export const executeHooks = async (
       })
 
       logger.debug(
-        `Hook (name: ${hook.config.name}, type: ${hook.config.type}) executed with success: ${output.success}, message: ${output.message}`,
+        `Hook (name: ${hook.config.name}, type: ${hook.config.type}) executed with success: ${output.success}, skip: ${output.skip} message: ${output.message}`,
       )
 
       variables.hooks[hook.config.name] = output.value
 
       if (!output.success) {
         return {
-          message: output.message || "Failed",
-          success: false,
+          message: output.message ?? "Failed",
+          result: "abort",
           error: output.error,
         }
       }
-    } catch (e) {
+
+      if (output.skip === true) {
+        return {
+          message: output.message ?? "Skip",
+          result: "skip",
+        }
+      }
+    } catch (error) {
       logger.error(
         `An error occurred while executing hook (name: ${hook.config.name}, type: ${hook.config.type})`,
-        e,
+        error,
       )
       return {
-        message: e.message || "Error",
-        success: false,
-        error: e,
+        error,
+        result: "abort",
+        message: error.message ?? "Error",
       }
     }
   }
 
   return {
     message: "Success",
-    success: true,
+    result: "continue",
   }
 }

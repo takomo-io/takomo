@@ -7,11 +7,7 @@ export {
   DeployStacksIO,
   DeployStacksListener,
 } from "./stacks/deploy/model"
-export {
-  StackDeployOperation,
-  StackDeployOperationType,
-  StacksDeployPlan,
-} from "./stacks/deploy/plan"
+export { StackDeployOperation, StacksDeployPlan } from "./stacks/deploy/plan"
 export { detectDriftCommand } from "./stacks/drift/command"
 export { detectDriftCommandIamPolicy } from "./stacks/drift/iam-policy"
 export {

@@ -1,12 +1,11 @@
-import { defaultCapabilities } from "@takomo/stacks-model"
+import { defaultCapabilities, StackOperationType } from "@takomo/stacks-model"
 import { uuid } from "@takomo/util"
 import { ChangeSetType } from "aws-sdk/clients/cloudformation"
 import { StackOperationStep } from "../../common/steps"
-import { StackDeployOperationType } from "../plan"
 import { TemplateSummaryHolder } from "../states"
 
 export const resolveChangeSetType = (
-  type: StackDeployOperationType,
+  type: StackOperationType,
 ): ChangeSetType => {
   switch (type) {
     case "UPDATE":
