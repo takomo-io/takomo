@@ -1,0 +1,12 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+hooks:
+  - name: first
+    type: checksum
+    stage: before
+    dir: app
+  - name: second
+    type: checksum
+    stage: before
+    dir: app
+    encoding: hex

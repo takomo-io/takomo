@@ -16,6 +16,7 @@ import {
   DeploymentTargetRepository,
 } from "@takomo/deployment-targets-repository"
 import { StacksConfigRepository } from "@takomo/stacks-context"
+import { createHookRegistry } from "@takomo/stacks-hooks"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   dirExists,
@@ -133,13 +134,13 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
     stacksDir,
   } = props
 
-  const hookInitializers = new Map()
+  const hookRegistry = createHookRegistry({ logger })
   const resolverRegistry = new ResolverRegistry(logger)
   const schemaRegistry = createDeploymentTargetsSchemaRegistry(logger)
 
   await stacksConfigRepository.loadExtensions(
     resolverRegistry,
-    hookInitializers,
+    hookRegistry,
     schemaRegistry,
   )
 

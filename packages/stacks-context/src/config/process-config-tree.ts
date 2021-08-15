@@ -1,10 +1,10 @@
 import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
 import { CommandContext } from "@takomo/core"
+import { HookRegistry } from "@takomo/stacks-hooks"
 import {
   CommandPath,
   createStackGroup,
-  HookInitializersMap,
   InternalStack,
   normalizeStackPath,
   ROOT_STACK_GROUP_PATH,
@@ -99,7 +99,7 @@ const processStackGroupConfigNode = async (
   credentialManagers: Map<IamRoleArn, CredentialManager>,
   resolverRegistry: ResolverRegistry,
   schemaRegistry: SchemaRegistry,
-  hookInitializers: HookInitializersMap,
+  hookRegistry: HookRegistry,
   commandPath: CommandPath,
   status: ProcessStatus,
   node: StackGroupConfigNode,
@@ -152,7 +152,7 @@ const processStackGroupConfigNode = async (
         credentialManagers,
         resolverRegistry,
         schemaRegistry,
-        hookInitializers,
+        hookRegistry,
         stack,
         status.getStackGroup(node.path),
         commandPath,
@@ -174,7 +174,7 @@ const processStackGroupConfigNode = async (
         credentialManagers,
         resolverRegistry,
         schemaRegistry,
-        hookInitializers,
+        hookRegistry,
         commandPath,
         status,
         child,
@@ -190,7 +190,7 @@ export const processConfigTree = async (
   credentialManagers: Map<IamRoleArn, CredentialManager>,
   resolverRegistry: ResolverRegistry,
   schemaRegistry: SchemaRegistry,
-  hookInitializers: HookInitializersMap,
+  hookRegistry: HookRegistry,
   commandPath: CommandPath,
   configTree: ConfigTree,
 ): Promise<StackGroup> => {
@@ -209,7 +209,7 @@ export const processConfigTree = async (
         credentialManagers,
         resolverRegistry,
         schemaRegistry,
-        hookInitializers,
+        hookRegistry,
         cp,
         status,
         item,

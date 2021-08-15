@@ -1,26 +1,24 @@
-import { CmdHook } from "@takomo/stacks-hooks"
-import {
-  HookConfig,
-  HookExecutor,
-  HookInitializersMap,
-} from "@takomo/stacks-model"
-import { TakomoError } from "@takomo/util"
+import { ChecksumHook, CmdHook, HookRegistry } from "@takomo/stacks-hooks"
+import { HookConfig, HookExecutor, HookProvider } from "@takomo/stacks-model"
 
-export const coreHookInitializers = (): HookInitializersMap =>
-  new Map([["cmd", (props: any) => Promise.resolve(new CmdHook(props))]])
+export const coreHookProviders = (): ReadonlyArray<HookProvider> => [
+  {
+    type: "cmd",
+    init: (props: any) => Promise.resolve(new CmdHook(props)),
+  },
+  {
+    type: "checksum",
+    init: (props: any) => Promise.resolve(new ChecksumHook(props)),
+  },
+]
 
 export const initializeHooks = async (
   hookConfigs: HookConfig[],
-  hookInitializers: HookInitializersMap,
+  hookRegistry: HookRegistry,
 ): Promise<HookExecutor[]> => {
   return Promise.all(
     hookConfigs.map(async (config) => {
-      const initializer = hookInitializers.get(config.type)
-      if (!initializer) {
-        throw new TakomoError(`Unknown hook type: ${config.type}`)
-      }
-
-      const hook = await initializer(config)
+      const hook = await hookRegistry.initHook(config)
       return new HookExecutor(config, hook)
     }),
   )

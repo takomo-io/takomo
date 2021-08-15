@@ -1,9 +1,9 @@
 import { IamRoleArn, StackEvent } from "@takomo/aws-model"
 import { CommandStatus, EnvVars, Variables } from "@takomo/core"
 import { ParameterConfig } from "@takomo/stacks-config"
+import { HookRegistry } from "@takomo/stacks-hooks"
 import {
   CommandPath,
-  HookInitializersMap,
   InternalStack,
   Resolver,
   ResolverInput,
@@ -213,7 +213,7 @@ export interface StacksConfigRepository {
 
   loadExtensions: (
     resolverRegistry: ResolverRegistry,
-    hookInitializers: HookInitializersMap,
+    hookRegistry: HookRegistry,
     schemaRegistry: SchemaRegistry,
   ) => Promise<void>
 
