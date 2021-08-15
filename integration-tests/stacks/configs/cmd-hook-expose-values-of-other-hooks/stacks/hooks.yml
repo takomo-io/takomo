@@ -1,0 +1,9 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-north-1
+hooks:
+  - name: first
+    type: cmd
+    command: echo hello
+  - name: second
+    type: cmd
+    command: ./uppercase.sh

@@ -1,0 +1,6 @@
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+Outputs:
+  One:
+    Value: {{ hooks.second }}

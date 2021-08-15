@@ -2,6 +2,8 @@ import { Hook, HookInput, HookOutput } from "@takomo/stacks-model"
 import { deepCopy, executeShellCommand, expandFilePath } from "@takomo/util"
 import R from "ramda"
 
+const safeEnvVariablePattern = /^[a-zA-Z_]+[a-zA-Z0-9_]*$/
+
 type Capture = "last-line" | "all"
 
 const captureValue = (capture: Capture, output: string): string => {
@@ -42,7 +44,7 @@ export class CmdHook implements Hook {
   }
 
   async execute(input: HookInput): Promise<HookOutput> {
-    const { ctx, status, operation, stage, logger, stack } = input
+    const { ctx, status, operation, stage, logger, stack, variables } = input
     try {
       const cwd = this.cwd
         ? expandFilePath(ctx.projectDir, this.cwd)
@@ -57,6 +59,16 @@ export class CmdHook implements Hook {
       if (status) {
         env.TKM_COMMAND_STATUS = status
       }
+
+      Object.entries(variables.hooks ?? {}).forEach(([hookName, value]) => {
+        if (safeEnvVariablePattern.test(hookName)) {
+          env[`TKM_HOOK_${hookName}`] = value
+        } else {
+          logger.warn(
+            `Value of hook '${hookName}' could not be exposed in environment variables because the hook name contains unsafe characters`,
+          )
+        }
+      })
 
       if (this.exposeStackCredentials) {
         const credentials = await stack.credentialManager.getCredentials()
