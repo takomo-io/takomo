@@ -59,7 +59,7 @@ export const executeShellCommand = ({
         success: false,
       })
     })
-    child.on("exit", (code, signal) => {
+    child.on("close", (code, signal) => {
       if (signal) {
         resolve({
           command,
