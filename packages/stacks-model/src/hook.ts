@@ -3,13 +3,6 @@ import { StackOperationVariables } from "./command"
 import { StacksContext } from "./context"
 import { Stack } from "./stack"
 
-export type HookInitializer = (props: any) => Promise<Hook>
-
-/**
- * @hidden
- */
-export type HookInitializersMap = Map<HookType, HookInitializer>
-
 export type HookType = string
 
 /**
@@ -188,4 +181,20 @@ export interface HookConfig {
   readonly stage?: ReadonlyArray<HookStage>
   readonly operation?: ReadonlyArray<HookOperation>
   readonly status?: ReadonlyArray<HookStatus>
+}
+
+/**
+ * An interface to be implemented by objects that initialize {@linkcode Hook}
+ * objects.
+ */
+export interface HookProvider {
+  /**
+   * The name of the hook that this provider initializes.
+   */
+  readonly type: HookType
+
+  /**
+   * Initialize a hook.
+   */
+  readonly init: (props: any) => Promise<Hook>
 }

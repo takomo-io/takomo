@@ -3,10 +3,10 @@ import { IamRoleArn, StackName } from "@takomo/aws-model"
 import { createAwsSchemas } from "@takomo/aws-schema"
 import { CommandContext, Vars } from "@takomo/core"
 import { TemplateConfig } from "@takomo/stacks-config"
+import { HookRegistry } from "@takomo/stacks-hooks"
 import {
   CommandPath,
   createStack,
-  HookInitializersMap,
   InternalStack,
   normalizeStackPath,
   SchemaRegistry,
@@ -107,7 +107,7 @@ export const buildStack = async (
   credentialManagers: Map<IamRoleArn, CredentialManager>,
   resolverRegistry: ResolverRegistry,
   schemaRegistry: SchemaRegistry,
-  hookInitializers: HookInitializersMap,
+  hookRegistry: HookRegistry,
   node: StackConfigNode,
   stackGroup: StackGroup,
   commandPath: CommandPath,
@@ -165,7 +165,7 @@ export const buildStack = async (
 
   const accountIds = stackConfig.accountIds || stackGroup.accountIds
   const hookConfigs = [...stackGroup.hooks, ...stackConfig.hooks]
-  const hooks = await initializeHooks(hookConfigs, hookInitializers)
+  const hooks = await initializeHooks(hookConfigs, hookRegistry)
 
   const commandRole = stackConfig.commandRole || stackGroup.commandRole
   const credentialManager = await getCredentialManager(

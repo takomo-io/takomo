@@ -4,11 +4,8 @@ import {
   StacksConfigRepository,
   StacksConfigRepositoryProps,
 } from "@takomo/stacks-context"
-import {
-  HookInitializersMap,
-  ROOT_STACK_GROUP_PATH,
-  SchemaRegistry,
-} from "@takomo/stacks-model"
+import { HookRegistry } from "@takomo/stacks-hooks"
+import { ROOT_STACK_GROUP_PATH, SchemaRegistry } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   createTemplateEngine,
@@ -153,12 +150,12 @@ export const createFileSystemStacksConfigRepository = async ({
 
     loadExtensions: async (
       resolverRegistry: ResolverRegistry,
-      hookInitializers: HookInitializersMap,
+      hookRegistry: HookRegistry,
       schemaRegistry: SchemaRegistry,
     ): Promise<void> => {
       await Promise.all([
         loadCustomResolvers(resolversDir, logger, resolverRegistry),
-        loadCustomHooks(hooksDir, logger, hookInitializers),
+        loadCustomHooks(hooksDir, logger, hookRegistry),
         loadCustomSchemas({ schemasDir, logger, registry: schemaRegistry }),
       ])
     },

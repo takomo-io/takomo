@@ -1,6 +1,7 @@
 import { CredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn } from "@takomo/aws-model"
 import { InternalCommandContext } from "@takomo/core"
+import { createHookRegistry } from "@takomo/stacks-hooks"
 import {
   CommandPath,
   createSchemaRegistry,
@@ -28,7 +29,7 @@ import {
 import { collectStackGroups } from "./collect-stack-groups"
 import { collectStacks } from "./collect-stacks"
 import { ConfigTree } from "./config-tree"
-import { coreHookInitializers } from "./hooks"
+import { coreHookProviders } from "./hooks"
 import { processConfigTree } from "./process-config-tree"
 
 export interface BuildConfigContextInput {
@@ -83,7 +84,10 @@ export const buildStacksContext = async ({
 
   validateCommandPath(configTree, commandPath)
 
-  const hookInitializers = coreHookInitializers()
+  const hookRegistry = createHookRegistry({ logger })
+  for (const p of coreHookProviders()) {
+    await hookRegistry.registerBuiltInProvider(p)
+  }
 
   const resolverRegistry = new ResolverRegistry(logger)
   coreResolverProviders().forEach((p) =>
@@ -98,7 +102,7 @@ export const buildStacksContext = async ({
 
   await configRepository.loadExtensions(
     resolverRegistry,
-    hookInitializers,
+    hookRegistry,
     schemaRegistry,
   )
 
@@ -112,7 +116,7 @@ export const buildStacksContext = async ({
     credentialManagers,
     resolverRegistry,
     schemaRegistry,
-    hookInitializers,
+    hookRegistry,
     commandPath ?? ROOT_STACK_GROUP_PATH,
     configTree,
   )
