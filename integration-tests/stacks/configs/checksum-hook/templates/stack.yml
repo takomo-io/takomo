@@ -4,3 +4,5 @@ Resources:
 Outputs:
   Checksum:
     Value: {{ hooks.first }}
+  Checksum2:
+    Value: {{ hooks.second }}

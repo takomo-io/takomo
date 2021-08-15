@@ -108,19 +108,7 @@ export const createHookRegistry = ({
   }
 
   const initHook = async (props: HookConfig): Promise<Hook> => {
-    // if (props.confidential) {
-    //   this.logger.debug(
-    //     `Init resolver '${name}' for stack: '${stackPath}', parameter: '${parameterName}' with properties: *****`,
-    //   )
-    // } else {
-    //   this.logger.debugObject(
-    //     `Init resolver '${name}' for stack: '${stackPath}', parameter: '${parameterName}' with properties:`,
-    //     () => props,
-    //   )
-    // }
-
     const provider = getProvider(props.type)
-
     return provider.init(props)
   }
 
@@ -128,11 +116,11 @@ export const createHookRegistry = ({
     registerProvider(provider, "built-in providers")
 
   const registerProviderFromFile = async (
-    pathToResolverFile: FilePath,
+    pathToFile: FilePath,
   ): Promise<void> => {
     // eslint-disable-next-line
-    const provider = require(pathToResolverFile)
-    return registerProvider(provider, `file: ${pathToResolverFile}`)
+    const provider = require(pathToFile)
+    return registerProvider(provider, `file: ${pathToFile}`)
   }
 
   return deepFreeze({

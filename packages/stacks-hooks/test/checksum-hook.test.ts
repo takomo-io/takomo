@@ -42,4 +42,9 @@ describe("Checksum Hook", () => {
     const hook = new ChecksumHook({ dir: "test/samples" })
     await expectSuccess(hook, input, "2VmIwlMvZgGzf9K56e64uDmeAls=")
   })
+
+  test("Hex encoding", async () => {
+    const hook = new ChecksumHook({ dir: "test/samples", encoding: "hex" })
+    await expectSuccess(hook, input, "667f54b3c569bdf12ffbfd2c06cf57f47b845d86")
+  })
 })

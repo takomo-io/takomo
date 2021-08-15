@@ -5,3 +5,8 @@ hooks:
     type: checksum
     stage: before
     dir: app
+  - name: second
+    type: checksum
+    stage: before
+    dir: app
+    encoding: hex

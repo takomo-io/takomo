@@ -33,7 +33,7 @@ export const loadCustomHooks = async (
   logger: TkmLogger,
   hookRegistry: HookRegistry,
 ): Promise<void> => {
-  if (await dirExists(hooksDir)) {
+  if (!(await dirExists(hooksDir))) {
     logger.debug("Hooks dir not found")
     return
   }
