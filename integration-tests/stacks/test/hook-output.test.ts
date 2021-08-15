@@ -1,4 +1,4 @@
-import { executeDeployStacksCommand } from "@takomo/test-integration/src"
+import { executeDeployStacksCommand } from "@takomo/test-integration"
 
 const projectDir = "configs/hook-outputs",
   stackPath = "/stack.yml/eu-west-1",
