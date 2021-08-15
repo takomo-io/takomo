@@ -41,6 +41,23 @@ describe("#executeShellCommand", () => {
     expect(output.signal).toBeUndefined()
   })
 
+  test("Success case using cat command", async () => {
+    const output = await executeShellCommand({
+      command: "cat sample.txt",
+      cwd: join(cwd, "test/exec"),
+      env,
+      stderrListener: listener,
+      stdoutListener: listener,
+    })
+    expect(output.command).toStrictEqual("cat sample.txt")
+    expect(output.success).toStrictEqual(true)
+    expect(output.error).toBeUndefined()
+    expect(output.stderr).toStrictEqual("")
+    expect(output.stdout).toStrictEqual("line 1\nline 2\nline 3\nline 4\n")
+    expect(output.code).toStrictEqual(0)
+    expect(output.signal).toBeUndefined()
+  })
+
   test("Script that returns code 1", async () => {
     const output = await executeShellCommand({
       command: "./test/exec/script1.sh",
