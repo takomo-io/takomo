@@ -1,7 +1,7 @@
 {
   "name": "integration-test-stacks2",
   "private": true,
-  "version": "3.27.0",
+  "version": "3.28.0",
   "description": "Takomo integration tests for stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -22,21 +22,21 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.27.0",
-    "@takomo/stacks-model": "3.27.0",
-    "@takomo/test-integration": "3.27.0",
-    "@takomo/util": "3.27.0",
+    "@takomo/aws-model": "3.28.0",
+    "@takomo/stacks-model": "3.28.0",
+    "@takomo/test-integration": "3.28.0",
+    "@takomo/util": "3.28.0",
     "aws-sdk": "2.886.0"
   },
   "devDependencies": {
-    "@takomo/cli": "3.27.0",
-    "@takomo/test-unit": "3.27.0",
-    "source-map-support": "0.5.19",
+    "@takomo/cli": "3.28.0",
     "@takomo/test-custom-helper-lowercase": "0.0.1",
     "@takomo/test-custom-helper-uppercase": "0.0.1",
     "@takomo/test-custom-resolver-code": "0.0.1",
     "@takomo/test-custom-resolver-name": "0.0.1",
+    "@takomo/test-unit": "3.28.0",
     "dotenv": "8.2.0",
-    "jest-environment-testenv-recycler": "0.0.12"
+    "jest-environment-testenv-recycler": "0.0.12",
+    "source-map-support": "0.5.19"
   }
 }

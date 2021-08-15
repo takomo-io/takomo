@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.28.0](https://github.com/takomo-io/takomo/compare/v3.27.0...v3.28.0) (2021-08-15)
+
+
+### Bug Fixes
+
+* **hooks:** fix stdout max buffer length exceeded bug with cmd hook ([#277](https://github.com/takomo-io/takomo/issues/277)) ([a2021c0](https://github.com/takomo-io/takomo/commit/a2021c0d6e7b65020eafc7f51cb053dc66a4afe0))
+
+
+### Features
+
+* **stacks:** implement skipping of stack operation based on hook outputs ([#278](https://github.com/takomo-io/takomo/issues/278)) ([8f1553f](https://github.com/takomo-io/takomo/commit/8f1553fc51af4c88592c78b1a1084fe92c1fc52e)), closes [#254](https://github.com/takomo-io/takomo/issues/254)
+
+
+
+
+
 # [3.27.0](https://github.com/takomo-io/takomo/compare/v3.26.0...v3.27.0) (2021-07-22)
 
 **Note:** Version bump only for package @takomo/stacks-hooks
