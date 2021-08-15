@@ -1,4 +1,4 @@
-import { CmdHook } from "@takomo/stacks-hooks"
+import { ChecksumHook, CmdHook } from "@takomo/stacks-hooks"
 import {
   HookConfig,
   HookExecutor,
@@ -7,7 +7,10 @@ import {
 import { TakomoError } from "@takomo/util"
 
 export const coreHookInitializers = (): HookInitializersMap =>
-  new Map([["cmd", (props: any) => Promise.resolve(new CmdHook(props))]])
+  new Map([
+    ["cmd", (props: any) => Promise.resolve(new CmdHook(props))],
+    ["checksum", (props: any) => Promise.resolve(new ChecksumHook(props))],
+  ])
 
 export const initializeHooks = async (
   hookConfigs: HookConfig[],
