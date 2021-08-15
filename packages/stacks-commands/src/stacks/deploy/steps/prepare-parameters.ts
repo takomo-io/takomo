@@ -29,7 +29,7 @@ export const prepareParameters: StackOperationStep<DetailedCurrentStackHolder> =
             parameterName,
             variables,
             listParameterIndex: 0,
-            logger: logger.childLogger(stack.path),
+            logger: logger.childLogger(`param:${parameterName}`),
           })
 
           const loggedValue = getValueForLog(

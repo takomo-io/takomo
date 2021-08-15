@@ -110,4 +110,13 @@ describe("Cmd resolver", () => {
       },
       "TODAY",
     ))
+
+  test("Capture last line output from cat command", () =>
+    expectSuccess(
+      {
+        command: "cat test/sample.txt",
+        capture: "last-line",
+      },
+      "line 6",
+    ))
 })

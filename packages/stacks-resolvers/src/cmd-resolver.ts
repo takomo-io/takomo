@@ -4,13 +4,14 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import { deepCopy, deepFreeze } from "@takomo/util"
-import { exec } from "child_process"
+import {
+  deepCopy,
+  deepFreeze,
+  executeShellCommand,
+  expandFilePath,
+} from "@takomo/util"
 import { ObjectSchema } from "joi"
 import R from "ramda"
-import { promisify } from "util"
-
-const execP = promisify(exec)
 
 type Capture = "last-line" | "all"
 
@@ -61,12 +62,19 @@ export const init = async ({
         env.AWS_DEFAULT_REGION = stack.region
       }
 
-      const { stdout } = await execP(command, {
-        cwd: cwd ?? ctx.projectDir,
+      const { stdout, success, error } = await executeShellCommand({
+        command,
         env,
+        cwd: cwd ? expandFilePath(ctx.projectDir, cwd) : ctx.projectDir,
+        stdoutListener: (data: string) => logger.info(data),
+        stderrListener: (data: string) => logger.error(data),
       })
 
-      return captureValue(capture, (stdout ?? "").trim())
+      if (success) {
+        return captureValue(capture, (stdout ?? "").trim())
+      }
+
+      throw error
     },
   })
 }
