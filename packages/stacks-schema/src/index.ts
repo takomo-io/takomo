@@ -20,6 +20,7 @@ export interface StacksSchemas {
   stackGroupName: StringSchema
   terminationProtection: BooleanSchema
   ignore: BooleanSchema
+  inheritTags: BooleanSchema
   template: (StringSchema | ObjectSchema)[]
   parameters: ObjectSchema
   hooks: ArraySchema
@@ -292,6 +293,8 @@ export const createStacksSchemas = (
     ],
   })
 
+  const inheritTags = Joi.boolean()
+
   return {
     commandPath,
     stackGroupPath,
@@ -311,5 +314,6 @@ export const createStacksSchemas = (
     hookResult,
     templateBucket,
     schemas,
+    inheritTags,
   }
 }

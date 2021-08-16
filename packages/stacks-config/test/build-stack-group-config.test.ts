@@ -19,6 +19,7 @@ const emptyStackGroupConfig = {
   stackPolicy: undefined,
   stackPolicyDuringUpdate: undefined,
   schemas: undefined,
+  inheritTags: true,
 }
 
 const ctx: CommandContext = {
@@ -39,6 +40,8 @@ const ctx: CommandContext = {
   credentials: undefined,
   projectConfig: mock<TakomoProjectConfig>(),
   awsClientProvider: mock<AwsClientProvider>(),
+  quiet: false,
+  outputFormat: "text",
 }
 
 describe("#buildStackGroupConfig", () => {
@@ -73,6 +76,7 @@ describe("#buildStackGroupConfig", () => {
         ["first", "1"],
         ["second", "b"],
       ]),
+      inheritTags: true,
       templateBucket: undefined,
       terminationProtection: undefined,
       stackPolicy: undefined,

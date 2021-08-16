@@ -31,6 +31,7 @@ export const createStackGroupConfigSchema = (
     timeoutInMinutes,
     timeoutObject,
     schemas,
+    inheritTags,
   } = createStacksSchemas({ ...props })
 
   const timeout = [timeoutInMinutes, timeoutObject]
@@ -46,6 +47,7 @@ export const createStackGroupConfigSchema = (
     terminationProtection,
     timeout,
     schemas,
+    inheritTags,
     accountIds: [accountId, accountIds],
     commandRole: iamRoleArn,
     capabilities: stackCapabilities,
@@ -85,6 +87,7 @@ export const createStackConfigSchema = (
     relativeStackPath,
     parameters,
     schemas,
+    inheritTags,
   } = createStacksSchemas({ ...props })
 
   const timeout = [timeoutInMinutes, timeoutObject]
@@ -103,6 +106,7 @@ export const createStackConfigSchema = (
     parameters,
     timeout,
     schemas,
+    inheritTags,
     accountIds: [accountId, accountIds],
     commandRole: iamRoleArn,
     name: stackName,

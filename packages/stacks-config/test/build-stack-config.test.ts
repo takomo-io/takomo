@@ -23,6 +23,7 @@ const emptyStackConfig = {
   stackPolicy: undefined,
   stackPolicyDuringUpdate: undefined,
   schemas: undefined,
+  inheritTags: true,
 }
 
 const ctx: CommandContext = {
@@ -43,6 +44,8 @@ const ctx: CommandContext = {
   credentials: undefined,
   projectConfig: mock<TakomoProjectConfig>(),
   awsClientProvider: mock<AwsClientProvider>(),
+  quiet: false,
+  outputFormat: "text",
 }
 
 describe("#buildStackConfig", () => {

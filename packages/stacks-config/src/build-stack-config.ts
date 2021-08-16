@@ -1,5 +1,6 @@
 import {
   CommandContext,
+  parseBoolean,
   parseCommandRole,
   parseOptionalBoolean,
   parseOptionalString,
@@ -67,6 +68,7 @@ export const buildStackConfig = (
     depends: parseStringArray(record.depends),
     templateBucket: parseTemplateBucket(record.templateBucket),
     tags: parseTags(record.tags),
+    inheritTags: parseBoolean(record.inheritTags, true),
     parameters: parseParameters(record.parameters),
   })
 }

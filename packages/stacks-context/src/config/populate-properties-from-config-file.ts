@@ -68,9 +68,13 @@ export const populatePropertiesFromConfigFile = async (
     props.timeout = configFile.timeout
   }
 
-  configFile.tags.forEach((value, key) => {
-    props.tags.set(key, value)
-  })
+  if (configFile.inheritTags) {
+    configFile.tags.forEach((value, key) => {
+      props.tags.set(key, value)
+    })
+  } else {
+    props.tags = configFile.tags
+  }
 
   props.data = { ...stackGroup.data, ...configFile.data }
   props.hooks = [...stackGroup.hooks, ...configFile.hooks]
