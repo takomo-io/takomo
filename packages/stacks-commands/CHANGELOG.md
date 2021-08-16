@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.29.0](https://github.com/takomo-io/takomo/compare/v3.28.0...v3.29.0) (2021-08-16)
+
+
+### Bug Fixes
+
+* **stacks:** fix stdout buffer exceeded bug with cmd resolver ([#280](https://github.com/takomo-io/takomo/issues/280)) ([7857a31](https://github.com/takomo-io/takomo/commit/7857a31a90312db170309425b2700b6ce14235dd)), closes [#279](https://github.com/takomo-io/takomo/issues/279)
+
+
+
+
+
 # [3.28.0](https://github.com/takomo-io/takomo/compare/v3.27.0...v3.28.0) (2021-08-15)
 
 

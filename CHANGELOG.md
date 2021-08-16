@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.29.0](https://github.com/takomo-io/takomo/compare/v3.28.0...v3.29.0) (2021-08-16)
+
+
+### Bug Fixes
+
+* **stacks:** fix stdout buffer exceeded bug with cmd resolver ([#280](https://github.com/takomo-io/takomo/issues/280)) ([7857a31](https://github.com/takomo-io/takomo/commit/7857a31a90312db170309425b2700b6ce14235dd)), closes [#279](https://github.com/takomo-io/takomo/issues/279)
+
+
+### Features
+
+* **stacks:** expose values from other hooks as environment variables in cmd hook ([461e803](https://github.com/takomo-io/takomo/commit/461e803aca9407c59681604407af020fc1f6cfc7))
+* **stacks:** implement checksum hook ([#281](https://github.com/takomo-io/takomo/issues/281)) ([e074b8d](https://github.com/takomo-io/takomo/commit/e074b8d096b43e15d243e8b760bb3ba4a35b83f2))
+
+
+
+
+
 # [3.28.0](https://github.com/takomo-io/takomo/compare/v3.27.0...v3.28.0) (2021-08-15)
 
 
