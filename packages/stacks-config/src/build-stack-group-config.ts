@@ -1,5 +1,6 @@
 import {
   CommandContext,
+  parseBoolean,
   parseCommandRole,
   parseOptionalBoolean,
   parseOptionalString,
@@ -63,6 +64,7 @@ export const buildStackGroupConfig = (
     regions: parseStringArray(record.regions),
     templateBucket: parseTemplateBucket(record.templateBucket),
     tags: parseTags(record.tags),
+    inheritTags: parseBoolean(record.inheritTags, true),
     timeout: parseTimeout(record.timeout),
   })
 }

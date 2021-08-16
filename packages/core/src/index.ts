@@ -35,6 +35,7 @@ export {
   TakomoProjectOrganizationConfig,
 } from "./config"
 export {
+  parseBoolean,
   parseCommandRole,
   parseOptionalBoolean,
   parseOptionalString,

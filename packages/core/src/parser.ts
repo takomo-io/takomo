@@ -139,3 +139,13 @@ export const parseOptionalBoolean = (value: unknown): boolean | undefined =>
     () => undefined,
     (value) => value === true,
   )
+
+/**
+ * @hidden
+ */
+export const parseBoolean = (value: unknown, defaultValue: boolean): boolean =>
+  parse(
+    value,
+    () => defaultValue,
+    (value) => value === true,
+  )

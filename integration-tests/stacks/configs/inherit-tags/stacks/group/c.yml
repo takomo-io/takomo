@@ -1,0 +1,4 @@
+template: t.yml
+inheritTags: true
+tags:
+  code: 456

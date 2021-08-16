@@ -92,6 +92,7 @@ export interface StackConfig {
   readonly timeout?: TimeoutConfig
   readonly depends: ReadonlyArray<StackPath>
   readonly tags: Map<TagKey, TagValue>
+  readonly inheritTags: boolean
   readonly parameters: Map<StackParameterKey, ParameterConfigs>
   readonly data: Vars
   readonly hooks: ReadonlyArray<HookConfig>
@@ -110,6 +111,7 @@ export interface StackGroupConfig {
   readonly commandRole?: CommandRole
   readonly templateBucket?: TemplateBucketConfig
   readonly tags: Map<TagKey, TagValue>
+  readonly inheritTags: boolean
   readonly timeout?: TimeoutConfig
   readonly hooks: ReadonlyArray<HookConfig>
   readonly data: Vars

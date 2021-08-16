@@ -99,12 +99,9 @@ const singleParameterCases: Array<[unknown, ParameterConfig]> = [
   ],
 ]
 
-const listParameterCases: Array<[
-  unknown,
-  boolean | undefined,
-  boolean,
-  ParameterConfig[],
-]> = [
+const listParameterCases: Array<
+  [unknown, boolean | undefined, boolean, ParameterConfig[]]
+> = [
   [
     ["a", "b", "c"],
     undefined,

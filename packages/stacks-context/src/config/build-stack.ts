@@ -208,6 +208,10 @@ export const buildStack = async (
         stackConfig.schemas,
       )
 
+      const inheritedTags = stackConfig.inheritTags
+        ? new Map(stackGroup.tags)
+        : new Map()
+
       const props: StackProps = {
         name,
         template,
@@ -226,7 +230,7 @@ export const buildStack = async (
         path: exactPath,
         stackGroupPath: stackGroup.path,
         project: stackConfig.project ?? stackGroup.project,
-        tags: new Map(stackGroup.tags),
+        tags: inheritedTags,
         timeout: stackConfig.timeout ??
           stackGroup.timeout ?? { create: 0, update: 0 },
         dependencies: stackConfig.depends.map((d) =>
