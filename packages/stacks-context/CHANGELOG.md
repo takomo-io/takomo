@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.30.0](https://github.com/takomo-io/takomo/compare/v3.29.0...v3.30.0) (2021-08-16)
+
+
+### Features
+
+* **stacks:** add property to disable inheriting of tags ([#283](https://github.com/takomo-io/takomo/issues/283)) ([a37ca94](https://github.com/takomo-io/takomo/commit/a37ca94a8b148ac7644d5bfabef5a5030b435c9d)), closes [#282](https://github.com/takomo-io/takomo/issues/282)
+
+
+
+
+
 # [3.29.0](https://github.com/takomo-io/takomo/compare/v3.28.0...v3.29.0) (2021-08-16)
 
 

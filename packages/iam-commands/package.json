@@ -1,6 +1,6 @@
 {
   "name": "@takomo/iam-commands",
-  "version": "3.29.0",
+  "version": "3.30.0",
   "description": "Takomo IAM Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -30,7 +30,7 @@
     "@takomo/aws-clients": "3.29.0",
     "@takomo/aws-model": "3.29.0",
     "@takomo/aws-schema": "3.29.0",
-    "@takomo/core": "3.29.0",
+    "@takomo/core": "3.30.0",
     "@takomo/util": "3.29.0",
     "joi": "17.4.0",
     "ramda": "0.27.1"
