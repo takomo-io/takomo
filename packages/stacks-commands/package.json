@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-commands",
-  "version": "3.30.0",
+  "version": "3.31.0",
   "description": "Takomo Stacks Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -30,7 +30,7 @@
     "@takomo/aws-clients": "3.29.0",
     "@takomo/aws-model": "3.29.0",
     "@takomo/core": "3.30.0",
-    "@takomo/stacks-context": "3.30.0",
+    "@takomo/stacks-context": "3.31.0",
     "@takomo/stacks-hooks": "3.30.0",
     "@takomo/stacks-model": "3.30.0",
     "@takomo/stacks-schema": "3.30.0",

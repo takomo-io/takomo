@@ -1,7 +1,7 @@
 {
   "name": "integration-test-deployment-targets",
   "private": true,
-  "version": "3.30.0",
+  "version": "3.31.0",
   "description": "",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@takomo/core": "3.30.0",
-    "@takomo/test-integration": "3.30.0",
+    "@takomo/test-integration": "3.31.0",
     "aws-sdk": "2.886.0"
   },
   "devDependencies": {

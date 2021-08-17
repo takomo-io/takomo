@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.31.0](https://github.com/takomo-io/takomo/compare/v3.30.0...v3.31.0) (2021-08-17)
+
+
+### Features
+
+* **deployment targets:** add option to infer deployment target name from its config file name ([#285](https://github.com/takomo-io/takomo/issues/285)) ([393d3e5](https://github.com/takomo-io/takomo/commit/393d3e587fee91a3560c54019f6780642c9c329f))
+
+
+
+
+
 # [3.30.0](https://github.com/takomo-io/takomo/compare/v3.29.0...v3.30.0) (2021-08-16)
 
 **Note:** Version bump only for package integration-test-deployment-targets
