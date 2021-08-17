@@ -1,4 +1,7 @@
-import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
+import {
+  DeploymentGroupPath,
+  DeploymentTargetName,
+} from "@takomo/deployment-targets-model"
 import {
   createFile,
   deepFreeze,
@@ -13,7 +16,7 @@ import {
   TemplateEngine,
   TkmLogger,
 } from "@takomo/util"
-import { dirname, join, relative } from "path"
+import { basename, dirname, join, relative } from "path"
 import readdirp from "readdirp"
 import {
   DeploymentTargetConfigItem,
@@ -29,6 +32,7 @@ interface LoadDeploymentTargetFileProps {
   readonly baseDir: FilePath
   readonly pathToFile: FilePath
   readonly inferDeploymentGroupPathFromDirName: boolean
+  readonly inferDeploymentTargetNameFromFileName: boolean
   readonly logger: TkmLogger
 }
 
@@ -44,13 +48,38 @@ export const inferDeploymentGroupPathFromFilePath = (
   return relative(baseDir, parentDir)
 }
 
-const loadDeploymentTargetFile = async ({
-  templateEngine,
-  variables,
-  baseDir,
-  pathToFile,
-  inferDeploymentGroupPathFromDirName,
-}: LoadDeploymentTargetFileProps): Promise<DeploymentTargetConfigItemWrapper> => {
+const resolveDeploymentGroupPath = (
+  item: DeploymentTargetConfigItem,
+  {
+    inferDeploymentGroupPathFromDirName,
+    baseDir,
+    pathToFile,
+  }: LoadDeploymentTargetFileProps,
+): DeploymentGroupPath =>
+  inferDeploymentGroupPathFromDirName
+    ? inferDeploymentGroupPathFromFilePath(baseDir, pathToFile)
+    : item.deploymentGroupPath
+
+export const inferDeploymentTargetName = (
+  pathToFile: FilePath,
+): DeploymentTargetName => basename(pathToFile, ".yml")
+
+const resolveDeploymentTargetName = (
+  item: DeploymentTargetConfigItem,
+  {
+    inferDeploymentTargetNameFromFileName,
+    pathToFile,
+  }: LoadDeploymentTargetFileProps,
+): DeploymentTargetName | undefined =>
+  inferDeploymentTargetNameFromFileName
+    ? inferDeploymentTargetName(pathToFile)
+    : item.name
+
+const loadDeploymentTargetFile = async (
+  props: LoadDeploymentTargetFileProps,
+): Promise<DeploymentTargetConfigItemWrapper> => {
+  const { templateEngine, variables, pathToFile } = props
+
   const contents = await readFileContents(pathToFile)
   const rendered = await renderTemplate(
     templateEngine,
@@ -64,23 +93,15 @@ const loadDeploymentTargetFile = async ({
     rendered,
   )) as DeploymentTargetConfigItem
 
-  if (inferDeploymentGroupPathFromDirName) {
-    const deploymentGroupPath = inferDeploymentGroupPathFromFilePath(
-      baseDir,
-      pathToFile,
-    )
-
-    return {
-      item: {
-        ...item,
-        deploymentGroupPath,
-      },
-      source: pathToFile,
-    }
-  }
+  const deploymentGroupPath = resolveDeploymentGroupPath(item, props)
+  const name = resolveDeploymentTargetName(item, props)
 
   return {
-    item,
+    item: {
+      ...item,
+      name,
+      deploymentGroupPath,
+    },
     source: pathToFile,
   }
 }
@@ -115,6 +136,14 @@ export const createFileSystemDeploymentTargetRepositoryProvider =
           )
         }
 
+        const inferDeploymentTargetNameFromFileName =
+          config.inferDeploymentTargetNameFromFileName ?? false
+        if (typeof inferDeploymentTargetNameFromFileName !== "boolean") {
+          throw new TakomoError(
+            "Invalid deployment target repository config - 'inferDeploymentTargetNameFromFileName' property must be of type 'boolean'",
+          )
+        }
+
         const expandedDir = expandFilePath(ctx.projectDir, deploymentTargetsDir)
 
         if (!(await dirExists(expandedDir))) {
@@ -138,6 +167,7 @@ export const createFileSystemDeploymentTargetRepositoryProvider =
               logger,
               templateEngine,
               inferDeploymentGroupPathFromDirName,
+              inferDeploymentTargetNameFromFileName,
               variables: ctx.variables,
               baseDir: expandedDir,
               pathToFile: f.fullPath,
