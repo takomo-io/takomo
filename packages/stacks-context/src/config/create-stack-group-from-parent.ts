@@ -26,4 +26,5 @@ export const createStackGroupFromParent = (
     terminationProtection: parent.terminationProtection,
     stackPolicy: parent.stackPolicy,
     stackPolicyDuringUpdate: parent.stackPolicyDuringUpdate,
+    schemas: parent.schemas,
   })

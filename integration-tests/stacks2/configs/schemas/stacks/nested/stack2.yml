@@ -1,0 +1,8 @@
+regions: eu-west-1
+data:
+  age: {{ var.age2 }}
+template:
+  inline: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
