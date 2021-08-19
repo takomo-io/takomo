@@ -16,9 +16,10 @@ export const getCredentialManager = async (
     return credentialManager
   }
 
-  const newCredentialManager = await defaultCredentialManager.createCredentialManagerForRole(
-    commandRole.iamRoleArn,
-  )
+  const newCredentialManager =
+    await defaultCredentialManager.createCredentialManagerForRole(
+      commandRole.iamRoleArn,
+    )
 
   credentialManagers.set(commandRole.iamRoleArn, newCredentialManager)
   return newCredentialManager
