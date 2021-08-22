@@ -52,12 +52,6 @@ const createDescribeEventsBulkhead = (): IPolicy => {
   return Policy.bulkhead(limit, queue)
 }
 
-const createDescribeStacksBulkhead = (): IPolicy => {
-  const limit = 2
-  const queue = 1000
-  return Policy.bulkhead(limit, queue)
-}
-
 /**
  * @hidden
  */
@@ -67,7 +61,6 @@ export const createAwsClientProvider = (
   const apiCalls = new Array<ApiCallProps>()
   const regions = new Set<Region>()
   const describeEventsBulkhead = createDescribeEventsBulkhead()
-  const describeStacksBulkhead = createDescribeStacksBulkhead()
 
   const listener = {
     onApiCall: (props: ApiCallProps): void => {
@@ -85,7 +78,6 @@ export const createAwsClientProvider = (
         listener,
         ...props,
         describeEventsBulkhead,
-        describeStacksBulkhead,
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
       })
