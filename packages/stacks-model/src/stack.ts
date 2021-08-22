@@ -11,7 +11,8 @@ import {
   TagValue,
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
-import { deepFreeze, FilePath, TkmLogger } from "@takomo/util"
+import { FilePath, TkmLogger } from "@takomo/util"
+import { Credentials } from "aws-sdk"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { ROOT_STACK_GROUP_PATH } from "./constants"
 import { HookExecutor } from "./hook"
@@ -54,6 +55,7 @@ export interface StackProps {
   data: Vars
   hooks: ReadonlyArray<HookExecutor>
   credentialManager: CredentialManager
+  credentials: Credentials
   capabilities?: ReadonlyArray<StackCapability>
   ignore: boolean
   terminationProtection: boolean
@@ -114,6 +116,11 @@ export interface Stack {
   readonly credentialManager: CredentialManager
 
   /**
+   * Credentials associated with the stack
+   */
+  readonly credentials: Credentials
+
+  /**
    * Logger instance associated with the stack
    */
   readonly logger: TkmLogger
@@ -162,6 +169,7 @@ export const createStack = (props: StackProps): InternalStack => {
     capabilities,
     commandRole,
     credentialManager,
+    credentials,
     data,
     dependents,
     dependencies,
@@ -190,10 +198,11 @@ export const createStack = (props: StackProps): InternalStack => {
   const getCurrentCloudFormationStack = () =>
     getCloudFormationClient().describeStack(name)
 
-  return deepFreeze({
+  return {
     accountIds,
     capabilities,
     commandRole,
+    credentials,
     credentialManager,
     data,
     dependents,
@@ -218,7 +227,7 @@ export const createStack = (props: StackProps): InternalStack => {
     stackPolicyDuringUpdate,
     schemas,
     toProps: () => props,
-  })
+  }
 }
 
 const normalizeStackPathInternal = (

@@ -65,6 +65,7 @@ export const loadCustomSchemas = async ({
 }: LoadCustomSchemasProps): Promise<void> => {
   if (!(await dirExists(schemasDir))) {
     logger.debug("Schemas dir not found")
+    return
   }
 
   logger.debug(`Found schemas dir: ${schemasDir}`)

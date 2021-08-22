@@ -4,12 +4,7 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import {
-  deepCopy,
-  deepFreeze,
-  executeShellCommand,
-  expandFilePath,
-} from "@takomo/util"
+import { deepCopy, executeShellCommand, expandFilePath } from "@takomo/util"
 import { ObjectSchema } from "joi"
 import R from "ramda"
 
@@ -37,7 +32,7 @@ export const init = async ({
     throw new Error("command is required property")
   }
 
-  return deepFreeze({
+  return {
     resolve: async ({
       logger,
       parameterName,
@@ -76,7 +71,7 @@ export const init = async ({
 
       throw error
     },
-  })
+  }
 }
 
 const name = "cmd"
@@ -90,9 +85,8 @@ const schema = ({ joi, base }: ResolverProviderSchemaProps): ObjectSchema =>
     capture: joi.string().valid("all", "last-line"),
   })
 
-export const createCmdResolverProvider = (): ResolverProvider =>
-  deepFreeze({
-    name,
-    init,
-    schema,
-  })
+export const createCmdResolverProvider = (): ResolverProvider => ({
+  name,
+  init,
+  schema,
+})

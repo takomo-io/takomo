@@ -1,5 +1,5 @@
 import { CallerIdentity, CredentialsError, IamRoleArn } from "@takomo/aws-model"
-import { deepFreeze, TkmLogger } from "@takomo/util"
+import { TkmLogger } from "@takomo/util"
 import {
   ChainableTemporaryCredentials,
   CredentialProviderChain,
@@ -105,17 +105,18 @@ export const createCredentialManager = ({
         })
         .getCallerIdentity()
         .catch((e) => {
+          console.log(e)
           throw new CredentialsError(e)
         }),
   )
 
-  return deepFreeze({
+  return {
     name,
     children,
     createCredentialManagerForRole,
     getCallerIdentity,
     getCredentials,
-  })
+  }
 }
 
 const isAwsMetaEndpointAvailable = (): Promise<boolean> => {

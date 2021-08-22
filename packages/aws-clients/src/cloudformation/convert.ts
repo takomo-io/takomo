@@ -46,6 +46,7 @@ import {
   TagValue,
   TemplateSummary,
 } from "@takomo/aws-model"
+import { CloudFormation } from "aws-sdk"
 import {
   DescribeChangeSetOutput,
   DescribeStackDriftDetectionStatusOutput,
@@ -54,6 +55,38 @@ import {
   GetTemplateSummaryOutput,
   ResourceTargetDefinition as CFResourceTargetDefinition,
 } from "aws-sdk/clients/cloudformation"
+
+const convertStackInternal = (
+  s: CloudFormation.Stack,
+): CloudFormationStack => ({
+  id: s.StackId as StackId,
+  name: s.StackName as StackName,
+  parameters: (s.Parameters ?? []).map((p) => ({
+    value: p.ParameterValue as StackParameterValue,
+    key: p.ParameterKey as StackParameterKey,
+  })),
+  status: s.StackStatus as StackStatus,
+  statusReason: s.StackStatusReason as StackStatusReason,
+  enableTerminationProtection:
+    s.EnableTerminationProtection as EnableTerminationProtection,
+  capabilities: s.Capabilities as StackCapability[],
+  creationTime: s.CreationTime,
+  lastUpdatedTime: s.LastUpdatedTime,
+  outputs: (s.Outputs ?? []).map((o) => ({
+    key: o.OutputKey as StackOutputKey,
+    value: o.OutputValue as StackOutputValue,
+    description: o.Description as StackOutputDescription,
+  })),
+  tags: (s.Tags ?? []).map((t) => ({
+    key: t.Key as TagKey,
+    value: t.Value as TagValue,
+  })),
+  driftInformation: {
+    stackDriftStatus: s.DriftInformation!.StackDriftStatus as StackDriftStatus,
+    lastCheckTimestamp: s.DriftInformation?.LastCheckTimestamp,
+  },
+  deletionTime: s.DeletionTime,
+})
 
 /**
  * @hidden
@@ -70,36 +103,16 @@ export const convertStack = ({
     throw new Error("Expected Stacks not to be empty")
   }
 
-  return {
-    id: s.StackId as StackId,
-    name: s.StackName as StackName,
-    parameters: (s.Parameters ?? []).map((p) => ({
-      value: p.ParameterValue as StackParameterValue,
-      key: p.ParameterKey as StackParameterKey,
-    })),
-    status: s.StackStatus as StackStatus,
-    statusReason: s.StackStatusReason as StackStatusReason,
-    enableTerminationProtection:
-      s.EnableTerminationProtection as EnableTerminationProtection,
-    capabilities: s.Capabilities as StackCapability[],
-    creationTime: s.CreationTime,
-    lastUpdatedTime: s.LastUpdatedTime,
-    outputs: (s.Outputs ?? []).map((o) => ({
-      key: o.OutputKey as StackOutputKey,
-      value: o.OutputValue as StackOutputValue,
-      description: o.Description as StackOutputDescription,
-    })),
-    tags: (s.Tags ?? []).map((t) => ({
-      key: t.Key as TagKey,
-      value: t.Value as TagValue,
-    })),
-    driftInformation: {
-      stackDriftStatus: s.DriftInformation!
-        .StackDriftStatus as StackDriftStatus,
-      lastCheckTimestamp: s.DriftInformation?.LastCheckTimestamp,
-    },
-  }
+  return convertStackInternal(s)
 }
+
+/**
+ * @hidden
+ */
+export const convertStacks = ({
+  Stacks,
+}: DescribeStacksOutput): ReadonlyArray<CloudFormationStack> =>
+  (Stacks ?? []).map(convertStackInternal)
 
 const convertResourceChangeTarget = (
   target?: CFResourceTargetDefinition,

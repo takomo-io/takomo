@@ -38,5 +38,5 @@ export const listStacksCommand: CommandHandler<
         credentialManager,
       }),
     )
-    .then((ctx) => listStacks(ctx, input))
+    .then((ctx) => listStacks(ctx, input, io))
     .then(io.printOutput)

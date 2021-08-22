@@ -7,7 +7,6 @@ import {
   TagValue,
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
-import { deepFreeze } from "@takomo/util"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { HookConfig } from "./hook"
 import { Schemas } from "./schemas"
@@ -97,7 +96,7 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     schemas,
   } = props
 
-  return deepFreeze({
+  return {
     accountIds,
     capabilities,
     children,
@@ -120,5 +119,5 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     schemas,
     root: parentPath === undefined,
     toProps: () => props,
-  })
+  }
 }

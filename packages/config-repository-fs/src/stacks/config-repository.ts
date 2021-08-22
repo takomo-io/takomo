@@ -9,7 +9,6 @@ import { ROOT_STACK_GROUP_PATH, SchemaRegistry } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   createTemplateEngine,
-  deepFreeze,
   FilePath,
   readFileContents,
   renderTemplate,
@@ -134,7 +133,7 @@ export const createFileSystemStacksConfigRepository = async ({
     return renderedContent
   }
 
-  return deepFreeze({
+  return {
     buildConfigTree: async (): Promise<ConfigTree> =>
       buildStackGroupConfigNode(
         ctx,
@@ -177,5 +176,5 @@ export const createFileSystemStacksConfigRepository = async ({
     },
 
     templateEngine,
-  })
+  }
 }

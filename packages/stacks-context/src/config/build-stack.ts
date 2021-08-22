@@ -223,6 +223,7 @@ export const buildStack = async (
           parameters,
           commandRole,
           credentialManager,
+          credentials,
           hooks,
           ignore,
           terminationProtection,

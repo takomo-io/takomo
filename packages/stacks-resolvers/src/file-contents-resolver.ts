@@ -4,12 +4,7 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import {
-  deepFreeze,
-  expandFilePath,
-  fileExists,
-  readFileContents,
-} from "@takomo/util"
+import { expandFilePath, fileExists, readFileContents } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
 export const init = async ({ file }: any): Promise<Resolver> => {
@@ -17,7 +12,7 @@ export const init = async ({ file }: any): Promise<Resolver> => {
     throw new Error("file is required property")
   }
 
-  return deepFreeze({
+  return {
     resolve: async ({
       logger,
       parameterName,
@@ -36,7 +31,7 @@ export const init = async ({ file }: any): Promise<Resolver> => {
         contents.trim(),
       )
     },
-  })
+  }
 }
 
 const name = "file-contents"
@@ -46,9 +41,8 @@ const schema = ({ joi, base }: ResolverProviderSchemaProps): ObjectSchema =>
     file: joi.string().required(),
   })
 
-export const createFileContentsResolverProvider = (): ResolverProvider =>
-  deepFreeze({
-    name,
-    init,
-    schema,
-  })
+export const createFileContentsResolverProvider = (): ResolverProvider => ({
+  name,
+  init,
+  schema,
+})

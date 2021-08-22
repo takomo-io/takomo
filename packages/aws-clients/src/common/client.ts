@@ -11,6 +11,15 @@ interface PagedResponse {
   readonly NextToken?: string
 }
 
+interface PagedOperationV2Props<T, P, R extends PagedResponse> {
+  readonly operation: (params: P) => Request<R, AWSError>
+  readonly params: P
+  readonly extractor: (response: R) => ReadonlyArray<T> | undefined
+  readonly nextToken?: string
+  readonly onPage?: (items: ReadonlyArray<T>) => boolean
+  readonly filter?: (item: T) => boolean
+}
+
 const maxRetries = 30
 const retryableErrorCodes = [
   "UnknownEndpoint",
@@ -34,11 +43,20 @@ export interface AwsClient<C> {
     onSuccess: (result: R) => T,
     onError?: (e: any) => T,
   ) => Promise<T>
+  readonly withClientPromiseBulkhead: <T, R>(
+    bulkhead: IPolicy,
+    fn: (client: C) => Request<R, AWSError>,
+    onSuccess: (result: R) => T,
+    onError?: (e: any) => T,
+  ) => Promise<T>
   readonly pagedOperation: <T, P, R extends PagedResponse>(
     operation: (params: P) => Request<R, AWSError>,
     params: P,
     extractor: (response: R) => ReadonlyArray<T> | undefined,
     nextToken?: string,
+  ) => Promise<ReadonlyArray<T>>
+  readonly pagedOperationV2: <T, P, R extends PagedResponse>(
+    props: PagedOperationV2Props<T, P, R>,
   ) => Promise<ReadonlyArray<T>>
   readonly pagedOperationBulkhead: <T, P, R extends PagedResponse>(
     bulkhead: IPolicy,
@@ -186,6 +204,22 @@ export const createClient = <C>({
         throw e
       })
 
+  const withClientPromiseBulkhead = <T, R>(
+    bulkhead: IPolicy,
+    fn: (client: C) => Request<R, AWSError>,
+    onSuccess: (result: R) => T,
+    onError?: (e: any) => T,
+  ): Promise<T> =>
+    getClient()
+      .then((client) => bulkhead.execute(() => fn(client).promise()))
+      .then(onSuccess)
+      .catch((e) => {
+        if (onError) {
+          return onError(e)
+        }
+        throw e
+      })
+
   const pagedOperation = async <T, P, R extends PagedResponse>(
     operation: (params: P) => Request<R, AWSError>,
     params: P,
@@ -198,6 +232,40 @@ export const createClient = <C>({
     }).promise()
 
     const items = extractor(response) || []
+    if (!response.NextToken) {
+      return items
+    }
+
+    return [
+      ...items,
+      ...(await pagedOperation(
+        operation,
+        params,
+        extractor,
+        response.NextToken,
+      )),
+    ]
+  }
+
+  const pagedOperationV2 = async <T, P, R extends PagedResponse>({
+    operation,
+    params,
+    extractor,
+    nextToken,
+    onPage = () => true,
+    filter = () => true,
+  }: PagedOperationV2Props<T, P, R>): Promise<ReadonlyArray<T>> => {
+    const response = await operation({
+      ...params,
+      NextToken: nextToken,
+    }).promise()
+
+    const items = (extractor(response) ?? []).filter(filter)
+
+    if (!onPage(items)) {
+      return items
+    }
+
     if (!response.NextToken) {
       return items
     }
@@ -250,7 +318,9 @@ export const createClient = <C>({
     getClient,
     withClient,
     withClientPromise,
+    withClientPromiseBulkhead,
     pagedOperation,
+    pagedOperationV2,
     pagedOperationBulkhead,
   }
 }

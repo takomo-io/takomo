@@ -6,11 +6,11 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import { deepFreeze, uuid } from "@takomo/util"
+import { uuid } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
 export const init = async (props: any): Promise<Resolver> => {
-  return deepFreeze({
+  return {
     iamRoleArns: (): IamRoleArn[] =>
       props.commandRole ? [props.commandRole] : [],
 
@@ -60,7 +60,7 @@ export const init = async (props: any): Promise<Resolver> => {
 
       return output.value
     },
-  })
+  }
 }
 
 const name = "external-stack-output"
@@ -78,8 +78,8 @@ const schema = ({ ctx, base }: ResolverProviderSchemaProps): ObjectSchema => {
   })
 }
 
-export const createExternalStackOutputResolverProvider = (): ResolverProvider =>
-  deepFreeze({
+export const createExternalStackOutputResolverProvider =
+  (): ResolverProvider => ({
     name,
     init,
     schema,

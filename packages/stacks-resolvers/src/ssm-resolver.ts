@@ -6,47 +6,45 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import { deepFreeze } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
-export const init = async (props: any): Promise<Resolver> =>
-  deepFreeze({
-    iamRoleArns: (): IamRoleArn[] =>
-      props.commandRole ? [props.commandRole] : [],
-    resolve: async ({
-      ctx,
-      stack,
-      logger,
-      parameterName,
-    }: ResolverInput): Promise<any> => {
-      const credentialManager = props.commandRole
-        ? await ctx.credentialManager.createCredentialManagerForRole(
-            props.commandRole,
-          )
-        : stack.credentialManager
+export const init = async (props: any): Promise<Resolver> => ({
+  iamRoleArns: (): IamRoleArn[] =>
+    props.commandRole ? [props.commandRole] : [],
+  resolve: async ({
+    ctx,
+    stack,
+    logger,
+    parameterName,
+  }: ResolverInput): Promise<any> => {
+    const credentialManager = props.commandRole
+      ? await ctx.credentialManager.createCredentialManagerForRole(
+          props.commandRole,
+        )
+      : stack.credentialManager
 
-      const region = props.region ?? stack.region
-      logger.debugObject(
-        `Resolving value for parameter '${parameterName}' using ssm resolver:`,
-        {
-          region,
-          name: props.name,
-          commandRole: props.commandRole,
-        },
-      )
-
-      const credentials = await credentialManager.getCredentials()
-
-      const ssm = ctx.awsClientProvider.createSsmClient({
-        credentials,
+    const region = props.region ?? stack.region
+    logger.debugObject(
+      `Resolving value for parameter '${parameterName}' using ssm resolver:`,
+      {
         region,
-        logger,
-        id: "ssm",
-      })
+        name: props.name,
+        commandRole: props.commandRole,
+      },
+    )
 
-      return ssm.getParameterValue(props.name)
-    },
-  })
+    const credentials = await credentialManager.getCredentials()
+
+    const ssm = ctx.awsClientProvider.createSsmClient({
+      credentials,
+      region,
+      logger,
+      id: "ssm",
+    })
+
+    return ssm.getParameterValue(props.name)
+  },
+})
 
 const schema = ({
   joi,
@@ -67,9 +65,8 @@ const schema = ({
 
 const name = "ssm"
 
-export const createSsmResolverProvider = (): ResolverProvider =>
-  deepFreeze({
-    name,
-    init,
-    schema,
-  })
+export const createSsmResolverProvider = (): ResolverProvider => ({
+  name,
+  init,
+  schema,
+})

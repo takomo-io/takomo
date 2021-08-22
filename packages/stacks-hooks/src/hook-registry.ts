@@ -1,6 +1,5 @@
 import { Hook, HookConfig, HookProvider, HookType } from "@takomo/stacks-model"
 import {
-  deepFreeze,
   FilePath,
   TakomoError,
   TakomoErrorProps,
@@ -123,10 +122,10 @@ export const createHookRegistry = ({
     return registerProvider(provider, `file: ${pathToFile}`)
   }
 
-  return deepFreeze({
+  return {
     registerBuiltInProvider,
     registerProviderFromFile,
     initHook,
     hasProvider,
-  })
+  }
 }

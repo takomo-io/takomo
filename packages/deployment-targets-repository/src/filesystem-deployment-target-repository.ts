@@ -4,7 +4,6 @@ import {
 } from "@takomo/deployment-targets-model"
 import {
   createFile,
-  deepFreeze,
   dirExists,
   expandFilePath,
   FilePath,
@@ -191,7 +190,7 @@ export const createFileSystemDeploymentTargetRepositoryProvider =
           },
           listDeploymentTargets: async (): Promise<
             ReadonlyArray<DeploymentTargetConfigItemWrapper>
-          > => deepFreeze(deploymentTargets),
+          > => deploymentTargets,
         }
       },
     }

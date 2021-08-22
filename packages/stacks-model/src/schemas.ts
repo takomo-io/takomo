@@ -1,6 +1,6 @@
 import { StackParameterKey } from "@takomo/aws-model"
 import { CommandContext } from "@takomo/core"
-import { deepFreeze, FilePath, TakomoError, TkmLogger } from "@takomo/util"
+import { FilePath, TakomoError, TkmLogger } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
 import { StackPath } from "./stack"
 import { StackGroupPath } from "./stack-group"
@@ -128,7 +128,7 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
   const getProvider = (name: SchemaName): SchemaProvider | undefined =>
     schemas.get(name)
 
-  return deepFreeze({
+  return {
     registerProviderFromFile: async (
       pathToProviderFile: FilePath,
     ): Promise<void> => {
@@ -592,7 +592,7 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
     },
 
     hasProvider: (name: SchemaName): boolean => schemas.has(name),
-  })
+  }
 }
 
 /**
