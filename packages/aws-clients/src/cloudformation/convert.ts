@@ -9,6 +9,7 @@ import {
   ChangeType,
   ClientRequestToken,
   CloudFormationStack,
+  DetailedCloudFormationStackSummary,
   EnableTerminationProtection,
   EvaluationType,
   EventId,
@@ -44,6 +45,7 @@ import {
   StackStatusReason,
   TagKey,
   TagValue,
+  TemplateDescription,
   TemplateSummary,
 } from "@takomo/aws-model"
 import { CloudFormation } from "aws-sdk"
@@ -216,3 +218,22 @@ export const convertStackDriftDetectionStatus = (
   driftedStackResourceCount: d.DriftedStackResourceCount!,
   timestamp: d.Timestamp!,
 })
+
+export const convertStackSummaries = ({
+  StackSummaries,
+}: CloudFormation.ListStacksOutput): ReadonlyArray<DetailedCloudFormationStackSummary> =>
+  (StackSummaries ?? []).map((s) => ({
+    id: s.StackId as StackId,
+    name: s.StackName as StackName,
+    status: s.StackStatus as StackStatus,
+    statusReason: s.StackStatusReason as StackStatusReason,
+    creationTime: s.CreationTime,
+    lastUpdatedTime: s.LastUpdatedTime,
+    deletionTime: s.DeletionTime,
+    driftInformation: {
+      stackDriftStatus: s.DriftInformation!
+        .StackDriftStatus as StackDriftStatus,
+      lastCheckTimestamp: s.DriftInformation?.LastCheckTimestamp,
+    },
+    templateDescription: s.TemplateDescription as TemplateDescription,
+  }))

@@ -1,4 +1,4 @@
-import { CloudFormationStack } from "@takomo/aws-model"
+import { CloudFormationStackSummary } from "@takomo/aws-model"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import {
   InternalStack,
@@ -24,7 +24,7 @@ export const deployStack = async (
   dependencies: Promise<StackResult>[],
   operationType: StackOperationType,
   configRepository: StacksConfigRepository,
-  currentStack?: CloudFormationStack,
+  currentStack?: CloudFormationStackSummary,
 ): Promise<StackResult> => {
   const logger = io.childLogger(stack.path)
 

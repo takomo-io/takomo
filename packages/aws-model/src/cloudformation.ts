@@ -38,6 +38,33 @@ export type StackStatus =
   | "IMPORT_ROLLBACK_COMPLETE"
 
 /**
+ * @hidden
+ */
+export const ACTIVE_STACK_STATUSES: ReadonlyArray<StackStatus> = [
+  "CREATE_IN_PROGRESS",
+  "CREATE_FAILED",
+  "CREATE_COMPLETE",
+  "ROLLBACK_IN_PROGRESS",
+  "ROLLBACK_FAILED",
+  "ROLLBACK_COMPLETE",
+  "DELETE_IN_PROGRESS",
+  "DELETE_FAILED",
+  "UPDATE_IN_PROGRESS",
+  "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
+  "UPDATE_COMPLETE",
+  "UPDATE_ROLLBACK_IN_PROGRESS",
+  "UPDATE_ROLLBACK_FAILED",
+  "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS",
+  "UPDATE_ROLLBACK_COMPLETE",
+  "REVIEW_IN_PROGRESS",
+  "IMPORT_IN_PROGRESS",
+  "IMPORT_COMPLETE",
+  "IMPORT_ROLLBACK_IN_PROGRESS",
+  "IMPORT_ROLLBACK_FAILED",
+  "IMPORT_ROLLBACK_COMPLETE",
+]
+
+/**
  * CloudFormation stack status reason.
  */
 export type StackStatusReason = string
@@ -137,20 +164,34 @@ export type LastUpdatedTime = Date
  */
 export type DeletionTime = Date
 
-interface BaseCloudFormationStack<P> {
+/**
+ * CloudFormation stack summary.
+ */
+export interface CloudFormationStackSummary {
   readonly id: StackId
   readonly name: StackName
-  readonly parameters: ReadonlyArray<P>
   readonly status: StackStatus
   readonly statusReason: StackStatusReason
-  readonly capabilities: ReadonlyArray<StackCapability>
-  readonly enableTerminationProtection: EnableTerminationProtection
   readonly creationTime: CreationTime
   readonly lastUpdatedTime?: LastUpdatedTime
   readonly deletionTime?: DeletionTime
+  readonly driftInformation: StackDriftInformation
+}
+
+/**
+ * Detailed CloudFormation stack summary.
+ */
+export interface DetailedCloudFormationStackSummary
+  extends CloudFormationStackSummary {
+  readonly templateDescription: TemplateDescription
+}
+
+interface BaseCloudFormationStack<P> extends CloudFormationStackSummary {
+  readonly parameters: ReadonlyArray<P>
+  readonly capabilities: ReadonlyArray<StackCapability>
+  readonly enableTerminationProtection: EnableTerminationProtection
   readonly outputs: ReadonlyArray<StackOutput>
   readonly tags: ReadonlyArray<Tag>
-  readonly driftInformation: StackDriftInformation
 }
 
 /**
@@ -162,6 +203,11 @@ export type CloudFormationStack = BaseCloudFormationStack<StackParameter>
  * CloudFormation stack template.
  */
 export type TemplateBody = string
+
+/**
+ * CloudFormation stack template description.
+ */
+export type TemplateDescription = string
 
 /**
  * CloudFormation stack policy.

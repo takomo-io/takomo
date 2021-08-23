@@ -1,4 +1,5 @@
 export {
+  ACTIVE_STACK_STATUSES,
   ALLOW_ALL_STACK_POLICY,
   BaseChangeSet,
   CausingEntity,
@@ -11,9 +12,11 @@ export {
   ChangeSource,
   ChangeType,
   CloudFormationStack,
+  CloudFormationStackSummary,
   CreationTime,
   DetailedChangeSet,
   DetailedCloudFormationStack,
+  DetailedCloudFormationStackSummary,
   DetailedStackParameter,
   EnableTerminationProtection,
   EvaluationType,
@@ -57,6 +60,7 @@ export {
   StackStatus,
   StackStatusReason,
   TemplateBody,
+  TemplateDescription,
   TemplateSummary,
 } from "./cloudformation"
 export { CloudTrailEvent } from "./cloudtrail"

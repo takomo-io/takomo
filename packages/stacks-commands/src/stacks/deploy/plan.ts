@@ -1,4 +1,4 @@
-import { CloudFormationStack, StackStatus } from "@takomo/aws-model"
+import { CloudFormationStackSummary, StackStatus } from "@takomo/aws-model"
 import {
   isWithinCommandPath,
   sortStacksForDeploy,
@@ -43,7 +43,7 @@ export const collectStackDependencies = (
 export interface StackDeployOperation {
   readonly stack: InternalStack
   readonly type: StackOperationType
-  readonly currentStack?: CloudFormationStack
+  readonly currentStack?: CloudFormationStackSummary
 }
 
 /**
