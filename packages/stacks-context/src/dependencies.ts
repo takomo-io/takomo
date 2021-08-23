@@ -105,8 +105,8 @@ export const populateDependents = (stacks: StackProps[]): StackProps[] =>
  * @hidden
  */
 export const processStackDependencies = (
-  stacks: InternalStack[],
-): InternalStack[] => {
+  stacks: ReadonlyArray<InternalStack>,
+): ReadonlyArray<InternalStack> => {
   const processed = stacks
     .map((stack) => stack.toProps())
     .map((stack) => {

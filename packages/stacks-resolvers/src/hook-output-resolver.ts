@@ -5,7 +5,6 @@ import {
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
 import { createStacksSchemas } from "@takomo/stacks-schema"
-import { deepFreeze } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
 export const init = async ({ hook }: any): Promise<Resolver> => {
@@ -13,7 +12,7 @@ export const init = async ({ hook }: any): Promise<Resolver> => {
     throw new Error("hook is required property")
   }
 
-  return deepFreeze({
+  return {
     resolve: async ({
       logger,
       parameterName,
@@ -29,7 +28,7 @@ export const init = async ({ hook }: any): Promise<Resolver> => {
 
       throw new Error(`No such hook: '${hook}'`)
     },
-  })
+  }
 }
 
 const name = "hook-output"
@@ -41,9 +40,8 @@ const schema = ({ base, ctx }: ResolverProviderSchemaProps): ObjectSchema => {
   })
 }
 
-export const createHookOutputResolverProvider = (): ResolverProvider =>
-  deepFreeze({
-    name,
-    init,
-    schema,
-  })
+export const createHookOutputResolverProvider = (): ResolverProvider => ({
+  name,
+  init,
+  schema,
+})

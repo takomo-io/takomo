@@ -14,7 +14,7 @@ import {
   StackPolicyBody,
   TemplateSummary,
 } from "@takomo/aws-model"
-import { sleep, uuid } from "@takomo/util"
+import { arrayToMap, sleep, uuid } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import {
   CreateChangeSetInput,
@@ -32,6 +32,7 @@ import {
   convertStack,
   convertStackDriftDetectionStatus,
   convertStackEvents,
+  convertStacks,
   convertTemplateSummary,
 } from "./convert"
 import { evaluateDescribeChangeSet } from "./rules/describe-change-set-rule"
@@ -42,6 +43,10 @@ export interface CloudFormationClient {
   readonly describeStack: (
     stackName: string,
   ) => Promise<CloudFormationStack | undefined>
+
+  readonly describeStacks: (
+    stackNames: ReadonlyArray<StackName>,
+  ) => Promise<Map<StackName, CloudFormationStack>>
 
   readonly enrichStack: (
     stack: CloudFormationStack,
@@ -170,11 +175,16 @@ interface CloudFormationClientProps extends AwsClientProps {
 export const createCloudFormationClient = (
   props: CloudFormationClientProps,
 ): CloudFormationClient => {
-  const { withClientPromise, pagedOperationBulkhead, withClient, getClient } =
-    createClient({
-      ...props,
-      clientConstructor: (config) => new CloudFormation(config),
-    })
+  const {
+    withClientPromise,
+    pagedOperationBulkhead,
+    pagedOperationV2,
+    withClient,
+    getClient,
+  } = createClient({
+    ...props,
+    clientConstructor: (config) => new CloudFormation(config),
+  })
 
   const {
     logger,
@@ -241,6 +251,24 @@ export const createCloudFormationClient = (
         throw e
       },
     )
+
+  const describeStacks = (
+    stackNames: ReadonlyArray<StackName>,
+  ): Promise<Map<StackName, CloudFormationStack>> => {
+    const collectedNames = new Set<StackName>()
+    return withClient((c) =>
+      pagedOperationV2({
+        operation: (params) => c.describeStacks(params),
+        params: {},
+        extractor: convertStacks,
+        filter: (s) => stackNames.includes(s.name),
+        onPage: (items) => {
+          items.forEach((item) => collectedNames.add(item.name))
+          return stackNames.every((s) => collectedNames.has(s))
+        },
+      }),
+    ).then((stacks) => new Map(arrayToMap(stacks, (s) => s.name)))
+  }
 
   const enrichStack = async (
     stack: CloudFormationStack,
@@ -667,6 +695,7 @@ export const createCloudFormationClient = (
   return {
     validateTemplate,
     describeStack,
+    describeStacks,
     enrichStack,
     getTemplateSummary,
     getCurrentTemplate,

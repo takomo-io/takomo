@@ -4,13 +4,11 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import { deepFreeze } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
-export const init = async (props: any): Promise<Resolver> =>
-  deepFreeze({
-    resolve: async (input: ResolverInput): Promise<any> => `${props.value}`,
-  })
+export const init = async (props: any): Promise<Resolver> => ({
+  resolve: async (input: ResolverInput): Promise<any> => `${props.value}`,
+})
 
 const schema = ({ joi, base }: ResolverProviderSchemaProps): ObjectSchema =>
   base.keys({
@@ -32,9 +30,8 @@ const schema = ({ joi, base }: ResolverProviderSchemaProps): ObjectSchema =>
       .required(),
   })
 
-export const createStaticResolverProvider = (): ResolverProvider =>
-  deepFreeze({
-    name: "static",
-    init,
-    schema,
-  })
+export const createStaticResolverProvider = (): ResolverProvider => ({
+  name: "static",
+  init,
+  schema,
+})

@@ -19,7 +19,6 @@ import {
   collectFromHierarchy,
   createLogger,
   createTimer,
-  deepFreeze,
   expandFilePath,
   fileExists,
   FilePath,
@@ -384,7 +383,7 @@ export const initCommandContext = async (
 
   const awsClientProvider = createAwsClientProvider({ logger })
 
-  return deepFreeze({
+  return {
     credentials,
     logLevel,
     variables,
@@ -400,7 +399,7 @@ export const initCommandContext = async (
     projectDir: filePaths.projectDir,
     iamGeneratePoliciesInstructionsEnabled:
       argv["show-generate-iam-policies"] === true,
-  })
+  }
 }
 
 export const onError = (e: any): void => {

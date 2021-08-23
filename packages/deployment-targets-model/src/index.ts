@@ -5,7 +5,7 @@ import {
   SchemaName,
   SchemaRegistry,
 } from "@takomo/stacks-model"
-import { deepFreeze, TakomoError, TkmLogger } from "@takomo/util"
+import { TakomoError, TkmLogger } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
 
 export type DeploymentGroupName = string
@@ -34,7 +34,7 @@ export const createDeploymentTargetsSchemaRegistry = (
   logger: TkmLogger,
 ): DeploymentTargetsSchemaRegistry => {
   const schemaRegistry = createSchemaRegistry(logger)
-  return deepFreeze({
+  return {
     ...schemaRegistry,
     initDeploymentTargetsSchema: async (
       ctx: CommandContext,
@@ -81,5 +81,5 @@ export const createDeploymentTargetsSchemaRegistry = (
         props,
       })
     },
-  })
+  }
 }

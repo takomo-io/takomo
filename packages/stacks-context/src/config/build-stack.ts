@@ -188,72 +188,76 @@ export const buildStack = async (
     stackConfig.stackPolicyDuringUpdate ?? stackGroup.stackPolicyDuringUpdate
 
   const credentials = await credentialManager.getCredentials()
-  const stacks = await Promise.all(
-    regions.map(async (region) => {
-      const exactPath = `${stackPath}/${region}`
-      const stackLogger = logger.childLogger(exactPath)
-      const cloudFormationClient =
-        ctx.awsClientProvider.createCloudFormationClient({
-          credentials,
+  return await Promise.all(
+    regions
+      .filter((region) =>
+        isWithinCommandPath(commandPath, `${stackPath}/${region}`),
+      )
+      .map(async (region) => {
+        const exactPath = `${stackPath}/${region}`
+        const stackLogger = logger.childLogger(exactPath)
+        const cloudFormationClient =
+          ctx.awsClientProvider.createCloudFormationClient({
+            credentials,
+            region,
+            id: exactPath,
+            logger: stackLogger,
+          })
+
+        const schemas = await mergeStackSchemas(
+          ctx,
+          schemaRegistry,
+          exactPath,
+          stackGroup.schemas,
+          stackConfig.schemas,
+        )
+
+        const inheritedTags = stackConfig.inheritTags
+          ? new Map(stackGroup.tags)
+          : new Map()
+
+        const props: StackProps = {
+          name,
+          template,
           region,
-          id: exactPath,
+          parameters,
+          commandRole,
+          credentialManager,
+          credentials,
+          hooks,
+          ignore,
+          terminationProtection,
+          capabilities,
+          accountIds,
+          cloudFormationClient,
+          stackPolicy,
+          stackPolicyDuringUpdate,
+          path: exactPath,
+          stackGroupPath: stackGroup.path,
+          project: stackConfig.project ?? stackGroup.project,
+          tags: inheritedTags,
+          timeout: stackConfig.timeout ??
+            stackGroup.timeout ?? { create: 0, update: 0 },
+          dependencies: stackConfig.depends.map((d) =>
+            normalizeStackPath(stackGroup.path, d),
+          ),
+          dependents: [],
+          templateBucket:
+            stackConfig.templateBucket ?? stackGroup.templateBucket,
+          data: deepCopy({ ...stackGroup.data, ...stackConfig.data }),
           logger: stackLogger,
+          schemas,
+        }
+
+        stackConfig.tags.forEach((value, key) => {
+          props.tags.set(key, value)
         })
 
-      const schemas = await mergeStackSchemas(
-        ctx,
-        schemaRegistry,
-        exactPath,
-        stackGroup.schemas,
-        stackConfig.schemas,
-      )
+        validateData(exactPath, schemas?.data ?? [], props.data)
+        validateTags(exactPath, schemas?.tags ?? [], props.tags)
+        validateName(exactPath, schemas?.name ?? [], name)
 
-      const inheritedTags = stackConfig.inheritTags
-        ? new Map(stackGroup.tags)
-        : new Map()
-
-      const props: StackProps = {
-        name,
-        template,
-        region,
-        parameters,
-        commandRole,
-        credentialManager,
-        hooks,
-        ignore,
-        terminationProtection,
-        capabilities,
-        accountIds,
-        cloudFormationClient,
-        stackPolicy,
-        stackPolicyDuringUpdate,
-        path: exactPath,
-        stackGroupPath: stackGroup.path,
-        project: stackConfig.project ?? stackGroup.project,
-        tags: inheritedTags,
-        timeout: stackConfig.timeout ??
-          stackGroup.timeout ?? { create: 0, update: 0 },
-        dependencies: stackConfig.depends.map((d) =>
-          normalizeStackPath(stackGroup.path, d),
-        ),
-        dependents: [],
-        templateBucket: stackConfig.templateBucket ?? stackGroup.templateBucket,
-        data: deepCopy({ ...stackGroup.data, ...stackConfig.data }),
-        logger: stackLogger,
-        schemas,
-      }
-
-      stackConfig.tags.forEach((value, key) => {
-        props.tags.set(key, value)
-      })
-
-      validateData(exactPath, schemas?.data ?? [], props.data)
-      validateTags(exactPath, schemas?.tags ?? [], props.tags)
-      validateName(exactPath, schemas?.name ?? [], name)
-
-      return createStack(props)
-    }),
+        return createStack(props)
+      }),
   )
-
-  return stacks.filter((s) => isWithinCommandPath(commandPath, s.path))
 }

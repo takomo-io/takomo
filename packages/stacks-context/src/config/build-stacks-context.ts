@@ -15,12 +15,7 @@ import {
   coreResolverProviders,
   ResolverRegistry,
 } from "@takomo/stacks-resolvers"
-import {
-  arrayToMap,
-  collectFromHierarchy,
-  deepFreeze,
-  TkmLogger,
-} from "@takomo/util"
+import { arrayToMap, collectFromHierarchy, TkmLogger } from "@takomo/util"
 import { isStackGroupPath } from "../common"
 import {
   CommandPathMatchesNoStacksError,
@@ -129,7 +124,7 @@ export const buildStacksContext = async ({
     Array.from(credentialManagers.values()).map((cm) => cm.getCallerIdentity()),
   )
 
-  return deepFreeze({
+  return {
     ...ctx,
     credentialManager,
     templateEngine,
@@ -155,5 +150,5 @@ export const buildStacksContext = async ({
         : path
       return stacks.filter((s) => s.path.startsWith(normalizedPath))
     },
-  })
+  }
 }

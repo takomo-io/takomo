@@ -13,13 +13,12 @@ export const coreHookProviders = (): ReadonlyArray<HookProvider> => [
 ]
 
 export const initializeHooks = async (
-  hookConfigs: HookConfig[],
+  hookConfigs: ReadonlyArray<HookConfig>,
   hookRegistry: HookRegistry,
-): Promise<HookExecutor[]> => {
-  return Promise.all(
+): Promise<ReadonlyArray<HookExecutor>> =>
+  Promise.all(
     hookConfigs.map(async (config) => {
       const hook = await hookRegistry.initHook(config)
       return new HookExecutor(config, hook)
     }),
   )
-}

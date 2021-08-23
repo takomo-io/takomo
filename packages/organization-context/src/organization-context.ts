@@ -7,7 +7,7 @@ import {
   OrganizationConfig,
 } from "@takomo/organization-config"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { collectFromHierarchy, deepFreeze, TkmLogger, uuid } from "@takomo/util"
+import { collectFromHierarchy, TkmLogger, uuid } from "@takomo/util"
 import { OrganizationConfigRepository } from "./model"
 
 interface AccountConfig {
@@ -135,7 +135,7 @@ export const createOrganizationContext = ({
   const getStages = (): ReadonlyArray<ConfigSetStage> | undefined =>
     organizationConfig.stages?.slice()
 
-  return deepFreeze({
+  return {
     ...ctx,
     getClient,
     hasOrganizationalUnit,
@@ -147,5 +147,5 @@ export const createOrganizationContext = ({
     credentialManager,
     getStages,
     commandContext: ctx,
-  })
+  }
 }

@@ -20,7 +20,6 @@ import {
 import {
   collectFromHierarchy,
   deepCopy,
-  deepFreeze,
   TkmLogger,
   ValidationError,
 } from "@takomo/util"
@@ -373,14 +372,12 @@ export const buildDeploymentConfig = async (
     return err(validationError)
   }
 
-  return ok(
-    deepFreeze({
-      vars,
-      configSets,
-      deploymentGroups,
-      targetsSchema,
-    }),
-  )
+  return ok({
+    vars,
+    configSets,
+    deploymentGroups,
+    targetsSchema,
+  })
 }
 
 const validateDeploymentTargets = async (

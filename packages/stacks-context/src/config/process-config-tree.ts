@@ -74,8 +74,8 @@ class ProcessStatus {
 
 const populateChildrenAndStacks = (
   stackGroup: StackGroup,
-  allStacks: InternalStack[],
-  allStackGroups: StackGroup[],
+  allStacks: ReadonlyArray<InternalStack>,
+  allStackGroups: ReadonlyArray<StackGroup>,
 ): StackGroup => {
   const children = allStackGroups
     .filter((sg) => sg.parentPath === stackGroup.path)

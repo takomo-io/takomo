@@ -1,7 +1,6 @@
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import {
   createFile,
-  deepFreeze,
   dirExists,
   expandFilePath,
   FilePath,
@@ -161,7 +160,7 @@ export const createFileSystemAccountRepositoryProvider =
           },
           listAccounts: async (): Promise<
             ReadonlyArray<AccountConfigItemWrapper>
-          > => deepFreeze(accounts),
+          > => accounts,
         }
       },
     }

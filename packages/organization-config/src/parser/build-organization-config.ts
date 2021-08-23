@@ -15,7 +15,6 @@ import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { buildOrganizationConfigSchema } from "@takomo/organization-schema"
 import {
   collectFromHierarchy,
-  deepFreeze,
   findNonUniques,
   TkmLogger,
   ValidationError,
@@ -159,25 +158,23 @@ export const buildOrganizationConfig = async (
     )
   }
 
-  return ok(
-    deepFreeze({
-      accountCreation,
-      configSets,
-      serviceControlPolicies,
-      tagPolicies,
-      aiServicesOptOutPolicies,
-      backupPolicies,
-      organizationalUnits,
-      vars,
-      stages,
-      masterAccountId: `${record.masterAccountId}`,
-      organizationAdminRoleName: parseOptionalString(
-        record.organizationAdminRoleName,
-      ),
-      accountAdminRoleName: parseOptionalString(record.accountAdminRoleName),
-      accountBootstrapRoleName: parseOptionalString(
-        record.accountBootstrapAdminRoleName,
-      ),
-    }),
-  )
+  return ok({
+    accountCreation,
+    configSets,
+    serviceControlPolicies,
+    tagPolicies,
+    aiServicesOptOutPolicies,
+    backupPolicies,
+    organizationalUnits,
+    vars,
+    stages,
+    masterAccountId: `${record.masterAccountId}`,
+    organizationAdminRoleName: parseOptionalString(
+      record.organizationAdminRoleName,
+    ),
+    accountAdminRoleName: parseOptionalString(record.accountAdminRoleName),
+    accountBootstrapRoleName: parseOptionalString(
+      record.accountBootstrapAdminRoleName,
+    ),
+  })
 }

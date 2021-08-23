@@ -132,6 +132,11 @@ export type CreationTime = Date
  */
 export type LastUpdatedTime = Date
 
+/**
+ * CloudFormation stack deletion time.
+ */
+export type DeletionTime = Date
+
 interface BaseCloudFormationStack<P> {
   readonly id: StackId
   readonly name: StackName
@@ -142,6 +147,7 @@ interface BaseCloudFormationStack<P> {
   readonly enableTerminationProtection: EnableTerminationProtection
   readonly creationTime: CreationTime
   readonly lastUpdatedTime?: LastUpdatedTime
+  readonly deletionTime?: DeletionTime
   readonly outputs: ReadonlyArray<StackOutput>
   readonly tags: ReadonlyArray<Tag>
   readonly driftInformation: StackDriftInformation

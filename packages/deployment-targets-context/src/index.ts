@@ -7,7 +7,7 @@ import {
 } from "@takomo/deployment-targets-config"
 import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
 import { StacksConfigRepository } from "@takomo/stacks-context"
-import { collectFromHierarchy, deepFreeze, TkmLogger } from "@takomo/util"
+import { collectFromHierarchy, TkmLogger } from "@takomo/util"
 
 export interface DeploymentTargetsConfigRepository
   extends StacksConfigRepository {
@@ -56,7 +56,7 @@ export const createDeploymentTargetsContext = async ({
 
   const rootDeploymentGroups = deploymentConfig.deploymentGroups
 
-  return deepFreeze({
+  return {
     ...ctx,
     deploymentConfig,
     rootDeploymentGroups,
@@ -88,5 +88,5 @@ export const createDeploymentTargetsContext = async ({
 
       return configSet
     },
-  })
+  }
 }
