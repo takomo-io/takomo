@@ -9,6 +9,7 @@ import {
   StackPath,
 } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
+import { Credentials } from "aws-sdk"
 import { mock } from "jest-mock-extended"
 
 export interface TestStackGroupProps {
@@ -69,6 +70,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
     }),
     stackGroupPath: "/",
     getCloudFormationClient: jest.fn(),
+    credentials: mock<Credentials>(),
     toProps: () => ({
       ignore: false,
       terminationProtection: false,
@@ -93,6 +95,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
       name: props.name,
       credentialManager: mock<CredentialManager>(),
       cloudFormationClient: mock<CloudFormationClient>(),
+      credentials: mock<Credentials>(),
     }),
     credentialManager: mock<CredentialManager>(),
     getCurrentCloudFormationStack: jest.fn(),

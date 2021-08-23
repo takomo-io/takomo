@@ -1,6 +1,8 @@
 import { StackName } from "@takomo/aws-model"
 import { InternalStack, StackPath } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
+import { Credentials } from "aws-sdk"
+import { mock } from "jest-mock-extended"
 
 export interface TestStackProps {
   path: StackPath
@@ -42,5 +44,6 @@ export const createStack = (props: TestStackProps): InternalStack => {
       name: "",
     },
     getCurrentCloudFormationStack: jest.fn(),
+    credentials: mock<Credentials>(),
   }
 }
