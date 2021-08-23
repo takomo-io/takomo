@@ -9,8 +9,12 @@ import {
   StackOperationType,
   StackPath,
 } from "@takomo/stacks-model"
-import { arrayToMap } from "@takomo/util"
+import { arrayToMap, TkmLogger } from "@takomo/util"
 import R from "ramda"
+import {
+  loadCurrentCfStacks,
+  StackPair,
+} from "../common/load-current-cf-stacks"
 
 /**
  * TODO: Move somewhere else
@@ -73,17 +77,14 @@ export const resolveOperationType = (
   }
 }
 
-const convertToOperation = async (
-  stack: InternalStack,
-): Promise<StackDeployOperation> => {
-  const currentStack = await stack.getCurrentCloudFormationStack()
-  const type = resolveOperationType(currentStack?.status)
-  return {
-    stack,
-    type,
-    currentStack,
-  }
-}
+const convertToOperation = ({
+  stack,
+  current,
+}: StackPair): StackDeployOperation => ({
+  stack,
+  type: resolveOperationType(current?.status),
+  currentStack: current,
+})
 
 /**
  * @hidden
@@ -92,6 +93,7 @@ export const buildStacksDeployPlan = async (
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
+  logger: TkmLogger,
 ): Promise<StacksDeployPlan> => {
   const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
@@ -108,7 +110,8 @@ export const buildStacksDeployPlan = async (
     .map((stackPath) => stacksByPath.get(stackPath)!)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
-  const operations = await Promise.all(sortedStacks.map(convertToOperation))
+  const stackPairs = await loadCurrentCfStacks(logger, sortedStacks)
+  const operations = stackPairs.map(convertToOperation)
 
   return {
     operations: ignoreDependencies

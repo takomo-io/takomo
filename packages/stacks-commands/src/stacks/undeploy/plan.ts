@@ -4,7 +4,12 @@ import {
   sortStacksForUndeploy,
 } from "@takomo/stacks-context"
 import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
+import { TkmLogger } from "@takomo/util"
 import R from "ramda"
+import {
+  loadCurrentCfStacks,
+  StackPair,
+} from "../common/load-current-cf-stacks"
 
 /**
  * @hidden
@@ -34,17 +39,14 @@ export interface StacksUndeployPlan {
   readonly operations: ReadonlyArray<StackUndeployOperation>
 }
 
-const convertToUndeployOperation = async (
-  stack: InternalStack,
-): Promise<StackUndeployOperation> => {
-  const currentStack = await stack.getCurrentCloudFormationStack()
-  const type = resolveUndeployOperationType(currentStack)
-  return {
-    stack,
-    type,
-    currentStack,
-  }
-}
+const convertToUndeployOperation = ({
+  stack,
+  current,
+}: StackPair): StackUndeployOperation => ({
+  stack,
+  type: resolveUndeployOperationType(current),
+  currentStack: current,
+})
 
 const collectStackDependents = (
   stacksByPath: Map<StackPath, InternalStack>,
@@ -70,6 +72,7 @@ export const buildStacksUndeployPlan = async (
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
+  logger: TkmLogger,
 ): Promise<StacksUndeployPlan> => {
   const stacksByPath = new Map(stacks.map((s) => [s.path, s]))
   const stacksToUndeploy = stacks
@@ -86,9 +89,8 @@ export const buildStacksUndeployPlan = async (
     .map((stackPath) => stacksByPath.get(stackPath)!)
 
   const sortedStacks = sortStacksForUndeploy(stacksToUndeploy)
-  const operations = await Promise.all(
-    sortedStacks.map(convertToUndeployOperation),
-  )
+  const stackPairs = await loadCurrentCfStacks(logger, sortedStacks)
+  const operations = stackPairs.map(convertToUndeployOperation)
 
   return {
     operations: ignoreDependencies

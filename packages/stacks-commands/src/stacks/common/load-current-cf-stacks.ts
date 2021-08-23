@@ -16,7 +16,7 @@ const loadCfStacks = (
   return stacks[0].getCloudFormationClient().describeStacks(stackNames)
 }
 
-interface StackPair {
+export interface StackPair {
   readonly stack: InternalStack
   readonly current?: CloudFormationStack
 }
