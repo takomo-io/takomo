@@ -1,6 +1,5 @@
 import {
   ClientRequestToken,
-  CloudFormationStack,
   CloudFormationStackSummary,
   DetailedChangeSet,
   DetailedCloudFormationStack,
@@ -63,7 +62,7 @@ export interface DetailedCurrentStackHolder extends InitialDeployStackState {
 export interface DeleteFailedStackClientTokenHolder
   extends InitialDeployStackState {
   readonly deleteFailedStackClientToken: string
-  readonly currentStack: CloudFormationStack
+  readonly currentStack: CloudFormationStackSummary
 }
 
 /**
