@@ -172,6 +172,7 @@ const findTerminalEvent = (
 
 interface CloudFormationClientProps extends AwsClientProps {
   readonly describeEventsBulkhead: IPolicy
+  readonly getTemplateSummaryBulkhead: IPolicy
   readonly waitStackDeployToCompletePollInterval: number
   readonly waitStackDeleteToCompletePollInterval: number
 }
@@ -184,6 +185,7 @@ export const createCloudFormationClient = (
 ): CloudFormationClient => {
   const {
     withClientPromise,
+    withClientPromiseBulkhead,
     pagedOperationBulkhead,
     pagedOperationV2,
     withClient,
@@ -196,6 +198,7 @@ export const createCloudFormationClient = (
   const {
     logger,
     describeEventsBulkhead,
+    getTemplateSummaryBulkhead,
     waitStackDeployToCompletePollInterval,
     waitStackDeleteToCompletePollInterval,
   } = props
@@ -353,7 +356,8 @@ export const createCloudFormationClient = (
   const getTemplateSummary = (
     input: CloudFormation.GetTemplateSummaryInput,
   ): Promise<TemplateSummary> =>
-    withClientPromise(
+    withClientPromiseBulkhead(
+      getTemplateSummaryBulkhead,
       (c) => c.getTemplateSummary(input),
       convertTemplateSummary,
     )
