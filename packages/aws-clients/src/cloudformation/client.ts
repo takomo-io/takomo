@@ -1,8 +1,11 @@
 import {
+  ACTIVE_STACK_STATUSES,
   ChangeSet,
   ClientRequestToken,
   CloudFormationStack,
+  CloudFormationStackSummary,
   DetailedCloudFormationStack,
+  DetailedCloudFormationStackSummary,
   EventId,
   isTerminalResourceStatus,
   ResourceStatus,
@@ -32,7 +35,7 @@ import {
   convertStack,
   convertStackDriftDetectionStatus,
   convertStackEvents,
-  convertStacks,
+  convertStackSummaries,
   convertTemplateSummary,
 } from "./convert"
 import { evaluateDescribeChangeSet } from "./rules/describe-change-set-rule"
@@ -44,12 +47,16 @@ export interface CloudFormationClient {
     stackName: string,
   ) => Promise<CloudFormationStack | undefined>
 
-  readonly describeStacks: (
-    stackNames: ReadonlyArray<StackName>,
-  ) => Promise<Map<StackName, CloudFormationStack>>
+  readonly listNotDeletedStacks: (
+    stackNames?: ReadonlyArray<StackName>,
+  ) => Promise<Map<StackName, DetailedCloudFormationStackSummary>>
 
   readonly enrichStack: (
     stack: CloudFormationStack,
+  ) => Promise<DetailedCloudFormationStack>
+
+  readonly enrichStackSummary: (
+    stack: CloudFormationStackSummary,
   ) => Promise<DetailedCloudFormationStack>
 
   readonly getTemplateSummary: (
@@ -252,17 +259,21 @@ export const createCloudFormationClient = (
       },
     )
 
-  const describeStacks = (
-    stackNames: ReadonlyArray<StackName>,
-  ): Promise<Map<StackName, CloudFormationStack>> => {
+  const listNotDeletedStacks = (
+    stackNames?: ReadonlyArray<StackName>,
+  ): Promise<Map<StackName, DetailedCloudFormationStackSummary>> => {
     const collectedNames = new Set<StackName>()
     return withClient((c) =>
       pagedOperationV2({
-        operation: (params) => c.describeStacks(params),
-        params: {},
-        extractor: convertStacks,
-        filter: (s) => stackNames.includes(s.name),
+        operation: (params) => c.listStacks(params),
+        params: { StackStatusFilter: ACTIVE_STACK_STATUSES.slice() },
+        extractor: convertStackSummaries,
+        filter: (s) => !stackNames || stackNames.includes(s.name),
         onPage: (items) => {
+          if (!stackNames) {
+            return false
+          }
+
           items.forEach((item) => collectedNames.add(item.name))
           return stackNames.every((s) => collectedNames.has(s))
         },
@@ -280,6 +291,43 @@ export const createCloudFormationClient = (
       getCurrentTemplate(stack.name),
       getStackPolicy(stack.name),
     ])
+
+    const parameterMap = new Map(stack.parameters.map((p) => [p.key, p]))
+    const parameters = summary.parameters.map((declaration) => {
+      const stackParam = parameterMap.get(declaration.key)
+      if (!stackParam) {
+        throw new Error(`Parameter '${declaration.key}' not found`)
+      }
+
+      return {
+        ...stackParam,
+        ...declaration,
+      }
+    })
+
+    return {
+      ...stack,
+      templateBody,
+      stackPolicyBody,
+      parameters,
+    }
+  }
+
+  const enrichStackSummary = async (
+    stackSummary: CloudFormationStackSummary,
+  ): Promise<DetailedCloudFormationStack> => {
+    const [summary, templateBody, stackPolicyBody, stack] = await Promise.all([
+      getTemplateSummary({
+        StackName: stackSummary.name,
+      }),
+      getCurrentTemplate(stackSummary.name),
+      getStackPolicy(stackSummary.name),
+      describeStack(stackSummary.name),
+    ])
+
+    if (!stack) {
+      throw new Error(`Expected stack '${stackSummary.name}' to exist`)
+    }
 
     const parameterMap = new Map(stack.parameters.map((p) => [p.key, p]))
     const parameters = summary.parameters.map((declaration) => {
@@ -695,8 +743,9 @@ export const createCloudFormationClient = (
   return {
     validateTemplate,
     describeStack,
-    describeStacks,
+    listNotDeletedStacks,
     enrichStack,
+    enrichStackSummary,
     getTemplateSummary,
     getCurrentTemplate,
     initiateStackDeletion,

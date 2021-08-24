@@ -54,22 +54,22 @@ export const createUndeployStackTransitions = (): UndeployStackTransitions => ({
 /**
  * @hidden
  */
-export const executeAfterUndeployHooksOnError = <
-  S extends InitialUndeployStackState
->(
-  step: StackOperationStep<S>,
-): StackOperationStep<S> => async (state: S) => {
-  try {
-    return await step(state)
-  } catch (error) {
-    state.logger.error("An error occurred", error)
-    return state.transitions.executeAfterUndeployHooks({
-      events: [],
-      ...state,
-      error,
-      success: false,
-      status: "FAILED",
-      message: "Error",
-    })
+export const executeAfterUndeployHooksOnError =
+  <S extends InitialUndeployStackState>(
+    step: StackOperationStep<S>,
+  ): StackOperationStep<S> =>
+  async (state: S) => {
+    try {
+      return await step(state)
+    } catch (error) {
+      state.logger.error("An error occurred", error)
+      return state.transitions.executeAfterUndeployHooks({
+        events: [],
+        ...state,
+        error,
+        success: false,
+        status: "FAILED",
+        message: "Error",
+      })
+    }
   }
-}

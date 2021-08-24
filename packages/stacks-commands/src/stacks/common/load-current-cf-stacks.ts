@@ -1,4 +1,5 @@
-import { CloudFormationStack, StackName } from "@takomo/aws-model"
+import { StackName } from "@takomo/aws-model"
+import { CloudFormationStackSummary } from "@takomo/aws-model/src/cloudformation"
 import { getStackNames, InternalStack } from "@takomo/stacks-model"
 import { checksum, TkmLogger } from "@takomo/util"
 import R from "ramda"
@@ -11,14 +12,14 @@ const makeCredentialsRegionHash = ({
 
 const loadCfStacks = (
   stacks: ReadonlyArray<InternalStack>,
-): Promise<Map<StackName, CloudFormationStack>> => {
+): Promise<Map<StackName, CloudFormationStackSummary>> => {
   const stackNames = getStackNames(stacks)
-  return stacks[0].getCloudFormationClient().describeStacks(stackNames)
+  return stacks[0].getCloudFormationClient().listNotDeletedStacks(stackNames)
 }
 
-interface StackPair {
+export interface StackPair {
   readonly stack: InternalStack
-  readonly current?: CloudFormationStack
+  readonly current?: CloudFormationStackSummary
 }
 
 export const loadCurrentCfStacks = async (

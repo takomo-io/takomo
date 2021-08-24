@@ -1,6 +1,6 @@
 import {
   ClientRequestToken,
-  CloudFormationStack,
+  CloudFormationStackSummary,
   DetailedChangeSet,
   DetailedCloudFormationStack,
   StackEvent,
@@ -35,7 +35,7 @@ export interface InitialDeployStackState extends InitialStackOperationState {
   readonly configRepository: StacksConfigRepository
   readonly variables: StackOperationVariables
   readonly logger: TkmLogger
-  readonly currentStack?: CloudFormationStack
+  readonly currentStack?: CloudFormationStackSummary
   readonly dependencies: ReadonlyArray<Promise<StackResult>>
   readonly operationType: StackOperationType
   readonly state: DeployState
@@ -46,7 +46,7 @@ export interface InitialDeployStackState extends InitialStackOperationState {
  * @hidden
  */
 export interface CurrentStackHolder extends InitialDeployStackState {
-  readonly currentStack: CloudFormationStack
+  readonly currentStack: CloudFormationStackSummary
 }
 
 /**
@@ -62,7 +62,7 @@ export interface DetailedCurrentStackHolder extends InitialDeployStackState {
 export interface DeleteFailedStackClientTokenHolder
   extends InitialDeployStackState {
   readonly deleteFailedStackClientToken: string
-  readonly currentStack: CloudFormationStack
+  readonly currentStack: CloudFormationStackSummary
 }
 
 /**
