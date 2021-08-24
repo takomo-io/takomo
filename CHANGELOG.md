@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.31.2](https://github.com/takomo-io/takomo/compare/v3.31.1...v3.31.2) (2021-08-24)
+
+
+### Performance Improvements
+
+* **stacks:** optimize loading of current stacks ([#289](https://github.com/takomo-io/takomo/issues/289)) ([b291948](https://github.com/takomo-io/takomo/commit/b2919486479ccf927eebc109fc0d5395a5ce1b53)), closes [#288](https://github.com/takomo-io/takomo/issues/288)
+
+
+
+
+
 ## [3.31.1](https://github.com/takomo-io/takomo/compare/v3.31.0...v3.31.1) (2021-08-23)
 
 **Note:** Version bump only for package Takomo
