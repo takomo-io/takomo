@@ -48,12 +48,24 @@ export const executeUndeployContext = async (
     operations.map((s) => s.stack.path),
   )
 
+  const stacksOperationListener = io.createStacksOperationListener(
+    plan.operations.length,
+  )
+
   const executions = operations.reduce((executions, operation) => {
     const dependents = ignoreDependencies
       ? []
       : operation.stack.dependents.map((d) => executions.get(d)!)
 
-    const execution = deleteStack(timer, ctx, io, operation, dependents)
+    const execution = deleteStack(
+      timer,
+      ctx,
+      io,
+      operation,
+      dependents,
+      stacksOperationListener,
+    )
+
     executions.set(operation.stack.path, execution)
 
     return executions

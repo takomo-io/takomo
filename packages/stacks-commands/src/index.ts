@@ -1,11 +1,11 @@
 export { StacksOperationInput, StacksOperationOutput } from "./model"
+export { StacksOperationListener } from "./stacks/common/model"
 export { deployStacksCommand } from "./stacks/deploy/command"
 export { deployStacksCommandIamPolicy } from "./stacks/deploy/iam-policy"
 export {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
-  DeployStacksListener,
 } from "./stacks/deploy/model"
 export { StackDeployOperation, StacksDeployPlan } from "./stacks/deploy/plan"
 export { detectDriftCommand } from "./stacks/drift/command"
@@ -41,7 +41,6 @@ export { undeployStacksCommandIamPolicy } from "./stacks/undeploy/iam-policy"
 export {
   ConfirmUndeployAnswer,
   UndeployStacksIO,
-  UndeployStacksListener,
 } from "./stacks/undeploy/model"
 export {
   StacksUndeployPlan,

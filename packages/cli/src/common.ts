@@ -379,11 +379,17 @@ export const initCommandContext = async (
     argv["env-file"],
   )
 
+  const buildInfo = {
+    version,
+  }
+
   const logger = createLogger({ logLevel, writer: console.log })
+  logger.debug(`Takomo v${version}`)
 
   const awsClientProvider = createAwsClientProvider({ logger })
 
   return {
+    buildInfo,
     credentials,
     logLevel,
     variables,

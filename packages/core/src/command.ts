@@ -203,7 +203,15 @@ export interface CommandContext {
 /**
  * @hidden
  */
+export interface TakomoBuildInfo {
+  readonly version: string
+}
+
+/**
+ * @hidden
+ */
 export interface InternalCommandContext extends CommandContext {
+  readonly buildInfo: TakomoBuildInfo
   readonly projectConfig: InternalTakomoProjectConfig
   readonly awsClientProvider: InternalAwsClientProvider
 }

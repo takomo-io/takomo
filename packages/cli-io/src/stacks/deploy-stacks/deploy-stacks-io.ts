@@ -9,7 +9,6 @@ import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
-  DeployStacksListener,
   StacksDeployPlan,
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
@@ -25,6 +24,7 @@ import { createBaseIO } from "../../cli-io"
 import { formatStackEvent, formatStackStatus } from "../../formatters"
 import {
   chooseCommandPathInternal,
+  createStacksOperationListenerInternal,
   IOProps,
   printStacksOperationOutput,
 } from "../common"
@@ -122,21 +122,12 @@ const formatStackOperationType = (type: StackOperationType): string => {
 const ensureContentsEndsWithLineFeed = (content: string): string =>
   content.endsWith("\n") ? content : content + "\n"
 
-export interface DeployStacksIOProps
-  extends IOProps,
-    Partial<DeployStacksListener> {}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noOpListener = async () => {}
+export type DeployStacksIOProps = IOProps
 
 export const createDeployStacksIO = (
   props: DeployStacksIOProps,
 ): DeployStacksIO => {
-  const {
-    logger,
-    onStackDeployBegin = noOpListener,
-    onStackDeployComplete = noOpListener,
-  } = props
+  const { logger } = props
   const io = createBaseIO(props)
 
   // TODO: Come up some other solution
@@ -374,6 +365,9 @@ export const createDeployStacksIO = (
   const chooseCommandPath = (rootStackGroup: StackGroup) =>
     chooseCommandPathInternal(io, rootStackGroup)
 
+  const createStacksOperationListener = (stackCount: number) =>
+    createStacksOperationListenerInternal(logger, "deploy", stackCount)
+
   return {
     ...logger,
     ...io,
@@ -382,7 +376,6 @@ export const createDeployStacksIO = (
     confirmStackDeploy,
     printOutput,
     printStackEvent,
-    onStackDeployBegin,
-    onStackDeployComplete,
+    createStacksOperationListener,
   }
 }

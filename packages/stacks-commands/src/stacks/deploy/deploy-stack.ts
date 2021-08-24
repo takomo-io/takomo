@@ -7,6 +7,7 @@ import {
   StackResult,
 } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
+import { StacksOperationListener } from "../common/model"
 import { executeSteps } from "../common/steps"
 import { DeployStacksIO, DeployState } from "./model"
 import { InitialDeployStackState } from "./states"
@@ -24,6 +25,7 @@ export const deployStack = async (
   dependencies: Promise<StackResult>[],
   operationType: StackOperationType,
   configRepository: StacksConfigRepository,
+  stacksOperationListener: StacksOperationListener,
   currentStack?: CloudFormationStackSummary,
 ): Promise<StackResult> => {
   const logger = io.childLogger(stack.path)
@@ -52,6 +54,7 @@ export const deployStack = async (
     currentStack,
     ctx,
     configRepository,
+    stacksOperationListener,
     stackExistedBeforeOperation: currentStack !== undefined,
     totalTimer: timer.startChild(stack.path),
     transitions: createDeployStackTransitions(),

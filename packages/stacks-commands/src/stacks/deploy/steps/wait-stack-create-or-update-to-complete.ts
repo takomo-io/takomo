@@ -8,15 +8,8 @@ import { StackOperationClientTokenHolder } from "../states"
  */
 export const waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperationClientTokenHolder> =
   async (state) => {
-    const {
-      stack,
-      clientToken,
-      operationType,
-      io,
-      logger,
-      transitions,
-      stackId,
-    } = state
+    const { stack, clientToken, operationType, io, transitions, stackId } =
+      state
 
     const eventListener = R.curry(io.printStackEvent)(stack.path)
     const timeout = operationType === "UPDATE" ? stack.timeout.update : 0
@@ -35,8 +28,6 @@ export const waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperatio
     const { stackStatus, events } = await stack
       .getCloudFormationClient()
       .waitStackDeployToComplete(waitProps)
-
-    logger.info(`Deploy completed with status: ${stackStatus}`)
 
     const success =
       stackStatus === "UPDATE_COMPLETE" || stackStatus === "CREATE_COMPLETE"
