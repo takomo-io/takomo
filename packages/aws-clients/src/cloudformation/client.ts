@@ -35,7 +35,6 @@ import {
   convertStack,
   convertStackDriftDetectionStatus,
   convertStackEvents,
-  convertStacks,
   convertStackSummaries,
   convertTemplateSummary,
 } from "./convert"
@@ -259,24 +258,6 @@ export const createCloudFormationClient = (
         throw e
       },
     )
-
-  const describeStacks = (
-    stackNames: ReadonlyArray<StackName>,
-  ): Promise<Map<StackName, CloudFormationStack>> => {
-    const collectedNames = new Set<StackName>()
-    return withClient((c) =>
-      pagedOperationV2({
-        operation: (params) => c.describeStacks(params),
-        params: {},
-        extractor: convertStacks,
-        filter: (s) => stackNames.includes(s.name),
-        onPage: (items) => {
-          items.forEach((item) => collectedNames.add(item.name))
-          return stackNames.every((s) => collectedNames.has(s))
-        },
-      }),
-    ).then((stacks) => new Map(arrayToMap(stacks, (s) => s.name)))
-  }
 
   const listNotDeletedStacks = (
     stackNames?: ReadonlyArray<StackName>,
