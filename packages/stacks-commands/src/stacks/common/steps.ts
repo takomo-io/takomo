@@ -86,8 +86,10 @@ const executeStep = async <S extends InitialStackOperationState>(
 export const executeSteps = async (
   state: InitialStackOperationState,
 ): Promise<StackResult> => {
-  const { transitions, totalTimer, stack } = state
+  const { transitions, totalTimer, stack, stacksOperationListener } = state
   const logger = stack.logger
+
+  await stacksOperationListener.onStackOperationBegin(stack)
 
   let result = await transitions.start(state)
   while (!result.completed) {
@@ -100,5 +102,11 @@ export const executeSteps = async (
   }
 
   totalTimer.stop()
+
+  await stacksOperationListener.onStackOperationComplete(stack, {
+    ...result.props,
+    timer: totalTimer,
+  })
+
   return { ...result.props, timer: totalTimer }
 }

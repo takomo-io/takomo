@@ -7,12 +7,7 @@ import {
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets-commands"
 import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
-import {
-  DeployStacksIO,
-  DeployStacksListener,
-  UndeployStacksIO,
-  UndeployStacksListener,
-} from "@takomo/stacks-commands"
+import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { splitTextInLines } from "@takomo/util"
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
@@ -57,10 +52,7 @@ const makeChoices = ({
   },
 ]
 
-interface DeploymentOperationIOProps
-  extends IOProps,
-    Partial<UndeployStacksListener>,
-    Partial<DeployStacksListener> {
+interface DeploymentOperationIOProps extends IOProps {
   readonly messages: Messages
 }
 
@@ -92,28 +84,17 @@ const getConfigSetNameByType = (type: ConfigSetType): string => {
 export const createDeploymentTargetsOperationIO = (
   props: DeploymentOperationIOProps,
 ): DeploymentTargetsOperationIO => {
-  const {
-    logger,
-    messages,
-    onStackDeployBegin,
-    onStackUndeployBegin,
-    onStackDeployComplete,
-    onStackUndeployComplete,
-  } = props
+  const { logger, messages } = props
   const io = createBaseIO(props)
 
   const createStackDeployIO = (loggerName: string): DeployStacksIO =>
     createDeployStacksIO({
       logger: logger.childLogger(loggerName),
-      onStackDeployComplete,
-      onStackDeployBegin,
     })
 
   const createStackUndeployIO = (loggerName: string): UndeployStacksIO =>
     createUndeployStacksIO({
       logger: logger.childLogger(loggerName),
-      onStackUndeployBegin,
-      onStackUndeployComplete,
     })
 
   const printOutput = (

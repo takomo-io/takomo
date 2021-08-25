@@ -7,6 +7,7 @@ import {
 } from "@takomo/stacks-model"
 import { createTimer, Timer } from "@takomo/util"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
+import { StacksOperationListener } from "../common/model"
 import { deployStack } from "./deploy-stack"
 import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"
 import { ConfirmDeployAnswer, DeployStacksIO, DeployState } from "./model"
@@ -37,6 +38,7 @@ const executeStacksInParallel = async (
   map: Map<StackPath, Promise<StackResult>>,
   configRepository: StacksConfigRepository,
   outputFormat: OutputFormat,
+  stacksOperationListener: StacksOperationListener,
 ): Promise<StacksOperationOutput> => {
   const executions = operations.reduce((executions, operation) => {
     const { stack, type, currentStack } = operation
@@ -62,6 +64,7 @@ const executeStacksInParallel = async (
       dependencies,
       type,
       configRepository,
+      stacksOperationListener,
       currentStack,
     )
     executions.set(stack.path, execution)
@@ -122,6 +125,10 @@ export const executeDeployContext = async (
     state.autoConfirm = true
   }
 
+  const deployStacksListener = io.createStacksOperationListener(
+    plan.operations.length,
+  )
+
   if (state.autoConfirm) {
     return executeStacksInParallel(
       ctx,
@@ -133,6 +140,7 @@ export const executeDeployContext = async (
       new Map(),
       configRepository,
       input.outputFormat,
+      deployStacksListener,
     )
   }
 
@@ -169,6 +177,7 @@ export const executeDeployContext = async (
       dependencies,
       operation.type,
       configRepository,
+      deployStacksListener,
       operation.currentStack,
     )
 
@@ -196,6 +205,7 @@ export const executeDeployContext = async (
         promisedExecutions,
         configRepository,
         input.outputFormat,
+        deployStacksListener,
       )
     }
   }

@@ -1,6 +1,9 @@
 import { StackEvent, StackName } from "@takomo/aws-model"
 import { CommandStatus } from "@takomo/core"
-import { StacksOperationOutput } from "@takomo/stacks-commands"
+import {
+  StacksOperationListener,
+  StacksOperationOutput,
+} from "@takomo/stacks-commands"
 import {
   CommandPath,
   StackGroup,
@@ -189,3 +192,41 @@ export interface IOProps extends BaseIOProps {
  */
 export const formatDate = (d: any): string =>
   d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
+
+/**
+ * @hidden
+ */
+export const createStacksOperationListenerInternal = (
+  logger: TkmLogger,
+  operation: string,
+  stackCount: number,
+): StacksOperationListener => {
+  let stacksInProgress = 0
+  let stacksCompleted = 0
+
+  return {
+    onStackOperationBegin: async (stack) => {
+      stack.logger.info(`Begin stack ${operation}`)
+      stacksInProgress++
+    },
+    onStackOperationComplete: async (stack, { timer, success }) => {
+      if (success) {
+        stack.logger.info(
+          `Stack ${operation} succeeded in ${timer.getFormattedTimeElapsed()}`,
+        )
+      } else {
+        stack.logger.info(
+          `Stack ${operation} failed in ${timer.getFormattedTimeElapsed()}`,
+        )
+      }
+
+      stacksInProgress--
+      stacksCompleted++
+      const waitingCount = stackCount - stacksInProgress - stacksCompleted
+      const percentage = ((stacksCompleted / stackCount) * 100).toFixed(1)
+      logger.info(
+        `Stacks waiting: ${waitingCount}, in progress: ${stacksInProgress}, completed: ${stacksCompleted}/${stackCount} (${percentage}%)`,
+      )
+    },
+  }
+}
