@@ -6,6 +6,7 @@ import {
   StackResult,
 } from "@takomo/stacks-model"
 import { createTimer, Timer } from "@takomo/util"
+import { Policy } from "cockatiel"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { StacksOperationListener } from "../common/model"
 import { deployStack } from "./deploy-stack"
@@ -40,6 +41,8 @@ const executeStacksInParallel = async (
   outputFormat: OutputFormat,
   stacksOperationListener: StacksOperationListener,
 ): Promise<StacksOperationOutput> => {
+  const bulkhead = Policy.bulkhead(ctx.concurrentStacks, 1000)
+
   const executions = operations.reduce((executions, operation) => {
     const { stack, type, currentStack } = operation
     const dependencies = ignoreDependencies
@@ -55,20 +58,22 @@ const executeStacksInParallel = async (
           return dependency
         })
 
-    const execution = deployStack(
-      timer,
-      ctx,
-      io,
-      state,
-      stack,
-      dependencies,
-      type,
-      configRepository,
-      stacksOperationListener,
-      currentStack,
+    const execution = bulkhead.execute(() =>
+      deployStack(
+        timer,
+        ctx,
+        io,
+        state,
+        stack,
+        dependencies,
+        type,
+        configRepository,
+        stacksOperationListener,
+        currentStack,
+      ),
     )
-    executions.set(stack.path, execution)
 
+    executions.set(stack.path, execution)
     return executions
   }, map)
 

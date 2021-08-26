@@ -130,6 +130,7 @@ export const buildStacksContext = async ({
     templateEngine,
     rootStackGroup,
     stacks,
+    concurrentStacks: 20,
     getStackGroup: (stackGroupPath: StackGroupPath) =>
       stackGroups.get(stackGroupPath),
     getStackByExactPath: (path: StackPath, stackGroupPath?: StackGroupPath) => {
