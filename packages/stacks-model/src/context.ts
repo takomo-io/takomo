@@ -43,6 +43,7 @@ export interface StacksContext extends CommandContext {
  * @hidden
  */
 export interface InternalStacksContext extends CommandContext {
+  readonly concurrentStacks: number
   readonly credentialManager: CredentialManager
   readonly templateEngine: TemplateEngine
   readonly rootStackGroup: StackGroup

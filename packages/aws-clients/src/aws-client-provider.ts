@@ -53,7 +53,13 @@ const createDescribeEventsBulkhead = (): IPolicy => {
 }
 
 const createGetTemplateSummaryBulkhead = (): IPolicy => {
-  const limit = 2
+  const limit = 1
+  const queue = 1000
+  return Policy.bulkhead(limit, queue)
+}
+
+const createValidateTemplateBulkhead = (): IPolicy => {
+  const limit = 4
   const queue = 1000
   return Policy.bulkhead(limit, queue)
 }
@@ -68,6 +74,7 @@ export const createAwsClientProvider = (
   const regions = new Set<Region>()
   const describeEventsBulkhead = createDescribeEventsBulkhead()
   const getTemplateSummaryBulkhead = createGetTemplateSummaryBulkhead()
+  const validateTemplateBulkhead = createValidateTemplateBulkhead()
 
   const listener = {
     onApiCall: (props: ApiCallProps): void => {
@@ -86,6 +93,7 @@ export const createAwsClientProvider = (
         ...props,
         describeEventsBulkhead,
         getTemplateSummaryBulkhead,
+        validateTemplateBulkhead,
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
       })
