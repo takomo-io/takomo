@@ -9,9 +9,12 @@ export const initiateFailedStackDelete: StackOperationStep<CurrentStackHolder> =
   async (state) => {
     const { transitions, stack, currentStack } = state
 
+    const client = stack.getCloudFormationClient()
+    await client.updateTerminationProtection(stack.name, false)
+
     const deleteFailedStackClientToken = uuid()
 
-    await stack.getCloudFormationClient().initiateStackDeletion({
+    await client.initiateStackDeletion({
       StackName: stack.name,
       ClientRequestToken: deleteFailedStackClientToken,
     })
