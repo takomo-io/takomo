@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.32.0](https://github.com/takomo-io/takomo/compare/v3.31.2...v3.32.0) (2021-08-26)
+
+
+### Bug Fixes
+
+* **stacks:** disable termination protection from failed stacks before deleting them ([#294](https://github.com/takomo-io/takomo/issues/294)) ([6c40ef8](https://github.com/takomo-io/takomo/commit/6c40ef850d1b55a97cbd0fabb34edcc1024469b8)), closes [#293](https://github.com/takomo-io/takomo/issues/293)
+
+
+### Features
+
+* **stacks:** improve logging ([#291](https://github.com/takomo-io/takomo/issues/291)) ([078388e](https://github.com/takomo-io/takomo/commit/078388ee954e9a8f8bb446797159ae3cc8508ea8))
+
+
+### Performance Improvements
+
+* **stacks:** add concurrency controls to stack deployment ([#292](https://github.com/takomo-io/takomo/issues/292)) ([caeb9a2](https://github.com/takomo-io/takomo/commit/caeb9a2d05c757b948fa4e4c88035ebf97ed882e))
+
+
+
+
+
 ## [3.31.2](https://github.com/takomo-io/takomo/compare/v3.31.1...v3.31.2) (2021-08-24)
 
 

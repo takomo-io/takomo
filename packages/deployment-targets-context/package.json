@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-context",
-  "version": "3.31.2",
+  "version": "3.32.0",
   "description": "Takomo Deployment Targets Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,12 +27,12 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.31.2",
-    "@takomo/config-sets": "3.31.2",
-    "@takomo/core": "3.31.2",
-    "@takomo/deployment-targets-config": "3.31.2",
-    "@takomo/deployment-targets-model": "3.31.2",
-    "@takomo/stacks-context": "3.31.2",
+    "@takomo/aws-clients": "3.32.0",
+    "@takomo/config-sets": "3.32.0",
+    "@takomo/core": "3.32.0",
+    "@takomo/deployment-targets-config": "3.32.0",
+    "@takomo/deployment-targets-model": "3.32.0",
+    "@takomo/stacks-context": "3.32.0",
     "@takomo/util": "3.29.0"
   },
   "engines": {
