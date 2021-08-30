@@ -1,19 +1,21 @@
 import { AccountId } from "@takomo/aws-model"
 import { IOProps } from "@takomo/cli-io"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
-import { ConfigSetType } from "@takomo/config-sets"
+import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import {
   accountsOperationCommand,
   AccountsOperationIO,
 } from "@takomo/organization-commands"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { DeploymentOperation } from "@takomo/stacks-model"
+import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle, RunProps } from "../../common"
 import {
   ACCOUNT_ID_ALIAS_OPT,
   ACCOUNT_ID_OPT,
+  COMMAND_PATH_OPT,
   CONCURRENT_ACCOUNTS_OPT,
+  CONFIG_SET_OPT,
   ORGANIZATIONAL_UNITS_OPT,
 } from "../../constants"
 
@@ -21,6 +23,8 @@ export type AccountOperationCommandArgs = {
   readonly [ORGANIZATIONAL_UNITS_OPT]: ReadonlyArray<OrganizationalUnitPath>
   readonly [ACCOUNT_ID_OPT]: ReadonlyArray<AccountId>
   readonly [CONCURRENT_ACCOUNTS_OPT]: number
+  readonly [COMMAND_PATH_OPT]: CommandPath | undefined
+  readonly [CONFIG_SET_OPT]: ConfigSetName | undefined
 }
 
 const accountsOperationBuilder = (yargs: Argv<AccountOperationCommandArgs>) =>
@@ -41,6 +45,18 @@ const accountsOperationBuilder = (yargs: Argv<AccountOperationCommandArgs>) =>
         global: false,
         demandOption: false,
         default: [],
+      },
+      [CONFIG_SET_OPT]: {
+        description: "Config set to use in the operation",
+        string: true,
+        global: false,
+        demandOption: false,
+      },
+      [COMMAND_PATH_OPT]: {
+        description: "Command path to include in the operation",
+        string: true,
+        global: false,
+        demandOption: false,
       },
     })
     .positional(ORGANIZATIONAL_UNITS_OPT, {
@@ -70,6 +86,8 @@ const createAccountsOperationHandler =
         organizationalUnits: argv[ORGANIZATIONAL_UNITS_OPT],
         accountIds: argv[ACCOUNT_ID_OPT],
         concurrentAccounts: argv[CONCURRENT_ACCOUNTS_OPT],
+        commandPath: argv[COMMAND_PATH_OPT],
+        configSetName: argv[CONFIG_SET_OPT],
       }),
       configRepository: (ctx, logger) =>
         createFileSystemOrganizationConfigRepository({

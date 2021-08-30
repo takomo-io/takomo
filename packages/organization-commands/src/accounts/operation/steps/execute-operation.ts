@@ -35,7 +35,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
       transitions,
       io,
       accountsLaunchPlan: plan,
-      input: { configSetType },
+      input: { configSetType, configSetName },
       totalTimer,
     } = state1
     const results = new Array<OrganizationalUnitAccountsOperationResult>()
@@ -71,6 +71,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
           state,
           configSetType,
           stage.stage,
+          configSetName,
         )
 
         results.push(result)

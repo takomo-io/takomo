@@ -5,6 +5,7 @@ import {
   OrganizationFeatureSet,
 } from "@takomo/aws-model"
 import { createFileSystemOrganizationConfigRepository } from "@takomo/config-repository-fs"
+import { ConfigSetName } from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
 import {
   accountsOperationCommand,
@@ -17,6 +18,7 @@ import {
 } from "@takomo/organization-commands"
 import { OrganizationConfigRepository } from "@takomo/organization-context"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
+import { CommandPath } from "@takomo/stacks-model"
 import { createConsoleLogger, createTimer } from "@takomo/util"
 import {
   AccountsOperationOutputMatcher,
@@ -291,6 +293,8 @@ export interface ExecuteAccountsOperationCommandProps
   readonly accountIds?: ReadonlyArray<AccountId>
   readonly organizationalUnits?: ReadonlyArray<OrganizationalUnitPath>
   readonly concurrentAccounts?: number
+  readonly configSetName?: ConfigSetName
+  readonly commandPath?: CommandPath
 }
 
 export const executeDeployAccountsCommand = (
@@ -333,6 +337,8 @@ export const executeDeployAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          configSetName: props.configSetName,
+          commandPath: props.commandPath,
           outputFormat: "text",
         },
       })
@@ -379,6 +385,8 @@ export const executeUndeployAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          configSetName: props.configSetName,
+          commandPath: props.commandPath,
           outputFormat: "text",
         },
       })
@@ -425,6 +433,8 @@ export const executeBootstrapAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          configSetName: props.configSetName,
+          commandPath: props.commandPath,
           outputFormat: "text",
         },
       })
@@ -471,6 +481,8 @@ export const executeTeardownAccountsCommand = (
           accountIds: props.accountIds ?? [],
           organizationalUnits: props.organizationalUnits ?? [],
           concurrentAccounts: props.concurrentAccounts ?? 1,
+          configSetName: props.configSetName,
+          commandPath: props.commandPath,
           outputFormat: "text",
         },
       })

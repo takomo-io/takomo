@@ -1,5 +1,6 @@
 import {
   executeDeployAccountsCommand,
+  executeDeployOrganizationCommand,
   executeUndeployAccountsCommand,
 } from "@takomo/test-integration"
 import {
@@ -10,6 +11,11 @@ import {
 
 const projectDir = "configs/config-sets-with-stages"
 
+beforeAll(() =>
+  executeDeployOrganizationCommand({ projectDir })
+    .expectCommandToSucceed()
+    .assert(),
+)
 describe("Config sets with stages", () => {
   test("Deploy", () =>
     executeDeployAccountsCommand({
