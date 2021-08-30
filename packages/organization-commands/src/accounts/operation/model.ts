@@ -1,6 +1,7 @@
 import { AccountId, OrganizationAccount } from "@takomo/aws-model"
 import {
   ConfigSetInstruction,
+  ConfigSetName,
   ConfigSetOperationResult,
   ConfigSetStage,
   ConfigSetType,
@@ -15,7 +16,7 @@ import {
 import { OrganizationAccountConfig } from "@takomo/organization-config"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { DeploymentOperation } from "@takomo/stacks-model"
+import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
 
 export interface AccountsOperationInput extends CommandInput {
@@ -24,6 +25,8 @@ export interface AccountsOperationInput extends CommandInput {
   readonly operation: DeploymentOperation
   readonly configSetType: ConfigSetType
   readonly concurrentAccounts: number
+  readonly configSetName?: ConfigSetName
+  readonly commandPath?: CommandPath
 }
 
 export interface AccountOperationResult extends CommandOutputBase {

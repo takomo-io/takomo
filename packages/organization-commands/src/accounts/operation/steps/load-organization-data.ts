@@ -8,5 +8,5 @@ export const loadOrganizationData: AccountsOperationStep<InitialAccountsOperatio
 
     const organizationState = await loadOrganizationState(ctx, io)
 
-    return transitions.validateConfiguration({ ...state, organizationState })
+    return transitions.planBasicConfig({ ...state, organizationState })
   }

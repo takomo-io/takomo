@@ -1,5 +1,6 @@
 import {
   executeDeployAccountsCommand,
+  executeDeployOrganizationCommand,
   executeUndeployAccountsCommand,
 } from "@takomo/test-integration"
 import {
@@ -26,6 +27,11 @@ const configSetResults = [
   },
 ]
 
+beforeAll(() =>
+  executeDeployOrganizationCommand({ projectDir })
+    .expectCommandToSucceed()
+    .assert(),
+)
 describe("concurrent accounts", () => {
   test("Deploy", () =>
     executeDeployAccountsCommand({ projectDir, concurrentAccounts: 4 })

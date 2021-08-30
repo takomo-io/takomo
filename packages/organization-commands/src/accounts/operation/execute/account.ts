@@ -1,4 +1,5 @@
 import {
+  ConfigSetInstruction,
   ConfigSetName,
   ConfigSetOperationResult,
   ConfigSetStage,
@@ -15,19 +16,34 @@ import {
 import { AccountsOperationPlanHolder } from "../states"
 import { processConfigSet } from "./config-set"
 
-const getConfigSetsToProcess = (
-  configSetType: ConfigSetType,
-  account: PlannedLaunchableAccount,
-  stage?: ConfigSetStage,
-): ReadonlyArray<ConfigSetName> => {
+interface GetConfigSetsToProcessProps {
+  readonly configSetType: ConfigSetType
+  readonly account: PlannedLaunchableAccount
+  readonly stage?: ConfigSetStage
+  readonly configSetName?: ConfigSetName
+}
+
+const getConfigSetsToProcess = ({
+  configSetType,
+  account,
+  stage,
+  configSetName,
+}: GetConfigSetsToProcessProps): ReadonlyArray<ConfigSetName> => {
+  const configSetNameMatches = (cs: ConfigSetInstruction): boolean =>
+    configSetName === undefined || cs.name === configSetName
+  const configSetStageMatches = (cs: ConfigSetInstruction): boolean =>
+    stage === undefined || cs.stage === stage
+
   switch (configSetType) {
     case "bootstrap":
       return account.config.bootstrapConfigSets
-        .filter((c) => c.stage === stage)
+        .filter(configSetStageMatches)
+        .filter(configSetNameMatches)
         .map((c) => c.name)
     case "standard":
       return account.config.configSets
-        .filter((c) => c.stage === stage)
+        .filter(configSetStageMatches)
+        .filter(configSetNameMatches)
         .map((c) => c.name)
     default:
       throw new Error(`Unsupported config set type: ${configSetType}`)
@@ -42,6 +58,7 @@ export const processAccount = async (
   state: OperationState,
   configSetType: ConfigSetType,
   stage?: ConfigSetStage,
+  configSetName?: ConfigSetName,
 ): Promise<AccountOperationResult> => {
   const { io } = holder
 
@@ -49,11 +66,12 @@ export const processAccount = async (
   io.info(`Process account: '${account.id}'`)
   const results = new Array<ConfigSetOperationResult>()
 
-  const configSetNames = getConfigSetsToProcess(
+  const configSetNames = getConfigSetsToProcess({
     configSetType,
-    plannedAccount,
     stage,
-  )
+    configSetName,
+    account: plannedAccount,
+  })
 
   for (const configSetName of configSetNames) {
     const result = await processConfigSet(

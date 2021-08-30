@@ -36,8 +36,11 @@ export const processConfigSet = async (
     )
 
   const results = new Array<ConfigSetCommandPathOperationResult>()
+  const commandPaths = input.commandPath
+    ? [input.commandPath]
+    : configSet.commandPaths
 
-  for (const commandPath of configSet.commandPaths) {
+  for (const commandPath of commandPaths) {
     const result = await processCommandPath(
       holder,
       ou,

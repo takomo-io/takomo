@@ -54,6 +54,7 @@ export interface OrganizationContext extends InternalCommandContext {
   getAdminRoleNameForAccount: (accountId: AccountId) => string
   organizationConfig: OrganizationConfig
   getConfigSet: (name: ConfigSetName) => ConfigSet
+  hasConfigSet: (name: ConfigSetName) => boolean
   configRepository: OrganizationConfigRepository
   credentialManager: CredentialManager
   commandContext: InternalCommandContext
@@ -132,6 +133,9 @@ export const createOrganizationContext = ({
     return configSet
   }
 
+  const hasConfigSet = (name: ConfigSetName): boolean =>
+    organizationConfig.configSets.some((r) => r.name === name)
+
   const getStages = (): ReadonlyArray<ConfigSetStage> | undefined =>
     organizationConfig.stages?.slice()
 
@@ -143,6 +147,7 @@ export const createOrganizationContext = ({
     getAdminRoleNameForAccount,
     organizationConfig,
     getConfigSet,
+    hasConfigSet,
     configRepository,
     credentialManager,
     getStages,

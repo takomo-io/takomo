@@ -70,7 +70,5 @@ export const validateOrganizationState: AccountsOperationStep<OrganizationalUnit
       )
     }
 
-    validateAccountsLaunchConfiguration(ctx, organizationalUnits, accountIds)
-
     return transitions.planOperation(state)
   }

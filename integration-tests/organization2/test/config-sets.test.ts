@@ -1,5 +1,6 @@
 import {
   executeDeployAccountsCommand,
+  executeDeployOrganizationCommand,
   executeUndeployAccountsCommand,
 } from "@takomo/test-integration"
 import {
@@ -9,6 +10,12 @@ import {
 } from "./env"
 
 const projectDir = "configs/config-sets"
+
+beforeAll(() =>
+  executeDeployOrganizationCommand({ projectDir })
+    .expectCommandToSucceed()
+    .assert(),
+)
 
 describe("Config sets", () => {
   test("Legacy config sets with single command path", () =>

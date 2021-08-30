@@ -1,10 +1,12 @@
 import { createAwsSchemas } from "@takomo/aws-schema"
+import { createConfigSetsSchemas } from "@takomo/config-sets"
 import { CommandContext, CommandHandler } from "@takomo/core"
 import {
   buildOrganizationContext,
   OrganizationConfigRepository,
 } from "@takomo/organization-context"
 import { createOrganizationSchemas } from "@takomo/organization-schema"
+import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
 import Joi, { ObjectSchema } from "joi"
 import {
@@ -15,16 +17,20 @@ import {
 import { executeSteps } from "./steps"
 import { createAccountsOperationTransitions } from "./transitions"
 
-const inputSchema = (ctx: CommandContext): ObjectSchema => {
+const inputSchema = ({ regions }: CommandContext): ObjectSchema => {
+  const { commandPath } = createStacksSchemas({ regions })
+  const { configSetName } = createConfigSetsSchemas({ regions })
   const { organizationalUnitPath } = createOrganizationSchemas({
-    regions: ctx.regions,
+    regions,
   })
 
-  const { accountId } = createAwsSchemas({ regions: ctx.regions })
+  const { accountId } = createAwsSchemas({ regions })
 
   return Joi.object({
     organizationalUnits: Joi.array().items(organizationalUnitPath).unique(),
     accountIds: Joi.array().items(accountId).unique(),
+    configSet: configSetName,
+    commandPath,
   }).unknown(true)
 }
 
