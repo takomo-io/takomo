@@ -5,9 +5,6 @@ import {
   OrganizationState,
 } from "@takomo/organization-context"
 import { Timer } from "@takomo/util"
-import { OrganizationBasicConfigDeploymentPlan } from "../../common/plan/basic-config/model"
-import { OrganizationalUnitsDeploymentPlan } from "../../common/plan/organizational-units/model"
-import { PolicyDeploymentPlan } from "../../common/plan/policies/model"
 import {
   AccountsLaunchPlan,
   AccountsOperationInput,
@@ -27,18 +24,6 @@ export interface InitialAccountsOperationState {
 
 export interface OrganizationStateHolder extends InitialAccountsOperationState {
   readonly organizationState: OrganizationState
-}
-
-export interface BasicConfigPlanHolder extends OrganizationStateHolder {
-  readonly organizationBasicConfigPlan: OrganizationBasicConfigDeploymentPlan
-}
-
-export interface PoliciesPlanHolder extends BasicConfigPlanHolder {
-  readonly policiesPlan: PolicyDeploymentPlan
-}
-
-export interface OrganizationalUnitsPlanHolder extends PoliciesPlanHolder {
-  readonly organizationalUnitsPlan: OrganizationalUnitsDeploymentPlan
 }
 
 export interface AccountsOperationPlanHolder extends OrganizationStateHolder {

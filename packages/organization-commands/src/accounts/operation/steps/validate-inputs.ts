@@ -1,10 +1,10 @@
 import { OrganizationalUnitConfig } from "@takomo/organization-config"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
 import R from "ramda"
-import { OrganizationStateHolder } from "../states"
+import { InitialAccountsOperationState } from "../states"
 import { AccountsOperationStep } from "../steps"
 
-export const validateInputs: AccountsOperationStep<OrganizationStateHolder> =
+export const validateInputs: AccountsOperationStep<InitialAccountsOperationState> =
   async (state) => {
     const {
       transitions,
@@ -45,5 +45,5 @@ export const validateInputs: AccountsOperationStep<OrganizationStateHolder> =
       })
     }
 
-    return transitions.planOperation(state)
+    return transitions.loadOrganizationData(state)
   }

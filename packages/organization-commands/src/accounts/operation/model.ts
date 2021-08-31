@@ -1,6 +1,5 @@
-import { AccountId, OrganizationAccount } from "@takomo/aws-model"
+import { AccountId } from "@takomo/aws-model"
 import {
-  ConfigSetInstruction,
   ConfigSetName,
   ConfigSetOperationResult,
   ConfigSetStage,
@@ -13,11 +12,11 @@ import {
   ConfirmResult,
   IO,
 } from "@takomo/core"
-import { OrganizationAccountConfig } from "@takomo/organization-config"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
+import { AccountsPlan } from "../common/model"
 
 export interface AccountsOperationInput extends CommandInput {
   readonly organizationalUnits: ReadonlyArray<string>
@@ -62,27 +61,6 @@ export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
   ) => AccountsListener
 }
 
-export interface PlannedLaunchableAccount {
-  readonly account: OrganizationAccount
-  readonly config: OrganizationAccountConfig
-}
-
-export interface PlannedAccountDeploymentOrganizationalUnit {
-  readonly path: string
-  readonly accountAdminRoleName?: string
-  readonly accountBootstrapRoleName?: string
-  readonly accounts: ReadonlyArray<PlannedLaunchableAccount>
-  readonly vars: any
-  readonly configSets: ReadonlyArray<ConfigSetInstruction>
-}
-
-export interface AccountsLaunchStagePlan {
-  readonly stage?: ConfigSetStage
-  readonly organizationalUnits: ReadonlyArray<PlannedAccountDeploymentOrganizationalUnit>
-}
-
-export interface AccountsLaunchPlan {
+export interface AccountsLaunchPlan extends AccountsPlan {
   readonly hasChanges: boolean
-  readonly stages: ReadonlyArray<AccountsLaunchStagePlan>
-  readonly configSetType: ConfigSetType
 }

@@ -8,17 +8,14 @@ import {
 import { resolveCommandOutputBase } from "@takomo/core"
 import { OperationState } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
-import {
-  PlannedAccountDeploymentOrganizationalUnit,
-  PlannedLaunchableAccount,
-} from "../model"
+import { AccountsPlanAccount, AccountsPlanOU } from "../../common/model"
 import { AccountsOperationPlanHolder } from "../states"
 import { processCommandPath } from "./command-path"
 
 export const processConfigSet = async (
   holder: AccountsOperationPlanHolder,
-  ou: PlannedAccountDeploymentOrganizationalUnit,
-  plannedAccount: PlannedLaunchableAccount,
+  ou: AccountsPlanOU,
+  plannedAccount: AccountsPlanAccount,
   configSetName: ConfigSetName,
   configSetTimer: Timer,
   state: OperationState,

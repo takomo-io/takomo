@@ -6,23 +6,16 @@ import {
   AccountsOperationFailedState,
   AccountsOperationPlanHolder,
   AccountsOperationSkippedState,
-  BasicConfigPlanHolder,
   InitialAccountsOperationState,
-  OrganizationalUnitsPlanHolder,
   OrganizationStateHolder,
-  PoliciesPlanHolder,
 } from "./states"
 import { AccountsOperationStep, StepResult } from "./steps"
 import { confirmOperation } from "./steps/confirm-operation"
 import { executeOperation } from "./steps/execute-operation"
 import { loadOrganizationData } from "./steps/load-organization-data"
-import { planBasicConfig } from "./steps/plan-basic-config"
 import { planOperation } from "./steps/plan-operation"
-import { planOrganizationalUnits } from "./steps/plan-organizational-units"
-import { planPolicies } from "./steps/plan-policies"
 import { validateConfiguration } from "./steps/validate-configuration"
 import { validateInputs } from "./steps/validate-inputs"
-import { validateOrganizationState } from "./steps/validate-organization-state"
 
 type AccountsOperationCompletedProps = Omit<AccountsOperationOutput, "timer">
 
@@ -60,19 +53,10 @@ export class AccountsOperationInProgress<
 
 export interface AccountsOperationTransitions {
   start: AccountsOperationStep<InitialAccountsOperationState>
+  loadOrganizationData: AccountsOperationStep<InitialAccountsOperationState>
   validateConfiguration: AccountsOperationStep<OrganizationStateHolder>
-
-  planBasicConfig: AccountsOperationStep<OrganizationStateHolder>
-  planPolicies: AccountsOperationStep<BasicConfigPlanHolder>
-  planOrganizationalUnits: AccountsOperationStep<PoliciesPlanHolder>
-
-  validateOrganizationState: AccountsOperationStep<OrganizationalUnitsPlanHolder>
-
-  validateInputs: AccountsOperationStep<OrganizationStateHolder>
-
   planOperation: AccountsOperationStep<OrganizationStateHolder>
   confirmOperation: AccountsOperationStep<AccountsOperationPlanHolder>
-
   executeOperation: AccountsOperationStep<AccountsOperationPlanHolder>
   cancelAccountsOperation: AccountsOperationStep<AccountsOperationCancelledState>
   skipAccountsOperation: AccountsOperationStep<AccountsOperationSkippedState>
@@ -94,26 +78,18 @@ export const inProgress =
 
 export const createAccountsOperationTransitions =
   (): AccountsOperationTransitions => ({
-    start: inProgress("load-organization-data", loadOrganizationData),
-    validateOrganizationState: inProgress(
-      "validate-organization-state",
-      validateOrganizationState,
+    start: inProgress("validate-inputs", validateInputs),
+    loadOrganizationData: inProgress(
+      "load-organization-data",
+      loadOrganizationData,
     ),
-    planOperation: inProgress("plan-operation", planOperation),
-    confirmOperation: inProgress("confirm-operation", confirmOperation),
-    executeOperation: inProgress("execute-operation", executeOperation),
-    planBasicConfig: inProgress("plan-basic-config", planBasicConfig),
-    planOrganizationalUnits: inProgress(
-      "plan-organizational-units",
-      planOrganizationalUnits,
-    ),
-    planPolicies: inProgress("plan-policies", planPolicies),
-    validateInputs: inProgress("validate-inputs", validateInputs),
     validateConfiguration: inProgress(
       "validate-configuration",
       validateConfiguration,
     ),
-
+    planOperation: inProgress("plan-operation", planOperation),
+    confirmOperation: inProgress("confirm-operation", confirmOperation),
+    executeOperation: inProgress("execute-operation", executeOperation),
     cancelAccountsOperation: async (
       state: AccountsOperationCancelledState,
     ): Promise<StepResult> =>

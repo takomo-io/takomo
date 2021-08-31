@@ -19,6 +19,13 @@ export {
   DeleteAccountAliasIO,
   DeleteAccountAliasOutput,
 } from "./accounts/delete-account-alias/model"
+export { listAccountsStacksCommand } from "./accounts/list-stacks/command"
+export { listAccountsStacksCommandIamPolicy } from "./accounts/list-stacks/iam-policy"
+export {
+  ListAccountsStacksInput,
+  ListAccountsStacksIO,
+  ListAccountsStacksOutput,
+} from "./accounts/list-stacks/model"
 export { listAccountsCommand } from "./accounts/list/command"
 export { listAccountsCommandIamPolicy } from "./accounts/list/iam-policy"
 export {

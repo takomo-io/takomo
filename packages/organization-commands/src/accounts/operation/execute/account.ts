@@ -8,17 +8,14 @@ import {
 import { resolveCommandOutputBase } from "@takomo/core"
 import { OperationState } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
-import {
-  AccountOperationResult,
-  PlannedAccountDeploymentOrganizationalUnit,
-  PlannedLaunchableAccount,
-} from "../model"
+import { AccountsPlanAccount, AccountsPlanOU } from "../../common/model"
+import { AccountOperationResult } from "../model"
 import { AccountsOperationPlanHolder } from "../states"
 import { processConfigSet } from "./config-set"
 
 interface GetConfigSetsToProcessProps {
   readonly configSetType: ConfigSetType
-  readonly account: PlannedLaunchableAccount
+  readonly account: AccountsPlanAccount
   readonly stage?: ConfigSetStage
   readonly configSetName?: ConfigSetName
 }
@@ -52,8 +49,8 @@ const getConfigSetsToProcess = ({
 
 export const processAccount = async (
   holder: AccountsOperationPlanHolder,
-  organizationalUnit: PlannedAccountDeploymentOrganizationalUnit,
-  plannedAccount: PlannedLaunchableAccount,
+  organizationalUnit: AccountsPlanOU,
+  plannedAccount: AccountsPlanAccount,
   accountTimer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,

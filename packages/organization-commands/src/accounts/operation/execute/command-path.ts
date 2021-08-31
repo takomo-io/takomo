@@ -24,11 +24,8 @@ import {
 } from "@takomo/stacks-model"
 import { createTimer, deepCopy, Timer } from "@takomo/util"
 import merge from "lodash.merge"
-import {
-  AccountsOperationIO,
-  PlannedAccountDeploymentOrganizationalUnit,
-  PlannedLaunchableAccount,
-} from "../model"
+import { AccountsPlanAccount, AccountsPlanOU } from "../../common/model"
+import { AccountsOperationIO } from "../model"
 import { AccountsOperationPlanHolder } from "../states"
 
 const executeOperation = async (
@@ -64,7 +61,7 @@ const executeOperation = async (
 
 const getRoleName = (
   configSetType: ConfigSetType,
-  ou: PlannedAccountDeploymentOrganizationalUnit,
+  ou: AccountsPlanOU,
   account: OrganizationAccountConfig,
   organizationConfigFile: OrganizationConfig,
 ): string => {
@@ -90,8 +87,8 @@ const getRoleName = (
 
 export const processCommandPath = async (
   holder: AccountsOperationPlanHolder,
-  ou: PlannedAccountDeploymentOrganizationalUnit,
-  plannedAccount: PlannedLaunchableAccount,
+  ou: AccountsPlanOU,
+  plannedAccount: AccountsPlanAccount,
   configSetName: ConfigSetName,
   commandPath: CommandPath,
   commandPathTimer: Timer,

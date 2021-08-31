@@ -1,0 +1,53 @@
+import {
+  OrganizationConfigRepository,
+  OrganizationContext,
+  OrganizationState,
+} from "@takomo/organization-context"
+import { TakomoError, TkmLogger } from "@takomo/util"
+import { planOrganizationBasicConfig } from "../../common/plan/basic-config/organization-basic-config"
+import { planOrganizationalUnitsDeploy } from "../../common/plan/organizational-units/plan-organizational-units-deploy"
+import { planOrganizationPolicies } from "../../common/plan/policies/plan-organization-policies"
+
+export interface ValidateOrganizationConfigIsInSyncWithRemoteStateProps {
+  readonly organizationState: OrganizationState
+  readonly ctx: OrganizationContext
+  readonly logger: TkmLogger
+  readonly configRepository: OrganizationConfigRepository
+}
+
+export const validateOrganizationConfigIsInSyncWithRemoteState = async ({
+  organizationState,
+  ctx,
+  logger,
+  configRepository,
+}: ValidateOrganizationConfigIsInSyncWithRemoteStateProps): Promise<void> => {
+  const basicConfigPlan = await planOrganizationBasicConfig({
+    ctx,
+    logger,
+    organizationState,
+  })
+
+  const organizationalUnitsPlan = await planOrganizationalUnitsDeploy({
+    ctx,
+    basicConfigPlan,
+    organizationState,
+    logger,
+  })
+
+  const policiesPlan = await planOrganizationPolicies({
+    logger,
+    configRepository,
+    ctx,
+    organizationState,
+  })
+
+  if (
+    policiesPlan.hasChanges ||
+    organizationalUnitsPlan.hasChanges ||
+    basicConfigPlan.hasChanges
+  ) {
+    throw new TakomoError(
+      `Local configuration does not match with the current organization state`,
+    )
+  }
+}

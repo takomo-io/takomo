@@ -12,6 +12,7 @@ export { createCreateAccountIO } from "./organization/accounts/create-account-io
 export { createDeleteAccountAliasIO } from "./organization/accounts/delete-account-alias-io"
 export { createDeployAccountsIO } from "./organization/accounts/deploy-accounts-io"
 export { createListAccountsIO } from "./organization/accounts/list-accounts-io"
+export { createListAccountsStacksIO } from "./organization/accounts/list-accounts-stacks-io"
 export { createTearDownAccountsIO } from "./organization/accounts/tear-down-accounts-io"
 export { createUndeployAccountsIO } from "./organization/accounts/undeploy-accounts-io"
 export { createCreateOrganizationIO } from "./organization/create-organization-io"

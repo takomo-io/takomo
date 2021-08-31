@@ -7,12 +7,11 @@ import { resolveCommandOutputBase } from "@takomo/core"
 import { OperationState } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
 import { IPolicy, Policy } from "cockatiel"
+import { AccountsPlanAccount, AccountsPlanOU } from "../../common/model"
 import {
   AccountOperationResult,
   AccountsListener,
   OrganizationalUnitAccountsOperationResult,
-  PlannedAccountDeploymentOrganizationalUnit,
-  PlannedLaunchableAccount,
 } from "../model"
 import { AccountsOperationPlanHolder } from "../states"
 import { processAccount } from "./account"
@@ -21,10 +20,10 @@ type AccountOperation = () => Promise<AccountOperationResult>
 
 interface ConvertToOperationProps {
   readonly holder: AccountsOperationPlanHolder
-  readonly organizationalUnit: PlannedAccountDeploymentOrganizationalUnit
+  readonly organizationalUnit: AccountsPlanOU
   readonly timer: Timer
   readonly policy: IPolicy
-  readonly account: PlannedLaunchableAccount
+  readonly account: AccountsPlanAccount
   readonly state: OperationState
   readonly configSetType: ConfigSetType
   readonly results: Array<AccountOperationResult>
@@ -69,7 +68,7 @@ const convertToOperation =
 export const processOrganizationalUnit = async (
   accountsListener: AccountsListener,
   holder: AccountsOperationPlanHolder,
-  organizationalUnit: PlannedAccountDeploymentOrganizationalUnit,
+  organizationalUnit: AccountsPlanOU,
   timer: Timer,
   state: OperationState,
   configSetType: ConfigSetType,
