@@ -1,4 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
+import { DEFAULT_STAGE_NAME } from "@takomo/config-sets"
 import { CommandContext } from "@takomo/core"
 import { OrganizationConfig } from "@takomo/organization-config"
 import { OrganizationConfigRepository } from "@takomo/organization-context"
@@ -51,6 +52,7 @@ export const createOrganization = async (
     const organizationConfig: OrganizationConfig = {
       masterAccountId: identity.accountId,
       vars: {},
+      stages: [DEFAULT_STAGE_NAME],
       accountCreation: {
         constraints: {},
         defaults: {

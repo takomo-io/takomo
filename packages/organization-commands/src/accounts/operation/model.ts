@@ -2,21 +2,29 @@ import { AccountId } from "@takomo/aws-model"
 import {
   ConfigSetName,
   ConfigSetOperationResult,
-  ConfigSetStage,
   ConfigSetType,
+  CreateTargetListenerProps,
+  ExecutionPlan,
+  PlanExecutionResult,
+  StageName,
+  TargetListener,
 } from "@takomo/config-sets"
 import {
   CommandInput,
-  CommandOutput,
   CommandOutputBase,
   ConfirmResult,
   IO,
+  OutputFormat,
 } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+import {
+  DeployStacksIO,
+  StacksOperationOutput,
+  UndeployStacksIO,
+} from "@takomo/stacks-commands"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
-import { AccountsPlan } from "../common/model"
+import { PlannedOrganizationAccount } from "../common/plan"
 
 export interface AccountsOperationInput extends CommandInput {
   readonly organizationalUnits: ReadonlyArray<string>
@@ -38,29 +46,24 @@ export interface OrganizationalUnitAccountsOperationResult
   extends CommandOutputBase {
   readonly path: OrganizationalUnitPath
   readonly results: ReadonlyArray<AccountOperationResult>
-  readonly stage?: ConfigSetStage
+  readonly stage?: StageName
   readonly timer: Timer
 }
 
-export interface AccountsOperationOutput extends CommandOutput {
-  readonly results?: ReadonlyArray<OrganizationalUnitAccountsOperationResult>
-}
-
-export interface AccountsListener {
-  readonly onAccountBegin: () => Promise<void>
-  readonly onAccountComplete: () => Promise<void>
+export interface AccountsOperationOutput
+  extends PlanExecutionResult<StacksOperationOutput> {
+  readonly outputFormat: OutputFormat
 }
 
 export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
   readonly createStackDeployIO: (accountId: AccountId) => DeployStacksIO
   readonly createStackUndeployIO: (accountId: AccountId) => UndeployStacksIO
-  readonly confirmLaunch: (plan: AccountsLaunchPlan) => Promise<ConfirmResult>
-  readonly createAccountsListener: (
-    stageInfo: string,
-    accountCount: number,
-  ) => AccountsListener
+  readonly confirmLaunch: (
+    plan: AccountsOperationPlan,
+  ) => Promise<ConfirmResult>
+  readonly createTargetListener: (
+    props: CreateTargetListenerProps,
+  ) => TargetListener
 }
 
-export interface AccountsLaunchPlan extends AccountsPlan {
-  readonly hasChanges: boolean
-}
+export type AccountsOperationPlan = ExecutionPlan<PlannedOrganizationAccount>

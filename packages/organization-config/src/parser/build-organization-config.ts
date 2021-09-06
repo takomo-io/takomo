@@ -95,7 +95,7 @@ export const buildOrganizationConfig = async (
   const accountCreation = parseAccountCreationConfig(record.accountCreation)
   const parsedConfigSets = parseConfigSets(record.configSets)
   const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
-  const stages = parseOptionalStringArray(record.stages)
+  const stages = parseOptionalStringArray(record.stages) ?? ["default"]
 
   const serviceControlPolicies = parsePoliciesConfig(
     "SERVICE_CONTROL_POLICY",

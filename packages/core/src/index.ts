@@ -12,6 +12,7 @@ export {
   FAILED,
   InternalCommandContext,
   IO,
+  OperationState,
   OutputFormat,
   Project,
   resolveCommandOutputBase,

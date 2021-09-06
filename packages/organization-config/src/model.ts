@@ -6,11 +6,7 @@ import {
   OrganizationPolicyName,
   OrganizationPolicyType,
 } from "@takomo/aws-model"
-import {
-  ConfigSet,
-  ConfigSetInstruction,
-  ConfigSetStage,
-} from "@takomo/config-sets"
+import { ConfigSet, ConfigSetInstruction, StageName } from "@takomo/config-sets"
 import {
   OrganizationAccountStatus,
   OrganizationalUnitPath,
@@ -91,7 +87,7 @@ export interface OrganizationConfig {
   readonly masterAccountId: AccountId
   readonly accountCreation: AccountCreationConfig
   readonly configSets: ReadonlyArray<ConfigSet>
-  readonly stages?: ReadonlyArray<ConfigSetStage>
+  readonly stages: ReadonlyArray<StageName>
   readonly vars: any
   readonly serviceControlPolicies: OrganizationPoliciesConfig
   readonly tagPolicies: OrganizationPoliciesConfig

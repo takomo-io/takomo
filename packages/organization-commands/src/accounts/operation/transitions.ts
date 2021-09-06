@@ -98,6 +98,7 @@ export const createAccountsOperationTransitions =
         success: false,
         status: CANCELLED,
         outputFormat: state.input.outputFormat,
+        results: [],
       }),
 
     completeAccountsOperation: async (
@@ -106,6 +107,7 @@ export const createAccountsOperationTransitions =
       new AccountsOperationCompleted({
         ...state,
         outputFormat: state.input.outputFormat,
+        results: [],
       }),
 
     failAccountsOperation: async (
@@ -117,6 +119,7 @@ export const createAccountsOperationTransitions =
         status: FAILED,
         error: state.error,
         outputFormat: state.input.outputFormat,
+        results: [],
       }),
 
     skipAccountsOperation: async (
@@ -127,5 +130,6 @@ export const createAccountsOperationTransitions =
         success: true,
         status: SKIPPED,
         outputFormat: state.input.outputFormat,
+        results: [],
       }),
   })

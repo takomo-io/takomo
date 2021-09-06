@@ -39,8 +39,6 @@ export {
   accountsUndeployOperationCommandIamPolicy,
 } from "./accounts/operation/iam-policy"
 export {
-  AccountsLaunchPlan,
-  AccountsListener,
   AccountsOperationInput,
   AccountsOperationIO,
   AccountsOperationOutput,

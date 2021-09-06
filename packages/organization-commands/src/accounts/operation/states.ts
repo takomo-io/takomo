@@ -6,10 +6,10 @@ import {
 } from "@takomo/organization-context"
 import { Timer } from "@takomo/util"
 import {
-  AccountsLaunchPlan,
   AccountsOperationInput,
   AccountsOperationIO,
-  OrganizationalUnitAccountsOperationResult,
+  AccountsOperationOutput,
+  AccountsOperationPlan,
 } from "./model"
 import { AccountsOperationTransitions } from "./transitions"
 
@@ -27,7 +27,7 @@ export interface OrganizationStateHolder extends InitialAccountsOperationState {
 }
 
 export interface AccountsOperationPlanHolder extends OrganizationStateHolder {
-  readonly accountsLaunchPlan: AccountsLaunchPlan
+  readonly accountsLaunchPlan: AccountsOperationPlan
 }
 
 export interface AccountsOperationFailedState
@@ -52,5 +52,5 @@ export interface AccountsOperationCompletedState
   readonly message: string
   readonly status: CommandStatus
   readonly error?: Error
-  readonly results?: ReadonlyArray<OrganizationalUnitAccountsOperationResult>
+  readonly result?: AccountsOperationOutput
 }

@@ -1,8 +1,12 @@
-import { AccountId } from "@takomo/aws-model"
+import { AccountId, IamRoleArn, OrganizationAccount } from "@takomo/aws-model"
 import {
   ConfigSetName,
-  ConfigSetStage,
   ConfigSetType,
+  ExecutionGroup,
+  ExecutionPlan,
+  ExecutionStage,
+  ExecutionTarget,
+  StageName,
 } from "@takomo/config-sets"
 import {
   OrganizationAccountConfig,
@@ -21,7 +25,6 @@ import {
   TkmLogger,
 } from "@takomo/util"
 import R from "ramda"
-import { AccountsPlan } from "./model"
 
 export interface AccountsSelectionCriteria {
   readonly organizationalUnits: ReadonlyArray<OrganizationalUnitPath>
@@ -38,15 +41,21 @@ export interface CreateAccountsPlanProps {
   readonly accountsSelectionCriteria: AccountsSelectionCriteria
 }
 
+export interface PlannedOrganizationAccount extends OrganizationAccount {
+  readonly executionRoleArn: IamRoleArn
+}
+
 export const createAccountsPlan = async ({
   ctx,
   logger,
   organizationState,
   accountsSelectionCriteria,
-}: CreateAccountsPlanProps): Promise<AccountsPlan> => {
+}: CreateAccountsPlanProps): Promise<
+  ExecutionPlan<PlannedOrganizationAccount>
+> => {
   const { accounts } = organizationState
   const {
-    organizationalUnits,
+    organizationalUnits: selectedOuPaths,
     accountIds,
     configSetType,
     commandPath,
@@ -70,12 +79,18 @@ export const createAccountsPlan = async ({
     }
   }
 
-  const organizationalUnitsToLaunch =
-    organizationalUnits.length === 0
-      ? [ctx.getOrganizationalUnit("Root")]
-      : organizationalUnits.reduce((collected, path) => {
-          return [...collected, ctx.getOrganizationalUnit(path)]
-        }, new Array<OrganizationalUnitConfig>())
+  const rootOu = ctx.getOrganizationalUnit("Root")
+  const allOuPaths = collectFromHierarchy(rootOu, (n) => n.children).map(
+    (ou) => ou.path,
+  )
+
+  selectedOuPaths.forEach((ouPath) => {
+    if (allOuPaths.includes(ouPath)) {
+      throw new TakomoError(
+        `No organizational unit found with path: '${ouPath}'`,
+      )
+    }
+  })
 
   const sortOus = (
     a: OrganizationalUnitConfig,
@@ -85,20 +100,68 @@ export const createAccountsPlan = async ({
     return order !== 0 ? order : a.name.localeCompare(b.name)
   }
 
-  const ousToLaunch: OrganizationalUnitConfig[] = organizationalUnitsToLaunch
-    .map((ou) =>
-      collectFromHierarchy(ou, (o) => o.children, {
-        sortSiblings: sortOus,
-        filter: (o) => o.status === "active",
-      }).flat(),
-    )
-    .flat()
+  const organizationalUnitsToLaunch =
+    selectedOuPaths.length === 0
+      ? [rootOu]
+      : selectedOuPaths.reduce(
+          (collected, path) => [...collected, ctx.getOrganizationalUnit(path)],
+          new Array<OrganizationalUnitConfig>(),
+        )
 
-  const uniqueOusToLaunch = R.uniqBy(R.prop("path"), ousToLaunch).filter(
-    (o) => o.status === "active",
+  const ousToLaunch: ReadonlyArray<OrganizationalUnitConfig> =
+    organizationalUnitsToLaunch
+      .map((ou) =>
+        collectFromHierarchy(ou, (o) => o.children, {
+          sortSiblings: sortOus,
+          filter: (o) => o.status === "active",
+        }).flat(),
+      )
+      .flat()
+
+  const uniqueOusToLaunch: ReadonlyArray<OrganizationalUnitConfig> = R.uniqBy(
+    R.prop("path"),
+    ousToLaunch,
   )
 
   const accountsById = arrayToMap(accounts, R.prop("id"))
+
+  const getConfigSets = (a: OrganizationAccountConfig) => {
+    switch (configSetType) {
+      case "bootstrap":
+        return a.bootstrapConfigSets
+      case "standard":
+        return a.configSets
+      default:
+        throw new Error(`Unsupported config set type: ${configSetType}`)
+    }
+  }
+
+  const getExecutionRoleArn = (a: OrganizationAccountConfig): IamRoleArn => {
+    switch (configSetType) {
+      case "bootstrap":
+        return `arn:aws:iam::${a.id}:role/${a.accountBootstrapRoleName}`
+      case "standard":
+        return `arn:aws:iam::${a.id}:role/${a.accountAdminRoleName}`
+      default:
+        throw new Error(`Unsupported config set type: ${configSetType}`)
+    }
+  }
+
+  const hasConfigSets = (a: OrganizationAccountConfig) =>
+    getConfigSets(a).length > 0
+
+  const hasConfigSetsWithStage = (
+    a: OrganizationAccountConfig,
+    stageName?: StageName,
+  ) => getConfigSets(a).some(({ stage }) => stage === stageName)
+
+  const isActive = ({ status }: OrganizationAccountConfig): boolean =>
+    status === "active"
+
+  const isIncludedInSelectedAccountIds = ({
+    id,
+  }: OrganizationAccountConfig): boolean =>
+    accountIds.length === 0 || accountIds.includes(id)
 
   const configSetNameMatches = (a: OrganizationAccountConfig): boolean => {
     if (configSetName === undefined) {
@@ -106,90 +169,68 @@ export const createAccountsPlan = async ({
     }
     switch (configSetType) {
       case "standard":
-        return a.configSets.some((cs) => cs.name === configSetName)
+        return a.configSets.some(({ name }) => name === configSetName)
       case "bootstrap":
-        return a.bootstrapConfigSets.some((cs) => cs.name === configSetName)
+        return a.bootstrapConfigSets.some(({ name }) => name === configSetName)
       default:
         throw new Error(`Unsupported config set type: ${configSetType}`)
     }
   }
 
-  const hasConfigSets = (a: OrganizationAccountConfig) => {
-    switch (configSetType) {
-      case "bootstrap":
-        return a.bootstrapConfigSets.length > 0
-      case "standard":
-        return a.configSets.length > 0
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
+  const filterAccountsBySelectionCriteria = (
+    accounts: ReadonlyArray<OrganizationAccountConfig>,
+  ): ReadonlyArray<OrganizationAccountConfig> =>
+    accounts.filter(
+      (a) =>
+        isActive(a) &&
+        hasConfigSets(a) &&
+        configSetNameMatches(a) &&
+        isIncludedInSelectedAccountIds,
+    )
 
-  const hasConfigSetsWithStage = (
+  const convertToExecutionTarget = (
     a: OrganizationAccountConfig,
-    stage?: ConfigSetStage,
-  ) => {
-    switch (configSetType) {
-      case "bootstrap":
-        return a.bootstrapConfigSets.some((c) => c.stage === stage)
-      case "standard":
-        return a.configSets.some((c) => c.stage === stage)
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
+  ): ExecutionTarget<PlannedOrganizationAccount> => ({
+    accountId: a.id,
+    id: a.id,
+    vars: a.vars,
+    configSets: getConfigSets(a).map((cs) => cs.name),
+    data: {
+      ...accountsById.get(a.id)!,
+      executionRoleArn: getExecutionRoleArn(a),
+    },
+  })
 
-  const ous = uniqueOusToLaunch
-    .map((ou) => {
-      return {
-        path: ou.path,
-        accountAdminRoleName: ou.accountAdminRoleName,
-        accountBootstrapRoleName: ou.accountBootstrapRoleName,
-        configSets: ou.configSets,
-        bootstrapConfigSets: ou.bootstrapConfigSets,
-        vars: ou.vars,
-        accounts: ou.accounts.filter(
-          (a) =>
-            a.status === "active" &&
-            hasConfigSets(a) &&
-            configSetNameMatches(a) &&
-            (accountIds.length === 0 || accountIds.includes(a.id)),
-        ),
-      }
-    })
+  const convertToExecutionGroup = (
+    ou: OrganizationalUnitConfig,
+    stageName: StageName,
+  ): ExecutionGroup<PlannedOrganizationAccount> => ({
+    path: ou.path,
+    targets: ou.accounts
+      .filter((a) => hasConfigSetsWithStage(a, stageName))
+      .map((a) => convertToExecutionTarget(a)),
+  })
+
+  const ous: ReadonlyArray<OrganizationalUnitConfig> = uniqueOusToLaunch
+    .map((ou) => ({
+      ...ou,
+      accounts: filterAccountsBySelectionCriteria(ou.accounts),
+    }))
     .filter((ou) => ou.accounts.length > 0)
-    .map((ou) => {
-      const accounts = ou.accounts.map((config) => {
-        const account = accountsById.get(config.id)!
-        return {
-          account,
-          config,
-        }
-      })
 
-      return {
-        ...ou,
-        accounts,
-      }
-    })
+  const createStage = (
+    stageName: StageName,
+  ): ExecutionStage<PlannedOrganizationAccount> => ({
+    stageName,
+    groups: ous
+      .map((ou) => convertToExecutionGroup(ou, stageName))
+      .filter((group) => group.targets.length > 0),
+  })
 
-  const stageNames = ctx.getStages() ?? [undefined]
-
-  const stages = stageNames
-    .map((stage) => {
-      return {
-        stage,
-        organizationalUnits: ous
-          .map((ou) => ({
-            ...ou,
-            accounts: ou.accounts.filter((a) =>
-              hasConfigSetsWithStage(a.config, stage),
-            ),
-          }))
-          .filter((ou) => ou.accounts.length > 0),
-      }
-    })
-    .filter((s) => s.organizationalUnits.length > 0)
+  const stages = ctx
+    .getStages()
+    .map(createStage)
+    .filter((s) => s.groups.length > 0)
 
   return {
     stages,

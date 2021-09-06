@@ -1,4 +1,23 @@
-import { ConfigSetInstruction } from "@takomo/config-sets"
+import { ConfigSetInstruction, DEFAULT_STAGE_NAME } from "@takomo/config-sets"
+
+const parseConfigSetInstruction = (value: unknown): ConfigSetInstruction => {
+  if (typeof value === "string") {
+    return {
+      name: value,
+      stage: DEFAULT_STAGE_NAME,
+    }
+  }
+
+  if (typeof value === "object") {
+    const o = value as any
+    return {
+      name: o.name,
+      stage: o.stage ?? DEFAULT_STAGE_NAME,
+    }
+  }
+
+  throw new Error("Expected config set item to be of type object or string")
+}
 
 export const parseConfigSetInstructions = (
   value: unknown,
@@ -8,30 +27,12 @@ export const parseConfigSetInstructions = (
   }
 
   if (typeof value === "string") {
-    return [
-      {
-        name: value,
-      },
-    ]
+    return [parseConfigSetInstruction(value)]
   }
 
   if (Array.isArray(value)) {
-    return value.map((entry) => {
-      if (typeof entry === "string") {
-        return { name: entry }
-      } else if (typeof entry === "object") {
-        return entry
-      }
-
-      throw new Error(
-        "Expected config set items to be of type object or string",
-      )
-    })
+    return value.map(parseConfigSetInstruction)
   }
 
-  if (typeof value === "object") {
-    return [value as ConfigSetInstruction]
-  }
-
-  throw new Error("Expected config sets to be of type object, array or string")
+  return [parseConfigSetInstruction(value)]
 }

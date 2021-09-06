@@ -7,5 +7,6 @@ export {
   OrganizationalUnitState,
   OrganizationalUnitStatus,
   OrganizationHierarchyState,
+  ORGANIZATION_ROOT_OU,
   PoliciesState,
 } from "./model"

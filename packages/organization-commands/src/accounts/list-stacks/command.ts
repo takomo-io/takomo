@@ -6,6 +6,7 @@ import {
   OrganizationContext,
 } from "@takomo/organization-context"
 import { TkmLogger } from "@takomo/util"
+import { createAccountsPlan } from "../common/plan"
 import { validateOrganizationConfigIsInSyncWithRemoteState } from "../common/validate-organization-state"
 import {
   ListAccountsStacksInput,
@@ -13,10 +14,11 @@ import {
   ListAccountsStacksOutput,
 } from "./model"
 
-export const listAccounts = async (
+const listAccountsStacks = async (
   ctx: OrganizationContext,
   logger: TkmLogger,
   configRepository: OrganizationConfigRepository,
+  input: ListAccountsStacksInput,
 ): Promise<string[]> => {
   const organizationState = await loadOrganizationState(ctx, logger)
 
@@ -25,6 +27,13 @@ export const listAccounts = async (
     ctx,
     logger,
     configRepository,
+  })
+
+  const plan = await createAccountsPlan({
+    ctx,
+    organizationState,
+    logger,
+    accountsSelectionCriteria: input,
   })
 
   return []
@@ -43,7 +52,7 @@ export const listAccountsStacksCommand: CommandHandler<
   credentialManager,
 }): Promise<ListAccountsStacksOutput> =>
   buildOrganizationContext(ctx, configRepository, io, credentialManager)
-    .then((ctx) => listAccounts(ctx, io, configRepository))
+    .then((ctx) => listAccountsStacks(ctx, io, configRepository, input))
     .then((accounts) => {
       const { timer } = input
       timer.stop()
