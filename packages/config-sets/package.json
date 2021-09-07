@@ -29,7 +29,7 @@
   "dependencies": {
     "@takomo/aws-model": "3.31.2",
     "@takomo/aws-clients": "3.31.2",
-    "@takomo/util": "3.31.2",
+    "@takomo/util": "3.29.0",
     "@takomo/core": "3.32.0",
     "@takomo/stacks-commands": "3.32.0",
     "@takomo/stacks-model": "3.32.0",

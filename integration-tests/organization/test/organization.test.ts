@@ -49,27 +49,30 @@ describe("Organization commands", () => {
       var: ["configVersion=v07.yml"],
     })
       .expectCommandToSucceed()
-      .expectResults(
-        {
-          organizationalUnitPath: "Root/sandbox accounts/sandbox-2",
-          accountResults: [
-            {
-              accountId: ORG_A_ACCOUNT_4_ID,
-            },
-            {
-              accountId: ORG_A_ACCOUNT_5_ID,
-            },
-          ],
-        },
-        {
-          organizationalUnitPath: "Root/test-accounts",
-          accountResults: [
-            { accountId: ORG_A_ACCOUNT_1_ID },
-            { accountId: ORG_A_ACCOUNT_2_ID },
-            { accountId: ORG_A_ACCOUNT_3_ID },
-          ],
-        },
-      )
+      .expectResults({
+        stageName: "default",
+        organizationalUnitResults: [
+          {
+            organizationalUnitPath: "Root/sandbox accounts/sandbox-2",
+            accountResults: [
+              {
+                accountId: ORG_A_ACCOUNT_4_ID,
+              },
+              {
+                accountId: ORG_A_ACCOUNT_5_ID,
+              },
+            ],
+          },
+          {
+            organizationalUnitPath: "Root/test-accounts",
+            accountResults: [
+              { accountId: ORG_A_ACCOUNT_1_ID },
+              { accountId: ORG_A_ACCOUNT_2_ID },
+              { accountId: ORG_A_ACCOUNT_3_ID },
+            ],
+          },
+        ],
+      })
       .assert())
 
   test("deploy accounts from Root/test-accounts", () =>
@@ -80,13 +83,18 @@ describe("Organization commands", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/test-accounts",
-        accountResults: [
+        stageName: "default",
+        organizationalUnitResults: [
           {
-            accountId: ORG_A_ACCOUNT_1_ID,
+            organizationalUnitPath: "Root/test-accounts",
+            accountResults: [
+              {
+                accountId: ORG_A_ACCOUNT_1_ID,
+              },
+              { accountId: ORG_A_ACCOUNT_2_ID },
+              { accountId: ORG_A_ACCOUNT_3_ID },
+            ],
           },
-          { accountId: ORG_A_ACCOUNT_2_ID },
-          { accountId: ORG_A_ACCOUNT_3_ID },
         ],
       })
       .assert())
@@ -99,10 +107,15 @@ describe("Organization commands", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/sandbox accounts/sandbox-2",
-        accountResults: [
-          { accountId: ORG_A_ACCOUNT_4_ID },
-          { accountId: ORG_A_ACCOUNT_5_ID },
+        stageName: "default",
+        organizationalUnitResults: [
+          {
+            organizationalUnitPath: "Root/sandbox accounts/sandbox-2",
+            accountResults: [
+              { accountId: ORG_A_ACCOUNT_4_ID },
+              { accountId: ORG_A_ACCOUNT_5_ID },
+            ],
+          },
         ],
       })
       .assert())
@@ -114,16 +127,21 @@ describe("Organization commands", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/test-accounts",
-        accountResults: [
+        stageName: "default",
+        organizationalUnitResults: [
           {
-            accountId: ORG_A_ACCOUNT_1_ID,
-          },
-          {
-            accountId: ORG_A_ACCOUNT_2_ID,
-          },
-          {
-            accountId: ORG_A_ACCOUNT_3_ID,
+            organizationalUnitPath: "Root/test-accounts",
+            accountResults: [
+              {
+                accountId: ORG_A_ACCOUNT_1_ID,
+              },
+              {
+                accountId: ORG_A_ACCOUNT_2_ID,
+              },
+              {
+                accountId: ORG_A_ACCOUNT_3_ID,
+              },
+            ],
           },
         ],
       })
@@ -136,16 +154,21 @@ describe("Organization commands", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/test-accounts",
-        accountResults: [
+        stageName: "default",
+        organizationalUnitResults: [
           {
-            accountId: ORG_A_ACCOUNT_1_ID,
-          },
-          {
-            accountId: ORG_A_ACCOUNT_2_ID,
-          },
-          {
-            accountId: ORG_A_ACCOUNT_3_ID,
+            organizationalUnitPath: "Root/test-accounts",
+            accountResults: [
+              {
+                accountId: ORG_A_ACCOUNT_1_ID,
+              },
+              {
+                accountId: ORG_A_ACCOUNT_2_ID,
+              },
+              {
+                accountId: ORG_A_ACCOUNT_3_ID,
+              },
+            ],
           },
         ],
       })

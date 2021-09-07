@@ -3,6 +3,7 @@ import { CallerIdentity, IamRoleArn, IamRoleName } from "@takomo/aws-model"
 import {
   CommandRole,
   CommandStatus,
+  OperationState,
   resolveCommandOutputBase,
 } from "@takomo/core"
 import {
@@ -10,7 +11,6 @@ import {
   DeploymentTargetConfig,
 } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
-import { OperationState } from "@takomo/stacks-model"
 import {
   expandFilePath,
   FilePath,

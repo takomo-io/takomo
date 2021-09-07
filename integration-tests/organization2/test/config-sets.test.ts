@@ -25,18 +25,23 @@ describe("Config sets", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/One",
-        accountResults: [
+        stageName: "default",
+        organizationalUnitResults: [
           {
-            accountId: ORG_3_ACCOUNT_01_ID,
-            configSetResults: [
+            organizationalUnitPath: "Root/One",
+            accountResults: [
               {
-                configSet: "legacySingle",
-                commandPathResults: [
+                accountId: ORG_3_ACCOUNT_01_ID,
+                configSetResults: [
                   {
-                    commandPath: "/a.yml",
-                    stackResults: [
-                      { stackPath: "/a.yml/eu-west-1", stackName: "a" },
+                    configSet: "legacySingle",
+                    commandPathResults: [
+                      {
+                        commandPath: "/a.yml",
+                        stackResults: [
+                          { stackPath: "/a.yml/eu-west-1", stackName: "a" },
+                        ],
+                      },
                     ],
                   },
                 ],
@@ -54,18 +59,26 @@ describe("Config sets", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/Two",
-        accountResults: [
+        stageName: "default",
+        organizationalUnitResults: [
           {
-            accountId: ORG_3_ACCOUNT_02_ID,
-            configSetResults: [
+            organizationalUnitPath: "Root/Two",
+            accountResults: [
               {
-                configSet: "logs",
-                commandPathResults: [
+                accountId: ORG_3_ACCOUNT_02_ID,
+                configSetResults: [
                   {
-                    commandPath: "/",
-                    stackResults: [
-                      { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/logs.yml/eu-west-1",
+                            stackName: "logs",
+                          },
+                        ],
+                      },
                     ],
                   },
                 ],
@@ -83,20 +96,25 @@ describe("Config sets", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/Three",
-        accountResults: [
+        stageName: "default",
+        organizationalUnitResults: [
           {
-            accountId: ORG_3_ACCOUNT_03_ID,
-            configSetResults: [
+            organizationalUnitPath: "Root/Three",
+            accountResults: [
               {
-                configSet: "network",
-                commandPathResults: [
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults: [
                   {
-                    commandPath: "/network2.yml",
-                    stackResults: [
+                    configSet: "network",
+                    commandPathResults: [
                       {
-                        stackPath: "/network2.yml/eu-west-1",
-                        stackName: "network2",
+                        commandPath: "/network2.yml",
+                        stackResults: [
+                          {
+                            stackPath: "/network2.yml/eu-west-1",
+                            stackName: "network2",
+                          },
+                        ],
                       },
                     ],
                   },
@@ -113,73 +131,79 @@ describe("Config sets", () => {
       projectDir,
     })
       .expectCommandToSucceed()
-      .expectResults(
-        {
-          organizationalUnitPath: "Root/One",
-          accountResults: [
-            {
-              accountId: ORG_3_ACCOUNT_01_ID,
-              configSetResults: [
-                {
-                  configSet: "legacySingle",
-                  commandPathResults: [
-                    {
-                      commandPath: "/a.yml",
-                      stackResults: [
-                        { stackPath: "/a.yml/eu-west-1", stackName: "a" },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          organizationalUnitPath: "Root/Three",
-          accountResults: [
-            {
-              accountId: ORG_3_ACCOUNT_03_ID,
-              configSetResults: [
-                {
-                  configSet: "network",
-                  commandPathResults: [
-                    {
-                      commandPath: "/network2.yml",
-                      stackResults: [
-                        {
-                          stackPath: "/network2.yml/eu-west-1",
-                          stackName: "network2",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          organizationalUnitPath: "Root/Two",
-          accountResults: [
-            {
-              accountId: ORG_3_ACCOUNT_02_ID,
-              configSetResults: [
-                {
-                  configSet: "logs",
-                  commandPathResults: [
-                    {
-                      commandPath: "/",
-                      stackResults: [
-                        { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      )
+      .expectResults({
+        stageName: "default",
+        organizationalUnitResults: [
+          {
+            organizationalUnitPath: "Root/One",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_01_ID,
+                configSetResults: [
+                  {
+                    configSet: "legacySingle",
+                    commandPathResults: [
+                      {
+                        commandPath: "/a.yml",
+                        stackResults: [
+                          { stackPath: "/a.yml/eu-west-1", stackName: "a" },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            organizationalUnitPath: "Root/Three",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults: [
+                  {
+                    configSet: "network",
+                    commandPathResults: [
+                      {
+                        commandPath: "/network2.yml",
+                        stackResults: [
+                          {
+                            stackPath: "/network2.yml/eu-west-1",
+                            stackName: "network2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            organizationalUnitPath: "Root/Two",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_02_ID,
+                configSetResults: [
+                  {
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/logs.yml/eu-west-1",
+                            stackName: "logs",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
       .assert())
 })
