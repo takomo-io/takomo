@@ -5,14 +5,12 @@ import { Timer, TkmLogger } from "@takomo/util"
 import {
   CommandPathExecutionResult,
   ConfigSet,
-  ConfigSetName,
   ExecutionTarget,
   TargetExecutor,
 } from "../model"
 
 export interface ExecuteCommandPathProps<R extends CommandOutput, C> {
   readonly target: ExecutionTarget<C>
-  readonly configSetName: ConfigSetName
   readonly commandPath: CommandPath
   readonly timer: Timer
   readonly state: OperationState
@@ -27,20 +25,20 @@ export const executeCommandPath = async <R extends CommandOutput, C>({
   commandPath,
   executor,
   target,
-  configSetName,
   state,
   logger,
   defaultCredentialManager,
   configSet,
 }: ExecuteCommandPathProps<R, C>): Promise<CommandPathExecutionResult<R>> => {
-  // try {
+  logger.info(`Execute command path: ${commandPath}`)
   const result = await executor({
     commandPath,
     defaultCredentialManager,
     target,
     configSet,
     state,
-    timer: timer.startChild(target.id),
+    logger,
+    timer,
   })
 
   timer.stop()

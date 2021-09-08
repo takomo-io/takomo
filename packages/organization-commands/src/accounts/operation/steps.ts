@@ -21,17 +21,19 @@ const executeStep = async <S extends InitialAccountsOperationState>(
 ): Promise<StepResult> => {
   const childTimer = state.totalTimer.startChild(stepName)
   try {
-    const result = await step(state)
-    return result
+    return await step(state)
   } catch (error) {
     return new AccountsOperationCompleted({
       ...state,
-      results: [],
-      outputFormat: state.input.outputFormat,
-      error,
-      message: "Error",
-      status: FAILED,
-      success: false,
+      result: {
+        message: "An error occurred",
+        success: false,
+        status: FAILED,
+        results: [],
+        timer: state.totalTimer,
+        error,
+        outputFormat: state.input.outputFormat,
+      },
     })
   } finally {
     childTimer.stop()
@@ -49,5 +51,5 @@ export const executeSteps = async (
   }
 
   totalTimer.stop()
-  return { ...result.props, timer: totalTimer }
+  return result.state.result
 }

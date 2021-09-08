@@ -42,6 +42,7 @@ export {
   parseOptionalString,
   parseOptionalStringArray,
   parseRegex,
+  parseString,
   parseStringArray,
   parseTypedArrayFromString,
   parseVars,

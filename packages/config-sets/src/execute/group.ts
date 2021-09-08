@@ -15,7 +15,7 @@ import {
   TargetExecutor,
   TargetListener,
 } from "../model"
-import { executeAccount } from "./target"
+import { executeTarget } from "./target"
 
 type TargetExecution<R extends CommandOutput> = () => Promise<
   TargetExecutionResult<R>
@@ -50,14 +50,14 @@ const convertToOperation =
   () =>
     policy.execute(async () => {
       await targetListener.onTargetBegin()
-      const result = await executeAccount<R, C>({
+      const result = await executeTarget<R, C>({
         target,
         state,
         executor,
         ctx,
-        timer: timer.startChild("TODO"),
-        logger,
         defaultCredentialManager,
+        timer: timer.startChild(target.id),
+        logger: logger.childLogger(target.id),
       })
 
       results.push(result)
@@ -111,6 +111,7 @@ export const executeGroup = async <R extends CommandOutput, C>({
   )
 
   await Promise.all(operations.map((o) => o()))
+  logger.info(`Completed organizational unit '${group.path}'`)
 
   timer.stop()
   return {

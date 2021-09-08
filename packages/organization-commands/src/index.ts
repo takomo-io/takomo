@@ -42,7 +42,6 @@ export {
   AccountsOperationInput,
   AccountsOperationIO,
   AccountsOperationOutput,
-  OrganizationalUnitAccountsOperationResult,
 } from "./accounts/operation/model"
 export { OrganizationBasicConfigDeploymentPlan } from "./common/plan/basic-config/model"
 export {

@@ -1,6 +1,10 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { CommandOutput, OperationState } from "@takomo/core"
-import { createTimer, TkmLogger } from "@takomo/util"
+import {
+  CommandOutput,
+  OperationState,
+  resolveCommandOutputBase,
+} from "@takomo/core"
+import { Timer, TkmLogger } from "@takomo/util"
 import {
   ConfigSetContext,
   ExecutionStage,
@@ -22,6 +26,7 @@ interface ExecuteStageProps<R extends CommandOutput, C> {
   readonly stageCount: number
   readonly targetListenerProvider: TargetListenerProvider
   readonly defaultCredentialManager: CredentialManager
+  readonly timer: Timer
 }
 
 export const executeStage = async <R extends CommandOutput, C>({
@@ -35,10 +40,10 @@ export const executeStage = async <R extends CommandOutput, C>({
   currentStageNumber,
   stageCount,
   defaultCredentialManager,
+  timer,
 }: ExecuteStageProps<R, C>): Promise<StageExecutionResult<R>> => {
   const stageName = stage.stageName
   logger.info(`Begin stage '${stageName}'`)
-  const timer = createTimer(stageName)
 
   const targetCount = stage.groups.map((g) => g.targets).flat().length
 
@@ -53,14 +58,14 @@ export const executeStage = async <R extends CommandOutput, C>({
   for (const group of stage.groups) {
     const result = await executeGroup<R, C>({
       group,
-      logger,
       ctx,
       executor,
       targetListener,
       state,
-      timer,
       concurrentAccounts,
       defaultCredentialManager,
+      timer: timer.startChild(group.path),
+      logger: logger.childLogger(group.path),
     })
     results.push(result)
   }
@@ -68,11 +73,9 @@ export const executeStage = async <R extends CommandOutput, C>({
   timer.stop()
 
   return {
+    ...resolveCommandOutputBase(results),
     results,
     timer,
     stageName,
-    success: true,
-    status: "SUCCESS",
-    message: "Success",
   }
 }

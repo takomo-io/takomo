@@ -36,21 +36,20 @@ export const executeConfigSet = async <R extends CommandOutput, C>({
   target,
   defaultCredentialManager,
 }: ExecuteConfigSetProps<R, C>): Promise<ConfigSetExecutionResult<R>> => {
-  logger.info(`Process config set: '${configSetName}'`)
+  logger.info(`Begin config set: '${configSetName}'`)
   const configSet = ctx.getConfigSet(configSetName)
   const results = new Array<CommandPathExecutionResult<R>>()
 
   for (const commandPath of configSet.commandPaths) {
     const result = await executeCommandPath<R, C>({
       target,
-      configSetName,
       commandPath,
-      timer: timer.startChild(commandPath),
       state,
       executor,
       logger,
       defaultCredentialManager,
       configSet,
+      timer: timer.startChild(commandPath),
     })
 
     if (!result.success) {

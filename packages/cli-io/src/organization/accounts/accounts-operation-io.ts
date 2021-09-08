@@ -1,4 +1,4 @@
-import { AccountId, OrganizationAccount } from "@takomo/aws-model"
+import { OrganizationAccount } from "@takomo/aws-model"
 import {
   ConfigSetType,
   CreateTargetListenerProps,
@@ -11,6 +11,7 @@ import {
   AccountsOperationOutput,
 } from "@takomo/organization-commands"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+import { TkmLogger } from "@takomo/util"
 import Table from "easy-table"
 import { createBaseIO } from "../../cli-io"
 import { printError } from "../../common"
@@ -47,11 +48,11 @@ export const createAccountsOperationIO = (
   const { logger, messages } = props
   const io = createBaseIO(props)
 
-  const createStackDeployIO = (accountId: AccountId): DeployStacksIO =>
-    createDeployStacksIO({ logger: logger.childLogger(accountId) })
+  const createStackDeployIO = (logger: TkmLogger): DeployStacksIO =>
+    createDeployStacksIO({ logger })
 
-  const createStackUndeployIO = (accountId: AccountId): UndeployStacksIO =>
-    createUndeployStacksIO({ logger: logger.childLogger(accountId) })
+  const createStackUndeployIO = (logger: TkmLogger): UndeployStacksIO =>
+    createUndeployStacksIO({ logger })
 
   const confirmLaunch = async (
     plan: ExecutionPlan<OrganizationAccount>,

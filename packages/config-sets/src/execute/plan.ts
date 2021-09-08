@@ -1,5 +1,9 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { CommandOutput, OperationState } from "@takomo/core"
+import {
+  CommandOutput,
+  OperationState,
+  resolveCommandOutputBase,
+} from "@takomo/core"
 import { CommandPath } from "@takomo/stacks-model"
 import { Timer, TkmLogger } from "@takomo/util"
 import {
@@ -49,21 +53,20 @@ export const executePlan = async <R extends CommandOutput, C>({
       executor,
       state,
       concurrentAccounts,
-      currentStageNumber,
       stageCount,
       targetListenerProvider,
       defaultCredentialManager,
+      currentStageNumber: currentStageNumber + 1,
+      timer: timer.startChild(stage.stageName),
     })
     results.push(result)
   }
 
   timer.stop()
   return {
+    ...resolveCommandOutputBase(results),
     results,
     timer,
-    message: "Success",
-    status: "SUCCESS",
-    success: true,
     outputFormat: "text",
   }
 }

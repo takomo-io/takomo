@@ -9,16 +9,22 @@ import {
   CommandContext,
   parseOptionalString,
   parseOptionalStringArray,
+  parseString,
   parseVars,
 } from "@takomo/core"
-import { OrganizationalUnitPath } from "@takomo/organization-model"
+import {
+  DEFAULT_ORGANIZATION_ROLE_NAME,
+  OrganizationalUnitPath,
+} from "@takomo/organization-model"
 import { buildOrganizationConfigSchema } from "@takomo/organization-schema"
 import {
   collectFromHierarchy,
+  deepCopy,
   findNonUniques,
   TkmLogger,
   ValidationError,
 } from "@takomo/util"
+import merge from "lodash.merge"
 import { err, ok, Result } from "neverthrow"
 import R from "ramda"
 import { OrganizationalUnitConfig, OrganizationConfig } from "../model"
@@ -92,7 +98,22 @@ export const buildOrganizationConfig = async (
     )
   }
 
-  const accountCreation = parseAccountCreationConfig(record.accountCreation)
+  const organizationAdminRoleName = parseOptionalString(
+    record.organizationAdminRoleName,
+  )
+  const accountAdminRoleName = parseString(
+    record.accountAdminRoleName,
+    DEFAULT_ORGANIZATION_ROLE_NAME,
+  )
+  const accountBootstrapRoleName = parseString(
+    record.accountBootstrapAdminRoleName,
+    DEFAULT_ORGANIZATION_ROLE_NAME,
+  )
+
+  const accountCreation = parseAccountCreationConfig(
+    record.accountCreation,
+    accountAdminRoleName,
+  )
   const parsedConfigSets = parseConfigSets(record.configSets)
   const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
   const stages = parseOptionalStringArray(record.stages) ?? ["default"]
@@ -110,11 +131,17 @@ export const buildOrganizationConfig = async (
     "BACKUP_POLICY",
     record.backupPolicies,
   )
+
   const vars = parseVars(record.vars)
+  merge(deepCopy(ctx.variables.var), vars)
+
   const organizationalUnits = await parseOrganizationalUnitsConfig(
     logger,
     externallyLoadedAccounts,
     record.organizationalUnits,
+    vars,
+    accountAdminRoleName,
+    accountBootstrapRoleName,
   )
 
   const configuredOUs = collectFromHierarchy(
@@ -169,12 +196,8 @@ export const buildOrganizationConfig = async (
     vars,
     stages,
     masterAccountId: `${record.masterAccountId}`,
-    organizationAdminRoleName: parseOptionalString(
-      record.organizationAdminRoleName,
-    ),
-    accountAdminRoleName: parseOptionalString(record.accountAdminRoleName),
-    accountBootstrapRoleName: parseOptionalString(
-      record.accountBootstrapAdminRoleName,
-    ),
+    organizationAdminRoleName,
+    accountAdminRoleName,
+    accountBootstrapRoleName,
   })
 }

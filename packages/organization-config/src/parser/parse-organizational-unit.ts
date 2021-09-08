@@ -1,8 +1,9 @@
-import { OrganizationPolicyName } from "@takomo/aws-model"
+import { IamRoleName, OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetInstruction } from "@takomo/config-sets"
-import { parseStringArray, parseVars } from "@takomo/core"
+import { parseStringArray, parseVars, Vars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { TkmLogger } from "@takomo/util"
+import merge from "lodash.merge"
 import R from "ramda"
 import { OrganizationalUnitConfig } from "../model"
 import { findMissingDirectChildrenPaths } from "./find-missing-direct-child-paths"
@@ -33,18 +34,40 @@ const collectDirectChildPaths = (
     (key) => resolveOrganizationalUnitDepth(key) === ouPathDepth + 1,
   )
 
-export const parseOrganizationalUnit = async (
-  parentLogger: TkmLogger,
-  externallyLoadedAccounts: Map<OrganizationalUnitPath, ReadonlyArray<unknown>>,
-  ouPath: OrganizationalUnitPath,
-  config: any,
-  inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
-): Promise<OrganizationalUnitConfig> => {
+interface ParseOrganizationalUnitProps {
+  readonly parentLogger: TkmLogger
+  readonly externallyLoadedAccounts: Map<
+    OrganizationalUnitPath,
+    ReadonlyArray<unknown>
+  >
+  readonly ouPath: OrganizationalUnitPath
+  readonly config: any
+  readonly inheritedServiceControlPolicies?: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedTagPolicies?: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedAiServicesOptOutPolicies?: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedBackupPolicies?: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedConfigSets?: ReadonlyArray<ConfigSetInstruction>
+  readonly inheritedBootstrapConfigSets?: ReadonlyArray<ConfigSetInstruction>
+  readonly inheritedVars: Vars
+  readonly inheritedAccountAdminRoleName: IamRoleName
+  readonly inheritedAccountBootstrapRoleName: IamRoleName
+}
+
+export const parseOrganizationalUnit = async ({
+  parentLogger,
+  externallyLoadedAccounts,
+  ouPath,
+  config,
+  inheritedServiceControlPolicies = [],
+  inheritedTagPolicies = [],
+  inheritedAiServicesOptOutPolicies = [],
+  inheritedBackupPolicies = [],
+  inheritedConfigSets = [],
+  inheritedBootstrapConfigSets = [],
+  inheritedVars,
+  inheritedAccountAdminRoleName,
+  inheritedAccountBootstrapRoleName,
+}: ParseOrganizationalUnitProps): Promise<OrganizationalUnitConfig> => {
   const name = extractOrganizationalUnitName(ouPath)
   const ouPathDepth = resolveOrganizationalUnitDepth(ouPath)
 
@@ -64,6 +87,10 @@ export const parseOrganizationalUnit = async (
   logger.debugObject("Missing direct child paths:", missingDirectChildPaths)
 
   const ou = config[ouPath]
+
+  const vars = parseVars(ou?.vars)
+  merge(inheritedVars, vars)
+
   const configuredServiceControlPolicies = parseStringArray(
     ou?.serviceControlPolicies,
   )
@@ -129,35 +156,46 @@ export const parseOrganizationalUnit = async (
     inheritedBootstrapConfigSets,
   )
 
+  const accountAdminRoleName =
+    ou?.accountAdminRoleName ?? inheritedAccountAdminRoleName
+  const accountBootstrapRoleName =
+    ou?.accountBootstrapRoleName ?? inheritedAccountBootstrapRoleName
+
   const children = await Promise.all(
     [...missingDirectChildPaths, ...directChildPaths].map(async (childPath) =>
-      parseOrganizationalUnit(
-        logger,
+      parseOrganizationalUnit({
+        parentLogger: logger,
         externallyLoadedAccounts,
-        childPath,
+        ouPath: childPath,
         config,
-        serviceControlPolicies.slice(),
-        tagPolicies.slice(),
-        aiServicesOptOutPolicies.slice(),
-        backupPolicies.slice(),
-        configSets.slice(),
-        bootstrapConfigSets.slice(),
-      ),
+        inheritedServiceControlPolicies: serviceControlPolicies.slice(),
+        inheritedTagPolicies: tagPolicies.slice(),
+        inheritedAiServicesOptOutPolicies: aiServicesOptOutPolicies.slice(),
+        inheritedBackupPolicies: backupPolicies.slice(),
+        inheritedConfigSets: configSets.slice(),
+        inheritedBootstrapConfigSets: bootstrapConfigSets.slice(),
+        inheritedVars: vars,
+        inheritedAccountAdminRoleName,
+        inheritedAccountBootstrapRoleName,
+      }),
     ),
   )
 
   const externalAccounts = externallyLoadedAccounts.get(ouPath) ?? []
   const allAccount = [...(ou?.accounts ?? []), ...externalAccounts]
 
-  const accounts = parseAccounts(
-    allAccount,
-    configSets,
-    bootstrapConfigSets,
-    serviceControlPolicies,
-    tagPolicies,
-    aiServicesOptOutPolicies,
-    backupPolicies,
-  )
+  const accounts = parseAccounts({
+    value: allAccount,
+    inheritedConfigSets: configSets,
+    inheritedBootstrapConfigSets: bootstrapConfigSets,
+    inheritedServiceControlPolicies: serviceControlPolicies,
+    inheritedTagPolicies: tagPolicies,
+    inheritedAiServicesOptOutPolicies: aiServicesOptOutPolicies,
+    inheritedBackupPolicies: backupPolicies,
+    inheritedVars: vars,
+    inheritedAccountAdminRoleName,
+    inheritedAccountBootstrapRoleName,
+  })
 
   return {
     name,
@@ -167,11 +205,11 @@ export const parseOrganizationalUnit = async (
     configSets,
     bootstrapConfigSets,
     path: ouPath,
-    description: ou?.description || null,
-    priority: ou?.priority || 0,
-    accountAdminRoleName: ou?.accountAdminRoleName || null,
-    accountBootstrapRoleName: ou?.accountBootstrapRoleName || null,
-    vars: parseVars(ou?.vars),
+    description: ou?.description ?? null,
+    priority: ou?.priority ?? 0,
+    accountAdminRoleName,
+    accountBootstrapRoleName,
+    vars,
     status: parseOrganizationalUnitStatus(ou?.status),
   }
 }

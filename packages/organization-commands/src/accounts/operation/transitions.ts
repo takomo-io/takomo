@@ -1,5 +1,4 @@
 import { CANCELLED, FAILED, SKIPPED } from "@takomo/core"
-import { AccountsOperationOutput } from "./model"
 import {
   AccountsOperationCancelledState,
   AccountsOperationCompletedState,
@@ -17,14 +16,12 @@ import { planOperation } from "./steps/plan-operation"
 import { validateConfiguration } from "./steps/validate-configuration"
 import { validateInputs } from "./steps/validate-inputs"
 
-type AccountsOperationCompletedProps = Omit<AccountsOperationOutput, "timer">
-
 export class AccountsOperationCompleted {
   readonly completed = true
-  readonly props: AccountsOperationCompletedProps
+  readonly state: AccountsOperationCompletedState
 
-  constructor(props: AccountsOperationCompletedProps) {
-    this.props = props
+  constructor(state: AccountsOperationCompletedState) {
+    this.state = state
   }
 }
 
@@ -94,32 +91,35 @@ export const createAccountsOperationTransitions =
       state: AccountsOperationCancelledState,
     ): Promise<StepResult> =>
       new AccountsOperationCompleted({
-        message: state.message,
-        success: false,
-        status: CANCELLED,
-        outputFormat: state.input.outputFormat,
-        results: [],
+        ...state,
+        result: {
+          message: state.message,
+          success: false,
+          status: CANCELLED,
+          results: [],
+          timer: state.totalTimer,
+          outputFormat: state.input.outputFormat,
+        },
       }),
 
     completeAccountsOperation: async (
       state: AccountsOperationCompletedState,
-    ): Promise<StepResult> =>
-      new AccountsOperationCompleted({
-        ...state,
-        outputFormat: state.input.outputFormat,
-        results: [],
-      }),
+    ): Promise<StepResult> => new AccountsOperationCompleted(state),
 
     failAccountsOperation: async (
       state: AccountsOperationFailedState,
     ): Promise<StepResult> =>
       new AccountsOperationCompleted({
         ...state,
-        success: false,
-        status: FAILED,
-        error: state.error,
-        outputFormat: state.input.outputFormat,
-        results: [],
+        result: {
+          message: state.message,
+          success: false,
+          status: FAILED,
+          results: [],
+          timer: state.totalTimer,
+          error: state.error,
+          outputFormat: state.input.outputFormat,
+        },
       }),
 
     skipAccountsOperation: async (
@@ -127,9 +127,13 @@ export const createAccountsOperationTransitions =
     ): Promise<StepResult> =>
       new AccountsOperationCompleted({
         ...state,
-        success: true,
-        status: SKIPPED,
-        outputFormat: state.input.outputFormat,
-        results: [],
+        result: {
+          message: state.message,
+          success: true,
+          status: SKIPPED,
+          results: [],
+          timer: state.totalTimer,
+          outputFormat: state.input.outputFormat,
+        },
       }),
   })

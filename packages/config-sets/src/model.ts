@@ -8,7 +8,7 @@ import {
 } from "@takomo/core"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath } from "@takomo/stacks-model"
-import { Timer } from "@takomo/util"
+import { Timer, TkmLogger } from "@takomo/util"
 
 export type ConfigSetName = string
 export type StageName = string
@@ -88,6 +88,7 @@ export interface TargetExecutorProps<C> {
   readonly commandPath: CommandPath
   readonly timer: Timer
   readonly configSet: ConfigSet
+  readonly logger: TkmLogger
 }
 
 export type TargetExecutor<R extends CommandOutput, C> = (

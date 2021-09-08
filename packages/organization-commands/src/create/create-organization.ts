@@ -51,6 +51,8 @@ export const createOrganization = async (
     // TODO: Specify this default config somewhere?
     const organizationConfig: OrganizationConfig = {
       masterAccountId: identity.accountId,
+      accountBootstrapRoleName: DEFAULT_ORGANIZATION_ROLE_NAME,
+      accountAdminRoleName: DEFAULT_ORGANIZATION_ROLE_NAME,
       vars: {},
       stages: [DEFAULT_STAGE_NAME],
       accountCreation: {
@@ -83,6 +85,8 @@ export const createOrganization = async (
       },
       organizationalUnits: {
         Root: {
+          accountBootstrapRoleName: DEFAULT_ORGANIZATION_ROLE_NAME,
+          accountAdminRoleName: DEFAULT_ORGANIZATION_ROLE_NAME,
           name: "Root",
           path: "Root",
           status: "active",
@@ -107,6 +111,8 @@ export const createOrganization = async (
                 serviceControl: { attached: [], inherited: [] },
                 tag: { attached: [], inherited: [] },
               },
+              accountBootstrapRoleName: DEFAULT_ORGANIZATION_ROLE_NAME,
+              accountAdminRoleName: DEFAULT_ORGANIZATION_ROLE_NAME,
               configSets: [],
               bootstrapConfigSets: [],
               vars: {},

@@ -13,8 +13,7 @@ import {
 } from "@takomo/stacks-commands"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { DeploymentOperation } from "@takomo/stacks-model"
-import { deepCopy } from "@takomo/util"
-import merge from "lodash.merge"
+import { deepCopy, TkmLogger } from "@takomo/util"
 import { PlannedOrganizationAccount } from "../../common/plan"
 import { AccountsOperationIO } from "../model"
 import { AccountsOperationPlanHolder } from "../states"
@@ -28,6 +27,7 @@ const executeOperationInternal = async (
   io: AccountsOperationIO,
   ctx: InternalCommandContext,
   configRepository: StacksConfigRepository,
+  logger: TkmLogger,
 ): Promise<StacksOperationOutput> => {
   switch (operation) {
     case "deploy":
@@ -36,7 +36,7 @@ const executeOperationInternal = async (
         ctx,
         credentialManager,
         configRepository,
-        io: io.createStackDeployIO(account.id),
+        io: io.createStackDeployIO(logger),
       })
     case "undeploy":
       return undeployStacksCommand({
@@ -44,7 +44,7 @@ const executeOperationInternal = async (
         ctx,
         credentialManager,
         configRepository,
-        io: io.createStackUndeployIO(account.id),
+        io: io.createStackUndeployIO(logger),
       })
     default:
       throw new Error(`Unsupported operation: ${operation}`)
@@ -66,15 +66,22 @@ const createExecutor = ({
   ctx,
   io,
 }: CreateExecutorProps) => {
-  return async (
-    props: TargetExecutorProps<PlannedOrganizationAccount>,
-  ): Promise<StacksOperationOutput> => {
-    if (props.state.failed) {
-      props.timer.stop()
+  return async ({
+    timer,
+    logger,
+    state,
+    commandPath,
+    configSet,
+    target,
+    defaultCredentialManager,
+  }: TargetExecutorProps<PlannedOrganizationAccount>): Promise<StacksOperationOutput> => {
+    if (state.failed) {
+      logger.debug("Cancel operation")
+      timer.stop()
 
       return {
         outputFormat,
-        timer: props.timer,
+        timer,
         status: "CANCELLED",
         message: "Cancelled",
         success: false,
@@ -83,38 +90,35 @@ const createExecutor = ({
     }
 
     try {
-      const executorInput = {
+      const input = {
         outputFormat,
-        commandPath: props.commandPath,
-        timer: props.timer,
+        timer,
+        commandPath,
         ignoreDependencies: false,
         interactive: false,
       }
 
       const stacksConfigRepository =
         await configRepository.createStacksConfigRepository(
-          props.configSet.name,
-          props.configSet.legacy,
+          configSet.name,
+          configSet.legacy,
         )
-
-      const mergedVars = deepCopy(ctx.variables.var)
-      merge(mergedVars, ctx.organizationConfig.vars, props.target.vars)
 
       const variables = {
         env: ctx.variables.env,
-        var: mergedVars,
+        var: deepCopy(target.vars),
         context: ctx.variables.context,
       }
 
       const credentialManager =
-        await props.defaultCredentialManager.createCredentialManagerForRole(
-          props.target.data.executionRoleArn,
+        await defaultCredentialManager.createCredentialManagerForRole(
+          target.data.executionRoleArn,
         )
 
-      return executeOperationInternal(
+      return await executeOperationInternal(
         operation,
-        executorInput,
-        props.target.data,
+        input,
+        target.data,
         credentialManager,
         io,
         {
@@ -122,13 +126,16 @@ const createExecutor = ({
           variables,
         },
         stacksConfigRepository,
+        logger,
       )
-    } catch (e) {
-      props.timer.stop()
+    } catch (error) {
+      logger.error("An error occurred", error)
+      timer.stop()
 
       return {
+        error,
         outputFormat,
-        timer: props.timer,
+        timer,
         status: "FAILED",
         message: "Failed",
         success: false,
@@ -155,58 +162,6 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
       transitions,
       configRepository,
     } = state
-    // const {
-    //   transitions,
-    //   io,
-    //   accountsLaunchPlan: plan,
-    //   input: { configSetType, configSetName },
-    //   totalTimer,
-    // } = state1
-    // const results = new Array<OrganizationalUnitAccountsOperationResult>()
-    //
-    // io.info("Process operation")
-    //
-    // const state = { failed: false }
-    // const stageCount = plan.stages.length
-    //
-    // for (const [i, stage] of plan.stages.entries()) {
-    //   const stageName = stage.stage ?? "default"
-    //   io.info(`Begin stage '${stageName}'`)
-    //   const timer = createTimer(stageName)
-    //
-    //   const accountCount = stage.organizationalUnits
-    //     .map((g) => g.accounts)
-    //     .flat().length
-    //
-    //   const accountsListener = createAccountsListener({
-    //     io,
-    //     accountCount,
-    //     stageCount,
-    //     currentStageNumber: i + 1,
-    //     stageName,
-    //   })
-    //
-    //   for (const organizationalUnit of stage.organizationalUnits) {
-    //     const result = await processOrganizationalUnit(
-    //       accountsListener,
-    //       state1,
-    //       organizationalUnit,
-    //       totalTimer.startChild(organizationalUnit.path),
-    //       state,
-    //       configSetType,
-    //       stage.stage,
-    //       configSetName,
-    //     )
-    //
-    //     results.push(result)
-    //   }
-    //
-    //   timer.stop()
-    //
-    //   io.info(
-    //     `Completed stage '${stageName}' in ${timer.getFormattedTimeElapsed()}`,
-    //   )
-    // }
 
     const executor = createExecutor({
       outputFormat,
@@ -232,6 +187,6 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
 
     return transitions.completeAccountsOperation({
       ...state,
-      ...result,
+      result,
     })
   }

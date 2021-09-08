@@ -2,6 +2,7 @@ import {
   AccountEmail,
   AccountId,
   AccountName,
+  IamRoleName,
   OrganizationalUnitName,
   OrganizationPolicyName,
   OrganizationPolicyType,
@@ -58,8 +59,8 @@ export interface OrgEntity {
   readonly vars: any
   readonly configSets: ReadonlyArray<ConfigSetInstruction>
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
-  readonly accountAdminRoleName?: string
-  readonly accountBootstrapRoleName?: string
+  readonly accountAdminRoleName: IamRoleName
+  readonly accountBootstrapRoleName: IamRoleName
   readonly description?: string
 }
 
@@ -94,7 +95,7 @@ export interface OrganizationConfig {
   readonly aiServicesOptOutPolicies: OrganizationPoliciesConfig
   readonly backupPolicies: OrganizationPoliciesConfig
   readonly organizationalUnits: OrganizationalUnitsConfig
-  readonly organizationAdminRoleName?: string
-  readonly accountAdminRoleName?: string
-  readonly accountBootstrapRoleName?: string
+  readonly organizationAdminRoleName?: IamRoleName
+  readonly accountAdminRoleName: IamRoleName
+  readonly accountBootstrapRoleName: IamRoleName
 }
