@@ -10,8 +10,8 @@ export const planOperation: AccountsOperationStep<OrganizationStateHolder> =
 
     const accountsLaunchPlan = await createAccountsPlan({
       ctx,
-      logger: io,
       organizationState,
+      logger: io,
       accountsSelectionCriteria: input,
     })
 

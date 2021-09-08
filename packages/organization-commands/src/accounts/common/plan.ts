@@ -85,7 +85,7 @@ export const createAccountsPlan = async ({
   )
 
   selectedOuPaths.forEach((ouPath) => {
-    if (allOuPaths.includes(ouPath)) {
+    if (!allOuPaths.includes(ouPath)) {
       throw new TakomoError(
         `No organizational unit found with path: '${ouPath}'`,
       )

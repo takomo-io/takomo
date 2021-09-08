@@ -27,6 +27,8 @@ export const validateOrganizationConfigIsInSyncWithRemoteState = async ({
     organizationState,
   })
 
+  logger.traceObject("Basic plan", basicConfigPlan)
+
   const organizationalUnitsPlan = await planOrganizationalUnitsDeploy({
     ctx,
     basicConfigPlan,
@@ -34,12 +36,16 @@ export const validateOrganizationConfigIsInSyncWithRemoteState = async ({
     logger,
   })
 
+  logger.traceObject("Organizational units plan", organizationalUnitsPlan)
+
   const policiesPlan = await planOrganizationPolicies({
     logger,
     configRepository,
     ctx,
     organizationState,
   })
+
+  logger.traceObject("Policies plan", policiesPlan)
 
   if (
     policiesPlan.hasChanges ||

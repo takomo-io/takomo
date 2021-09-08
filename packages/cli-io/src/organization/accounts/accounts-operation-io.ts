@@ -99,7 +99,12 @@ export const createAccountsOperationIO = (
   ): AccountsOperationOutput => {
     io.header({ text: messages.outputHeader, marginTop: true })
 
-    if (!output.results) {
+    if (output.error) {
+      io.message({ marginTop: true, text: "An unhandled error occurred:" })
+      printError(io, output.error, logger.logLevel, 0)
+    }
+
+    if (output.results.length === 0) {
       io.message({ text: messages.outputNoAccounts, marginTop: true })
       return output
     }
@@ -161,7 +166,9 @@ export const createAccountsOperationIO = (
 
     io.message({ text: targetsTable.toString(), marginTop: true })
 
-    const failed = output.results.filter((r) => !r.success)
+    const failed = output.results.filter(
+      (r) => !r.success && r.status === "FAILED",
+    )
 
     if (failed.length > 0) {
       io.subheader({
