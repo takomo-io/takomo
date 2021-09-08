@@ -185,7 +185,7 @@ export const createAccountsPlan = async ({
         isActive(a) &&
         hasConfigSets(a) &&
         configSetNameMatches(a) &&
-        isIncludedInSelectedAccountIds,
+        isIncludedInSelectedAccountIds(a),
     )
 
   const convertToExecutionTarget = (
