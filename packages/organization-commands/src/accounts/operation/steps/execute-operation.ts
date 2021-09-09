@@ -174,9 +174,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
     const result = await executePlan({
       ctx,
       executor,
-      commandPath,
       concurrentAccounts,
-      configSetType,
       logger: io,
       plan: accountsLaunchPlan,
       timer: totalTimer.startChild("execute"),

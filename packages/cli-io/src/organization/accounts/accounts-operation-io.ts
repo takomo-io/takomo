@@ -81,7 +81,7 @@ export const createAccountsOperationIO = (
           })
 
           configSets.forEach((configSet) => {
-            io.message({ text: `- ${configSet}`, indent: 10 })
+            io.message({ text: `- ${configSet.name}`, indent: 10 })
           })
         })
       })

@@ -4,11 +4,9 @@ import {
   OperationState,
   resolveCommandOutputBase,
 } from "@takomo/core"
-import { CommandPath } from "@takomo/stacks-model"
 import { Timer, TkmLogger } from "@takomo/util"
 import {
   ConfigSetContext,
-  ConfigSetType,
   ExecutionPlan,
   PlanExecutionResult,
   StageExecutionResult,
@@ -22,9 +20,7 @@ export interface ExecutePlanProps<R extends CommandOutput, C> {
   readonly logger: TkmLogger
   readonly timer: Timer
   readonly state: OperationState
-  readonly configSetType: ConfigSetType
   readonly ctx: ConfigSetContext
-  readonly commandPath?: CommandPath
   readonly executor: TargetExecutor<R, C>
   readonly concurrentAccounts: number
   readonly targetListenerProvider: TargetListenerProvider

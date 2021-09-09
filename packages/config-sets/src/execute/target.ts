@@ -35,16 +35,16 @@ export const executeTarget = async <R extends CommandOutput, C>({
 }: ExecuteTargetProps<R, C>): Promise<TargetExecutionResult<R>> => {
   const results = new Array<ConfigSetExecutionResult<R>>()
 
-  for (const configSetName of target.configSets) {
+  for (const configSet of target.configSets) {
     const result = await executeConfigSet<R, C>({
       target,
-      configSetName,
+      configSet,
       state,
       executor,
       ctx,
       logger,
       defaultCredentialManager,
-      timer: timer.startChild(configSetName),
+      timer: timer.startChild(configSet.name),
     })
     results.push(result)
   }

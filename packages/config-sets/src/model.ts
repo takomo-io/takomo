@@ -97,9 +97,14 @@ export type TargetExecutor<R extends CommandOutput, C> = (
 
 export type ExecutionTargetId = string
 
+export interface ExecutionConfigSet {
+  readonly name: ConfigSetName
+  readonly commandPaths: ReadonlyArray<CommandPath>
+}
+
 export interface ExecutionTarget<C> {
   readonly vars: any
-  readonly configSets: ReadonlyArray<ConfigSetName>
+  readonly configSets: ReadonlyArray<ExecutionConfigSet>
   readonly accountId: AccountId
   readonly executionRoleArn?: IamRoleArn
   readonly id: ExecutionTargetId

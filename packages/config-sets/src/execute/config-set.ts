@@ -9,7 +9,7 @@ import {
   CommandPathExecutionResult,
   ConfigSetContext,
   ConfigSetExecutionResult,
-  ConfigSetName,
+  ExecutionConfigSet,
   ExecutionTarget,
   TargetExecutor,
 } from "../model"
@@ -18,7 +18,7 @@ import { executeCommandPath } from "./command-path"
 export interface ExecuteConfigSetProps<R extends CommandOutput, C> {
   readonly executor: TargetExecutor<R, C>
   readonly target: ExecutionTarget<C>
-  readonly configSetName: ConfigSetName
+  readonly configSet: ExecutionConfigSet
   readonly timer: Timer
   readonly state: OperationState
   readonly logger: TkmLogger
@@ -27,7 +27,7 @@ export interface ExecuteConfigSetProps<R extends CommandOutput, C> {
 }
 
 export const executeConfigSet = async <R extends CommandOutput, C>({
-  configSetName,
+  configSet: executionConfigSet,
   timer,
   state,
   logger,
@@ -36,11 +36,11 @@ export const executeConfigSet = async <R extends CommandOutput, C>({
   target,
   defaultCredentialManager,
 }: ExecuteConfigSetProps<R, C>): Promise<ConfigSetExecutionResult<R>> => {
-  logger.info(`Begin config set: '${configSetName}'`)
-  const configSet = ctx.getConfigSet(configSetName)
+  logger.info(`Begin config set: '${executionConfigSet.name}'`)
+  const configSet = ctx.getConfigSet(executionConfigSet.name)
   const results = new Array<CommandPathExecutionResult<R>>()
 
-  for (const commandPath of configSet.commandPaths) {
+  for (const commandPath of executionConfigSet.commandPaths) {
     const result = await executeCommandPath<R, C>({
       target,
       commandPath,
@@ -62,7 +62,7 @@ export const executeConfigSet = async <R extends CommandOutput, C>({
   timer.stop()
   return {
     ...resolveCommandOutputBase(results),
-    configSetName,
+    configSetName: executionConfigSet.name,
     results,
     timer,
   }

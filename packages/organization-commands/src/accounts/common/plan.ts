@@ -196,7 +196,12 @@ export const createAccountsPlan = async ({
     vars: a.vars,
     configSets: getConfigSets(a)
       .map((cs) => cs.name)
-      .filter((cs) => !configSetName || cs === configSetName),
+      .filter((csName) => !configSetName || csName === configSetName)
+      .map((csName) => ctx.getConfigSet(csName))
+      .map((cs) => ({
+        name: cs.name,
+        commandPaths: commandPath ? [commandPath] : cs.commandPaths,
+      })),
     data: {
       ...accountsById.get(a.id)!,
       executionRoleArn: getExecutionRoleArn(a),
