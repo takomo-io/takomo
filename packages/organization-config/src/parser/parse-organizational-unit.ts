@@ -2,8 +2,7 @@ import { IamRoleName, OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetInstruction } from "@takomo/config-sets"
 import { parseStringArray, parseVars, Vars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { TkmLogger } from "@takomo/util"
-import merge from "lodash.merge"
+import { merge, TkmLogger } from "@takomo/util"
 import R from "ramda"
 import { OrganizationalUnitConfig } from "../model"
 import { findMissingDirectChildrenPaths } from "./find-missing-direct-child-paths"
@@ -88,8 +87,7 @@ export const parseOrganizationalUnit = async ({
 
   const ou = config[ouPath]
 
-  const vars = parseVars(ou?.vars)
-  merge(inheritedVars, vars)
+  const vars = merge(inheritedVars, parseVars(ou?.vars))
 
   const configuredServiceControlPolicies = parseStringArray(
     ou?.serviceControlPolicies,

@@ -62,6 +62,7 @@ export const ROLE_NAME_OPT = "role-name"
 export const ALIAS_OPT = "alias"
 export const CONFIG_FILE_OPT = "config-file"
 export const CONFIG_SET_OPT = "config-set"
+export const CONFIG_SET_TYPE_OPT = "config-set-type"
 
 export const outputFormatOptions = {
   [OUTPUT_OPT]: {

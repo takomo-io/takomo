@@ -1,3 +1,4 @@
+import { executePlan } from "@takomo/config-sets"
 import { CommandHandler } from "@takomo/core"
 import {
   buildOrganizationContext,
@@ -5,9 +6,9 @@ import {
   OrganizationConfigRepository,
   OrganizationContext,
 } from "@takomo/organization-context"
-import { TkmLogger } from "@takomo/util"
 import { createAccountsPlan } from "../common/plan"
 import { validateOrganizationConfigIsInSyncWithRemoteState } from "../common/validate-organization-state"
+import { createExecutor } from "./executor"
 import {
   ListAccountsStacksInput,
   ListAccountsStacksIO,
@@ -16,27 +17,44 @@ import {
 
 const listAccountsStacks = async (
   ctx: OrganizationContext,
-  logger: TkmLogger,
+  io: ListAccountsStacksIO,
   configRepository: OrganizationConfigRepository,
   input: ListAccountsStacksInput,
-): Promise<string[]> => {
-  const organizationState = await loadOrganizationState(ctx, logger)
+): Promise<ListAccountsStacksOutput> => {
+  const organizationState = await loadOrganizationState(ctx, io)
 
   await validateOrganizationConfigIsInSyncWithRemoteState({
     organizationState,
     ctx,
-    logger,
+    logger: io,
     configRepository,
   })
 
   const plan = await createAccountsPlan({
     ctx,
     organizationState,
-    logger,
+    logger: io,
     accountsSelectionCriteria: input,
   })
 
-  return []
+  const executor = createExecutor({
+    ctx,
+    io,
+    configRepository,
+    outputFormat: input.outputFormat,
+  })
+
+  return executePlan({
+    plan,
+    ctx,
+    executor,
+    logger: io,
+    timer: input.timer,
+    state: { failed: false },
+    concurrentAccounts: input.concurrentAccounts,
+    defaultCredentialManager: ctx.credentialManager,
+    targetListenerProvider: io.createTargetListener,
+  })
 }
 
 export const listAccountsStacksCommand: CommandHandler<
@@ -53,16 +71,4 @@ export const listAccountsStacksCommand: CommandHandler<
 }): Promise<ListAccountsStacksOutput> =>
   buildOrganizationContext(ctx, configRepository, io, credentialManager)
     .then((ctx) => listAccountsStacks(ctx, io, configRepository, input))
-    .then((accounts) => {
-      const { timer } = input
-      timer.stop()
-      return {
-        accounts,
-        success: true,
-        message: "Success",
-        status: "SUCCESS",
-        outputFormat: input.outputFormat,
-        timer,
-      } as ListAccountsStacksOutput
-    })
     .then(io.printOutput)

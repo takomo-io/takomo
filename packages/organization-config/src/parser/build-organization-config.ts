@@ -19,12 +19,11 @@ import {
 import { buildOrganizationConfigSchema } from "@takomo/organization-schema"
 import {
   collectFromHierarchy,
-  deepCopy,
   findNonUniques,
+  merge,
   TkmLogger,
   ValidationError,
 } from "@takomo/util"
-import merge from "lodash.merge"
 import { err, ok, Result } from "neverthrow"
 import R from "ramda"
 import { OrganizationalUnitConfig, OrganizationConfig } from "../model"
@@ -132,8 +131,7 @@ export const buildOrganizationConfig = async (
     record.backupPolicies,
   )
 
-  const vars = parseVars(record.vars)
-  merge(deepCopy(ctx.variables.var), vars)
+  const vars = merge(ctx.variables.var, parseVars(record.vars))
 
   const organizationalUnits = await parseOrganizationalUnitsConfig(
     logger,

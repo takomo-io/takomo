@@ -28,7 +28,7 @@ export const EMAIL_OPT = "email"
 export const OU_OPT = "ou"
 export const IAM_USER_ACCESS_TO_BILLING_OPT = "iam-user-access-to-billing"
 
-type CommandArgs = {
+interface CommandArgs {
   readonly [NAME_OPT]: AccountName
   readonly [EMAIL_OPT]: AccountEmail
   readonly [IAM_USER_ACCESS_TO_BILLING_OPT]: boolean

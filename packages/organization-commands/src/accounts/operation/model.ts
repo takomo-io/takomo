@@ -27,20 +27,6 @@ export interface AccountsOperationInput extends CommandInput {
   readonly commandPath?: CommandPath
 }
 
-// export interface AccountOperationResult extends CommandOutputBase {
-//   readonly accountId: AccountId
-//   readonly results: ReadonlyArray<ConfigSetOperationResult>
-//   readonly timer: Timer
-// }
-
-// export interface OrganizationalUnitAccountsOperationResult
-//   extends CommandOutputBase {
-//   readonly path: OrganizationalUnitPath
-//   readonly results: ReadonlyArray<AccountOperationResult>
-//   readonly stage?: StageName
-//   readonly timer: Timer
-// }
-
 export interface AccountsOperationOutput
   extends PlanExecutionResult<StacksOperationOutput> {
   readonly outputFormat: OutputFormat

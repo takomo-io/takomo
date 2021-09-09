@@ -1,8 +1,7 @@
 import { IamRoleName, OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetInstruction } from "@takomo/config-sets"
 import { parseStringArray, parseVars, Vars } from "@takomo/core"
-import { deepCopy } from "@takomo/util"
-import merge from "lodash.merge"
+import { deepCopy, merge } from "@takomo/util"
 import { OrganizationAccountConfig } from "../model"
 import { mergeConfigSetInstructions } from "./merge-config-set-instructions"
 import { parseAccountStatus } from "./parse-account-status"
@@ -113,8 +112,7 @@ const parseComplexAccount = (
     },
   }
 
-  const vars = parseVars(value.vars)
-  merge(inheritedVars, vars)
+  const vars = merge(inheritedVars, parseVars(value.vars))
 
   return {
     configSets,

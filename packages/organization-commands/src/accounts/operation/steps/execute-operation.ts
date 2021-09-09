@@ -149,13 +149,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
   async (state) => {
     const {
       ctx,
-      input: {
-        commandPath,
-        concurrentAccounts,
-        outputFormat,
-        configSetType,
-        operation,
-      },
+      input: { concurrentAccounts, outputFormat, operation },
       io,
       accountsLaunchPlan,
       totalTimer,

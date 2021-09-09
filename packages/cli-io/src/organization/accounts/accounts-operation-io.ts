@@ -1,10 +1,5 @@
 import { OrganizationAccount } from "@takomo/aws-model"
-import {
-  ConfigSetType,
-  CreateTargetListenerProps,
-  ExecutionPlan,
-  TargetListener,
-} from "@takomo/config-sets"
+import { ConfigSetType, ExecutionPlan } from "@takomo/config-sets"
 import { ConfirmResult } from "@takomo/core"
 import {
   AccountsOperationIO,
@@ -13,12 +8,14 @@ import {
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { TkmLogger } from "@takomo/util"
 import Table from "easy-table"
+import R from "ramda"
 import { createBaseIO } from "../../cli-io"
 import { printError } from "../../common"
 import { formatCommandStatus } from "../../formatters"
 import { IOProps, printFailedStackResults } from "../../stacks/common"
 import { createDeployStacksIO } from "../../stacks/deploy-stacks/deploy-stacks-io"
 import { createUndeployStacksIO } from "../../stacks/undeploy-stacks-io"
+import { createTargetListenerInternal } from "./common"
 
 export interface Messages {
   readonly confirmHeader: string
@@ -237,35 +234,7 @@ export const createAccountsOperationIO = (
     return output
   }
 
-  const createTargetListener = ({
-    stageName,
-    currentStageNumber,
-    stageCount,
-    targetCount,
-  }: CreateTargetListenerProps): TargetListener => {
-    let accountsInProgress = 0
-    let accountsCompleted = 0
-    const stageInfo = `stage ${currentStageNumber}/${stageCount}: ${stageName}`
-
-    const onTargetBegin = async () => {
-      accountsInProgress++
-    }
-
-    const onTargetComplete = async () => {
-      accountsInProgress--
-      accountsCompleted++
-      const waitingCount = targetCount - accountsInProgress - accountsCompleted
-      const percentage = ((accountsCompleted / targetCount) * 100).toFixed(1)
-      logger.info(
-        `${stageInfo}, accounts waiting: ${waitingCount}, in progress: ${accountsInProgress}, completed: ${accountsCompleted}/${targetCount} (${percentage}%)`,
-      )
-    }
-
-    return {
-      onTargetBegin,
-      onTargetComplete,
-    }
-  }
+  const createTargetListener = R.curry(createTargetListenerInternal)(logger)
 
   return {
     ...logger,

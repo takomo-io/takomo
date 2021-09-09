@@ -5,10 +5,14 @@ import { formatStackStatus } from "../formatters"
 import { formatDate, IOProps } from "./common"
 
 export const createListStacksIO = (props: IOProps): ListStacksIO => {
-  const { logger } = props
+  const { logger, hideOutput } = props
   const io = createBaseIO(props)
 
   const printOutput = (output: ListStacksOutput): ListStacksOutput => {
+    if (hideOutput) {
+      return output
+    }
+
     const { outputFormat, stacks } = output
     switch (outputFormat) {
       case "json":
@@ -53,6 +57,7 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
         io.table({
           showHeaders: true,
           marginTop: true,
+          marginBottom: true,
           table: stacksTable,
         })
     }

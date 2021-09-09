@@ -150,10 +150,15 @@ export const createAccountsPlan = async ({
   const hasConfigSets = (a: OrganizationAccountConfig) =>
     getConfigSets(a).length > 0
 
+  const getConfigSetsWithStage = (
+    a: OrganizationAccountConfig,
+    stageName: StageName,
+  ) => getConfigSets(a).filter((cs) => cs.stage === stageName)
+
   const hasConfigSetsWithStage = (
     a: OrganizationAccountConfig,
-    stageName?: StageName,
-  ) => getConfigSets(a).some(({ stage }) => stage === stageName)
+    stageName: StageName,
+  ) => getConfigSetsWithStage(a, stageName).length > 0
 
   const isActive = ({ status }: OrganizationAccountConfig): boolean =>
     status === "active"
@@ -190,11 +195,12 @@ export const createAccountsPlan = async ({
 
   const convertToExecutionTarget = (
     a: OrganizationAccountConfig,
+    stageName: StageName,
   ): ExecutionTarget<PlannedOrganizationAccount> => ({
     accountId: a.id,
     id: a.id,
     vars: a.vars,
-    configSets: getConfigSets(a)
+    configSets: getConfigSetsWithStage(a, stageName)
       .map((cs) => cs.name)
       .filter((csName) => !configSetName || csName === configSetName)
       .map((csName) => ctx.getConfigSet(csName))
@@ -215,7 +221,7 @@ export const createAccountsPlan = async ({
     path: ou.path,
     targets: ou.accounts
       .filter((a) => hasConfigSetsWithStage(a, stageName))
-      .map((a) => convertToExecutionTarget(a)),
+      .map((a) => convertToExecutionTarget(a, stageName)),
   })
 
   const ous: ReadonlyArray<OrganizationalUnitConfig> = uniqueOusToLaunch
@@ -239,8 +245,12 @@ export const createAccountsPlan = async ({
     .map(createStage)
     .filter((s) => s.groups.length > 0)
 
-  return {
+  const plan = {
     stages,
     configSetType,
   }
+
+  logger.traceObject("Accounts plan", plan)
+
+  return plan
 }
