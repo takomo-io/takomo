@@ -12,6 +12,7 @@ import {
   createDetectDriftIO,
   createInitProjectIO,
   createListAccountsIO,
+  createListAccountsStacksIO,
   createListStacksIO,
   createRunTargetsIO,
   createTearDownAccountsIO,
@@ -34,6 +35,7 @@ import {
   DeployOrganizationIO,
   DescribeOrganizationIO,
   ListAccountsIO,
+  ListAccountsStacksIO,
 } from "@takomo/organization-commands"
 import {
   ConfirmDeployAnswer,
@@ -172,3 +174,7 @@ export const createTestDeployOrganizationIO = (
 
 export const createTestInitProjectIO = (logger: TkmLogger): InitProjectIO =>
   createInitProjectIO({ logger })
+
+export const createTestListAccountsStacks = (
+  logger: TkmLogger,
+): ListAccountsStacksIO => createListAccountsStacksIO({ logger })
