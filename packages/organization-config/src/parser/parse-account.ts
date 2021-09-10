@@ -1,6 +1,7 @@
-import { OrganizationPolicyName } from "@takomo/aws-model"
+import { IamRoleName, OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetInstruction } from "@takomo/config-sets"
-import { parseStringArray, parseVars } from "@takomo/core"
+import { parseStringArray, parseVars, Vars } from "@takomo/core"
+import { deepCopy, merge } from "@takomo/util"
 import { OrganizationAccountConfig } from "../model"
 import { mergeConfigSetInstructions } from "./merge-config-set-instructions"
 import { parseAccountStatus } from "./parse-account-status"
@@ -14,13 +15,18 @@ const parseSimpleAccount = (
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedVars: Vars,
+  inheritedAccountAdminRoleName: IamRoleName,
+  inheritedAccountBootstrapRoleName: IamRoleName,
 ): OrganizationAccountConfig => {
   return {
     id,
     configSets: inheritedConfigSets,
     bootstrapConfigSets: inheritedBootstrapConfigSets,
-    vars: {},
+    vars: deepCopy(inheritedVars),
     status: "active",
+    accountAdminRoleName: inheritedAccountAdminRoleName,
+    accountBootstrapRoleName: inheritedAccountBootstrapRoleName,
     policies: {
       serviceControl: {
         inherited: inheritedServiceControlPolicies,
@@ -53,6 +59,9 @@ const parseComplexAccount = (
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedVars: Vars,
+  inheritedAccountAdminRoleName: IamRoleName,
+  inheritedAccountBootstrapRoleName: IamRoleName,
 ): OrganizationAccountConfig => {
   const configuredConfigSets = parseConfigSetInstructions(value.configSets)
   const configSets = mergeConfigSetInstructions(
@@ -103,17 +112,21 @@ const parseComplexAccount = (
     },
   }
 
+  const vars = merge(inheritedVars, parseVars(value.vars))
+
   return {
     configSets,
     bootstrapConfigSets,
     policies,
     id: `${value.id}`,
-    name: value.name || null,
-    email: value.email || null,
-    description: value.description || null,
-    vars: parseVars(value.vars),
-    accountAdminRoleName: value.accountAdminRoleName || null,
-    accountBootstrapRoleName: value.accountBootstrapRoleName || null,
+    name: value.name ?? null,
+    email: value.email ?? null,
+    description: value.description ?? null,
+    vars,
+    accountAdminRoleName:
+      value.accountAdminRoleName ?? inheritedAccountAdminRoleName,
+    accountBootstrapRoleName:
+      value.accountBootstrapRoleName ?? inheritedAccountBootstrapRoleName,
     status: parseAccountStatus(value.status),
   }
 }
@@ -126,6 +139,9 @@ export const parseAccount = (
   inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
   inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
+  inheritedVars: Vars,
+  inheritedAccountAdminRoleName: IamRoleName,
+  inheritedAccountBootstrapRoleName: IamRoleName,
 ): OrganizationAccountConfig => {
   if (typeof value === "string") {
     return parseSimpleAccount(
@@ -136,6 +152,9 @@ export const parseAccount = (
       inheritedTagPolicies,
       inheritedAiServicesOptOutPolicies,
       inheritedBackupPolicies,
+      inheritedVars,
+      inheritedAccountAdminRoleName,
+      inheritedAccountBootstrapRoleName,
     )
   }
 
@@ -147,5 +166,8 @@ export const parseAccount = (
     inheritedTagPolicies,
     inheritedAiServicesOptOutPolicies,
     inheritedBackupPolicies,
+    inheritedVars,
+    inheritedAccountAdminRoleName,
+    inheritedAccountBootstrapRoleName,
   )
 }

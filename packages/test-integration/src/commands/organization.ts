@@ -301,7 +301,7 @@ export const executeDeployAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
   createAccountsOperationOutputMatcher({
-    organizationalUnitAssertions: [],
+    stageAssertions: [],
     executor: async () => {
       const logLevel = props.logLevel ?? "info"
 
@@ -349,7 +349,7 @@ export const executeUndeployAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
   createAccountsOperationOutputMatcher({
-    organizationalUnitAssertions: [],
+    stageAssertions: [],
     executor: async () => {
       const logLevel = props.logLevel ?? "info"
 
@@ -397,7 +397,7 @@ export const executeBootstrapAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
   createAccountsOperationOutputMatcher({
-    organizationalUnitAssertions: [],
+    stageAssertions: [],
     executor: async () => {
       const logLevel = props.logLevel ?? "info"
 
@@ -445,7 +445,7 @@ export const executeTeardownAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
 ): AccountsOperationOutputMatcher =>
   createAccountsOperationOutputMatcher({
-    organizationalUnitAssertions: [],
+    stageAssertions: [],
     executor: async () => {
       const logLevel = props.logLevel ?? "info"
 

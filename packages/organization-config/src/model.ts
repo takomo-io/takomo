@@ -2,15 +2,12 @@ import {
   AccountEmail,
   AccountId,
   AccountName,
+  IamRoleName,
   OrganizationalUnitName,
   OrganizationPolicyName,
   OrganizationPolicyType,
 } from "@takomo/aws-model"
-import {
-  ConfigSet,
-  ConfigSetInstruction,
-  ConfigSetStage,
-} from "@takomo/config-sets"
+import { ConfigSet, ConfigSetInstruction, StageName } from "@takomo/config-sets"
 import {
   OrganizationAccountStatus,
   OrganizationalUnitPath,
@@ -62,8 +59,8 @@ export interface OrgEntity {
   readonly vars: any
   readonly configSets: ReadonlyArray<ConfigSetInstruction>
   readonly bootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
-  readonly accountAdminRoleName?: string
-  readonly accountBootstrapRoleName?: string
+  readonly accountAdminRoleName: IamRoleName
+  readonly accountBootstrapRoleName: IamRoleName
   readonly description?: string
 }
 
@@ -91,14 +88,14 @@ export interface OrganizationConfig {
   readonly masterAccountId: AccountId
   readonly accountCreation: AccountCreationConfig
   readonly configSets: ReadonlyArray<ConfigSet>
-  readonly stages?: ReadonlyArray<ConfigSetStage>
+  readonly stages: ReadonlyArray<StageName>
   readonly vars: any
   readonly serviceControlPolicies: OrganizationPoliciesConfig
   readonly tagPolicies: OrganizationPoliciesConfig
   readonly aiServicesOptOutPolicies: OrganizationPoliciesConfig
   readonly backupPolicies: OrganizationPoliciesConfig
   readonly organizationalUnits: OrganizationalUnitsConfig
-  readonly organizationAdminRoleName?: string
-  readonly accountAdminRoleName?: string
-  readonly accountBootstrapRoleName?: string
+  readonly organizationAdminRoleName?: IamRoleName
+  readonly accountAdminRoleName: IamRoleName
+  readonly accountBootstrapRoleName: IamRoleName
 }

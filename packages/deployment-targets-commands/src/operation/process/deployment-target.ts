@@ -3,12 +3,11 @@ import {
   ConfigSetOperationResult,
   ConfigSetType,
 } from "@takomo/config-sets"
-import { resolveCommandOutputBase } from "@takomo/core"
+import { OperationState, resolveCommandOutputBase } from "@takomo/core"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
 } from "@takomo/deployment-targets-config"
-import { OperationState } from "@takomo/stacks-model"
 import { Timer } from "@takomo/util"
 import { DeploymentTargetDeployResult, PlanHolder } from "../model"
 import { processConfigSet } from "./config-set"

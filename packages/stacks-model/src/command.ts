@@ -12,13 +12,6 @@ export type CommandPath = StackGroupPath | StackPath
 /**
  * @hidden
  */
-export interface OperationState {
-  failed: boolean
-}
-
-/**
- * @hidden
- */
 export type DeploymentOperation = "deploy" | "undeploy"
 
 /**

@@ -24,19 +24,26 @@ describe("Config sets with stages", () => {
       .expectCommandToSucceed()
       .expectResults(
         {
-          organizationalUnitPath: "Root/Two",
-          stage: "first",
-          accountResults: [
+          stageName: "first",
+          organizationalUnitResults: [
             {
-              accountId: ORG_3_ACCOUNT_02_ID,
-              configSetResults: [
+              organizationalUnitPath: "Root/Two",
+              accountResults: [
                 {
-                  configSet: "logs",
-                  commandPathResults: [
+                  accountId: ORG_3_ACCOUNT_02_ID,
+                  configSetResults: [
                     {
-                      commandPath: "/",
-                      stackResults: [
-                        { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                      configSet: "logs",
+                      commandPathResults: [
+                        {
+                          commandPath: "/",
+                          stackResults: [
+                            {
+                              stackPath: "/logs.yml/eu-west-1",
+                              stackName: "logs",
+                            },
+                          ],
+                        },
                       ],
                     },
                   ],
@@ -46,41 +53,50 @@ describe("Config sets with stages", () => {
           ],
         },
         {
-          organizationalUnitPath: "Root/One",
-          stage: "second",
-          accountResults: [
+          stageName: "second",
+          organizationalUnitResults: [
             {
-              accountId: ORG_3_ACCOUNT_01_ID,
-              configSetResults: [
+              organizationalUnitPath: "Root/One",
+              accountResults: [
                 {
-                  configSet: "logs",
-                  commandPathResults: [
+                  accountId: ORG_3_ACCOUNT_01_ID,
+                  configSetResults: [
                     {
-                      commandPath: "/",
-                      stackResults: [
-                        { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                      configSet: "logs",
+                      commandPathResults: [
+                        {
+                          commandPath: "/",
+                          stackResults: [
+                            {
+                              stackPath: "/logs.yml/eu-west-1",
+                              stackName: "logs",
+                            },
+                          ],
+                        },
                       ],
                     },
                   ],
                 },
               ],
             },
-          ],
-        },
-        {
-          organizationalUnitPath: "Root/Three",
-          stage: "second",
-          accountResults: [
             {
-              accountId: ORG_3_ACCOUNT_03_ID,
-              configSetResults: [
+              organizationalUnitPath: "Root/Three",
+              accountResults: [
                 {
-                  configSet: "logs",
-                  commandPathResults: [
+                  accountId: ORG_3_ACCOUNT_03_ID,
+                  configSetResults: [
                     {
-                      commandPath: "/",
-                      stackResults: [
-                        { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                      configSet: "logs",
+                      commandPathResults: [
+                        {
+                          commandPath: "/",
+                          stackResults: [
+                            {
+                              stackPath: "/logs.yml/eu-west-1",
+                              stackName: "logs",
+                            },
+                          ],
+                        },
                       ],
                     },
                   ],
@@ -99,19 +115,26 @@ describe("Config sets with stages", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/Three",
-        stage: "second",
-        accountResults: [
+        stageName: "second",
+        organizationalUnitResults: [
           {
-            accountId: ORG_3_ACCOUNT_03_ID,
-            configSetResults: [
+            organizationalUnitPath: "Root/Three",
+            accountResults: [
               {
-                configSet: "logs",
-                commandPathResults: [
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults: [
                   {
-                    commandPath: "/",
-                    stackResults: [
-                      { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/logs.yml/eu-west-1",
+                            stackName: "logs",
+                          },
+                        ],
+                      },
                     ],
                   },
                 ],
@@ -129,19 +152,26 @@ describe("Config sets with stages", () => {
       .expectCommandToSucceed()
       .expectResults(
         {
-          organizationalUnitPath: "Root/Two",
-          stage: "first",
-          accountResults: [
+          stageName: "first",
+          organizationalUnitResults: [
             {
-              accountId: ORG_3_ACCOUNT_02_ID,
-              configSetResults: [
+              organizationalUnitPath: "Root/Two",
+              accountResults: [
                 {
-                  configSet: "logs",
-                  commandPathResults: [
+                  accountId: ORG_3_ACCOUNT_02_ID,
+                  configSetResults: [
                     {
-                      commandPath: "/",
-                      stackResults: [
-                        { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                      configSet: "logs",
+                      commandPathResults: [
+                        {
+                          commandPath: "/",
+                          stackResults: [
+                            {
+                              stackPath: "/logs.yml/eu-west-1",
+                              stackName: "logs",
+                            },
+                          ],
+                        },
                       ],
                     },
                   ],
@@ -151,41 +181,50 @@ describe("Config sets with stages", () => {
           ],
         },
         {
-          organizationalUnitPath: "Root/One",
-          stage: "second",
-          accountResults: [
+          stageName: "second",
+          organizationalUnitResults: [
             {
-              accountId: ORG_3_ACCOUNT_01_ID,
-              configSetResults: [
+              organizationalUnitPath: "Root/One",
+              accountResults: [
                 {
-                  configSet: "logs",
-                  commandPathResults: [
+                  accountId: ORG_3_ACCOUNT_01_ID,
+                  configSetResults: [
                     {
-                      commandPath: "/",
-                      stackResults: [
-                        { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                      configSet: "logs",
+                      commandPathResults: [
+                        {
+                          commandPath: "/",
+                          stackResults: [
+                            {
+                              stackPath: "/logs.yml/eu-west-1",
+                              stackName: "logs",
+                            },
+                          ],
+                        },
                       ],
                     },
                   ],
                 },
               ],
             },
-          ],
-        },
-        {
-          organizationalUnitPath: "Root/Three",
-          stage: "second",
-          accountResults: [
             {
-              accountId: ORG_3_ACCOUNT_03_ID,
-              configSetResults: [
+              organizationalUnitPath: "Root/Three",
+              accountResults: [
                 {
-                  configSet: "logs",
-                  commandPathResults: [
+                  accountId: ORG_3_ACCOUNT_03_ID,
+                  configSetResults: [
                     {
-                      commandPath: "/",
-                      stackResults: [
-                        { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                      configSet: "logs",
+                      commandPathResults: [
+                        {
+                          commandPath: "/",
+                          stackResults: [
+                            {
+                              stackPath: "/logs.yml/eu-west-1",
+                              stackName: "logs",
+                            },
+                          ],
+                        },
                       ],
                     },
                   ],

@@ -1,14 +1,15 @@
+import { IamRoleName } from "@takomo/aws-model"
 import { parseRegex } from "@takomo/core"
-import { DEFAULT_ORGANIZATION_ROLE_NAME } from "@takomo/organization-model"
 import { AccountCreationConfig } from "../model"
 
 export const parseAccountCreationConfig = (
   value: any,
+  defaultAccountAdminRoleName: IamRoleName,
 ): AccountCreationConfig => {
   if (value === null || value === undefined) {
     return {
       defaults: {
-        roleName: DEFAULT_ORGANIZATION_ROLE_NAME,
+        roleName: defaultAccountAdminRoleName,
         iamUserAccessToBilling: true,
       },
       constraints: {},
@@ -26,7 +27,7 @@ export const parseAccountCreationConfig = (
 
   return {
     defaults: {
-      roleName: value.accountAdminRoleName || DEFAULT_ORGANIZATION_ROLE_NAME,
+      roleName: value.accountAdminRoleName ?? defaultAccountAdminRoleName,
       iamUserAccessToBilling: value.iamUserAccessToBilling !== false,
     },
     constraints: {

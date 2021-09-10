@@ -7,6 +7,7 @@ import {
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
 import R from "ramda"
+import { validateOrganizationConfigIsInSyncWithRemoteState } from "../../common/validate-organization-state"
 import { OrganizationStateHolder } from "../states"
 import { AccountsOperationStep } from "../steps"
 
@@ -57,6 +58,7 @@ export const validateConfiguration: AccountsOperationStep<OrganizationStateHolde
       io,
       input: { organizationalUnits, accountIds },
       organizationState,
+      configRepository,
     } = state
 
     io.info("Validate configuration")
@@ -64,6 +66,13 @@ export const validateConfiguration: AccountsOperationStep<OrganizationStateHolde
     await validateCommonLocalConfiguration(ctx, organizationState.accounts)
 
     validateAccountsLaunchConfiguration(ctx, organizationalUnits, accountIds)
+
+    await validateOrganizationConfigIsInSyncWithRemoteState({
+      organizationState,
+      ctx,
+      configRepository,
+      logger: io,
+    })
 
     return transitions.planOperation(state)
   }

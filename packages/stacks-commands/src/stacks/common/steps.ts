@@ -75,7 +75,7 @@ const executeStep = async <S extends InitialStackOperationState>(
   } finally {
     timer.stop()
     logger.trace(
-      `Step '${stepName}' completed in ${timer.getSecondsElapsed()}ms`,
+      `Step '${stepName}' completed in ${timer.getFormattedTimeElapsed()}`,
     )
   }
 }

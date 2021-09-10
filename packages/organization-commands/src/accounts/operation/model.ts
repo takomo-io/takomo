@@ -1,23 +1,21 @@
-import { AccountId, OrganizationAccount } from "@takomo/aws-model"
+import { AccountId } from "@takomo/aws-model"
 import {
-  ConfigSetInstruction,
   ConfigSetName,
-  ConfigSetOperationResult,
-  ConfigSetStage,
   ConfigSetType,
+  CreateTargetListenerProps,
+  ExecutionPlan,
+  PlanExecutionResult,
+  TargetListener,
 } from "@takomo/config-sets"
+import { CommandInput, ConfirmResult, IO, OutputFormat } from "@takomo/core"
 import {
-  CommandInput,
-  CommandOutput,
-  CommandOutputBase,
-  ConfirmResult,
-  IO,
-} from "@takomo/core"
-import { OrganizationAccountConfig } from "@takomo/organization-config"
-import { OrganizationalUnitPath } from "@takomo/organization-model"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+  DeployStacksIO,
+  StacksOperationOutput,
+  UndeployStacksIO,
+} from "@takomo/stacks-commands"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
-import { Timer } from "@takomo/util"
+import { TkmLogger } from "@takomo/util"
+import { PlannedOrganizationAccount } from "../common/plan"
 
 export interface AccountsOperationInput extends CommandInput {
   readonly organizationalUnits: ReadonlyArray<string>
@@ -29,60 +27,20 @@ export interface AccountsOperationInput extends CommandInput {
   readonly commandPath?: CommandPath
 }
 
-export interface AccountOperationResult extends CommandOutputBase {
-  readonly accountId: AccountId
-  readonly results: ReadonlyArray<ConfigSetOperationResult>
-  readonly timer: Timer
-}
-
-export interface OrganizationalUnitAccountsOperationResult
-  extends CommandOutputBase {
-  readonly path: OrganizationalUnitPath
-  readonly results: ReadonlyArray<AccountOperationResult>
-  readonly stage?: ConfigSetStage
-  readonly timer: Timer
-}
-
-export interface AccountsOperationOutput extends CommandOutput {
-  readonly results?: ReadonlyArray<OrganizationalUnitAccountsOperationResult>
-}
-
-export interface AccountsListener {
-  readonly onAccountBegin: () => Promise<void>
-  readonly onAccountComplete: () => Promise<void>
+export interface AccountsOperationOutput
+  extends PlanExecutionResult<StacksOperationOutput> {
+  readonly outputFormat: OutputFormat
 }
 
 export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
-  readonly createStackDeployIO: (accountId: AccountId) => DeployStacksIO
-  readonly createStackUndeployIO: (accountId: AccountId) => UndeployStacksIO
-  readonly confirmLaunch: (plan: AccountsLaunchPlan) => Promise<ConfirmResult>
-  readonly createAccountsListener: (
-    stageInfo: string,
-    accountCount: number,
-  ) => AccountsListener
+  readonly createStackDeployIO: (logger: TkmLogger) => DeployStacksIO
+  readonly createStackUndeployIO: (logger: TkmLogger) => UndeployStacksIO
+  readonly confirmLaunch: (
+    plan: AccountsOperationPlan,
+  ) => Promise<ConfirmResult>
+  readonly createTargetListener: (
+    props: CreateTargetListenerProps,
+  ) => TargetListener
 }
 
-export interface PlannedLaunchableAccount {
-  readonly account: OrganizationAccount
-  readonly config: OrganizationAccountConfig
-}
-
-export interface PlannedAccountDeploymentOrganizationalUnit {
-  readonly path: string
-  readonly accountAdminRoleName?: string
-  readonly accountBootstrapRoleName?: string
-  readonly accounts: ReadonlyArray<PlannedLaunchableAccount>
-  readonly vars: any
-  readonly configSets: ReadonlyArray<ConfigSetInstruction>
-}
-
-export interface AccountsLaunchStagePlan {
-  readonly stage?: ConfigSetStage
-  readonly organizationalUnits: ReadonlyArray<PlannedAccountDeploymentOrganizationalUnit>
-}
-
-export interface AccountsLaunchPlan {
-  readonly hasChanges: boolean
-  readonly stages: ReadonlyArray<AccountsLaunchStagePlan>
-  readonly configSetType: ConfigSetType
-}
+export type AccountsOperationPlan = ExecutionPlan<PlannedOrganizationAccount>

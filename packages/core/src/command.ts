@@ -11,6 +11,13 @@ export type Project = string
 /**
  * @hidden
  */
+export interface OperationState {
+  failed: boolean
+}
+
+/**
+ * @hidden
+ */
 export enum ConfirmResult {
   YES,
   NO,

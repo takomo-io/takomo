@@ -8,6 +8,7 @@ import {
 import {
   CommandRole,
   InternalCommandContext,
+  OperationState,
   OutputFormat,
   Variables,
 } from "@takomo/core"
@@ -26,11 +27,7 @@ import {
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
 import { StacksConfigRepository } from "@takomo/stacks-context"
-import {
-  CommandPath,
-  DeploymentOperation,
-  OperationState,
-} from "@takomo/stacks-model"
+import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { deepCopy, TakomoError, Timer } from "@takomo/util"
 import merge from "lodash.merge"
 import { DeploymentTargetsOperationIO, PlanHolder } from "../model"

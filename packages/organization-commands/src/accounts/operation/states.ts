@@ -1,18 +1,14 @@
-import { CommandStatus } from "@takomo/core"
 import {
   OrganizationConfigRepository,
   OrganizationContext,
   OrganizationState,
 } from "@takomo/organization-context"
 import { Timer } from "@takomo/util"
-import { OrganizationBasicConfigDeploymentPlan } from "../../common/plan/basic-config/model"
-import { OrganizationalUnitsDeploymentPlan } from "../../common/plan/organizational-units/model"
-import { PolicyDeploymentPlan } from "../../common/plan/policies/model"
 import {
-  AccountsLaunchPlan,
   AccountsOperationInput,
   AccountsOperationIO,
-  OrganizationalUnitAccountsOperationResult,
+  AccountsOperationOutput,
+  AccountsOperationPlan,
 } from "./model"
 import { AccountsOperationTransitions } from "./transitions"
 
@@ -29,20 +25,8 @@ export interface OrganizationStateHolder extends InitialAccountsOperationState {
   readonly organizationState: OrganizationState
 }
 
-export interface BasicConfigPlanHolder extends OrganizationStateHolder {
-  readonly organizationBasicConfigPlan: OrganizationBasicConfigDeploymentPlan
-}
-
-export interface PoliciesPlanHolder extends BasicConfigPlanHolder {
-  readonly policiesPlan: PolicyDeploymentPlan
-}
-
-export interface OrganizationalUnitsPlanHolder extends PoliciesPlanHolder {
-  readonly organizationalUnitsPlan: OrganizationalUnitsDeploymentPlan
-}
-
 export interface AccountsOperationPlanHolder extends OrganizationStateHolder {
-  readonly accountsLaunchPlan: AccountsLaunchPlan
+  readonly accountsLaunchPlan: AccountsOperationPlan
 }
 
 export interface AccountsOperationFailedState
@@ -63,9 +47,5 @@ export interface AccountsOperationCancelledState
 
 export interface AccountsOperationCompletedState
   extends InitialAccountsOperationState {
-  readonly success: boolean
-  readonly message: string
-  readonly status: CommandStatus
-  readonly error?: Error
-  readonly results?: ReadonlyArray<OrganizationalUnitAccountsOperationResult>
+  readonly result: AccountsOperationOutput
 }

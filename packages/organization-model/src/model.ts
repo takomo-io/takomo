@@ -2,6 +2,7 @@ import { OrganizationPolicyName } from "@takomo/aws-model"
 
 export const DEFAULT_ORGANIZATION_ROLE_NAME = "OrganizationAccountAccessRole"
 export const DEFAULT_SERVICE_CONTROL_POLICY_NAME = "FullAWSAccess"
+export const ORGANIZATION_ROOT_OU = "Root"
 
 export type OrganizationalUnitPath = string
 export type OrganizationAccountStatus = "active" | "disabled" | "suspended"

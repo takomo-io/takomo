@@ -1,17 +1,34 @@
-import { OrganizationPolicyName } from "@takomo/aws-model"
+import { IamRoleName, OrganizationPolicyName } from "@takomo/aws-model"
 import { ConfigSetInstruction } from "@takomo/config-sets"
+import { Vars } from "@takomo/core"
 import { OrganizationAccountConfig } from "../model"
 import { parseAccount } from "./parse-account"
 
-export const parseAccounts = (
-  value: any,
-  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
-  inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>,
-  inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>,
-): OrganizationAccountConfig[] => {
+interface ParseAccountsProps {
+  readonly value: any
+  readonly inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>
+  readonly inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
+  readonly inheritedServiceControlPolicies: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedTagPolicies: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedAiServicesOptOutPolicies: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedBackupPolicies: ReadonlyArray<OrganizationPolicyName>
+  readonly inheritedVars: Vars
+  readonly inheritedAccountAdminRoleName: IamRoleName
+  readonly inheritedAccountBootstrapRoleName: IamRoleName
+}
+
+export const parseAccounts = ({
+  value,
+  inheritedConfigSets,
+  inheritedBootstrapConfigSets,
+  inheritedServiceControlPolicies,
+  inheritedTagPolicies,
+  inheritedAiServicesOptOutPolicies,
+  inheritedBackupPolicies,
+  inheritedVars,
+  inheritedAccountAdminRoleName,
+  inheritedAccountBootstrapRoleName,
+}: ParseAccountsProps): ReadonlyArray<OrganizationAccountConfig> => {
   if (value === null || value === undefined) {
     return []
   }
@@ -25,6 +42,9 @@ export const parseAccounts = (
       inheritedTagPolicies.slice(),
       inheritedAiServicesOptOutPolicies.slice(),
       inheritedBackupPolicies.slice(),
+      inheritedVars,
+      inheritedAccountAdminRoleName,
+      inheritedAccountBootstrapRoleName,
     ),
   )
 }

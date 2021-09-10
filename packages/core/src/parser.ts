@@ -100,6 +100,22 @@ export const parseOptionalString = (value: unknown): string | undefined =>
 /**
  * @hidden
  */
+export const parseString = (value: unknown, defaultValue: string): string =>
+  parse(
+    value,
+    () => defaultValue,
+    (value: unknown) => {
+      if (typeof value === "string") {
+        return value
+      }
+
+      throw new Error("Expected string")
+    },
+  )
+
+/**
+ * @hidden
+ */
 export const parseRegex = (
   path: string,
   pattern?: string,
@@ -116,7 +132,7 @@ export const parseRegex = (
 /**
  * @hidden
  */
-export const parseVars = (value: any): Vars => value || {}
+export const parseVars = (value: any): Vars => value ?? {}
 
 /**
  * @hidden

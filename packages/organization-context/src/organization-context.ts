@@ -1,6 +1,11 @@
 import { CredentialManager, OrganizationsClient } from "@takomo/aws-clients"
 import { AccountId } from "@takomo/aws-model"
-import { ConfigSet, ConfigSetName, ConfigSetStage } from "@takomo/config-sets"
+import {
+  ConfigSet,
+  ConfigSetContext,
+  ConfigSetName,
+  StageName,
+} from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
 import {
   OrganizationalUnitConfig,
@@ -45,7 +50,9 @@ const findConfigForAccount = (
   return null
 }
 
-export interface OrganizationContext extends InternalCommandContext {
+export interface OrganizationContext
+  extends InternalCommandContext,
+    ConfigSetContext {
   getClient: () => Promise<OrganizationsClient>
   hasOrganizationalUnit: (path: OrganizationalUnitPath) => boolean
   getOrganizationalUnit: (
@@ -53,12 +60,9 @@ export interface OrganizationContext extends InternalCommandContext {
   ) => OrganizationalUnitConfig
   getAdminRoleNameForAccount: (accountId: AccountId) => string
   organizationConfig: OrganizationConfig
-  getConfigSet: (name: ConfigSetName) => ConfigSet
-  hasConfigSet: (name: ConfigSetName) => boolean
   configRepository: OrganizationConfigRepository
   credentialManager: CredentialManager
   commandContext: InternalCommandContext
-  getStages: () => ReadonlyArray<ConfigSetStage> | undefined
 }
 
 export interface OrganizationContextProps {
@@ -136,8 +140,8 @@ export const createOrganizationContext = ({
   const hasConfigSet = (name: ConfigSetName): boolean =>
     organizationConfig.configSets.some((r) => r.name === name)
 
-  const getStages = (): ReadonlyArray<ConfigSetStage> | undefined =>
-    organizationConfig.stages?.slice()
+  const getStages = (): ReadonlyArray<StageName> =>
+    organizationConfig.stages.slice()
 
   return {
     ...ctx,

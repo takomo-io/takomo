@@ -25,39 +25,44 @@ describe("Config sets with config set name and command path", () => {
     })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/Two",
-        accountResults: [
+        stageName: "default",
+        organizationalUnitResults: [
           {
-            accountId: ORG_3_ACCOUNT_02_ID,
-            configSetResults: [
+            organizationalUnitPath: "Root/Two",
+            accountResults: [
               {
-                configSet: "other",
-                commandPathResults: [
+                accountId: ORG_3_ACCOUNT_02_ID,
+                configSetResults: [
                   {
-                    commandPath: "/",
-                    stackResults: [
+                    configSet: "other",
+                    commandPathResults: [
                       {
-                        stackPath: "/another-logs.yml/eu-west-1",
-                        stackName: "another-logs",
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/another-logs.yml/eu-west-1",
+                            stackName: "another-logs",
+                          },
+                        ],
                       },
                     ],
                   },
                 ],
               },
-            ],
-          },
-          {
-            accountId: ORG_3_ACCOUNT_03_ID,
-            configSetResults: [
               {
-                configSet: "other",
-                commandPathResults: [
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults: [
                   {
-                    commandPath: "/",
-                    stackResults: [
+                    configSet: "other",
+                    commandPathResults: [
                       {
-                        stackPath: "/another-logs.yml/eu-west-1",
-                        stackName: "another-logs",
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/another-logs.yml/eu-west-1",
+                            stackName: "another-logs",
+                          },
+                        ],
                       },
                     ],
                   },
@@ -76,75 +81,78 @@ describe("Config sets with config set name and command path", () => {
       commandPath: "/logs-2.yml",
     })
       .expectCommandToSucceed()
-      .expectResults(
-        {
-          organizationalUnitPath: "Root/One",
-          accountResults: [
-            {
-              accountId: ORG_3_ACCOUNT_01_ID,
-              configSetResults: [
-                {
-                  configSet: "logs",
-                  commandPathResults: [
-                    {
-                      commandPath: "/logs-2.yml",
-                      stackResults: [
-                        {
-                          stackPath: "/logs-2.yml/eu-west-1",
-                          stackName: "logs-2",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          organizationalUnitPath: "Root/Two",
-          accountResults: [
-            {
-              accountId: ORG_3_ACCOUNT_02_ID,
-              configSetResults: [
-                {
-                  configSet: "logs",
-                  commandPathResults: [
-                    {
-                      commandPath: "/logs-2.yml",
-                      stackResults: [
-                        {
-                          stackPath: "/logs-2.yml/eu-west-1",
-                          stackName: "logs-2",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              accountId: ORG_3_ACCOUNT_03_ID,
-              configSetResults: [
-                {
-                  configSet: "logs",
-                  commandPathResults: [
-                    {
-                      commandPath: "/logs-2.yml",
-                      stackResults: [
-                        {
-                          stackPath: "/logs-2.yml/eu-west-1",
-                          stackName: "logs-2",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      )
+      .expectResults({
+        stageName: "default",
+        organizationalUnitResults: [
+          {
+            organizationalUnitPath: "Root/One",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_01_ID,
+                configSetResults: [
+                  {
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/logs-2.yml",
+                        stackResults: [
+                          {
+                            stackPath: "/logs-2.yml/eu-west-1",
+                            stackName: "logs-2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            organizationalUnitPath: "Root/Two",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_02_ID,
+                configSetResults: [
+                  {
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/logs-2.yml",
+                        stackResults: [
+                          {
+                            stackPath: "/logs-2.yml/eu-west-1",
+                            stackName: "logs-2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults: [
+                  {
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/logs-2.yml",
+                        stackResults: [
+                          {
+                            stackPath: "/logs-2.yml/eu-west-1",
+                            stackName: "logs-2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
       .assert())
 
   test("Undeploy", () =>
@@ -152,114 +160,117 @@ describe("Config sets with config set name and command path", () => {
       projectDir,
     })
       .expectCommandToSucceed()
-      .expectResults(
-        {
-          organizationalUnitPath: "Root/One",
-          accountResults: [
-            {
-              accountId: ORG_3_ACCOUNT_01_ID,
-              configSetResults: [
-                {
-                  configSet: "logs",
-                  commandPathResults: [
-                    {
-                      commandPath: "/",
-                      stackResults: [
-                        {
-                          stackPath: "/logs-1.yml/eu-west-1",
-                          stackName: "logs-1",
-                        },
-                        {
-                          stackPath: "/logs-2.yml/eu-west-1",
-                          stackName: "logs-2",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          organizationalUnitPath: "Root/Two",
-          accountResults: [
-            {
-              accountId: ORG_3_ACCOUNT_02_ID,
-              configSetResults: [
-                {
-                  configSet: "other",
-                  commandPathResults: [
-                    {
-                      commandPath: "/",
-                      stackResults: [
-                        {
-                          stackPath: "/another-logs.yml/eu-west-1",
-                          stackName: "another-logs",
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  configSet: "logs",
-                  commandPathResults: [
-                    {
-                      commandPath: "/",
-                      stackResults: [
-                        {
-                          stackPath: "/logs-1.yml/eu-west-1",
-                          stackName: "logs-1",
-                        },
-                        {
-                          stackPath: "/logs-2.yml/eu-west-1",
-                          stackName: "logs-2",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              accountId: ORG_3_ACCOUNT_03_ID,
-              configSetResults: [
-                {
-                  configSet: "other",
-                  commandPathResults: [
-                    {
-                      commandPath: "/",
-                      stackResults: [
-                        {
-                          stackPath: "/another-logs.yml/eu-west-1",
-                          stackName: "another-logs",
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  configSet: "logs",
-                  commandPathResults: [
-                    {
-                      commandPath: "/",
-                      stackResults: [
-                        {
-                          stackPath: "/logs-1.yml/eu-west-1",
-                          stackName: "logs-1",
-                        },
-                        {
-                          stackPath: "/logs-2.yml/eu-west-1",
-                          stackName: "logs-2",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      )
+      .expectResults({
+        stageName: "default",
+        organizationalUnitResults: [
+          {
+            organizationalUnitPath: "Root/One",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_01_ID,
+                configSetResults: [
+                  {
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/logs-1.yml/eu-west-1",
+                            stackName: "logs-1",
+                          },
+                          {
+                            stackPath: "/logs-2.yml/eu-west-1",
+                            stackName: "logs-2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            organizationalUnitPath: "Root/Two",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_02_ID,
+                configSetResults: [
+                  {
+                    configSet: "other",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/another-logs.yml/eu-west-1",
+                            stackName: "another-logs",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/logs-1.yml/eu-west-1",
+                            stackName: "logs-1",
+                          },
+                          {
+                            stackPath: "/logs-2.yml/eu-west-1",
+                            stackName: "logs-2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults: [
+                  {
+                    configSet: "other",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/another-logs.yml/eu-west-1",
+                            stackName: "another-logs",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    configSet: "logs",
+                    commandPathResults: [
+                      {
+                        commandPath: "/",
+                        stackResults: [
+                          {
+                            stackPath: "/logs-1.yml/eu-west-1",
+                            stackName: "logs-1",
+                          },
+                          {
+                            stackPath: "/logs-2.yml/eu-west-1",
+                            stackName: "logs-2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
       .assert())
 })

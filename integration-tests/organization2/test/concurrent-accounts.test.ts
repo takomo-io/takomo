@@ -37,20 +37,25 @@ describe("concurrent accounts", () => {
     executeDeployAccountsCommand({ projectDir, concurrentAccounts: 4 })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/Test",
+        stageName: "default",
         unorderedAccounts: true,
-        accountResults: [
+        organizationalUnitResults: [
           {
-            accountId: ORG_3_ACCOUNT_01_ID,
-            configSetResults,
-          },
-          {
-            accountId: ORG_3_ACCOUNT_02_ID,
-            configSetResults,
-          },
-          {
-            accountId: ORG_3_ACCOUNT_03_ID,
-            configSetResults,
+            organizationalUnitPath: "Root/Test",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_01_ID,
+                configSetResults,
+              },
+              {
+                accountId: ORG_3_ACCOUNT_02_ID,
+                configSetResults,
+              },
+              {
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults,
+              },
+            ],
           },
         ],
       })
@@ -59,20 +64,25 @@ describe("concurrent accounts", () => {
     executeUndeployAccountsCommand({ projectDir, concurrentAccounts: 2 })
       .expectCommandToSucceed()
       .expectResults({
-        organizationalUnitPath: "Root/Test",
+        stageName: "default",
         unorderedAccounts: true,
-        accountResults: [
+        organizationalUnitResults: [
           {
-            accountId: ORG_3_ACCOUNT_01_ID,
-            configSetResults,
-          },
-          {
-            accountId: ORG_3_ACCOUNT_02_ID,
-            configSetResults,
-          },
-          {
-            accountId: ORG_3_ACCOUNT_03_ID,
-            configSetResults,
+            organizationalUnitPath: "Root/Test",
+            accountResults: [
+              {
+                accountId: ORG_3_ACCOUNT_01_ID,
+                configSetResults,
+              },
+              {
+                accountId: ORG_3_ACCOUNT_02_ID,
+                configSetResults,
+              },
+              {
+                accountId: ORG_3_ACCOUNT_03_ID,
+                configSetResults,
+              },
+            ],
           },
         ],
       })
