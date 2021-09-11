@@ -19,7 +19,7 @@ export const listStacks = async (
 
   const stackPairs = await loadCurrentCfStacks(logger, stacksWithinCommandPath)
 
-  const stacks = stackPairs.map(({ stack, current }) => ({
+  const results = stackPairs.map(({ stack, current }) => ({
     path: stack.path,
     name: stack.name,
     status: current?.status,
@@ -35,6 +35,6 @@ export const listStacks = async (
     message: "Success",
     outputFormat,
     timer,
-    stacks,
+    results,
   }
 }

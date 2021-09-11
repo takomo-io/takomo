@@ -84,6 +84,13 @@ export interface CommandOutput extends CommandOutputBase {
 /**
  * @hidden
  */
+export interface ResultsOutput<T> extends CommandOutput {
+  readonly results: ReadonlyArray<T>
+}
+
+/**
+ * @hidden
+ */
 export interface CommandInput {
   readonly timer: Timer
   readonly outputFormat: OutputFormat

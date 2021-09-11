@@ -6,6 +6,7 @@ export { aws } from "./aws-api"
 export { executeWithCli } from "./cli/execute"
 export { ExecuteCommandProps } from "./commands/common"
 export { executeInitProjectCommand } from "./commands/init"
+export { ExpectOrganizationalUnitResultProps } from "./commands/organization/accounts-operation"
 export { executeBootstrapAccountsCommand } from "./commands/organization/bootstrap-accounts"
 export { executeCreateAccountAliasCommand } from "./commands/organization/create-account-alias"
 export { executeCreateOrganizationCommand } from "./commands/organization/create-organization"
@@ -14,7 +15,10 @@ export { executeDeployAccountsCommand } from "./commands/organization/deploy-acc
 export { executeDeployOrganizationCommand } from "./commands/organization/deploy-organization"
 export { executeDescribeOrganizationCommand } from "./commands/organization/describe-organization"
 export { executeListAccountsCommand } from "./commands/organization/list-accounts"
-export { executeListAccountsStacksCommand } from "./commands/organization/list-accounts-stacks"
+export {
+  executeListAccountsStacksCommand,
+  ExpectListStackProps,
+} from "./commands/organization/list-accounts-stacks"
 export { executeTeardownAccountsCommand } from "./commands/organization/teardown-accounts"
 export { executeUndeployAccountsCommand } from "./commands/organization/undeploy-accounts"
 export {

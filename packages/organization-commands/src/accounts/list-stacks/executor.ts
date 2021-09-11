@@ -41,7 +41,7 @@ export const createExecutor = ({
         status: "CANCELLED",
         message: "Cancelled",
         success: false,
-        stacks: [],
+        results: [],
       }
     }
 
@@ -92,7 +92,7 @@ export const createExecutor = ({
         status: "FAILED",
         message: "Failed",
         success: false,
-        stacks: [],
+        results: [],
       }
     }
   }

@@ -1,10 +1,17 @@
 import { initDefaultCredentialManager } from "@takomo/aws-clients"
-import { accountsOperationCommand } from "@takomo/organization-commands"
+import {
+  accountsOperationCommand,
+  AccountsOperationOutput,
+} from "@takomo/organization-commands"
+import { StacksOperationOutput } from "@takomo/stacks-commands"
+import { StackResult } from "@takomo/stacks-model"
 import { createConsoleLogger, createTimer } from "@takomo/util"
 import { createTestUndeployAccountsIO } from "../../io"
 import {
   AccountsOperationOutputMatcher,
   createAccountsOperationOutputMatcher,
+  ExpectStackResultProps,
+  StackOperationResultAssertionProvider,
 } from "./accounts-operation"
 import {
   createCtxAndConfigRepository,
@@ -13,9 +20,15 @@ import {
 
 export const executeUndeployAccountsCommand = (
   props: ExecuteAccountsOperationCommandProps,
-): AccountsOperationOutputMatcher =>
+): AccountsOperationOutputMatcher<
+  ExpectStackResultProps,
+  StackResult,
+  StacksOperationOutput,
+  AccountsOperationOutput
+> =>
   createAccountsOperationOutputMatcher({
     stageAssertions: [],
+    stackResultAssertionProvider: StackOperationResultAssertionProvider,
     executor: async () => {
       const logLevel = props.logLevel ?? "info"
 

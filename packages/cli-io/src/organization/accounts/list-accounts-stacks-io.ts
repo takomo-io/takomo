@@ -43,11 +43,11 @@ export const createListAccountsStacksIO = (
         group.results.forEach((target) => {
           target.results.forEach((configSet) => {
             configSet.results.forEach((commandPathResult) => {
-              if (commandPathResult.result.stacks.length === 0) {
+              if (commandPathResult.result.results.length === 0) {
                 return
               }
 
-              commandPathResult.result.stacks.forEach((stackResult) => {
+              commandPathResult.result.results.forEach((stackResult) => {
                 targetsTable.cell("stage", stage.stageName)
                 targetsTable.cell("OU", group.groupId)
                 targetsTable.cell("Account", target.targetId)

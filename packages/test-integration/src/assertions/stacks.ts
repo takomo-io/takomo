@@ -511,8 +511,8 @@ export const createListStacksOutputMatcher = (
     if (outputAssertions) {
       outputAssertions(output)
     }
-    expect(output.stacks).toHaveLength(stackAssertions.length)
-    output.stacks.forEach((result) => {
+    expect(output.results).toHaveLength(stackAssertions.length)
+    output.results.forEach((result) => {
       if (!stackAssertions.some((s) => s(result))) {
         fail(`Unexpected stack with path: ${result.path}`)
       }
