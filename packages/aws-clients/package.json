@@ -29,7 +29,7 @@
   "dependencies": {
     "@takomo/aws-model": "3.31.2",
     "@takomo/util": "3.29.0",
-    "aws-sdk": "2.973.0",
+    "aws-sdk": "2.987.0",
     "cockatiel": "2.0.1",
     "lodash.takerightwhile": "4.6.0",
     "ramda": "0.27.1"

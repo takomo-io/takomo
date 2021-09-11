@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@takomo/test-unit": "3.29.0",
-    "aws-sdk": "2.973.0"
+    "aws-sdk": "2.987.0"
   },
   "engines": {
     "node": ">=14.4.0"
