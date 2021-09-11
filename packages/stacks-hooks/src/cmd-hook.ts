@@ -104,7 +104,7 @@ export class CmdHook implements Hook {
         success: false,
         error,
       }
-    } catch (error) {
+    } catch (error: any) {
       return {
         message: "Error",
         success: false,

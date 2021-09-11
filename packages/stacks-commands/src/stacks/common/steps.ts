@@ -60,7 +60,7 @@ const executeStep = async <S extends InitialStackOperationState>(
   const timer = state.totalTimer.startChild(stepName)
   try {
     return await step(state)
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Unhandled error in step '${stepName}':`, error)
     return new StackOperationCompleted({
       stack: state.stack,

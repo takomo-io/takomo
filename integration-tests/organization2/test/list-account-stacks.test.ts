@@ -1,5 +1,6 @@
-import { AccountId } from "@takomo/aws-model"
+import { AccountId, StackStatus } from "@takomo/aws-model"
 import {
+  executeDeployAccountsCommand,
   executeDeployOrganizationCommand,
   executeListAccountsStacksCommand,
   executeTeardownAccountsCommand,
@@ -151,6 +152,34 @@ const ouWithAccounts = (
   ),
 })
 
+const ouWithStackStatus = (
+  ou: ExpectedOU,
+  status: StackStatus,
+): ExpectedOU => ({
+  ...ou,
+  accountResults: ou.accountResults.map((account) => {
+    return {
+      ...account,
+      configSetResults: account.configSetResults.map((configSet) => {
+        return {
+          ...configSet,
+          commandPathResults: configSet.commandPathResults.map((cpr) => {
+            return {
+              ...cpr,
+              stackResults: cpr.stackResults.map((stack) => {
+                return {
+                  ...stack,
+                  status,
+                }
+              }),
+            }
+          }),
+        }
+      }),
+    }
+  }),
+})
+
 describe("List accounts stacks command", () => {
   test("list all with standard config set type", () =>
     executeListAccountsStacksCommand({
@@ -179,7 +208,7 @@ describe("List accounts stacks command", () => {
       })
       .assert())
 
-  test("list by accounts with standard config set type", async () =>
+  test("list by accounts with standard config set type", () =>
     executeListAccountsStacksCommand({
       projectDir,
       configSetType: "standard",
@@ -190,6 +219,30 @@ describe("List accounts stacks command", () => {
         stageName: "default",
         unorderedAccounts: true,
         organizationalUnitResults: [ouWithAccounts(ouTwo, ORG_3_ACCOUNT_02_ID)],
+      })
+      .assert())
+
+  test("Deploy OUs", () =>
+    executeDeployAccountsCommand({
+      projectDir,
+      organizationalUnits: ["Root/Two"],
+    })
+      .expectCommandToSucceed()
+      .assert({ skipResultAssertions: true }))
+
+  test("list all with standard config set type after deploy", () =>
+    executeListAccountsStacksCommand({
+      projectDir,
+      configSetType: "standard",
+    })
+      .expectCommandToSucceed()
+      .expectResults({
+        stageName: "default",
+        unorderedAccounts: true,
+        organizationalUnitResults: [
+          ouOne,
+          ouWithStackStatus(ouTwo, "CREATE_COMPLETE"),
+        ],
       })
       .assert())
 })

@@ -37,7 +37,7 @@ export const createCommonSchema = (): CommonSchema => {
       if (type === "string") {
         try {
           JSON.parse(value)
-        } catch (e) {
+        } catch (e: any) {
           return helpers.error("parseError", { error: e.message })
         }
       }

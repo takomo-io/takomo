@@ -163,7 +163,7 @@ export class HookExecutor implements Hook {
       }
 
       return result
-    } catch (e) {
+    } catch (e: any) {
       return {
         message: e.message ?? "Error",
         success: false,

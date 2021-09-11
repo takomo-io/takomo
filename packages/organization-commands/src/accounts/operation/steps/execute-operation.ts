@@ -128,7 +128,7 @@ const createExecutor = ({
         stacksConfigRepository,
         logger,
       )
-    } catch (error) {
+    } catch (error: any) {
       logger.error("An error occurred", error)
       timer.stop()
 

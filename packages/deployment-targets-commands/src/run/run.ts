@@ -331,7 +331,7 @@ export const processDeploymentTarget = async (
       value,
       timer,
     }
-  } catch (error) {
+  } catch (error: any) {
     timer.stop()
     logger.error(`Map command failed for target '${target.name}'`, error)
     return {
@@ -514,7 +514,7 @@ export const run = async (
       timer: childTimer,
       outputFormat: input.outputFormat,
     }
-  } catch (error) {
+  } catch (error: any) {
     childTimer.stop()
     io.error(`Reduce command failed`, error)
     return {

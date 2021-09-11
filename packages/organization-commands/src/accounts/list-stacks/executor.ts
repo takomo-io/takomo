@@ -81,7 +81,7 @@ export const createExecutor = ({
         io: io.createListStacksIO(io),
         configRepository: stacksConfigRepository,
       })
-    } catch (error) {
+    } catch (error: any) {
       logger.error("An error occurred", error)
       timer.stop()
 

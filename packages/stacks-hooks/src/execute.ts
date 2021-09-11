@@ -83,7 +83,7 @@ export const executeHooks = async ({
           result: "skip",
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       logger.error(
         `An error occurred while executing hook (name: ${hook.config.name}, type: ${hook.config.type})`,
         error,

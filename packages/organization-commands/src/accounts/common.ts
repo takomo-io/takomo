@@ -37,7 +37,7 @@ export const createAccountAliasInternal = async (
     })
 
     return ok(await iam.createAccountAlias(alias))
-  } catch (e) {
+  } catch (e: any) {
     return err(e)
   }
 }
@@ -67,7 +67,7 @@ export const deleteAccountAliasInternal = async (
     }
 
     return ok(await iam.deleteAccountAlias(alias))
-  } catch (e) {
+  } catch (e: any) {
     return err(e)
   }
 }

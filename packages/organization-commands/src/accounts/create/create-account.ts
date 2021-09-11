@@ -177,7 +177,7 @@ export const createAccount = async (
         SourceParentId: sourceOu.id,
       })
       io.info("Account moved to OU")
-    } catch (error) {
+    } catch (error: any) {
       io.error("Failed to set account OU", error)
       timer.stop()
       return {
@@ -198,7 +198,7 @@ export const createAccount = async (
       ...(config ?? {}),
       id: createAccountStatus.accountId,
     })
-  } catch (error) {
+  } catch (error: any) {
     io.error("Failed to persist account to account repository", error)
     timer.stop()
     return {
