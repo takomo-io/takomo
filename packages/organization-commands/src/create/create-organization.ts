@@ -133,7 +133,7 @@ export const createOrganization = async (
       organization,
       timer,
     }
-  } catch (e) {
+  } catch (e: any) {
     timer.stop()
     io.error("Failed to create the organization", e)
     return {

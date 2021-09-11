@@ -1,4 +1,4 @@
-import { CommandInput, CommandOutput } from "@takomo/core"
+import { CommandInput, ResultsOutput } from "@takomo/core"
 import { CommandPath, StackResult } from "@takomo/stacks-model"
 
 export interface StacksOperationInput extends CommandInput {
@@ -7,6 +7,4 @@ export interface StacksOperationInput extends CommandInput {
   readonly interactive: boolean
 }
 
-export interface StacksOperationOutput extends CommandOutput {
-  readonly results: ReadonlyArray<StackResult>
-}
+export type StacksOperationOutput = ResultsOutput<StackResult>

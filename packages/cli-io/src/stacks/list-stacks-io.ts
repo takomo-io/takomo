@@ -13,12 +13,12 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
       return output
     }
 
-    const { outputFormat, stacks } = output
+    const { outputFormat, results } = output
     switch (outputFormat) {
       case "json":
         io.message({
           text: toPrettyJson({
-            stacks,
+            results,
             status: output.status,
             success: output.success,
             message: output.message,
@@ -30,7 +30,7 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
       case "yaml":
         io.message({
           text: formatYaml({
-            stacks,
+            results,
             status: output.status,
             success: output.success,
             message: output.message,
@@ -42,7 +42,7 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
       default:
         const headers = ["Path", "Name", "Status", "Created", "Updated"]
 
-        const stacksTable = stacks.reduce(
+        const stacksTable = results.reduce(
           (tbl, stack) =>
             tbl.row(
               stack.path,

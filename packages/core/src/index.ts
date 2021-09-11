@@ -16,6 +16,7 @@ export {
   OutputFormat,
   Project,
   resolveCommandOutputBase,
+  ResultsOutput,
   SKIPPED,
   SUCCESS,
   SuccessHolder,

@@ -165,7 +165,7 @@ export const renderTemplate = async (
 ): Promise<string> => {
   try {
     return templateEngine.renderTemplate(contents, variables)
-  } catch (e) {
+  } catch (e: any) {
     const errorMessage = buildErrorMessage(
       `An error occurred while rendering file: ${filePath}`,
       contents,

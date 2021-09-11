@@ -41,7 +41,7 @@ export const createExecutor = ({
         status: "CANCELLED",
         message: "Cancelled",
         success: false,
-        stacks: [],
+        results: [],
       }
     }
 
@@ -81,7 +81,7 @@ export const createExecutor = ({
         io: io.createListStacksIO(io),
         configRepository: stacksConfigRepository,
       })
-    } catch (error) {
+    } catch (error: any) {
       logger.error("An error occurred", error)
       timer.stop()
 
@@ -92,7 +92,7 @@ export const createExecutor = ({
         status: "FAILED",
         message: "Failed",
         success: false,
-        stacks: [],
+        results: [],
       }
     }
   }

@@ -207,7 +207,7 @@ export const executeAfterDeployHooksOnError =
   async (state: S) => {
     try {
       return await step(state)
-    } catch (error) {
+    } catch (error: any) {
       state.logger.error("An error occurred", error)
       return state.transitions.executeAfterDeployHooks({
         events: [],

@@ -29,7 +29,7 @@ describe("List stacks", () => {
       success: true,
       message: "Success",
       time: isNumber,
-      stacks: [
+      results: [
         {
           path: "/security-groups1.yml/eu-west-1",
           name: "security-groups1",
@@ -88,7 +88,7 @@ describe("List stacks", () => {
       success: true,
       message: "Success",
       time: isNumber,
-      stacks: [
+      results: [
         {
           path: "/security-groups1.yml/eu-west-1",
           name: "security-groups1",
@@ -136,7 +136,7 @@ describe("List stacks", () => {
       success: true,
       message: "Success",
       time: isNumber,
-      stacks: [
+      results: [
         {
           path: "/security-groups1.yml/eu-west-1",
           name: "security-groups1",

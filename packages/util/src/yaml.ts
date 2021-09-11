@@ -24,7 +24,7 @@ export const parseYaml = (
 ): any => {
   try {
     return yaml.load(contents)
-  } catch (e) {
+  } catch (e: any) {
     if (e.name === "YAMLException") {
       const errorMessage = buildErrorMessage(
         `An error occurred while parsing file: ${filePath}`,

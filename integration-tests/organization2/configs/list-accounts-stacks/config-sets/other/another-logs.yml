@@ -1,0 +1,6 @@
+regions: eu-west-1
+template:
+  inline: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup

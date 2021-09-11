@@ -38,7 +38,8 @@ describe("Describe organization command", () => {
     expect(organization.masterAccountId).toBe(ORG_A_MASTER_ACCOUNT_ID)
     expect(organization.id).toBe(ORG_A_ID)
 
-    const actualEnabledPolicies = await aws.organizations.getEnabledPolicyTypes()
+    const actualEnabledPolicies =
+      await aws.organizations.getEnabledPolicyTypes()
 
     expect(enabledPolicies.slice().sort()).toStrictEqual(
       actualEnabledPolicies.slice().sort(),

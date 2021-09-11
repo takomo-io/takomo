@@ -274,7 +274,7 @@ export const processCommandPath = async (
       stacksConfigRepository,
       outputFormat,
     )
-  } catch (e) {
+  } catch (e: any) {
     io.error(
       `Unhandled error when executing group: ${group.path}, target: ${target.name}, config set: ${configSet.name}, command path: ${commandPath}`,
       e,

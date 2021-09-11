@@ -1,5 +1,5 @@
 import { StackName, StackStatus } from "@takomo/aws-model"
-import { CommandInput, CommandOutput, IO } from "@takomo/core"
+import { CommandInput, IO, ResultsOutput } from "@takomo/core"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
 
 export interface StackInfo {
@@ -14,8 +14,6 @@ export interface ListStacksInput extends CommandInput {
   readonly commandPath: CommandPath
 }
 
-export interface ListStacksOutput extends CommandOutput {
-  readonly stacks: ReadonlyArray<StackInfo>
-}
+export type ListStacksOutput = ResultsOutput<StackInfo>
 
 export type ListStacksIO = IO<ListStacksOutput>

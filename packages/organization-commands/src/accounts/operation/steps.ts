@@ -25,7 +25,7 @@ const executeStep = async <S extends InitialAccountsOperationState>(
   const timer = state.totalTimer.startChild(stepName)
   try {
     return await step(state)
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Unhandled error in step '${stepName}':`, error)
     return new AccountsOperationCompleted({
       ...state,

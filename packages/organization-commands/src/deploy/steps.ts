@@ -24,7 +24,7 @@ const executeStep = async <S extends InitialDeployOrganizationState>(
   const timer = state.totalTimer.startChild(stepName)
   try {
     return await step(state)
-  } catch (error) {
+  } catch (error: any) {
     if (!error.isTakomoError) {
       logger.error(`Unhandled error in step '${stepName}':`, error)
     }
