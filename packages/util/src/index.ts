@@ -16,6 +16,6 @@ export {
   TemplateEngine,
 } from "./templating"
 export * from "./timer"
-export { printTimer, Timer } from "./timer"
+export { formatElapsedMillis, printTimer, Timer } from "./timer"
 export * from "./validation"
 export * from "./yaml"

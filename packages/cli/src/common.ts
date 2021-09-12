@@ -22,6 +22,7 @@ import {
   expandFilePath,
   fileExists,
   FilePath,
+  formatElapsedMillis,
   indentLines,
   LogLevel,
   parseYamlFile,
@@ -39,7 +40,6 @@ import inquirer from "inquirer"
 import merge from "lodash.merge"
 import os from "os"
 import path from "path"
-import prettyMs from "pretty-ms"
 import R from "ramda"
 import { Arguments } from "yargs"
 import { CliCommandContext, ProjectFilePaths } from "./cli-command-context"
@@ -527,12 +527,18 @@ export const onComplete = async ({
 
         clientsTable.cell("Id", `  ${actionName}`)
         clientsTable.cell("Count", calls.length)
-        clientsTable.cell("Time total", prettyMs(totalTime * 1000))
-        clientsTable.cell("Time min", prettyMs(Math.min(...times) * 1000))
-        clientsTable.cell("Time max", prettyMs(Math.max(...times) * 1000))
+        clientsTable.cell("Time total", formatElapsedMillis(totalTime * 1000))
+        clientsTable.cell(
+          "Time min",
+          formatElapsedMillis(Math.min(...times) * 1000),
+        )
+        clientsTable.cell(
+          "Time max",
+          formatElapsedMillis(Math.max(...times) * 1000),
+        )
         clientsTable.cell(
           "Time avg",
-          prettyMs((totalTime / calls.length) * 1000),
+          formatElapsedMillis((totalTime / calls.length) * 1000),
         )
         clientsTable.cell(
           "Retries",
@@ -559,12 +565,18 @@ export const onComplete = async ({
 
         clientsTable.cell("Id", `  ${action}`)
         clientsTable.cell("Count", calls.length)
-        clientsTable.cell("Time total", prettyMs(totalTime * 1000))
-        clientsTable.cell("Time min", prettyMs(Math.min(...times) * 1000))
-        clientsTable.cell("Time max", prettyMs(Math.max(...times) * 1000))
+        clientsTable.cell("Time total", formatElapsedMillis(totalTime * 1000))
+        clientsTable.cell(
+          "Time min",
+          formatElapsedMillis(Math.min(...times) * 1000),
+        )
+        clientsTable.cell(
+          "Time max",
+          formatElapsedMillis(Math.max(...times) * 1000),
+        )
         clientsTable.cell(
           "Time avg",
-          prettyMs((totalTime / calls.length) * 1000),
+          formatElapsedMillis((totalTime / calls.length) * 1000),
         )
         clientsTable.cell(
           "Retries",
@@ -637,9 +649,9 @@ export const onComplete = async ({
   if (output.outputFormat === "text") {
     console.log()
     console.log(
-      `Completed in ${prettyMs(
-        output.timer.getSecondsElapsed(),
-      )} with status: ${formatCommandStatus(output.status)}`,
+      `Completed in ${output.timer.getFormattedTimeElapsed()} with status: ${formatCommandStatus(
+        output.status,
+      )}`,
     )
     console.log()
   }

@@ -4,6 +4,12 @@ import prettyMs from "pretty-ms"
 /**
  * @hidden
  */
+export const formatElapsedMillis = (milliseconds: number): string =>
+  prettyMs(milliseconds)
+
+/**
+ * @hidden
+ */
 export interface Timer {
   readonly name: string
   readonly startTime: number

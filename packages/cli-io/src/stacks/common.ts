@@ -19,7 +19,6 @@ import {
   toPrettyJson,
 } from "@takomo/util"
 import date from "date-and-time"
-import prettyMs from "pretty-ms"
 import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus, formatStackEvent } from "../formatters"
@@ -156,7 +155,7 @@ export const printStacksOperationOutput = (
         r.stack.path,
         r.stack.name,
         formatCommandStatus(r.status),
-        prettyMs(r.timer.getSecondsElapsed()),
+        r.timer.getFormattedTimeElapsed(),
         r.message,
       ),
     table({ headers }),

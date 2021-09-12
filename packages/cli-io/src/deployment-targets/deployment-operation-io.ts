@@ -10,7 +10,6 @@ import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
 import { splitTextInLines } from "@takomo/util"
 import Table from "easy-table"
-import prettyMs from "pretty-ms"
 import { createBaseIO } from "../cli-io"
 import { formatCommandStatus } from "../formatters"
 import { IOProps } from "../stacks/common"
@@ -126,7 +125,7 @@ export const createDeploymentTargetsOperationIO = (
                 )
                 targetsTable.cell(
                   "Time",
-                  prettyMs(stackResult.timer.getSecondsElapsed()),
+                  stackResult.timer.getFormattedTimeElapsed(),
                 )
                 targetsTable.cell("Message", stackResult.message)
                 targetsTable.newRow()
@@ -141,7 +140,7 @@ export const createDeploymentTargetsOperationIO = (
               targetsTable.cell("Status", formatCommandStatus(result.status))
               targetsTable.cell(
                 "Time",
-                prettyMs(result.result.timer.getSecondsElapsed()),
+                result.result.timer.getFormattedTimeElapsed(),
               )
               targetsTable.cell("Message", result.result.message)
               targetsTable.newRow()
