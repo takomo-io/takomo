@@ -28,8 +28,7 @@ import {
 } from "@takomo/stacks-commands"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
-import { deepCopy, TakomoError, Timer } from "@takomo/util"
-import merge from "lodash.merge"
+import { merge, TakomoError, Timer } from "@takomo/util"
 import { DeploymentTargetsOperationIO, PlanHolder } from "../model"
 
 const getDeploymentRole = (
@@ -224,8 +223,7 @@ export const processCommandPath = async (
     }
   }
 
-  const mergedVars = deepCopy(variables.var)
-  merge(mergedVars, target.vars)
+  const mergedVars = merge(variables.var, target.vars)
 
   const commandPathVariables = {
     env: variables.env,
