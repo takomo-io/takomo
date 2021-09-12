@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.33.0](https://github.com/takomo-io/takomo/compare/v3.32.0...v3.33.0) (2021-09-12)
+
+**Note:** Version bump only for package @takomo/stacks-schema
+
+
+
+
+
 # [3.32.0](https://github.com/takomo-io/takomo/compare/v3.31.2...v3.32.0) (2021-08-26)
 
 **Note:** Version bump only for package @takomo/stacks-schema

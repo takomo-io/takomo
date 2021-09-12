@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-context",
-  "version": "3.32.0",
+  "version": "3.33.0",
   "description": "Takomo Organization Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,15 +27,15 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.32.0",
-    "@takomo/aws-model": "3.31.2",
-    "@takomo/config-sets": "3.32.0",
-    "@takomo/core": "3.32.0",
-    "@takomo/organization-account-repository": "3.32.0",
-    "@takomo/organization-config": "3.32.0",
-    "@takomo/organization-model": "3.31.2",
-    "@takomo/stacks-context": "3.32.0",
-    "@takomo/util": "3.29.0",
+    "@takomo/aws-clients": "3.33.0",
+    "@takomo/aws-model": "3.33.0",
+    "@takomo/config-sets": "3.33.0",
+    "@takomo/core": "3.33.0",
+    "@takomo/organization-account-repository": "3.33.0",
+    "@takomo/organization-config": "3.33.0",
+    "@takomo/organization-model": "3.33.0",
+    "@takomo/stacks-context": "3.33.0",
+    "@takomo/util": "3.33.0",
     "ramda": "0.27.1"
   },
   "engines": {

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.33.0](https://github.com/takomo-io/takomo/compare/v3.32.0...v3.33.0) (2021-09-12)
+
+
+### Features
+
+* **organizations:** add new command to list stacks from organization accounts ([#298](https://github.com/takomo-io/takomo/issues/298)) ([1429825](https://github.com/takomo-io/takomo/commit/14298254bcdf41bff53899374803989b24f9a045))
+
+
+
+
+
 ## [3.31.2](https://github.com/takomo-io/takomo/compare/v3.31.1...v3.31.2) (2021-08-24)
 
 **Note:** Version bump only for package @takomo/organization-model

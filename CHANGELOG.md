@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.33.0](https://github.com/takomo-io/takomo/compare/v3.32.0...v3.33.0) (2021-09-12)
+
+
+### Features
+
+* **organizations:** add new command to list stacks from organization accounts ([#298](https://github.com/takomo-io/takomo/issues/298)) ([1429825](https://github.com/takomo-io/takomo/commit/14298254bcdf41bff53899374803989b24f9a045))
+* **organizations:** add new options to choose the config set and command path to deploy to organiza ([#296](https://github.com/takomo-io/takomo/issues/296)) ([e7f39c2](https://github.com/takomo-io/takomo/commit/e7f39c295e25b18b8eb27274535168f56ca8d248)), closes [#295](https://github.com/takomo-io/takomo/issues/295)
+
+
+
+
+
 # [3.32.0](https://github.com/takomo-io/takomo/compare/v3.31.2...v3.32.0) (2021-08-26)
 
 
