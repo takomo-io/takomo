@@ -2035,18 +2035,6 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@takomo/aws-clients@3.31.2":
-  version "3.31.2"
-  resolved "https://registry.yarnpkg.com/@takomo/aws-clients/-/aws-clients-3.31.2.tgz#eaf8c47611db10145fbb68d40fce765ae04f9c20"
-  integrity sha512-/EDSFEhS/JdnURhYeCsagvU0rvycWoqsjhDsCOY+IskasPizTa9M4+rvlcbmi/ISJx2zbUKHCv4/MKV0tRY5+g==
-  dependencies:
-    "@takomo/aws-model" "3.31.2"
-    "@takomo/util" "3.29.0"
-    aws-sdk "2.973.0"
-    cockatiel "2.0.1"
-    lodash.takerightwhile "4.6.0"
-    ramda "0.27.1"
-
 "@takomo/test-custom-helper-lowercase@0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@takomo/test-custom-helper-lowercase/-/test-custom-helper-lowercase-0.0.1.tgz#b49dabcfe5d5cc1c749459491283b6a8e666e511"
@@ -2761,21 +2749,6 @@ atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
-
-aws-sdk@2.973.0:
-  version "2.973.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.973.0.tgz#0a6e9de7f97fe7f5a670c10c5584f2b2a40cd108"
-  integrity sha512-IhVDIrI+7x+643S7HKDZ8bA8rTKfkCLSlxUZcP9W39PD5y04Hwamxou/kNTtXzdg1yyriq3d5tCVu6w5Z5QFDQ==
-  dependencies:
-    buffer "4.9.2"
-    events "1.1.1"
-    ieee754 "1.1.13"
-    jmespath "0.15.0"
-    querystring "0.2.0"
-    sax "1.2.1"
-    url "0.10.3"
-    uuid "3.3.2"
-    xml2js "0.4.19"
 
 aws-sdk@2.987.0:
   version "2.987.0"
