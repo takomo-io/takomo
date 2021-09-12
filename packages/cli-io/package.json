@@ -42,10 +42,9 @@
     "@takomo/util": "3.29.0",
     "date-and-time": "0.14.2",
     "easy-table": "1.1.1",
-    "inquirer": "7.0.6",
-    "inquirer-autocomplete-prompt": "1.0.2",
+    "inquirer": "8.1.2",
+    "inquirer-autocomplete-prompt": "1.4.0",
     "joi": "17.4.0",
-    "pretty-ms": "5.1.0",
     "ramda": "0.27.1",
     "ts-dedent": "2.0.0"
   },
