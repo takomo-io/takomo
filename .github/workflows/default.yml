@@ -266,3 +266,34 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
           DOCS_BASE: /api-docs/release/next/
+
+  put-metrics:
+    runs-on: ubuntu-18.04
+    needs:
+      - unit-test
+      - stacks-test
+      - stacks2-test
+      - deployment-targets-test
+      - organization-creation-test
+      - organization-test
+      - organization2-test
+      - cli-test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.4.0
+      - uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            packages
+            integration-tests
+          key: packages-${{ github.sha }}
+      - run: ./ci/publish-project-stats.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.METRICS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.METRICS_AWS_SECRET_ACCESS_KEY }}
