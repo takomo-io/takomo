@@ -46,7 +46,7 @@
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.1.1",
-    "inquirer": "7.0.6",
+    "inquirer": "8.1.2",
     "joi": "17.4.0",
     "lodash.merge": "4.6.2",
     "pretty-ms": "5.1.0",
