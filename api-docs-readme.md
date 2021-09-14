@@ -10,10 +10,12 @@ Most of the modules are undocumented and subject to breaking changes.
 
 Here are some links to the most important types:
 
-- [Stack](interfaces/stacks_model_src.stack.html) - Represents a CloudFormation stack
-- [Resolver](interfaces/stacks_model_src.resolver.html) - Used to resolve parameter values at deployment time
-- [ResolverProvider](interfaces/stacks_model_src.resolverprovider.html) - Used to initialize ResolverProvider objects
-- [Hook](interfaces/stacks_model_src.hook.html) - Used to execute actions during stack operations
-- [HookInitializer](modules/stacks_model_src.html#hookinitializer) - Used to initialize Hook objects
-- [CommandContext](interfaces/core_src.commandcontext.html) - Provides access to the current project configuration
-- [StackContext](interfaces/stacks_model_src.stackscontext.html) - Provides access to the current stacks and project configuration
+- [Stack](interfaces/stacks_model_src.Stack.html) - Represents a CloudFormation stack
+- [Resolver](interfaces/stacks_model_src.Resolver.html) - Used to resolve parameter values at deployment time
+- [ResolverProvider](interfaces/stacks_model_src.ResolverProvider.html) - Used to initialize ResolverProvider objects
+- [Hook](interfaces/stacks_model_src.Hook.html) - Used to execute actions during stack operations
+- [HookProvider](modules/stacks_model_src.HookProvider.html) - Used to initialize Hook objects
+- [CommandContext](interfaces/core_src.CommandContext.html) - Provides access to the current project configuration
+- [StackContext](interfaces/stacks_model_src.StacksContext.html) - Provides access to the current stacks and project configuration
+
+
