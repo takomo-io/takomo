@@ -5,7 +5,7 @@
   "description": "Takomo integration tests for organization creation",
   "author": "henri@takomo.io",
   "license": "MIT",
-  "homepage": "https://takomo.io",
+  "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "type": "commonjs",
   "repository": {

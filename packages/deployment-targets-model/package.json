@@ -2,7 +2,7 @@
   "name": "@takomo/deployment-targets-model",
   "version": "3.33.0",
   "description": "Takomo Deployment Targets Model",
-  "homepage": "https://takomo.io",
+  "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",
