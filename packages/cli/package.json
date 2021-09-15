@@ -2,7 +2,7 @@
   "name": "@takomo/cli",
   "version": "3.33.1",
   "description": "Takomo CLI",
-  "homepage": "https://takomo.io",
+  "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",
@@ -48,7 +48,6 @@
     "easy-table": "1.1.1",
     "inquirer": "8.1.2",
     "joi": "17.4.0",
-    "lodash.merge": "4.6.2",
     "ramda": "0.27.1",
     "semver": "7.3.4",
     "yargs": "17.0.1"

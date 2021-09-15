@@ -2,7 +2,7 @@
   "name": "@takomo/deployment-targets-commands",
   "version": "3.33.1",
   "description": "Takomo Deployment Targets Commands",
-  "homepage": "https://takomo.io",
+  "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",
@@ -43,7 +43,6 @@
     "aws-sdk": "2.987.0",
     "cockatiel": "2.0.1",
     "joi": "17.4.0",
-    "lodash.merge": "4.6.2",
     "ramda": "0.27.1"
   },
   "engines": {

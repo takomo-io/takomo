@@ -1,4 +1,4 @@
-import { StackName } from "@takomo/aws-model"
+import { StackName, Tag, TagKey, TagValue } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
 import {
@@ -28,6 +28,7 @@ export interface TargetsOperationOutputMatcher {
 export interface ExpectStackResultProps {
   readonly stackPath: StackPath
   readonly stackName: StackName
+  readonly tags?: Record<TagKey, TagValue>
 }
 
 export interface ExpectCommandPathResultProps {
@@ -63,7 +64,7 @@ export interface DeploymentGroupResultMatcher {
 
 type DeploymentGroupResultAssertion = (
   result: DeploymentGroupDeployResult,
-) => boolean
+) => Promise<boolean>
 
 const createDeploymentGroupResultMatcher = (
   executor: () => Promise<DeploymentTargetsOperationOutput>,
@@ -74,13 +75,16 @@ const createDeploymentGroupResultMatcher = (
     ...props: ReadonlyArray<ExpectDeploymentGroupResultProps>
   ): DeploymentGroupResultMatcher => {
     const assertions = props.map((prop) => {
-      const assertion: DeploymentGroupResultAssertion = (result) => {
+      const assertion: DeploymentGroupResultAssertion = async (
+        result,
+      ): Promise<boolean> => {
         if (result.path !== prop.deploymentGroupPath) {
           return false
         }
 
         expect(result.results).toHaveLength(prop.targetResults.length)
-        result.results.forEach((targetResult, i) => {
+
+        for (const [i, targetResult] of result.results.entries()) {
           const expected =
             prop.unorderedTargets === true
               ? prop.targetResults.find((a) => a.name === targetResult.name)
@@ -110,7 +114,7 @@ const createDeploymentGroupResultMatcher = (
               expected.configSetResults.length,
             )
 
-            targetResult.results.forEach((configSetResult, j) => {
+            for (const [j, configSetResult] of targetResult.results.entries()) {
               const expectedConfigSetResult = expected.configSetResults![j]
               expect(configSetResult.configSetName).toStrictEqual(
                 expectedConfigSetResult.configSet,
@@ -121,7 +125,10 @@ const createDeploymentGroupResultMatcher = (
                   expectedConfigSetResult.commandPathResults.length,
                 )
 
-                configSetResult.results.forEach((commandPathResult, k) => {
+                for (const [
+                  k,
+                  commandPathResult,
+                ] of configSetResult.results.entries()) {
                   const expectedCommandPathResult =
                     expectedConfigSetResult.commandPathResults![k]
 
@@ -140,25 +147,47 @@ const createDeploymentGroupResultMatcher = (
                       expectedCommandPathResult.stackResults.length,
                     )
 
-                    commandPathResult.result.results.forEach(
-                      (stackResult, n) => {
-                        const expectedStackResult =
-                          expectedCommandPathResult.stackResults![n]
+                    for (const [
+                      n,
+                      stackResult,
+                    ] of commandPathResult.result.results.entries()) {
+                      const expectedStackResult =
+                        expectedCommandPathResult.stackResults![n]
 
-                        expect(stackResult.stack.path).toStrictEqual(
-                          expectedStackResult.stackPath,
+                      expect(stackResult.stack.path).toStrictEqual(
+                        expectedStackResult.stackPath,
+                      )
+                      expect(stackResult.stack.name).toStrictEqual(
+                        expectedStackResult.stackName,
+                      )
+
+                      if (expectedStackResult.tags) {
+                        const cfStack =
+                          await stackResult.stack.getCurrentCloudFormationStack()
+
+                        if (!cfStack) {
+                          throw new Error(
+                            `Expected stack '${expectedStackResult.stackPath}' to exists`,
+                          )
+                        }
+
+                        const actual = cfStack.tags.reduce(
+                          (collected: Record<TagKey, TagValue>, tag: Tag) => ({
+                            ...collected,
+                            [tag.key]: tag.value,
+                          }),
+                          {},
                         )
-                        expect(stackResult.stack.name).toStrictEqual(
-                          expectedStackResult.stackName,
-                        )
-                      },
-                    )
+
+                        expect(actual).toStrictEqual(expectedStackResult.tags)
+                      }
+                    }
                   }
-                })
+                }
               }
-            })
+            }
           }
-        })
+        }
 
         return true
       }
@@ -179,13 +208,21 @@ const createDeploymentGroupResultMatcher = (
     }
 
     expect(output.results).toHaveLength(groupsAssertions.length)
-    output.results.forEach((result) => {
-      if (!groupsAssertions.some((s) => s(result))) {
+    for (const result of output.results) {
+      let res = false
+      for (const groupAssertion of groupsAssertions) {
+        res = await groupAssertion(result)
+        if (res) {
+          break
+        }
+      }
+
+      if (!res) {
         fail(
           `Unexpected result for deployment group result with path: ${result.path}`,
         )
       }
-    })
+    }
 
     return output
   }

@@ -69,4 +69,4 @@ You can delete the stack with command:
 
 ## Next Steps
 
-Take a look at https://takomo.io for more documentation.
+Take a look at https://docs.takomo.io for more documentation.

@@ -2,7 +2,7 @@
   "name": "@takomo/core",
   "version": "3.33.0",
   "description": "Takomo Core",
-  "homepage": "https://takomo.io",
+  "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",

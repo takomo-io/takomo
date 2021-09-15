@@ -1,0 +1,10 @@
+regions: eu-north-1
+commandRole: arn:aws:iam::{{ var.accountId }}:role/OrganizationAccountAccessRole
+tags:
+  color: {{ var.color }}
+  name: {{ var.nested.name }}
+template:
+  inline: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup

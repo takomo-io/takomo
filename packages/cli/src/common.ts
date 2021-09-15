@@ -25,6 +25,7 @@ import {
   formatElapsedMillis,
   indentLines,
   LogLevel,
+  merge,
   parseYamlFile,
   printTimer,
   readFileContents,
@@ -37,7 +38,6 @@ import dotenv from "dotenv"
 import dotenvExpand from "dotenv-expand"
 import Table from "easy-table"
 import inquirer from "inquirer"
-import merge from "lodash.merge"
 import os from "os"
 import path from "path"
 import R from "ramda"
@@ -75,7 +75,7 @@ export const readConfigurationFromFiles = async (
   args: any,
 ): Promise<Record<string, unknown>> => {
   const filePaths = args ? (Array.isArray(args) ? args : [args]) : []
-  const config = {}
+  let config = {}
   for (const filePath of filePaths) {
     const configFromFile = await readVariablesFromFile(projectDir, filePath)
     if (typeof configFromFile !== "object") {
@@ -84,7 +84,7 @@ export const readConfigurationFromFiles = async (
       )
     }
 
-    merge(config, configFromFile)
+    config = merge(config, configFromFile)
   }
 
   return config
@@ -116,12 +116,12 @@ export const parseVarFileArgs = async (
   projectDir: string,
   varsArray: ReadonlyArray<string>,
 ): Promise<any> => {
-  const vars = {}
+  let vars = {}
   for (const varArg of varsArray) {
     if (/^([a-zA-Z][a-zA-Z0-9_]+)=/.test(varArg)) {
       const [varName, varValue] = varArg.split("=", 2)
       const varsFromFile = await readVariablesFromFile(projectDir, varValue)
-      merge(vars, { [varName]: varsFromFile })
+      vars = merge(vars, { [varName]: varsFromFile })
     } else {
       const varsFromFile = await readVariablesFromFile(projectDir, varArg)
       if (typeof varsFromFile !== "object") {
@@ -130,7 +130,7 @@ export const parseVarFileArgs = async (
         )
       }
 
-      merge(vars, varsFromFile)
+      vars = merge(vars, varsFromFile)
     }
   }
 
@@ -147,7 +147,7 @@ export const parseVarArgs = (varArgs: any, vars: any): any => {
   for (const varArg of varsArray) {
     if (/^([a-zA-Z][a-zA-Z0-9_]+)=/.test(varArg)) {
       const [varName, varValue] = varArg.split("=", 2)
-      merge(vars, { [varName]: varValue })
+      vars = merge(vars, { [varName]: varValue })
     } else {
       throw new TakomoError(`Invalid variable ${varArg}`)
     }

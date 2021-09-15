@@ -13,7 +13,7 @@
     "cloudformation stacks",
     "cloudformation deployment"
   ],
-  "homepage": "https://takomo.io",
+  "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",

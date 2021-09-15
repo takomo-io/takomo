@@ -67,7 +67,7 @@ describe("parse var file args", () => {
   test("variables from any file must be assigned to a variable if returned value is not an object", async () => {
     try {
       await parseVarFileArgs("test", ["example.txt"])
-    } catch (e) {
+    } catch (e: any) {
       expect(e.message).toBe(
         "Contents of variable file example.txt could not be deserialized to an object",
       )
