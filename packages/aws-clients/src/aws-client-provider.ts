@@ -96,6 +96,7 @@ export const createAwsClientProvider = (
         validateTemplateBulkhead,
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
+        waitStackRollbackToCompletePollInterval: 2000,
       })
 
       regions.add(props.region)

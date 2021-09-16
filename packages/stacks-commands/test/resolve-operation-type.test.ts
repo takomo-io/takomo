@@ -11,7 +11,6 @@ const notSupported: Array<StackStatus> = [
   "UPDATE_IN_PROGRESS",
   "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
   "UPDATE_ROLLBACK_IN_PROGRESS",
-  "UPDATE_ROLLBACK_FAILED",
   "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS",
 ]
 
@@ -42,6 +41,10 @@ describe("#resolveOperationType", () => {
 
   test("when UPDATE_ROLLBACK_COMPLETE is given returns UPDATE", () => {
     expect(resolveOperationType("UPDATE_ROLLBACK_COMPLETE")).toBe("UPDATE")
+  })
+
+  test("when UPDATE_ROLLBACK_FAILED is given returns UPDATE", () => {
+    expect(resolveOperationType("UPDATE_ROLLBACK_FAILED")).toBe("UPDATE")
   })
 
   test("when REVIEW_IN_PROGRESS is given returns RECREATE", () => {

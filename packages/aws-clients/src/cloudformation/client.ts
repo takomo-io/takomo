@@ -51,6 +51,10 @@ export interface CloudFormationClient {
     stackNames?: ReadonlyArray<StackName>,
   ) => Promise<Map<StackName, DetailedCloudFormationStackSummary>>
 
+  readonly getNotDeletedStack: (
+    stackName: StackName,
+  ) => Promise<DetailedCloudFormationStackSummary>
+
   readonly enrichStack: (
     stack: CloudFormationStack,
   ) => Promise<DetailedCloudFormationStack>
@@ -91,6 +95,10 @@ export interface CloudFormationClient {
   ) => Promise<ReadonlyArray<StackEvent>>
 
   readonly cancelStackUpdate: (stackName: string) => Promise<string>
+
+  readonly continueUpdateRollback: (
+    stackNameOrId: StackName | StackId,
+  ) => Promise<ClientRequestToken>
 
   readonly createStack: (params: CreateStackInput) => Promise<StackId>
 
@@ -136,6 +144,10 @@ export interface CloudFormationClient {
 
   readonly getNativeClient: () => Promise<CloudFormation>
 
+  readonly waitStackRollbackToComplete: (
+    props: WaitStackRollbackToCompleteProps,
+  ) => Promise<StackRollbackCompleteResponse>
+
   readonly waitStackDeployToComplete: (
     props: WaitStackDeployToCompleteProps,
   ) => Promise<WaitStackDeployToCompleteResponse>
@@ -176,6 +188,7 @@ interface CloudFormationClientProps extends AwsClientProps {
   readonly validateTemplateBulkhead: IPolicy
   readonly waitStackDeployToCompletePollInterval: number
   readonly waitStackDeleteToCompletePollInterval: number
+  readonly waitStackRollbackToCompletePollInterval: number
 }
 
 /**
@@ -203,6 +216,7 @@ export const createCloudFormationClient = (
     validateTemplateBulkhead,
     waitStackDeployToCompletePollInterval,
     waitStackDeleteToCompletePollInterval,
+    waitStackRollbackToCompletePollInterval,
   } = props
 
   const getStackPolicy = (
@@ -285,6 +299,18 @@ export const createCloudFormationClient = (
         },
       }),
     ).then((stacks) => new Map(arrayToMap(stacks, (s) => s.name)))
+  }
+
+  const getNotDeletedStack = async (
+    stackName: StackName,
+  ): Promise<DetailedCloudFormationStackSummary> => {
+    const stacks = await listNotDeletedStacks([stackName])
+    const stack = stacks.get(stackName)
+    if (!stack) {
+      throw new Error(`Stack not found with name: '${stackName}'`)
+    }
+
+    return stack
   }
 
   const enrichStack = async (
@@ -458,6 +484,20 @@ export const createCloudFormationClient = (
 
     return withClientPromise(
       (c) => c.cancelUpdateStack(params),
+      () => params.ClientRequestToken,
+    )
+  }
+
+  const continueUpdateRollback = (
+    stackNameOrId: StackName | StackId,
+  ): Promise<ClientRequestToken> => {
+    const params = {
+      StackName: stackNameOrId,
+      ClientRequestToken: uuid(),
+    }
+
+    return withClientPromise(
+      (c) => c.continueUpdateRollback(params),
       () => params.ClientRequestToken,
     )
   }
@@ -747,10 +787,53 @@ export const createCloudFormationClient = (
     })
   }
 
+  const waitStackRollbackToComplete = async (
+    props: WaitStackRollbackToCompleteProps,
+  ): Promise<StackRollbackCompleteResponse> => {
+    const {
+      stackId,
+      latestEventId,
+      clientToken,
+      eventListener,
+      allEvents = [],
+    } = props
+
+    await sleep(waitStackRollbackToCompletePollInterval)
+
+    const events = (await describeStackEvents(stackId)).slice().reverse()
+
+    const newEvents = takeRightWhile(
+      events,
+      (e) => e.id !== latestEventId,
+    ).filter((e) => e.clientRequestToken === clientToken)
+
+    newEvents.forEach(eventListener)
+
+    const updatedEvents = [...allEvents, ...newEvents]
+    const terminalEvent = findTerminalEvent(stackId, updatedEvents)
+
+    if (terminalEvent) {
+      return {
+        events: updatedEvents,
+        stackStatus: terminalEvent.resourceStatus,
+      }
+    }
+
+    const latestEvent = R.last(events)
+    const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
+    return waitStackRollbackToComplete({
+      ...props,
+      latestEventId: newLatestEventId,
+      allEvents: updatedEvents,
+    })
+  }
+
   return {
+    continueUpdateRollback,
     validateTemplate,
     describeStack,
     listNotDeletedStacks,
+    getNotDeletedStack,
     enrichStack,
     enrichStackSummary,
     getTemplateSummary,
@@ -773,6 +856,7 @@ export const createCloudFormationClient = (
     detectDrift,
     describeStackDriftDetectionStatus,
     waitDriftDetectionToComplete,
+    waitStackRollbackToComplete,
     getNativeClient: getClient,
   }
 }
@@ -839,6 +923,25 @@ export interface WaitStackDeleteToCompleteProps {
  * @hidden
  */
 export interface StackDeleteCompletionResponse {
+  readonly events: ReadonlyArray<StackEvent>
+  readonly stackStatus: CloudFormation.StackStatus
+}
+
+/**
+ * @hidden
+ */
+export interface WaitStackRollbackToCompleteProps {
+  readonly stackId: StackId
+  readonly clientToken: ClientRequestToken
+  readonly eventListener: (event: StackEvent) => void
+  readonly allEvents?: ReadonlyArray<StackEvent>
+  readonly latestEventId?: EventId
+}
+
+/**
+ * @hidden
+ */
+export interface StackRollbackCompleteResponse {
   readonly events: ReadonlyArray<StackEvent>
   readonly stackStatus: CloudFormation.StackStatus
 }

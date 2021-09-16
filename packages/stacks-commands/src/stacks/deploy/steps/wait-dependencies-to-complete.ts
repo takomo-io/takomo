@@ -49,13 +49,25 @@ export const waitDependenciesToComplete: StackOperationStep<InitialDeployStackSt
       })
     }
 
-    return operationType === "RECREATE"
-      ? transitions.initiateFailedStackDelete({
-          ...state,
-          currentStack,
-        })
-      : transitions.enrichCurrentStack({
-          ...state,
-          currentStack,
-        })
+    if (operationType === "RECREATE") {
+      return transitions.initiateFailedStackDelete({
+        ...state,
+        currentStack,
+      })
+    }
+
+    if (
+      operationType === "UPDATE" &&
+      currentStack.status === "UPDATE_ROLLBACK_FAILED"
+    ) {
+      return transitions.continueUpdateRollback({
+        ...state,
+        currentStack,
+      })
+    }
+
+    return transitions.enrichCurrentStack({
+      ...state,
+      currentStack,
+    })
   }
