@@ -1,6 +1,6 @@
 {
   "name": "@takomo/config-sets",
-  "version": "3.33.2",
+  "version": "3.34.0",
   "description": "Takomo Config Sets",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,12 +27,12 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.33.2",
+    "@takomo/aws-clients": "3.34.0",
     "@takomo/aws-model": "3.33.2",
-    "@takomo/core": "3.33.2",
-    "@takomo/stacks-commands": "3.33.2",
-    "@takomo/stacks-model": "3.33.2",
-    "@takomo/stacks-schema": "3.33.2",
+    "@takomo/core": "3.34.0",
+    "@takomo/stacks-commands": "3.34.0",
+    "@takomo/stacks-model": "3.34.0",
+    "@takomo/stacks-schema": "3.34.0",
     "@takomo/util": "3.33.2",
     "cockatiel": "2.0.1",
     "joi": "17.4.0",

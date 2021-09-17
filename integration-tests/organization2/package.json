@@ -1,7 +1,7 @@
 {
   "name": "integration-test-organization2",
   "private": true,
-  "version": "3.33.2",
+  "version": "3.34.0",
   "description": "Takomo integration tests for organization functionalities #2",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.33.2",
-    "@takomo/organization-commands": "3.33.2",
-    "@takomo/test-integration": "3.33.2",
+    "@takomo/organization-commands": "3.34.0",
+    "@takomo/test-integration": "3.34.0",
     "ts-dedent": "2.0.0"
   },
   "devDependencies": {

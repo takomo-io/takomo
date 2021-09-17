@@ -1,7 +1,7 @@
 {
   "name": "integration-test-stacks2",
   "private": true,
-  "version": "3.33.2",
+  "version": "3.34.0",
   "description": "Takomo integration tests for stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -23,13 +23,13 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.33.2",
-    "@takomo/stacks-model": "3.33.2",
-    "@takomo/test-integration": "3.33.2",
+    "@takomo/stacks-model": "3.34.0",
+    "@takomo/test-integration": "3.34.0",
     "@takomo/util": "3.33.2",
     "aws-sdk": "2.987.0"
   },
   "devDependencies": {
-    "@takomo/cli": "3.33.2",
+    "@takomo/cli": "3.34.0",
     "@takomo/test-custom-helper-lowercase": "0.0.1",
     "@takomo/test-custom-helper-uppercase": "0.0.1",
     "@takomo/test-custom-resolver-code": "0.0.1",

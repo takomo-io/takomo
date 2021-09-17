@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.34.0](https://github.com/takomo-io/takomo/compare/v3.33.2...v3.34.0) (2021-09-17)
+
+
+### Features
+
+* **stacks:** handle stacks in update_rollback_failed status ([#303](https://github.com/takomo-io/takomo/issues/303)) ([ee2e6d7](https://github.com/takomo-io/takomo/commit/ee2e6d7c8b1ef0a05fd1a897d9d906afdbb047fd)), closes [#302](https://github.com/takomo-io/takomo/issues/302)
+
+
+
+
+
 ## [3.33.2](https://github.com/takomo-io/takomo/compare/v3.33.1...v3.33.2) (2021-09-15)
 
 

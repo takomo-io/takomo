@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-resolvers",
-  "version": "3.33.2",
+  "version": "3.34.0",
   "description": "Takomo Stacks Resolvers",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,16 +29,16 @@
   "dependencies": {
     "@takomo/aws-model": "3.33.2",
     "@takomo/aws-schema": "3.33.2",
-    "@takomo/core": "3.33.2",
-    "@takomo/stacks-config": "3.33.2",
-    "@takomo/stacks-model": "3.33.2",
-    "@takomo/stacks-schema": "3.33.2",
+    "@takomo/core": "3.34.0",
+    "@takomo/stacks-config": "3.34.0",
+    "@takomo/stacks-model": "3.34.0",
+    "@takomo/stacks-schema": "3.34.0",
     "@takomo/util": "3.33.2",
     "joi": "17.4.0",
     "ramda": "0.27.1"
   },
   "devDependencies": {
-    "@takomo/aws-clients": "3.33.2",
+    "@takomo/aws-clients": "3.34.0",
     "@takomo/test-unit": "3.33.2",
     "aws-sdk": "2.987.0"
   },
