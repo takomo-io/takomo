@@ -1,4 +1,4 @@
-import { createUndeployTargetsIO } from "@takomo/cli-io"
+import { createTearDownTargetsIO } from "@takomo/cli-io"
 import { undeployTargetsOperationCommandIamPolicy } from "@takomo/deployment-targets-commands"
 import { GROUPS_OPT, targetsOperationCommand } from "./common"
 
@@ -11,5 +11,5 @@ export const tearDownTargetsCmd = targetsOperationCommand({
   configSetType: "bootstrap",
   operation: "undeploy",
   iamPolicyProvider: undeployTargetsOperationCommandIamPolicy,
-  io: createUndeployTargetsIO,
+  io: createTearDownTargetsIO,
 })

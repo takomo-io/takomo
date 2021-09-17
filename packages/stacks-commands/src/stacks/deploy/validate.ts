@@ -15,6 +15,7 @@ export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
     "REVIEW_IN_PROGRESS",
     "CREATE_FAILED",
     "ROLLBACK_COMPLETE",
+    "ROLLBACK_FAILED",
     "IMPORT_COMPLETE",
     "IMPORT_ROLLBACK_COMPLETE",
   ].includes(stackStatus)

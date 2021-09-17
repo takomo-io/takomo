@@ -71,6 +71,7 @@ export const resolveOperationType = (
       return "UPDATE"
     case "CREATE_FAILED":
     case "ROLLBACK_COMPLETE":
+    case "ROLLBACK_FAILED":
     case "REVIEW_IN_PROGRESS":
       return "RECREATE"
     default:

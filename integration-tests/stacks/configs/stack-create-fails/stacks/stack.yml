@@ -1,0 +1,4 @@
+regions: eu-north-1
+commandRole: {{ var.commandRole }}
+tags:
+  test-resource: true

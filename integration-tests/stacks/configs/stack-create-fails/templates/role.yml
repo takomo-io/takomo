@@ -1,0 +1,24 @@
+Resources:
+
+  MyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: {{ var.roleName }}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: '{{ var.executorAccountId }}'
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: TestPolicy1
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                NotAction:
+                  - logs:DeleteLogGroup
+                  - ec2:CreateVpc
+                Resource: '*'

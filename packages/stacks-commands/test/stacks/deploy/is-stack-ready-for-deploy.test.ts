@@ -6,7 +6,7 @@ const data: Array<[StackStatus, boolean]> = [
   ["CREATE_FAILED", true],
   ["CREATE_COMPLETE", true],
   ["ROLLBACK_IN_PROGRESS", false],
-  ["ROLLBACK_FAILED", false],
+  ["ROLLBACK_FAILED", true],
   ["ROLLBACK_COMPLETE", true],
   ["DELETE_IN_PROGRESS", false],
   ["DELETE_FAILED", false],
