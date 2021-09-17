@@ -1,0 +1,10 @@
+Resources:
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+
+  Vpc:
+    Type: AWS::EC2::VPC
+    DependsOn: LogGroup
+    Properties:
+      CidrBlock: 10.0.0.0/24

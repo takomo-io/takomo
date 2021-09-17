@@ -4,7 +4,6 @@ import { resolveOperationType } from "../src/stacks/deploy/plan"
 const notSupported: Array<StackStatus> = [
   "CREATE_IN_PROGRESS",
   "ROLLBACK_IN_PROGRESS",
-  "ROLLBACK_FAILED",
   "DELETE_IN_PROGRESS",
   "DELETE_FAILED",
   "DELETE_COMPLETE",
@@ -49,5 +48,9 @@ describe("#resolveOperationType", () => {
 
   test("when REVIEW_IN_PROGRESS is given returns RECREATE", () => {
     expect(resolveOperationType("REVIEW_IN_PROGRESS")).toBe("RECREATE")
+  })
+
+  test("when ROLLBACK_FAILED is given returns RECREATE", () => {
+    expect(resolveOperationType("ROLLBACK_FAILED")).toBe("RECREATE")
   })
 })
