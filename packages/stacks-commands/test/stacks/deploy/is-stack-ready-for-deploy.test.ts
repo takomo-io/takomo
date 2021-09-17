@@ -15,7 +15,7 @@ const data: Array<[StackStatus, boolean]> = [
   ["UPDATE_COMPLETE_CLEANUP_IN_PROGRESS", false],
   ["UPDATE_COMPLETE", true],
   ["UPDATE_ROLLBACK_IN_PROGRESS", false],
-  ["UPDATE_ROLLBACK_FAILED", false],
+  ["UPDATE_ROLLBACK_FAILED", true],
   ["UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS", false],
   ["UPDATE_ROLLBACK_COMPLETE", true],
   ["REVIEW_IN_PROGRESS", true],

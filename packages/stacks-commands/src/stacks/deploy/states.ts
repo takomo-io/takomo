@@ -61,7 +61,16 @@ export interface DetailedCurrentStackHolder extends InitialDeployStackState {
  */
 export interface DeleteFailedStackClientTokenHolder
   extends InitialDeployStackState {
-  readonly deleteFailedStackClientToken: string
+  readonly deleteFailedStackClientToken: ClientRequestToken
+  readonly currentStack: CloudFormationStackSummary
+}
+
+/**
+ * @hidden
+ */
+export interface ContinueStackRollbackClientTokenHolder
+  extends InitialDeployStackState {
+  readonly continueStackRollbackClientToken: ClientRequestToken
   readonly currentStack: CloudFormationStackSummary
 }
 

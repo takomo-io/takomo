@@ -8,6 +8,7 @@ import { resolveResultMessage } from "./common"
 import {
   ChangeSetHolder,
   ChangeSetNameHolder,
+  ContinueStackRollbackClientTokenHolder,
   CurrentStackHolder,
   DeleteFailedStackClientTokenHolder,
   DetailedCurrentStackHolder,
@@ -21,6 +22,7 @@ import {
   TemplateSummaryHolder,
   UpdateStackHolder,
 } from "./states"
+import { continueUpdateRollback } from "./steps/continue-update-rollback"
 import { enrichCurrentStack } from "./steps/enrich-current-stack"
 import { executeAfterDeployHooks } from "./steps/execute-after-deploy-hooks"
 import { executeBeforeDeployHooks } from "./steps/execute-before-deploy-hooks"
@@ -42,6 +44,7 @@ import { waitChangeSetToBeReady } from "./steps/wait-change-set-to-be-ready"
 import { waitDependenciesToComplete } from "./steps/wait-dependencies-to-complete"
 import { waitFailedStackDeleteToComplete } from "./steps/wait-failed-stack-delete-to-complete"
 import { waitStackCreateOrUpdateToComplete } from "./steps/wait-stack-create-or-update-to-complete"
+import { waitStackRollbackToComplete } from "./steps/wait-stack-rollback-to-complete"
 
 /**
  * @hidden
@@ -50,6 +53,10 @@ export interface DeployStackTransitions extends StackOperationTransitions {
   initiateFailedStackDelete: StackOperationStep<CurrentStackHolder>
 
   waitFailedStackDeleteToComplete: StackOperationStep<DeleteFailedStackClientTokenHolder>
+
+  continueUpdateRollback: StackOperationStep<CurrentStackHolder>
+
+  waitStackRollbackToComplete: StackOperationStep<ContinueStackRollbackClientTokenHolder>
 
   enrichCurrentStack: StackOperationStep<CurrentStackHolder>
 
@@ -184,9 +191,19 @@ export const createDeployStackTransitions = (): DeployStackTransitions => ({
     initiateFailedStackDelete,
   ),
 
+  continueUpdateRollback: inProgress(
+    "continue-update-rollback",
+    continueUpdateRollback,
+  ),
+
   waitFailedStackDeleteToComplete: inProgress(
     "wait-failed-stack-delete-to-complete",
     waitFailedStackDeleteToComplete,
+  ),
+
+  waitStackRollbackToComplete: inProgress(
+    "wait-stack-rollback-to-complete",
+    waitStackRollbackToComplete,
   ),
 
   enrichCurrentStack: inProgress("enrich-current-stack", enrichCurrentStack),

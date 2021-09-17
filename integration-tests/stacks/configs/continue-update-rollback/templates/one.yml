@@ -1,0 +1,38 @@
+Resources:
+
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/24
+
+  SG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: TestTestTest
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  MyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: {{ var.roleName }}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: '{{ var.executorAccountId }}'
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: TestPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                NotAction: ec2:RevokeSecurityGroupIngress
+                Resource: '*'
