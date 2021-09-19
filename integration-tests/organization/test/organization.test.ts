@@ -6,6 +6,7 @@ import {
   executeTeardownAccountsCommand,
   executeUndeployAccountsCommand,
 } from "@takomo/test-integration"
+import { sleep } from "@takomo/util"
 import {
   ORG_A_ACCOUNT_1_ID,
   ORG_A_ACCOUNT_2_ID,
@@ -18,13 +19,15 @@ const projectDir = "configs"
 
 const deployOrganization = async (
   version: string,
-): Promise<DeployOrganizationOutput> =>
-  executeDeployOrganizationCommand({
+): Promise<DeployOrganizationOutput> => {
+  await sleep(2000)
+  return executeDeployOrganizationCommand({
     projectDir,
     var: [`configVersion=${version}.yml`],
   })
     .expectCommandToSucceed()
     .assert()
+}
 
 describe("Organization commands", () => {
   test("initial configuration", () => deployOrganization("v01"))
