@@ -10,6 +10,7 @@ import {
   OrganizationConfig,
   OrganizationPolicyConfig,
 } from "@takomo/organization-config"
+import { ORGANIZATION_ROOT_OU } from "@takomo/organization-model"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
 import {
   AccountRefersToNonExistingBootstrapConfigSet,
@@ -265,7 +266,7 @@ export const validateCommonLocalConfiguration = async (
   currentAccounts: ReadonlyArray<OrganizationAccount>,
 ): Promise<void> => {
   const allAccountsInConfig = collectFromHierarchy(
-    ctx.getOrganizationalUnit("Root"),
+    ctx.getOrganizationalUnit(ORGANIZATION_ROOT_OU),
     (node) => node.children,
   )
     .map((ou) => ou.accounts)

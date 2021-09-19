@@ -6,7 +6,8 @@ import { CurrentStackHolder } from "../states"
  */
 export const continueUpdateRollback: StackOperationStep<CurrentStackHolder> =
   async (state) => {
-    const { transitions, stack, currentStack } = state
+    const { transitions, stack, currentStack, logger } = state
+    logger.info("Continue update rollback")
 
     const continueStackRollbackClientToken = await stack
       .getCloudFormationClient()

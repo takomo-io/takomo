@@ -221,7 +221,8 @@ export const createAccountsPlan = async ({
     path: ou.path,
     targets: ou.accounts
       .filter((a) => hasConfigSetsWithStage(a, stageName))
-      .map((a) => convertToExecutionTarget(a, stageName)),
+      .map((a) => convertToExecutionTarget(a, stageName))
+      .filter((a) => a.configSets.length > 0),
   })
 
   const ous: ReadonlyArray<OrganizationalUnitConfig> = uniqueOusToLaunch
