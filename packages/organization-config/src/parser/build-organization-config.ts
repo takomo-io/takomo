@@ -8,7 +8,6 @@ import {
 import {
   CommandContext,
   parseOptionalString,
-  parseOptionalStringArray,
   parseString,
   parseVars,
 } from "@takomo/core"
@@ -31,6 +30,7 @@ import { getAccountIds, getOUPaths } from "../util"
 import { parseAccountCreationConfig } from "./parse-account-creation-config"
 import { parseOrganizationalUnitsConfig } from "./parse-organizational-units-config"
 import { parsePoliciesConfig } from "./parse-policies-config"
+import { parseStages } from "./parse-stages"
 
 interface BuildOrganizationConfigProps {
   readonly logger: TkmLogger
@@ -115,7 +115,7 @@ export const buildOrganizationConfig = async (
   )
   const parsedConfigSets = parseConfigSets(record.configSets)
   const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
-  const stages = parseOptionalStringArray(record.stages) ?? ["default"]
+  const stages = parseStages(record.stages)
 
   const serviceControlPolicies = parsePoliciesConfig(
     "SERVICE_CONTROL_POLICY",
