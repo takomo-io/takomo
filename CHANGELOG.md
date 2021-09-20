@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.34.1](https://github.com/takomo-io/takomo/compare/v3.34.0...v3.34.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* add missing dependency ([45edaa5](https://github.com/takomo-io/takomo/commit/45edaa5ec99ef8969e7bab4ceb8533514ca3f366))
+* small fixes ([#306](https://github.com/takomo-io/takomo/issues/306)) ([6198d49](https://github.com/takomo-io/takomo/commit/6198d494782e135fb1c5893aaf694fdb60949876))
+
+
+
+
+
 # [3.34.0](https://github.com/takomo-io/takomo/compare/v3.33.2...v3.34.0) (2021-09-17)
 
 

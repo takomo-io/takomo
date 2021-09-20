@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.34.1](https://github.com/takomo-io/takomo/compare/v3.34.0...v3.34.1) (2021-09-20)
+
+**Note:** Version bump only for package @takomo/deployment-targets-repository
+
+
+
+
+
 # [3.34.0](https://github.com/takomo-io/takomo/compare/v3.33.2...v3.34.0) (2021-09-17)
 
 **Note:** Version bump only for package @takomo/deployment-targets-repository
