@@ -12,11 +12,36 @@ interface PagedResponse {
 }
 
 interface PagedOperationV2Props<T, P, R extends PagedResponse> {
+  /**
+   * API operation to execute.
+   */
   readonly operation: (params: P) => Request<R, AWSError>
+
+  /**
+   * Parameters for the API operation.
+   */
   readonly params: P
+
+  /**
+   * Function that extracts objects from the API response
+   * and converts them to the required type.
+   */
   readonly extractor: (response: R) => ReadonlyArray<T> | undefined
+
+  /**
+   * Next token used to request the next page from API.
+   */
   readonly nextToken?: string
+
+  /**
+   * Function invoked on every page. Continue paging if returns false,
+   * otherwise stop paging.
+   */
   readonly onPage?: (items: ReadonlyArray<T>) => boolean
+
+  /**
+   * Function to filter objects that should be included in the final result.
+   */
   readonly filter?: (item: T) => boolean
 }
 
@@ -262,7 +287,7 @@ export const createClient = <C>({
 
     const items = (extractor(response) ?? []).filter(filter)
 
-    if (!onPage(items)) {
+    if (onPage(items)) {
       return items
     }
 
@@ -272,12 +297,14 @@ export const createClient = <C>({
 
     return [
       ...items,
-      ...(await pagedOperation(
+      ...(await pagedOperationV2({
         operation,
         params,
         extractor,
-        response.NextToken,
-      )),
+        onPage,
+        filter,
+        nextToken: response.NextToken,
+      })),
     ]
   }
 
