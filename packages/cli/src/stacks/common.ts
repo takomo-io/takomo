@@ -1,4 +1,5 @@
 import {
+  EXPECT_NO_CHANGES_OPT,
   IGNORE_DEPENDENCIES_OPT,
   INTERACTIVE_ALIAS_OPT,
   INTERACTIVE_OPT,
@@ -21,6 +22,17 @@ export const stackOperationOptions = {
   ...outputFormatOptions,
   [IGNORE_DEPENDENCIES_OPT]: {
     description: "Ignore stack dependencies",
+    boolean: true,
+    global: false,
+    default: false,
+    demandOption: false,
+  },
+}
+
+export const stackDeployOperationOptions = {
+  ...stackOperationOptions,
+  [EXPECT_NO_CHANGES_OPT]: {
+    description: "Expect no changes to stacks",
     boolean: true,
     global: false,
     default: false,

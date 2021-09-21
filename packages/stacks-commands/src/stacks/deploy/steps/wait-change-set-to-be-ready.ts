@@ -6,9 +6,37 @@ import {
   TemplateSummary,
 } from "@takomo/aws-model"
 import { InternalStack } from "@takomo/stacks-model"
-import { arrayToMap, prettyPrintJson } from "@takomo/util"
+import {
+  arrayToMap,
+  indentLines,
+  prettyPrintJson,
+  TakomoError,
+} from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { ChangeSetNameHolder } from "../states"
+
+class UnexpectedChangesInStackError extends TakomoError {
+  constructor(
+    changeSet: ChangeSet | undefined,
+    terminationProtectionChanged: boolean,
+    stackPolicyChanged: boolean,
+  ) {
+    let message = "Stack has unexpected changes:\n\n"
+    if (terminationProtectionChanged) {
+      message += "- termination protection was changed\n\n"
+    }
+    if (stackPolicyChanged) {
+      message += "- stack policy was changed\n\n"
+    }
+    if (changeSet) {
+      message += `- Change set:\n\n${indentLines(
+        JSON.stringify(changeSet, undefined, 2),
+      )}`
+    }
+
+    super(message)
+  }
+}
 
 const enrichChangeSet = (
   changeSet: ChangeSet,
@@ -69,6 +97,7 @@ export const waitChangeSetToBeReady: StackOperationStep<ChangeSetNameHolder> =
       currentStack,
       templateSummary,
       transitions,
+      expectNoChanges,
     } = state
     const changeSet = await stack
       .getCloudFormationClient()
@@ -92,6 +121,19 @@ export const waitChangeSetToBeReady: StackOperationStep<ChangeSetNameHolder> =
         status: "SUCCESS",
         events: [],
         success: true,
+      })
+    }
+
+    if (expectNoChanges) {
+      return transitions.failStackOperation({
+        ...state,
+        message: "Stack has unexpected changes",
+        events: [],
+        error: new UnexpectedChangesInStackError(
+          changeSet,
+          terminationProtectionChanged,
+          stackPolicyChanged,
+        ),
       })
     }
 

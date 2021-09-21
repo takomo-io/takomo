@@ -7,7 +7,7 @@ import {
 } from "@takomo/stacks-model"
 import { createTimer, Timer } from "@takomo/util"
 import { Policy } from "cockatiel"
-import { StacksOperationInput, StacksOperationOutput } from "../../model"
+import { StacksDeployOperationInput, StacksOperationOutput } from "../../model"
 import { StacksOperationListener } from "../common/model"
 import { deployStack } from "./deploy-stack"
 import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"
@@ -40,6 +40,7 @@ const executeStacksInParallel = async (
   configRepository: StacksConfigRepository,
   outputFormat: OutputFormat,
   stacksOperationListener: StacksOperationListener,
+  expectNoChanges: boolean,
 ): Promise<StacksOperationOutput> => {
   const bulkhead = Policy.bulkhead(ctx.concurrentStacks, 1000)
 
@@ -69,6 +70,7 @@ const executeStacksInParallel = async (
         type,
         configRepository,
         stacksOperationListener,
+        expectNoChanges,
         currentStack,
       ),
     )
@@ -92,12 +94,12 @@ const executeStacksInParallel = async (
  */
 export const executeDeployContext = async (
   ctx: InternalStacksContext,
-  input: StacksOperationInput,
+  input: StacksDeployOperationInput,
   io: DeployStacksIO,
   plan: StacksDeployPlan,
   configRepository: StacksConfigRepository,
 ): Promise<StacksOperationOutput> => {
-  const { ignoreDependencies, timer } = input
+  const { ignoreDependencies, expectNoChanges, timer } = input
   const { operations } = plan
 
   io.debugObject("Deploy stacks in the following order:", () =>
@@ -146,6 +148,7 @@ export const executeDeployContext = async (
       configRepository,
       input.outputFormat,
       deployStacksListener,
+      expectNoChanges,
     )
   }
 
@@ -183,6 +186,7 @@ export const executeDeployContext = async (
       operation.type,
       configRepository,
       deployStacksListener,
+      expectNoChanges,
       operation.currentStack,
     )
 
@@ -211,6 +215,7 @@ export const executeDeployContext = async (
         configRepository,
         input.outputFormat,
         deployStacksListener,
+        expectNoChanges,
       )
     }
   }

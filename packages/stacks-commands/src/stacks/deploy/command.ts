@@ -7,17 +7,17 @@ import { InternalStacksContext } from "@takomo/stacks-model"
 import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
-import { StacksOperationInput, StacksOperationOutput } from "../../model"
+import { StacksDeployOperationInput, StacksOperationOutput } from "../../model"
 import { executeDeployContext } from "./execute-deploy-context"
 import { DeployStacksIO } from "./model"
 import { buildStacksDeployPlan } from "./plan"
 import { validateStacksDeployPlan } from "./validate"
 
 const modifyInput = async (
-  input: StacksOperationInput,
+  input: StacksDeployOperationInput,
   ctx: InternalStacksContext,
   io: DeployStacksIO,
-): Promise<StacksOperationInput> => {
+): Promise<StacksDeployOperationInput> => {
   if (input.interactive) {
     const commandPath = await io.chooseCommandPath(ctx.rootStackGroup)
     return {
@@ -33,7 +33,7 @@ const deployStacks = async (
   ctx: InternalStacksContext,
   configRepository: StacksConfigRepository,
   io: DeployStacksIO,
-  input: StacksOperationInput,
+  input: StacksDeployOperationInput,
 ): Promise<StacksOperationOutput> => {
   const modifiedInput = await modifyInput(input, ctx, io)
 
@@ -59,7 +59,7 @@ const inputSchema = (ctx: CommandContext): AnySchema => {
 export const deployStacksCommand: CommandHandler<
   StacksConfigRepository,
   DeployStacksIO,
-  StacksOperationInput,
+  StacksDeployOperationInput,
   StacksOperationOutput
 > = ({
   credentialManager,

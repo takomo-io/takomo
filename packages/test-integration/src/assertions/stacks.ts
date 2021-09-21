@@ -32,6 +32,7 @@ export interface ExpectStackResultProps {
   readonly success: boolean
   readonly message: string
   readonly errorMessage?: string
+  readonly errorMessageToContain?: string
 }
 
 export type ExpectSuccessStackResultProps = Omit<
@@ -130,6 +131,7 @@ const createStackResultsMatcher = (
     success,
     message,
     errorMessage,
+    errorMessageToContain,
   }: ExpectStackResultProps): StackResultsMatcher => {
     const stackResultMatcher = (stackResult: StackResult): boolean => {
       if (stackResult.stack.path !== stackPath) {
@@ -141,9 +143,14 @@ const createStackResultsMatcher = (
       expect(stackResult.status).toEqual(status)
       expect(stackResult.success).toEqual(success)
 
-      if (errorMessage) {
+      if (errorMessage || errorMessageToContain) {
         expect(stackResult.error).toBeDefined()
-        expect(stackResult.error?.message).toEqual(errorMessage)
+
+        if (errorMessageToContain) {
+          expect(stackResult.error?.message).toContain(errorMessageToContain)
+        } else if (errorMessage) {
+          expect(stackResult.error?.message).toEqual(errorMessage)
+        }
       } else {
         expect(stackResult.error).toBeUndefined()
       }

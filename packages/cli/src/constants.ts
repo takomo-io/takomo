@@ -45,6 +45,7 @@ export const DEFAULT_REGIONS: ReadonlyArray<Region> = [
 
 export const OUTPUT_OPT = "output"
 export const INTERACTIVE_OPT = "interactive"
+export const EXPECT_NO_CHANGES_OPT = "expect-no-changes"
 export const INTERACTIVE_ALIAS_OPT = "i"
 export const IGNORE_DEPENDENCIES_OPT = "ignore-dependencies"
 export const FEATURE_SET_OPT = "feature-set"

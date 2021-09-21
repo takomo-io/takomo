@@ -7,4 +7,8 @@ export interface StacksOperationInput extends CommandInput {
   readonly interactive: boolean
 }
 
+export interface StacksDeployOperationInput extends StacksOperationInput {
+  readonly expectNoChanges: boolean
+}
+
 export type StacksOperationOutput = ResultsOutput<StackResult>

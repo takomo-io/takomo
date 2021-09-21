@@ -40,6 +40,7 @@ export interface InitialDeployStackState extends InitialStackOperationState {
   readonly operationType: StackOperationType
   readonly state: DeployState
   readonly transitions: DeployStackTransitions
+  readonly expectNoChanges: boolean
 }
 
 /**

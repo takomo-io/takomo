@@ -72,6 +72,7 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
     currentStack,
     templateSummary,
     stack,
+    expectNoChanges,
   } = input
 
   parameters.forEach((parameter) => {
@@ -134,7 +135,7 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
     })
   }
 
-  if (state.autoConfirm) {
+  if (state.autoConfirm && !expectNoChanges) {
     return transitions.initiateStackCreateOrUpdate(input)
   }
 
