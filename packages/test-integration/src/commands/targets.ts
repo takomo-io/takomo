@@ -79,6 +79,7 @@ export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
   readonly concurrentTargets?: number
   readonly commandPath?: CommandPath
   readonly configSetName?: ConfigSetName
+  readonly expectNoChanges?: boolean
 }
 
 export const executeDeployTargetsCommand = (
@@ -125,6 +126,7 @@ export const executeDeployTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        expectNoChanges: props.expectNoChanges ?? false,
         outputFormat: "text",
       },
     })
@@ -174,6 +176,7 @@ export const executeUndeployTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        expectNoChanges: props.expectNoChanges ?? false,
         outputFormat: "text",
       },
     })
@@ -223,6 +226,7 @@ export const executeBootstrapTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        expectNoChanges: props.expectNoChanges ?? false,
         outputFormat: "text",
       },
     })
@@ -272,6 +276,7 @@ export const executeTeardownTargetsCommand = (
         concurrentTargets: props.concurrentTargets ?? 1,
         commandPath: props.commandPath,
         configSetName: props.configSetName,
+        expectNoChanges: props.expectNoChanges ?? false,
         outputFormat: "text",
       },
     })

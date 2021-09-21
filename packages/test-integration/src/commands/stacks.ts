@@ -79,6 +79,7 @@ const createCtxAndConfigRepository = async (
 export interface ExecuteDeployStacksCommandProps extends ExecuteCommandProps {
   readonly answers?: TestDeployStacksIOAnswers
   readonly interactive?: boolean
+  readonly expectNoChanges?: boolean
 }
 
 export interface ExecuteUndeployStacksCommandProps extends ExecuteCommandProps {
@@ -120,6 +121,7 @@ export const executeDeployStacksCommand = (
       io: createTestDeployStacksIO(logger, props.answers),
       input: {
         ignoreDependencies,
+        expectNoChanges: props.expectNoChanges ?? false,
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
         timer: createTimer("total"),
         interactive: props.interactive ?? false,

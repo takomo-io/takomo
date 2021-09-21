@@ -32,7 +32,10 @@ const executeOperationInternal = async (
   switch (operation) {
     case "deploy":
       return deployStacksCommand({
-        input,
+        input: {
+          ...input,
+          expectNoChanges: false,
+        },
         ctx,
         credentialManager,
         configRepository,

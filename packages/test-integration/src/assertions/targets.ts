@@ -29,6 +29,9 @@ export interface ExpectStackResultProps {
   readonly stackPath: StackPath
   readonly stackName: StackName
   readonly tags?: Record<TagKey, TagValue>
+  readonly message?: string
+  readonly success?: boolean
+  readonly status?: CommandStatus
 }
 
 export interface ExpectCommandPathResultProps {
@@ -160,6 +163,24 @@ const createDeploymentGroupResultMatcher = (
                       expect(stackResult.stack.name).toStrictEqual(
                         expectedStackResult.stackName,
                       )
+
+                      if (expectedStackResult.message) {
+                        expect(stackResult.message).toStrictEqual(
+                          expectedStackResult.message,
+                        )
+                      }
+
+                      if (expectedStackResult.success !== undefined) {
+                        expect(stackResult.success).toStrictEqual(
+                          expectedStackResult.success,
+                        )
+                      }
+
+                      if (expectedStackResult.status) {
+                        expect(stackResult.status).toStrictEqual(
+                          expectedStackResult.status,
+                        )
+                      }
 
                       if (expectedStackResult.tags) {
                         const cfStack =

@@ -1,0 +1,8 @@
+deploymentGroups:
+
+  Default:
+    configSets: super
+    targets:
+      - name: example
+        vars:
+          accountId: "{{ var.ACCOUNT_1_ID }}"

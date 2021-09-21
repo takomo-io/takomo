@@ -9,15 +9,17 @@ import { Arguments, Argv, CommandModule } from "yargs"
 import { commonEpilog, handle, RunProps } from "../common"
 import {
   COMMAND_PATH_OPT,
+  EXPECT_NO_CHANGES_OPT,
   IGNORE_DEPENDENCIES_OPT,
   INTERACTIVE_OPT,
 } from "../constants"
-import { stackOperationOptions } from "./common"
+import { stackDeployOperationOptions } from "./common"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath
   readonly [IGNORE_DEPENDENCIES_OPT]: boolean
   readonly [INTERACTIVE_OPT]: boolean
+  readonly [EXPECT_NO_CHANGES_OPT]: boolean
 }
 
 const command = `deploy [${COMMAND_PATH_OPT}]`
@@ -31,7 +33,7 @@ const builder = (yargs: Argv<CommandArgs>) =>
       "$0 deploy /networking/vpc.yml",
       "Deploy only the /networking/vpc.yml stack",
     )
-    .options(stackOperationOptions)
+    .options(stackDeployOperationOptions)
     .positional(COMMAND_PATH_OPT, {
       describe: "Deploy stacks within this path",
       string: true,
@@ -46,6 +48,7 @@ const handler = (argv: Arguments<CommandArgs>) =>
       ignoreDependencies: argv[IGNORE_DEPENDENCIES_OPT],
       commandPath: argv[COMMAND_PATH_OPT],
       interactive: argv.interactive,
+      expectNoChanges: argv[EXPECT_NO_CHANGES_OPT],
     }),
     io: (ctx, logger) => createDeployStacksIO({ logger }),
     configRepository: (ctx, logger) =>
