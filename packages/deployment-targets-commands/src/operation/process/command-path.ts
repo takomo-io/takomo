@@ -23,10 +23,10 @@ import {
 } from "@takomo/deployment-targets-model"
 import {
   deployStacksCommand,
+  StacksDeployOperationInput,
   StacksOperationInput,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
-import { StacksDeployOperationInput } from "@takomo/stacks-commands/src/model"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { merge, TakomoError, Timer } from "@takomo/util"

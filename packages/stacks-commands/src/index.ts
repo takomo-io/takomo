@@ -1,4 +1,8 @@
-export { StacksOperationInput, StacksOperationOutput } from "./model"
+export {
+  StacksDeployOperationInput,
+  StacksOperationInput,
+  StacksOperationOutput,
+} from "./model"
 export { StacksOperationListener } from "./stacks/common/model"
 export { deployStacksCommand } from "./stacks/deploy/command"
 export { deployStacksCommandIamPolicy } from "./stacks/deploy/iam-policy"
