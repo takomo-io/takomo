@@ -33,7 +33,11 @@ describe("Large number of stacks", () => {
       .assert())
 
   test("Deploy a single stack without changes", () =>
-    executeDeployStacksCommand({ projectDir, var: ["template=first.yml"] })
+    executeDeployStacksCommand({
+      projectDir,
+      var: ["template=first.yml"],
+      commandPath: "/stack-113.yml",
+    })
       .expectCommandToSucceed()
       .expectStackUpdateSuccessWithNoChanges({
         stackName: "stack-113",
