@@ -26,6 +26,7 @@ import {
   StacksOperationInput,
   undeployStacksCommand,
 } from "@takomo/stacks-commands"
+import { StacksDeployOperationInput } from "@takomo/stacks-commands/src/model"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { merge, TakomoError, Timer } from "@takomo/util"
@@ -82,7 +83,7 @@ const deploy = async (
   commandPath: CommandPath,
   groupPath: DeploymentGroupPath,
   targetName: DeploymentTargetName,
-  input: StacksOperationInput,
+  input: StacksDeployOperationInput,
   io: DeploymentTargetsOperationIO,
   configRepository: StacksConfigRepository,
   ctx: InternalCommandContext,
@@ -143,6 +144,7 @@ const deployOrUndeploy = async (
   ctx: DeploymentTargetsContext,
   stacksConfigRepository: StacksConfigRepository,
   outputFormat: OutputFormat,
+  expectNoChanges: boolean,
 ): Promise<ConfigSetCommandPathOperationResult> => {
   const input = {
     timer,
@@ -159,12 +161,17 @@ const deployOrUndeploy = async (
 
   switch (operation) {
     case "deploy":
+      const deployInput = {
+        ...input,
+        expectNoChanges,
+      }
+
       return deploy(
         credentialManager,
         commandPath,
         groupPath,
         target,
-        input,
+        deployInput,
         io,
         stacksConfigRepository,
         commandContext,
@@ -198,7 +205,7 @@ export const processCommandPath = async (
   const {
     io,
     ctx,
-    input: { operation, configSetType, outputFormat },
+    input: { operation, configSetType, outputFormat, expectNoChanges },
   } = holder
 
   const { variables } = ctx
@@ -271,6 +278,7 @@ export const processCommandPath = async (
       ctx,
       stacksConfigRepository,
       outputFormat,
+      expectNoChanges,
     )
   } catch (e: any) {
     io.error(
