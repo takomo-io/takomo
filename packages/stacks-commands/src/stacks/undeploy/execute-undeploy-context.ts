@@ -4,6 +4,7 @@ import {
   StackPath,
   StackResult,
 } from "@takomo/stacks-model"
+import { Policy } from "cockatiel"
 import { StacksOperationInput, StacksOperationOutput } from "../../model"
 import { deleteStack } from "./delete"
 import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors"
@@ -52,18 +53,22 @@ export const executeUndeployContext = async (
     plan.operations.length,
   )
 
+  const bulkhead = Policy.bulkhead(ctx.concurrentStacks, 1000)
+
   const executions = operations.reduce((executions, operation) => {
     const dependents = ignoreDependencies
       ? []
       : operation.stack.dependents.map((d) => executions.get(d)!)
 
-    const execution = deleteStack(
-      timer,
-      ctx,
-      io,
-      operation,
-      dependents,
-      stacksOperationListener,
+    const execution = bulkhead.execute(() =>
+      deleteStack(
+        timer,
+        ctx,
+        io,
+        operation,
+        dependents,
+        stacksOperationListener,
+      ),
     )
 
     executions.set(operation.stack.path, execution)

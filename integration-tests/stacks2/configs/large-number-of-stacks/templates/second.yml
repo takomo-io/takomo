@@ -1,0 +1,5 @@
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+  LogGroup2:
+    Type: AWS::Logs::LogGroup
