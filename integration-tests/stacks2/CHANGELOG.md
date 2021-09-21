@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.35.0](https://github.com/takomo-io/takomo/compare/v3.34.1...v3.35.0) (2021-09-21)
+
+
+### Bug Fixes
+
+* **stacks:** fix loading of stacks from regions with more than 100 stacks([#309](https://github.com/takomo-io/takomo/issues/309)) ([0c8bc52](https://github.com/takomo-io/takomo/commit/0c8bc520a393f9876fa26b5aeb8f4a9bc6b3765a)), closes [#307](https://github.com/takomo-io/takomo/issues/307)
+
+
+
+
+
 ## [3.34.1](https://github.com/takomo-io/takomo/compare/v3.34.0...v3.34.1) (2021-09-20)
 
 **Note:** Version bump only for package integration-test-stacks2

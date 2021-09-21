@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-config",
-  "version": "3.34.0",
+  "version": "3.35.0",
   "description": "Takomo Stacks Config",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,15 +29,15 @@
   "dependencies": {
     "@takomo/aws-model": "3.33.2",
     "@takomo/aws-schema": "3.33.2",
-    "@takomo/core": "3.34.0",
-    "@takomo/stacks-model": "3.34.0",
-    "@takomo/stacks-schema": "3.34.0",
+    "@takomo/core": "3.35.0",
+    "@takomo/stacks-model": "3.35.0",
+    "@takomo/stacks-schema": "3.35.0",
     "@takomo/util": "3.33.2",
     "joi": "17.4.0",
     "neverthrow": "3.1.3"
   },
   "devDependencies": {
-    "@takomo/aws-clients": "3.34.0"
+    "@takomo/aws-clients": "3.35.0"
   },
   "engines": {
     "node": ">=14.4.0"
