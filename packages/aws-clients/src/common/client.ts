@@ -1,5 +1,5 @@
 import { Region } from "@takomo/aws-model"
-import { randomInt, TkmLogger } from "@takomo/util"
+import { randomInt, Scheduler, TkmLogger } from "@takomo/util"
 import { CognitoIdentityCredentials, Credentials } from "aws-sdk"
 import { AWSError } from "aws-sdk/lib/error"
 import { Request } from "aws-sdk/lib/request"
@@ -70,6 +70,13 @@ export interface AwsClient<C> {
   ) => Promise<T>
   readonly withClientPromiseBulkhead: <T, R>(
     bulkhead: IPolicy,
+    fn: (client: C) => Request<R, AWSError>,
+    onSuccess: (result: R) => T,
+    onError?: (e: any) => T,
+  ) => Promise<T>
+  readonly withClientPromiseScheduler: <T, R>(
+    taskId: string,
+    scheduler: Scheduler,
     fn: (client: C) => Request<R, AWSError>,
     onSuccess: (result: R) => T,
     onError?: (e: any) => T,
@@ -245,6 +252,25 @@ export const createClient = <C>({
         throw e
       })
 
+  const withClientPromiseScheduler = <T, R>(
+    taskId: string,
+    scheduler: Scheduler,
+    fn: (client: C) => Request<R, AWSError>,
+    onSuccess: (result: R) => T,
+    onError?: (e: any) => T,
+  ): Promise<T> =>
+    getClient()
+      .then((client) =>
+        scheduler.execute<R>({ taskId, fn: () => fn(client).promise() }),
+      )
+      .then(onSuccess)
+      .catch((e) => {
+        if (onError) {
+          return onError(e)
+        }
+        throw e
+      })
+
   const pagedOperation = async <T, P, R extends PagedResponse>(
     operation: (params: P) => Request<R, AWSError>,
     params: P,
@@ -346,6 +372,7 @@ export const createClient = <C>({
     withClient,
     withClientPromise,
     withClientPromiseBulkhead,
+    withClientPromiseScheduler,
     pagedOperation,
     pagedOperationV2,
     pagedOperationBulkhead,
