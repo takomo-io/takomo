@@ -1,6 +1,5 @@
 import { Region } from "@takomo/aws-model"
 import { checksum, createScheduler, Scheduler, TkmLogger } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { IPolicy, Policy } from "cockatiel"
 import {
   CloudFormationClient,
@@ -17,11 +16,20 @@ import { createS3Client, S3Client } from "./s3/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
 import { createStsClient, StsClient } from "./sts/client"
 
-const makeCredentialsRegionHash = (
-  region: Region,
-  { accessKeyId, secretAccessKey, sessionToken }: Credentials,
-): string =>
-  checksum([region, accessKeyId, secretAccessKey, sessionToken].join(":"))
+const makeCredentialsRegionHash = ({
+  region,
+  credentials,
+  identity,
+}: AwsClientProps): string => {
+  if (identity) {
+    return checksum([region, identity.accountId].join(":"))
+  }
+
+  const { accessKeyId, secretAccessKey, sessionToken } = credentials
+  return checksum(
+    [region, accessKeyId, secretAccessKey, sessionToken].join(":"),
+  )
+}
 
 export interface AwsClientProvider {
   readonly createCloudFormationClient: (
@@ -119,9 +127,7 @@ export const createAwsClientProvider = ({
     createCloudFormationClient: (
       props: AwsClientProps,
     ): CloudFormationClient => {
-      const controls = getConcurrencyControls(
-        makeCredentialsRegionHash(props.region, props.credentials),
-      )
+      const controls = getConcurrencyControls(makeCredentialsRegionHash(props))
 
       const client = createCloudFormationClient({
         listener,

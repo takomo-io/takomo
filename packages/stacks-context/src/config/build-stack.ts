@@ -188,6 +188,8 @@ export const buildStack = async (
     stackConfig.stackPolicyDuringUpdate ?? stackGroup.stackPolicyDuringUpdate
 
   const credentials = await credentialManager.getCredentials()
+  const identity = await credentialManager.getCallerIdentity()
+
   return await Promise.all(
     regions
       .filter((region) =>
@@ -200,6 +202,7 @@ export const buildStack = async (
           ctx.awsClientProvider.createCloudFormationClient({
             credentials,
             region,
+            identity,
             id: exactPath,
             logger: stackLogger,
           })

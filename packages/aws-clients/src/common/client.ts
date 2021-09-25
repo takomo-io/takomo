@@ -1,11 +1,10 @@
-import { Region } from "@takomo/aws-model"
+import { CallerIdentity, Region } from "@takomo/aws-model"
 import { randomInt, Scheduler, TkmLogger } from "@takomo/util"
-import { CognitoIdentityCredentials, Credentials } from "aws-sdk"
+import { Credentials } from "aws-sdk"
 import { AWSError } from "aws-sdk/lib/error"
 import { Request } from "aws-sdk/lib/request"
 import { IPolicy } from "cockatiel"
 import https from "https"
-import ClientConfiguration = CognitoIdentityCredentials.ClientConfiguration
 
 interface PagedResponse {
   readonly NextToken?: string
@@ -104,6 +103,7 @@ export interface AwsClientProps {
   readonly region: Region
   readonly logger: TkmLogger
   readonly id: string
+  readonly identity?: CallerIdentity
   readonly listener?: ClientListener
 }
 
@@ -111,7 +111,7 @@ export interface AwsClientProps {
  * @hidden
  */
 interface ClientProps<C> extends AwsClientProps {
-  readonly clientConstructor: (config: ClientConfiguration) => C
+  readonly clientConstructor: (config: any) => C
 }
 
 /**
