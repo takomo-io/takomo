@@ -1,5 +1,5 @@
 import { Region } from "@takomo/aws-model"
-import { TkmLogger } from "@takomo/util"
+import { checksum, createScheduler, Scheduler, TkmLogger } from "@takomo/util"
 import { IPolicy, Policy } from "cockatiel"
 import {
   CloudFormationClient,
@@ -15,6 +15,21 @@ import {
 import { createS3Client, S3Client } from "./s3/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
 import { createStsClient, StsClient } from "./sts/client"
+
+const makeCredentialsRegionHash = ({
+  region,
+  credentials,
+  identity,
+}: AwsClientProps): string => {
+  if (identity) {
+    return checksum([region, identity.accountId].join(":"))
+  }
+
+  const { accessKeyId, secretAccessKey, sessionToken } = credentials
+  return checksum(
+    [region, accessKeyId, secretAccessKey, sessionToken].join(":"),
+  )
+}
 
 export interface AwsClientProvider {
   readonly createCloudFormationClient: (
@@ -52,11 +67,14 @@ const createDescribeEventsBulkhead = (): IPolicy => {
   return Policy.bulkhead(limit, queue)
 }
 
-const createGetTemplateSummaryBulkhead = (): IPolicy => {
-  const limit = 1
-  const queue = 1000
-  return Policy.bulkhead(limit, queue)
-}
+const createGetTemplateSummaryScheduler = (logger: TkmLogger): Scheduler =>
+  createScheduler({
+    logger,
+    id: "GetTemplateSummary",
+    intervalCap: 2,
+    concurrency: 5,
+    intervalInMillis: 200,
+  })
 
 const createValidateTemplateBulkhead = (): IPolicy => {
   const limit = 4
@@ -64,17 +82,38 @@ const createValidateTemplateBulkhead = (): IPolicy => {
   return Policy.bulkhead(limit, queue)
 }
 
+interface ConcurrencyControls {
+  readonly describeEventsBulkhead: IPolicy
+  readonly getTemplateSummaryScheduler: Scheduler
+  readonly validateTemplateBulkhead: IPolicy
+}
+
 /**
  * @hidden
  */
-export const createAwsClientProvider = (
-  props: AwsClientProviderProps,
-): InternalAwsClientProvider => {
+export const createAwsClientProvider = ({
+  logger,
+}: AwsClientProviderProps): InternalAwsClientProvider => {
   const apiCalls = new Array<ApiCallProps>()
   const regions = new Set<Region>()
-  const describeEventsBulkhead = createDescribeEventsBulkhead()
-  const getTemplateSummaryBulkhead = createGetTemplateSummaryBulkhead()
-  const validateTemplateBulkhead = createValidateTemplateBulkhead()
+
+  const concurrencyControls = new Map<string, ConcurrencyControls>()
+
+  const getConcurrencyControls = (key: string): ConcurrencyControls => {
+    if (concurrencyControls.has(key)) {
+      return concurrencyControls.get(key)!
+    }
+
+    const controls = {
+      describeEventsBulkhead: createDescribeEventsBulkhead(),
+      getTemplateSummaryScheduler: createGetTemplateSummaryScheduler(logger),
+      validateTemplateBulkhead: createValidateTemplateBulkhead(),
+    }
+
+    concurrencyControls.set(key, controls)
+
+    return controls
+  }
 
   const listener = {
     onApiCall: (props: ApiCallProps): void => {
@@ -88,12 +127,12 @@ export const createAwsClientProvider = (
     createCloudFormationClient: (
       props: AwsClientProps,
     ): CloudFormationClient => {
+      const controls = getConcurrencyControls(makeCredentialsRegionHash(props))
+
       const client = createCloudFormationClient({
         listener,
         ...props,
-        describeEventsBulkhead,
-        getTemplateSummaryBulkhead,
-        validateTemplateBulkhead,
+        ...controls,
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
         waitStackRollbackToCompletePollInterval: 2000,

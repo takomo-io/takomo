@@ -511,8 +511,7 @@ export const onComplete = async ({
     const apiCallsByClient = R.groupBy(R.prop("clientId"), allApiCalls)
     const clientIds = Object.keys(apiCallsByClient).sort()
     clientIds.forEach((clientId) => {
-      clientsTable.cell("Id", clientId)
-      clientsTable.newRow()
+      clientsTable.cell("Id", clientId).newRow()
       const clientApiCalls = apiCallsByClient[clientId]
       const clientApiCallsByAction = R.groupBy(
         (a) => `${a.api}:${a.action}`,
@@ -525,32 +524,25 @@ export const onComplete = async ({
         const times = R.map(R.prop("time"), calls)
         const totalTime = R.sum(times)
 
-        clientsTable.cell("Id", `  ${actionName}`)
-        clientsTable.cell("Count", calls.length)
-        clientsTable.cell("Time total", formatElapsedMillis(totalTime * 1000))
-        clientsTable.cell(
-          "Time min",
-          formatElapsedMillis(Math.min(...times) * 1000),
-        )
-        clientsTable.cell(
-          "Time max",
-          formatElapsedMillis(Math.max(...times) * 1000),
-        )
-        clientsTable.cell(
-          "Time avg",
-          formatElapsedMillis((totalTime / calls.length) * 1000),
-        )
-        clientsTable.cell(
-          "Retries",
-          calls.reduce((sum, { retries }) => sum + retries, 0),
-        )
-        clientsTable.newRow()
+        clientsTable
+          .cell("Id", `  ${actionName}`)
+          .cell("Count", calls.length)
+          .cell("Time total", formatElapsedMillis(totalTime * 1000))
+          .cell("Time min", formatElapsedMillis(Math.min(...times) * 1000))
+          .cell("Time max", formatElapsedMillis(Math.max(...times) * 1000))
+          .cell(
+            "Time avg",
+            formatElapsedMillis((totalTime / calls.length) * 1000),
+          )
+          .cell(
+            "Retries",
+            calls.reduce((sum, { retries }) => sum + retries, 0),
+          )
+          .newRow()
       })
     })
 
-    clientsTable.newRow()
-    clientsTable.cell("Id", "Total")
-    clientsTable.newRow()
+    clientsTable.newRow().cell("Id", "Total").newRow()
 
     const totalApiCallsByAction = R.groupBy(
       (a) => `${a.api}:${a.action}`,
@@ -563,26 +555,21 @@ export const onComplete = async ({
         const times = R.map(R.prop("time"), calls)
         const totalTime = R.sum(times)
 
-        clientsTable.cell("Id", `  ${action}`)
-        clientsTable.cell("Count", calls.length)
-        clientsTable.cell("Time total", formatElapsedMillis(totalTime * 1000))
-        clientsTable.cell(
-          "Time min",
-          formatElapsedMillis(Math.min(...times) * 1000),
-        )
-        clientsTable.cell(
-          "Time max",
-          formatElapsedMillis(Math.max(...times) * 1000),
-        )
-        clientsTable.cell(
-          "Time avg",
-          formatElapsedMillis((totalTime / calls.length) * 1000),
-        )
-        clientsTable.cell(
-          "Retries",
-          calls.reduce((sum, { retries }) => sum + retries, 0),
-        )
-        clientsTable.newRow()
+        clientsTable
+          .cell("Id", `  ${action}`)
+          .cell("Count", calls.length)
+          .cell("Time total", formatElapsedMillis(totalTime * 1000))
+          .cell("Time min", formatElapsedMillis(Math.min(...times) * 1000))
+          .cell("Time max", formatElapsedMillis(Math.max(...times) * 1000))
+          .cell(
+            "Time avg",
+            formatElapsedMillis((totalTime / calls.length) * 1000),
+          )
+          .cell(
+            "Retries",
+            calls.reduce((sum, { retries }) => sum + retries, 0),
+          )
+          .newRow()
       })
 
     console.log(indentLines(clientsTable.toString()))

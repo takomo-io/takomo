@@ -1,11 +1,10 @@
-import { Region } from "@takomo/aws-model"
-import { randomInt, TkmLogger } from "@takomo/util"
-import { CognitoIdentityCredentials, Credentials } from "aws-sdk"
+import { CallerIdentity, Region } from "@takomo/aws-model"
+import { randomInt, Scheduler, TkmLogger } from "@takomo/util"
+import { Credentials } from "aws-sdk"
 import { AWSError } from "aws-sdk/lib/error"
 import { Request } from "aws-sdk/lib/request"
 import { IPolicy } from "cockatiel"
 import https from "https"
-import ClientConfiguration = CognitoIdentityCredentials.ClientConfiguration
 
 interface PagedResponse {
   readonly NextToken?: string
@@ -74,6 +73,13 @@ export interface AwsClient<C> {
     onSuccess: (result: R) => T,
     onError?: (e: any) => T,
   ) => Promise<T>
+  readonly withClientPromiseScheduler: <T, R>(
+    taskId: string,
+    scheduler: Scheduler,
+    fn: (client: C) => Request<R, AWSError>,
+    onSuccess: (result: R) => T,
+    onError?: (e: any) => T,
+  ) => Promise<T>
   readonly pagedOperation: <T, P, R extends PagedResponse>(
     operation: (params: P) => Request<R, AWSError>,
     params: P,
@@ -97,6 +103,7 @@ export interface AwsClientProps {
   readonly region: Region
   readonly logger: TkmLogger
   readonly id: string
+  readonly identity?: CallerIdentity
   readonly listener?: ClientListener
 }
 
@@ -104,7 +111,7 @@ export interface AwsClientProps {
  * @hidden
  */
 interface ClientProps<C> extends AwsClientProps {
-  readonly clientConstructor: (config: ClientConfiguration) => C
+  readonly clientConstructor: (config: any) => C
 }
 
 /**
@@ -245,6 +252,25 @@ export const createClient = <C>({
         throw e
       })
 
+  const withClientPromiseScheduler = <T, R>(
+    taskId: string,
+    scheduler: Scheduler,
+    fn: (client: C) => Request<R, AWSError>,
+    onSuccess: (result: R) => T,
+    onError?: (e: any) => T,
+  ): Promise<T> =>
+    getClient()
+      .then((client) =>
+        scheduler.execute<R>({ taskId, fn: () => fn(client).promise() }),
+      )
+      .then(onSuccess)
+      .catch((e) => {
+        if (onError) {
+          return onError(e)
+        }
+        throw e
+      })
+
   const pagedOperation = async <T, P, R extends PagedResponse>(
     operation: (params: P) => Request<R, AWSError>,
     params: P,
@@ -346,6 +372,7 @@ export const createClient = <C>({
     withClient,
     withClientPromise,
     withClientPromiseBulkhead,
+    withClientPromiseScheduler,
     pagedOperation,
     pagedOperationV2,
     pagedOperationBulkhead,

@@ -17,7 +17,7 @@ import {
   StackPolicyBody,
   TemplateSummary,
 } from "@takomo/aws-model"
-import { arrayToMap, sleep, uuid } from "@takomo/util"
+import { arrayToMap, Scheduler, sleep, uuid } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import {
   CreateChangeSetInput,
@@ -184,7 +184,7 @@ const findTerminalEvent = (
 
 interface CloudFormationClientProps extends AwsClientProps {
   readonly describeEventsBulkhead: IPolicy
-  readonly getTemplateSummaryBulkhead: IPolicy
+  readonly getTemplateSummaryScheduler: Scheduler
   readonly validateTemplateBulkhead: IPolicy
   readonly waitStackDeployToCompletePollInterval: number
   readonly waitStackDeleteToCompletePollInterval: number
@@ -200,6 +200,7 @@ export const createCloudFormationClient = (
   const {
     withClientPromise,
     withClientPromiseBulkhead,
+    withClientPromiseScheduler,
     pagedOperationBulkhead,
     pagedOperationV2,
     withClient,
@@ -212,7 +213,7 @@ export const createCloudFormationClient = (
   const {
     logger,
     describeEventsBulkhead,
-    getTemplateSummaryBulkhead,
+    getTemplateSummaryScheduler,
     validateTemplateBulkhead,
     waitStackDeployToCompletePollInterval,
     waitStackDeleteToCompletePollInterval,
@@ -385,8 +386,9 @@ export const createCloudFormationClient = (
   const getTemplateSummary = (
     input: CloudFormation.GetTemplateSummaryInput,
   ): Promise<TemplateSummary> =>
-    withClientPromiseBulkhead(
-      getTemplateSummaryBulkhead,
+    withClientPromiseScheduler(
+      uuid(),
+      getTemplateSummaryScheduler,
       (c) => c.getTemplateSummary(input),
       convertTemplateSummary,
     )
