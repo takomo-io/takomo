@@ -1,9 +1,6 @@
 import { InternalStack } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 
-/**
- * @hidden
- */
 export class IncompatibleIgnoreDependenciesOptionOnLaunchError extends TakomoError {
   constructor(stacks: ReadonlyArray<InternalStack>) {
     const stackPaths = stacks.map((s) => `  - ${s.path}`).join("\n")

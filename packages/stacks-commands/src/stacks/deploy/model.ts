@@ -54,17 +54,11 @@ export interface DeployStacksIO extends IO<StacksOperationOutput> {
   ) => StacksOperationListener
 }
 
-/**
- * @hidden
- */
 export interface DeployState {
   cancelled: boolean
   autoConfirm: boolean
 }
 
-/**
- * @hidden
- */
 export interface StackParameterInfo {
   readonly key: StackParameterKey
   readonly value: StackParameterValue
@@ -72,9 +66,6 @@ export interface StackParameterInfo {
   readonly schema?: AnySchema
 }
 
-/**
- * @hidden
- */
 export interface StackTagInfo {
   readonly key: TagKey
   readonly value: TagValue

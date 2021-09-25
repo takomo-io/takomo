@@ -6,9 +6,6 @@ import { resolveResultMessage } from "../common"
 import { StackParameterInfo } from "../model"
 import { TemplateSummaryHolder } from "../states"
 
-/**
- * @hidden
- */
 export class ImmutableParameterError extends TakomoError {
   constructor({ key }: StackParameterInfo) {
     super(
@@ -17,9 +14,6 @@ export class ImmutableParameterError extends TakomoError {
   }
 }
 
-/**
- * @hidden
- */
 export class ImmutableNoEchoParameterError extends TakomoError {
   constructor({ key }: StackParameterInfo) {
     super(

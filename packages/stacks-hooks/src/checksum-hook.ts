@@ -2,9 +2,6 @@ import { Hook, HookInput, HookOutput } from "@takomo/stacks-model"
 import { expandFilePath, FilePath } from "@takomo/util"
 import { hashElement } from "folder-hash"
 
-/**
- * @hidden
- */
 export class ChecksumHook implements Hook {
   readonly algo = "sha1"
   readonly dir: FilePath

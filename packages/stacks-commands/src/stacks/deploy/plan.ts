@@ -18,7 +18,6 @@ import {
 
 /**
  * TODO: Move somewhere else
- * @hidden
  */
 export const collectStackDependencies = (
   stacksByPath: Map<StackPath, InternalStack>,
@@ -37,25 +36,16 @@ export const collectStackDependencies = (
     ])
   }, new Array<StackPath>())
 
-/**
- * @hidden
- */
 export interface StackDeployOperation {
   readonly stack: InternalStack
   readonly type: StackOperationType
   readonly currentStack?: CloudFormationStackSummary
 }
 
-/**
- * @hidden
- */
 export interface StacksDeployPlan {
   readonly operations: ReadonlyArray<StackDeployOperation>
 }
 
-/**
- * @hidden
- */
 export const resolveOperationType = (
   status?: StackStatus,
 ): StackOperationType => {
@@ -88,9 +78,6 @@ const convertToOperation = ({
   currentStack: current,
 })
 
-/**
- * @hidden
- */
 export const buildStacksDeployPlan = async (
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,

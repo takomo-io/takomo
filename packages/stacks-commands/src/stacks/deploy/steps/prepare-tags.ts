@@ -1,9 +1,6 @@
 import { StackOperationStep } from "../../common/steps"
 import { ParametersHolder } from "../states"
 
-/**
- * @hidden
- */
 export const prepareTags: StackOperationStep<ParametersHolder> = (
   state: ParametersHolder,
 ) => {

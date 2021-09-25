@@ -1,9 +1,6 @@
 import { bold, FormattedTable, indentLines, LogWriter } from "@takomo/util"
 import { createInquirerUserActions, UserActions } from "./user-actions"
 
-/**
- * @hidden
- */
 export interface Choice<T> {
   readonly name: string
   readonly value: T
@@ -25,9 +22,6 @@ interface TableProps {
   readonly indent?: number
 }
 
-/**
- * @hidden
- */
 export interface BaseIO extends UserActions {
   print: (text?: any, ...optionalParams: any[]) => void
   subheader: (props: MessageProps) => void
@@ -42,17 +36,11 @@ export interface BaseIO extends UserActions {
   table: (props: TableProps) => void
 }
 
-/**
- * @hidden
- */
 export interface BaseIOProps {
   readonly writer?: LogWriter
   readonly actions?: UserActions
 }
 
-/**
- * @hidden
- */
 export const createBaseIO = ({
   writer = console.log,
   actions,

@@ -2,9 +2,6 @@ import { executeHooks } from "@takomo/stacks-hooks"
 import { StackOperationStep } from "../../common/steps"
 import { StackOperationResultHolder } from "../states"
 
-/**
- * @hidden
- */
 export const executeAfterUndeployHooks: StackOperationStep<StackOperationResultHolder> =
   async (state) => {
     const { stack, ctx, variables, logger, transitions, events } = state

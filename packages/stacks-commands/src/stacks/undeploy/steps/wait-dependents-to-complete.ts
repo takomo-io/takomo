@@ -10,9 +10,6 @@ const hasSomeDependentSkipped = (
 ): boolean =>
   results.some((r) => r.status === "SKIPPED" && r.stackExistedBeforeOperation)
 
-/**
- * @hidden
- */
 export const waitDependentsToComplete: StackOperationStep<InitialUndeployStackState> =
   async (state) => {
     const { transitions, dependents, currentStack } = state

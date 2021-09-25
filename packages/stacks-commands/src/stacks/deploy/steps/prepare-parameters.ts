@@ -12,9 +12,6 @@ const getValueForLog = (
   return logConfidentialInfo ? value : "*****"
 }
 
-/**
- * @hidden
- */
 export const prepareParameters: StackOperationStep<DetailedCurrentStackHolder> =
   async (state: DetailedCurrentStackHolder) => {
     const { stack, ctx, logger, transitions, variables } = state

@@ -8,9 +8,6 @@ import {
 import { TakomoError } from "@takomo/util"
 import R from "ramda"
 
-/**
- * @hidden
- */
 export const checkCyclicDependenciesForStack = (
   stack: InternalStack,
   stacks: Map<StackPath, InternalStack>,
@@ -36,18 +33,12 @@ export const checkCyclicDependenciesForStack = (
   })
 }
 
-/**
- * @hidden
- */
 export const checkCyclicDependencies = (
   stacks: Map<StackPath, InternalStack>,
 ) => {
   stacks.forEach((s) => checkCyclicDependenciesForStack(s, stacks, [s.path]))
 }
 
-/**
- * @hidden
- */
 export const collectAllDependencies = (
   stackPath: StackPath,
   stacks: InternalStack[],
@@ -61,9 +52,6 @@ export const collectAllDependencies = (
   )
 }
 
-/**
- * @hidden
- */
 export const collectAllDependents = (
   stackPath: StackPath,
   stacks: InternalStack[],
@@ -77,9 +65,6 @@ export const collectAllDependents = (
   )
 }
 
-/**
- * @hidden
- */
 export const collectStackDirectDependents = (
   stackPath: StackPath,
   stacks: StackProps[],
@@ -92,18 +77,12 @@ export const collectStackDirectDependents = (
         : dependents
     }, new Array<string>())
 
-/**
- * @hidden
- */
 export const populateDependents = (stacks: StackProps[]): StackProps[] =>
   stacks.reduce((collected, stack) => {
     const dependents = collectStackDirectDependents(stack.path, stacks)
     return [...collected, { ...stack, dependents }]
   }, new Array<StackProps>())
 
-/**
- * @hidden
- */
 export const processStackDependencies = (
   stacks: ReadonlyArray<InternalStack>,
 ): ReadonlyArray<InternalStack> => {
@@ -181,16 +160,10 @@ const sortStacks = (
   return sorted
 }
 
-/**
- * @hidden
- */
 export const sortStacksForUndeploy = (
   stacks: ReadonlyArray<InternalStack>,
 ): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependents)
 
-/**
- * @hidden
- */
 export const sortStacksForDeploy = (
   stacks: ReadonlyArray<InternalStack>,
 ): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependencies)

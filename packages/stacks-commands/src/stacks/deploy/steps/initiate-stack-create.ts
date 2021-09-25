@@ -3,9 +3,6 @@ import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateSummaryHolder } from "../states"
 
-/**
- * @hidden
- */
 export const initiateStackCreate: StackOperationStep<TemplateSummaryHolder> =
   async (state) => {
     const {

@@ -9,9 +9,6 @@ const hasTerminationProtectionChanged = (
 ): boolean =>
   stack.terminationProtection !== currentStack.enableTerminationProtection
 
-/**
- * @hidden
- */
 export const initiateStackCreateOrUpdate: StackOperationStep<TemplateSummaryHolder> =
   (state) => {
     const { operationType, transitions, stack, currentStack } = state

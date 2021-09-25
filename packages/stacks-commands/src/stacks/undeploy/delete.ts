@@ -7,9 +7,6 @@ import { StackUndeployOperation } from "./plan"
 import { InitialUndeployStackState } from "./states"
 import { createUndeployStackTransitions } from "./transitions"
 
-/**
- * @hidden
- */
 export const deleteStack = async (
   timer: Timer,
   ctx: InternalStacksContext,

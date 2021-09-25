@@ -12,9 +12,6 @@ import { Timer } from "@takomo/util"
 import { PlanHolder } from "../model"
 import { processCommandPath } from "./command-path"
 
-/**
- * @hidden
- */
 export const processConfigSet = async (
   holder: PlanHolder,
   group: DeploymentGroupConfig,

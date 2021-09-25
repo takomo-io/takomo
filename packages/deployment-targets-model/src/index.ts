@@ -15,9 +15,6 @@ export type DeploymentGroupPath = string
 export type DeploymentStatus = "active" | "disabled"
 export type Label = string
 
-/**
- * @hidden
- */
 export interface DeploymentTargetsSchemaRegistry extends SchemaRegistry {
   readonly initDeploymentTargetsSchema: (
     ctx: CommandContext,
@@ -27,9 +24,6 @@ export interface DeploymentTargetsSchemaRegistry extends SchemaRegistry {
   ) => Promise<AnySchema>
 }
 
-/**
- * @hidden
- */
 export const createDeploymentTargetsSchemaRegistry = (
   logger: TkmLogger,
 ): DeploymentTargetsSchemaRegistry => {

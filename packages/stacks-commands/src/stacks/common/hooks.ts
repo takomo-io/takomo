@@ -5,9 +5,6 @@ import {
   StackOperationType,
 } from "@takomo/stacks-model"
 
-/**
- * @hidden
- */
 export const toHookOperation = (
   operationType: StackOperationType,
 ): HookOperation => {
@@ -22,9 +19,6 @@ export const toHookOperation = (
   }
 }
 
-/**
- * @hidden
- */
 export const toHookStatus = (commandStatus: CommandStatus): HookStatus => {
   switch (commandStatus) {
     case "CANCELLED":

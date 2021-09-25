@@ -1,15 +1,9 @@
 import { CommandPath, InternalStack } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 
-/**
- * @hidden
- */
 export const isStackGroupPath = (commandPath: CommandPath): boolean =>
   !commandPath.includes(".yml")
 
-/**
- * @hidden
- */
 export const validateStackCredentialManagersWithAllowedAccountIds = async (
   stacks: ReadonlyArray<InternalStack>,
 ): Promise<void> => {
@@ -33,9 +27,6 @@ export const validateStackCredentialManagersWithAllowedAccountIds = async (
   })
 }
 
-/**
- * @hidden
- */
 export const isWithinCommandPath = (
   commandPath: CommandPath,
   other: CommandPath,

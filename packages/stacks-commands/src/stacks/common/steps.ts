@@ -4,9 +4,6 @@ import { InitialStackOperationState } from "./states"
 
 type StackOperationCompletedProps = Omit<StackResult, "timer">
 
-/**
- * @hidden
- */
 export class StackOperationCompleted {
   readonly completed = true
   readonly props: StackOperationCompletedProps
@@ -22,9 +19,6 @@ interface StackOperationInProgressProps<S extends InitialStackOperationState> {
   readonly state: S
 }
 
-/**
- * @hidden
- */
 export class StackOperationInProgress<S extends InitialStackOperationState> {
   readonly completed = false
   readonly stepName: string
@@ -38,14 +32,8 @@ export class StackOperationInProgress<S extends InitialStackOperationState> {
   }
 }
 
-/**
- * @hidden
- */
 export type StepResult = StackOperationInProgress<any> | StackOperationCompleted
 
-/**
- * @hidden
- */
 export type StackOperationStep<S extends InitialStackOperationState> = (
   state: S,
 ) => Promise<StepResult>
@@ -80,9 +68,6 @@ const executeStep = async <S extends InitialStackOperationState>(
   }
 }
 
-/**
- * @hidden
- */
 export const executeSteps = async (
   state: InitialStackOperationState,
 ): Promise<StackResult> => {

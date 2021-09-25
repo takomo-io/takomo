@@ -3,9 +3,6 @@ import { validateStackCredentialManagersWithAllowedAccountIds } from "@takomo/st
 import { TakomoError } from "@takomo/util"
 import { StackDeployOperation, StacksDeployPlan } from "./plan"
 
-/**
- * @hidden
- */
 export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
   [
     "CREATE_COMPLETE",
@@ -20,9 +17,6 @@ export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
     "IMPORT_ROLLBACK_COMPLETE",
   ].includes(stackStatus)
 
-/**
- * @hidden
- */
 export const validateStacksStatus = (
   operations: ReadonlyArray<StackDeployOperation>,
 ): void => {
@@ -47,9 +41,6 @@ export const validateStacksStatus = (
   }
 }
 
-/**
- * @hidden
- */
 export const validateStacksDeployPlan = async (
   plan: StacksDeployPlan,
 ): Promise<void> => {

@@ -1,9 +1,6 @@
 import { StackOperationStep } from "../../common/steps"
 import { TemplateLocationHolder } from "../states"
 
-/**
- * @hidden
- */
 export const summarizeTemplate: StackOperationStep<TemplateLocationHolder> =
   async (state) => {
     const { stack, templateS3Url, templateBody, transitions } = state

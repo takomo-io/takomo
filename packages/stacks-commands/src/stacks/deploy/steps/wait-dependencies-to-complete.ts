@@ -13,9 +13,6 @@ const hasSomeDependencySkipped = (
     (r) => r.status === "SKIPPED" && !r.stackExistedBeforeOperation,
   )
 
-/**
- * @hidden
- */
 export const waitDependenciesToComplete: StackOperationStep<InitialDeployStackState> =
   async (state) => {
     const { logger, dependencies, transitions, operationType, currentStack } =

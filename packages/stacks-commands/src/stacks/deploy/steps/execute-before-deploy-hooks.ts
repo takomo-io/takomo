@@ -3,9 +3,6 @@ import { toHookOperation } from "../../common/hooks"
 import { StackOperationStep } from "../../common/steps"
 import { DetailedCurrentStackHolder } from "../states"
 
-/**
- * @hidden
- */
 export const executeBeforeDeployHooks: StackOperationStep<DetailedCurrentStackHolder> =
   async (state) => {
     const { stack, operationType, ctx, variables, logger, transitions } = state

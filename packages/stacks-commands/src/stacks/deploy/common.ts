@@ -1,8 +1,5 @@
 import { StackOperationType } from "@takomo/stacks-model"
 
-/**
- * @hidden
- */
 export const resolveResultMessage = (
   operationType: StackOperationType,
   success: boolean,

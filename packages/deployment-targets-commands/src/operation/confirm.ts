@@ -1,9 +1,6 @@
 import { DeploymentTargetsOperationOutput, PlanHolder } from "./model"
 import { processOperation } from "./process"
 
-/**
- * @hidden
- */
 export const confirmOperation = async (
   holder: PlanHolder,
 ): Promise<DeploymentTargetsOperationOutput> => {

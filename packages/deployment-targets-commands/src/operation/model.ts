@@ -81,9 +81,6 @@ export interface DeploymentGroupDeployResult extends CommandOutputBase {
   readonly results: ReadonlyArray<DeploymentTargetDeployResult>
 }
 
-/**
- * @hidden
- */
 export interface InitialHolder {
   readonly timer: Timer
   readonly ctx: DeploymentTargetsContext
@@ -91,9 +88,6 @@ export interface InitialHolder {
   readonly input: DeploymentTargetsOperationInput
 }
 
-/**
- * @hidden
- */
 export interface PlanHolder extends InitialHolder {
   readonly plan: TargetsExecutionPlan
   readonly listener: DeploymentTargetsListener

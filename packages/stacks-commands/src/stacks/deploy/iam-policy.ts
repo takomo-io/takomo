@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 export const deployStacksCommandIamPolicy = (): string => `
 # Minimum permissions. Additional permissions are needed to actually 
 # modify resources defined in CloudFormation templates.

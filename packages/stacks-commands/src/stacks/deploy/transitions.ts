@@ -46,9 +46,6 @@ import { waitFailedStackDeleteToComplete } from "./steps/wait-failed-stack-delet
 import { waitStackCreateOrUpdateToComplete } from "./steps/wait-stack-create-or-update-to-complete"
 import { waitStackRollbackToComplete } from "./steps/wait-stack-rollback-to-complete"
 
-/**
- * @hidden
- */
 export interface DeployStackTransitions extends StackOperationTransitions {
   initiateFailedStackDelete: StackOperationStep<CurrentStackHolder>
 
@@ -95,9 +92,6 @@ export interface DeployStackTransitions extends StackOperationTransitions {
   executeAfterDeployHooks: StackOperationStep<StackOperationResultHolder>
 }
 
-/**
- * @hidden
- */
 export const createDeployStackTransitions = (): DeployStackTransitions => ({
   ...defaultStackOperationTransitions,
 
@@ -214,9 +208,6 @@ export const createDeployStackTransitions = (): DeployStackTransitions => ({
   ),
 })
 
-/**
- * @hidden
- */
 export const executeAfterDeployHooksOnError =
   <S extends InitialDeployStackState>(
     step: StackOperationStep<S>,

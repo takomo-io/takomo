@@ -3,9 +3,6 @@ import { TkmLogger } from "@takomo/util"
 import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
 import { DetectDriftInput, DetectDriftOutput } from "./model"
 
-/**
- * @hidden
- */
 export const detectDrift = async (
   ctx: InternalStacksContext,
   input: DetectDriftInput,

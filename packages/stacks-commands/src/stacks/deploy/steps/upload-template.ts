@@ -2,9 +2,6 @@ import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateBodyHolder } from "../states"
 
-/**
- * @hidden
- */
 export const uploadTemplate: StackOperationStep<TemplateBodyHolder> = async (
   state,
 ) => {

@@ -2,9 +2,6 @@ import R from "ramda"
 import { StackOperationStep } from "../../common/steps"
 import { DeleteFailedStackClientTokenHolder } from "../states"
 
-/**
- * @hidden
- */
 export const waitFailedStackDeleteToComplete: StackOperationStep<DeleteFailedStackClientTokenHolder> =
   async (state) => {
     const {

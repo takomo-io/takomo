@@ -2,9 +2,6 @@ import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { ChangeSetHolder } from "../states"
 
-/**
- * @hidden
- */
 export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
   input,
 ) => {

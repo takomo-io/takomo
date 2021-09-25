@@ -6,9 +6,6 @@ import {
 } from "../model"
 import { processDeploymentGroup } from "./deployment-group"
 
-/**
- * @hidden
- */
 export const processOperation = async (
   holder: PlanHolder,
 ): Promise<DeploymentTargetsOperationOutput> => {

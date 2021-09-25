@@ -16,9 +16,6 @@ import { initiateStackDeletion } from "./steps/initiate-stack-delete"
 import { waitDependentsToComplete } from "./steps/wait-dependents-to-complete"
 import { waitStackDeleteToComplete } from "./steps/wait-stack-delete-to-complete"
 
-/**
- * @hidden
- */
 export interface UndeployStackTransitions extends StackOperationTransitions {
   executeBeforeUndeployHooks: StackOperationStep<CurrentStackHolder>
   initiateStackDelete: StackOperationStep<CurrentStackHolder>
@@ -26,9 +23,6 @@ export interface UndeployStackTransitions extends StackOperationTransitions {
   executeAfterUndeployHooks: StackOperationStep<StackOperationResultHolder>
 }
 
-/**
- * @hidden
- */
 export const createUndeployStackTransitions = (): UndeployStackTransitions => ({
   ...defaultStackOperationTransitions,
 
@@ -51,9 +45,6 @@ export const createUndeployStackTransitions = (): UndeployStackTransitions => ({
   start: inProgress("wait-dependents-to-complete", waitDependentsToComplete),
 })
 
-/**
- * @hidden
- */
 export const executeAfterUndeployHooksOnError =
   <S extends InitialUndeployStackState>(
     step: StackOperationStep<S>,

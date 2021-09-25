@@ -11,9 +11,6 @@ import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors"
 import { UndeployStacksIO } from "./model"
 import { StacksUndeployPlan } from "./plan"
 
-/**
- * @hidden
- */
 export const executeUndeployContext = async (
   ctx: InternalStacksContext,
   input: StacksOperationInput,

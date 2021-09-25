@@ -5,9 +5,6 @@ import { StackOperationStep } from "../../common/steps"
 import { StackParameterInfo } from "../model"
 import { TagsHolder } from "../states"
 
-/**
- * @hidden
- */
 export const createVariablesForStackTemplate = (
   variables: StackOperationVariables,
   stack: InternalStack,

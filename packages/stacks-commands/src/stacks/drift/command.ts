@@ -16,9 +16,6 @@ const inputSchema = (ctx: CommandContext): AnySchema => {
   }).unknown(true)
 }
 
-/**
- * @hidden
- */
 export const detectDriftCommand: CommandHandler<
   StacksConfigRepository,
   DetectDriftIO,

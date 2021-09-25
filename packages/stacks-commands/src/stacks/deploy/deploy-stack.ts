@@ -13,9 +13,6 @@ import { DeployStacksIO, DeployState } from "./model"
 import { InitialDeployStackState } from "./states"
 import { createDeployStackTransitions } from "./transitions"
 
-/**
- * @hidden
- */
 export const deployStack = async (
   timer: Timer,
   ctx: InternalStacksContext,

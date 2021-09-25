@@ -4,17 +4,11 @@ import { Choice } from "./cli-io"
 // eslint-disable-next-line
 inquirer.registerPrompt("autocomplete", require("inquirer-autocomplete-prompt"))
 
-/**
- * @hidden
- */
 export interface QuestionOptions {
   validate?: (input: any) => string | boolean
   filter?: (input: any) => any
 }
 
-/**
- * @hidden
- */
 export interface UserActions {
   confirm: (message: string, marginTop: boolean) => Promise<boolean>
   question: (

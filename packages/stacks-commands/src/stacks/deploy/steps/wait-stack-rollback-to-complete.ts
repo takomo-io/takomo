@@ -2,9 +2,6 @@ import R from "ramda"
 import { StackOperationStep } from "../../common/steps"
 import { ContinueStackRollbackClientTokenHolder } from "../states"
 
-/**
- * @hidden
- */
 export const waitStackRollbackToComplete: StackOperationStep<ContinueStackRollbackClientTokenHolder> =
   async (state) => {
     const {

@@ -30,9 +30,6 @@ export const createDeploymentTargetNamePatternMatcher = (
   return ({ name }) => name === pattern
 }
 
-/**
- * @hidden
- */
 export const planDeployment = async (
   holder: InitialHolder,
 ): Promise<DeploymentTargetsOperationOutput> => {

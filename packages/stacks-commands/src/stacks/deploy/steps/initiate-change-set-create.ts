@@ -18,9 +18,6 @@ export const resolveChangeSetType = (
   }
 }
 
-/**
- * @hidden
- */
 export const initiateChangeSetCreate: StackOperationStep<TemplateSummaryHolder> =
   async (state) => {
     const {

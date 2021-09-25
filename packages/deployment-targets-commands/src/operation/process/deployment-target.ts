@@ -30,9 +30,6 @@ const getConfigSetsToProcess = (
   }
 }
 
-/**
- * @hidden
- */
 export const processDeploymentTarget = async (
   holder: PlanHolder,
   group: DeploymentGroupConfig,

@@ -3,9 +3,6 @@ import { toHookOperation, toHookStatus } from "../../common/hooks"
 import { StackOperationStep } from "../../common/steps"
 import { StackOperationResultHolder } from "../states"
 
-/**
- * @hidden
- */
 export const executeAfterDeployHooks: StackOperationStep<StackOperationResultHolder> =
   async (state) => {
     const {

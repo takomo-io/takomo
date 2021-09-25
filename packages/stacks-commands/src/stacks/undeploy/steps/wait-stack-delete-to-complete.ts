@@ -2,9 +2,6 @@ import R from "ramda"
 import { StackOperationStep } from "../../common/steps"
 import { ClientTokenHolder } from "../states"
 
-/**
- * @hidden
- */
 export const waitStackDeleteToComplete: StackOperationStep<ClientTokenHolder> =
   async (state) => {
     const { transitions, stack, currentStack, clientToken, io } = state

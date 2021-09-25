@@ -4,9 +4,6 @@ import { uuid } from "@takomo/util"
 import { StackOperationStep } from "../../common/steps"
 import { UpdateStackHolder } from "../states"
 
-/**
- * @hidden
- */
 export const initiateStackUpdate: StackOperationStep<UpdateStackHolder> =
   async (state) => {
     const {

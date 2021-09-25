@@ -3,9 +3,6 @@ import { TakomoError } from "@takomo/util"
 import { CloudFormation } from "aws-sdk"
 import { StacksUndeployPlan, StackUndeployOperation } from "./plan"
 
-/**
- * @hidden
- */
 export const isStackReadyForUndeploy = (
   stackStatus: CloudFormation.StackStatus,
 ): boolean =>
@@ -66,9 +63,6 @@ const validateTerminationProtection = (
   }
 }
 
-/**
- * @hidden
- */
 export const validateStacksUndeployPlan = async (
   plan: StacksUndeployPlan,
 ): Promise<void> => {

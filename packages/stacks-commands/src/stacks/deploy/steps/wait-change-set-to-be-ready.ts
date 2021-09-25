@@ -85,9 +85,6 @@ const hasStackPolicyChanged = (
   return currentStack?.stackPolicyBody !== stack.stackPolicy
 }
 
-/**
- * @hidden
- */
 export const waitChangeSetToBeReady: StackOperationStep<ChangeSetNameHolder> =
   async (state) => {
     const {

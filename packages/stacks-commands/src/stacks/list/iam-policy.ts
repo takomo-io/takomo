@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 export const listStacksCommandIamPolicy = (): string => `
 Statement: 
   - Sid: Stacks

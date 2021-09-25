@@ -5,9 +5,6 @@ import { Timer } from "@takomo/util"
 import { StacksOperationListener } from "./model"
 import { StackOperationTransitions } from "./transitions"
 
-/**
- * @hidden
- */
 export interface InitialStackOperationState {
   readonly stack: InternalStack
   readonly stackExistedBeforeOperation: boolean
@@ -17,33 +14,21 @@ export interface InitialStackOperationState {
   readonly stacksOperationListener: StacksOperationListener
 }
 
-/**
- * @hidden
- */
 export interface StackOperationFailedState extends InitialStackOperationState {
   readonly message: string
   readonly events: ReadonlyArray<StackEvent>
   readonly error?: Error
 }
 
-/**
- * @hidden
- */
 export interface StackOperationSkippedState extends InitialStackOperationState {
   readonly message: string
 }
 
-/**
- * @hidden
- */
 export interface StackOperationCancelledState
   extends InitialStackOperationState {
   readonly message: string
 }
 
-/**
- * @hidden
- */
 export interface StackOperationCompletedState
   extends InitialStackOperationState {
   readonly message: string

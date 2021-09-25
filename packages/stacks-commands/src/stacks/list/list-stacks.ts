@@ -3,9 +3,6 @@ import { TkmLogger } from "@takomo/util"
 import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
 import { ListStacksInput, ListStacksOutput } from "./model"
 
-/**
- * @hidden
- */
 export const listStacks = async (
   ctx: InternalStacksContext,
   input: ListStacksInput,

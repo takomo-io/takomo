@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 export const detectDriftCommandIamPolicy = (): string => `
 Statement: 
   - Sid: Stacks

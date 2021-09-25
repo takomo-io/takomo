@@ -12,9 +12,6 @@ import {
   StepResult,
 } from "./steps"
 
-/**
- * @hidden
- */
 export interface StackOperationTransitions {
   start: StackOperationStep<any>
   cancelStackOperation: StackOperationStep<StackOperationCancelledState>
@@ -23,9 +20,6 @@ export interface StackOperationTransitions {
   completeStackOperation: StackOperationStep<StackOperationCompletedState>
 }
 
-/**
- * @hidden
- */
 export const inProgress =
   <S extends InitialStackOperationState>(
     stepName: string,
@@ -38,9 +32,6 @@ export const inProgress =
       step,
     })
 
-/**
- * @hidden
- */
 export const defaultStackOperationTransitions = {
   cancelStackOperation: async ({
     message,

@@ -23,9 +23,6 @@ import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus, formatStackEvent } from "../formatters"
 
-/**
- * @hidden
- */
 export const chooseCommandPathInternal = async (
   io: BaseIO,
   rootStackGroup: StackGroup,
@@ -47,9 +44,6 @@ export const chooseCommandPathInternal = async (
   return io.autocomplete("Choose command path", source)
 }
 
-/**
- * @hidden
- */
 export const printFailedStackResults = (
   io: BaseIO,
   failed: ReadonlyArray<StackResult>,
@@ -101,9 +95,6 @@ const toOutputStackResult = (result: StackResult): OutputStackResult => ({
   message: result.message,
 })
 
-/**
- * @hidden
- */
 export const printStacksOperationOutput = (
   io: BaseIO,
   output: StacksOperationOutput,
@@ -179,23 +170,14 @@ export const printStacksOperationOutput = (
   return output
 }
 
-/**
- * @hidden
- */
 export interface IOProps extends BaseIOProps {
   readonly logger: TkmLogger
   readonly hideOutput?: boolean
 }
 
-/**
- * @hidden
- */
 export const formatDate = (d: any): string =>
   d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
 
-/**
- * @hidden
- */
 export const createStacksOperationListenerInternal = (
   logger: TkmLogger,
   operation: string,

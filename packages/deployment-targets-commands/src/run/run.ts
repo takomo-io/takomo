@@ -374,9 +374,6 @@ const convertToOperation =
       return result
     })
 
-/**
- * @hidden
- */
 export const processDeploymentGroup = async (
   props: RunProps,
   group: DeploymentGroupConfig,

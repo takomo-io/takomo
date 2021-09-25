@@ -6,30 +6,18 @@ import {
 import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
 import R from "ramda"
 
-/**
- * @hidden
- */
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
-/**
- * @hidden
- */
 export const resolveUndeployOperationType = (
   currentStack?: CloudFormationStack,
 ): StackUndeployOperationType => (currentStack ? "DELETE" : "SKIP")
 
-/**
- * @hidden
- */
 export interface StackUndeployOperation {
   readonly stack: InternalStack
   readonly type: StackUndeployOperationType
   readonly currentStack?: CloudFormationStack
 }
 
-/**
- * @hidden
- */
 export interface StacksUndeployPlan {
   readonly operations: ReadonlyArray<StackUndeployOperation>
 }
@@ -63,9 +51,6 @@ const collectStackDependents = (
     ])
   }, new Array<StackPath>())
 
-/**
- * @hidden
- */
 export const buildStacksUndeployPlan = async (
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,

@@ -16,9 +16,6 @@ import { TakomoError, TemplateEngine, Timer } from "@takomo/util"
 import { AnySchema } from "joi"
 import { ConfigTree } from "./config/config-tree"
 
-/**
- * @hidden
- */
 export class CommandPathMatchesNoStacksError extends TakomoError {
   constructor(commandPath: CommandPath, availableStackPaths: StackPath[]) {
     const stackPaths = availableStackPaths.map((s) => `  - ${s}`).join("\n")
@@ -66,9 +63,6 @@ const getValue = <T>(defaultValue: T, value?: GetterOrConst<T>): T => {
   return value
 }
 
-/**
- * @hidden
- */
 export class SingleResolverExecutor implements ResolverExecutor {
   readonly #name: ResolverName
   readonly #resolver: Resolver
@@ -115,7 +109,6 @@ export class SingleResolverExecutor implements ResolverExecutor {
 
 /**
  * Wrapper that executes parameter resolver.
- * @hidden
  */
 export class ListResolverExecutor implements ResolverExecutor {
   readonly #name: ResolverName
@@ -179,7 +172,6 @@ export interface StackResult {
 
 /**
  * Wrapper that executes parameter resolver.
- * @hidden
  */
 export interface ResolverExecutor {
   resolve: (input: ResolverInput) => Promise<any>

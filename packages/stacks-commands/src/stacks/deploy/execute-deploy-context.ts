@@ -26,9 +26,6 @@ const confirmDeploy = async (
   return io.confirmDeploy(plan)
 }
 
-/**
- * @hidden
- */
 const executeStacksInParallel = async (
   ctx: InternalStacksContext,
   io: DeployStacksIO,
@@ -89,9 +86,6 @@ const executeStacksInParallel = async (
   }
 }
 
-/**
- * @hidden
- */
 export const executeDeployContext = async (
   ctx: InternalStacksContext,
   input: StacksDeployOperationInput,

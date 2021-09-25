@@ -3,9 +3,6 @@ import { StackOperationStep } from "../../common/steps"
 import { resolveResultMessage } from "../common"
 import { StackOperationClientTokenHolder } from "../states"
 
-/**
- * @hidden
- */
 export const waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperationClientTokenHolder> =
   async (state) => {
     const { stack, clientToken, operationType, io, transitions, stackId } =

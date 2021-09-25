@@ -1,9 +1,6 @@
 import { StackOperationStep } from "../../common/steps"
 import { CurrentStackHolder } from "../states"
 
-/**
- * @hidden
- */
 export const continueUpdateRollback: StackOperationStep<CurrentStackHolder> =
   async (state) => {
     const { transitions, stack, currentStack, logger } = state
