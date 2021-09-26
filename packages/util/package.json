@@ -37,11 +37,11 @@
     "js-yaml": "4.1.0",
     "json-stable-stringify": "1.0.1",
     "lodash.merge": "4.6.2",
+    "p-queue": "6.6.2",
     "pretty-ms": "7.0.1",
     "ramda": "0.27.1",
     "strip-ansi": "6.0.0",
-    "uuid": "8.3.2",
-    "p-queue": "6.6.2"
+    "uuid": "8.3.2"
   },
   "engines": {
     "node": ">=14.4.0"
