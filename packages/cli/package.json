@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli",
-  "version": "3.35.0",
+  "version": "3.35.1",
   "description": "Takomo CLI",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,21 +27,21 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.35.0",
-    "@takomo/aws-model": "3.33.2",
-    "@takomo/cli-io": "3.35.0",
-    "@takomo/config-repository-fs": "3.35.0",
-    "@takomo/config-sets": "3.35.0",
-    "@takomo/core": "3.35.0",
-    "@takomo/deployment-targets-commands": "3.35.0",
-    "@takomo/deployment-targets-model": "3.35.0",
-    "@takomo/iam-commands": "3.35.0",
-    "@takomo/init-command": "3.35.0",
-    "@takomo/organization-commands": "3.35.0",
-    "@takomo/organization-model": "3.33.2",
-    "@takomo/stacks-commands": "3.35.0",
-    "@takomo/stacks-model": "3.35.0",
-    "@takomo/util": "3.33.2",
+    "@takomo/aws-clients": "3.35.1",
+    "@takomo/aws-model": "3.35.1",
+    "@takomo/cli-io": "3.35.1",
+    "@takomo/config-repository-fs": "3.35.1",
+    "@takomo/config-sets": "3.35.1",
+    "@takomo/core": "3.35.1",
+    "@takomo/deployment-targets-commands": "3.35.1",
+    "@takomo/deployment-targets-model": "3.35.1",
+    "@takomo/iam-commands": "3.35.1",
+    "@takomo/init-command": "3.35.1",
+    "@takomo/organization-commands": "3.35.1",
+    "@takomo/organization-model": "3.35.1",
+    "@takomo/stacks-commands": "3.35.1",
+    "@takomo/stacks-model": "3.35.1",
+    "@takomo/util": "3.35.1",
     "aws-sdk": "2.987.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
@@ -53,7 +53,7 @@
     "yargs": "17.0.1"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.33.2"
+    "@takomo/test-unit": "3.35.1"
   },
   "engines": {
     "node": ">=14.4.0"

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.35.1](https://github.com/takomo-io/takomo/compare/v3.35.0...v3.35.1) (2021-09-26)
+
+
+### Bug Fixes
+
+* improve AWS API invocations and concurrency ([#311](https://github.com/takomo-io/takomo/issues/311)) ([d689295](https://github.com/takomo-io/takomo/commit/d689295a9e228b164784237476d71c0e74579ec7))
+
+
+
+
+
 ## [3.33.2](https://github.com/takomo-io/takomo/compare/v3.33.1...v3.33.2) (2021-09-15)
 
 
