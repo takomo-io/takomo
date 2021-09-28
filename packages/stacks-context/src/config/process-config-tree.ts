@@ -24,7 +24,8 @@ import {
 import { buildStack } from "./build-stack"
 import { ConfigTree, StackGroupConfigNode } from "./config-tree"
 import { doCreateStackGroup } from "./create-stack-group"
-class ProcessStatus {
+
+export class ProcessStatus {
   readonly #stackGroups = new Map<StackGroupPath, StackGroup>()
   readonly #stacks = new Map<StackPath, InternalStack>()
   readonly #newStacks = new Map<StackPath, InternalStack>()
@@ -156,6 +157,7 @@ const processStackGroupConfigNode = async (
         stack,
         status.getStackGroup(node.path),
         commandPath,
+        status,
       ),
     ),
   )
