@@ -1,7 +1,7 @@
 import { StackName } from "@takomo/aws-model"
 import { CloudFormationStackSummary } from "@takomo/aws-model/src/cloudformation"
 import { getStackNames, InternalStack } from "@takomo/stacks-model"
-import { checksum, TkmLogger } from "@takomo/util"
+import { arrayToMap, checksum, TkmLogger } from "@takomo/util"
 import R from "ramda"
 
 const makeCredentialsRegionHash = ({
@@ -38,5 +38,7 @@ export const loadCurrentCfStacks = async (
     }),
   )
 
-  return pairs.flat()
+  const pairsByPath = arrayToMap(pairs.flat(), (p) => p.stack.path)
+
+  return stacks.map((stack) => pairsByPath.get(stack.path)!)
 }
