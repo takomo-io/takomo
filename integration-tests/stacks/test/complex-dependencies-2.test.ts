@@ -1,4 +1,3 @@
-import { makeStackName } from "@takomo/stacks-context/dist/config/make-stack-name"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
@@ -50,9 +49,12 @@ const stacks = [
   "/e/eu-west-1/a-22.yml/eu-west-1",
   "/e/eu-west-1/a-12.yml/eu-west-1",
   "/e/eu-west-1/a-23.yml/eu-west-1",
-].map((stackPath) => ({ stackName: makeStackName(stackPath), stackPath }))
+].map((stackPath) => ({
+  stackName: stackPath.split(".")[0].substr(1).replace(/\//g, "-"),
+  stackPath,
+}))
 
-describe("Complex dependencies", () => {
+describe("Complex dependencies 2", () => {
   test("Deploy", () =>
     executeDeployStacksCommand({
       projectDir,
