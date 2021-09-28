@@ -1,3 +1,4 @@
+import { getStackPaths, InternalStack } from "@takomo/stacks-model"
 import { sortStacksForDeploy } from "../../src/dependencies"
 import { createStack } from "../helpers"
 
@@ -349,5 +350,548 @@ describe("#sortStacksForDeploy", () => {
       euWestO.path,
       euWestN.path,
     ])
+  })
+
+  test("when super complex dependency graph is given", () => {
+    const allStacks = new Array<InternalStack>()
+
+    const e_eu_north_1_a_1_eu_north_1 = createStack(
+      {
+        name: "e_eu_north_1_a_1_eu_north_1",
+        path: "/e/eu-north-1/a-1.yml/eu-north-1",
+        dependencies: ["/e/eu-north-1/a-3.yml/eu-north-1"],
+      },
+      allStacks,
+    )
+
+    const e_eu_north_1_a_2_eu_north_1 = createStack(
+      {
+        name: "e_eu_north_1_a_2_eu_north_1",
+        path: "/e/eu-north-1/a-2.yml/eu-north-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_eu_north_1_a_3_eu_north_1 = createStack(
+      {
+        name: "e_eu_north_1_a_3_eu_north_1",
+        path: "/e/eu-north-1/a-3.yml/eu-north-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_eu_north_1_a_4_eu_north_1 = createStack(
+      {
+        name: "e_eu_north_1_a_4_eu_north_1",
+        path: "/e/eu-north-1/a-4.yml/eu-north-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_eu_north_1_a_5_eu_north_1 = createStack(
+      {
+        name: "e_eu_north_1_a_5_eu_north_1",
+        path: "/e/eu-north-1/a-5.yml/eu-north-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_6_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_6_eu_west_1",
+        path: "/e/eu-west-1/a-6.yml/eu-west-1",
+        dependencies: [
+          "/e/us-east-1/a-d.yml/us-east-1",
+          "/e/eu-west-1/a-c.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_7_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_7_eu_west_1",
+        path: "/e/eu-west-1/a-7.yml/eu-west-1",
+        dependencies: ["/e/eu-west-1/a-8.yml/eu-west-1"],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_8_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_8_eu_west_1",
+        path: "/e/eu-west-1/a-8.yml/eu-west-1",
+        dependencies: ["/e/us-east-1/a-c.yml/us-east-1"],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_9_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_9_eu_west_1",
+        path: "/e/eu-west-1/a-9.yml/eu-west-1",
+        dependencies: ["/e/eu-west-1/a-7.yml/eu-west-1"],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_c_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_c_eu_west_1",
+        path: "/e/eu-west-1/a-c.yml/eu-west-1",
+        dependencies: ["/e/us-east-1/a-d.yml/us-east-1"],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_2_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_2_eu_west_1",
+        path: "/e/eu-west-1/a-2.yml/eu-west-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_12_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_12_eu_west_1",
+        path: "/e/eu-west-1/a-12.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-14.yml/eu-west-1",
+          "/e/eu-west-1/a-22.yml/eu-west-1",
+          "/e/eu-west-1/a-15.yml/eu-west-1",
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_13_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_13_eu_west_1",
+        path: "/e/eu-west-1/a-13.yml/eu-west-1",
+        dependencies: ["/e/eu-west-1/a-3.yml/eu-west-1"],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_14_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_14_eu_west_1",
+        path: "/e/eu-west-1/a-14.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-19.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_15_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_15_eu_west_1",
+        path: "/e/eu-west-1/a-15.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+          "/e/us-east-1/a-32.yml/us-east-1",
+          "/e/eu-west-1/a-30.yml/eu-west-1",
+          "/e/eu-west-1/a-18.yml/eu-west-1",
+          "/e/eu-west-1/a-13.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_16_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_16_eu_west_1",
+        path: "/e/eu-west-1/a-16.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-15.yml/eu-west-1",
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_17_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_17_eu_west_1",
+        path: "/e/eu-west-1/a-17.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/eu-west-1/a-14.yml/eu-west-1",
+          "/e/eu-west-1/a-18.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_18_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_18_eu_west_1",
+        path: "/e/eu-west-1/a-18.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-7.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_19_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_19_eu_west_1",
+        path: "/e/eu-west-1/a-19.yml/eu-west-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_20_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_20_eu_west_1",
+        path: "/e/eu-west-1/a-20.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-19.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+          "/e/eu-west-1/a-15.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_3_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_3_eu_west_1",
+        path: "/e/eu-west-1/a-3.yml/eu-west-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_22_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_22_eu_west_1",
+        path: "/e/eu-west-1/a-22.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-19.yml/eu-west-1",
+          "/e/us-east-1/a-32.yml/us-east-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+          "/e/eu-west-1/a-30.yml/eu-west-1",
+          "/e/eu-west-1/a-18.yml/eu-west-1",
+          "/e/eu-west-1/a-20.yml/eu-west-1",
+          "/e/eu-west-1/a-14.yml/eu-west-1",
+          "/e/eu-west-1/a-13.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_23_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_23_eu_west_1",
+        path: "/e/eu-west-1/a-23.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-22.yml/eu-west-1",
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_24_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_24_eu_west_1",
+        path: "/e/eu-west-1/a-24.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/eu-west-1/a-18.yml/eu-west-1",
+          "/e/eu-west-1/a-25.yml/eu-west-1",
+          "/e/eu-west-1/a-19.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_25_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_25_eu_west_1",
+        path: "/e/eu-west-1/a-25.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/us-east-1/a-d.yml/us-east-1",
+          "/e/us-east-1/a-c.yml/us-east-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_26_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_26_eu_west_1",
+        path: "/e/eu-west-1/a-26.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-7.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/us-east-1/a-d.yml/us-east-1",
+          "/e/eu-west-1/a-c.yml/eu-west-1",
+          "/e/eu-west-1/a-5.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_34_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_34_eu_west_1",
+        path: "/e/eu-west-1/a-34.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/us-east-1/a-d.yml/us-east-1",
+          "/e/eu-west-1/a-c.yml/eu-west-1",
+          "/e/eu-west-1/a-5.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_27_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_27_eu_west_1",
+        path: "/e/eu-west-1/a-27.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/us-east-1/a-d.yml/us-east-1",
+          "/e/eu-west-1/a-c.yml/eu-west-1",
+          "/e/eu-west-1/a-5.yml/eu-west-1",
+          "/e/eu-west-1/a-26.yml/eu-west-1",
+          "/e/eu-west-1/a-34.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_28_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_28_eu_west_1",
+        path: "/e/eu-west-1/a-28.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-7.yml/eu-west-1",
+          "/e/eu-west-1/a-19.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+          "/e/eu-west-1/a-30.yml/eu-west-1",
+          "/e/eu-west-1/a-18.yml/eu-west-1",
+          "/e/eu-west-1/a-13.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_29_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_29_eu_west_1",
+        path: "/e/eu-west-1/a-29.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-3.yml/eu-west-1",
+          "/e/eu-west-1/a-14.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_30_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_30_eu_west_1",
+        path: "/e/eu-west-1/a-30.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-7.yml/eu-west-1",
+          "/e/eu-west-1/a-6.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_eu_west_1_a_5_eu_west_1 = createStack(
+      {
+        name: "e_eu_west_1_a_5_eu_west_1",
+        path: "/e/eu-west-1/a-5.yml/eu-west-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_us_east_1_a_c_us_east_1 = createStack(
+      {
+        name: "e_us_east_1_a_c_us_east_1",
+        path: "/e/us-east-1/a-c.yml/us-east-1",
+        dependencies: ["/e/us-east-1/a-d.yml/us-east-1"],
+      },
+      allStacks,
+    )
+
+    const e_us_east_1_a_2_us_east_1 = createStack(
+      {
+        name: "e_us_east_1_a_2_us_east_1",
+        path: "/e/us-east-1/a-2.yml/us-east-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_us_east_1_a_d_us_east_1 = createStack(
+      {
+        name: "e_us_east_1_a_d_us_east_1",
+        path: "/e/us-east-1/a-d.yml/us-east-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const e_us_east_1_a_32_us_east_1 = createStack(
+      {
+        name: "e_us_east_1_a_32_us_east_1",
+        path: "/e/us-east-1/a-32.yml/us-east-1",
+        dependencies: [
+          "/e/eu-west-1/a-8.yml/eu-west-1",
+          "/e/eu-west-1/a-19.yml/eu-west-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const e_us_east_1_a_5_us_east_1 = createStack(
+      {
+        name: "e_us_east_1_a_5_us_east_1",
+        path: "/e/us-east-1/a-5.yml/us-east-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const x_eu_west_1_a_2_eu_west_1 = createStack(
+      {
+        name: "x_eu_west_1_a_2_eu_west_1",
+        path: "/x/eu-west-1/a-2.yml/eu-west-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const x_eu_west_1_a_33_eu_west_1 = createStack(
+      {
+        name: "x_eu_west_1_a_33_eu_west_1",
+        path: "/x/eu-west-1/a-33.yml/eu-west-1",
+        dependencies: [
+          "/e/eu-west-1/a-9.yml/eu-west-1",
+          "/x/us-east-1/a-32.yml/us-east-1",
+          "/x/us-east-1/a-d.yml/us-east-1",
+          "/x/us-east-1/a-c.yml/us-east-1",
+        ],
+      },
+      allStacks,
+    )
+
+    const x_us_east_1_a_c_us_east_1 = createStack(
+      {
+        name: "x_us_east_1_a_c_us_east_1",
+        path: "/x/us-east-1/a-c.yml/us-east-1",
+        dependencies: ["/x/us-east-1/a-d.yml/us-east-1"],
+      },
+      allStacks,
+    )
+
+    const x_us_east_1_a_2_us_east_1 = createStack(
+      {
+        name: "x_us_east_1_a_2_us_east_1",
+        path: "/x/us-east-1/a-2.yml/us-east-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const x_us_east_1_a_d_us_east_1 = createStack(
+      {
+        name: "x_us_east_1_a_d_us_east_1",
+        path: "/x/us-east-1/a-d.yml/us-east-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const x_us_east_1_a_32_us_east_1 = createStack(
+      {
+        name: "x_us_east_1_a_32_us_east_1",
+        path: "/x/us-east-1/a-32.yml/us-east-1",
+        dependencies: [],
+      },
+      allStacks,
+    )
+
+    const sorted = getStackPaths(sortStacksForDeploy(allStacks))
+    const expected = getStackPaths([
+      e_eu_north_1_a_2_eu_north_1,
+      e_eu_north_1_a_3_eu_north_1,
+      e_eu_north_1_a_4_eu_north_1,
+      e_eu_north_1_a_5_eu_north_1,
+      e_eu_west_1_a_19_eu_west_1,
+      e_eu_west_1_a_2_eu_west_1,
+      e_eu_west_1_a_3_eu_west_1,
+      e_eu_west_1_a_5_eu_west_1,
+      e_us_east_1_a_2_us_east_1,
+      e_us_east_1_a_5_us_east_1,
+      e_us_east_1_a_d_us_east_1,
+      x_eu_west_1_a_2_eu_west_1,
+      x_us_east_1_a_2_us_east_1,
+      x_us_east_1_a_32_us_east_1,
+      x_us_east_1_a_d_us_east_1,
+      e_eu_north_1_a_1_eu_north_1,
+      e_eu_west_1_a_13_eu_west_1,
+      e_eu_west_1_a_c_eu_west_1,
+      e_us_east_1_a_c_us_east_1,
+      x_us_east_1_a_c_us_east_1,
+      e_eu_west_1_a_6_eu_west_1,
+      e_eu_west_1_a_8_eu_west_1,
+      e_eu_west_1_a_14_eu_west_1,
+      e_eu_west_1_a_25_eu_west_1,
+      e_eu_west_1_a_34_eu_west_1,
+      e_eu_west_1_a_7_eu_west_1,
+      e_us_east_1_a_32_us_east_1,
+      e_eu_west_1_a_18_eu_west_1,
+      e_eu_west_1_a_26_eu_west_1,
+      e_eu_west_1_a_29_eu_west_1,
+      e_eu_west_1_a_30_eu_west_1,
+      e_eu_west_1_a_9_eu_west_1,
+      e_eu_west_1_a_15_eu_west_1,
+      e_eu_west_1_a_17_eu_west_1,
+      e_eu_west_1_a_24_eu_west_1,
+      e_eu_west_1_a_27_eu_west_1,
+      e_eu_west_1_a_28_eu_west_1,
+      x_eu_west_1_a_33_eu_west_1,
+      e_eu_west_1_a_16_eu_west_1,
+      e_eu_west_1_a_20_eu_west_1,
+      e_eu_west_1_a_22_eu_west_1,
+      e_eu_west_1_a_12_eu_west_1,
+      e_eu_west_1_a_23_eu_west_1,
+    ])
+
+    expect(sorted).toStrictEqual(expected)
   })
 })
