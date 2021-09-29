@@ -1,0 +1,5 @@
+regions: eu-west-1
+template: t.yml
+depends:
+  - /e/us-east-1/a-d.yml/us-east-1
+  - /e/eu-west-1/a-c.yml/eu-west-1

@@ -1,0 +1,13 @@
+regions: eu-west-1
+template: t.yml
+depends:
+  - /e/eu-west-1/a-8.yml/eu-west-1
+  - /e/eu-west-1/a-19.yml/eu-west-1
+  - /e/us-east-1/a-32.yml/us-east-1
+  - /e/eu-west-1/a-6.yml/eu-west-1
+  - /e/eu-west-1/a-3.yml/eu-west-1
+  - /e/eu-west-1/a-30.yml/eu-west-1
+  - /e/eu-west-1/a-18.yml/eu-west-1
+  - /e/eu-west-1/a-20.yml/eu-west-1
+  - /e/eu-west-1/a-14.yml/eu-west-1
+  - /e/eu-west-1/a-13.yml/eu-west-1

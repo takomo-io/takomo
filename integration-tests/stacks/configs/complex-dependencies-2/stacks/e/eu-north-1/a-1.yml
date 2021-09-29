@@ -1,0 +1,4 @@
+regions: eu-north-1
+template: t.yml
+depends:
+  - /e/eu-north-1/a-3.yml/eu-north-1

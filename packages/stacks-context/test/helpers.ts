@@ -45,8 +45,11 @@ export interface TestStackProps {
   dependents?: StackPath[]
 }
 
-export const createStack = (props: TestStackProps): InternalStack => {
-  return {
+export const createStack = (
+  props: TestStackProps,
+  allStacks?: Array<InternalStack>,
+): InternalStack => {
+  const stack = {
     path: props.path,
     name: props.name,
     dependencies: props.dependencies ?? [],
@@ -100,4 +103,10 @@ export const createStack = (props: TestStackProps): InternalStack => {
     credentialManager: mock<CredentialManager>(),
     getCurrentCloudFormationStack: jest.fn(),
   }
+
+  if (allStacks) {
+    allStacks.push(stack)
+  }
+
+  return stack
 }

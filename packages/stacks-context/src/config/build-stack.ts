@@ -33,6 +33,7 @@ import { initializeHooks } from "./hooks"
 import { makeStackName } from "./make-stack-name"
 import { mergeStackSchemas } from "./merge-stack-schemas"
 import { buildParameters } from "./parameters"
+import { ProcessStatus } from "./process-config-tree"
 
 const buildTemplate = (
   stackPath: StackPath,
@@ -111,6 +112,7 @@ export const buildStack = async (
   node: StackConfigNode,
   stackGroup: StackGroup,
   commandPath: CommandPath,
+  status: ProcessStatus,
 ): Promise<InternalStack[]> => {
   const { stackName } = createAwsSchemas({ regions: ctx.regions })
 
@@ -195,6 +197,7 @@ export const buildStack = async (
       .filter((region) =>
         isWithinCommandPath(commandPath, `${stackPath}/${region}`),
       )
+      .filter((region) => !status.isStackProcessed(`${stackPath}/${region}`))
       .map(async (region) => {
         const exactPath = `${stackPath}/${region}`
         const stackLogger = logger.childLogger(exactPath)
