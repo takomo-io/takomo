@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.35.2](https://github.com/takomo-io/takomo/compare/v3.35.1...v3.35.2) (2021-09-29)
+
+
+### Bug Fixes
+
+* fix stacks deployment order ([#313](https://github.com/takomo-io/takomo/issues/313)) ([76c9232](https://github.com/takomo-io/takomo/commit/76c92322965a0e9cf08277ebbfef515d69f6daa6))
+
+
+
+
+
 ## [3.35.1](https://github.com/takomo-io/takomo/compare/v3.35.0...v3.35.1) (2021-09-26)
 
 **Note:** Version bump only for package integration-test-stacks
