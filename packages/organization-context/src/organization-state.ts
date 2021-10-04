@@ -58,6 +58,10 @@ export class OrganizationState {
     this.#props = props
   }
 
+  get organization(): Organization {
+    return this.#props.organization
+  }
+
   get enabledPolicies(): ReadonlyArray<OrganizationPolicyType> {
     return this.#props.enabledPolicies.slice()
   }
