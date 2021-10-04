@@ -64,6 +64,7 @@ export const createOrganizationSchemas = (
     name: Joi.string(),
     email: Joi.string().email(),
     accountAdminRoleName: organizationRoleName,
+    accountBootstrapRoleName: organizationRoleName,
     configSets: [
       Joi.array().items(configSetName, configSetInstruction),
       configSetName,
@@ -157,6 +158,7 @@ export const createOrganizationSchemas = (
   const organizationalUnit = Joi.object({
     vars,
     accountAdminRoleName: organizationRoleName,
+    accountBootstrapRoleName: organizationRoleName,
     status: Joi.string().valid("active", "disabled"),
     priority: Joi.number().integer().min(0),
     configSets: [

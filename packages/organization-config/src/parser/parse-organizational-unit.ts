@@ -173,8 +173,8 @@ export const parseOrganizationalUnit = async ({
         inheritedConfigSets: configSets.slice(),
         inheritedBootstrapConfigSets: bootstrapConfigSets.slice(),
         inheritedVars: vars,
-        inheritedAccountAdminRoleName,
-        inheritedAccountBootstrapRoleName,
+        inheritedAccountAdminRoleName: accountAdminRoleName,
+        inheritedAccountBootstrapRoleName: accountBootstrapRoleName,
       }),
     ),
   )
@@ -191,8 +191,8 @@ export const parseOrganizationalUnit = async ({
     inheritedAiServicesOptOutPolicies: aiServicesOptOutPolicies,
     inheritedBackupPolicies: backupPolicies,
     inheritedVars: vars,
-    inheritedAccountAdminRoleName,
-    inheritedAccountBootstrapRoleName,
+    inheritedAccountAdminRoleName: accountAdminRoleName,
+    inheritedAccountBootstrapRoleName: accountBootstrapRoleName,
   })
 
   return {

@@ -39,7 +39,8 @@ export const buildOrganizationContext = async (
       credentialManager,
     )
 
-  const credentials = await credentialManager.getCredentials()
+  const credentials = await organizationAdminCredentialManager.getCredentials()
+
   const client = ctx.awsClientProvider.createOrganizationsClient({
     credentials,
     region: "us-east-1",

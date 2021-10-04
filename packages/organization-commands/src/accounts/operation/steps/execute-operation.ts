@@ -4,6 +4,7 @@ import { InternalCommandContext, OutputFormat } from "@takomo/core"
 import {
   OrganizationConfigRepository,
   OrganizationContext,
+  OrganizationState,
 } from "@takomo/organization-context"
 import {
   deployStacksCommand,
@@ -60,6 +61,7 @@ interface CreateExecutorProps {
   readonly operation: DeploymentOperation
   readonly ctx: OrganizationContext
   readonly io: AccountsOperationIO
+  readonly organizationState: OrganizationState
 }
 
 const createExecutor = ({
@@ -68,6 +70,7 @@ const createExecutor = ({
   operation,
   ctx,
   io,
+  organizationState,
 }: CreateExecutorProps) => {
   return async ({
     timer,
@@ -107,10 +110,16 @@ const createExecutor = ({
           configSet.legacy,
         )
 
+      const { id, arn } = organizationState.organization
+
       const variables = {
         env: ctx.variables.env,
         var: deepCopy(target.vars),
         context: ctx.variables.context,
+        organization: {
+          id,
+          arn,
+        },
       }
 
       const credentialManager =
@@ -158,6 +167,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
       totalTimer,
       transitions,
       configRepository,
+      organizationState,
     } = state
 
     const executor = createExecutor({
@@ -166,6 +176,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
       ctx,
       operation,
       io,
+      organizationState,
     })
 
     const result = await executePlan({

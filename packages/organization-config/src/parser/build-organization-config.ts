@@ -105,7 +105,7 @@ export const buildOrganizationConfig = async (
     DEFAULT_ORGANIZATION_ROLE_NAME,
   )
   const accountBootstrapRoleName = parseString(
-    record.accountBootstrapAdminRoleName,
+    record.accountBootstrapRoleName,
     DEFAULT_ORGANIZATION_ROLE_NAME,
   )
 
