@@ -21,7 +21,7 @@ import {
   StacksOperationOutput,
 } from "@takomo/stacks-commands"
 import { StackPath, StackResult } from "@takomo/stacks-model"
-import { prettyPrintJson } from "@takomo/util"
+import { prettyPrintJson, toPrettyJson } from "@takomo/util"
 import { CloudFormation, Credentials } from "aws-sdk"
 import { aws } from "../aws-api"
 
@@ -83,6 +83,14 @@ export interface ExpectDeployedCfStackProps {
   expectedDescription?: string
 }
 
+export interface ExpectDeployedCfStackPropsV2 {
+  stackPath: StackPath
+  tags?: Record<TagKey, TagValue>
+  outputs?: Record<StackOutputKey, StackOutputValue>
+  description?: string
+  stackPolicy?: StackPolicyBody
+}
+
 export interface StackResultsMatcher {
   expectStackResult: (props: ExpectStackResultProps) => StackResultsMatcher
   expectSuccessStackResult: (
@@ -115,14 +123,21 @@ export interface StackResultsMatcher {
   expectDeployedCfStack: (
     props: ExpectDeployedCfStackProps,
   ) => StackResultsMatcher
+  expectDeployedCfStackV2: (
+    props: ExpectDeployedCfStackPropsV2,
+  ) => StackResultsMatcher
   assert: () => Promise<StacksOperationOutput>
 }
+
+type DeployedCfStackAssertion = (
+  output: StacksOperationOutput,
+) => Promise<() => void>
 
 const createStackResultsMatcher = (
   executor: () => Promise<StacksOperationOutput>,
   outputAssertions: (output: StacksOperationOutput) => void,
   stackAssertions: ((stackResult: StackResult) => boolean)[] = [],
-  deployedCfStackAssertions: (() => Promise<() => void>)[] = [],
+  deployedCfStackAssertions: DeployedCfStackAssertion[] = [],
 ): StackResultsMatcher => {
   const expectStackResult = ({
     stackPath,
@@ -285,6 +300,97 @@ const createStackResultsMatcher = (
       message: "Stack update failed",
     })
 
+  const expectDeployedCfStackV2 = ({
+    stackPath,
+    outputs,
+    tags,
+    description,
+    stackPolicy,
+  }: ExpectDeployedCfStackPropsV2): StackResultsMatcher => {
+    const deployedStackMatcher: DeployedCfStackAssertion = async (
+      output: StacksOperationOutput,
+    ): Promise<() => void> => {
+      const actualStackResult = output.results.find(
+        (r) => r.stack.path === stackPath,
+      )
+      if (!actualStackResult) {
+        throw new Error(
+          `Expected to found result for a stack with '${stackPath}'`,
+        )
+      }
+
+      const { name, region, credentials } = actualStackResult.stack
+
+      const { accountId } =
+        await actualStackResult.stack.credentialManager.getCallerIdentity()
+
+      const params = {
+        region,
+        credentials,
+        stackName: name,
+        iamRoleArn: `arn:aws:iam::${accountId}:role/OrganizationAccountAccessRole`,
+      }
+
+      const [stack, actualStackPolicy]: [any, any] = await Promise.all([
+        aws.cloudFormation.describeStack(params),
+        aws.cloudFormation.getStackPolicy(params),
+      ])
+
+      if (!stack) {
+        throw new Error(
+          `Could not find a stack with params:\n\n${toPrettyJson(params)}`,
+        )
+      }
+
+      return () => {
+        if (description) {
+          expect(stack["Description"]).toStrictEqual(description)
+        }
+
+        if (tags) {
+          const actual = stack["Tags"]!.reduce(
+            (collected: any, tag: any) => ({
+              ...collected,
+              [tag.Key!]: tag.Value!,
+            }),
+            {},
+          )
+
+          expect(actual).toStrictEqual(tags)
+        }
+
+        if (outputs) {
+          const actual = stack["Outputs"]!.reduce(
+            (collected: any, o: any) => ({
+              ...collected,
+              [o.OutputKey!]: o.OutputValue!,
+            }),
+            {},
+          )
+
+          expect(actual).toStrictEqual(outputs)
+        }
+
+        if (stackPolicy) {
+          const prettyExpectedStackPolicy = prettyPrintJson(stackPolicy)
+          const prettyActualStackPolicy = actualStackPolicy
+            ? prettyPrintJson(stackPolicy)
+            : undefined
+
+          expect(prettyActualStackPolicy).toStrictEqual(
+            prettyExpectedStackPolicy,
+          )
+        }
+      }
+    }
+    return createStackResultsMatcher(
+      executor,
+      outputAssertions,
+      stackAssertions,
+      [...deployedCfStackAssertions, deployedStackMatcher],
+    )
+  }
+
   const expectDeployedCfStack = ({
     stackName,
     credentials,
@@ -297,7 +403,7 @@ const createStackResultsMatcher = (
     expectedDescription,
     expectedStackPolicy,
   }: ExpectDeployedCfStackProps): StackResultsMatcher => {
-    const deployedStackMatcher = async (): Promise<() => void> => {
+    const deployedStackMatcher: DeployedCfStackAssertion = async () => {
       const params = {
         stackName,
         region,
@@ -379,7 +485,7 @@ const createStackResultsMatcher = (
     })
 
     const deployedCfStackMatchers = await Promise.all(
-      deployedCfStackAssertions.map(async (r) => r()),
+      deployedCfStackAssertions.map(async (r) => r(output)),
     )
 
     deployedCfStackMatchers.forEach((r) => r())
@@ -400,6 +506,7 @@ const createStackResultsMatcher = (
     expectStackDeleteSuccess,
     expectFailureStackResult,
     expectDeployedCfStack,
+    expectDeployedCfStackV2,
   }
 }
 
