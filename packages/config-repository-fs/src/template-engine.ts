@@ -9,12 +9,14 @@ import {
 import readdirp from "readdirp"
 
 export const loadTemplateHelpers = async (
-  helpersDir: FilePath,
+  helpersDirs: ReadonlyArray<FilePath>,
   logger: TkmLogger,
   te: TemplateEngine,
-) => {
-  if (await dirExists(helpersDir)) {
-    logger.debug(`Found helpers dir: ${helpersDir}`)
+): Promise<void> => {
+  for (const helpersDir of helpersDirs) {
+    if (!(await dirExists(helpersDir))) {
+      throw new TakomoError(`Helpers dir ${helpersDir} does not exists`)
+    }
 
     const helperFiles = await readdirp.promise(helpersDir, {
       alwaysStat: true,
@@ -38,8 +40,6 @@ export const loadTemplateHelpers = async (
       logger.debug(`Register helper: ${helper.name}`)
       te.registerHelper(helper.name, helper.fn)
     }
-  } else {
-    logger.debug("Helpers dir not found")
   }
 }
 

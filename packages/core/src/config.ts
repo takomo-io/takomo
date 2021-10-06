@@ -77,6 +77,7 @@ export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly helpers: ReadonlyArray<ExternalHandlebarsHelperConfig>
   readonly features: Features
   readonly varFiles: ReadonlyArray<FilePath>
+  readonly helpersDir: ReadonlyArray<FilePath>
 }
 
 /**

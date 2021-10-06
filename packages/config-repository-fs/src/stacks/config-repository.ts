@@ -9,6 +9,8 @@ import { ROOT_STACK_GROUP_PATH, SchemaRegistry } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   createTemplateEngine,
+  dirExists,
+  expandFilePath,
   FilePath,
   readFileContents,
   renderTemplate,
@@ -79,8 +81,17 @@ export const createFileSystemStacksConfigRepository = async ({
     templateEngine.registerHelper(helperWithName.name, helperWithName.fn)
   })
 
+  const defaultHelpersDirExists = await dirExists(helpersDir)
+  const additionalHelpersDirs = ctx.projectConfig.helpersDir.map((d) =>
+    expandFilePath(ctx.projectDir, d),
+  )
+
+  const helpersDirs = defaultHelpersDirExists
+    ? [helpersDir, ...additionalHelpersDirs]
+    : additionalHelpersDirs
+
   await Promise.all([
-    loadTemplateHelpers(helpersDir, logger, templateEngine),
+    loadTemplateHelpers(helpersDirs, logger, templateEngine),
     loadTemplatePartials(partialsDir, logger, templateEngine),
   ])
 

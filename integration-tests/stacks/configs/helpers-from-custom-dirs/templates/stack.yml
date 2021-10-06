@@ -1,0 +1,4 @@
+Description: {{ code }} {{ other }}
+Resources:
+  LG:
+    Type: AWS::Logs::LogGroup
