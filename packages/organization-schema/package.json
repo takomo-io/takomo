@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-schema",
-  "version": "3.35.2",
+  "version": "3.36.0",
   "description": "Takomo Organization Schema",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,8 +29,8 @@
   "dependencies": {
     "@takomo/aws-model": "3.35.1",
     "@takomo/aws-schema": "3.35.1",
-    "@takomo/config-sets": "3.35.2",
-    "@takomo/core": "3.35.1",
+    "@takomo/config-sets": "3.36.0",
+    "@takomo/core": "3.36.0",
     "joi": "17.4.0"
   },
   "devDependencies": {

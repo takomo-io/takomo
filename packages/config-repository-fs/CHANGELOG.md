@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.36.0](https://github.com/takomo-io/takomo/compare/v3.35.2...v3.36.0) (2021-10-06)
+
+
+### Features
+
+* **stacks:** load helpers from a custom directories ([#315](https://github.com/takomo-io/takomo/issues/315)) ([9a8a968](https://github.com/takomo-io/takomo/commit/9a8a96884a46d3534bd237ec10bf8793b1091383)), closes [#276](https://github.com/takomo-io/takomo/issues/276)
+
+
+
+
+
 ## [3.35.2](https://github.com/takomo-io/takomo/compare/v3.35.1...v3.35.2) (2021-09-29)
 
 **Note:** Version bump only for package @takomo/config-repository-fs

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.36.0](https://github.com/takomo-io/takomo/compare/v3.35.2...v3.36.0) (2021-10-06)
+
+
+### Bug Fixes
+
+* **organizations:** fix parsing of organization config ([#314](https://github.com/takomo-io/takomo/issues/314)) ([e911431](https://github.com/takomo-io/takomo/commit/e911431a2ffbb90515c2b99152bbdf9000e729eb))
+
+
+
+
+
 ## [3.35.2](https://github.com/takomo-io/takomo/compare/v3.35.1...v3.35.2) (2021-09-29)
 
 **Note:** Version bump only for package @takomo/organization-commands
