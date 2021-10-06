@@ -133,12 +133,14 @@ export const parseProjectConfigFile = async (
     ...overrideFeatures,
   }
   const varFiles = parseStringArray(parsedFile.varFiles)
+  const helpersDir = parseStringArray(parsedFile.helpersDir)
 
   return {
     regions,
     requiredVersion,
     resolvers,
     helpers,
+    helpersDir,
     features,
     varFiles,
     organization: parsedFile.organization,
@@ -192,6 +194,7 @@ export const takomoProjectConfigFileSchema = Joi.object({
   regions: Joi.array().items(Joi.string()).unique(),
   resolvers: Joi.array().items(Joi.string(), externalResolver),
   helpers: Joi.array().items(Joi.string(), externalHandlebarsHelper),
+  helpersDir: [Joi.string(), Joi.array().items(Joi.string())],
   varFiles,
   features,
 })
@@ -205,6 +208,7 @@ export const loadProjectConfig = async (
       regions: DEFAULT_REGIONS.slice(),
       resolvers: [],
       helpers: [],
+      helpersDir: [],
       varFiles: [],
       features: { ...defaultFeatures(), ...overrideFeatures },
     }
