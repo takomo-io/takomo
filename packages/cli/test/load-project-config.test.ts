@@ -1,14 +1,19 @@
-import { defaultFeatures } from "@takomo/core"
+import { defaultFeatures, InternalTakomoProjectConfig } from "@takomo/core"
 import { FilePath } from "@takomo/util"
-import { parseProjectConfigFile } from "../src/config"
+import { join } from "path"
+import { loadProjectConfig } from "../src/config"
 import { DEFAULT_REGIONS } from "../src/constants"
 
-const doParseProjectConfigFile = (pathToFile: FilePath): any =>
-  parseProjectConfigFile(`${process.cwd()}/test/${pathToFile}`, {})
+const projectDir = `${process.cwd()}/test`
 
-describe("#parseProjectConfigFile", () => {
+const doLoadProjectConfig = (
+  pathToFile: FilePath,
+): Promise<InternalTakomoProjectConfig> =>
+  loadProjectConfig(projectDir, `${process.cwd()}/test/${pathToFile}`, {})
+
+describe("#loadProjectConfig", () => {
   test("with empty file", async () => {
-    const config = await doParseProjectConfigFile("project-config-01.yml")
+    const config = await doLoadProjectConfig("project-config-01.yml")
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
@@ -23,7 +28,7 @@ describe("#parseProjectConfigFile", () => {
   })
 
   test("with a single region", async () => {
-    const config = await doParseProjectConfigFile("project-config-02.yml")
+    const config = await doLoadProjectConfig("project-config-02.yml")
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
@@ -38,7 +43,7 @@ describe("#parseProjectConfigFile", () => {
   })
 
   test("with multiple regions", async () => {
-    const config = await doParseProjectConfigFile("project-config-03.yml")
+    const config = await doLoadProjectConfig("project-config-03.yml")
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
@@ -53,7 +58,7 @@ describe("#parseProjectConfigFile", () => {
   })
 
   test("with resolvers", async () => {
-    const config = await doParseProjectConfigFile("project-config-04.yml")
+    const config = await doLoadProjectConfig("project-config-04.yml")
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
@@ -80,7 +85,7 @@ describe("#parseProjectConfigFile", () => {
   })
 
   test("with helpers", async () => {
-    const config = await doParseProjectConfigFile("project-config-05.yml")
+    const config = await doLoadProjectConfig("project-config-05.yml")
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
@@ -107,7 +112,7 @@ describe("#parseProjectConfigFile", () => {
   })
 
   test("with var files", async () => {
-    const config = await doParseProjectConfigFile("project-config-06.yml")
+    const config = await doLoadProjectConfig("project-config-06.yml")
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
@@ -116,13 +121,13 @@ describe("#parseProjectConfigFile", () => {
       resolvers: [],
       helpers: [],
       helpersDir: [],
-      varFiles: ["file1.json", "file2.yml"],
+      varFiles: [join(projectDir, "file1.json"), join(projectDir, "file2.yml")],
       features: defaultFeatures(),
     })
   })
 
   test("with helper dirs", async () => {
-    const config = await doParseProjectConfigFile("project-config-07.yml")
+    const config = await doLoadProjectConfig("project-config-07.yml")
     expect(config).toStrictEqual({
       requiredVersion: undefined,
       organization: undefined,
@@ -131,6 +136,21 @@ describe("#parseProjectConfigFile", () => {
       resolvers: [],
       helpers: [],
       helpersDir: ["/tmp/custom"],
+      varFiles: [],
+      features: defaultFeatures(),
+    })
+  })
+
+  test("with extends", async () => {
+    const config = await doLoadProjectConfig("project-config-08.yml")
+    expect(config).toStrictEqual({
+      requiredVersion: ">1.0.0",
+      organization: undefined,
+      deploymentTargets: undefined,
+      regions: ["eu-central-1", "eu-west-1", "us-east-1"],
+      resolvers: [],
+      helpers: [],
+      helpersDir: [join(projectDir, "my-helpers")],
       varFiles: [],
       features: defaultFeatures(),
     })
