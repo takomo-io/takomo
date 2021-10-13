@@ -146,12 +146,12 @@ export const parseProjectConfigItem = (
     resolvers: mergeArrays({
       first: parentConfig.resolvers,
       second: resolvers,
-      equals: (a, b) => a.package === b.package,
+      equals: (a, b) => a.package === b.package && a.name === b.name,
     }),
     helpers: mergeArrays({
       first: parentConfig.helpers,
       second: helpers,
-      equals: (a, b) => a.package === b.package,
+      equals: (a, b) => a.package === b.package && a.name === b.name,
     }),
     helpersDir: mergeArrays({
       first: parentConfig.helpersDir,
