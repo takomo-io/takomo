@@ -78,3 +78,39 @@ export const findNonUniques = <Primitive>(
   R.uniq(
     items.filter((item) => items.filter((i) => i === item).length > 1),
   ).sort()
+
+interface MergeArraysProps<T> {
+  readonly first: ReadonlyArray<T>
+  readonly second: ReadonlyArray<T>
+  readonly equals?: (a: T, b: T) => boolean
+  readonly allowDuplicates?: boolean
+}
+
+/**
+ * @hidden
+ */
+export const mergeArrays = <T>({
+  first,
+  second,
+  equals = R.equals,
+  allowDuplicates = false,
+}: MergeArraysProps<T>): ReadonlyArray<T> => {
+  const merged = [...first, ...second]
+  if (allowDuplicates) {
+    return merged
+  }
+
+  return merged.reduce((collected, current) => {
+    const eq = (a: T) => equals(a, current)
+    if (collected.some(eq)) {
+      return collected
+    }
+
+    const lastDuplicate = R.findLast(eq, merged)
+    if (!lastDuplicate) {
+      throw new Error("Expected an item to be found")
+    }
+
+    return [...collected, lastDuplicate]
+  }, new Array<T>())
+}

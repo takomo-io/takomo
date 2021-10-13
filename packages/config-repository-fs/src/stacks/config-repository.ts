@@ -10,7 +10,6 @@ import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   createTemplateEngine,
   dirExists,
-  expandFilePath,
   FilePath,
   readFileContents,
   renderTemplate,
@@ -82,9 +81,7 @@ export const createFileSystemStacksConfigRepository = async ({
   })
 
   const defaultHelpersDirExists = await dirExists(helpersDir)
-  const additionalHelpersDirs = ctx.projectConfig.helpersDir.map((d) =>
-    expandFilePath(ctx.projectDir, d),
-  )
+  const additionalHelpersDirs = ctx.projectConfig.helpersDir
 
   const helpersDirs = defaultHelpersDirExists
     ? [helpersDir, ...additionalHelpersDirs]

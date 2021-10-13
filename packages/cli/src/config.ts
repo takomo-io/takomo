@@ -1,3 +1,4 @@
+import { Region } from "@takomo/aws-model"
 import {
   createCommonSchema,
   defaultFeatures,
@@ -8,13 +9,15 @@ import {
   parseStringArray,
 } from "@takomo/core"
 import {
+  expandFilePath,
   fileExists,
   FilePath,
-  parseYaml,
-  readFileContents,
+  mergeArrays,
+  parseYamlFile,
   TakomoError,
 } from "@takomo/util"
 import Joi from "joi"
+import R from "ramda"
 import semver from "semver"
 import { DEFAULT_REGIONS } from "./constants"
 
@@ -82,6 +85,12 @@ export const parseExternalHandlebarsHelpers = (
   return value.map(parseExternalHandlebarsHelper)
 }
 
+const parseFilePaths = (
+  projectDir: FilePath,
+  value: unknown,
+): ReadonlyArray<FilePath> =>
+  parseStringArray(value).map((f) => expandFilePath(projectDir, f))
+
 export const parseExternalResolvers = (
   value: any,
 ): ReadonlyArray<ExternalResolverConfig> => {
@@ -105,47 +114,101 @@ export const parseFeatures = (value: any): Features => {
   return { ...defaults, ...value }
 }
 
-export const parseProjectConfigFile = async (
-  path: FilePath,
-  overrideFeatures: Partial<Features>,
-): Promise<InternalTakomoProjectConfig> => {
-  const contents = await readFileContents(path)
-  const parsedFile = (await parseYaml(path, contents)) ?? {}
+interface ConfigFileItem {
+  readonly absolutePath: FilePath
+  readonly contents: any
+}
 
-  const { error } = takomoProjectConfigFileSchema.validate(parsedFile, {
+export const parseProjectConfigItem = (
+  projectDir: FilePath,
+  { absolutePath, contents }: ConfigFileItem,
+  parentConfig: InternalTakomoProjectConfig,
+): InternalTakomoProjectConfig => {
+  const { error } = takomoProjectConfigFileSchema.validate(contents, {
     abortEarly: false,
   })
   if (error) {
     const details = error.details.map((d) => `  - ${d.message}`).join("\n")
     throw new TakomoError(
-      `${error.details.length} validation error(s) in project config file ${path}:\n\n${details}`,
+      `${error.details.length} validation error(s) in project config file ${absolutePath}:\n\n${details}`,
     )
   }
 
-  const requiredVersion = parsedFile.requiredVersion
-  validateRequiredVersion(path, requiredVersion)
-
-  const regions = parsedFile.regions ?? DEFAULT_REGIONS
-  const resolvers = parseExternalResolvers(parsedFile.resolvers)
-  const helpers = parseExternalHandlebarsHelpers(parsedFile.helpers)
-  const features = {
-    ...parseFeatures(parsedFile.features),
-    ...overrideFeatures,
-  }
-  const varFiles = parseStringArray(parsedFile.varFiles)
-  const helpersDir = parseStringArray(parsedFile.helpersDir)
+  const regions = contents.regions ?? []
+  const resolvers = parseExternalResolvers(contents.resolvers)
+  const helpers = parseExternalHandlebarsHelpers(contents.helpers)
+  const features = parseFeatures(contents.features)
+  const varFiles = parseFilePaths(projectDir, contents.varFiles)
+  const helpersDir = parseFilePaths(projectDir, contents.helpersDir)
 
   return {
-    regions,
-    requiredVersion,
-    resolvers,
-    helpers,
-    helpersDir,
-    features,
-    varFiles,
-    organization: parsedFile.organization,
-    deploymentTargets: parsedFile.deploymentTargets,
+    regions: mergeArrays({ first: parentConfig.regions, second: regions }),
+    resolvers: mergeArrays({
+      first: parentConfig.resolvers,
+      second: resolvers,
+      equals: (a, b) => a.package === b.package && a.name === b.name,
+    }),
+    helpers: mergeArrays({
+      first: parentConfig.helpers,
+      second: helpers,
+      equals: (a, b) => a.package === b.package && a.name === b.name,
+    }),
+    helpersDir: mergeArrays({
+      first: parentConfig.helpersDir,
+      second: helpersDir,
+    }),
+    features: { ...parentConfig.features, ...features },
+    varFiles: mergeArrays({ first: parentConfig.varFiles, second: varFiles }),
+    requiredVersion: contents.requiredVersion ?? parentConfig.requiredVersion,
+    organization: contents.organization ?? parentConfig.organization,
+    deploymentTargets:
+      contents.deploymentTargets ?? parentConfig.deploymentTargets,
   }
+}
+
+export const collectProjectConfigFileHierarchy = async (
+  projectDir: FilePath,
+  pathConfigFile: FilePath,
+  collected: ReadonlyArray<ConfigFileItem> = [],
+  referencingConfigFilePath?: FilePath,
+): Promise<ReadonlyArray<ConfigFileItem>> => {
+  const absolutePath = expandFilePath(projectDir, pathConfigFile)
+
+  if (collected.some((i) => i.absolutePath === absolutePath)) {
+    const filePaths = collected.map((p) => p.absolutePath).join(" -> ")
+    throw new TakomoError(
+      `Circular inheritance of project config files detected: ${filePaths} -> ${absolutePath}`,
+    )
+  }
+
+  if (!(await fileExists(absolutePath))) {
+    if (referencingConfigFilePath) {
+      throw new TakomoError(
+        `Project config file ${absolutePath} not found. It's referenced in file ${referencingConfigFilePath}`,
+      )
+    } else {
+      throw new TakomoError(`Project config file ${absolutePath} not found`)
+    }
+  }
+
+  const contents = (await parseYamlFile(absolutePath)) ?? {}
+  const pair = { absolutePath, contents }
+  if (!contents.extends) {
+    return [...collected, pair]
+  }
+
+  if (typeof contents.extends !== "string") {
+    throw new TakomoError(
+      `Expected property 'extends' to be a string in file ${absolutePath}`,
+    )
+  }
+
+  return collectProjectConfigFileHierarchy(
+    projectDir,
+    contents.extends,
+    [...collected, pair],
+    absolutePath,
+  )
 }
 
 const { variableName } = createCommonSchema()
@@ -184,6 +247,7 @@ const features = Joi.object({
 const varFiles = [Joi.string(), Joi.array().items(Joi.string())]
 
 export const takomoProjectConfigFileSchema = Joi.object({
+  extends: Joi.string(),
   requiredVersion: Joi.string(),
   organization: Joi.object({
     repository: accountRepository,
@@ -199,20 +263,81 @@ export const takomoProjectConfigFileSchema = Joi.object({
   features,
 })
 
+const createDefaultProjectConfig = (
+  regions: ReadonlyArray<Region>,
+): InternalTakomoProjectConfig => ({
+  regions,
+  resolvers: [],
+  helpers: [],
+  helpersDir: [],
+  varFiles: [],
+  features: defaultFeatures(),
+})
+
+const parseProjectConfigFiles = async (
+  projectDir: FilePath,
+  [currentItem, ...rest]: ReadonlyArray<ConfigFileItem>,
+  projectConfig: InternalTakomoProjectConfig,
+): Promise<InternalTakomoProjectConfig> => {
+  if (!currentItem) {
+    return projectConfig
+  }
+
+  const updatedProjectConfig = parseProjectConfigItem(
+    projectDir,
+    currentItem,
+    projectConfig,
+  )
+
+  return parseProjectConfigFiles(projectDir, rest, updatedProjectConfig)
+}
+
 export const loadProjectConfig = async (
+  projectDir: FilePath,
   pathConfigFile: FilePath,
   overrideFeatures: Partial<Features>,
 ): Promise<InternalTakomoProjectConfig> => {
   if (!(await fileExists(pathConfigFile))) {
-    return {
-      regions: DEFAULT_REGIONS.slice(),
-      resolvers: [],
-      helpers: [],
-      helpersDir: [],
-      varFiles: [],
-      features: { ...defaultFeatures(), ...overrideFeatures },
-    }
+    return createDefaultProjectConfig(DEFAULT_REGIONS.slice())
   }
 
-  return parseProjectConfigFile(pathConfigFile, overrideFeatures)
+  const projectConfigItems = await collectProjectConfigFileHierarchy(
+    projectDir,
+    pathConfigFile,
+  )
+
+  const projectConfig = await parseProjectConfigFiles(
+    projectDir,
+    projectConfigItems.slice().reverse(),
+    createDefaultProjectConfig([]),
+  )
+
+  validateRequiredVersion(pathConfigFile, projectConfig.requiredVersion)
+
+  const setOverrideFeatures = (
+    cfg: InternalTakomoProjectConfig,
+  ): InternalTakomoProjectConfig => ({
+    ...cfg,
+    features: Object.entries(overrideFeatures).reduce(
+      (collected, [key, value]) => {
+        return {
+          ...collected,
+          [key]: value,
+        }
+      },
+      cfg.features,
+    ),
+  })
+
+  const setDefaultRegionsIfNeeded = (
+    cfg: InternalTakomoProjectConfig,
+  ): InternalTakomoProjectConfig =>
+    cfg.regions.length === 0
+      ? {
+          ...cfg,
+          regions: DEFAULT_REGIONS.slice(),
+        }
+      : cfg
+
+  return R.pipe(setDefaultRegionsIfNeeded, setOverrideFeatures)(projectConfig)
 }

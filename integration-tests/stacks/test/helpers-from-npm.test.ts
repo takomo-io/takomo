@@ -17,13 +17,9 @@ describe("Helpers from npm", () => {
           stackName,
           stackPath,
         })
-        .expectDeployedCfStack({
-          stackName,
-          accountId,
-          credentials,
-          region: "eu-north-1",
-          roleName: "OrganizationAccountAccessRole",
-          expectedTags: {
+        .expectDeployedCfStackV2({
+          stackPath,
+          tags: {
             Tag1: "ONE",
             Tag2: "two",
             Tag3: "THREE",

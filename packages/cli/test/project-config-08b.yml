@@ -1,0 +1,3 @@
+extends: project-config-08c.yml
+regions:
+  - eu-central-1

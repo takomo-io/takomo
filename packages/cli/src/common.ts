@@ -217,6 +217,7 @@ export const parseVariables = async (
   }
 }
 
+// TODO: Use expandFilePath
 const resolveProjectDir = (projectDirArg: any): string => {
   if (projectDirArg) {
     const projectDir = projectDirArg.toString()
@@ -361,6 +362,7 @@ export const initCommandContext = async (
   const overrideFeatures = parseFeaturesFromArgs(argv.feature)
 
   const projectConfig = await loadProjectConfig(
+    projectDir,
     filePaths.projectConfigFile,
     overrideFeatures,
   )
