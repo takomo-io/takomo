@@ -45,7 +45,7 @@
     "aws-sdk": "2.987.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
-    "easy-table": "1.1.1",
+    "easy-table": "1.2.0",
     "inquirer": "8.1.2",
     "joi": "17.4.0",
     "ramda": "0.27.1",

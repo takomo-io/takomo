@@ -46,7 +46,7 @@
     "@takomo/stacks-resolvers": "3.36.0",
     "@takomo/stacks-schema": "3.36.0",
     "@takomo/util": "3.35.1",
-    "easy-table": "1.1.1",
+    "easy-table": "1.2.0",
     "ramda": "0.27.1",
     "readdirp": "3.5.0",
     "ts-dedent": "2.0.0"
