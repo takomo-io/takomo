@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.37.0](https://github.com/takomo-io/takomo/compare/v3.36.0...v3.37.0) (2021-10-14)
+
+**Note:** Version bump only for package @takomo/init-command
+
+
+
+
+
 # [3.36.0](https://github.com/takomo-io/takomo/compare/v3.35.2...v3.36.0) (2021-10-06)
 
 **Note:** Version bump only for package @takomo/init-command

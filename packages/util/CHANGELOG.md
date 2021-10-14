@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.37.0](https://github.com/takomo-io/takomo/compare/v3.36.0...v3.37.0) (2021-10-14)
+
+
+### Features
+
+* make it possible to extend the project configuration file from another file ([#318](https://github.com/takomo-io/takomo/issues/318)) ([13d5172](https://github.com/takomo-io/takomo/commit/13d51726ed6889a2ba1245bd9fa53b94dc9dd862)), closes [#316](https://github.com/takomo-io/takomo/issues/316)
+
+
+
+
+
 ## [3.35.1](https://github.com/takomo-io/takomo/compare/v3.35.0...v3.35.1) (2021-09-26)
 
 
