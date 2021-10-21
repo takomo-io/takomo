@@ -40,22 +40,22 @@ describe("Creating stack fails", () => {
 
   test(
     "Create stack fails",
-    withSingleAccountReservation(async ({ accountId }) => {
-      return executeDeployStacksCommand({
+    withSingleAccountReservation(({ accountId }) =>
+      executeDeployStacksCommand({
         projectDir,
         commandPath: "/stack.yml",
         var: [`commandRole=arn:aws:iam::${accountId}:role/${roleName}`],
       })
         .expectCommandToFail("Failed")
         .expectStackCreateFail(stack)
-        .assert()
-    }),
+        .assert(),
+    ),
   )
 
   test(
     "Create stack succeeds with role that has enough permissions",
-    withSingleAccountReservation(async ({ accountId }) => {
-      return executeDeployStacksCommand({
+    withSingleAccountReservation(({ accountId }) =>
+      executeDeployStacksCommand({
         projectDir,
         commandPath: "/stack.yml",
         var: [
@@ -64,7 +64,7 @@ describe("Creating stack fails", () => {
       })
         .expectCommandToSucceed()
         .expectStackCreateSuccess(stack)
-        .assert()
-    }),
+        .assert(),
+    ),
   )
 })

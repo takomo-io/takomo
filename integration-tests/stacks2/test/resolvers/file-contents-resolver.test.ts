@@ -1,7 +1,4 @@
-import {
-  executeDeployStacksCommand,
-  withSingleAccountReservation,
-} from "@takomo/test-integration"
+import { executeDeployStacksCommand } from "@takomo/test-integration"
 
 const projectDir = "configs/resolvers/file-contents"
 const stack = {
@@ -19,56 +16,30 @@ describe("File contents resolver", () => {
       })
       .assert())
 
-  test(
-    "Deploy",
-    withSingleAccountReservation(({ credentials, accountId }) =>
-      executeDeployStacksCommand({ projectDir, var: ["file=name.txt"] })
-        .expectCommandToSucceed()
-        .expectStackCreateSuccess(stack)
-        .expectDeployedCfStack({
-          ...stack,
-          credentials,
-          accountId,
-          region: "eu-west-1",
-          roleName: "OrganizationAccountAccessRole",
-          expected: {
-            Outputs: [
-              {
-                OutputKey: "Name",
-                OutputValue: "VpcLogs",
-              },
-            ],
-          },
-        })
-        .assert(),
-    ),
-  )
-
-  test(
-    "Deploy with file from a subdir",
-    withSingleAccountReservation(({ credentials, accountId }) =>
-      executeDeployStacksCommand({
-        projectDir,
-        var: ["file=dir/name2.txt"],
+  test("Deploy", () =>
+    executeDeployStacksCommand({ projectDir, var: ["file=name.txt"] })
+      .expectCommandToSucceed()
+      .expectStackCreateSuccess(stack)
+      .expectDeployedCfStackV2({
+        ...stack,
+        outputs: {
+          Name: "VpcLogs",
+        },
       })
-        .expectCommandToSucceed()
-        .expectStackUpdateSuccess(stack)
-        .expectDeployedCfStack({
-          ...stack,
-          credentials,
-          accountId,
-          region: "eu-west-1",
-          roleName: "OrganizationAccountAccessRole",
-          expected: {
-            Outputs: [
-              {
-                OutputKey: "Name",
-                OutputValue: "Zorro",
-              },
-            ],
-          },
-        })
-        .assert(),
-    ),
-  )
+      .assert())
+
+  test("Deploy with file from a subdir", () =>
+    executeDeployStacksCommand({
+      projectDir,
+      var: ["file=dir/name2.txt"],
+    })
+      .expectCommandToSucceed()
+      .expectStackUpdateSuccess(stack)
+      .expectDeployedCfStackV2({
+        ...stack,
+        outputs: {
+          Name: "Zorro",
+        },
+      })
+      .assert())
 })

@@ -29,7 +29,7 @@ describe("Cmd hook that exposes stack credentials", () => {
 
   test(
     "Deploy with exposing credentials succeeds",
-    withSingleAccountReservation(({ accountId, credentials }) =>
+    withSingleAccountReservation(({ accountId }) =>
       executeDeployStacksCommand({
         projectDir,
         var: ["exposeStackCredentials=true"],
@@ -39,15 +39,9 @@ describe("Cmd hook that exposes stack credentials", () => {
           stackName: "hooks",
           stackPath: "/hooks.yml/eu-central-1",
         })
-        .expectDeployedCfStack({
+        .expectDeployedCfStackV2({
           ...stack,
-          credentials,
-          accountId,
-          region: "eu-central-1",
-          roleName: "OrganizationAccountAccessRole",
-          expected: {
-            Description: `hook1=${accountId}`,
-          },
+          description: `hook1=${accountId}`,
         })
         .assert(),
     ),
