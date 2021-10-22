@@ -1,7 +1,4 @@
-import {
-  executeDeployStacksCommand,
-  withSingleAccountReservation,
-} from "@takomo/test-integration"
+import { executeDeployStacksCommand } from "@takomo/test-integration"
 
 const projectDir = "configs/resolvers/cmd"
 const stack = {
@@ -10,27 +7,17 @@ const stack = {
 }
 
 describe("Command resolver", () => {
-  test(
-    "Deploy",
-    withSingleAccountReservation(({ accountId, credentials }) =>
-      executeDeployStacksCommand({ projectDir })
-        .expectCommandToSucceed()
-        .expectStackCreateSuccess(stack)
-        .expectDeployedCfStack({
-          ...stack,
-          credentials,
-          accountId,
-          region: "eu-west-1",
-          roleName: "OrganizationAccountAccessRole",
-          expected: {
-            Outputs: [
-              { OutputKey: "LastLine", OutputValue: "line 6" },
-              { OutputKey: "ConfidentialParamValue", OutputValue: "hello" },
-              { OutputKey: "NonConfidentialParamValue", OutputValue: "world" },
-            ],
-          },
-        })
-        .assert(),
-    ),
-  )
+  test("Deploy", () =>
+    executeDeployStacksCommand({ projectDir })
+      .expectCommandToSucceed()
+      .expectStackCreateSuccess(stack)
+      .expectDeployedCfStackV2({
+        ...stack,
+        outputs: {
+          LastLine: "line 6",
+          ConfidentialParamValue: "hello",
+          NonConfidentialParamValue: "world",
+        },
+      })
+      .assert())
 })

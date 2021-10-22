@@ -121,19 +121,15 @@ describe("Stack policy", () => {
     ),
   )
 
-  test(
-    "Undeploy",
-    withSingleAccountReservation(({ accountId, credentials }) =>
-      executeUndeployStacksCommand({
-        projectDir,
-        var: ["retentionDays=1"],
+  test("Undeploy", () =>
+    executeUndeployStacksCommand({
+      projectDir,
+      var: ["retentionDays=1"],
+    })
+      .expectCommandToSucceed()
+      .expectStackDeleteSuccess({
+        stackPath,
+        stackName,
       })
-        .expectCommandToSucceed()
-        .expectStackDeleteSuccess({
-          stackPath,
-          stackName,
-        })
-        .assert(),
-    ),
-  )
+      .assert())
 })
