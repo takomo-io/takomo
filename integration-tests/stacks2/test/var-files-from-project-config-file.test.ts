@@ -7,11 +7,12 @@ describe("Variable files from project configuration", () => {
   test("Deploy", () =>
     executeDeployStacksCommand({ projectDir })
       .expectCommandToSucceed()
-      .expectStackCreateSuccess(stack)
-      .expectDeployedCfStackV2({
+      .expectStackCreateSuccess({
         ...stack,
-        tags: {
-          Code: "1234",
+        expectDeployedStack: {
+          tags: {
+            Code: "1234",
+          },
         },
       })
       .assert())

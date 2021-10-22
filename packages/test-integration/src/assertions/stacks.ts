@@ -33,6 +33,7 @@ export interface ExpectStackResultProps {
   readonly message: string
   readonly errorMessage?: string
   readonly errorMessageToContain?: string
+  readonly expectDeployedStack?: Omit<ExpectDeployedCfStackPropsV2, "stackPath">
 }
 
 export type ExpectSuccessStackResultProps = Omit<
@@ -147,6 +148,7 @@ const createStackResultsMatcher = (
     message,
     errorMessage,
     errorMessageToContain,
+    expectDeployedStack,
   }: ExpectStackResultProps): StackResultsMatcher => {
     const stackResultMatcher = (stackResult: StackResult): boolean => {
       if (stackResult.stack.path !== stackPath) {
@@ -173,11 +175,25 @@ const createStackResultsMatcher = (
       return true
     }
 
+    if (!expectDeployedStack) {
+      return createStackResultsMatcher(
+        executor,
+        outputAssertions,
+        [...stackAssertions, stackResultMatcher],
+        deployedCfStackAssertions,
+      )
+    }
+
+    const deployedStackMatcher = createDeployedCfStackAssertion({
+      stackPath,
+      ...expectDeployedStack,
+    })
+
     return createStackResultsMatcher(
       executor,
       outputAssertions,
       [...stackAssertions, stackResultMatcher],
-      deployedCfStackAssertions,
+      [...deployedCfStackAssertions, deployedStackMatcher],
     )
   }
 
@@ -300,13 +316,13 @@ const createStackResultsMatcher = (
       message: "Stack update failed",
     })
 
-  const expectDeployedCfStackV2 = ({
+  const createDeployedCfStackAssertion = ({
     stackPath,
     outputs,
     tags,
     description,
     stackPolicy,
-  }: ExpectDeployedCfStackPropsV2): StackResultsMatcher => {
+  }: ExpectDeployedCfStackPropsV2) => {
     const deployedStackMatcher: DeployedCfStackAssertion = async (
       output: StacksOperationOutput,
     ): Promise<() => void> => {
@@ -383,6 +399,15 @@ const createStackResultsMatcher = (
         }
       }
     }
+
+    return deployedStackMatcher
+  }
+
+  const expectDeployedCfStackV2 = (
+    props: ExpectDeployedCfStackPropsV2,
+  ): StackResultsMatcher => {
+    const deployedStackMatcher = createDeployedCfStackAssertion(props)
+
     return createStackResultsMatcher(
       executor,
       outputAssertions,
