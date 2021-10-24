@@ -1,4 +1,9 @@
-import { AccountId, IamRoleArn, OrganizationAccount } from "@takomo/aws-model"
+import {
+  AccountId,
+  IamRoleArn,
+  makeIamRoleArn,
+  OrganizationAccount,
+} from "@takomo/aws-model"
 import {
   ConfigSetName,
   ConfigSetType,
@@ -139,9 +144,9 @@ export const createAccountsPlan = async ({
   const getExecutionRoleArn = (a: OrganizationAccountConfig): IamRoleArn => {
     switch (configSetType) {
       case "bootstrap":
-        return `arn:aws:iam::${a.id}:role/${a.accountBootstrapRoleName}`
+        return makeIamRoleArn(a.id, a.accountBootstrapRoleName)
       case "standard":
-        return `arn:aws:iam::${a.id}:role/${a.accountAdminRoleName}`
+        return makeIamRoleArn(a.id, a.accountAdminRoleName)
       default:
         throw new Error(`Unsupported config set type: ${configSetType}`)
     }

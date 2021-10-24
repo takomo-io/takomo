@@ -1,10 +1,6 @@
-import {
-  DeploymentGroupConfig,
-  DeploymentTargetConfig,
-} from "@takomo/deployment-targets-config"
+import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
 import { DeploymentTargetNamePattern } from "@takomo/deployment-targets-model"
-import { collectFromHierarchy, TakomoError } from "@takomo/util"
-import R from "ramda"
+import { createDeploymentPlan } from "../common/plan"
 import { confirmOperation } from "./confirm"
 import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"
 
@@ -33,139 +29,20 @@ export const createDeploymentTargetNamePatternMatcher = (
 export const planDeployment = async (
   holder: InitialHolder,
 ): Promise<DeploymentTargetsOperationOutput> => {
-  const {
+  const { ctx, io, input, timer } = holder
+
+  const plan = await createDeploymentPlan({
     ctx,
-    io,
-    timer,
-    input: {
-      groups,
-      targets,
-      excludeTargets,
-      labels,
-      excludeLabels,
-      configSetType,
-      configSetName,
-      commandPath,
-      outputFormat,
-    },
-  } = holder
+    logger: io,
+    targetsSelectionCriteria: input,
+  })
 
-  if (groups.length > 0) {
-    groups.forEach((groupPath) => {
-      if (!ctx.hasDeploymentGroup(groupPath)) {
-        throw new TakomoError(`Deployment group '${groupPath}' not found`)
-      }
-    })
-  }
-
-  if (commandPath && !configSetName) {
-    throw new TakomoError(
-      "If you provide command path, you must provide config set, too",
-    )
-  }
-
-  if (configSetName) {
-    if (!ctx.hasConfigSet(configSetName)) {
-      throw new TakomoError(`Config set '${configSetName}' not found`)
-    }
-  }
-
-  const deploymentGroupsToLaunch =
-    groups.length === 0
-      ? ctx.rootDeploymentGroups
-      : groups.reduce((collected, path) => {
-          return [...collected, ctx.getDeploymentGroup(path)]
-        }, new Array<DeploymentGroupConfig>())
-
-  const sortGroups = (
-    a: DeploymentGroupConfig,
-    b: DeploymentGroupConfig,
-  ): number => {
-    const order = a.priority - b.priority
-    return order !== 0 ? order : a.name.localeCompare(b.name)
-  }
-
-  const groupsToLaunch: DeploymentGroupConfig[] = deploymentGroupsToLaunch
-    .map((ou) =>
-      collectFromHierarchy(ou, (o) => o.children, {
-        sortSiblings: sortGroups,
-        filter: (o) => o.status === "active",
-      }),
-    )
-    .flat()
-
-  const uniqueGroupsToLaunch = R.uniqBy(R.prop("path"), groupsToLaunch).filter(
-    (o) => o.status === "active",
-  )
-
-  const hasConfigSets = (target: DeploymentTargetConfig): boolean => {
-    switch (configSetType) {
-      case "standard":
-        return target.configSets.length > 0
-      case "bootstrap":
-        return target.bootstrapConfigSets.length > 0
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
-
-  const targetNameMatchers = targets.map(
-    createDeploymentTargetNamePatternMatcher,
-  )
-
-  const excludeTargetNameMatchers = excludeTargets.map(
-    createDeploymentTargetNamePatternMatcher,
-  )
-
-  const targetNameMatches = (target: DeploymentTargetConfig): boolean =>
-    (targetNameMatchers.length === 0 ||
-      targetNameMatchers.some((m) => m(target))) &&
-    (excludeTargetNameMatchers.length === 0 ||
-      !excludeTargetNameMatchers.some((m) => m(target)))
-
-  const labelMatches = (target: DeploymentTargetConfig): boolean =>
-    (labels.length === 0 || target.labels.some((l) => labels.includes(l))) &&
-    (excludeLabels.length === 0 ||
-      !target.labels.some((l) => excludeLabels.includes(l)))
-
-  const configSetNameMatches = (target: DeploymentTargetConfig): boolean => {
-    if (configSetName === undefined) {
-      return true
-    }
-    switch (configSetType) {
-      case "standard":
-        return target.configSets.includes(configSetName)
-      case "bootstrap":
-        return target.bootstrapConfigSets.includes(configSetName)
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
-
-  const grs = uniqueGroupsToLaunch
-    .map((ou) => {
-      return {
-        ...ou,
-        targets: ou.targets.filter(
-          (a) =>
-            a.status === "active" &&
-            hasConfigSets(a) &&
-            targetNameMatches(a) &&
-            labelMatches(a) &&
-            configSetNameMatches(a),
-        ),
-      }
-    })
-    .filter((ou) => ou.targets.length > 0)
-
-  const hasChanges = grs.length > 0
-
-  if (!hasChanges) {
+  if (plan.stages.length === 0) {
     timer.stop()
     io.info("No targets to deploy")
     return {
       timer,
-      outputFormat,
+      outputFormat: input.outputFormat,
       results: [],
       success: true,
       status: "SKIPPED",
@@ -173,21 +50,8 @@ export const planDeployment = async (
     }
   }
 
-  const selectedTargets = grs.map((g) => g.targets).flat()
-
-  const plan = {
-    configSetType,
-    groups: grs,
-    hasChanges,
-    configSetName,
-    commandPath,
-  }
-
-  const listener = io.createDeploymentTargetsListener(selectedTargets.length)
-
   return confirmOperation({
     ...holder,
     plan,
-    listener,
   })
 }

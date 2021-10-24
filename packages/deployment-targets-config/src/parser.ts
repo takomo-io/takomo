@@ -1,11 +1,16 @@
+import { IamRoleName } from "@takomo/aws-model"
 import {
   ConfigSet,
+  ConfigSetInstruction,
   ConfigSetName,
+  mergeConfigSetInstructions,
   mergeConfigSets,
+  parseConfigSetInstructions,
   parseConfigSets,
 } from "@takomo/config-sets"
 import {
   CommandContext,
+  CommandRole,
   parseCommandRole,
   parseStringArray,
   parseVars,
@@ -91,24 +96,40 @@ const parseTargetSchemas = (value: unknown): ReadonlyArray<SchemaConfig> => {
 const parseDeploymentTarget = (
   value: any,
   inheritedVars: Vars,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedLabels: ReadonlyArray<Label>,
+  inheritedDeploymentRole: CommandRole | undefined,
+  inheritedDeploymentRoleName: IamRoleName | undefined,
+  inheritedBootstrapRole: CommandRole | undefined,
+  inheritedBootstrapRoleName: IamRoleName | undefined,
 ): DeploymentTargetConfig => {
-  const configuredConfigSets = parseStringArray(value.configSets)
-  const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
+  const configuredConfigSets = parseConfigSetInstructions(value.configSets)
+  const configSets = mergeConfigSetInstructions(
+    configuredConfigSets,
+    inheritedConfigSets,
+  )
 
-  const configuredBootstrapConfigSets = parseStringArray(
+  const configuredBootstrapConfigSets = parseConfigSetInstructions(
     value.bootstrapConfigSets,
   )
-  const bootstrapConfigSets = R.uniq([
-    ...inheritedBootstrapConfigSets,
-    ...configuredBootstrapConfigSets,
-  ])
+  const bootstrapConfigSets = mergeConfigSetInstructions(
+    configuredBootstrapConfigSets,
+    inheritedBootstrapConfigSets,
+  )
 
   const configuredLabels = parseStringArray(value.labels)
   const labels = R.uniq([...inheritedLabels, ...configuredLabels])
   const vars = deepCopy({ ...inheritedVars, ...parseVars(value.vars) })
+
+  const deploymentRole =
+    parseCommandRole(value.deploymentRole) ?? inheritedDeploymentRole
+  const bootstrapRole =
+    parseCommandRole(value.bootstrapRole) ?? inheritedBootstrapRole
+  const deploymentRoleName =
+    value.deploymentRoleName ?? inheritedDeploymentRoleName
+  const bootstrapRoleName =
+    value.bootstrapRoleName ?? inheritedBootstrapRoleName
 
   return {
     configSets,
@@ -118,10 +139,10 @@ const parseDeploymentTarget = (
     name: value.name,
     description: value.description,
     accountId: value.accountId,
-    deploymentRole: parseCommandRole(value.deploymentRole),
-    bootstrapRole: parseCommandRole(value.bootstrapRole),
-    deploymentRoleName: value.deploymentRoleName,
-    bootstrapRoleName: value.bootstrapRoleName,
+    deploymentRole,
+    bootstrapRole,
+    deploymentRoleName,
+    bootstrapRoleName,
     status: parseDeploymentStatus(value.status),
   }
 }
@@ -129,9 +150,13 @@ const parseDeploymentTarget = (
 const parseDeploymentTargets = (
   value: any,
   inheritedVars: Vars,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedLabels: ReadonlyArray<Label>,
+  inheritedDeploymentRole: CommandRole | undefined,
+  inheritedDeploymentRoleName: IamRoleName | undefined,
+  inheritedBootstrapRole: CommandRole | undefined,
+  inheritedBootstrapRoleName: IamRoleName | undefined,
 ): ReadonlyArray<DeploymentTargetConfig> => {
   if (value === null || value === undefined) {
     return []
@@ -145,6 +170,10 @@ const parseDeploymentTargets = (
         inheritedConfigSets,
         inheritedBootstrapConfigSets,
         inheritedLabels,
+        inheritedDeploymentRole,
+        inheritedDeploymentRoleName,
+        inheritedBootstrapRole,
+        inheritedBootstrapRoleName,
       ),
     )
     .sort((a: DeploymentTargetConfig, b: DeploymentTargetConfig) =>
@@ -157,9 +186,13 @@ const parseDeploymentGroup = (
   groupPath: DeploymentGroupPath,
   config: any,
   inheritedVars: Vars,
-  inheritedConfigSets: ReadonlyArray<ConfigSetName>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetName>,
+  inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
+  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedLabels: ReadonlyArray<Label>,
+  inheritedDeploymentRole: CommandRole | undefined,
+  inheritedDeploymentRoleName: IamRoleName | undefined,
+  inheritedBootstrapRole: CommandRole | undefined,
+  inheritedBootstrapRoleName: IamRoleName | undefined,
 ): DeploymentGroupConfig => {
   const group = config[groupPath]
   const groupPathDepth = groupPath.split("/").length
@@ -172,22 +205,34 @@ const parseDeploymentGroup = (
     (key) => key.split("/").length === groupPathDepth + 1,
   )
 
-  const configuredConfigSets = parseStringArray(group?.configSets)
-  const configSets = R.uniq([...inheritedConfigSets, ...configuredConfigSets])
-
-  const configuredBootstrapConfigSets = parseStringArray(
-    group?.bootstrapConfigSets,
+  const configuredConfigSets = parseConfigSetInstructions(group.configSets)
+  const configSets = mergeConfigSetInstructions(
+    configuredConfigSets,
+    inheritedConfigSets,
   )
-  const bootstrapConfigSets = R.uniq([
-    ...inheritedBootstrapConfigSets,
-    ...configuredBootstrapConfigSets,
-  ])
+
+  const configuredBootstrapConfigSets = parseConfigSetInstructions(
+    group.bootstrapConfigSets,
+  )
+  const bootstrapConfigSets = mergeConfigSetInstructions(
+    configuredBootstrapConfigSets,
+    inheritedBootstrapConfigSets,
+  )
 
   const configuredLabels = parseStringArray(group?.labels)
   const labels = R.uniq([...inheritedLabels, ...configuredLabels])
 
   const targetsSchema = parseTargetSchemas(group?.targetsSchema)
   const vars = deepCopy({ ...inheritedVars, ...parseVars(group?.vars) })
+
+  const deploymentRole =
+    parseCommandRole(group?.deploymentRole) ?? inheritedDeploymentRole
+  const deploymentRoleName =
+    group?.deploymentRoleName ?? inheritedDeploymentRoleName
+  const bootstrapRole =
+    parseCommandRole(group?.bootstrapRole) ?? inheritedBootstrapRole
+  const bootstrapRoleName =
+    group?.bootstrapRoleName ?? inheritedBootstrapRoleName
 
   const children = directChildPaths.map((childPath) =>
     parseDeploymentGroup(
@@ -198,6 +243,10 @@ const parseDeploymentGroup = (
       configSets,
       bootstrapConfigSets,
       labels,
+      deploymentRole,
+      deploymentRoleName,
+      bootstrapRole,
+      bootstrapRoleName,
     ),
   )
 
@@ -210,6 +259,10 @@ const parseDeploymentGroup = (
     configSets,
     bootstrapConfigSets,
     labels,
+    deploymentRole,
+    deploymentRoleName,
+    bootstrapRole,
+    bootstrapRoleName,
   )
   const name = groupPath.split("/").reverse()[0]
 
@@ -222,10 +275,10 @@ const parseDeploymentGroup = (
     labels,
     targetsSchema,
     vars,
-    deploymentRole: parseCommandRole(group?.deploymentRole),
-    bootstrapRole: parseCommandRole(group?.bootstrapRole),
-    deploymentRoleName: group?.deploymentRoleName,
-    bootstrapRoleName: group?.bootstrapRoleName,
+    deploymentRole,
+    bootstrapRole,
+    deploymentRoleName,
+    bootstrapRoleName,
     path: groupPath,
     description: group?.description,
     priority: group?.priority ?? 0,
@@ -256,6 +309,10 @@ const parseDeploymentGroups = (
       [],
       [],
       [],
+      undefined,
+      undefined,
+      undefined,
+      undefined,
     ),
   )
 }

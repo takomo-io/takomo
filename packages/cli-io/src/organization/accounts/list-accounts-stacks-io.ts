@@ -8,10 +8,10 @@ import Table from "easy-table"
 import R from "ramda"
 import { createBaseIO } from "../../cli-io"
 import { printError } from "../../common"
+import { createTargetListenerInternal } from "../../config-set/target-listener"
 import { formatStackStatus } from "../../formatters"
 import { formatDate, IOProps } from "../../stacks/common"
 import { createListStacksIO } from "../../stacks/list-stacks-io"
-import { createTargetListenerInternal } from "./common"
 
 export const createListAccountsStacksIO = (
   props: IOProps,
@@ -48,26 +48,18 @@ export const createListAccountsStacksIO = (
               }
 
               commandPathResult.result.results.forEach((stackResult) => {
-                targetsTable.cell("stage", stage.stageName)
-                targetsTable.cell("OU", group.groupId)
-                targetsTable.cell("Account", target.targetId)
-                targetsTable.cell("Config set", configSet.configSetName)
-                targetsTable.cell("Command path", commandPathResult.commandPath)
-                targetsTable.cell("Path", stackResult.path)
-                targetsTable.cell("Name", stackResult.name)
-                targetsTable.cell(
-                  "Status",
-                  formatStackStatus(stackResult.status),
-                )
-                targetsTable.cell(
-                  "Created",
-                  formatDate(stackResult.createdTime),
-                )
-                targetsTable.cell(
-                  "Updated",
-                  formatDate(stackResult.updatedTime),
-                )
-                targetsTable.newRow()
+                targetsTable
+                  .cell("stage", stage.stageName)
+                  .cell("OU", group.groupId)
+                  .cell("Account", target.targetId)
+                  .cell("Config set", configSet.configSetName)
+                  .cell("Command path", commandPathResult.commandPath)
+                  .cell("Path", stackResult.path)
+                  .cell("Name", stackResult.name)
+                  .cell("Status", formatStackStatus(stackResult.status))
+                  .cell("Created", formatDate(stackResult.createdTime))
+                  .cell("Updated", formatDate(stackResult.updatedTime))
+                  .newRow()
               })
             })
           })
@@ -83,7 +75,10 @@ export const createListAccountsStacksIO = (
   const doCreateListStacksIO = (logger: TkmLogger): ListStacksIO =>
     createListStacksIO({ logger, hideOutput: true })
 
-  const createTargetListener = R.curry(createTargetListenerInternal)(logger)
+  const createTargetListener = R.curry(createTargetListenerInternal)(
+    "accounts",
+    logger,
+  )
 
   return {
     ...logger,

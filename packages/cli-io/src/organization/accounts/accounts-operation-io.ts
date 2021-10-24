@@ -11,11 +11,11 @@ import Table from "easy-table"
 import R from "ramda"
 import { createBaseIO } from "../../cli-io"
 import { printError } from "../../common"
+import { createTargetListenerInternal } from "../../config-set/target-listener"
 import { formatCommandStatus } from "../../formatters"
 import { IOProps, printFailedStackResults } from "../../stacks/common"
 import { createDeployStacksIO } from "../../stacks/deploy-stacks/deploy-stacks-io"
 import { createUndeployStacksIO } from "../../stacks/undeploy-stacks-io"
-import { createTargetListenerInternal } from "./common"
 
 export interface Messages {
   readonly confirmHeader: string
@@ -234,7 +234,10 @@ export const createAccountsOperationIO = (
     return output
   }
 
-  const createTargetListener = R.curry(createTargetListenerInternal)(logger)
+  const createTargetListener = R.curry(createTargetListenerInternal)(
+    "accounts",
+    logger,
+  )
 
   return {
     ...logger,

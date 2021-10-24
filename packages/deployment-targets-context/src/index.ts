@@ -1,5 +1,11 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
+import {
+  ConfigSet,
+  ConfigSetContext,
+  ConfigSetName,
+  DEFAULT_STAGE_NAME,
+  StageName,
+} from "@takomo/config-sets"
 import { InternalCommandContext } from "@takomo/core"
 import {
   DeploymentConfig,
@@ -18,7 +24,9 @@ export interface DeploymentTargetsConfigRepository
   ) => Promise<StacksConfigRepository>
 }
 
-export interface DeploymentTargetsContext extends InternalCommandContext {
+export interface DeploymentTargetsContext
+  extends InternalCommandContext,
+    ConfigSetContext {
   readonly deploymentConfig: DeploymentConfig
   readonly rootDeploymentGroups: ReadonlyArray<DeploymentGroupConfig>
   readonly logger: TkmLogger
@@ -27,8 +35,6 @@ export interface DeploymentTargetsContext extends InternalCommandContext {
     path: DeploymentGroupPath,
   ) => DeploymentGroupConfig
   readonly hasDeploymentGroup: (path: DeploymentGroupPath) => boolean
-  readonly getConfigSet: (name: ConfigSetName) => ConfigSet
-  readonly hasConfigSet: (name: ConfigSetName) => boolean
   readonly commandContext: InternalCommandContext
   readonly configRepository: DeploymentTargetsConfigRepository
 }
@@ -67,6 +73,7 @@ export const createDeploymentTargetsContext = async ({
     configRepository,
     commandContext: ctx,
 
+    getStages: (): ReadonlyArray<StageName> => [DEFAULT_STAGE_NAME],
     getDeploymentGroup: (path: DeploymentGroupPath): DeploymentGroupConfig => {
       const group = deploymentGroups.find((group) => group.path === path)
       if (!group) {

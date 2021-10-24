@@ -5,7 +5,7 @@ export {
 } from "./operation/iam-policy"
 export {
   ConfirmOperationAnswer,
-  DeploymentGroupDeployResult,
+  // DeploymentGroupDeployResult,
   DeploymentTargetsListener,
   DeploymentTargetsOperationInput,
   DeploymentTargetsOperationIO,

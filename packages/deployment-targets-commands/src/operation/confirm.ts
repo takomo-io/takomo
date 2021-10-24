@@ -1,5 +1,5 @@
+import { processOperation } from "./execute"
 import { DeploymentTargetsOperationOutput, PlanHolder } from "./model"
-import { processOperation } from "./process"
 
 export const confirmOperation = async (
   holder: PlanHolder,
