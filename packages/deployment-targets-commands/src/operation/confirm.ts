@@ -1,4 +1,4 @@
-import { processOperation } from "./execute"
+import { executeOperation } from "./execute"
 import { DeploymentTargetsOperationOutput, PlanHolder } from "./model"
 
 export const confirmOperation = async (
@@ -7,7 +7,7 @@ export const confirmOperation = async (
   const { io, timer, plan, ctx, input } = holder
 
   if (ctx.autoConfirmEnabled) {
-    return processOperation(holder)
+    return executeOperation(holder)
   }
 
   const answer = await io.confirmOperation(plan)
@@ -23,12 +23,12 @@ export const confirmOperation = async (
         timer,
       }
     case "CONTINUE_AND_REVIEW":
-      return processOperation({
+      return executeOperation({
         ...holder,
         input: { ...holder.input, concurrentTargets: 1 },
       })
     case "CONTINUE_NO_REVIEW":
-      return processOperation({
+      return executeOperation({
         ...holder,
         ctx: {
           ...holder.ctx,

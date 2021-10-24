@@ -168,7 +168,7 @@ const createExecutor = ({
   }
 }
 
-export const processOperation = async (
+export const executeOperation = async (
   holder: PlanHolder,
 ): Promise<DeploymentTargetsOperationOutput> => {
   const {
@@ -179,7 +179,7 @@ export const processOperation = async (
     ctx,
   } = holder
 
-  io.info("Process operation")
+  io.info("Execute operation")
 
   const executor = createExecutor({
     outputFormat,
@@ -193,11 +193,11 @@ export const processOperation = async (
   return executePlan({
     ctx,
     plan,
-    logger: io,
     executor,
+    concurrentTargets,
+    logger: io,
     state: { failed: false },
     timer: timer.startChild("execute"),
-    concurrentAccounts: concurrentTargets,
     defaultCredentialManager: ctx.credentialManager,
     targetListenerProvider: io.createTargetListener,
   })

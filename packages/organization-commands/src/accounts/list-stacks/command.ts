@@ -51,7 +51,7 @@ const listAccountsStacks = async (
     logger: io,
     timer: input.timer,
     state: { failed: false },
-    concurrentAccounts: input.concurrentAccounts,
+    concurrentTargets: input.concurrentAccounts,
     defaultCredentialManager: ctx.credentialManager,
     targetListenerProvider: io.createTargetListener,
   })

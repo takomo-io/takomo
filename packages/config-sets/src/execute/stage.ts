@@ -21,7 +21,7 @@ interface ExecuteStageProps<R extends CommandOutput, C> {
   readonly state: OperationState
   readonly ctx: ConfigSetContext
   readonly executor: TargetExecutor<R, C>
-  readonly concurrentAccounts: number
+  readonly concurrentTargets: number
   readonly currentStageNumber: number
   readonly stageCount: number
   readonly targetListenerProvider: TargetListenerProvider
@@ -34,7 +34,7 @@ export const executeStage = async <R extends CommandOutput, C>({
   logger,
   executor,
   state,
-  concurrentAccounts,
+  concurrentTargets,
   targetListenerProvider,
   ctx,
   currentStageNumber,
@@ -62,7 +62,7 @@ export const executeStage = async <R extends CommandOutput, C>({
       executor,
       targetListener,
       state,
-      concurrentAccounts,
+      concurrentTargets,
       defaultCredentialManager,
       timer: timer.startChild(group.path),
       logger: logger.childLogger(group.path),

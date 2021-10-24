@@ -22,7 +22,7 @@ export interface ExecutePlanProps<R extends CommandOutput, C> {
   readonly state: OperationState
   readonly ctx: ConfigSetContext
   readonly executor: TargetExecutor<R, C>
-  readonly concurrentAccounts: number
+  readonly concurrentTargets: number
   readonly targetListenerProvider: TargetListenerProvider
   readonly defaultCredentialManager: CredentialManager
 }
@@ -32,7 +32,7 @@ export const executePlan = async <R extends CommandOutput, C>({
   plan,
   timer,
   executor,
-  concurrentAccounts,
+  concurrentTargets,
   ctx,
   state,
   targetListenerProvider,
@@ -48,7 +48,7 @@ export const executePlan = async <R extends CommandOutput, C>({
       ctx,
       executor,
       state,
-      concurrentAccounts,
+      concurrentTargets,
       stageCount,
       targetListenerProvider,
       defaultCredentialManager,

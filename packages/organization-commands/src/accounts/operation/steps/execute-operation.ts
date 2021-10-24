@@ -182,7 +182,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
     const result = await executePlan({
       ctx,
       executor,
-      concurrentAccounts,
+      concurrentTargets: concurrentAccounts,
       logger: io,
       plan: accountsLaunchPlan,
       timer: totalTimer.startChild("execute"),

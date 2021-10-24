@@ -73,7 +73,7 @@ export interface ExecuteGroupProps<R extends CommandOutput, C> {
   readonly logger: TkmLogger
   readonly ctx: ConfigSetContext
   readonly executor: TargetExecutor<R, C>
-  readonly concurrentAccounts: number
+  readonly concurrentTargets: number
   readonly defaultCredentialManager: CredentialManager
 }
 
@@ -85,14 +85,14 @@ export const executeGroup = async <R extends CommandOutput, C>({
   logger,
   executor,
   ctx,
-  concurrentAccounts,
+  concurrentTargets,
   defaultCredentialManager,
 }: ExecuteGroupProps<R, C>): Promise<GroupExecutionResult<R>> => {
   logger.info(
     `Process organizational unit '${group.path}' with ${group.targets.length} account(s)`,
   )
 
-  const policy = Policy.bulkhead(concurrentAccounts, 10000)
+  const policy = Policy.bulkhead(concurrentTargets, 10000)
   const results = new Array<TargetExecutionResult<R>>()
 
   const operations = group.targets.map((target) =>
