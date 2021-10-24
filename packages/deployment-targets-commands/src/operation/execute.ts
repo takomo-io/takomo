@@ -118,7 +118,7 @@ const createExecutor = ({
         context: ctx.variables.context,
         target: {
           name: target.id,
-          accountId: target.accountId,
+          accountId: target.data.accountId,
         },
       }
 
@@ -128,11 +128,11 @@ const createExecutor = ({
           )
         : defaultCredentialManager
 
-      if (target.accountId) {
+      if (target.data.accountId) {
         const identity = await credentialManager.getCallerIdentity()
-        if (identity.accountId !== target.accountId) {
+        if (identity.accountId !== target.data.accountId) {
           throw new TakomoError(
-            `Current credentials belong to AWS account ${identity.accountId}, but the deployment target can be deployed only to account: ${target.accountId}`,
+            `Current credentials belong to AWS account ${identity.accountId}, but the deployment target can be deployed only to account: ${target.data.accountId}`,
           )
         }
       }

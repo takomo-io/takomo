@@ -1,5 +1,4 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { AccountId, IamRoleArn } from "@takomo/aws-model"
 import {
   CommandOutput,
   CommandOutputBase,
@@ -105,8 +104,6 @@ export interface ExecutionConfigSet {
 export interface ExecutionTarget<C> {
   readonly vars: any
   readonly configSets: ReadonlyArray<ExecutionConfigSet>
-  readonly accountId: AccountId
-  readonly executionRoleArn?: IamRoleArn
   readonly id: ExecutionTargetId
   readonly data: C
 }
@@ -137,7 +134,9 @@ export interface CreateTargetListenerProps {
 
 export interface TargetListener {
   readonly onTargetBegin: () => Promise<void>
+  readonly onGroupBegin: (group: ExecutionGroup<any>) => Promise<void>
   readonly onTargetComplete: () => Promise<void>
+  readonly onGroupComplete: (group: ExecutionGroup<any>) => Promise<void>
 }
 
 export type TargetListenerProvider = ({

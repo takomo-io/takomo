@@ -1,7 +1,12 @@
-import { CreateTargetListenerProps, TargetListener } from "@takomo/config-sets"
+import {
+  CreateTargetListenerProps,
+  ExecutionGroup,
+  TargetListener,
+} from "@takomo/config-sets"
 import { TkmLogger } from "@takomo/util"
 
 export const createTargetListenerInternal = (
+  groupsName: string,
   targetsName: string,
   logger: TkmLogger,
   props: CreateTargetListenerProps,
@@ -26,8 +31,20 @@ export const createTargetListenerInternal = (
     )
   }
 
+  const onGroupBegin = async (group: ExecutionGroup<any>) => {
+    logger.info(
+      `Process ${groupsName} '${group.path}' with ${group.targets.length} ${targetsName}`,
+    )
+  }
+
+  const onGroupComplete = async (group: ExecutionGroup<any>) => {
+    logger.info(`Completed ${groupsName} '${group.path}'`)
+  }
+
   return {
     onTargetBegin,
     onTargetComplete,
+    onGroupBegin,
+    onGroupComplete,
   }
 }

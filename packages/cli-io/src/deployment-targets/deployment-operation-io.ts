@@ -195,6 +195,7 @@ export const createDeploymentTargetsOperationIO = (
   }
 
   const createTargetListener = R.curry(createTargetListenerInternal)(
+    "group",
     "targets",
     logger,
   )

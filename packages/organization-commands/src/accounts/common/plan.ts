@@ -48,6 +48,7 @@ export interface CreateAccountsPlanProps {
 
 export interface PlannedOrganizationAccount extends OrganizationAccount {
   readonly executionRoleArn: IamRoleArn
+  readonly accountId: AccountId
 }
 
 export const createAccountsPlan = async ({
@@ -202,7 +203,6 @@ export const createAccountsPlan = async ({
     a: OrganizationAccountConfig,
     stageName: StageName,
   ): ExecutionTarget<PlannedOrganizationAccount> => ({
-    accountId: a.id,
     id: a.id,
     vars: a.vars,
     configSets: getConfigSetsWithStage(a, stageName)
@@ -216,6 +216,7 @@ export const createAccountsPlan = async ({
     data: {
       ...accountsById.get(a.id)!,
       executionRoleArn: getExecutionRoleArn(a),
+      accountId: a.id,
     },
   })
 

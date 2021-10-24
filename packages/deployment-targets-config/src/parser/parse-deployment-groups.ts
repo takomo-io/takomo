@@ -11,10 +11,10 @@ import {
   parseVars,
   Vars,
 } from "@takomo/core"
-import { DeploymentGroupConfig } from "@takomo/deployment-targets-config"
 import { DeploymentGroupPath, Label } from "@takomo/deployment-targets-model"
 import { deepCopy } from "@takomo/util"
 import R from "ramda"
+import { DeploymentGroupConfig } from "../model"
 import { fillMissingDeploymentGroups } from "../util"
 import { parseDeploymentStatus } from "./parse-deployment-status"
 import { parseDeploymentTargets } from "./parse-deployment-targets"

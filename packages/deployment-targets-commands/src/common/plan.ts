@@ -1,4 +1,4 @@
-import { IamRoleArn, makeIamRoleArn } from "@takomo/aws-model"
+import { AccountId, IamRoleArn, makeIamRoleArn } from "@takomo/aws-model"
 import {
   ConfigSetName,
   ConfigSetType,
@@ -63,6 +63,7 @@ export interface CreateDeploymentPlanProps {
 
 export interface PlannedDeploymentTarget extends DeploymentTargetConfig {
   readonly executionRoleArn?: IamRoleArn
+  readonly accountId?: AccountId
 }
 
 export const createDeploymentPlan = async ({
@@ -254,7 +255,6 @@ export const createDeploymentPlan = async ({
     a: DeploymentTargetConfig,
     stageName: StageName,
   ): ExecutionTarget<PlannedDeploymentTarget> => ({
-    accountId: a.accountId ?? callerIdentity.accountId,
     id: a.name,
     vars: a.vars,
     configSets: getConfigSetsWithStage(a, stageName)
@@ -268,6 +268,7 @@ export const createDeploymentPlan = async ({
     data: {
       ...a,
       executionRoleArn: getExecutionRoleArn(a),
+      accountId: a.accountId,
     },
   })
 

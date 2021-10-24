@@ -235,6 +235,7 @@ export const createAccountsOperationIO = (
   }
 
   const createTargetListener = R.curry(createTargetListenerInternal)(
+    "ou",
     "accounts",
     logger,
   )

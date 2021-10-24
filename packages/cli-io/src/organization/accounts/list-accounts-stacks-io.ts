@@ -76,6 +76,7 @@ export const createListAccountsStacksIO = (
     createListStacksIO({ logger, hideOutput: true })
 
   const createTargetListener = R.curry(createTargetListenerInternal)(
+    "ou",
     "accounts",
     logger,
   )

@@ -88,9 +88,7 @@ export const executeGroup = async <R extends CommandOutput, C>({
   concurrentTargets,
   defaultCredentialManager,
 }: ExecuteGroupProps<R, C>): Promise<GroupExecutionResult<R>> => {
-  logger.info(
-    `Process organizational unit '${group.path}' with ${group.targets.length} account(s)`,
-  )
+  await targetListener.onGroupBegin(group)
 
   const policy = Policy.bulkhead(concurrentTargets, 10000)
   const results = new Array<TargetExecutionResult<R>>()
@@ -111,7 +109,8 @@ export const executeGroup = async <R extends CommandOutput, C>({
   )
 
   await Promise.all(operations.map((o) => o()))
-  logger.info(`Completed organizational unit '${group.path}'`)
+
+  await targetListener.onGroupComplete(group)
 
   timer.stop()
   return {

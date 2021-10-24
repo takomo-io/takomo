@@ -11,10 +11,10 @@ import {
   parseVars,
   Vars,
 } from "@takomo/core"
-import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
 import { Label } from "@takomo/deployment-targets-model"
 import { deepCopy } from "@takomo/util"
 import R from "ramda"
+import { DeploymentTargetConfig } from "../model"
 import { parseDeploymentStatus } from "./parse-deployment-status"
 
 const parseDeploymentTarget = (
