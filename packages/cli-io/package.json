@@ -31,7 +31,6 @@
     "@takomo/config-sets": "3.37.0",
     "@takomo/core": "3.37.0",
     "@takomo/deployment-targets-commands": "3.37.0",
-    "@takomo/deployment-targets-config": "3.37.0",
     "@takomo/iam-commands": "3.37.0",
     "@takomo/init-command": "3.37.0",
     "@takomo/organization-commands": "3.37.0",
