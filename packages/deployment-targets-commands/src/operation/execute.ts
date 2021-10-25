@@ -137,7 +137,7 @@ const createExecutor = ({
         }
       }
 
-      return executeOperationInternal(
+      return await executeOperationInternal(
         operation,
         input,
         target.data,

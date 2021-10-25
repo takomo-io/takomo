@@ -170,11 +170,6 @@ export const createDeploymentPlan = async ({
     }
   }
 
-  const isIncludedInSelectedTargets = ({
-    name,
-  }: DeploymentTargetConfig): boolean =>
-    targets.length === 0 || targets.includes(name)
-
   const targetNameMatchers = targets.map(
     createDeploymentTargetNamePatternMatcher,
   )
@@ -202,7 +197,6 @@ export const createDeploymentPlan = async ({
         isActive(a) &&
         hasConfigSets(a) &&
         configSetNameMatches(a) &&
-        isIncludedInSelectedTargets(a) &&
         targetNameMatches(a) &&
         labelMatches(a),
     )

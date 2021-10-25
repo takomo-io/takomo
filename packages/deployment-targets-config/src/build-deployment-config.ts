@@ -9,7 +9,12 @@ import {
   DeploymentGroupPath,
   DeploymentTargetsSchemaRegistry,
 } from "@takomo/deployment-targets-model"
-import { collectFromHierarchy, TkmLogger, ValidationError } from "@takomo/util"
+import {
+  collectFromHierarchy,
+  merge,
+  TkmLogger,
+  ValidationError,
+} from "@takomo/util"
 import { err, ok, Result } from "neverthrow"
 import R from "ramda"
 import { DeploymentConfig, DeploymentGroupConfig, SchemaConfig } from "./model"
@@ -62,7 +67,7 @@ export const buildDeploymentConfig = async (
     )
   }
 
-  const vars = parseVars(record.vars)
+  const vars = merge(ctx.variables.var, parseVars(record.vars))
   const targetsSchema = parseTargetSchemas(record.targetsSchema)
   const parsedConfigSets = parseConfigSets(record.configSets)
   const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
