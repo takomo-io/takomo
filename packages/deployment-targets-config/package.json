@@ -39,7 +39,8 @@
     "ramda": "0.27.1"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.37.0"
+    "@takomo/test-unit": "3.37.0",
+    "@takomo/aws-clients": "3.37.0"
   },
   "engines": {
     "node": ">=14.4.0"
