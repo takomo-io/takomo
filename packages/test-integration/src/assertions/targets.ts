@@ -228,8 +228,9 @@ const createDeploymentGroupResultMatcher = (
       outputAssertions(output)
     }
 
-    expect(output.results).toHaveLength(groupsAssertions.length)
+    // TODO: Add support for stages
     for (const stage of output.results) {
+      expect(stage.results).toHaveLength(groupsAssertions.length)
       for (const result of stage.results) {
         let res = false
         for (const groupAssertion of groupsAssertions) {

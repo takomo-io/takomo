@@ -1,9 +1,21 @@
 import { merge } from "../../src/objects"
 
 describe("#merge", () => {
+  test("a single empty object", () => {
+    const a = {}
+    expect(merge(a)).toStrictEqual(a)
+  })
+
   test("a single object", () => {
     const a = { name: "John" }
     expect(merge(a)).toStrictEqual(a)
+  })
+
+  test("two empty objectss", () => {
+    const a = {}
+    const b = {}
+    const expected = {}
+    expect(merge(a, b)).toStrictEqual(expected)
   })
 
   test("two identical objects", () => {

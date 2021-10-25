@@ -1,4 +1,5 @@
-import { CommandContext } from "@takomo/core"
+import { AwsClientProvider } from "@takomo/aws-clients"
+import { CommandContext, TakomoProjectConfig } from "@takomo/core"
 import { DeploymentTargetsSchemaRegistry } from "@takomo/deployment-targets-model"
 import { TkmLogger } from "@takomo/util"
 import { parseYaml } from "@takomo/util/src"
@@ -7,7 +8,21 @@ import { mock } from "jest-mock-extended"
 import { join } from "path"
 import { buildDeploymentConfig } from "../src"
 
-const ctx = mock<CommandContext>({ regions: ["eu-north-1"] })
+const ctx: CommandContext = {
+  regions: ["eu-north-1"],
+  variables: { var: { test: "yes" }, context: { projectDir: "/tmp" }, env: {} },
+  outputFormat: "text",
+  quiet: false,
+  projectDir: "/tmp",
+  autoConfirmEnabled: false,
+  awsClientProvider: mock<AwsClientProvider>(),
+  confidentialValuesLoggingEnabled: false,
+  iamGeneratePoliciesInstructionsEnabled: false,
+  credentials: undefined,
+  logLevel: "info",
+  statisticsEnabled: false,
+  projectConfig: mock<TakomoProjectConfig>(),
+}
 
 const readConfig = (file: string) =>
   parseYaml(
