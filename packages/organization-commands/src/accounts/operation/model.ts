@@ -1,9 +1,9 @@
 import { AccountId } from "@takomo/aws-model"
 import {
+  ConfigSetExecutionPlan,
   ConfigSetName,
   ConfigSetType,
   CreateTargetListenerProps,
-  ExecutionPlan,
   PlanExecutionResult,
   TargetListener,
 } from "@takomo/config-sets"
@@ -43,4 +43,5 @@ export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
   ) => TargetListener
 }
 
-export type AccountsOperationPlan = ExecutionPlan<PlannedOrganizationAccount>
+export type AccountsOperationPlan =
+  ConfigSetExecutionPlan<PlannedOrganizationAccount>

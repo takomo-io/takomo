@@ -1,5 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { executePlan, TargetExecutorProps } from "@takomo/config-sets"
+import { executeConfigSetPlan, TargetExecutorProps } from "@takomo/config-sets"
 import { InternalCommandContext, OutputFormat } from "@takomo/core"
 import {
   OrganizationConfigRepository,
@@ -179,7 +179,7 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
       organizationState,
     })
 
-    const result = await executePlan({
+    const result = await executeConfigSetPlan({
       ctx,
       executor,
       concurrentTargets: concurrentAccounts,

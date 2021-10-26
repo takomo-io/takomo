@@ -1,5 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { executePlan, TargetExecutorProps } from "@takomo/config-sets"
+import { executeConfigSetPlan, TargetExecutorProps } from "@takomo/config-sets"
 import { InternalCommandContext, OutputFormat } from "@takomo/core"
 import {
   DeploymentTargetsConfigRepository,
@@ -14,7 +14,7 @@ import {
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { DeploymentOperation } from "@takomo/stacks-model"
 import { deepCopy, TakomoError, TkmLogger } from "@takomo/util"
-import { PlannedDeploymentTarget } from "../common/plan"
+import { PlannedDeploymentTarget } from "../common/plan/model"
 import {
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
@@ -190,7 +190,7 @@ export const executeOperation = async (
     expectNoChanges,
   })
 
-  return executePlan({
+  return executeConfigSetPlan({
     ctx,
     plan,
     executor,

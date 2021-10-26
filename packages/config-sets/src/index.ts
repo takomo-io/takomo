@@ -1,4 +1,4 @@
-export { executePlan } from "./execute/plan"
+export { executeConfigSetPlan } from "./execute/plan"
 export * from "./model"
 export {
   mergeConfigSetInstructions,
@@ -7,3 +7,4 @@ export {
   parseConfigSets,
 } from "./parser"
 export { createConfigSetsSchemas } from "./schema"
+export { getConfigSetsByType } from "./util"

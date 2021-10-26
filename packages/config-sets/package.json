@@ -30,7 +30,6 @@
     "@takomo/aws-clients": "3.37.0",
     "@takomo/aws-model": "3.37.0",
     "@takomo/core": "3.37.0",
-    "@takomo/stacks-commands": "3.37.0",
     "@takomo/stacks-model": "3.37.0",
     "@takomo/stacks-schema": "3.37.0",
     "@takomo/util": "3.37.0",

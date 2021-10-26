@@ -1,4 +1,4 @@
-import { executePlan } from "@takomo/config-sets"
+import { executeConfigSetPlan } from "@takomo/config-sets"
 import { CommandHandler } from "@takomo/core"
 import {
   buildOrganizationContext,
@@ -44,7 +44,7 @@ const listAccountsStacks = async (
     outputFormat: input.outputFormat,
   })
 
-  return executePlan({
+  return executeConfigSetPlan({
     plan,
     ctx,
     executor,

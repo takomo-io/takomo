@@ -5,7 +5,6 @@ import {
   OperationState,
   Vars,
 } from "@takomo/core"
-import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath } from "@takomo/stacks-model"
 import { Timer, TkmLogger } from "@takomo/util"
 
@@ -29,16 +28,16 @@ export interface ConfigSet {
 
 export type ConfigSetType = "standard" | "bootstrap"
 
-export interface ConfigSetCommandPathOperationResult extends CommandOutputBase {
-  readonly commandPath: CommandPath
-  readonly stage?: StageName
-  readonly result: StacksOperationOutput
-}
+// export interface ConfigSetCommandPathOperationResult extends CommandOutputBase {
+//   readonly commandPath: CommandPath
+//   readonly stage?: StageName
+//   readonly result: StacksOperationOutput
+// }
 
-export interface ConfigSetOperationResult extends CommandOutput {
-  readonly configSetName: ConfigSetName
-  readonly results: ReadonlyArray<ConfigSetCommandPathOperationResult>
-}
+// export interface ConfigSetOperationResult extends CommandOutput {
+//   readonly configSetName: ConfigSetName
+//   readonly results: ReadonlyArray<ConfigSetCommandPathOperationResult>
+// }
 
 export interface CommandPathExecutionResult<R extends CommandOutput>
   extends CommandOutputBase {
@@ -122,6 +121,9 @@ export interface ExecutionStage<C> {
 
 export interface ExecutionPlan<C> {
   readonly stages: ReadonlyArray<ExecutionStage<C>>
+}
+
+export interface ConfigSetExecutionPlan<C> extends ExecutionPlan<C> {
   readonly configSetType: ConfigSetType
 }
 
@@ -150,4 +152,9 @@ export interface ConfigSetContext {
   readonly getConfigSet: (name: ConfigSetName) => ConfigSet
   readonly hasConfigSet: (name: ConfigSetName) => boolean
   readonly getStages: () => ReadonlyArray<StageName>
+}
+
+export interface ConfigSetInstructionsHolder {
+  readonly configSets: ReadonlyArray<ConfigSetInstruction>
+  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
 }

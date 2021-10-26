@@ -1,5 +1,5 @@
 import { OrganizationAccount } from "@takomo/aws-model"
-import { ConfigSetType, ExecutionPlan } from "@takomo/config-sets"
+import { ConfigSetExecutionPlan, ConfigSetType } from "@takomo/config-sets"
 import { ConfirmResult } from "@takomo/core"
 import {
   AccountsOperationIO,
@@ -52,7 +52,7 @@ export const createAccountsOperationIO = (
     createUndeployStacksIO({ logger })
 
   const confirmLaunch = async (
-    plan: ExecutionPlan<OrganizationAccount>,
+    plan: ConfigSetExecutionPlan<OrganizationAccount>,
   ): Promise<ConfirmResult> => {
     io.header({ text: messages.confirmHeader, marginTop: true })
 

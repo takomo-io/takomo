@@ -1,8 +1,8 @@
 import {
+  ConfigSetExecutionPlan,
   ConfigSetName,
   ConfigSetType,
   CreateTargetListenerProps,
-  ExecutionPlan,
   PlanExecutionResult,
   TargetListener,
 } from "@takomo/config-sets"
@@ -20,14 +20,15 @@ import {
 } from "@takomo/stacks-commands"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
 import { Timer, TkmLogger } from "@takomo/util"
-import { PlannedDeploymentTarget } from "../common/plan"
+import { PlannedDeploymentTarget } from "../common/plan/model"
 
 export type ConfirmOperationAnswer =
   | "CANCEL"
   | "CONTINUE_AND_REVIEW"
   | "CONTINUE_NO_REVIEW"
 
-export type TargetsExecutionPlan = ExecutionPlan<PlannedDeploymentTarget>
+export type TargetsExecutionPlan =
+  ConfigSetExecutionPlan<PlannedDeploymentTarget>
 
 export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly groups: ReadonlyArray<DeploymentGroupPath>
@@ -64,18 +65,6 @@ export interface DeploymentTargetsOperationIO
     props: CreateTargetListenerProps,
   ) => TargetListener
 }
-
-// export interface DeploymentTargetDeployResult extends CommandOutputBase {
-//   readonly name: DeploymentTargetName
-//   readonly results: ReadonlyArray<ConfigSetOperationResult>
-//   readonly timer: Timer
-// }
-//
-// export interface DeploymentGroupDeployResult extends CommandOutputBase {
-//   readonly path: DeploymentGroupPath
-//   readonly timer: Timer
-//   readonly results: ReadonlyArray<DeploymentTargetDeployResult>
-// }
 
 export interface InitialHolder {
   readonly timer: Timer

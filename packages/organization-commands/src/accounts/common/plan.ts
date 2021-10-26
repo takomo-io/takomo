@@ -5,12 +5,13 @@ import {
   OrganizationAccount,
 } from "@takomo/aws-model"
 import {
+  ConfigSetExecutionPlan,
   ConfigSetName,
   ConfigSetType,
   ExecutionGroup,
-  ExecutionPlan,
   ExecutionStage,
   ExecutionTarget,
+  getConfigSetsByType,
   StageName,
 } from "@takomo/config-sets"
 import {
@@ -57,7 +58,7 @@ export const createAccountsPlan = async ({
   organizationState,
   accountsSelectionCriteria,
 }: CreateAccountsPlanProps): Promise<
-  ExecutionPlan<PlannedOrganizationAccount>
+  ConfigSetExecutionPlan<PlannedOrganizationAccount>
 > => {
   const { accounts } = organizationState
   const {
@@ -131,16 +132,7 @@ export const createAccountsPlan = async ({
 
   const accountsById = arrayToMap(accounts, R.prop("id"))
 
-  const getConfigSets = (a: OrganizationAccountConfig) => {
-    switch (configSetType) {
-      case "bootstrap":
-        return a.bootstrapConfigSets
-      case "standard":
-        return a.configSets
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
+  const getConfigSets = R.curry(getConfigSetsByType)(configSetType)
 
   const getExecutionRoleArn = (a: OrganizationAccountConfig): IamRoleArn => {
     switch (configSetType) {
@@ -174,19 +166,9 @@ export const createAccountsPlan = async ({
   }: OrganizationAccountConfig): boolean =>
     accountIds.length === 0 || accountIds.includes(id)
 
-  const configSetNameMatches = (a: OrganizationAccountConfig): boolean => {
-    if (configSetName === undefined) {
-      return true
-    }
-    switch (configSetType) {
-      case "standard":
-        return a.configSets.some(({ name }) => name === configSetName)
-      case "bootstrap":
-        return a.bootstrapConfigSets.some(({ name }) => name === configSetName)
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
+  const configSetNameMatches = (a: OrganizationAccountConfig): boolean =>
+    configSetName === undefined ||
+    getConfigSets(a).some(({ name }) => name === configSetName)
 
   const filterAccountsBySelectionCriteria = (
     accounts: ReadonlyArray<OrganizationAccountConfig>,
