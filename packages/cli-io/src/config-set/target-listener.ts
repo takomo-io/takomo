@@ -2,7 +2,7 @@ import {
   CreateTargetListenerProps,
   ExecutionGroup,
   TargetListener,
-} from "@takomo/config-sets"
+} from "@takomo/execution-plans"
 import { TkmLogger } from "@takomo/util"
 
 export const createTargetListenerInternal = (

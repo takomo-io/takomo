@@ -1,5 +1,5 @@
-import { TargetExecutorProps } from "@takomo/config-sets"
 import { OutputFormat } from "@takomo/core"
+import { TargetExecutorProps } from "@takomo/execution-plans"
 import {
   OrganizationConfigRepository,
   OrganizationContext,

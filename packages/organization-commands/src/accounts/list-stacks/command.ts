@@ -1,5 +1,5 @@
-import { executeConfigSetPlan } from "@takomo/config-sets"
 import { CommandHandler } from "@takomo/core"
+import { executeConfigSetPlan } from "@takomo/execution-plans"
 import {
   buildOrganizationContext,
   loadOrganizationState,

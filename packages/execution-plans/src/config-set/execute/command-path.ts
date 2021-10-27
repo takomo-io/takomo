@@ -1,10 +1,10 @@
 import { CredentialManager } from "@takomo/aws-clients"
+import { ConfigSet } from "@takomo/config-sets"
 import { CommandOutput, OperationState } from "@takomo/core"
 import { CommandPath } from "@takomo/stacks-model"
 import { Timer, TkmLogger } from "@takomo/util"
 import {
   CommandPathExecutionResult,
-  ConfigSet,
   ExecutionTarget,
   TargetExecutor,
 } from "../model"

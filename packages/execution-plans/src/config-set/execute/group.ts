@@ -1,4 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
+import { ConfigSetContext } from "@takomo/config-sets"
 import {
   CommandOutput,
   OperationState,
@@ -7,7 +8,6 @@ import {
 import { Timer, TkmLogger } from "@takomo/util"
 import { IPolicy, Policy } from "cockatiel"
 import {
-  ConfigSetContext,
   ExecutionGroup,
   ExecutionTarget,
   GroupExecutionResult,

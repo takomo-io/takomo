@@ -1,8 +1,5 @@
 import {
-  ConfigSetExecutionPlan,
   ConfigSetType,
-  ExecutionGroup,
-  ExecutionTarget,
   getConfigSetsByType,
   StageName,
 } from "@takomo/config-sets"
@@ -11,6 +8,11 @@ import {
   DeploymentTargetConfig,
 } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
+import {
+  ConfigSetExecutionPlan,
+  ExecutionGroup,
+  ExecutionTarget,
+} from "@takomo/execution-plans"
 import { TkmLogger } from "@takomo/util"
 import {
   createExecutionPlan,

@@ -1,6 +1,7 @@
 import { OrganizationAccount } from "@takomo/aws-model"
-import { ConfigSetExecutionPlan, ConfigSetType } from "@takomo/config-sets"
+import { ConfigSetType } from "@takomo/config-sets"
 import { ConfirmResult } from "@takomo/core"
+import { ConfigSetExecutionPlan } from "@takomo/execution-plans"
 import {
   AccountsOperationIO,
   AccountsOperationOutput,

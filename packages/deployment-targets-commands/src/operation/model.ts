@@ -1,11 +1,4 @@
-import {
-  ConfigSetExecutionPlan,
-  ConfigSetName,
-  ConfigSetType,
-  CreateTargetListenerProps,
-  PlanExecutionResult,
-  TargetListener,
-} from "@takomo/config-sets"
+import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import { CommandInput, IO, OutputFormat } from "@takomo/core"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import {
@@ -13,6 +6,12 @@ import {
   DeploymentTargetNamePattern,
   Label,
 } from "@takomo/deployment-targets-model"
+import {
+  ConfigSetExecutionPlan,
+  CreateTargetListenerProps,
+  PlanExecutionResult,
+  TargetListener,
+} from "@takomo/execution-plans"
 import {
   DeployStacksIO,
   StacksOperationOutput,

@@ -5,15 +5,17 @@ import {
   OrganizationAccount,
 } from "@takomo/aws-model"
 import {
-  ConfigSetExecutionPlan,
   ConfigSetName,
   ConfigSetType,
-  ExecutionGroup,
-  ExecutionStage,
-  ExecutionTarget,
   getConfigSetsByType,
   StageName,
 } from "@takomo/config-sets"
+import {
+  ConfigSetExecutionPlan,
+  ExecutionGroup,
+  ExecutionStage,
+  ExecutionTarget,
+} from "@takomo/execution-plans"
 import {
   OrganizationAccountConfig,
   OrganizationalUnitConfig,

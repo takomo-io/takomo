@@ -1,11 +1,4 @@
-import {
-  ConfigSetName,
-  ConfigSetType,
-  ExecutionGroup,
-  ExecutionPlan,
-  ExecutionStage,
-  StageName,
-} from "@takomo/config-sets"
+import { ConfigSetName, ConfigSetType, StageName } from "@takomo/config-sets"
 import { DeploymentGroupConfig } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import {
@@ -13,6 +6,11 @@ import {
   DeploymentTargetNamePattern,
   Label,
 } from "@takomo/deployment-targets-model"
+import {
+  ExecutionGroup,
+  ExecutionPlan,
+  ExecutionStage,
+} from "@takomo/execution-plans"
 import { CommandPath } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
 import { PlannedDeploymentTarget } from "./model"

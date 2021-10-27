@@ -1,5 +1,5 @@
 import { StackName, Tag, TagKey, TagValue } from "@takomo/aws-model"
-import { ConfigSetName, GroupExecutionResult } from "@takomo/config-sets"
+import { ConfigSetName } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
 import {
   DeploymentTargetsOperationOutput,
@@ -9,6 +9,7 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "@takomo/deployment-targets-model"
+import { GroupExecutionResult } from "@takomo/execution-plans"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
 

@@ -1,10 +1,13 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { executeConfigSetPlan, TargetExecutorProps } from "@takomo/config-sets"
 import { InternalCommandContext, OutputFormat } from "@takomo/core"
 import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
 } from "@takomo/deployment-targets-context"
+import {
+  executeConfigSetPlan,
+  TargetExecutorProps,
+} from "@takomo/execution-plans"
 import {
   deployStacksCommand,
   StacksOperationInput,

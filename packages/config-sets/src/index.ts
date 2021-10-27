@@ -1,4 +1,3 @@
-export { executeConfigSetPlan } from "./execute/plan"
 export * from "./model"
 export {
   mergeConfigSetInstructions,
