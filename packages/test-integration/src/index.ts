@@ -4,7 +4,12 @@ export {
 } from "./assertions/stacks"
 export { aws } from "./aws-api"
 export { executeWithCli } from "./cli/execute"
-export { ExecuteCommandProps } from "./commands/common"
+export {
+  ExecuteCommandProps,
+  stackCreateSucceeded,
+  stackDeleteSucceeded,
+  stackUpdateSucceeded,
+} from "./commands/common"
 export { executeInitProjectCommand } from "./commands/init"
 export { ExpectOrganizationalUnitResultProps } from "./commands/organization/accounts-operation"
 export { executeBootstrapAccountsCommand } from "./commands/organization/bootstrap-accounts"
@@ -29,13 +34,11 @@ export {
   executeUndeployStacksCommand,
   ExecuteUndeployStacksCommandProps,
 } from "./commands/stacks"
-export {
-  executeBootstrapTargetsCommand,
-  executeDeployTargetsCommand,
-  executeRunTargetsCommand,
-  executeTeardownTargetsCommand,
-  executeUndeployTargetsCommand,
-} from "./commands/targets"
+export { executeBootstrapTargetsCommand } from "./commands/targets/bootstrap-targets"
+export { executeDeployTargetsCommand } from "./commands/targets/deploy-targets"
+export { executeRunTargetsCommand } from "./commands/targets/run-targets"
+export { executeTeardownTargetsCommand } from "./commands/targets/tear-down-targets"
+export { executeUndeployTargetsCommand } from "./commands/targets/undeploy-targets"
 export { TIMEOUT } from "./constants"
 export {
   TestReservation,

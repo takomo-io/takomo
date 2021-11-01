@@ -5,6 +5,8 @@
 import {
   executeDeployTargetsCommand,
   executeUndeployTargetsCommand,
+  stackCreateSucceeded,
+  stackDeleteSucceeded,
 } from "@takomo/test-integration"
 
 const projectDir = "configs/simple"
@@ -18,7 +20,65 @@ describe("Deployment group commands", () => {
       .expectCommandToSucceed()
       .expectResults({
         deploymentGroupPath: "Environments/Test",
-        targetResults: [{ name: "five" }, { name: "four" }, { name: "three" }],
+        targetResults: [
+          {
+            name: "five",
+            configSetResults: [
+              {
+                configSet: "logs",
+                commandPathResults: [
+                  {
+                    commandPath: "/logs.yml",
+                    stackResults: [
+                      stackCreateSucceeded({
+                        stackPath: "/logs.yml/eu-west-1",
+                        stackName: "logs",
+                      }),
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "four",
+            configSetResults: [
+              {
+                configSet: "logs",
+                commandPathResults: [
+                  {
+                    commandPath: "/logs.yml",
+                    stackResults: [
+                      stackCreateSucceeded({
+                        stackPath: "/logs.yml/eu-west-1",
+                        stackName: "logs",
+                      }),
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "three",
+            configSetResults: [
+              {
+                configSet: "logs",
+                commandPathResults: [
+                  {
+                    commandPath: "/logs.yml",
+                    stackResults: [
+                      stackCreateSucceeded({
+                        stackPath: "/logs.yml/eu-west-1",
+                        stackName: "logs",
+                      }),
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       })
       .assert())
 
@@ -40,7 +100,10 @@ describe("Deployment group commands", () => {
                   {
                     commandPath: "/logs.yml",
                     stackResults: [
-                      { stackPath: "/logs.yml/eu-west-1", stackName: "logs" },
+                      stackCreateSucceeded({
+                        stackPath: "/logs.yml/eu-west-1",
+                        stackName: "logs",
+                      }),
                     ],
                   },
                 ],
@@ -59,14 +122,90 @@ describe("Deployment group commands", () => {
       .expectResults(
         {
           deploymentGroupPath: "Environments/Dev",
-          targetResults: [{ name: "one", status: "SKIPPED" }, { name: "two" }],
+          targetResults: [
+            { name: "one", status: "SKIPPED" },
+            {
+              name: "two",
+              status: "SUCCESS",
+              configSetResults: [
+                {
+                  configSet: "logs",
+                  commandPathResults: [
+                    {
+                      commandPath: "/logs.yml",
+                      stackResults: [
+                        stackDeleteSucceeded({
+                          stackPath: "/logs.yml/eu-west-1",
+                          stackName: "logs",
+                        }),
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           deploymentGroupPath: "Environments/Test",
           targetResults: [
-            { name: "five" },
-            { name: "four" },
-            { name: "three" },
+            {
+              name: "five",
+              configSetResults: [
+                {
+                  configSet: "logs",
+                  commandPathResults: [
+                    {
+                      commandPath: "/logs.yml",
+                      stackResults: [
+                        stackDeleteSucceeded({
+                          stackPath: "/logs.yml/eu-west-1",
+                          stackName: "logs",
+                        }),
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "four",
+              configSetResults: [
+                {
+                  configSet: "logs",
+                  commandPathResults: [
+                    {
+                      commandPath: "/logs.yml",
+                      stackResults: [
+                        stackDeleteSucceeded({
+                          stackPath: "/logs.yml/eu-west-1",
+                          stackName: "logs",
+                        }),
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "three",
+              configSetResults: [
+                {
+                  configSet: "logs",
+                  commandPathResults: [
+                    {
+                      commandPath: "/logs.yml",
+                      stackResults: [
+                        stackDeleteSucceeded({
+                          stackPath: "/logs.yml/eu-west-1",
+                          stackName: "logs",
+                        }),
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         },
       )

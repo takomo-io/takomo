@@ -1,5 +1,7 @@
+import { StackName } from "@takomo/aws-model"
 import { CliCommandContext, initCommandContext } from "@takomo/cli"
-import { CommandPath } from "@takomo/stacks-model"
+import { CommandStatus } from "@takomo/core"
+import { CommandPath, StackPath } from "@takomo/stacks-model"
 import { FilePath, LogLevel } from "@takomo/util"
 import { Credentials } from "aws-sdk"
 import { CreateCtxAndConfigRepositoryProps } from "./stacks"
@@ -41,3 +43,53 @@ export const createTestCommandContext = async (
     credentials,
   )
 }
+
+export interface ExpectedStackResult {
+  readonly stackPath: StackPath
+  readonly stackName: StackName
+  readonly status: CommandStatus
+  readonly success: boolean
+  readonly message: string
+}
+
+type StackOperationSucceededProps = Pick<
+  ExpectedStackResult,
+  "stackPath" | "stackName" | "message"
+>
+type StackSucceededProps = Pick<ExpectedStackResult, "stackPath" | "stackName">
+
+const stackOperationSucceeded = ({
+  stackPath,
+  stackName,
+  message,
+}: StackOperationSucceededProps): ExpectedStackResult => ({
+  stackPath,
+  stackName,
+  message,
+  status: "SUCCESS",
+  success: true,
+})
+
+export const stackCreateSucceeded = (
+  props: StackSucceededProps,
+): ExpectedStackResult =>
+  stackOperationSucceeded({
+    ...props,
+    message: "Stack create succeeded",
+  })
+
+export const stackDeleteSucceeded = (
+  props: StackSucceededProps,
+): ExpectedStackResult =>
+  stackOperationSucceeded({
+    ...props,
+    message: "Stack delete succeeded",
+  })
+
+export const stackUpdateSucceeded = (
+  props: StackSucceededProps,
+): ExpectedStackResult =>
+  stackOperationSucceeded({
+    ...props,
+    message: "Stack delete succeeded",
+  })

@@ -29,6 +29,9 @@ interface ExecuteStageProps<R extends CommandOutput, C> {
   readonly timer: Timer
 }
 
+const countTargets = (stage: ConfigSetExecutionStage<unknown>): number =>
+  stage.groups.reduce((count, g) => g.targets.length + count, 0)
+
 export const executeStage = async <R extends CommandOutput, C>({
   stage,
   logger,
@@ -45,7 +48,7 @@ export const executeStage = async <R extends CommandOutput, C>({
   const stageName = stage.stageName
   logger.info(`Begin stage '${stageName}'`)
 
-  const targetCount = stage.groups.map((g) => g.targets).flat().length
+  const targetCount = countTargets(stage)
 
   const targetListener = targetListenerProvider({
     stageName,

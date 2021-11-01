@@ -5,6 +5,8 @@
 import {
   executeBootstrapTargetsCommand,
   executeTeardownTargetsCommand,
+  stackCreateSucceeded,
+  stackDeleteSucceeded,
 } from "@takomo/test-integration"
 
 const projectDir = "configs/simple"
@@ -21,6 +23,24 @@ describe("Bootstrapping", () => {
         targetResults: [
           {
             name: "two",
+            success: true,
+            status: "SUCCESS",
+            configSetResults: [
+              {
+                configSet: "logs2",
+                commandPathResults: [
+                  {
+                    commandPath: "/logs-2.yml",
+                    stackResults: [
+                      stackCreateSucceeded({
+                        stackPath: "/logs-2.yml/eu-west-1",
+                        stackName: "logs-2",
+                      }),
+                    ],
+                  },
+                ],
+              },
+            ],
           },
         ],
       })
@@ -34,7 +54,29 @@ describe("Bootstrapping", () => {
       .expectCommandToSucceed()
       .expectResults({
         deploymentGroupPath: "Example",
-        targetResults: [{ name: "two" }],
+        targetResults: [
+          {
+            name: "two",
+            success: true,
+            status: "SUCCESS",
+            configSetResults: [
+              {
+                configSet: "logs2",
+                commandPathResults: [
+                  {
+                    commandPath: "/logs-2.yml",
+                    stackResults: [
+                      stackDeleteSucceeded({
+                        stackPath: "/logs-2.yml/eu-west-1",
+                        stackName: "logs-2",
+                      }),
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       })
       .assert())
 })

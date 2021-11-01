@@ -1,8 +1,7 @@
-import { HookOperation } from "@takomo/stacks-model"
-import { StackDeployOperationType } from "../../../src"
+import { HookOperation, StackOperationType } from "@takomo/stacks-model"
 import { toHookOperation } from "../../../src/stacks/common/hooks"
 
-const cases: Array<[StackDeployOperationType, HookOperation]> = [
+const cases: Array<[StackOperationType, HookOperation]> = [
   ["CREATE", "create"],
   ["RECREATE", "create"],
   ["UPDATE", "update"],

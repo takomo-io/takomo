@@ -1,8 +1,6 @@
 import { CloudFormationStack } from "@takomo/aws-model"
-import {
-  StackDeployOperation,
-  StackDeployOperationType,
-} from "@takomo/stacks-commands"
+import { StackDeployOperation } from "@takomo/stacks-commands"
+import { StackOperationType } from "@takomo/stacks-model"
 import { createCapturingLogWriter } from "@takomo/test-unit"
 import {
   bold,
@@ -47,7 +45,7 @@ const createIO = (writer: LogWriter) =>
   })
 
 const mockOperation = (
-  type: StackDeployOperationType,
+  type: StackOperationType,
   stackProps: MockInternalStackProps,
 ): StackDeployOperation => {
   const { currentStack } = stackProps

@@ -4,7 +4,10 @@
  * @testenv-recycler-count 4
  */
 
-import { executeDeployTargetsCommand } from "@takomo/test-integration"
+import {
+  executeDeployTargetsCommand,
+  stackCreateSucceeded,
+} from "@takomo/test-integration"
 
 const projectDir = "configs/config-sets"
 
@@ -27,14 +30,14 @@ describe("Config sets", () => {
                   {
                     commandPath: "/",
                     stackResults: [
-                      {
+                      stackCreateSucceeded({
                         stackPath: "/a.yml/eu-west-1",
                         stackName: "a",
-                      },
-                      {
+                      }),
+                      stackCreateSucceeded({
                         stackPath: "/b.yml/eu-west-1",
                         stackName: "b",
-                      },
+                      }),
                     ],
                   },
                 ],
