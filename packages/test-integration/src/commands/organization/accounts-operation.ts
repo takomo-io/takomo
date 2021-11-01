@@ -4,10 +4,10 @@ import { CommandStatus, ResultsOutput } from "@takomo/core"
 import {
   CommandPathExecutionResult,
   ConfigSetExecutionResult,
-  GroupExecutionResult,
-  PlanExecutionResult,
-  StageExecutionResult,
-  TargetExecutionResult,
+  ConfigSetGroupExecutionResult,
+  ConfigSetPlanExecutionResult,
+  ConfigSetStageExecutionResult,
+  ConfigSetTargetExecutionResult,
 } from "@takomo/execution-plans"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { CommandPath, StackPath, StackResult } from "@takomo/stacks-model"
@@ -57,7 +57,7 @@ export interface AccountsOperationOutputMatcher<
   P,
   O,
   R extends ResultsOutput<O>,
-  T extends PlanExecutionResult<R>,
+  T extends ConfigSetPlanExecutionResult<R>,
 > {
   readonly expectCommandToSucceed: () => AccountsOperationOutputMatcher<
     P,
@@ -74,7 +74,7 @@ export interface AccountsOperationOutputMatcher<
 }
 
 type StageResultAssertion<O, R extends ResultsOutput<O>> = (
-  result: StageExecutionResult<R>,
+  result: ConfigSetStageExecutionResult<R>,
 ) => void
 
 export type StackResultAssertion<O> = (result: O) => void
@@ -94,7 +94,7 @@ interface CreateAccountsOperationOutputMatcherProps<
   P,
   O,
   R extends ResultsOutput<O>,
-  T extends PlanExecutionResult<R>,
+  T extends ConfigSetPlanExecutionResult<R>,
 > {
   readonly executor: () => Promise<T>
   readonly outputAssertions?: (output: T) => void
@@ -157,7 +157,7 @@ const assertAccountResults = <P, O, R extends ResultsOutput<O>>(
   ouPath: OrganizationalUnitPath,
   expectedResults: ReadonlyArray<ExpectAccountResultProps<P>>,
   unorderedAccounts: boolean,
-  actualResults: ReadonlyArray<TargetExecutionResult<R>>,
+  actualResults: ReadonlyArray<ConfigSetTargetExecutionResult<R>>,
 ) => {
   expectedResults.forEach((expectedAccountResult, i) => {
     const actualAccountResult = unorderedAccounts
@@ -197,7 +197,7 @@ const assertAccountResults = <P, O, R extends ResultsOutput<O>>(
 
 const assertOrganizationalUnitResults = <P, O, R extends ResultsOutput<O>>(
   stackResultAssertionProvider: StackResultAssertionProvider<P, O>,
-  actualResults: ReadonlyArray<GroupExecutionResult<R>>,
+  actualResults: ReadonlyArray<ConfigSetGroupExecutionResult<R>>,
   unorderedAccounts: boolean,
   expectedResults: ReadonlyArray<ExpectOrganizationalUnitResultProps<P>>,
 ): void => {
@@ -236,7 +236,7 @@ export const createAccountsOperationOutputMatcher = <
   P,
   O,
   R extends ResultsOutput<O>,
-  T extends PlanExecutionResult<R>,
+  T extends ConfigSetPlanExecutionResult<R>,
 >({
   executor,
   outputAssertions,

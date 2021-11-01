@@ -9,7 +9,7 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "@takomo/deployment-targets-model"
-import { GroupExecutionResult } from "@takomo/execution-plans"
+import { ConfigSetGroupExecutionResult } from "@takomo/execution-plans"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
 
@@ -67,7 +67,7 @@ export interface DeploymentGroupResultMatcher {
 }
 
 type DeploymentGroupResultAssertion = (
-  result: GroupExecutionResult<StacksOperationOutput>,
+  result: ConfigSetGroupExecutionResult<StacksOperationOutput>,
 ) => Promise<boolean>
 
 const createDeploymentGroupResultMatcher = (

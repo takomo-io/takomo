@@ -8,6 +8,7 @@ import {
 import { CommandOutput, CommandOutputBase, OperationState } from "@takomo/core"
 import { CommandPath } from "@takomo/stacks-model"
 import { Timer, TkmLogger } from "@takomo/util"
+import { ExecutionGroupId, ExecutionTargetId } from "../model"
 
 export interface CommandPathExecutionResult<R extends CommandOutput>
   extends CommandOutputBase {
@@ -23,35 +24,35 @@ export interface ConfigSetExecutionResult<R extends CommandOutput>
   readonly timer: Timer
 }
 
-export interface TargetExecutionResult<R extends CommandOutput>
+export interface ConfigSetTargetExecutionResult<R extends CommandOutput>
   extends CommandOutputBase {
   readonly targetId: ExecutionTargetId
   readonly results: ReadonlyArray<ConfigSetExecutionResult<R>>
   readonly timer: Timer
 }
 
-export interface GroupExecutionResult<R extends CommandOutput>
+export interface ConfigSetGroupExecutionResult<R extends CommandOutput>
   extends CommandOutputBase {
-  readonly groupId: ExecutionGroupPath
-  readonly results: ReadonlyArray<TargetExecutionResult<R>>
+  readonly groupId: ExecutionGroupId
+  readonly results: ReadonlyArray<ConfigSetTargetExecutionResult<R>>
   readonly timer: Timer
 }
 
-export interface StageExecutionResult<R extends CommandOutput>
+export interface ConfigSetStageExecutionResult<R extends CommandOutput>
   extends CommandOutputBase {
   readonly stageName: StageName
-  readonly results: ReadonlyArray<GroupExecutionResult<R>>
+  readonly results: ReadonlyArray<ConfigSetGroupExecutionResult<R>>
   readonly timer: Timer
 }
 
-export interface PlanExecutionResult<R extends CommandOutput>
+export interface ConfigSetPlanExecutionResult<R extends CommandOutput>
   extends CommandOutput {
-  readonly results: ReadonlyArray<StageExecutionResult<R>>
+  readonly results: ReadonlyArray<ConfigSetStageExecutionResult<R>>
 }
 
-export interface TargetExecutorProps<C> {
+export interface ConfigSetTargetExecutorProps<C> {
   readonly state: OperationState
-  readonly target: ExecutionTarget<C>
+  readonly target: ConfigSetExecutionTarget<C>
   readonly defaultCredentialManager: CredentialManager
   readonly commandPath: CommandPath
   readonly timer: Timer
@@ -59,58 +60,53 @@ export interface TargetExecutorProps<C> {
   readonly logger: TkmLogger
 }
 
-export type TargetExecutor<R extends CommandOutput, C> = (
-  props: TargetExecutorProps<C>,
+export type ConfigSetTargetExecutor<R extends CommandOutput, C> = (
+  props: ConfigSetTargetExecutorProps<C>,
 ) => Promise<R>
 
-export interface ExecutionConfigSet {
+export interface ConfigSetExecution {
   readonly name: ConfigSetName
   readonly commandPaths: ReadonlyArray<CommandPath>
 }
 
-export type ExecutionTargetId = string
-
-export interface ExecutionTarget<C> {
+export interface ConfigSetExecutionTarget<C> {
   readonly vars: any
-  readonly configSets: ReadonlyArray<ExecutionConfigSet>
+  readonly configSets: ReadonlyArray<ConfigSetExecution>
   readonly id: ExecutionTargetId
   readonly data: C
 }
 
-export type ExecutionGroupPath = string
-
-export interface ExecutionGroup<C> {
-  readonly path: ExecutionGroupPath
-  readonly targets: ReadonlyArray<ExecutionTarget<C>>
+export interface ConfigSetExecutionGroup<C> {
+  readonly id: ExecutionGroupId
+  readonly targets: ReadonlyArray<ConfigSetExecutionTarget<C>>
 }
 
-export interface ExecutionStage<C> {
+export interface ConfigSetExecutionStage<C> {
   readonly stageName: StageName
-  readonly groups: ReadonlyArray<ExecutionGroup<C>>
+  readonly groups: ReadonlyArray<ConfigSetExecutionGroup<C>>
 }
 
-export interface ExecutionPlan<C> {
-  readonly stages: ReadonlyArray<ExecutionStage<C>>
-}
-
-export interface ConfigSetExecutionPlan<C> extends ExecutionPlan<C> {
+export interface ConfigSetExecutionPlan<C> {
+  readonly stages: ReadonlyArray<ConfigSetExecutionStage<C>>
   readonly configSetType: ConfigSetType
 }
 
-export interface CreateTargetListenerProps {
+export interface CreateConfigSetTargetListenerProps {
   readonly stageName: StageName
   readonly currentStageNumber: number
   readonly stageCount: number
   readonly targetCount: number
 }
 
-export interface TargetListener {
+export interface ConfigSetTargetListener {
   readonly onTargetBegin: () => Promise<void>
-  readonly onGroupBegin: (group: ExecutionGroup<any>) => Promise<void>
+  readonly onGroupBegin: (group: ConfigSetExecutionGroup<any>) => Promise<void>
   readonly onTargetComplete: () => Promise<void>
-  readonly onGroupComplete: (group: ExecutionGroup<any>) => Promise<void>
+  readonly onGroupComplete: (
+    group: ConfigSetExecutionGroup<any>,
+  ) => Promise<void>
 }
 
-export type TargetListenerProvider = (
-  props: CreateTargetListenerProps,
-) => TargetListener
+export type ConfigSetTargetListenerProvider = (
+  props: CreateConfigSetTargetListenerProps,
+) => ConfigSetTargetListener

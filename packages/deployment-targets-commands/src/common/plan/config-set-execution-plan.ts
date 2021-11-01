@@ -9,15 +9,15 @@ import {
 } from "@takomo/deployment-targets-config"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import {
+  ConfigSetExecutionGroup,
   ConfigSetExecutionPlan,
-  ExecutionGroup,
-  ExecutionTarget,
+  ConfigSetExecutionTarget,
 } from "@takomo/execution-plans"
 import { TkmLogger } from "@takomo/util"
 import {
-  createExecutionPlan,
+  createConfigSetExecutionPlan,
   TargetsSelectionCriteria,
-} from "./create-execution-plan"
+} from "./create-config-set-execution-plan"
 import { getExecutionRoleArn } from "./get-execution-role-arn"
 import { PlannedDeploymentTarget } from "./model"
 
@@ -32,7 +32,7 @@ export interface CreateConfigSetExecutionPlanProps {
   readonly targetsSelectionCriteria: ConfigSetExecutionPlanTargetsSelectionProps
 }
 
-export const createConfigSetExecutionPlan = async (
+export const createExecutionPlan = async (
   props: CreateConfigSetExecutionPlanProps,
 ): Promise<ConfigSetExecutionPlan<PlannedDeploymentTarget>> => {
   const {
@@ -58,7 +58,7 @@ export const createConfigSetExecutionPlan = async (
   const convertToExecutionTarget = (
     target: DeploymentTargetConfig,
     stageName: StageName,
-  ): ExecutionTarget<PlannedDeploymentTarget> => ({
+  ): ConfigSetExecutionTarget<PlannedDeploymentTarget> => ({
     id: target.name,
     vars: target.vars,
     configSets: getConfigSetsWithStage(target, stageName)
@@ -82,18 +82,13 @@ export const createConfigSetExecutionPlan = async (
   const executionGroupConverter = (
     group: DeploymentGroupConfig,
     stageName: StageName,
-  ): ExecutionGroup<PlannedDeploymentTarget> => ({
-    path: group.path,
+  ): ConfigSetExecutionGroup<PlannedDeploymentTarget> => ({
+    id: group.path,
     targets: group.targets
       .filter((target) => hasConfigSetsWithStage(target, stageName))
       .map((target) => convertToExecutionTarget(target, stageName))
       .filter(({ configSets }) => configSets.length > 0),
   })
 
-  const plan = createExecutionPlan({ ...props, executionGroupConverter })
-
-  return {
-    ...plan,
-    configSetType,
-  }
+  return createConfigSetExecutionPlan({ ...props, executionGroupConverter })
 }

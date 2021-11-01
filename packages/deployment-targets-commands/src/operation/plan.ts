@@ -1,6 +1,6 @@
 import { OutputFormat } from "@takomo/core"
 import { Timer } from "@takomo/util"
-import { createConfigSetExecutionPlan } from "../common/plan/config-set-execution-plan"
+import { createExecutionPlan } from "../common/plan/config-set-execution-plan"
 import { confirmOperation } from "./confirm"
 import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"
 
@@ -21,7 +21,7 @@ export const planDeployment = async (
 ): Promise<DeploymentTargetsOperationOutput> => {
   const { ctx, io, input, timer } = holder
 
-  const plan = await createConfigSetExecutionPlan({
+  const plan = await createExecutionPlan({
     ctx,
     logger: io,
     targetsSelectionCriteria: input,

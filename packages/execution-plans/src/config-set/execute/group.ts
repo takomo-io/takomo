@@ -8,29 +8,29 @@ import {
 import { Timer, TkmLogger } from "@takomo/util"
 import { IPolicy, Policy } from "cockatiel"
 import {
-  ExecutionGroup,
-  ExecutionTarget,
-  GroupExecutionResult,
-  TargetExecutionResult,
-  TargetExecutor,
-  TargetListener,
+  ConfigSetExecutionGroup,
+  ConfigSetExecutionTarget,
+  ConfigSetGroupExecutionResult,
+  ConfigSetTargetExecutionResult,
+  ConfigSetTargetExecutor,
+  ConfigSetTargetListener,
 } from "../model"
 import { executeTarget } from "./target"
 
 type TargetExecution<R extends CommandOutput> = () => Promise<
-  TargetExecutionResult<R>
+  ConfigSetTargetExecutionResult<R>
 >
 
 interface ConvertToOperationProps<R extends CommandOutput, C> {
   readonly timer: Timer
   readonly policy: IPolicy
-  readonly target: ExecutionTarget<C>
+  readonly target: ConfigSetExecutionTarget<C>
   readonly state: OperationState
-  readonly results: Array<TargetExecutionResult<R>>
-  readonly targetListener: TargetListener
+  readonly results: Array<ConfigSetTargetExecutionResult<R>>
+  readonly targetListener: ConfigSetTargetListener
   readonly logger: TkmLogger
   readonly ctx: ConfigSetContext
-  readonly executor: TargetExecutor<R, C>
+  readonly executor: ConfigSetTargetExecutor<R, C>
   readonly defaultCredentialManager: CredentialManager
 }
 
@@ -66,13 +66,13 @@ const convertToOperation =
     })
 
 export interface ExecuteGroupProps<R extends CommandOutput, C> {
-  readonly targetListener: TargetListener
-  readonly group: ExecutionGroup<C>
+  readonly targetListener: ConfigSetTargetListener
+  readonly group: ConfigSetExecutionGroup<C>
   readonly timer: Timer
   readonly state: OperationState
   readonly logger: TkmLogger
   readonly ctx: ConfigSetContext
-  readonly executor: TargetExecutor<R, C>
+  readonly executor: ConfigSetTargetExecutor<R, C>
   readonly concurrentTargets: number
   readonly defaultCredentialManager: CredentialManager
 }
@@ -87,11 +87,11 @@ export const executeGroup = async <R extends CommandOutput, C>({
   ctx,
   concurrentTargets,
   defaultCredentialManager,
-}: ExecuteGroupProps<R, C>): Promise<GroupExecutionResult<R>> => {
+}: ExecuteGroupProps<R, C>): Promise<ConfigSetGroupExecutionResult<R>> => {
   await targetListener.onGroupBegin(group)
 
   const policy = Policy.bulkhead(concurrentTargets, 10000)
-  const results = new Array<TargetExecutionResult<R>>()
+  const results = new Array<ConfigSetTargetExecutionResult<R>>()
 
   const operations = group.targets.map((target) =>
     convertToOperation<R, C>({
@@ -115,7 +115,7 @@ export const executeGroup = async <R extends CommandOutput, C>({
   timer.stop()
   return {
     ...resolveCommandOutputBase(results),
-    groupId: group.path,
+    groupId: group.id,
     results,
     timer,
   }

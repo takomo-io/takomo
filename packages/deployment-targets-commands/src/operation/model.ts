@@ -8,9 +8,9 @@ import {
 } from "@takomo/deployment-targets-model"
 import {
   ConfigSetExecutionPlan,
-  CreateTargetListenerProps,
-  PlanExecutionResult,
-  TargetListener,
+  ConfigSetPlanExecutionResult,
+  ConfigSetTargetListener,
+  CreateConfigSetTargetListenerProps,
 } from "@takomo/execution-plans"
 import {
   DeployStacksIO,
@@ -44,7 +44,7 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
 }
 
 export interface DeploymentTargetsOperationOutput
-  extends PlanExecutionResult<StacksOperationOutput> {
+  extends ConfigSetPlanExecutionResult<StacksOperationOutput> {
   readonly outputFormat: OutputFormat
 }
 
@@ -61,8 +61,8 @@ export interface DeploymentTargetsOperationIO
     plan: TargetsExecutionPlan,
   ) => Promise<ConfirmOperationAnswer>
   readonly createTargetListener: (
-    props: CreateTargetListenerProps,
-  ) => TargetListener
+    props: CreateConfigSetTargetListenerProps,
+  ) => ConfigSetTargetListener
 }
 
 export interface InitialHolder {

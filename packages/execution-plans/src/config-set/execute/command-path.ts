@@ -5,16 +5,16 @@ import { CommandPath } from "@takomo/stacks-model"
 import { Timer, TkmLogger } from "@takomo/util"
 import {
   CommandPathExecutionResult,
-  ExecutionTarget,
-  TargetExecutor,
+  ConfigSetExecutionTarget,
+  ConfigSetTargetExecutor,
 } from "../model"
 
 export interface ExecuteCommandPathProps<R extends CommandOutput, C> {
-  readonly target: ExecutionTarget<C>
+  readonly target: ConfigSetExecutionTarget<C>
   readonly commandPath: CommandPath
   readonly timer: Timer
   readonly state: OperationState
-  readonly executor: TargetExecutor<R, C>
+  readonly executor: ConfigSetTargetExecutor<R, C>
   readonly logger: TkmLogger
   readonly defaultCredentialManager: CredentialManager
   readonly configSet: ConfigSet

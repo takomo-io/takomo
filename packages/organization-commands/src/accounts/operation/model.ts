@@ -3,9 +3,9 @@ import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import { CommandInput, ConfirmResult, IO, OutputFormat } from "@takomo/core"
 import {
   ConfigSetExecutionPlan,
-  CreateTargetListenerProps,
-  PlanExecutionResult,
-  TargetListener,
+  ConfigSetPlanExecutionResult,
+  ConfigSetTargetListener,
+  CreateConfigSetTargetListenerProps,
 } from "@takomo/execution-plans"
 import {
   DeployStacksIO,
@@ -27,7 +27,7 @@ export interface AccountsOperationInput extends CommandInput {
 }
 
 export interface AccountsOperationOutput
-  extends PlanExecutionResult<StacksOperationOutput> {
+  extends ConfigSetPlanExecutionResult<StacksOperationOutput> {
   readonly outputFormat: OutputFormat
 }
 
@@ -38,8 +38,8 @@ export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
     plan: AccountsOperationPlan,
   ) => Promise<ConfirmResult>
   readonly createTargetListener: (
-    props: CreateTargetListenerProps,
-  ) => TargetListener
+    props: CreateConfigSetTargetListenerProps,
+  ) => ConfigSetTargetListener
 }
 
 export type AccountsOperationPlan =

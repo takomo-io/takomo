@@ -5,8 +5,8 @@ import {
   DeploymentTargetsContext,
 } from "@takomo/deployment-targets-context"
 import {
+  ConfigSetTargetExecutorProps,
   executeConfigSetPlan,
-  TargetExecutorProps,
 } from "@takomo/execution-plans"
 import {
   deployStacksCommand,
@@ -85,7 +85,7 @@ const createExecutor = ({
     configSet,
     target,
     defaultCredentialManager,
-  }: TargetExecutorProps<PlannedDeploymentTarget>): Promise<StacksOperationOutput> => {
+  }: ConfigSetTargetExecutorProps<PlannedDeploymentTarget>): Promise<StacksOperationOutput> => {
     if (state.failed) {
       logger.debug("Cancel operation")
       timer.stop()

@@ -1,5 +1,5 @@
 import { OutputFormat } from "@takomo/core"
-import { TargetExecutorProps } from "@takomo/execution-plans"
+import { ConfigSetTargetExecutorProps } from "@takomo/execution-plans"
 import {
   OrganizationConfigRepository,
   OrganizationContext,
@@ -30,7 +30,7 @@ export const createExecutor = ({
     configSet,
     target,
     defaultCredentialManager,
-  }: TargetExecutorProps<PlannedOrganizationAccount>): Promise<ListStacksOutput> => {
+  }: ConfigSetTargetExecutorProps<PlannedOrganizationAccount>): Promise<ListStacksOutput> => {
     if (state.failed) {
       logger.debug("Cancel operation")
       timer.stop()

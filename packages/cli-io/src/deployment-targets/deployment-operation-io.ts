@@ -156,7 +156,7 @@ export const createDeploymentTargetsOperationIO = (
         marginTop: true,
       })
       stage.groups.forEach((ou) => {
-        io.message({ text: `${ou.path}:`, indent: 4, marginTop: true })
+        io.message({ text: `${ou.id}:`, indent: 4, marginTop: true })
         ou.targets.forEach(({ data, configSets }) => {
           io.message({
             text: `- name:     ${data.name}`,

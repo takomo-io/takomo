@@ -7,9 +7,9 @@ import {
   Label,
 } from "@takomo/deployment-targets-model"
 import {
-  ExecutionGroup,
-  ExecutionPlan,
-  ExecutionStage,
+  ConfigSetExecutionGroup,
+  ConfigSetExecutionPlan,
+  ConfigSetExecutionStage,
 } from "@takomo/execution-plans"
 import { CommandPath } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
@@ -19,7 +19,7 @@ import { selectDeploymentGroups } from "./select-deployment-groups"
 export type ExecutionGroupConverter = (
   group: DeploymentGroupConfig,
   stageName: StageName,
-) => ExecutionGroup<PlannedDeploymentTarget>
+) => ConfigSetExecutionGroup<PlannedDeploymentTarget>
 
 export interface TargetsSelectionCriteria {
   readonly groups: ReadonlyArray<DeploymentGroupPath>
@@ -27,7 +27,7 @@ export interface TargetsSelectionCriteria {
   readonly excludeTargets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly labels: ReadonlyArray<Label>
   readonly excludeLabels: ReadonlyArray<Label>
-  readonly configSetType?: ConfigSetType
+  readonly configSetType: ConfigSetType
   readonly configSetName?: ConfigSetName
   readonly commandPath?: CommandPath
 }
@@ -39,16 +39,17 @@ export interface CreateExecutionPlanProps {
   readonly executionGroupConverter: ExecutionGroupConverter
 }
 
-export const createExecutionPlan = ({
+export const createConfigSetExecutionPlan = ({
   ctx,
   targetsSelectionCriteria,
   executionGroupConverter,
-}: CreateExecutionPlanProps): ExecutionPlan<PlannedDeploymentTarget> => {
+}: CreateExecutionPlanProps): ConfigSetExecutionPlan<PlannedDeploymentTarget> => {
+  const { configSetType } = targetsSelectionCriteria
   const selectedGroups = selectDeploymentGroups(ctx, targetsSelectionCriteria)
 
   const createStage = (
     stageName: StageName,
-  ): ExecutionStage<PlannedDeploymentTarget> => ({
+  ): ConfigSetExecutionStage<PlannedDeploymentTarget> => ({
     stageName,
     groups: selectedGroups
       .map((group) => executionGroupConverter(group, stageName))
@@ -62,5 +63,6 @@ export const createExecutionPlan = ({
 
   return {
     stages,
+    configSetType,
   }
 }

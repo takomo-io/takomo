@@ -8,15 +8,15 @@ import {
 import { Timer, TkmLogger } from "@takomo/util"
 import {
   ConfigSetExecutionResult,
-  ExecutionTarget,
-  TargetExecutionResult,
-  TargetExecutor,
+  ConfigSetExecutionTarget,
+  ConfigSetTargetExecutionResult,
+  ConfigSetTargetExecutor,
 } from "../model"
 import { executeConfigSet } from "./config-set"
 
 export interface ExecuteTargetProps<R extends CommandOutput, C> {
-  readonly executor: TargetExecutor<R, C>
-  readonly target: ExecutionTarget<C>
+  readonly executor: ConfigSetTargetExecutor<R, C>
+  readonly target: ConfigSetExecutionTarget<C>
   readonly state: OperationState
   readonly logger: TkmLogger
   readonly ctx: ConfigSetContext
@@ -32,7 +32,7 @@ export const executeTarget = async <R extends CommandOutput, C>({
   executor,
   ctx,
   defaultCredentialManager,
-}: ExecuteTargetProps<R, C>): Promise<TargetExecutionResult<R>> => {
+}: ExecuteTargetProps<R, C>): Promise<ConfigSetTargetExecutionResult<R>> => {
   const results = new Array<ConfigSetExecutionResult<R>>()
 
   for (const configSet of target.configSets) {

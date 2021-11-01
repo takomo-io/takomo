@@ -11,10 +11,10 @@ import {
   StageName,
 } from "@takomo/config-sets"
 import {
+  ConfigSetExecutionGroup,
   ConfigSetExecutionPlan,
-  ExecutionGroup,
-  ExecutionStage,
-  ExecutionTarget,
+  ConfigSetExecutionStage,
+  ConfigSetExecutionTarget,
 } from "@takomo/execution-plans"
 import {
   OrganizationAccountConfig,
@@ -186,7 +186,7 @@ export const createAccountsPlan = async ({
   const convertToExecutionTarget = (
     a: OrganizationAccountConfig,
     stageName: StageName,
-  ): ExecutionTarget<PlannedOrganizationAccount> => ({
+  ): ConfigSetExecutionTarget<PlannedOrganizationAccount> => ({
     id: a.id,
     vars: a.vars,
     configSets: getConfigSetsWithStage(a, stageName)
@@ -207,8 +207,8 @@ export const createAccountsPlan = async ({
   const convertToExecutionGroup = (
     ou: OrganizationalUnitConfig,
     stageName: StageName,
-  ): ExecutionGroup<PlannedOrganizationAccount> => ({
-    path: ou.path,
+  ): ConfigSetExecutionGroup<PlannedOrganizationAccount> => ({
+    id: ou.path,
     targets: ou.accounts
       .filter((a) => hasConfigSetsWithStage(a, stageName))
       .map((a) => convertToExecutionTarget(a, stageName))
@@ -224,7 +224,7 @@ export const createAccountsPlan = async ({
 
   const createStage = (
     stageName: StageName,
-  ): ExecutionStage<PlannedOrganizationAccount> => ({
+  ): ConfigSetExecutionStage<PlannedOrganizationAccount> => ({
     stageName,
     groups: ous
       .map((ou) => convertToExecutionGroup(ou, stageName))

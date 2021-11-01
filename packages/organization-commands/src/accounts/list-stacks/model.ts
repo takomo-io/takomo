@@ -2,9 +2,9 @@ import { AccountId } from "@takomo/aws-model"
 import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import { CommandInput, IO, OutputFormat } from "@takomo/core"
 import {
-  CreateTargetListenerProps,
-  PlanExecutionResult,
-  TargetListener,
+  ConfigSetPlanExecutionResult,
+  ConfigSetTargetListener,
+  CreateConfigSetTargetListenerProps,
 } from "@takomo/execution-plans"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { ListStacksIO, ListStacksOutput } from "@takomo/stacks-commands"
@@ -21,13 +21,13 @@ export interface ListAccountsStacksInput extends CommandInput {
 }
 
 export interface ListAccountsStacksOutput
-  extends PlanExecutionResult<ListStacksOutput> {
+  extends ConfigSetPlanExecutionResult<ListStacksOutput> {
   readonly outputFormat: OutputFormat
 }
 
 export interface ListAccountsStacksIO extends IO<ListAccountsStacksOutput> {
   readonly createListStacksIO: (logger: TkmLogger) => ListStacksIO
   readonly createTargetListener: (
-    props: CreateTargetListenerProps,
-  ) => TargetListener
+    props: CreateConfigSetTargetListenerProps,
+  ) => ConfigSetTargetListener
 }

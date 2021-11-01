@@ -75,9 +75,10 @@ export const selectDeploymentGroups = (
   const rootGroups =
     groups.length === 0
       ? ctx.rootDeploymentGroups
-      : groups.reduce((collected, path) => {
-          return [...collected, ctx.getDeploymentGroup(path)]
-        }, new Array<DeploymentGroupConfig>())
+      : groups.reduce(
+          (collected, path) => [...collected, ctx.getDeploymentGroup(path)],
+          new Array<DeploymentGroupConfig>(),
+        )
 
   const flattenedGroups = rootGroups
     .map((group) =>
