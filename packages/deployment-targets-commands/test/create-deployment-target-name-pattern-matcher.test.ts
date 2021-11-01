@@ -1,7 +1,7 @@
 import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
 import { DeploymentTargetName } from "@takomo/deployment-targets-model"
 import { mock } from "jest-mock-extended"
-import { createDeploymentTargetNamePatternMatcher } from "../src/operation/plan"
+import { createDeploymentTargetNamePatternMatcher } from "../src/common/plan/create-deployment-target-name-pattern-matcher"
 
 const target = (name: DeploymentTargetName): DeploymentTargetConfig =>
   mock<DeploymentTargetConfig>({ name })

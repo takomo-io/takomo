@@ -1,13 +1,21 @@
-import { AccountId, IamRoleArn, OrganizationAccount } from "@takomo/aws-model"
+import {
+  AccountId,
+  IamRoleArn,
+  makeIamRoleArn,
+  OrganizationAccount,
+} from "@takomo/aws-model"
 import {
   ConfigSetName,
   ConfigSetType,
-  ExecutionGroup,
-  ExecutionPlan,
-  ExecutionStage,
-  ExecutionTarget,
+  getConfigSetsByType,
   StageName,
 } from "@takomo/config-sets"
+import {
+  ConfigSetExecutionGroup,
+  ConfigSetExecutionPlan,
+  ConfigSetExecutionStage,
+  ConfigSetExecutionTarget,
+} from "@takomo/execution-plans"
 import {
   OrganizationAccountConfig,
   OrganizationalUnitConfig,
@@ -43,6 +51,7 @@ export interface CreateAccountsPlanProps {
 
 export interface PlannedOrganizationAccount extends OrganizationAccount {
   readonly executionRoleArn: IamRoleArn
+  readonly accountId: AccountId
 }
 
 export const createAccountsPlan = async ({
@@ -51,7 +60,7 @@ export const createAccountsPlan = async ({
   organizationState,
   accountsSelectionCriteria,
 }: CreateAccountsPlanProps): Promise<
-  ExecutionPlan<PlannedOrganizationAccount>
+  ConfigSetExecutionPlan<PlannedOrganizationAccount>
 > => {
   const { accounts } = organizationState
   const {
@@ -125,23 +134,14 @@ export const createAccountsPlan = async ({
 
   const accountsById = arrayToMap(accounts, R.prop("id"))
 
-  const getConfigSets = (a: OrganizationAccountConfig) => {
-    switch (configSetType) {
-      case "bootstrap":
-        return a.bootstrapConfigSets
-      case "standard":
-        return a.configSets
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
+  const getConfigSets = R.curry(getConfigSetsByType)(configSetType)
 
   const getExecutionRoleArn = (a: OrganizationAccountConfig): IamRoleArn => {
     switch (configSetType) {
       case "bootstrap":
-        return `arn:aws:iam::${a.id}:role/${a.accountBootstrapRoleName}`
+        return makeIamRoleArn(a.id, a.accountBootstrapRoleName)
       case "standard":
-        return `arn:aws:iam::${a.id}:role/${a.accountAdminRoleName}`
+        return makeIamRoleArn(a.id, a.accountAdminRoleName)
       default:
         throw new Error(`Unsupported config set type: ${configSetType}`)
     }
@@ -168,19 +168,9 @@ export const createAccountsPlan = async ({
   }: OrganizationAccountConfig): boolean =>
     accountIds.length === 0 || accountIds.includes(id)
 
-  const configSetNameMatches = (a: OrganizationAccountConfig): boolean => {
-    if (configSetName === undefined) {
-      return true
-    }
-    switch (configSetType) {
-      case "standard":
-        return a.configSets.some(({ name }) => name === configSetName)
-      case "bootstrap":
-        return a.bootstrapConfigSets.some(({ name }) => name === configSetName)
-      default:
-        throw new Error(`Unsupported config set type: ${configSetType}`)
-    }
-  }
+  const configSetNameMatches = (a: OrganizationAccountConfig): boolean =>
+    configSetName === undefined ||
+    getConfigSets(a).some(({ name }) => name === configSetName)
 
   const filterAccountsBySelectionCriteria = (
     accounts: ReadonlyArray<OrganizationAccountConfig>,
@@ -196,8 +186,7 @@ export const createAccountsPlan = async ({
   const convertToExecutionTarget = (
     a: OrganizationAccountConfig,
     stageName: StageName,
-  ): ExecutionTarget<PlannedOrganizationAccount> => ({
-    accountId: a.id,
+  ): ConfigSetExecutionTarget<PlannedOrganizationAccount> => ({
     id: a.id,
     vars: a.vars,
     configSets: getConfigSetsWithStage(a, stageName)
@@ -211,14 +200,15 @@ export const createAccountsPlan = async ({
     data: {
       ...accountsById.get(a.id)!,
       executionRoleArn: getExecutionRoleArn(a),
+      accountId: a.id,
     },
   })
 
   const convertToExecutionGroup = (
     ou: OrganizationalUnitConfig,
     stageName: StageName,
-  ): ExecutionGroup<PlannedOrganizationAccount> => ({
-    path: ou.path,
+  ): ConfigSetExecutionGroup<PlannedOrganizationAccount> => ({
+    id: ou.path,
     targets: ou.accounts
       .filter((a) => hasConfigSetsWithStage(a, stageName))
       .map((a) => convertToExecutionTarget(a, stageName))
@@ -234,7 +224,7 @@ export const createAccountsPlan = async ({
 
   const createStage = (
     stageName: StageName,
-  ): ExecutionStage<PlannedOrganizationAccount> => ({
+  ): ConfigSetExecutionStage<PlannedOrganizationAccount> => ({
     stageName,
     groups: ous
       .map((ou) => convertToExecutionGroup(ou, stageName))

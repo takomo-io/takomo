@@ -1,4 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
+import { ConfigSetContext } from "@takomo/config-sets"
 import {
   CommandOutput,
   OperationState,
@@ -7,18 +8,17 @@ import {
 import { Timer, TkmLogger } from "@takomo/util"
 import {
   CommandPathExecutionResult,
-  ConfigSetContext,
+  ConfigSetExecution,
   ConfigSetExecutionResult,
-  ExecutionConfigSet,
-  ExecutionTarget,
-  TargetExecutor,
+  ConfigSetExecutionTarget,
+  ConfigSetTargetExecutor,
 } from "../model"
 import { executeCommandPath } from "./command-path"
 
 export interface ExecuteConfigSetProps<R extends CommandOutput, C> {
-  readonly executor: TargetExecutor<R, C>
-  readonly target: ExecutionTarget<C>
-  readonly configSet: ExecutionConfigSet
+  readonly executor: ConfigSetTargetExecutor<R, C>
+  readonly target: ConfigSetExecutionTarget<C>
+  readonly configSet: ConfigSetExecution
   readonly timer: Timer
   readonly state: OperationState
   readonly logger: TkmLogger

@@ -2,7 +2,6 @@ import { StackName, Tag, TagKey, TagValue } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
 import {
-  DeploymentGroupDeployResult,
   DeploymentTargetsOperationOutput,
   DeploymentTargetsRunOutput,
 } from "@takomo/deployment-targets-commands"
@@ -10,6 +9,8 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "@takomo/deployment-targets-model"
+import { ConfigSetGroupExecutionResult } from "@takomo/execution-plans"
+import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
 
 export interface TargetsRunOutputMatcher {
@@ -66,7 +67,7 @@ export interface DeploymentGroupResultMatcher {
 }
 
 type DeploymentGroupResultAssertion = (
-  result: DeploymentGroupDeployResult,
+  result: ConfigSetGroupExecutionResult<StacksOperationOutput>,
 ) => Promise<boolean>
 
 const createDeploymentGroupResultMatcher = (
@@ -81,7 +82,7 @@ const createDeploymentGroupResultMatcher = (
       const assertion: DeploymentGroupResultAssertion = async (
         result,
       ): Promise<boolean> => {
-        if (result.path !== prop.deploymentGroupPath) {
+        if (result.groupId !== prop.deploymentGroupPath) {
           return false
         }
 
@@ -90,16 +91,16 @@ const createDeploymentGroupResultMatcher = (
         for (const [i, targetResult] of result.results.entries()) {
           const expected =
             prop.unorderedTargets === true
-              ? prop.targetResults.find((a) => a.name === targetResult.name)
+              ? prop.targetResults.find((a) => a.name === targetResult.targetId)
               : prop.targetResults[i]
 
           if (!expected) {
             fail(
-              `Unexpected target ${targetResult.name} found under deployment group ${result.path}`,
+              `Unexpected target ${targetResult.targetId} found under deployment group ${result.groupId}`,
             )
           }
 
-          expect(targetResult.name).toStrictEqual(expected.name)
+          expect(targetResult.targetId).toStrictEqual(expected.name)
           if (expected.success !== undefined) {
             expect(targetResult.success).toStrictEqual(expected.success)
           } else {
@@ -228,20 +229,21 @@ const createDeploymentGroupResultMatcher = (
       outputAssertions(output)
     }
 
-    expect(output.results).toHaveLength(groupsAssertions.length)
-    for (const result of output.results) {
-      let res = false
-      for (const groupAssertion of groupsAssertions) {
-        res = await groupAssertion(result)
-        if (res) {
-          break
+    // TODO: Add support for stages
+    for (const stage of output.results) {
+      expect(stage.results).toHaveLength(groupsAssertions.length)
+      for (const result of stage.results) {
+        let res = false
+        for (const groupAssertion of groupsAssertions) {
+          res = await groupAssertion(result)
+          if (res) {
+            break
+          }
         }
-      }
 
-      if (!res) {
-        fail(
-          `Unexpected result for deployment group result with path: ${result.path}`,
-        )
+        if (!res) {
+          fail(`Unexpected result for deployment group: ${result.groupId}`)
+        }
       }
     }
 

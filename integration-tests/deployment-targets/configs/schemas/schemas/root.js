@@ -11,7 +11,8 @@ module.exports = {
               "cost-center": joi.number().required(),
               logGroupName: joi.string().required(),
             })
-            .required(),
+            .required()
+            .unknown(true),
         })
         .unknown(true),
     ),

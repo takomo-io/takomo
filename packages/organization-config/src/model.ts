@@ -7,7 +7,11 @@ import {
   OrganizationPolicyName,
   OrganizationPolicyType,
 } from "@takomo/aws-model"
-import { ConfigSet, ConfigSetInstruction, StageName } from "@takomo/config-sets"
+import {
+  ConfigSet,
+  ConfigSetInstructionsHolder,
+  StageName,
+} from "@takomo/config-sets"
 import {
   OrganizationAccountStatus,
   OrganizationalUnitPath,
@@ -54,11 +58,9 @@ export interface OrgEntityPoliciesConfig {
   readonly backup: OrgEntityPolicies
 }
 
-export interface OrgEntity {
+export interface OrgEntity extends ConfigSetInstructionsHolder {
   readonly policies: OrgEntityPoliciesConfig
   readonly vars: any
-  readonly configSets: ReadonlyArray<ConfigSetInstruction>
-  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
   readonly accountAdminRoleName: IamRoleName
   readonly accountBootstrapRoleName: IamRoleName
   readonly description?: string

@@ -1,14 +1,16 @@
 import { IamRoleName, OrganizationPolicyName } from "@takomo/aws-model"
-import { ConfigSetInstruction } from "@takomo/config-sets"
+import {
+  ConfigSetInstruction,
+  mergeConfigSetInstructions,
+  parseConfigSetInstructions,
+} from "@takomo/config-sets"
 import { parseStringArray, parseVars, Vars } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
 import { merge, TkmLogger } from "@takomo/util"
 import R from "ramda"
 import { OrganizationalUnitConfig } from "../model"
 import { findMissingDirectChildrenPaths } from "./find-missing-direct-child-paths"
-import { mergeConfigSetInstructions } from "./merge-config-set-instructions"
 import { parseAccounts } from "./parse-accounts"
-import { parseConfigSetInstructions } from "./parse-config-set-instructions"
 import { parseOrganizationalUnitStatus } from "./parse-organizational-unit-status"
 
 const extractOrganizationalUnitName = (

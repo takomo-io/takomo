@@ -1,5 +1,5 @@
-import { executePlan } from "@takomo/config-sets"
 import { CommandHandler } from "@takomo/core"
+import { executeConfigSetPlan } from "@takomo/execution-plans"
 import {
   buildOrganizationContext,
   loadOrganizationState,
@@ -44,14 +44,14 @@ const listAccountsStacks = async (
     outputFormat: input.outputFormat,
   })
 
-  return executePlan({
+  return executeConfigSetPlan({
     plan,
     ctx,
     executor,
     logger: io,
     timer: input.timer,
     state: { failed: false },
-    concurrentAccounts: input.concurrentAccounts,
+    concurrentTargets: input.concurrentAccounts,
     defaultCredentialManager: ctx.credentialManager,
     targetListenerProvider: io.createTargetListener,
   })

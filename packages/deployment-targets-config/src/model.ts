@@ -1,5 +1,9 @@
 import { AccountId, IamRoleName } from "@takomo/aws-model"
-import { ConfigSet, ConfigSetName } from "@takomo/config-sets"
+import {
+  ConfigSet,
+  ConfigSetInstruction,
+  ConfigSetInstructionsHolder,
+} from "@takomo/config-sets"
 import { CommandRole, Vars } from "@takomo/core"
 import {
   DeploymentGroupName,
@@ -14,13 +18,11 @@ export interface SchemaConfig {
   readonly [key: string]: unknown
 }
 
-export interface DeploymentTargetConfig {
+export interface DeploymentTargetConfig extends ConfigSetInstructionsHolder {
   readonly status: DeploymentStatus
   readonly name: DeploymentTargetName
   readonly description?: string
   readonly vars: Vars
-  readonly configSets: ReadonlyArray<ConfigSetName>
-  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
   readonly labels: ReadonlyArray<Label>
   readonly deploymentRole?: CommandRole
   readonly deploymentRoleName?: IamRoleName
@@ -38,8 +40,8 @@ export interface DeploymentGroupConfig {
   readonly status: DeploymentStatus
   readonly vars: Vars
   readonly targetsSchema: ReadonlyArray<SchemaConfig>
-  readonly configSets: ReadonlyArray<ConfigSetName>
-  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetName>
+  readonly configSets: ReadonlyArray<ConfigSetInstruction>
+  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
   readonly labels: ReadonlyArray<Label>
   readonly children: ReadonlyArray<DeploymentGroupConfig>
   readonly deploymentRole?: CommandRole

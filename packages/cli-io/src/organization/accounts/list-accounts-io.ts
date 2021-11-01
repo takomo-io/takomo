@@ -16,15 +16,13 @@ export const createListAccountsIO = (props: IOProps): ListAccountsIO => {
     const table = new Table()
 
     output.accounts.forEach((a) => {
-      table.cell("Id", a.id)
-      table.cell("Name", a.name)
-      table.cell("Email", a.email)
-      table.cell("Status", formatAccountStatus(a.status))
-      table.cell(
-        "Joined",
-        date.format(a.joinedTimestamp, "YYYY-MM-DD HH:mm:ss Z"),
-      )
-      table.newRow()
+      table
+        .cell("Id", a.id)
+        .cell("Name", a.name)
+        .cell("Email", a.email)
+        .cell("Status", formatAccountStatus(a.status))
+        .cell("Joined", date.format(a.joinedTimestamp, "YYYY-MM-DD HH:mm:ss Z"))
+        .newRow()
     })
 
     io.message({ text: table.toString(), marginTop: true })

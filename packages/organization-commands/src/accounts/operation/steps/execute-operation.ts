@@ -1,6 +1,9 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { executePlan, TargetExecutorProps } from "@takomo/config-sets"
 import { InternalCommandContext, OutputFormat } from "@takomo/core"
+import {
+  ConfigSetTargetExecutorProps,
+  executeConfigSetPlan,
+} from "@takomo/execution-plans"
 import {
   OrganizationConfigRepository,
   OrganizationContext,
@@ -80,7 +83,7 @@ const createExecutor = ({
     configSet,
     target,
     defaultCredentialManager,
-  }: TargetExecutorProps<PlannedOrganizationAccount>): Promise<StacksOperationOutput> => {
+  }: ConfigSetTargetExecutorProps<PlannedOrganizationAccount>): Promise<StacksOperationOutput> => {
     if (state.failed) {
       logger.debug("Cancel operation")
       timer.stop()
@@ -179,10 +182,10 @@ export const executeOperation: AccountsOperationStep<AccountsOperationPlanHolder
       organizationState,
     })
 
-    const result = await executePlan({
+    const result = await executeConfigSetPlan({
       ctx,
       executor,
-      concurrentAccounts,
+      concurrentTargets: concurrentAccounts,
       logger: io,
       plan: accountsLaunchPlan,
       timer: totalTimer.startChild("execute"),

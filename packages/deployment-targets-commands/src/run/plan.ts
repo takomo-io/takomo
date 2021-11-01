@@ -5,7 +5,7 @@ import {
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import { collectFromHierarchy, TakomoError } from "@takomo/util"
 import R from "ramda"
-import { createDeploymentTargetNamePatternMatcher } from "../operation/plan"
+import { createDeploymentTargetNamePatternMatcher } from "../common/plan/create-deployment-target-name-pattern-matcher"
 import { confirmRun } from "./confirm"
 import {
   DeploymentTargetsRunInput,

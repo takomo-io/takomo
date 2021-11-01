@@ -1,11 +1,13 @@
 import { IamRoleName, OrganizationPolicyName } from "@takomo/aws-model"
-import { ConfigSetInstruction } from "@takomo/config-sets"
+import {
+  ConfigSetInstruction,
+  mergeConfigSetInstructions,
+  parseConfigSetInstructions,
+} from "@takomo/config-sets"
 import { parseStringArray, parseVars, Vars } from "@takomo/core"
 import { deepCopy, merge } from "@takomo/util"
 import { OrganizationAccountConfig } from "../model"
-import { mergeConfigSetInstructions } from "./merge-config-set-instructions"
 import { parseAccountStatus } from "./parse-account-status"
-import { parseConfigSetInstructions } from "./parse-config-set-instructions"
 
 const parseSimpleAccount = (
   id: string,

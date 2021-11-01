@@ -1,38 +1,33 @@
-import {
-  ConfigSetName,
-  ConfigSetOperationResult,
-  ConfigSetType,
-} from "@takomo/config-sets"
-import {
-  CommandInput,
-  CommandOutput,
-  CommandOutputBase,
-  IO,
-} from "@takomo/core"
-import { DeploymentGroupConfig } from "@takomo/deployment-targets-config"
+import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
+import { CommandInput, IO, OutputFormat } from "@takomo/core"
 import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
 import {
   DeploymentGroupPath,
-  DeploymentTargetName,
   DeploymentTargetNamePattern,
   Label,
 } from "@takomo/deployment-targets-model"
-import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
+import {
+  ConfigSetExecutionPlan,
+  ConfigSetPlanExecutionResult,
+  ConfigSetTargetListener,
+  CreateConfigSetTargetListenerProps,
+} from "@takomo/execution-plans"
+import {
+  DeployStacksIO,
+  StacksOperationOutput,
+  UndeployStacksIO,
+} from "@takomo/stacks-commands"
 import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
-import { Timer } from "@takomo/util"
+import { Timer, TkmLogger } from "@takomo/util"
+import { PlannedDeploymentTarget } from "../common/plan/model"
 
 export type ConfirmOperationAnswer =
   | "CANCEL"
   | "CONTINUE_AND_REVIEW"
   | "CONTINUE_NO_REVIEW"
 
-export interface TargetsExecutionPlan {
-  readonly groups: ReadonlyArray<DeploymentGroupConfig>
-  readonly hasChanges: boolean
-  readonly configSetType: ConfigSetType
-  readonly commandPath?: CommandPath
-  readonly configSet?: ConfigSetName
-}
+export type TargetsExecutionPlan =
+  ConfigSetExecutionPlan<PlannedDeploymentTarget>
 
 export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly groups: ReadonlyArray<DeploymentGroupPath>
@@ -48,8 +43,9 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly commandPath?: CommandPath
 }
 
-export interface DeploymentTargetsOperationOutput extends CommandOutput {
-  readonly results: ReadonlyArray<DeploymentGroupDeployResult>
+export interface DeploymentTargetsOperationOutput
+  extends ConfigSetPlanExecutionResult<StacksOperationOutput> {
+  readonly outputFormat: OutputFormat
 }
 
 export interface DeploymentTargetsListener {
@@ -59,26 +55,14 @@ export interface DeploymentTargetsListener {
 
 export interface DeploymentTargetsOperationIO
   extends IO<DeploymentTargetsOperationOutput> {
-  readonly createStackDeployIO: (loggerName: string) => DeployStacksIO
-  readonly createStackUndeployIO: (loggerName: string) => UndeployStacksIO
+  readonly createStackDeployIO: (logger: TkmLogger) => DeployStacksIO
+  readonly createStackUndeployIO: (logger: TkmLogger) => UndeployStacksIO
   readonly confirmOperation: (
     plan: TargetsExecutionPlan,
   ) => Promise<ConfirmOperationAnswer>
-  readonly createDeploymentTargetsListener: (
-    targetCount: number,
-  ) => DeploymentTargetsListener
-}
-
-export interface DeploymentTargetDeployResult extends CommandOutputBase {
-  readonly name: DeploymentTargetName
-  readonly results: ReadonlyArray<ConfigSetOperationResult>
-  readonly timer: Timer
-}
-
-export interface DeploymentGroupDeployResult extends CommandOutputBase {
-  readonly path: DeploymentGroupPath
-  readonly timer: Timer
-  readonly results: ReadonlyArray<DeploymentTargetDeployResult>
+  readonly createTargetListener: (
+    props: CreateConfigSetTargetListenerProps,
+  ) => ConfigSetTargetListener
 }
 
 export interface InitialHolder {
@@ -90,5 +74,4 @@ export interface InitialHolder {
 
 export interface PlanHolder extends InitialHolder {
   readonly plan: TargetsExecutionPlan
-  readonly listener: DeploymentTargetsListener
 }

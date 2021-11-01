@@ -1,13 +1,12 @@
 import { AccountId } from "@takomo/aws-model"
-import {
-  ConfigSetName,
-  ConfigSetType,
-  CreateTargetListenerProps,
-  ExecutionPlan,
-  PlanExecutionResult,
-  TargetListener,
-} from "@takomo/config-sets"
+import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
 import { CommandInput, ConfirmResult, IO, OutputFormat } from "@takomo/core"
+import {
+  ConfigSetExecutionPlan,
+  ConfigSetPlanExecutionResult,
+  ConfigSetTargetListener,
+  CreateConfigSetTargetListenerProps,
+} from "@takomo/execution-plans"
 import {
   DeployStacksIO,
   StacksOperationOutput,
@@ -28,7 +27,7 @@ export interface AccountsOperationInput extends CommandInput {
 }
 
 export interface AccountsOperationOutput
-  extends PlanExecutionResult<StacksOperationOutput> {
+  extends ConfigSetPlanExecutionResult<StacksOperationOutput> {
   readonly outputFormat: OutputFormat
 }
 
@@ -39,8 +38,9 @@ export interface AccountsOperationIO extends IO<AccountsOperationOutput> {
     plan: AccountsOperationPlan,
   ) => Promise<ConfirmResult>
   readonly createTargetListener: (
-    props: CreateTargetListenerProps,
-  ) => TargetListener
+    props: CreateConfigSetTargetListenerProps,
+  ) => ConfigSetTargetListener
 }
 
-export type AccountsOperationPlan = ExecutionPlan<PlannedOrganizationAccount>
+export type AccountsOperationPlan =
+  ConfigSetExecutionPlan<PlannedOrganizationAccount>

@@ -1,16 +1,16 @@
-import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
+import { ConfigSetType } from "@takomo/config-sets"
 import {
   ConfirmOperationAnswer,
-  DeploymentTargetsListener,
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "@takomo/deployment-targets-commands"
-import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
 import { DeployStacksIO, UndeployStacksIO } from "@takomo/stacks-commands"
-import { splitTextInLines } from "@takomo/util"
+import { splitTextInLines, TkmLogger } from "@takomo/util"
 import Table from "easy-table"
+import R from "ramda"
 import { createBaseIO } from "../cli-io"
+import { createTargetListenerInternal } from "../config-set/target-listener"
 import { formatCommandStatus } from "../formatters"
 import { IOProps } from "../stacks/common"
 import { createDeployStacksIO } from "../stacks/deploy-stacks/deploy-stacks-io"
@@ -55,28 +55,14 @@ interface DeploymentOperationIOProps extends IOProps {
   readonly messages: Messages
 }
 
-const getConfigSetsByType = (
-  target: DeploymentTargetConfig,
-  type: ConfigSetType,
-): ReadonlyArray<ConfigSetName> => {
-  switch (type) {
-    case "bootstrap":
-      return target.bootstrapConfigSets
-    case "standard":
-      return target.configSets
-    default:
-      throw new Error(`Unknown config set type: ${type}`)
-  }
-}
-
-const getConfigSetNameByType = (type: ConfigSetType): string => {
-  switch (type) {
-    case "bootstrap":
-      return "bootstrap config sets"
+const getConfigSetsName = (configSetType: ConfigSetType): string => {
+  switch (configSetType) {
     case "standard":
       return "config sets"
+    case "bootstrap":
+      return "bootstrap config sets"
     default:
-      throw new Error(`Unknown config set type: ${type}`)
+      throw new Error(`Unsupported config set type: ${configSetType}`)
   }
 }
 
@@ -86,15 +72,11 @@ export const createDeploymentTargetsOperationIO = (
   const { logger, messages } = props
   const io = createBaseIO(props)
 
-  const createStackDeployIO = (loggerName: string): DeployStacksIO =>
-    createDeployStacksIO({
-      logger: logger.childLogger(loggerName),
-    })
+  const createStackDeployIO = (logger: TkmLogger): DeployStacksIO =>
+    createDeployStacksIO({ logger })
 
-  const createStackUndeployIO = (loggerName: string): UndeployStacksIO =>
-    createUndeployStacksIO({
-      logger: logger.childLogger(loggerName),
-    })
+  const createStackUndeployIO = (logger: TkmLogger): UndeployStacksIO =>
+    createUndeployStacksIO({ logger })
 
   const printOutput = (
     output: DeploymentTargetsOperationOutput,
@@ -107,44 +89,40 @@ export const createDeploymentTargetsOperationIO = (
     }
 
     const targetsTable = new Table()
-    output.results.forEach((group) => {
-      group.results.forEach((target) => {
-        target.results.forEach((configSet) => {
-          configSet.results.forEach((result) => {
-            if (result.result.results.length > 0) {
-              result.result.results.forEach((stackResult) => {
-                targetsTable.cell("Group", group.path)
-                targetsTable.cell("Target", target.name)
-                targetsTable.cell("Config set", configSet.configSetName)
-                targetsTable.cell("Command path", result.commandPath)
-                targetsTable.cell("Stack path", stackResult.stack.path)
-                targetsTable.cell("Stack name", stackResult.stack.name)
-                targetsTable.cell(
-                  "Status",
-                  formatCommandStatus(stackResult.status),
-                )
-                targetsTable.cell(
-                  "Time",
-                  stackResult.timer.getFormattedTimeElapsed(),
-                )
-                targetsTable.cell("Message", stackResult.message)
-                targetsTable.newRow()
-              })
-            } else {
-              targetsTable.cell("Group", group.path)
-              targetsTable.cell("Target", target.name)
-              targetsTable.cell("Config set", configSet.configSetName)
-              targetsTable.cell("Command path", result.commandPath)
-              targetsTable.cell("Stack path", "-")
-              targetsTable.cell("Stack name", "-")
-              targetsTable.cell("Status", formatCommandStatus(result.status))
-              targetsTable.cell(
-                "Time",
-                result.result.timer.getFormattedTimeElapsed(),
-              )
-              targetsTable.cell("Message", result.result.message)
-              targetsTable.newRow()
-            }
+
+    output.results.forEach((stage) => {
+      stage.results.forEach((group) => {
+        group.results.forEach((target) => {
+          target.results.forEach((configSet) => {
+            configSet.results.forEach((result) => {
+              if (result.result.results.length > 0) {
+                result.result.results.forEach((stackResult) => {
+                  targetsTable
+                    .cell("Group", group.groupId)
+                    .cell("Target", target.targetId)
+                    .cell("Config set", configSet.configSetName)
+                    .cell("Command path", result.commandPath)
+                    .cell("Stack path", stackResult.stack.path)
+                    .cell("Stack name", stackResult.stack.name)
+                    .cell("Status", formatCommandStatus(stackResult.status))
+                    .cell("Time", stackResult.timer.getFormattedTimeElapsed())
+                    .cell("Message", stackResult.message)
+                    .newRow()
+                })
+              } else {
+                targetsTable
+                  .cell("Group", group.groupId)
+                  .cell("Target", target.targetId)
+                  .cell("Config set", configSet.configSetName)
+                  .cell("Command path", result.commandPath)
+                  .cell("Stack path", "-")
+                  .cell("Stack name", "-")
+                  .cell("Status", formatCommandStatus(result.status))
+                  .cell("Time", result.result.timer.getFormattedTimeElapsed())
+                  .cell("Message", result.result.message)
+                  .newRow()
+              }
+            })
           })
         })
       })
@@ -171,39 +149,43 @@ export const createDeploymentTargetsOperationIO = (
       marginTop: true,
     })
 
-    const { configSet } = plan
-    const configSetMatches = (cs: ConfigSetName): boolean =>
-      configSet === undefined || configSet === cs
+    plan.stages.forEach((stage) => {
+      io.message({
+        text: `stage: ${stage.stageName}`,
+        indent: 2,
+        marginTop: true,
+      })
+      stage.groups.forEach((ou) => {
+        io.message({ text: `${ou.id}:`, indent: 4, marginTop: true })
+        ou.targets.forEach(({ data, configSets }) => {
+          io.message({
+            text: `- name:     ${data.name}`,
+            marginTop: true,
+            indent: 6,
+          })
 
-    plan.groups.forEach((group) => {
-      io.message({ text: `${group.path}:`, marginTop: true, indent: 2 })
-      group.targets.forEach((target) => {
-        io.message({
-          text: `- name:                 ${target.name}`,
-          marginTop: true,
-          indent: 4,
-        })
-        if (target.accountId) {
+          if (data.accountId) {
+            io.message({
+              text: `account id:           ${data.accountId}`,
+              indent: 6,
+            })
+          }
+          if (data.description) {
+            io.message({
+              text: `description:          ${data.description}`,
+              indent: 6,
+            })
+          }
+
           io.message({
-            text: `account id:           ${target.accountId}`,
-            indent: 6,
+            text: `${getConfigSetsName(plan.configSetType)}:`,
+            indent: 8,
           })
-        }
-        if (target.description) {
-          io.message({
-            text: `description:          ${target.description}`,
-            indent: 6,
+
+          configSets.forEach((configSet) => {
+            io.message({ text: `- ${configSet.name}`, indent: 10 })
           })
-        }
-        io.message({
-          text: `${getConfigSetNameByType(plan.configSetType)}:`,
-          indent: 6,
         })
-        getConfigSetsByType(target, plan.configSetType)
-          .filter(configSetMatches)
-          .forEach((configSet) => {
-            io.message({ text: `- ${configSet}`, indent: 8 })
-          })
       })
     })
 
@@ -212,24 +194,11 @@ export const createDeploymentTargetsOperationIO = (
     return io.choose("How do you want to continue?", choices, true)
   }
 
-  let targetsInProgress = 0
-  let targetsCompleted = 0
-  const createDeploymentTargetsListener = (
-    targetCount: number,
-  ): DeploymentTargetsListener => ({
-    onTargetBegin: async () => {
-      targetsInProgress++
-    },
-    onTargetComplete: async () => {
-      targetsInProgress--
-      targetsCompleted++
-      const waitingCount = targetCount - targetsInProgress - targetsCompleted
-      const percentage = ((targetsCompleted / targetCount) * 100).toFixed(1)
-      logger.info(
-        `Targets waiting: ${waitingCount}, in progress: ${targetsInProgress}, completed: ${targetsCompleted}/${targetCount} (${percentage}%)`,
-      )
-    },
-  })
+  const createTargetListener = R.curry(createTargetListenerInternal)(
+    "group",
+    "targets",
+    logger,
+  )
 
   return {
     ...logger,
@@ -237,6 +206,6 @@ export const createDeploymentTargetsOperationIO = (
     createStackUndeployIO,
     confirmOperation,
     printOutput,
-    createDeploymentTargetsListener,
+    createTargetListener,
   }
 }

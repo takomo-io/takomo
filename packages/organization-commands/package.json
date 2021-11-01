@@ -31,6 +31,7 @@
     "@takomo/aws-model": "3.37.0",
     "@takomo/aws-schema": "3.37.0",
     "@takomo/config-sets": "3.37.0",
+    "@takomo/execution-plans": "3.37.0",
     "@takomo/core": "3.37.0",
     "@takomo/organization-config": "3.37.0",
     "@takomo/organization-context": "3.37.0",

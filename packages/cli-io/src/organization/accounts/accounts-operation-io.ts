@@ -1,6 +1,7 @@
 import { OrganizationAccount } from "@takomo/aws-model"
-import { ConfigSetType, ExecutionPlan } from "@takomo/config-sets"
+import { ConfigSetType } from "@takomo/config-sets"
 import { ConfirmResult } from "@takomo/core"
+import { ConfigSetExecutionPlan } from "@takomo/execution-plans"
 import {
   AccountsOperationIO,
   AccountsOperationOutput,
@@ -11,11 +12,11 @@ import Table from "easy-table"
 import R from "ramda"
 import { createBaseIO } from "../../cli-io"
 import { printError } from "../../common"
+import { createTargetListenerInternal } from "../../config-set/target-listener"
 import { formatCommandStatus } from "../../formatters"
 import { IOProps, printFailedStackResults } from "../../stacks/common"
 import { createDeployStacksIO } from "../../stacks/deploy-stacks/deploy-stacks-io"
 import { createUndeployStacksIO } from "../../stacks/undeploy-stacks-io"
-import { createTargetListenerInternal } from "./common"
 
 export interface Messages {
   readonly confirmHeader: string
@@ -52,7 +53,7 @@ export const createAccountsOperationIO = (
     createUndeployStacksIO({ logger })
 
   const confirmLaunch = async (
-    plan: ExecutionPlan<OrganizationAccount>,
+    plan: ConfigSetExecutionPlan<OrganizationAccount>,
   ): Promise<ConfirmResult> => {
     io.header({ text: messages.confirmHeader, marginTop: true })
 
@@ -63,7 +64,7 @@ export const createAccountsOperationIO = (
         marginTop: true,
       })
       stage.groups.forEach((ou) => {
-        io.message({ text: `${ou.path}:`, indent: 4, marginTop: true })
+        io.message({ text: `${ou.id}:`, indent: 4, marginTop: true })
         ou.targets.forEach(({ data, configSets }) => {
           io.message({
             text: `- id:       ${data.id}`,
@@ -234,7 +235,11 @@ export const createAccountsOperationIO = (
     return output
   }
 
-  const createTargetListener = R.curry(createTargetListenerInternal)(logger)
+  const createTargetListener = R.curry(createTargetListenerInternal)(
+    "ou",
+    "accounts",
+    logger,
+  )
 
   return {
     ...logger,

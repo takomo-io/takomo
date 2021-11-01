@@ -119,3 +119,4 @@ export {
   OrganizationRootId,
   OrganizationRootName,
 } from "./organizations"
+export { makeIamRoleArn } from "./util"

@@ -1,4 +1,5 @@
 import { CredentialManager } from "@takomo/aws-clients"
+import { ConfigSetContext } from "@takomo/config-sets"
 import {
   CommandOutput,
   OperationState,
@@ -6,25 +7,24 @@ import {
 } from "@takomo/core"
 import { Timer, TkmLogger } from "@takomo/util"
 import {
-  ConfigSetContext,
-  ExecutionStage,
-  GroupExecutionResult,
-  StageExecutionResult,
-  TargetExecutor,
-  TargetListenerProvider,
+  ConfigSetExecutionStage,
+  ConfigSetGroupExecutionResult,
+  ConfigSetStageExecutionResult,
+  ConfigSetTargetExecutor,
+  ConfigSetTargetListenerProvider,
 } from "../model"
 import { executeGroup } from "./group"
 
 interface ExecuteStageProps<R extends CommandOutput, C> {
-  readonly stage: ExecutionStage<C>
+  readonly stage: ConfigSetExecutionStage<C>
   readonly logger: TkmLogger
   readonly state: OperationState
   readonly ctx: ConfigSetContext
-  readonly executor: TargetExecutor<R, C>
-  readonly concurrentAccounts: number
+  readonly executor: ConfigSetTargetExecutor<R, C>
+  readonly concurrentTargets: number
   readonly currentStageNumber: number
   readonly stageCount: number
-  readonly targetListenerProvider: TargetListenerProvider
+  readonly targetListenerProvider: ConfigSetTargetListenerProvider
   readonly defaultCredentialManager: CredentialManager
   readonly timer: Timer
 }
@@ -34,14 +34,14 @@ export const executeStage = async <R extends CommandOutput, C>({
   logger,
   executor,
   state,
-  concurrentAccounts,
+  concurrentTargets,
   targetListenerProvider,
   ctx,
   currentStageNumber,
   stageCount,
   defaultCredentialManager,
   timer,
-}: ExecuteStageProps<R, C>): Promise<StageExecutionResult<R>> => {
+}: ExecuteStageProps<R, C>): Promise<ConfigSetStageExecutionResult<R>> => {
   const stageName = stage.stageName
   logger.info(`Begin stage '${stageName}'`)
 
@@ -54,7 +54,7 @@ export const executeStage = async <R extends CommandOutput, C>({
     targetCount,
   })
 
-  const results = new Array<GroupExecutionResult<R>>()
+  const results = new Array<ConfigSetGroupExecutionResult<R>>()
   for (const group of stage.groups) {
     const result = await executeGroup<R, C>({
       group,
@@ -62,10 +62,10 @@ export const executeStage = async <R extends CommandOutput, C>({
       executor,
       targetListener,
       state,
-      concurrentAccounts,
+      concurrentTargets,
       defaultCredentialManager,
-      timer: timer.startChild(group.path),
-      logger: logger.childLogger(group.path),
+      timer: timer.startChild(group.id),
+      logger: logger.childLogger(group.id),
     })
     results.push(result)
   }
