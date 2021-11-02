@@ -1,4 +1,4 @@
-import { executeDeployTargetsCommand } from "@takomo/test-integration/src"
+import { executeDeployTargetsCommand } from "@takomo/test-integration"
 
 const projectDir = "configs/failing-targets"
 

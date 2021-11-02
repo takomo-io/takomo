@@ -1,8 +1,7 @@
 import { CredentialManager } from "@takomo/aws-clients"
 import { ConfigSetContext, ConfigSetName } from "@takomo/config-sets"
 import { CommandOutput, CommandOutputBase } from "@takomo/core"
-import { createTimer } from "@takomo/util"
-import { createConsoleLogger } from "@takomo/util/src"
+import { createConsoleLogger, createTimer } from "@takomo/util"
 import { mock } from "jest-mock-extended"
 import {
   ConfigSetPlanExecutionResult,
