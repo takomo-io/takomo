@@ -8,8 +8,7 @@ import {
   ConfigSetPlanExecutionResult,
   ConfigSetTargetExecutionResult,
   ConfigSetTargetListener,
-} from "../../../dist"
-import { ExecutionTargetId } from "../../../dist/model"
+} from "../../../src"
 import { executeConfigSetPlan } from "../../../src/config-set/execute/plan"
 import {
   ConfigSetExecutionPlan,
@@ -17,6 +16,7 @@ import {
   ConfigSetTargetExecutorProps,
   ConfigSetTargetListenerProvider,
 } from "../../../src/config-set/model"
+import { ExecutionTargetId } from "../../../src/model"
 
 const logger = createConsoleLogger({
   logLevel: "info",

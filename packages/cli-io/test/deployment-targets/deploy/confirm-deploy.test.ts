@@ -1,5 +1,7 @@
-import { TargetsExecutionPlan } from "@takomo/deployment-targets-commands"
-import { PlannedDeploymentTarget } from "@takomo/deployment-targets-commands/dist/common/plan/model"
+import {
+  PlannedDeploymentTarget,
+  TargetsExecutionPlan,
+} from "@takomo/deployment-targets-commands"
 import { createCapturingLogWriter } from "@takomo/test-unit"
 import { bold, createConsoleLogger, LogWriter } from "@takomo/util"
 import { mock } from "jest-mock-extended"
