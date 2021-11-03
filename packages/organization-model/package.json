@@ -1,6 +1,6 @@
 {
   "name": "@takomo/organization-model",
-  "version": "3.37.0",
+  "version": "3.37.1",
   "description": "Takomo Organization Model",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,7 +27,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.37.0"
+    "@takomo/aws-model": "3.37.1"
   },
   "engines": {
     "node": ">=14.4.0"
