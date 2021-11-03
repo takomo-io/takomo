@@ -1,10 +1,7 @@
 import { StackName, Tag, TagKey, TagValue } from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
-import {
-  DeploymentTargetsOperationOutput,
-  DeploymentTargetsRunOutput,
-} from "@takomo/deployment-targets-commands"
+import { DeploymentTargetsOperationOutput } from "@takomo/deployment-targets-commands"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
@@ -12,13 +9,21 @@ import {
 import { ConfigSetGroupExecutionResult } from "@takomo/execution-plans"
 import { StacksOperationOutput } from "@takomo/stacks-commands"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
+import { ExecuteCommandProps } from "../common"
 
-export interface TargetsRunOutputMatcher {
-  readonly expectCommandToSucceed: (
-    expectedResult: unknown,
-  ) => TargetsRunOutputMatcher
-  readonly assert: () => Promise<DeploymentTargetsRunOutput>
+export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
+  readonly groups?: ReadonlyArray<string>
+  readonly targets?: ReadonlyArray<string>
+  readonly excludeTargets?: ReadonlyArray<string>
+  readonly labels?: ReadonlyArray<string>
+  readonly excludeLabels?: ReadonlyArray<string>
+  readonly configFile?: string
+  readonly concurrentTargets?: number
+  readonly commandPath?: CommandPath
+  readonly configSetName?: ConfigSetName
+  readonly expectNoChanges?: boolean
 }
+
 export interface TargetsOperationOutputMatcher {
   readonly expectCommandToSucceed: () => DeploymentGroupResultMatcher
   readonly expectCommandToFail: () => DeploymentGroupResultMatcher
@@ -63,6 +68,7 @@ export interface DeploymentGroupResultMatcher {
   readonly expectResults: (
     ...props: ReadonlyArray<ExpectDeploymentGroupResultProps>
   ) => DeploymentGroupResultMatcher
+
   readonly assert: () => Promise<DeploymentTargetsOperationOutput>
 }
 
@@ -296,38 +302,5 @@ export const createTargetsOperationOutputMatcher = (
     expectCommandToFail,
     expectCommandToSkip,
     expectCommandToThrow,
-  }
-}
-
-export const createTargetsRunOutputMatcher = (
-  executor: () => Promise<DeploymentTargetsRunOutput>,
-  outputAssertions?: (output: DeploymentTargetsRunOutput) => void,
-): TargetsRunOutputMatcher => {
-  const expectCommandToSucceed = (expectedResult: unknown) =>
-    createTargetsRunOutputMatcher(executor, (output) => {
-      expect(output.status).toEqual("SUCCESS")
-      expect(output.message).toEqual("Success")
-      expect(output.success).toEqual(true)
-      expect(output.error).toBeUndefined()
-
-      if (typeof expectedResult === "function") {
-        expectedResult(output.result)
-      } else {
-        expect(output.result).toStrictEqual(expectedResult)
-      }
-    })
-
-  const assert = async (): Promise<DeploymentTargetsRunOutput> => {
-    const output = await executor()
-    if (outputAssertions) {
-      outputAssertions(output)
-    }
-
-    return output
-  }
-
-  return {
-    expectCommandToSucceed,
-    assert,
   }
 }

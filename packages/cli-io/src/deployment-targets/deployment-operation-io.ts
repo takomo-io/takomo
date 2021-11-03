@@ -159,21 +159,21 @@ export const createDeploymentTargetsOperationIO = (
         io.message({ text: `${ou.id}:`, indent: 4, marginTop: true })
         ou.targets.forEach(({ data, configSets }) => {
           io.message({
-            text: `- name:     ${data.name}`,
+            text: `- name:               ${data.name}`,
             marginTop: true,
             indent: 6,
           })
 
           if (data.accountId) {
             io.message({
-              text: `account id:           ${data.accountId}`,
-              indent: 6,
+              text: `account id:         ${data.accountId}`,
+              indent: 8,
             })
           }
           if (data.description) {
             io.message({
-              text: `description:          ${data.description}`,
-              indent: 6,
+              text: `description:        ${data.description}`,
+              indent: 8,
             })
           }
 

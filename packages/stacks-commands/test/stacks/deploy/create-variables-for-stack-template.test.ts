@@ -1,6 +1,7 @@
 import { CredentialManager } from "@takomo/aws-clients"
 import { InternalStack } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
+import { Credentials } from "aws-sdk"
 import { mock } from "jest-mock-extended"
 import { createVariablesForStackTemplate } from "../../../src/stacks/deploy/steps/prepare-template"
 
@@ -62,6 +63,7 @@ describe("#createVariablesForStackTemplate", () => {
       },
       stackGroupPath: "/",
       logger,
+      credentials: mock<Credentials>(),
       getCurrentCloudFormationStack: jest.fn(),
       getCloudFormationClient: jest.fn(),
       toProps: jest.fn(),
@@ -195,6 +197,7 @@ describe("#createVariablesForStackTemplate", () => {
       },
       stackGroupPath: "/dev/apps/prod",
       logger,
+      credentials: mock<Credentials>(),
       getCurrentCloudFormationStack: jest.fn(),
       getCloudFormationClient: jest.fn(),
       toProps: jest.fn(),

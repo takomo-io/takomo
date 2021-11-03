@@ -1,3 +1,4 @@
+export { PlannedDeploymentTarget } from "./common/plan/model"
 export { deploymentTargetsOperationCommand } from "./operation/command"
 export {
   deployTargetsOperationCommandIamPolicy,
