@@ -21,7 +21,7 @@ const captureValue = (capture: Capture, output: string): string => {
   }
 }
 
-export const init = async ({
+const init = async ({
   command,
   exposeStackCredentials,
   exposeStackRegion,

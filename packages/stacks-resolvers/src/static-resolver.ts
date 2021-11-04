@@ -6,7 +6,7 @@ import {
 } from "@takomo/stacks-model"
 import { ObjectSchema } from "joi"
 
-export const init = async (props: any): Promise<Resolver> => ({
+const init = async (props: any): Promise<Resolver> => ({
   resolve: async (input: ResolverInput): Promise<any> => `${props.value}`,
 })
 

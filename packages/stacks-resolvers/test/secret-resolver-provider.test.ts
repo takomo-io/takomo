@@ -7,14 +7,14 @@ import {
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
 import { defaultSchema } from "../src/resolver-registry"
-import { createStackOutputResolverProvider } from "../src/stack-output-resolver"
+import { createSecretResolverProvider } from "../src/secret-resolver"
 
-const provider = createStackOutputResolverProvider()
+const provider = createSecretResolverProvider()
 
 const ctx: CommandContext = {
   projectDir: "",
   autoConfirmEnabled: true,
-  regions: ["eu-west-1"],
+  regions: ["eu-west-1", "eu-north-1"],
   logLevel: "info",
   quiet: false,
   outputFormat: "text",
@@ -36,68 +36,66 @@ const ctx: CommandContext = {
 const schema = provider.schema!({
   ctx,
   joi: Joi.defaults((schema) => schema),
-  base: defaultSchema("stack-output"),
+  base: defaultSchema("secret"),
 })
 
-describe("StackOutputResolverProvider", () => {
-  test("#name should be stack-output", () => {
-    expect(provider.name).toBe("stack-output")
+describe("SecretResolverProvider", () => {
+  test("#name should be secret", () => {
+    expect(provider.name).toBe("secret")
   })
   describe("#schema validation", () => {
     test("should succeed when a valid configuration is given", () => {
       expectNoValidationError(schema)({
-        stack: "/dev.yml",
-        output: "myOutput",
+        secretId: "MySecret",
+        region: "eu-north-1",
+        commandRole: "arn:aws:iam::123456789012:role/admin",
       })
     })
 
     test("should succeed when a valid configuration and confidential is given", () => {
       expectNoValidationError(schema)({
-        stack: "/dev.yml",
-        output: "myOutput",
+        secretId: "Another",
+        region: "eu-north-1",
+        commandRole: "arn:aws:iam::123456789012:role/admin",
         confidential: true,
       })
     })
 
     test("should succeed when a valid configuration and immutable is given", () => {
       expectNoValidationError(schema)({
-        stack: "/dev.yml",
-        output: "myOutput",
+        secretId: "Code",
+        region: "eu-north-1",
+        commandRole: "arn:aws:iam::123456789012:role/admin",
         immutable: true,
       })
     })
 
-    test("should succeed when a valid configuration with all supported properties is given", () => {
+    test("should succeed when a valid configuration with all supported properties are given", () => {
       expectNoValidationError(schema)({
-        stack: "/dev.yml",
-        output: "myOutput",
+        secretId: "Code",
+        region: "eu-north-1",
+        commandRole: "arn:aws:iam::123456789012:role/admin",
+        versionId: "121",
+        versionStage: "121",
+        query: "value.other",
         immutable: true,
         confidential: true,
       })
     })
 
-    test("should fail when a stack is missing", () => {
+    test("should fail when secretId is missing", () => {
       expectValidationErrors(schema)(
         {
-          output: "myOutput",
+          region: "eu-north-1",
         },
-        '"stack" is required',
+        '"secretId" is required',
       )
     })
 
-    test("should fail when a output is missing", () => {
+    test("should fail when region is invalid", () => {
       expectValidationErrors(schema)(
-        {
-          stack: "/network.yml",
-        },
-        '"output" is required',
-      )
-    })
-
-    test("should fail when a stack is invalid", () => {
-      expectValidationErrors(schema)(
-        { output: "foo", stack: "sdkjasdj" },
-        '"stack" with value "sdkjasdj" fails to match the required pattern: /^(((\\/|(\\.\\.\\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\\.yml\\/?/',
+        { region: "in valid", secretId: "MySecret" },
+        '"region" must be one of [eu-west-1, eu-north-1]',
       )
     })
   })

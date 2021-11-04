@@ -7,7 +7,7 @@ import {
 import { createStacksSchemas } from "@takomo/stacks-schema"
 import { ObjectSchema } from "joi"
 
-export const init = async ({ hook }: any): Promise<Resolver> => {
+const init = async ({ hook }: any): Promise<Resolver> => {
   if (!hook) {
     throw new Error("hook is required property")
   }

@@ -7,7 +7,7 @@ import {
 import { expandFilePath, fileExists, readFileContents } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
-export const init = async ({ file }: any): Promise<Resolver> => {
+const init = async ({ file }: any): Promise<Resolver> => {
   if (!file) {
     throw new Error("file is required property")
   }

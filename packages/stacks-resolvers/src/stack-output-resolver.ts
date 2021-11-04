@@ -9,7 +9,7 @@ import {
 import { createStacksSchemas } from "@takomo/stacks-schema"
 import { ObjectSchema } from "joi"
 
-export const init = async (props: any): Promise<Resolver> => ({
+const init = async (props: any): Promise<Resolver> => ({
   dependencies: (): StackPath[] => [props.stack],
 
   resolve: async ({
