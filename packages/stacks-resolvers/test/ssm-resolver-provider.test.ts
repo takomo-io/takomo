@@ -16,6 +16,8 @@ const ctx: CommandContext = {
   autoConfirmEnabled: true,
   regions: ["eu-west-1", "eu-north-1"],
   logLevel: "info",
+  quiet: false,
+  outputFormat: "text",
   variables: {
     var: {},
     env: {},

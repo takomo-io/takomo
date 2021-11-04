@@ -9,7 +9,7 @@ import {
 import { uuid } from "@takomo/util"
 import { ObjectSchema } from "joi"
 
-export const init = async (props: any): Promise<Resolver> => {
+const init = async (props: any): Promise<Resolver> => {
   return {
     iamRoleArns: (): IamRoleArn[] =>
       props.commandRole ? [props.commandRole] : [],

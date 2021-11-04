@@ -9,6 +9,7 @@ import {
   Credentials,
   EC2,
   Organizations,
+  SecretsManager,
   SSM,
   STS,
 } from "aws-sdk"
@@ -21,6 +22,11 @@ const organizationsClient = new Organizations({
 
 const ssmClient = (region: string, credentials: Credentials): SSM =>
   new SSM({ region, credentials })
+
+const secretsClient = (
+  region: string,
+  credentials: Credentials,
+): SecretsManager => new SecretsManager({ region, credentials })
 
 const ec2Client = (region: string, credentials: Credentials): EC2 =>
   new EC2({ region, credentials })
@@ -130,6 +136,34 @@ export type PutParamArgs = {
   encrypted: boolean
 }
 
+export interface CreateSecretArgs {
+  credentials: Credentials
+  iamRoleArn?: string
+  region: string
+  name: string
+  value: string
+}
+
+export interface PutSecretArgs {
+  credentials: Credentials
+  iamRoleArn?: string
+  region: string
+  secretId: string
+  value: string
+}
+
+export interface CreateSecretResponse {
+  secretId: string
+  arn: string
+}
+
+export interface PutSecretResponse {
+  secretId: string
+  arn: string
+  versionId: string
+  versionStages: string[]
+}
+
 export type TagVpcArgs = {
   credentials: Credentials
   iamRoleArn?: string
@@ -166,6 +200,69 @@ const putParameter = async ({
     })
     .promise()
     .then(() => true)
+}
+
+const createSecret = async (
+  args: CreateSecretArgs,
+): Promise<CreateSecretResponse> => {
+  const { credentials, region, value, name, iamRoleArn } = args
+  console.log(
+    "create secret: " + JSON.stringify({ region, value, name, iamRoleArn }),
+  )
+
+  const cp = await initDefaultCredentialManager(
+    () => Promise.resolve(""),
+    mock<TkmLogger>(),
+    mock<AwsClientProvider>(),
+    credentials,
+  )
+
+  const secretCp = iamRoleArn
+    ? await cp.createCredentialManagerForRole(iamRoleArn)
+    : cp
+
+  return secretsClient(region, await secretCp.getCredentials())
+    .createSecret({
+      Name: name,
+      SecretString: value,
+      Tags: [{ Key: "test-resource", Value: "true" }],
+    })
+    .promise()
+    .then((r) => ({
+      arn: r.ARN!,
+      secretId: r.VersionId!,
+    }))
+}
+
+const putSecret = async (args: PutSecretArgs): Promise<PutSecretResponse> => {
+  const { credentials, region, value, secretId, iamRoleArn } = args
+  console.log(
+    "put secret: " + JSON.stringify({ region, value, secretId, iamRoleArn }),
+  )
+
+  const cp = await initDefaultCredentialManager(
+    () => Promise.resolve(""),
+    mock<TkmLogger>(),
+    mock<AwsClientProvider>(),
+    credentials,
+  )
+
+  const secretCp = iamRoleArn
+    ? await cp.createCredentialManagerForRole(iamRoleArn)
+    : cp
+
+  return secretsClient(region, await secretCp.getCredentials())
+    .putSecretValue({
+      SecretId: secretId,
+      SecretString: value,
+    })
+    .promise()
+    .then((r) => ({
+      arn: r.ARN!,
+      secretId: r.VersionId!,
+      versionStages: r.VersionStages ?? [],
+      versionId: r.VersionId!,
+    }))
 }
 
 const tagVpc = async ({
@@ -230,6 +327,10 @@ export const aws = {
   },
   ssm: {
     putParameter,
+  },
+  secrets: {
+    createSecret,
+    putSecret,
   },
   ec2: { tagVpc },
   sts: { getCallerIdentity },

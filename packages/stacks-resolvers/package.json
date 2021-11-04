@@ -35,7 +35,8 @@
     "@takomo/stacks-schema": "3.37.1",
     "@takomo/util": "3.37.1",
     "joi": "17.4.0",
-    "ramda": "0.27.1"
+    "ramda": "0.27.1",
+    "jmespath": "0.15.0"
   },
   "devDependencies": {
     "@takomo/aws-clients": "3.37.1",
