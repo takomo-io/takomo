@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.38.0](https://github.com/takomo-io/takomo/compare/v3.37.1...v3.38.0) (2021-11-05)
+
+
+### Features
+
+* **resolvers:** implement secret parameter resolver ([#324](https://github.com/takomo-io/takomo/issues/324)) ([6f1abc8](https://github.com/takomo-io/takomo/commit/6f1abc88cecb2a7851ba078ec2bcae20609bc164)), closes [#317](https://github.com/takomo-io/takomo/issues/317)
+
+
+
+
+
 ## [3.37.1](https://github.com/takomo-io/takomo/compare/v3.37.0...v3.37.1) (2021-11-03)
 
 **Note:** Version bump only for package @takomo/stacks-resolvers

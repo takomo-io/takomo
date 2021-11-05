@@ -1,6 +1,6 @@
 {
   "name": "@takomo/aws-clients",
-  "version": "3.37.1",
+  "version": "3.38.0",
   "description": "Takomo AWS Clients",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",

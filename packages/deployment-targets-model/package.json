@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-model",
-  "version": "3.37.1",
+  "version": "3.38.0",
   "description": "Takomo Deployment Targets Model",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,8 +27,8 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/core": "3.37.1",
-    "@takomo/stacks-model": "3.37.1",
+    "@takomo/core": "3.38.0",
+    "@takomo/stacks-model": "3.38.0",
     "@takomo/util": "3.37.1",
     "joi": "17.4.0"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@takomo/execution-plans",
-  "version": "3.37.1",
+  "version": "3.38.0",
   "description": "Takomo Execution Plans",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,10 +27,10 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.37.1",
-    "@takomo/config-sets": "3.37.1",
-    "@takomo/core": "3.37.1",
-    "@takomo/stacks-model": "3.37.1",
+    "@takomo/aws-clients": "3.38.0",
+    "@takomo/config-sets": "3.38.0",
+    "@takomo/core": "3.38.0",
+    "@takomo/stacks-model": "3.38.0",
     "@takomo/util": "3.37.1",
     "cockatiel": "2.0.1"
   },

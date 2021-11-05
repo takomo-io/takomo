@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-schema",
-  "version": "3.37.1",
+  "version": "3.38.0",
   "description": "Takomo Deployment Targets Schema",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -32,8 +32,8 @@
   "devDependencies": {
     "@takomo/aws-model": "3.37.1",
     "@takomo/aws-schema": "3.37.1",
-    "@takomo/config-sets": "3.37.1",
-    "@takomo/core": "3.37.1",
+    "@takomo/config-sets": "3.38.0",
+    "@takomo/core": "3.38.0",
     "@takomo/test-unit": "3.37.1"
   },
   "engines": {
