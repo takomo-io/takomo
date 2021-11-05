@@ -49,7 +49,7 @@
     "easy-table": "1.2.0",
     "ramda": "0.27.1",
     "readdirp": "3.5.0",
-    "ts-dedent": "2.0.0"
+    "ts-dedent": "2.2.0"
   },
   "engines": {
     "node": ">=14.4.0"
