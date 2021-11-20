@@ -1,5 +1,7 @@
-import { CliCommandContext } from "@takomo/cli"
-import { createFileSystemDeploymentTargetsConfigRepository } from "@takomo/config-repository-fs"
+import {
+  createFileSystemDeploymentTargetsConfigRepository,
+  FileSystemCommandContext,
+} from "@takomo/config-repository-fs"
 import { InternalCommandContext } from "@takomo/core"
 import { DeploymentTargetsConfigRepository } from "@takomo/deployment-targets-context"
 import { createConsoleLogger } from "@takomo/util"
@@ -17,7 +19,7 @@ export interface CreateDeploymentTargetsCtxAndConfigRepositoryProps
 }
 
 export interface CreateTestDeploymentTargetsConfigRepositoryProps {
-  readonly ctx: CliCommandContext
+  readonly ctx: FileSystemCommandContext
   readonly pathToDeploymentConfigFile?: string
 }
 

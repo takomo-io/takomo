@@ -2,6 +2,7 @@ import { Region } from "@takomo/aws-model"
 import {
   createCommonSchema,
   defaultFeatures,
+  DEFAULT_REGIONS,
   ExternalHandlebarsHelperConfig,
   ExternalResolverConfig,
   Features,
@@ -19,10 +20,9 @@ import {
 import Joi from "joi"
 import R from "ramda"
 import semver from "semver"
-import { DEFAULT_REGIONS } from "./constants"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../package.json")
+const { version } = require("../../package.json")
 
 const validateRequiredVersion = (
   configFilePath: string,

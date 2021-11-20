@@ -5,62 +5,41 @@ import {
 } from "@takomo/aws-clients"
 import { formatCommandStatus } from "@takomo/cli-io"
 import {
+  createFileSystemCommandContext,
+  FileSystemCommandContext,
+} from "@takomo/config-repository-fs"
+import {
   CommandHandler,
   CommandInput,
   CommandOutput,
-  ContextVars,
-  Features,
   InternalCommandContext,
   IO,
-  OutputFormat,
-  Variables,
+  parseBoolean,
+  parseStringArray,
 } from "@takomo/core"
 import {
   collectFromHierarchy,
   createLogger,
   createTimer,
   expandFilePath,
-  fileExists,
   FilePath,
   formatElapsedMillis,
   indentLines,
-  LogLevel,
-  merge,
-  parseYamlFile,
   printTimer,
-  readFileContents,
   red,
-  TakomoError,
   TkmLogger,
 } from "@takomo/util"
 import { Credentials } from "aws-sdk"
-import dotenv from "dotenv"
-import dotenvExpand from "dotenv-expand"
 import Table from "easy-table"
 import inquirer from "inquirer"
 import os from "os"
-import path from "path"
 import R from "ramda"
 import { Arguments } from "yargs"
-import { CliCommandContext, ProjectFilePaths } from "./cli-command-context"
-import { loadProjectConfig } from "./config"
-import {
-  CONFIG_FILE_EXTENSION,
-  CONFIG_SETS_DIR,
-  DEFAULT_DEPLOYMENT_CONFIG_FILE,
-  DEFAULT_ORGANIZATION_CONFIG_FILE,
-  DEPLOYMENT_DIR,
-  HELPERS_DIR,
-  HOOKS_DIR,
-  ORGANIZATION_DIR,
-  PARTIALS_DIR,
-  RESOLVERS_DIR,
-  SCHEMAS_DIR,
-  STACKS_DIR,
-  STACK_GROUP_CONFIG_FILE_NAME,
-  TAKOMO_PROJECT_CONFIG_FILE_NAME,
-  TEMPLATES_DIR,
-} from "./constants"
+import { parseFeaturesFromArgs } from "./options/parse-features-from-args"
+import { parseLogLevel } from "./options/parse-log-level"
+import { parseOutputFormat } from "./options/parse-output-format"
+import { parseVarArgs } from "./options/parse-var-args"
+import { parseVarFileOptions } from "./options/parse-var-file-options"
 
 export interface RunProps {
   readonly overridingHandler?: (args: Arguments) => void
@@ -70,242 +49,19 @@ export interface RunProps {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../package.json")
 
-export const readConfigurationFromFiles = async (
-  projectDir: FilePath,
-  args: any,
-): Promise<Record<string, unknown>> => {
-  const filePaths = args ? (Array.isArray(args) ? args : [args]) : []
-  let config = {}
-  for (const filePath of filePaths) {
-    const configFromFile = await readVariablesFromFile(projectDir, filePath)
-    if (typeof configFromFile !== "object") {
-      throw new TakomoError(
-        `Contents of configuration file ${filePath} could not be deserialized to an object`,
-      )
-    }
-
-    config = merge(config, configFromFile)
-  }
-
-  return config
-}
-
-const readVariablesFromFile = async (
-  projectDir: FilePath,
-  fileName: FilePath,
-): Promise<any> => {
-  const pathToVarsFile = expandFilePath(projectDir, fileName)
-
-  if (!(await fileExists(pathToVarsFile))) {
-    throw new TakomoError(`Variable file ${pathToVarsFile} not found`)
-  }
-
-  if (pathToVarsFile.endsWith(".json")) {
-    const contents = await readFileContents(pathToVarsFile)
-    return JSON.parse(contents)
-  }
-
-  if (pathToVarsFile.endsWith(".yml")) {
-    return parseYamlFile(pathToVarsFile)
-  }
-
-  return (await readFileContents(pathToVarsFile)).trim()
-}
-
-export const parseVarFileArgs = async (
-  projectDir: string,
-  varsArray: ReadonlyArray<string>,
-): Promise<any> => {
-  let vars = {}
-  for (const varArg of varsArray) {
-    if (/^([a-zA-Z][a-zA-Z0-9_]+)=/.test(varArg)) {
-      const [varName, varValue] = varArg.split("=", 2)
-      const varsFromFile = await readVariablesFromFile(projectDir, varValue)
-      vars = merge(vars, { [varName]: varsFromFile })
-    } else {
-      const varsFromFile = await readVariablesFromFile(projectDir, varArg)
-      if (typeof varsFromFile !== "object") {
-        throw new TakomoError(
-          `Contents of variable file ${varArg} could not be deserialized to an object`,
-        )
-      }
-
-      vars = merge(vars, varsFromFile)
-    }
-  }
-
-  return vars
-}
-
-export const parseVarArgs = (varArgs: any, vars: any): any => {
-  const varsArray = varArgs
-    ? Array.isArray(varArgs)
-      ? varArgs
-      : [varArgs]
-    : []
-
-  for (const varArg of varsArray) {
-    if (/^([a-zA-Z][a-zA-Z0-9_]+)=/.test(varArg)) {
-      const [varName, varValue] = varArg.split("=", 2)
-      vars = merge(vars, { [varName]: varValue })
-    } else {
-      throw new TakomoError(`Invalid variable ${varArg}`)
-    }
-  }
-
-  return vars
-}
-
-const loadEnvironmentVariables = (): any =>
-  Object.keys(process.env).reduce((collected, key) => {
-    return { ...collected, [key]: process.env[key] }
-  }, {})
-
-const loadContextVariables = (projectDir: string): ContextVars => ({
-  projectDir,
-})
-
-const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
-  projectDir: string,
-  envFileArgs: any,
-): Promise<void> => {
-  const envArray = envFileArgs
-    ? Array.isArray(envFileArgs)
-      ? envFileArgs
-      : [envFileArgs]
-    : []
-
-  for (const envArg of envArray) {
-    const pathToEnvVarsFile = expandFilePath(projectDir, envArg)
-
-    if (!(await fileExists(pathToEnvVarsFile))) {
-      throw new TakomoError(
-        `Environment variables file ${pathToEnvVarsFile} not found`,
-      )
-    }
-
-    const contents = await readFileContents(pathToEnvVarsFile)
-    const envConfig = dotenv.parse(contents)
-    dotenvExpand(envConfig)
-
-    for (const k in envConfig) {
-      process.env[k] = envConfig[k]
-    }
-  }
-}
-
-export const parseVariables = async (
-  projectDir: string,
-  varFileArgs: ReadonlyArray<string>,
-  varArgs: any,
-  envFileArgs: any,
-): Promise<Variables> => {
-  const fileVars = await parseVarFileArgs(projectDir, varFileArgs)
-  const vars = parseVarArgs(varArgs, fileVars)
-
-  await overrideEnvironmentVariablesFromEnvironmentVariablesFiles(
-    projectDir,
-    envFileArgs,
-  )
-
-  const env = loadEnvironmentVariables()
-  const context = loadContextVariables(projectDir)
-  return {
-    env,
-    var: vars,
-    context,
-  }
-}
-
-// TODO: Use expandFilePath
-const resolveProjectDir = (projectDirArg: any): string => {
+const resolveProjectDir = (projectDirArg: any): FilePath => {
   if (projectDirArg) {
     const projectDir = projectDirArg.toString()
-    return projectDir.startsWith("/") || projectDir.startsWith("~")
-      ? projectDir
-      : path.join(process.cwd(), projectDir)
+    return expandFilePath(process.cwd(), projectDir)
   }
 
   return process.cwd()
 }
 
-const resolveLogLevel = (log: string, quiet: boolean): LogLevel => {
-  if (quiet) {
-    return "none"
-  }
-
-  switch (log) {
-    case "trace":
-      return "trace"
-    case "debug":
-      return "debug"
-    case "info":
-      return "info"
-    case "warn":
-      return "warn"
-    case "error":
-      return "error"
-    case "none":
-      return "none"
-    default:
-      return "info"
-  }
-}
-
-const resolveOutputFormat = (format?: string): OutputFormat => {
-  if (!format) {
-    return "text"
-  }
-
-  switch (format) {
-    case "text":
-      return "text"
-    case "yaml":
-      return "yaml"
-    case "json":
-      return "json"
-    default:
-      return "text"
-  }
-}
-
-export const parseFeaturesFromArgs = (args: any): Partial<Features> => {
-  const varsArray = args ? (Array.isArray(args) ? args : [args]) : []
-
-  const featureNames: ReadonlyArray<keyof Features> = [
-    "deploymentTargetsUndeploy",
-    "deploymentTargetsTearDown",
-  ]
-
-  return varsArray.reduce((collected, arg) => {
-    const [name, value] = arg.split("=", 2)
-    if (!featureNames.includes(name)) {
-      throw new TakomoError(`Unknown feature name: '${name}'`, {
-        instructions: [`Supported feature names are: ${featureNames}`],
-      })
-    }
-
-    if (!value || value === "") {
-      throw new TakomoError(`Value not given for feature '${name}'`)
-    }
-
-    if ("true" !== value && "false" !== value) {
-      throw new TakomoError(`Invalid value '${value}' for feature '${name}'`, {
-        instructions: [`Supported values are: true, false`],
-      })
-    }
-
-    return {
-      ...collected,
-      [name]: value === "true",
-    }
-  }, {})
-}
-
 export const initCommandContext = async (
   argv: any,
   credentials?: Credentials,
-): Promise<CliCommandContext> => {
+): Promise<FileSystemCommandContext> => {
   if (argv.profile) {
     process.env.AWS_PROFILE = argv.profile
   }
@@ -314,100 +70,54 @@ export const initCommandContext = async (
     process.env.AWS_SDK_LOAD_CONFIG = "true"
   }
 
-  const quiet = argv.quiet === true
-  const projectDir = resolveProjectDir(argv.dir)
-  const logLevel = resolveLogLevel(argv.log, quiet)
-  const outputFormat = resolveOutputFormat(argv.output)
-
-  const filePaths: ProjectFilePaths = {
-    projectDir,
-    hooksDir: path.join(projectDir, HOOKS_DIR),
-    helpersDir: path.join(projectDir, HELPERS_DIR),
-    partialsDir: path.join(projectDir, PARTIALS_DIR),
-    resolversDir: path.join(projectDir, RESOLVERS_DIR),
-    stacksDir: path.join(projectDir, STACKS_DIR),
-    templatesDir: path.join(projectDir, TEMPLATES_DIR),
-    schemasDir: path.join(projectDir, SCHEMAS_DIR),
-    projectConfigFile: path.join(projectDir, TAKOMO_PROJECT_CONFIG_FILE_NAME),
-    projectConfigFileName: TAKOMO_PROJECT_CONFIG_FILE_NAME,
-    stackGroupConfigFileName: STACK_GROUP_CONFIG_FILE_NAME,
-    configFileExtension: CONFIG_FILE_EXTENSION,
-    defaultDeploymentConfigFileName: DEFAULT_DEPLOYMENT_CONFIG_FILE,
-    deploymentDir: path.join(projectDir, DEPLOYMENT_DIR),
-    configSetsDir: path.join(projectDir, CONFIG_SETS_DIR),
-    organizationDir: path.join(projectDir, ORGANIZATION_DIR),
-    organizationTagPoliciesDir: path.join(
-      projectDir,
-      ORGANIZATION_DIR,
-      "tag-policies",
-    ),
-    organizationBackupPoliciesDir: path.join(
-      projectDir,
-      ORGANIZATION_DIR,
-      "backup-policies",
-    ),
-    organizationServiceControlPoliciesDir: path.join(
-      projectDir,
-      ORGANIZATION_DIR,
-      "service-control-policies",
-    ),
-    organizationAiServicesOptOutPoliciesDir: path.join(
-      projectDir,
-      ORGANIZATION_DIR,
-      "ai-services-opt-out-policies",
-    ),
-    defaultOrganizationConfigFileName: DEFAULT_ORGANIZATION_CONFIG_FILE,
-  }
-
-  const overrideFeatures = parseFeaturesFromArgs(argv.feature)
-
-  const projectConfig = await loadProjectConfig(
-    projectDir,
-    filePaths.projectConfigFile,
-    overrideFeatures,
-  )
-
-  const varFileArgs = argv["var-file"]
-  const varFileArray = varFileArgs
-    ? Array.isArray(varFileArgs)
-      ? varFileArgs
-      : [varFileArgs]
-    : []
-
-  const variables = await parseVariables(
-    projectDir,
-    [...projectConfig.varFiles, ...varFileArray],
-    argv.var,
-    argv["env-file"],
-  )
-
   const buildInfo = {
     version,
   }
 
-  const logger = createLogger({ logLevel, writer: console.log })
-  logger.debug(`Takomo v${version}`)
+  const statisticsEnabled = parseBoolean(argv.stats, false)
+  const autoConfirmEnabled = parseBoolean(argv.yes, false)
+  const quiet = parseBoolean(argv.quiet, false)
+  const projectDir = resolveProjectDir(argv.dir)
+  const logLevel = parseLogLevel(argv.log, quiet)
+  const outputFormat = parseOutputFormat(argv.output)
+  const overrideFeatures = parseFeaturesFromArgs(argv.feature)
+  const varFilePaths = parseVarFileOptions(argv["var-file"])
+  const envFilePaths = parseStringArray(argv["env-file"])
+  const vars = parseVarArgs(argv.var)
 
+  const logger = createLogger({ logLevel, writer: console.log })
   const awsClientProvider = createAwsClientProvider({ logger })
 
-  return {
-    buildInfo,
-    credentials,
-    logLevel,
-    variables,
-    filePaths,
-    projectConfig,
-    awsClientProvider,
+  const iamGeneratePoliciesInstructionsEnabled = parseBoolean(
+    argv["show-generate-iam-policies"],
+    false,
+  )
+
+  const confidentialValuesLoggingEnabled = parseBoolean(
+    argv["log-confidential-info"],
+    false,
+  )
+
+  logger.debug(`Takomo v${version}`)
+
+  return createFileSystemCommandContext({
     quiet,
     outputFormat,
-    regions: projectConfig.regions.slice(),
-    autoConfirmEnabled: argv.yes === true,
-    statisticsEnabled: argv.stats === true,
-    confidentialValuesLoggingEnabled: argv["log-confidential-info"] === true,
-    projectDir: filePaths.projectDir,
-    iamGeneratePoliciesInstructionsEnabled:
-      argv["show-generate-iam-policies"] === true,
-  }
+    logLevel,
+    autoConfirmEnabled,
+    statisticsEnabled,
+    iamGeneratePoliciesInstructionsEnabled,
+    confidentialValuesLoggingEnabled,
+    credentials,
+    buildInfo,
+    projectDir,
+    awsClientProvider,
+    overrideFeatures,
+    vars,
+    envFilePaths,
+    varFilePaths,
+    logger,
+  })
 }
 
 export const onError = (e: any): void => {
@@ -657,9 +367,12 @@ interface HandleProps<
   OUT extends CommandOutput,
 > {
   argv: any
-  input?: (ctx: CliCommandContext, input: CommandInput) => Promise<IN>
-  io: (ctx: CliCommandContext, logger: TkmLogger) => I
-  configRepository: (ctx: CliCommandContext, logger: TkmLogger) => Promise<C>
+  input?: (ctx: FileSystemCommandContext, input: CommandInput) => Promise<IN>
+  io: (ctx: FileSystemCommandContext, logger: TkmLogger) => I
+  configRepository: (
+    ctx: FileSystemCommandContext,
+    logger: TkmLogger,
+  ) => Promise<C>
   executor: CommandHandler<C, I, IN, OUT>
 }
 
@@ -676,7 +389,7 @@ const promptMfaCode = async (mfaSerial: string): Promise<string> => {
 }
 
 const defaultInputBuilder = async <IN extends CommandInput>(
-  ctx: CliCommandContext,
+  ctx: FileSystemCommandContext,
   input: CommandInput,
 ): Promise<IN> => input as IN
 

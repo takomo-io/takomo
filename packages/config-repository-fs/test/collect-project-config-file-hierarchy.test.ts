@@ -1,5 +1,5 @@
 import { join } from "path"
-import { collectProjectConfigFileHierarchy } from "../src/config"
+import { collectProjectConfigFileHierarchy } from "../src/project/config"
 
 const projectDir = join(process.cwd(), "test", "config-file-hierarchy")
 

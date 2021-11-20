@@ -47,7 +47,6 @@ const handler = (argv: Arguments<CommandArgs>) =>
     argv,
     input: async (ctx, input) => ({
       ...input,
-      ...ctx.filePaths,
       regions: argv.regions,
       project: argv.project,
       createSamples: argv[CREATE_SAMPLES_OPT],

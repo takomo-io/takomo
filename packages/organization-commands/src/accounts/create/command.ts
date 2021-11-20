@@ -19,10 +19,6 @@ const inputSchema = (ctx: CommandContext) => {
     regions: ctx.regions,
   })
 
-  const { organizationAccountWithoutId } = createOrganizationSchemas({
-    regions: ctx.regions,
-  })
-
   const { organizationRoleName, organizationalUnitPath } =
     createOrganizationSchemas({
       regions: ctx.regions,
@@ -35,7 +31,6 @@ const inputSchema = (ctx: CommandContext) => {
     iamUserAccessToBilling: Joi.boolean(),
     alias: accountAlias,
     ou: organizationalUnitPath,
-    config: organizationAccountWithoutId,
   }).unknown(true)
 }
 

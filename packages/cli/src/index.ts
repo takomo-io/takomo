@@ -6,7 +6,6 @@ import { initProjectCmd } from "./init"
 import { organizationCmd } from "./organization"
 import { stacksCmd } from "./stacks"
 
-export { CliCommandContext } from "./cli-command-context"
 export { initCommandContext } from "./common"
 
 export const run = (props: RunProps = { showHelpOnFail: true }): void => {

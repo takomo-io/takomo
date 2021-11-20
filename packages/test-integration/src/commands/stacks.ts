@@ -1,6 +1,8 @@
 import { initDefaultCredentialManager } from "@takomo/aws-clients"
-import { CliCommandContext } from "@takomo/cli"
-import { createFileSystemStacksConfigRepository } from "@takomo/config-repository-fs"
+import {
+  createFileSystemStacksConfigRepository,
+  FileSystemCommandContext,
+} from "@takomo/config-repository-fs"
 import { InternalCommandContext } from "@takomo/core"
 import {
   deployStacksCommand,
@@ -45,7 +47,7 @@ export interface CreateCtxAndConfigRepositoryProps {
 }
 
 export interface CreateTestStacksConfigRepositoryProps {
-  readonly ctx: CliCommandContext
+  readonly ctx: FileSystemCommandContext
 }
 
 export const createTestStacksConfigRepository = async ({

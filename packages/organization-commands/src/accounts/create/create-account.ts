@@ -5,7 +5,8 @@ import {
   OrganizationConfigRepository,
   OrganizationContext,
 } from "@takomo/organization-context"
-import { sleep, TakomoError } from "@takomo/util"
+import { createOrganizationSchemas } from "@takomo/organization-schema"
+import { loadVariablesFromFile, sleep, TakomoError } from "@takomo/util"
 import { ResultAsync } from "neverthrow"
 import { createAccountAliasInternal } from "../common"
 import { UnknownOrganizationalUnitError } from "./errors"
@@ -43,8 +44,24 @@ export const createAccount = async (
     iamUserAccessToBilling,
     ou,
     timer,
-    config,
+    configFile,
   } = input
+
+  const config = configFile
+    ? await loadVariablesFromFile(ctx.projectDir, configFile)
+    : {}
+
+  const { organizationAccountWithoutId } = createOrganizationSchemas({
+    regions: ctx.regions,
+  })
+
+  const { error } = organizationAccountWithoutId.validate(config)
+  if (error) {
+    const details = error.details.map((d: any) => `  - ${d.message}`).join("\n")
+    throw new TakomoError(
+      `${error.details.length} validation error(s) in account config file:\n\n${details}`,
+    )
+  }
 
   const emailPattern =
     ctx.organizationConfig.accountCreation.constraints.emailPattern
@@ -195,7 +212,7 @@ export const createAccount = async (
   try {
     await configRepository.putAccountConfig({
       organizationalUnitPath: ou ?? "Root",
-      ...(config ?? {}),
+      ...config,
       id: createAccountStatus.accountId,
     })
   } catch (error: any) {

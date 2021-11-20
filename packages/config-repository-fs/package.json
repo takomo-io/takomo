@@ -45,11 +45,19 @@
     "@takomo/stacks-model": "3.38.0",
     "@takomo/stacks-resolvers": "3.38.0",
     "@takomo/stacks-schema": "3.38.0",
+    "@takomo/aws-clients": "3.38.0",
     "@takomo/util": "3.37.1",
     "easy-table": "1.2.0",
     "ramda": "0.27.1",
     "readdirp": "3.5.0",
-    "ts-dedent": "2.2.0"
+    "ts-dedent": "2.2.0",
+    "dotenv-expand": "5.1.0",
+    "joi": "17.4.0",
+    "semver": "7.3.4",
+    "aws-sdk": "2.987.0"
+  },
+  "devDependencies": {
+    "@takomo/test-unit": "3.37.1"
   },
   "engines": {
     "node": ">=14.4.0"
