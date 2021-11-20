@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-config",
-  "version": "3.38.0",
+  "version": "3.38.1",
   "description": "Takomo Deployment Targets Config",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,20 +27,20 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.37.1",
-    "@takomo/aws-schema": "3.37.1",
-    "@takomo/config-sets": "3.38.0",
-    "@takomo/core": "3.38.0",
-    "@takomo/deployment-targets-model": "3.38.0",
-    "@takomo/deployment-targets-schema": "3.38.0",
-    "@takomo/util": "3.37.1",
+    "@takomo/aws-model": "3.38.1",
+    "@takomo/aws-schema": "3.38.1",
+    "@takomo/config-sets": "3.38.1",
+    "@takomo/core": "3.38.1",
+    "@takomo/deployment-targets-model": "3.38.1",
+    "@takomo/deployment-targets-schema": "3.38.1",
+    "@takomo/util": "3.38.1",
     "joi": "17.4.0",
     "neverthrow": "3.1.3",
     "ramda": "0.27.1"
   },
   "devDependencies": {
-    "@takomo/aws-clients": "3.38.0",
-    "@takomo/test-unit": "3.37.1"
+    "@takomo/aws-clients": "3.38.1",
+    "@takomo/test-unit": "3.38.1"
   },
   "engines": {
     "node": ">=14.4.0"
