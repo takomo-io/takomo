@@ -4,6 +4,7 @@ import {
   fileExists,
   FilePath,
   loadVariablesFromFiles,
+  merge,
   readFileContents,
   TakomoError,
   VarFileOption,
@@ -13,14 +14,8 @@ import dotenvExpand from "dotenv-expand"
 
 const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
   projectDir: FilePath,
-  envFileArgs: any,
+  envArray: ReadonlyArray<FilePath>,
 ): Promise<void> => {
-  const envArray = envFileArgs
-    ? Array.isArray(envFileArgs)
-      ? envFileArgs
-      : [envFileArgs]
-    : []
-
   for (const envArg of envArray) {
     const pathToEnvVarsFile = expandFilePath(projectDir, envArg)
 
@@ -51,15 +46,16 @@ const loadContextVariables = (projectDir: FilePath): ContextVars => ({
 
 export const buildVariables = async (
   projectDir: FilePath,
-  varFileArgs: ReadonlyArray<VarFileOption>,
+  varFileOptions: ReadonlyArray<VarFileOption>,
   vars: Record<string, unknown>,
-  envFileArgs: ReadonlyArray<FilePath>,
+  envFilePaths: ReadonlyArray<FilePath>,
 ): Promise<Variables> => {
-  const mergedVars = await loadVariablesFromFiles(projectDir, vars, varFileArgs)
+  const fileVars = await loadVariablesFromFiles(projectDir, varFileOptions)
+  const mergedVars = merge(fileVars, vars)
 
   await overrideEnvironmentVariablesFromEnvironmentVariablesFiles(
     projectDir,
-    envFileArgs,
+    envFilePaths,
   )
 
   const env = loadEnvironmentVariables()

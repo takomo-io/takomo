@@ -15,10 +15,10 @@ export interface VarFileOption {
  * @hidden
  */
 export const loadVariablesFromFile = async (
-  projectDir: FilePath,
+  baseDir: FilePath,
   fileName: FilePath,
 ): Promise<any> => {
-  const pathToVarsFile = expandFilePath(projectDir, fileName)
+  const pathToVarsFile = expandFilePath(baseDir, fileName)
 
   if (!(await fileExists(pathToVarsFile))) {
     throw new TakomoError(`Variable file ${pathToVarsFile} not found`)
@@ -41,14 +41,13 @@ export const loadVariablesFromFile = async (
  */
 export const loadVariablesFromFiles = async (
   projectDir: FilePath,
-  vars: Record<string, unknown>,
   varsArray: ReadonlyArray<VarFileOption>,
 ): Promise<Record<string, unknown>> => {
-  let fileVars = {}
+  let vars = {}
   for (const { filePath, variableName } of varsArray) {
     const varsFromFile = await loadVariablesFromFile(projectDir, filePath)
     if (variableName) {
-      fileVars = merge(fileVars, { [variableName]: varsFromFile })
+      vars = merge(vars, { [variableName]: varsFromFile })
     } else {
       const varsFromFile = await loadVariablesFromFile(projectDir, filePath)
       if (typeof varsFromFile !== "object") {
@@ -57,9 +56,9 @@ export const loadVariablesFromFiles = async (
         )
       }
 
-      fileVars = merge(fileVars, varsFromFile)
+      vars = merge(vars, varsFromFile)
     }
   }
 
-  return merge(fileVars, vars)
+  return vars
 }

@@ -65,9 +65,15 @@ export const createFileSystemCommandContext = async (
 
   const regions = projectConfig.regions.slice()
 
+  const projectVarFilePaths = projectConfig.varFiles.map((filePath) => ({
+    filePath,
+  }))
+
+  const allVarFilePaths = [...projectVarFilePaths, ...varFilePaths]
+
   const variables = await buildVariables(
     projectDir,
-    varFilePaths,
+    allVarFilePaths,
     vars,
     envFilePaths,
   )
