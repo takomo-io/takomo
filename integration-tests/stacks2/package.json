@@ -26,7 +26,7 @@
     "@takomo/stacks-model": "3.38.0",
     "@takomo/test-integration": "3.38.0",
     "@takomo/util": "3.37.1",
-    "aws-sdk": "2.987.0"
+    "aws-sdk": "2.1033.0"
   },
   "devDependencies": {
     "@takomo/cli": "3.38.0",

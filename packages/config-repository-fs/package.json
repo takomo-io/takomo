@@ -54,7 +54,7 @@
     "dotenv-expand": "5.1.0",
     "joi": "17.4.0",
     "semver": "7.3.4",
-    "aws-sdk": "2.987.0"
+    "aws-sdk": "2.1033.0"
   },
   "devDependencies": {
     "@takomo/test-unit": "3.37.1"
