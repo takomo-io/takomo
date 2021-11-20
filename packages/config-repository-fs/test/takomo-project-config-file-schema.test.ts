@@ -1,5 +1,5 @@
 import { expectNoValidationError } from "@takomo/test-unit"
-import { takomoProjectConfigFileSchema } from "../src/config"
+import { takomoProjectConfigFileSchema } from "../src/project/config"
 
 const valid = [
   {},

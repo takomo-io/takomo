@@ -1,5 +1,5 @@
-import { ExternalResolverConfig } from "@takomo/core/src"
-import { parseExternalResolvers } from "../src/config"
+import { ExternalResolverConfig } from "@takomo/core"
+import { parseExternalResolvers } from "../src/project/config"
 
 const cases: Array<[unknown, ReadonlyArray<ExternalResolverConfig>]> = [
   [undefined, []],

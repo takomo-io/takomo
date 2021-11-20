@@ -11,7 +11,7 @@ describe("#merge", () => {
     expect(merge(a)).toStrictEqual(a)
   })
 
-  test("two empty objectss", () => {
+  test("two empty objects", () => {
     const a = {}
     const b = {}
     const expected = {}

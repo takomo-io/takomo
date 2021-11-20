@@ -14,13 +14,9 @@ import {
   DEFAULT_ORGANIZATION_ROLE_NAME,
   OrganizationalUnitPath,
 } from "@takomo/organization-model"
+import { FilePath } from "@takomo/util"
 import { Arguments, Argv, CommandModule } from "yargs"
-import {
-  commonEpilog,
-  handle,
-  readConfigurationFromFiles,
-  RunProps,
-} from "../../common"
+import { commonEpilog, handle, RunProps } from "../../common"
 import { ALIAS_OPT, CONFIG_FILE_OPT, ROLE_NAME_OPT } from "../../constants"
 
 export const NAME_OPT = "name"
@@ -35,6 +31,7 @@ interface CommandArgs {
   readonly [ROLE_NAME_OPT]: IamRoleName
   readonly [ALIAS_OPT]?: AccountAlias
   readonly [OU_OPT]?: OrganizationalUnitPath
+  readonly [CONFIG_FILE_OPT]?: FilePath
 }
 
 const command = "create"
@@ -95,10 +92,7 @@ const handler = (argv: Arguments<CommandArgs>) =>
       roleName: argv[ROLE_NAME_OPT],
       alias: argv.alias,
       ou: argv.ou,
-      config: await readConfigurationFromFiles(
-        ctx.projectDir,
-        argv[CONFIG_FILE_OPT],
-      ),
+      configFile: argv[CONFIG_FILE_OPT],
     }),
     io: (ctx, logger) => createCreateAccountIO({ logger }),
     configRepository: (ctx, logger) =>

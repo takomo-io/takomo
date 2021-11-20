@@ -1,8 +1,11 @@
-import { defaultFeatures, InternalTakomoProjectConfig } from "@takomo/core"
+import {
+  defaultFeatures,
+  DEFAULT_REGIONS,
+  InternalTakomoProjectConfig,
+} from "@takomo/core"
 import { FilePath } from "@takomo/util"
 import { join } from "path"
-import { loadProjectConfig } from "../src/config"
-import { DEFAULT_REGIONS } from "../src/constants"
+import { loadProjectConfig } from "../src/project/config"
 
 const projectDir = `${process.cwd()}/test`
 

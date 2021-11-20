@@ -41,7 +41,7 @@
     "@takomo/stacks-model": "3.38.0",
     "@takomo/stacks-schema": "3.38.0",
     "@takomo/util": "3.37.1",
-    "aws-sdk": "2.987.0",
+    "aws-sdk": "2.1033.0",
     "cockatiel": "2.0.1",
     "joi": "17.4.0",
     "ramda": "0.27.1"

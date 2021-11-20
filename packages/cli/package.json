@@ -42,18 +42,13 @@
     "@takomo/stacks-commands": "3.38.0",
     "@takomo/stacks-model": "3.38.0",
     "@takomo/util": "3.37.1",
-    "aws-sdk": "2.987.0",
+    "aws-sdk": "2.1033.0",
     "dotenv": "8.2.0",
-    "dotenv-expand": "5.1.0",
     "easy-table": "1.2.0",
     "inquirer": "8.1.2",
     "joi": "17.4.0",
     "ramda": "0.27.1",
-    "semver": "7.3.4",
     "yargs": "17.0.1"
-  },
-  "devDependencies": {
-    "@takomo/test-unit": "3.37.1"
   },
   "engines": {
     "node": ">=14.4.0"

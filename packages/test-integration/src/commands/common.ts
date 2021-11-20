@@ -1,5 +1,6 @@
 import { StackName } from "@takomo/aws-model"
-import { CliCommandContext, initCommandContext } from "@takomo/cli"
+import { initCommandContext } from "@takomo/cli"
+import { FileSystemCommandContext } from "@takomo/config-repository-fs"
 import { CommandStatus } from "@takomo/core"
 import { CommandPath, StackPath } from "@takomo/stacks-model"
 import { FilePath, LogLevel } from "@takomo/util"
@@ -19,7 +20,7 @@ export interface ExecuteCommandProps {
 
 export const createTestCommandContext = async (
   props: CreateCtxAndConfigRepositoryProps,
-): Promise<CliCommandContext> => {
+): Promise<FileSystemCommandContext> => {
   const credentials = global.reservation
     ? new Credentials(global.reservation.credentials)
     : undefined

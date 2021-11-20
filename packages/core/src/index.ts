@@ -20,6 +20,7 @@ export {
   SKIPPED,
   SUCCESS,
   SuccessHolder,
+  TakomoBuildInfo,
 } from "./command"
 export {
   AccountRepositoryConfig,
@@ -36,6 +37,7 @@ export {
   TakomoProjectDeploymentTargetsConfig,
   TakomoProjectOrganizationConfig,
 } from "./config"
+export { DEFAULT_REGIONS } from "./constants"
 export {
   parseBoolean,
   parseCommandRole,

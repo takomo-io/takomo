@@ -6,6 +6,7 @@ import {
 } from "@takomo/aws-model"
 import { CommandInput, CommandOutput, ConfirmResult, IO } from "@takomo/core"
 import { OrganizationalUnitPath } from "@takomo/organization-model"
+import { FilePath } from "@takomo/util"
 
 export interface CreateAccountInput extends CommandInput {
   readonly email: AccountEmail
@@ -14,7 +15,7 @@ export interface CreateAccountInput extends CommandInput {
   readonly roleName: string
   readonly alias?: AccountAlias
   readonly ou?: OrganizationalUnitPath
-  readonly config?: Record<string, unknown>
+  readonly configFile?: FilePath
 }
 
 export interface CreateAccountOutput extends CommandOutput {

@@ -19,4 +19,9 @@ export {
 export * from "./timer"
 export { formatElapsedMillis, printTimer, Timer } from "./timer"
 export * from "./validation"
+export {
+  loadVariablesFromFile,
+  loadVariablesFromFiles,
+  VarFileOption,
+} from "./variables"
 export * from "./yaml"

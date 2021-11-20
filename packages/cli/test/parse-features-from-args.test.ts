@@ -1,5 +1,5 @@
 import { Features } from "@takomo/core"
-import { parseFeaturesFromArgs } from "../src/common"
+import { parseFeaturesFromArgs } from "../src/options/parse-features-from-args"
 
 const cases: Array<[any, Partial<Features>]> = [
   [undefined, {}],
