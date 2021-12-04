@@ -167,4 +167,111 @@ describe("DeployStacksIO#confirmDeploy", () => {
     `
     expect(output).toBe(expected)
   })
+
+  test("dependencies are shown correctly", async () => {
+    const operation1 = mockOperation("UPDATE", {
+      name: "hello",
+      path: "/hello.yml/eu-north-1",
+      region: "eu-north-1",
+      currentStack: mock<CloudFormationStack>({
+        status: "CREATE_COMPLETE",
+      }),
+    })
+
+    const operation2 = mockOperation("UPDATE", {
+      name: "hello2",
+      path: "/hello2.yml/eu-central-1",
+      region: "eu-central-1",
+      currentStack: mock<CloudFormationStack>({
+        status: "CREATE_COMPLETE",
+      }),
+      dependencies: ["/hello.yml/eu-north-1"],
+    })
+
+    const operation3 = mockOperation("UPDATE", {
+      name: "hello3",
+      path: "/hello3.yml/eu-central-1",
+      region: "eu-central-1",
+      currentStack: mock<CloudFormationStack>({
+        status: "CREATE_COMPLETE",
+      }),
+    })
+
+    const operation4 = mockOperation("UPDATE", {
+      name: "hello4",
+      path: "/hello4.yml/eu-central-1",
+      region: "eu-central-1",
+      currentStack: mock<CloudFormationStack>({
+        status: "CREATE_COMPLETE",
+      }),
+      dependencies: ["/hello3.yml/eu-central-1", "/hello2.yml/eu-central-1"],
+    })
+
+    const output = await confirmDeploy(
+      operation1,
+      operation3,
+      operation2,
+      operation4,
+    )
+    const expected = dedent`
+      
+      ${bold("Review stacks deployment plan:")}
+      ${bold("------------------------------")}
+      A stacks deployment plan has been created and is shown below.
+      Stacks will be deployed in the order they are listed, and in parallel when possible.
+      
+      Following stacks will be deployed:
+      
+        ${yellow("~ /hello.yml/eu-north-1:       (stack will be updated)")}
+            name:                      hello
+            status:                    ${green("CREATE_COMPLETE")}
+            account id:                123456789012
+            region:                    eu-north-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependencies:              none
+
+        ${yellow("~ /hello3.yml/eu-central-1:    (stack will be updated)")}
+            name:                      hello3
+            status:                    ${green("CREATE_COMPLETE")}
+            account id:                123456789012
+            region:                    eu-central-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependencies:              none
+
+        ${yellow("~ /hello2.yml/eu-central-1:    (stack will be updated)")}
+            name:                      hello2
+            status:                    ${green("CREATE_COMPLETE")}
+            account id:                123456789012
+            region:                    eu-central-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependencies:
+              - /hello.yml/eu-north-1
+
+        ${yellow("~ /hello4.yml/eu-central-1:    (stack will be updated)")}
+            name:                      hello4
+            status:                    ${green("CREATE_COMPLETE")}
+            account id:                123456789012
+            region:                    eu-central-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependencies:
+              - /hello3.yml/eu-central-1
+              - /hello2.yml/eu-central-1
+
+        stacks | total: 4, ${yellow("update: 4")}
+
+      `
+    expect(output).toBe(expected)
+  })
 })
