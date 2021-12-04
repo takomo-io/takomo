@@ -24,6 +24,8 @@ export interface MockInternalStackProps {
   readonly region: Region
   readonly currentStack?: CloudFormationStack
   readonly terminationProtection?: boolean
+  readonly dependents?: ReadonlyArray<StackPath>
+  readonly dependencies?: ReadonlyArray<StackPath>
 }
 
 export const mockInternalStack = ({
@@ -31,12 +33,16 @@ export const mockInternalStack = ({
   path,
   region,
   terminationProtection = false,
+  dependents = [],
+  dependencies = [],
 }: MockInternalStackProps): InternalStack => {
   const stack = mockDeep<InternalStack>({
     name,
     path,
     region,
     terminationProtection,
+    dependents,
+    dependencies,
   })
 
   stack.credentialManager.getCallerIdentity.calledWith().mockResolvedValue({

@@ -6,7 +6,7 @@ import {
   StackUndeployOperationType,
   UndeployStacksIO,
 } from "@takomo/stacks-commands"
-import { InternalStack, StackGroup, StackPath } from "@takomo/stacks-model"
+import { StackGroup, StackPath } from "@takomo/stacks-model"
 import { grey, red } from "@takomo/util"
 import R from "ramda"
 import { createBaseIO } from "../cli-io"
@@ -108,10 +108,12 @@ export const createUndeployStacksIO = (
       )
 
       if (stack.dependents.length > 0) {
-        io.message({ text: "      dependents:" })
-        printStackDependents(stack, stacksMap, 8)
+        io.message({ text: "dependents:", indent: 6 })
+        stack.dependents.forEach((d) => {
+          io.message({ text: `- ${d}`, indent: 8 })
+        })
       } else {
-        io.message({ text: "      dependents:                none" })
+        io.message({ text: "dependents:                none", indent: 6 })
       }
     }
 
@@ -151,24 +153,6 @@ export const createUndeployStacksIO = (
 
   const printOutput = (output: StacksOperationOutput): StacksOperationOutput =>
     printStacksOperationOutput(io, output, logger.logLevel)
-
-  const printStackDependents = (
-    stack: InternalStack,
-    stacksMap: Map<StackPath, InternalStack>,
-    depth: number,
-  ) => {
-    stack.dependents.forEach((dependentPath) => {
-      const dependent = stacksMap.get(dependentPath)
-      if (!dependent) {
-        throw new Error(`Dependency ${dependentPath} was not found`)
-      }
-
-      const padding = " ".repeat(depth)
-      const end = dependent.dependents.length > 0 ? ":" : ""
-      io.message({ text: `${padding}- ${dependentPath}${end}` })
-      printStackDependents(dependent, stacksMap, depth + 2)
-    })
-  }
 
   const chooseCommandPath = (rootStackGroup: StackGroup) =>
     chooseCommandPathInternal(io, rootStackGroup)

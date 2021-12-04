@@ -189,10 +189,14 @@ export const createDeployStacksIO = (
       )
 
       if (stack.dependencies.length > 0) {
-        io.message({ text: "      dependencies:" })
-        printStackDependencies(stack, stacksMap, 8)
+        io.message({ text: "dependencies:", indent: 6 })
+        stack.dependencies
+          .map((d) => `- ${d}`)
+          .forEach((d) => {
+            io.message({ text: d, indent: 8 })
+          })
       } else {
-        io.message({ text: "      dependencies:              none" })
+        io.message({ text: "dependencies:              none", indent: 6 })
       }
     }
 
@@ -341,26 +345,6 @@ export const createDeployStacksIO = (
 
   const printStackEvent = (stackPath: StackPath, e: StackEvent): void =>
     logger.info(stackPath + " - " + formatStackEvent(e))
-
-  const printStackDependencies = (
-    stack: InternalStack,
-    stacksMap: Map<StackPath, InternalStack>,
-    depth: number,
-  ) => {
-    stack.dependencies.forEach((dependencyPath) => {
-      const dependency = stacksMap.get(dependencyPath)
-      if (!dependency) {
-        throw new Error(`Dependency ${dependencyPath} was not found`)
-      }
-
-      const padding = " ".repeat(depth)
-      const end = dependency.dependencies.length > 0 ? ":" : ""
-
-      io.message({ text: `${padding}- ${dependencyPath}${end}` })
-
-      printStackDependencies(dependency, stacksMap, depth + 2)
-    })
-  }
 
   const chooseCommandPath = (rootStackGroup: StackGroup) =>
     chooseCommandPathInternal(io, rootStackGroup)

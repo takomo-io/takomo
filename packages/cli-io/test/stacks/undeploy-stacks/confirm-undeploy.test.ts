@@ -189,4 +189,99 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
     `
     expect(output).toBe(expected)
   })
+
+  test("dependents are shown correctly", async () => {
+    const operation1 = mockOperation("DELETE", {
+      name: "example1",
+      path: "/example1.yml/eu-north-1",
+      region: "eu-north-1",
+      dependents: ["/sample.yml/eu-central-1", "/sample2.yml/eu-central-1"],
+    })
+
+    const operation2 = mockOperation("DELETE", {
+      name: "sample",
+      path: "/sample.yml/eu-central-1",
+      region: "eu-central-1",
+    })
+
+    const operation3 = mockOperation("DELETE", {
+      name: "sample2",
+      path: "/sample2.yml/eu-central-1",
+      region: "eu-central-1",
+      dependents: ["/sample3.yml/eu-central-1"],
+    })
+
+    const operation4 = mockOperation("DELETE", {
+      name: "sample3",
+      path: "/sample3.yml/eu-central-1",
+      region: "eu-central-1",
+    })
+
+    const output = await confirmUndeploy(
+      operation4,
+      operation3,
+      operation2,
+      operation1,
+    )
+    const expected = dedent`
+      
+      ${bold("Review stacks undeployment plan:")}
+      ${bold("--------------------------------")}
+      A stacks undeployment plan has been created and is shown below.
+      Stacks will be undeployed in the order they are listed, and in parallel when possible.
+      
+      Following stacks will be undeployed:
+
+        ${red("- /sample3.yml/eu-central-1:   (stack will be removed)")}
+            name:                      sample3
+            status:                    ${cyan("PENDING")}
+            account id:                123456789012
+            region:                    eu-central-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependents:                none
+
+        ${red("- /sample2.yml/eu-central-1:   (stack will be removed)")}
+            name:                      sample2
+            status:                    ${cyan("PENDING")}
+            account id:                123456789012
+            region:                    eu-central-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependents:
+              - /sample3.yml/eu-central-1
+
+        ${red("- /sample.yml/eu-central-1:    (stack will be removed)")}
+            name:                      sample
+            status:                    ${cyan("PENDING")}
+            account id:                123456789012
+            region:                    eu-central-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependents:                none
+      
+        ${red("- /example1.yml/eu-north-1:    (stack will be removed)")}
+            name:                      example1
+            status:                    ${cyan("PENDING")}
+            account id:                123456789012
+            region:                    eu-north-1
+            credentials:
+              user id:                 AIDARKRBVDY5HHA3SQU7Q
+              account id:              123456789012
+              arn:                     arn:aws:iam::123456789012:user/reiner-braun
+            dependents:
+              - /sample.yml/eu-central-1
+              - /sample2.yml/eu-central-1
+
+        stacks | total: 4, ${red("remove: 4")}
+      
+    `
+    expect(output).toBe(expected)
+  })
 })
