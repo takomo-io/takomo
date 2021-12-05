@@ -86,6 +86,7 @@ export const buildStacksDeployPlan = async (
 ): Promise<StacksDeployPlan> => {
   const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
+    .filter((s) => !s.obsolete)
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
       (collected, stack) =>
