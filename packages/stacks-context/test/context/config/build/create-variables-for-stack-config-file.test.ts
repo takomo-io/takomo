@@ -32,6 +32,7 @@ describe("#createVariablesForStackConfigFile", () => {
       },
       hooks: [],
       ignore: false,
+      obsolete: false,
       terminationProtection: false,
       root: true,
       name: "regionName",

@@ -58,6 +58,7 @@ export interface StackProps {
   credentials: Credentials
   capabilities?: ReadonlyArray<StackCapability>
   ignore: boolean
+  obsolete: boolean
   terminationProtection: boolean
   logger: TkmLogger
   cloudFormationClient: CloudFormationClient
@@ -153,6 +154,7 @@ export interface InternalStack extends Stack {
   readonly hooks: ReadonlyArray<HookExecutor>
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly ignore: boolean
+  readonly obsolete: boolean
   readonly terminationProtection: boolean
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
@@ -175,6 +177,7 @@ export const createStack = (props: StackProps): InternalStack => {
     dependencies,
     hooks,
     ignore,
+    obsolete,
     logger,
     name,
     parameters,
@@ -211,6 +214,7 @@ export const createStack = (props: StackProps): InternalStack => {
     getCurrentCloudFormationStack,
     hooks,
     ignore,
+    obsolete,
     logger,
     name,
     parameters,

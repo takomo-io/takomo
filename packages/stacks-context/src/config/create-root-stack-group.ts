@@ -17,5 +17,6 @@ export const createRootStackGroup = (): StackGroup =>
     hooks: [],
     accountIds: [],
     ignore: false,
+    obsolete: false,
     terminationProtection: false,
   })

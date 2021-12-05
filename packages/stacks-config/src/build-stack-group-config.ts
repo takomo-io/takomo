@@ -58,6 +58,7 @@ export const buildStackGroupConfig = (
     accountIds,
     terminationProtection: parseOptionalBoolean(record.terminationProtection),
     ignore: parseOptionalBoolean(record.ignore),
+    obsolete: parseOptionalBoolean(record.obsolete),
     capabilities: parseOptionalStringArray(record.capabilities),
     project: parseOptionalString(record.project),
     commandRole: parseCommandRole(record.commandRole),

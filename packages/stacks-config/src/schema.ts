@@ -25,6 +25,7 @@ export const createStackGroupConfigSchema = (
 
   const {
     ignore,
+    obsolete,
     terminationProtection,
     templateBucket,
     hooks,
@@ -44,6 +45,7 @@ export const createStackGroupConfigSchema = (
     data,
     regions,
     ignore,
+    obsolete,
     terminationProtection,
     timeout,
     schemas,
@@ -78,6 +80,7 @@ export const createStackConfigSchema = (
 
   const {
     ignore,
+    obsolete,
     terminationProtection,
     templateBucket,
     template,
@@ -97,6 +100,7 @@ export const createStackConfigSchema = (
     project,
     regions,
     ignore,
+    obsolete,
     terminationProtection,
     templateBucket,
     tags,

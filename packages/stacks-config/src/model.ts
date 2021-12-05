@@ -98,6 +98,7 @@ export interface StackConfig {
   readonly hooks: ReadonlyArray<HookConfig>
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly ignore?: boolean
+  readonly obsolete?: boolean
   readonly terminationProtection?: boolean
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
@@ -116,6 +117,7 @@ export interface StackGroupConfig {
   readonly hooks: ReadonlyArray<HookConfig>
   readonly data: Vars
   readonly ignore?: boolean
+  readonly obsolete?: boolean
   readonly terminationProtection?: boolean
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly stackPolicy?: StackPolicyBody

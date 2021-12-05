@@ -7,6 +7,7 @@ import {
 } from "@takomo/stacks-model"
 import { TakomoError } from "@takomo/util"
 import R from "ramda"
+import { ObsoleteDependenciesError } from "./errors"
 
 export const checkCyclicDependenciesForStack = (
   stack: InternalStack,
@@ -35,8 +36,38 @@ export const checkCyclicDependenciesForStack = (
 
 export const checkCyclicDependencies = (
   stacks: Map<StackPath, InternalStack>,
-) => {
+): void => {
   stacks.forEach((s) => checkCyclicDependenciesForStack(s, stacks, [s.path]))
+}
+
+export const checkObsoleteDependencies = (
+  stacks: Map<StackPath, InternalStack>,
+): void => {
+  const stacksWithObsoleteDependencies = Array.from(stacks.values())
+    .filter((stack) => !stack.obsolete)
+    .map((stack) => {
+      const obsoleteDependencies = stack.dependencies.filter(
+        (dependencyPath) => {
+          const dependencyStack = stacks.get(dependencyPath)
+          if (!dependencyStack) {
+            throw new Error(
+              `Expected stack to found with path: ${dependencyPath}`,
+            )
+          }
+          return dependencyStack.obsolete
+        },
+      )
+
+      return {
+        from: stack.path,
+        to: obsoleteDependencies,
+      }
+    })
+    .filter(({ to }) => to.length > 0)
+
+  if (stacksWithObsoleteDependencies.length > 0) {
+    throw new ObsoleteDependenciesError(stacksWithObsoleteDependencies)
+  }
 }
 
 export const collectAllDependencies = (

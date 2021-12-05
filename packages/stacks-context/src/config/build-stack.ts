@@ -180,6 +180,11 @@ export const buildStack = async (
   const ignore =
     stackConfig.ignore !== undefined ? stackConfig.ignore : stackGroup.ignore
 
+  const obsolete =
+    stackConfig.obsolete !== undefined
+      ? stackConfig.obsolete
+      : stackGroup.obsolete
+
   const terminationProtection =
     stackConfig.terminationProtection !== undefined
       ? stackConfig.terminationProtection
@@ -232,6 +237,7 @@ export const buildStack = async (
           credentials,
           hooks,
           ignore,
+          obsolete,
           terminationProtection,
           capabilities,
           accountIds,

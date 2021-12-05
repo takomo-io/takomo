@@ -20,6 +20,7 @@ export interface StacksSchemas {
   stackGroupName: StringSchema
   terminationProtection: BooleanSchema
   ignore: BooleanSchema
+  obsolete: BooleanSchema
   inheritTags: BooleanSchema
   template: (StringSchema | ObjectSchema)[]
   parameters: ObjectSchema
@@ -183,6 +184,7 @@ export const createStacksSchemas = (
   ])
 
   const ignore = Joi.boolean()
+  const obsolete = Joi.boolean()
   const terminationProtection = Joi.boolean()
 
   const stackPath = Joi.string()
@@ -303,6 +305,7 @@ export const createStacksSchemas = (
     stackGroupName,
     terminationProtection,
     ignore,
+    obsolete,
     parameters,
     template,
     hooks,
