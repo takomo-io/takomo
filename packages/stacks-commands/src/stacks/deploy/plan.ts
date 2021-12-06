@@ -86,7 +86,6 @@ export const buildStacksDeployPlan = async (
 ): Promise<StacksDeployPlan> => {
   const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
-    .filter((s) => !s.obsolete)
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
       (collected, stack) =>
@@ -98,6 +97,7 @@ export const buildStacksDeployPlan = async (
       new Array<StackPath>(),
     )
     .map((stackPath) => stacksByPath.get(stackPath)!)
+    .filter((s) => !s.obsolete)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
   const stackPairs = await loadCurrentCfStacks(logger, sortedStacks)
