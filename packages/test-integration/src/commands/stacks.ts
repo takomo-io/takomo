@@ -87,6 +87,7 @@ export interface ExecuteDeployStacksCommandProps extends ExecuteCommandProps {
 export interface ExecuteUndeployStacksCommandProps extends ExecuteCommandProps {
   readonly answers?: TestUndeployStacksIOAnswers
   readonly interactive?: boolean
+  readonly prune?: boolean
 }
 
 export const executeDeployStacksCommand = (
@@ -172,6 +173,7 @@ export const executeUndeployStacksCommand = (
         timer: createTimer("total"),
         ignoreDependencies: props.ignoreDependencies ?? false,
         interactive: props.interactive ?? false,
+        prune: props.prune ?? false,
         outputFormat: "text",
       },
     })

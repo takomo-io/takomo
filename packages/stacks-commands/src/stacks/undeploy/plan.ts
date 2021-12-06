@@ -8,6 +8,7 @@ import {
   getStackPath,
   InternalStack,
   isNotObsolete,
+  isObsolete,
   StackPath,
 } from "@takomo/stacks-model"
 import { arrayToMap } from "@takomo/util"
@@ -27,6 +28,7 @@ export interface StackUndeployOperation {
 
 export interface StacksUndeployPlan {
   readonly operations: ReadonlyArray<StackUndeployOperation>
+  readonly prune: boolean
 }
 
 const convertToUndeployOperation = async (
@@ -62,7 +64,9 @@ export const buildStacksUndeployPlan = async (
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
+  prune: boolean,
 ): Promise<StacksUndeployPlan> => {
+  const pruneFilter = prune ? isObsolete : isNotObsolete
   const stacksByPath = arrayToMap(stacks, getStackPath)
   const stacksToUndeploy = stacks
     .filter((s) => isWithinCommandPath(s.path, commandPath))
@@ -76,7 +80,7 @@ export const buildStacksUndeployPlan = async (
       new Array<StackPath>(),
     )
     .map((stackPath) => stacksByPath.get(stackPath)!)
-    .filter(isNotObsolete)
+    .filter(pruneFilter)
 
   const sortedStacks = sortStacksForUndeploy(stacksToUndeploy)
   const operations = await Promise.all(
@@ -84,6 +88,7 @@ export const buildStacksUndeployPlan = async (
   )
 
   return {
+    prune,
     operations: ignoreDependencies
       ? operations.filter((o) => isWithinCommandPath(o.stack.path, commandPath))
       : operations,

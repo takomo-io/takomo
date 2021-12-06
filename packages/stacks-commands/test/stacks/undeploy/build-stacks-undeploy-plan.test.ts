@@ -83,7 +83,12 @@ const assertPlan = (
 
 describe("#buildStacksUndeployPlan", () => {
   test("empty plan", async () => {
-    const plan = await buildStacksUndeployPlan([], ROOT_STACK_GROUP_PATH, false)
+    const plan = await buildStacksUndeployPlan(
+      [],
+      ROOT_STACK_GROUP_PATH,
+      false,
+      false,
+    )
     assertPlan(plan)
   })
 
@@ -91,6 +96,7 @@ describe("#buildStacksUndeployPlan", () => {
     const plan = await buildStacksUndeployPlan(
       [stack({ name: "a", path: "/a.yml/eu-north-1", region: "eu-north-1" })],
       ROOT_STACK_GROUP_PATH,
+      false,
       false,
     )
     assertPlan(plan, { type: "SKIP", path: "/a.yml/eu-north-1" })
@@ -107,6 +113,7 @@ describe("#buildStacksUndeployPlan", () => {
         }),
       ],
       ROOT_STACK_GROUP_PATH,
+      false,
       false,
     )
     assertPlan(plan, { type: "DELETE", path: "/a.yml/eu-north-1" })
@@ -129,6 +136,7 @@ describe("#buildStacksUndeployPlan", () => {
         }),
       ],
       ROOT_STACK_GROUP_PATH,
+      false,
       false,
     )
     assertPlan(
@@ -156,6 +164,7 @@ describe("#buildStacksUndeployPlan", () => {
         }),
       ],
       ROOT_STACK_GROUP_PATH,
+      false,
       false,
     )
     assertPlan(
@@ -185,6 +194,7 @@ describe("#buildStacksUndeployPlan", () => {
       ],
       ROOT_STACK_GROUP_PATH,
       false,
+      false,
     )
     assertPlan(plan, { type: "DELETE", path: "/a.yml/eu-north-1" })
   })
@@ -209,6 +219,7 @@ describe("#buildStacksUndeployPlan", () => {
         }),
       ],
       ROOT_STACK_GROUP_PATH,
+      false,
       false,
     )
     assertPlan(plan)
