@@ -47,7 +47,10 @@ const executeOperationInternal = async (
       })
     case "undeploy":
       return undeployStacksCommand({
-        input,
+        input: {
+          ...input,
+          prune: false,
+        },
         ctx,
         credentialManager,
         configRepository,

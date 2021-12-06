@@ -40,6 +40,7 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly concurrentTargets: number
   readonly configSetName?: ConfigSetName
   readonly expectNoChanges: boolean
+  readonly prune: boolean
   readonly commandPath?: CommandPath
 }
 

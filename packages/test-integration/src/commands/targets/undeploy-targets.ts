@@ -54,6 +54,7 @@ export const executeUndeployTargetsCommand = (
         commandPath: props.commandPath,
         configSetName: props.configSetName,
         expectNoChanges: props.expectNoChanges ?? false,
+        prune: props.prune ?? false,
         outputFormat: "text",
       },
     })

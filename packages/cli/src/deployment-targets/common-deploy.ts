@@ -141,6 +141,7 @@ const createTargetsDeployHandler =
         commandPath: argv[COMMAND_PATH_OPT],
         configSetName: argv[CONFIG_SET_OPT],
         expectNoChanges: argv[EXPECT_NO_CHANGES_OPT],
+        prune: false,
       }),
       io: (ctx, logger) => io({ logger }),
       configRepository: (ctx, logger) =>
