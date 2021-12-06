@@ -3,6 +3,7 @@ import {
   buildStacksContext,
   StacksConfigRepository,
 } from "@takomo/stacks-context"
+import { isNotObsolete } from "@takomo/stacks-model"
 import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
@@ -49,7 +50,7 @@ export const dependencyGraphCommand: CommandHandler<
         status: "SUCCESS",
         message: "Success",
         timer,
-        stacks: ctx.stacks,
+        stacks: ctx.stacks.filter(isNotObsolete),
         outputFormat: input.outputFormat,
       }
 

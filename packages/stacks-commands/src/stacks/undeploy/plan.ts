@@ -3,7 +3,13 @@ import {
   isWithinCommandPath,
   sortStacksForUndeploy,
 } from "@takomo/stacks-context"
-import { CommandPath, InternalStack, StackPath } from "@takomo/stacks-model"
+import {
+  CommandPath,
+  getStackPath,
+  InternalStack,
+  isNotObsolete,
+  StackPath,
+} from "@takomo/stacks-model"
 import { arrayToMap } from "@takomo/util"
 import R from "ramda"
 
@@ -57,7 +63,7 @@ export const buildStacksUndeployPlan = async (
   commandPath: CommandPath,
   ignoreDependencies: boolean,
 ): Promise<StacksUndeployPlan> => {
-  const stacksByPath = arrayToMap(stacks, (s) => s.path)
+  const stacksByPath = arrayToMap(stacks, getStackPath)
   const stacksToUndeploy = stacks
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
@@ -70,7 +76,7 @@ export const buildStacksUndeployPlan = async (
       new Array<StackPath>(),
     )
     .map((stackPath) => stacksByPath.get(stackPath)!)
-    .filter((s) => !s.obsolete)
+    .filter(isNotObsolete)
 
   const sortedStacks = sortStacksForUndeploy(stacksToUndeploy)
   const operations = await Promise.all(

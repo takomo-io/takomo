@@ -1,4 +1,4 @@
-import { InternalStacksContext } from "@takomo/stacks-model"
+import { InternalStacksContext, isNotObsolete } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
 import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
 import { ListStacksInput, ListStacksOutput } from "./model"
@@ -10,9 +10,9 @@ export const listStacks = async (
 ): Promise<ListStacksOutput> => {
   const { timer, commandPath, outputFormat } = input
 
-  const stacksWithinCommandPath = ctx.stacks.filter((stack) =>
-    stack.path.startsWith(commandPath),
-  )
+  const stacksWithinCommandPath = ctx.stacks
+    .filter((stack) => stack.path.startsWith(commandPath))
+    .filter(isNotObsolete)
 
   const stackPairs = await loadCurrentCfStacks(logger, stacksWithinCommandPath)
 

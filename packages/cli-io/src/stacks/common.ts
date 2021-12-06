@@ -6,6 +6,7 @@ import {
 } from "@takomo/stacks-commands"
 import {
   CommandPath,
+  getStackPath,
   StackGroup,
   StackPath,
   StackResult,
@@ -33,7 +34,7 @@ export const chooseCommandPathInternal = async (
     (collected, stackGroup) => [
       ...collected,
       stackGroup.path,
-      ...stackGroup.stacks.map((s) => s.path),
+      ...stackGroup.stacks.map(getStackPath),
     ],
     new Array<string>(),
   )
