@@ -1,0 +1,6 @@
+obsolete: true
+template:
+  inline: |
+    Resources:
+      LG:
+        Type: AWS::Logs::LogGroup

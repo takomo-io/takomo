@@ -1,0 +1,6 @@
+depends: s4.yml
+template:
+  inline: |
+    Resources:
+      LG:
+        Type: AWS::Logs::LogGroup

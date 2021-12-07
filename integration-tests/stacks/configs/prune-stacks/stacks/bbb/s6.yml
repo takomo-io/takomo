@@ -1,0 +1,6 @@
+depends: s5.yml
+template:
+  inline: |
+    Resources:
+      LG:
+        Type: AWS::Logs::LogGroup
