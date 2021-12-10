@@ -30,6 +30,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
     hooks: [],
     capabilities: [],
     ignore: false,
+    obsolete: false,
     terminationProtection: false,
     logger: createConsoleLogger({
       logLevel: "info",
