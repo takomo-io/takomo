@@ -31,6 +31,7 @@ interface CreateExecutorProps {
   readonly ctx: DeploymentTargetsContext
   readonly io: DeploymentTargetsOperationIO
   readonly expectNoChanges: boolean
+  readonly prune: boolean
 }
 
 const executeOperationInternal = async (
@@ -43,6 +44,7 @@ const executeOperationInternal = async (
   configRepository: StacksConfigRepository,
   logger: TkmLogger,
   expectNoChanges: boolean,
+  prune: boolean,
 ): Promise<StacksOperationOutput> => {
   switch (operation) {
     case "deploy":
@@ -58,7 +60,10 @@ const executeOperationInternal = async (
       })
     case "undeploy":
       return undeployStacksCommand({
-        input,
+        input: {
+          ...input,
+          prune,
+        },
         ctx,
         credentialManager,
         configRepository,
@@ -76,6 +81,7 @@ const createExecutor = ({
   ctx,
   io,
   expectNoChanges,
+  prune,
 }: CreateExecutorProps) => {
   return async ({
     timer,
@@ -153,6 +159,7 @@ const createExecutor = ({
         stacksConfigRepository,
         logger,
         expectNoChanges,
+        prune,
       )
     } catch (error: any) {
       logger.error("An error occurred", error)
@@ -178,7 +185,13 @@ export const executeOperation = async (
     timer,
     io,
     plan,
-    input: { concurrentTargets, outputFormat, operation, expectNoChanges },
+    input: {
+      concurrentTargets,
+      outputFormat,
+      operation,
+      expectNoChanges,
+      prune,
+    },
     ctx,
   } = holder
 
@@ -191,6 +204,7 @@ export const executeOperation = async (
     operation,
     io,
     expectNoChanges,
+    prune,
   })
 
   return executeConfigSetPlan({

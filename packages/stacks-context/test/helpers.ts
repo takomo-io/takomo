@@ -33,6 +33,7 @@ export const createStackGroup = (props: TestStackGroupProps): StackGroup => {
     data: {},
     capabilities: [],
     ignore: false,
+    obsolete: false,
     terminationProtection: false,
     toProps: jest.fn(),
   }
@@ -67,6 +68,7 @@ export const createStack = (
     hooks: [],
     capabilities: [],
     ignore: false,
+    obsolete: false,
     terminationProtection: false,
     logger: createConsoleLogger({
       logLevel: "info",
@@ -76,6 +78,7 @@ export const createStack = (
     credentials: mock<Credentials>(),
     toProps: () => ({
       ignore: false,
+      obsolete: false,
       terminationProtection: false,
       timeout: {
         create: 0,

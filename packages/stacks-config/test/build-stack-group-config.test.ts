@@ -15,6 +15,7 @@ const emptyStackGroupConfig = {
   timeout: undefined,
   capabilities: undefined,
   ignore: undefined,
+  obsolete: undefined,
   terminationProtection: undefined,
   stackPolicy: undefined,
   stackPolicyDuringUpdate: undefined,
@@ -88,6 +89,7 @@ describe("#buildStackGroupConfig", () => {
       },
       capabilities: undefined,
       ignore: undefined,
+      obsolete: undefined,
     })
   })
 })

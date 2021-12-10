@@ -11,4 +11,8 @@ export interface StacksDeployOperationInput extends StacksOperationInput {
   readonly expectNoChanges: boolean
 }
 
+export interface StacksUndeployOperationInput extends StacksOperationInput {
+  readonly prune: boolean
+}
+
 export type StacksOperationOutput = ResultsOutput<StackResult>

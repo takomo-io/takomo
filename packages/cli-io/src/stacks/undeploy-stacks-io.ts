@@ -50,6 +50,24 @@ const formatStackOperation = (
   }
 }
 
+const getConfirmUndeployHeader = (prune: boolean): string =>
+  prune ? "Review stacks prune plan:" : "Review stacks undeployment plan:"
+
+const getConfirmUndeployText = (prune: boolean): ReadonlyArray<string> =>
+  prune
+    ? [
+        "A stacks prune plan has been created and is shown below.",
+        "Stacks marked as obsolete will be undeployed in the order they are listed, and in parallel when possible.",
+        "",
+        "Following stacks will be undeployed:",
+      ]
+    : [
+        "A stacks undeployment plan has been created and is shown below.",
+        "Stacks will be undeployed in the order they are listed, and in parallel when possible.",
+        "",
+        "Following stacks will be undeployed:",
+      ]
+
 export type UndeployStacksIOProps = IOProps
 
 export const createUndeployStacksIO = (
@@ -60,23 +78,10 @@ export const createUndeployStacksIO = (
 
   const confirmUndeploy = async ({
     operations,
+    prune,
   }: StacksUndeployPlan): Promise<ConfirmUndeployAnswer> => {
-    io.subheader({ text: "Review stacks undeployment plan:", marginTop: true })
-    io.longMessage(
-      [
-        "A stacks undeployment plan has been created and is shown below.",
-        "Stacks will be undeployed in the order they are listed, and in parallel when possible.",
-        "",
-        `Following stacks will be undeployed:`,
-      ],
-      false,
-      false,
-      0,
-    )
-
-    const stacksMap = new Map(
-      operations.map((o) => o.stack).map((s) => [s.path, s]),
-    )
+    io.subheader({ text: getConfirmUndeployHeader(prune), marginTop: true })
+    io.longMessage(getConfirmUndeployText(prune), false, false, 0)
 
     const maxStackPathLength = R.apply(
       Math.max,

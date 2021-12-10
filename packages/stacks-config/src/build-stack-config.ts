@@ -58,6 +58,7 @@ export const buildStackConfig = (
     stackPolicyDuringUpdate,
     schemas,
     ignore: parseOptionalBoolean(record.ignore),
+    obsolete: parseOptionalBoolean(record.obsolete),
     terminationProtection: parseOptionalBoolean(record.terminationProtection),
     capabilities: parseOptionalStringArray(record.capabilities),
     project: parseOptionalString(record.project),

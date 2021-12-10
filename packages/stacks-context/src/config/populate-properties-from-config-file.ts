@@ -52,6 +52,10 @@ export const populatePropertiesFromConfigFile = async (
     props.ignore = configFile.ignore
   }
 
+  if (configFile.obsolete !== undefined) {
+    props.obsolete = configFile.obsolete
+  }
+
   if (configFile.terminationProtection !== undefined) {
     props.terminationProtection = configFile.terminationProtection
   }

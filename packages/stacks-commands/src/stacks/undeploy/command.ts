@@ -7,17 +7,20 @@ import { InternalStacksContext } from "@takomo/stacks-model"
 import { createStacksSchemas } from "@takomo/stacks-schema"
 import { validateInput } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
-import { StacksOperationInput, StacksOperationOutput } from "../../model"
+import {
+  StacksOperationOutput,
+  StacksUndeployOperationInput,
+} from "../../model"
 import { executeUndeployContext } from "./execute-undeploy-context"
 import { UndeployStacksIO } from "./model"
 import { buildStacksUndeployPlan } from "./plan"
 import { validateStacksUndeployPlan } from "./validate"
 
 const modifyInput = async (
-  input: StacksOperationInput,
+  input: StacksUndeployOperationInput,
   ctx: InternalStacksContext,
   io: UndeployStacksIO,
-): Promise<StacksOperationInput> => {
+): Promise<StacksUndeployOperationInput> => {
   if (input.interactive) {
     const commandPath = await io.chooseCommandPath(ctx.rootStackGroup)
     return {
@@ -33,7 +36,7 @@ const undeployStacks = async (
   ctx: InternalStacksContext,
   configRepository: StacksConfigRepository,
   io: UndeployStacksIO,
-  input: StacksOperationInput,
+  input: StacksUndeployOperationInput,
 ): Promise<StacksOperationOutput> => {
   const modifiedInput = await modifyInput(input, ctx, io)
 
@@ -41,6 +44,7 @@ const undeployStacks = async (
     ctx.stacks,
     modifiedInput.commandPath,
     modifiedInput.ignoreDependencies,
+    modifiedInput.prune,
   )
 
   await validateStacksUndeployPlan(plan)
@@ -51,13 +55,14 @@ const inputSchema = (ctx: CommandContext): AnySchema => {
   const { commandPath } = createStacksSchemas({ regions: ctx.regions })
   return Joi.object({
     commandPath: commandPath.required(),
+    prune: Joi.boolean(),
   }).unknown(true)
 }
 
 export const undeployStacksCommand: CommandHandler<
   StacksConfigRepository,
   UndeployStacksIO,
-  StacksOperationInput,
+  StacksUndeployOperationInput,
   StacksOperationOutput
 > = ({
   credentialManager,

@@ -505,7 +505,9 @@ const createStackResultsMatcher = (
     expect(output.results).toHaveLength(stackAssertions.length)
     output.results.forEach((result) => {
       if (!stackAssertions.some((s) => s(result))) {
-        fail(`Unexpected result for stack with path: ${result.stack.path}`)
+        throw new Error(
+          `Unexpected result for stack with path: ${result.stack.path}`,
+        )
       }
     })
 

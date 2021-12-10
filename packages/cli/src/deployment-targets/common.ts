@@ -139,6 +139,7 @@ const createTargetsOperationHandler =
         commandPath: argv[COMMAND_PATH_OPT],
         configSetName: argv[CONFIG_SET_OPT],
         expectNoChanges: false,
+        prune: false,
       }),
       io: (ctx, logger) => io({ logger }),
       configRepository: (ctx, logger) =>

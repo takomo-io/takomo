@@ -35,6 +35,7 @@ export interface StackGroupProps {
   data: Vars
   capabilities?: ReadonlyArray<StackCapability>
   ignore: boolean
+  obsolete: boolean
   terminationProtection: boolean
   stackPolicy?: StackPolicyBody
   stackPolicyDuringUpdate?: StackPolicyBody
@@ -62,6 +63,7 @@ export interface StackGroup {
   readonly data: Record<string, unknown>
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly ignore: boolean
+  readonly obsolete: boolean
   readonly terminationProtection: boolean
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
@@ -81,6 +83,7 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     data,
     hooks,
     ignore,
+    obsolete,
     name,
     parentPath,
     path,
@@ -104,6 +107,7 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     data,
     hooks,
     ignore,
+    obsolete,
     name,
     parentPath,
     path,

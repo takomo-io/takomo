@@ -22,6 +22,7 @@ export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
   readonly commandPath?: CommandPath
   readonly configSetName?: ConfigSetName
   readonly expectNoChanges?: boolean
+  readonly prune?: boolean
 }
 
 export interface TargetsOperationOutputMatcher {

@@ -2,6 +2,7 @@ export {
   StacksDeployOperationInput,
   StacksOperationInput,
   StacksOperationOutput,
+  StacksUndeployOperationInput,
 } from "./model"
 export { StacksOperationListener } from "./stacks/common/model"
 export { deployStacksCommand } from "./stacks/deploy/command"

@@ -19,6 +19,7 @@ const emptyStackConfig = {
   timeout: undefined,
   capabilities: undefined,
   ignore: undefined,
+  obsolete: undefined,
   terminationProtection: undefined,
   stackPolicy: undefined,
   stackPolicyDuringUpdate: undefined,

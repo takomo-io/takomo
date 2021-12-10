@@ -5,7 +5,9 @@ import {
 } from "@takomo/stacks-context"
 import {
   CommandPath,
+  getStackPath,
   InternalStack,
+  isNotObsolete,
   StackOperationType,
   StackPath,
 } from "@takomo/stacks-model"
@@ -84,7 +86,7 @@ export const buildStacksDeployPlan = async (
   ignoreDependencies: boolean,
   logger: TkmLogger,
 ): Promise<StacksDeployPlan> => {
-  const stacksByPath = arrayToMap(stacks, (s) => s.path)
+  const stacksByPath = arrayToMap(stacks, getStackPath)
   const stacksToDeploy = stacks
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
@@ -97,6 +99,7 @@ export const buildStacksDeployPlan = async (
       new Array<StackPath>(),
     )
     .map((stackPath) => stacksByPath.get(stackPath)!)
+    .filter(isNotObsolete)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
   const stackPairs = await loadCurrentCfStacks(logger, sortedStacks)

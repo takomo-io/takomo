@@ -23,6 +23,7 @@ export const createStackGroupFromParent = (
     capabilities: parent.capabilities,
     accountIds: parent.accountIds,
     ignore: parent.ignore,
+    obsolete: parent.obsolete,
     terminationProtection: parent.terminationProtection,
     stackPolicy: parent.stackPolicy,
     stackPolicyDuringUpdate: parent.stackPolicyDuringUpdate,

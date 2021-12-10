@@ -25,6 +25,7 @@ describe("create stack group config from parent", () => {
     expect(group.timeout).toBeUndefined()
     expect(group.capabilities).toBeUndefined()
     expect(group.ignore).toBeFalsy()
+    expect(group.obsolete).toBeFalsy()
     expect(group.children).toHaveLength(0)
   })
 
@@ -62,6 +63,7 @@ describe("create stack group config from parent", () => {
     expect(group.timeout).toBeUndefined()
     expect(group.capabilities).toBeUndefined()
     expect(group.ignore).toBeFalsy()
+    expect(group.obsolete).toBeFalsy()
     expect(group.children).toHaveLength(0)
   })
 })

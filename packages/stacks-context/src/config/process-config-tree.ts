@@ -19,6 +19,7 @@ import R from "ramda"
 import { isWithinCommandPath } from "../common"
 import {
   checkCyclicDependencies,
+  checkObsoleteDependencies,
   processStackDependencies,
 } from "../dependencies"
 import { buildStack } from "./build-stack"
@@ -244,6 +245,7 @@ export const processConfigTree = async (
   const stacksByPath = arrayToMap(allStacks, (s) => s.path)
 
   checkCyclicDependencies(stacksByPath)
+  checkObsoleteDependencies(stacksByPath)
 
   return populateChildrenAndStacks(root, allStacks, allStackGroups)
 }

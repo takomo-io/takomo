@@ -13,6 +13,7 @@ describe("create root stack group config", () => {
     expect(root.timeout).toBeUndefined()
     expect(root.capabilities).toBeUndefined()
     expect(root.ignore).toBeFalsy()
+    expect(root.obsolete).toBeFalsy()
     expect(root.children).toHaveLength(0)
   })
 })

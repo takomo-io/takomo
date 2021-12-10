@@ -55,6 +55,7 @@ const handler = (argv: Arguments<CommandArgs>) =>
       ignoreDependencies: argv[IGNORE_DEPENDENCIES_OPT],
       commandPath: argv[COMMAND_PATH_OPT],
       interactive: argv.interactive,
+      prune: false,
     }),
     io: (ctx, logger) => createUndeployStacksIO({ logger }),
     executor: undeployStacksCommand,

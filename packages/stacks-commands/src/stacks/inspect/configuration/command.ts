@@ -6,8 +6,10 @@ import {
   StacksConfigRepository,
 } from "@takomo/stacks-context"
 import {
+  getStackPath,
   InternalStack,
   InternalStacksContext,
+  isNotObsolete,
   StackPath,
 } from "@takomo/stacks-model"
 import { createStacksSchemas } from "@takomo/stacks-schema"
@@ -37,7 +39,7 @@ const modifyStacks = async (
     return stacks
   }
 
-  const stacksByPath = arrayToMap(stacks, (s) => s.path)
+  const stacksByPath = arrayToMap(stacks, getStackPath)
   const modifiedStacks = stacks
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
@@ -50,6 +52,7 @@ const modifyStacks = async (
       new Array<StackPath>(),
     )
     .map((stackPath) => stacksByPath.get(stackPath)!)
+    .filter(isNotObsolete)
 
   return sortStacksForDeploy(modifiedStacks)
 }
