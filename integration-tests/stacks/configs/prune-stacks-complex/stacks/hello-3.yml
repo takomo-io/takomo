@@ -1,0 +1,14 @@
+obsolete: {{ var.obsolete3 }}
+parameters:
+  Code:
+    resolver: stack-output
+    stack: hello-2.yml
+    output: MyOutput
+template:
+  inline: |
+    Parameters:
+      Code:
+        Type: String
+    Resources:
+      LG:
+        Type: AWS::Logs::LogGroup

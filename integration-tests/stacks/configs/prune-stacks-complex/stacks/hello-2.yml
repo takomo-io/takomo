@@ -1,0 +1,9 @@
+obsolete: {{ var.obsolete2 }}
+template:
+  inline: |
+    Resources:
+      LG:
+        Type: AWS::Logs::LogGroup
+    Outputs:
+      MyOutput:
+        Value: FooBar

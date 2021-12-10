@@ -1,0 +1,7 @@
+obsolete: {{ var.obsolete4 }}
+depends: /hello-3.yml
+template:
+  inline: |
+    Resources:
+      LG:
+        Type: AWS::Logs::LogGroup
