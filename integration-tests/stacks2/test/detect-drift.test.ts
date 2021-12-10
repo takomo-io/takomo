@@ -5,9 +5,9 @@ import {
   withSingleAccountReservation,
 } from "@takomo/test-integration"
 
-const stackPath = "/vpc.yml/eu-central-1",
+const stackPath = "/vpc.yml/eu-north-1",
   stackName = "simple-vpc",
-  projectDir = "configs/simple"
+  projectDir = "configs/detect-drift"
 
 describe("Detect drift", () => {
   test("Of pending stacks", () =>
@@ -50,7 +50,7 @@ describe("Detect drift", () => {
         tagValue: "A new name",
         cidr: "10.0.1.0/24",
         iamRoleArn: `arn:aws:iam::${accountId}:role/OrganizationAccountAccessRole`,
-        region: "eu-central-1",
+        region: "eu-north-1",
       })
 
       return executeDetectDriftCommand({ projectDir })

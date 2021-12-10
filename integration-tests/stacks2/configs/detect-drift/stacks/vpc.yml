@@ -1,0 +1,5 @@
+project: simple
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-north-1
+parameters:
+  CidrBlock: 10.0.1.0/24
