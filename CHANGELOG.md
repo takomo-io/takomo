@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.39.0](https://github.com/takomo-io/takomo/compare/v3.38.1...v3.39.0) (2021-12-11)
+
+
+### Features
+
+* **cli:** do not show nested dependencies/dependent when reviewing stack deploy/undeploy ([#329](https://github.com/takomo-io/takomo/issues/329)) ([4a17945](https://github.com/takomo-io/takomo/commit/4a1794563745669932beec3c81bca4caa23de30d))
+* **stacks:** add new command to prune obsolete stacks ([#330](https://github.com/takomo-io/takomo/issues/330)) ([0ac6c41](https://github.com/takomo-io/takomo/commit/0ac6c41cdc43d689e60e2aab467032ced00796ca)), closes [#237](https://github.com/takomo-io/takomo/issues/237)
+
+
+### Reverts
+
+* Revert "chore(deps): upgrade dependencies" ([e6decb8](https://github.com/takomo-io/takomo/commit/e6decb8564b01c90a64fd15f56e4f974d262caca))
+
+
+
+
+
 ## [3.38.1](https://github.com/takomo-io/takomo/compare/v3.38.0...v3.38.1) (2021-11-20)
 
 **Note:** Version bump only for package Takomo

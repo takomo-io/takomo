@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-context",
-  "version": "3.38.1",
+  "version": "3.39.0",
   "description": "Takomo Stacks Context",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -31,10 +31,10 @@
     "@takomo/aws-model": "3.38.1",
     "@takomo/aws-schema": "3.38.1",
     "@takomo/core": "3.38.1",
-    "@takomo/stacks-config": "3.38.1",
-    "@takomo/stacks-hooks": "3.38.1",
-    "@takomo/stacks-model": "3.38.1",
-    "@takomo/stacks-resolvers": "3.38.1",
+    "@takomo/stacks-config": "3.39.0",
+    "@takomo/stacks-hooks": "3.39.0",
+    "@takomo/stacks-model": "3.39.0",
+    "@takomo/stacks-resolvers": "3.39.0",
     "@takomo/util": "3.38.1",
     "joi": "17.4.0",
     "ramda": "0.27.1"
