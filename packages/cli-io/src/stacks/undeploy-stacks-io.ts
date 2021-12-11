@@ -57,13 +57,15 @@ const getConfirmUndeployText = (prune: boolean): ReadonlyArray<string> =>
   prune
     ? [
         "A stacks prune plan has been created and is shown below.",
-        "Stacks marked as obsolete will be undeployed in the order they are listed, and in parallel when possible.",
+        "Stacks marked as obsolete will be undeployed in the order they",
+        "are listed, and in parallel when possible.",
         "",
         "Following stacks will be undeployed:",
       ]
     : [
         "A stacks undeployment plan has been created and is shown below.",
-        "Stacks will be undeployed in the order they are listed, and in parallel when possible.",
+        "Stacks will be undeployed in the order they are listed, and in",
+        "parallel when possible.",
         "",
         "Following stacks will be undeployed:",
       ]
@@ -90,7 +92,7 @@ export const createUndeployStacksIO = (
 
     const stackPathColumnLength = Math.max(27, maxStackPathLength)
 
-    for (const { stack, currentStack, type } of operations) {
+    for (const { stack, currentStack, type, dependents } of operations) {
       const stackIdentity = await stack.credentialManager.getCallerIdentity()
 
       io.longMessage(
@@ -112,9 +114,9 @@ export const createUndeployStacksIO = (
         0,
       )
 
-      if (stack.dependents.length > 0) {
+      if (dependents.length > 0) {
         io.message({ text: "dependents:", indent: 6 })
-        stack.dependents.forEach((d) => {
+        dependents.forEach((d) => {
           io.message({ text: `- ${d}`, indent: 8 })
         })
       } else {

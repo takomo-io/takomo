@@ -24,6 +24,7 @@ export interface StackUndeployOperation {
   readonly stack: InternalStack
   readonly type: StackUndeployOperationType
   readonly currentStack?: CloudFormationStack
+  readonly dependents: ReadonlyArray<StackPath>
 }
 
 export interface StacksUndeployPlan {
@@ -32,13 +33,26 @@ export interface StacksUndeployPlan {
 }
 
 const convertToUndeployOperation = async (
+  stacksByPath: Map<StackPath, InternalStack>,
   stack: InternalStack,
+  prune: boolean,
 ): Promise<StackUndeployOperation> => {
   const currentStack = await stack.getCurrentCloudFormationStack()
   const type = resolveUndeployOperationType(currentStack)
+  const dependentFilter = prune ? isObsolete : isNotObsolete
+  const dependents = stack.dependents.filter((dependentPath) => {
+    const dependent = stacksByPath.get(dependentPath)
+    if (!dependent) {
+      throw new Error(`Expected stack to exists: ${dependentPath}`)
+    }
+
+    return dependentFilter(dependent)
+  })
+
   return {
     stack,
     type,
+    dependents,
     currentStack,
   }
 }
@@ -84,7 +98,9 @@ export const buildStacksUndeployPlan = async (
 
   const sortedStacks = sortStacksForUndeploy(stacksToUndeploy)
   const operations = await Promise.all(
-    sortedStacks.map(convertToUndeployOperation),
+    sortedStacks.map((stack) =>
+      convertToUndeployOperation(stacksByPath, stack, prune),
+    ),
   )
 
   return {
