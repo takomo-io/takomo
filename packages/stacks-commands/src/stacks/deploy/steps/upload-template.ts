@@ -17,7 +17,7 @@ export const uploadTemplate: StackOperationStep<TemplateBodyHolder> = async (
   const key = `${templateBucket.keyPrefix || ""}${stack.name}-${Date.now()}.yml`
   const templateS3Url = `https://s3.amazonaws.com/${templateBucket.name}/${key}`
 
-  logger.debugObject("Template bucket configured:", templateBucket)
+  logger.debugObject("Template bucket configured:", () => templateBucket)
 
   const credentials = await stack.credentialManager.getCredentials()
 

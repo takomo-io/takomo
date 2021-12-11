@@ -6,6 +6,7 @@ import {
   CommandPath,
   createStackGroup,
   InternalStack,
+  isWithinCommandPath,
   normalizeStackPath,
   ROOT_STACK_GROUP_PATH,
   SchemaRegistry,
@@ -16,7 +17,6 @@ import {
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import { arrayToMap, TkmLogger } from "@takomo/util"
 import R from "ramda"
-import { isWithinCommandPath } from "../common"
 import {
   checkCyclicDependencies,
   checkObsoleteDependencies,

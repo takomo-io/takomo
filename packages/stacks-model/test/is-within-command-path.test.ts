@@ -1,4 +1,4 @@
-import { isWithinCommandPath } from "../../src/common"
+import { isWithinCommandPath } from "../src/util"
 
 type Case = [string, string, boolean]
 

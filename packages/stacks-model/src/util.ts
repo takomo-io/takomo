@@ -1,5 +1,6 @@
 import { StackName } from "@takomo/aws-model"
 import R from "ramda"
+import { CommandPath } from "./command"
 import { InternalStack, Stack, StackPath } from "./stack"
 
 /**
@@ -36,3 +37,11 @@ export const isObsolete = (stack: InternalStack): boolean => stack.obsolete
  */
 export const isNotObsolete = (stack: InternalStack): boolean =>
   !isObsolete(stack)
+
+/**
+ * @hidden
+ */
+export const isWithinCommandPath = (
+  commandPath: CommandPath,
+  other: CommandPath,
+): boolean => commandPath.startsWith(other.substr(0, commandPath.length))

@@ -26,8 +26,3 @@ export const validateStackCredentialManagersWithAllowedAccountIds = async (
     }
   })
 }
-
-export const isWithinCommandPath = (
-  commandPath: CommandPath,
-  other: CommandPath,
-): boolean => commandPath.startsWith(other.substr(0, commandPath.length))
