@@ -48,6 +48,7 @@ const mockOperation = (
   return {
     type,
     currentStack,
+    dependents: stackProps.dependents ?? [],
     stack: mockInternalStack(stackProps),
   }
 }
@@ -57,7 +58,7 @@ const confirmUndeploy = (
 ): Promise<string> => {
   const output = { value: "" }
   return createIO(createCapturingLogWriter(output))
-    .confirmUndeploy({ operations })
+    .confirmUndeploy({ operations, prune: false })
     .then(() => output.value)
 }
 
@@ -75,7 +76,8 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       ${bold("Review stacks undeployment plan:")}
       ${bold("--------------------------------")}
       A stacks undeployment plan has been created and is shown below.
-      Stacks will be undeployed in the order they are listed, and in parallel when possible.
+      Stacks will be undeployed in the order they are listed, and in
+      parallel when possible.
       
       Following stacks will be undeployed:
       
@@ -110,7 +112,8 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       ${bold("Review stacks undeployment plan:")}
       ${bold("--------------------------------")}
       A stacks undeployment plan has been created and is shown below.
-      Stacks will be undeployed in the order they are listed, and in parallel when possible.
+      Stacks will be undeployed in the order they are listed, and in
+      parallel when possible.
       
       Following stacks will be undeployed:
       
@@ -156,7 +159,8 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       ${bold("Review stacks undeployment plan:")}
       ${bold("--------------------------------")}
       A stacks undeployment plan has been created and is shown below.
-      Stacks will be undeployed in the order they are listed, and in parallel when possible.
+      Stacks will be undeployed in the order they are listed, and in
+      parallel when possible.
       
       Following stacks will be undeployed:
       
@@ -228,7 +232,8 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       ${bold("Review stacks undeployment plan:")}
       ${bold("--------------------------------")}
       A stacks undeployment plan has been created and is shown below.
-      Stacks will be undeployed in the order they are listed, and in parallel when possible.
+      Stacks will be undeployed in the order they are listed, and in
+      parallel when possible.
       
       Following stacks will be undeployed:
 

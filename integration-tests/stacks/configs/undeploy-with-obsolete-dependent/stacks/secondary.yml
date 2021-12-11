@@ -1,0 +1,7 @@
+obsolete: true
+depends: primary.yml
+template:
+  inline: |
+    Resources:
+      LG:
+        Type: AWS::Logs::LogGroup
