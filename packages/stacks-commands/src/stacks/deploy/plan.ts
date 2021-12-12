@@ -1,13 +1,11 @@
 import { CloudFormationStackSummary, StackStatus } from "@takomo/aws-model"
-import {
-  isWithinCommandPath,
-  sortStacksForDeploy,
-} from "@takomo/stacks-context"
+import { sortStacksForDeploy } from "@takomo/stacks-context"
 import {
   CommandPath,
   getStackPath,
   InternalStack,
   isNotObsolete,
+  isWithinCommandPath,
   StackOperationType,
   StackPath,
 } from "@takomo/stacks-model"

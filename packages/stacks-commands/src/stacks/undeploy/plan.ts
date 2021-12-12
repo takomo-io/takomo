@@ -1,14 +1,12 @@
 import { CloudFormationStack } from "@takomo/aws-model"
-import {
-  isWithinCommandPath,
-  sortStacksForUndeploy,
-} from "@takomo/stacks-context"
+import { sortStacksForUndeploy } from "@takomo/stacks-context"
 import {
   CommandPath,
   getStackPath,
   InternalStack,
   isNotObsolete,
   isObsolete,
+  isWithinCommandPath,
   StackPath,
 } from "@takomo/stacks-model"
 import { arrayToMap } from "@takomo/util"

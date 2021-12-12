@@ -37,4 +37,5 @@ export {
   getStackPaths,
   isNotObsolete,
   isObsolete,
+  isWithinCommandPath,
 } from "./util"

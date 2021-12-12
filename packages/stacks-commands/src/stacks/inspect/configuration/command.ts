@@ -1,7 +1,6 @@
 import { CommandContext, CommandHandler } from "@takomo/core"
 import {
   buildStacksContext,
-  isWithinCommandPath,
   sortStacksForDeploy,
   StacksConfigRepository,
 } from "@takomo/stacks-context"
@@ -10,6 +9,7 @@ import {
   InternalStack,
   InternalStacksContext,
   isNotObsolete,
+  isWithinCommandPath,
   StackPath,
 } from "@takomo/stacks-model"
 import { createStacksSchemas } from "@takomo/stacks-schema"

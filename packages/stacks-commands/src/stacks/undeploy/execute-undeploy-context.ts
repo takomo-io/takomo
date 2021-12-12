@@ -42,8 +42,8 @@ export const executeUndeployContext = async (
   }
 
   io.debugObject(
-    `Undeploy ${operations.length} stack(s) in following order:`,
-    operations.map((s) => s.stack.path),
+    `Undeploy ${operations.length} stack(s) in the following order:`,
+    () => operations.map((s) => s.stack.path),
   )
 
   const stacksOperationListener = io.createStacksOperationListener(

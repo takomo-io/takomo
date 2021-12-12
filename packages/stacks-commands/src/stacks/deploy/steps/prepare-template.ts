@@ -11,7 +11,7 @@ export const createVariablesForStackTemplate = (
   parameters: ReadonlyArray<StackParameterInfo>,
 ): any => {
   const stackPath = stack.path
-  const pathSegments = stackPath.substr(1).split("/")
+  const pathSegments = stackPath.substring(1).split("/")
   const filePath = pathSegments.slice(0, -1).join("/")
   return {
     ...variables,

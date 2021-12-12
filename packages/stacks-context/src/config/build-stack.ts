@@ -8,6 +8,7 @@ import {
   CommandPath,
   createStack,
   InternalStack,
+  isWithinCommandPath,
   normalizeStackPath,
   SchemaRegistry,
   StackGroup,
@@ -25,7 +26,6 @@ import {
 } from "@takomo/util"
 import { AnySchema } from "joi"
 import R from "ramda"
-import { isWithinCommandPath } from "../common"
 import { StackConfigNode } from "./config-tree"
 import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file"
 import { getCredentialManager } from "./get-credential-provider"
