@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-hooks",
-  "version": "3.39.0",
+  "version": "3.39.1",
   "description": "Takomo Stacks Hooks",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@takomo/aws-clients": "3.38.1",
     "@takomo/aws-model": "3.38.1",
-    "@takomo/stacks-model": "3.39.0",
+    "@takomo/stacks-model": "3.39.1",
     "@takomo/util": "3.38.1",
     "folder-hash": "4.0.1",
     "ramda": "0.27.1"

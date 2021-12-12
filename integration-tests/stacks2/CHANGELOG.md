@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.39.1](https://github.com/takomo-io/takomo/compare/v3.39.0...v3.39.1) (2021-12-12)
+
+**Note:** Version bump only for package integration-test-stacks2
+
+
+
+
+
 # [3.39.0](https://github.com/takomo-io/takomo/compare/v3.38.1...v3.39.0) (2021-12-11)
 
 **Note:** Version bump only for package integration-test-stacks2

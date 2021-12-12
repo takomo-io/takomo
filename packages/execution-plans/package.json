@@ -1,6 +1,6 @@
 {
   "name": "@takomo/execution-plans",
-  "version": "3.39.0",
+  "version": "3.39.1",
   "description": "Takomo Execution Plans",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -28,9 +28,9 @@
   },
   "dependencies": {
     "@takomo/aws-clients": "3.38.1",
-    "@takomo/config-sets": "3.39.0",
+    "@takomo/config-sets": "3.39.1",
     "@takomo/core": "3.38.1",
-    "@takomo/stacks-model": "3.39.0",
+    "@takomo/stacks-model": "3.39.1",
     "@takomo/util": "3.38.1",
     "cockatiel": "2.0.1"
   },

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.39.1](https://github.com/takomo-io/takomo/compare/v3.39.0...v3.39.1) (2021-12-12)
+
+
+### Bug Fixes
+
+* **stacks:** fix bug when undeploying a stack with obsolete dependents ([#332](https://github.com/takomo-io/takomo/issues/332)) ([11775f4](https://github.com/takomo-io/takomo/commit/11775f4b026ceedc3493beee9542b4b6375b8919))
+
+
+
+
+
 # [3.39.0](https://github.com/takomo-io/takomo/compare/v3.38.1...v3.39.0) (2021-12-11)
 
 
