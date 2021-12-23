@@ -51,9 +51,6 @@ const target: ConfigSetExecutionTarget<PlannedDeploymentTarget> = {
 
 describe("#createDeploymentTargetVariables", () => {
   test("creates correct variables", () => {
-    console.log("_--------")
-    console.log(JSON.stringify(ctx.variables.env, undefined, 2))
-    console.log("_--------")
     const variables = createDeploymentTargetVariables({
       ctx,
       target,
