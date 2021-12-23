@@ -16,8 +16,9 @@ import {
 } from "@takomo/stacks-commands"
 import { StacksConfigRepository } from "@takomo/stacks-context"
 import { DeploymentOperation } from "@takomo/stacks-model"
-import { deepCopy, TakomoError, TkmLogger } from "@takomo/util"
+import { TakomoError, TkmLogger } from "@takomo/util"
 import { PlannedDeploymentTarget } from "../common/plan/model"
+import { createDeploymentTargetVariables } from "./create-deployment-target-variables"
 import {
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
@@ -121,15 +122,7 @@ const createExecutor = ({
           configSet.legacy,
         )
 
-      const variables = {
-        env: ctx.variables.env,
-        var: deepCopy(target.vars),
-        context: ctx.variables.context,
-        target: {
-          name: target.id,
-          accountId: target.data.accountId,
-        },
-      }
+      const variables = createDeploymentTargetVariables({ target, ctx })
 
       const credentialManager = target.data.executionRoleArn
         ? await defaultCredentialManager.createCredentialManagerForRole(

@@ -8,3 +8,10 @@ template:
     Resources:
       LogGroup:
         Type: AWS::Logs::LogGroup
+    Outputs:
+      DeploymentGroupName:
+        Value: {{ target.deploymentGroup.name }}
+      DeploymentGroupPath:
+        Value: {{ target.deploymentGroup.path }}
+      TargetName:
+        Value: {{ target.name }}

@@ -52,8 +52,9 @@ jobs:
       - name: Install dependencies
         if: steps.node_modules.outputs.cache-hit != 'true'
         run: yarn
-      - name: Dependency check
-        run: yarn depcheck
+        # TODO: Enable after depcheck is fixed
+#      - name: Dependency check
+#        run: yarn depcheck
       - name: Build
         run: yarn build
       - uses: actions/cache@v2
