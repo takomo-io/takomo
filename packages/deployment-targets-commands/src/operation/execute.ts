@@ -128,6 +128,10 @@ const createExecutor = ({
         target: {
           name: target.id,
           accountId: target.data.accountId,
+          deploymentGroup: {
+            name: target.data.deploymentGroup.name,
+            path: target.data.deploymentGroup.path,
+          },
         },
       }
 

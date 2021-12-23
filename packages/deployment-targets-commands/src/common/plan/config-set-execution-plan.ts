@@ -58,6 +58,7 @@ export const createExecutionPlan = async (
   const convertToExecutionTarget = (
     target: DeploymentTargetConfig,
     stageName: StageName,
+    group: DeploymentGroupConfig,
   ): ConfigSetExecutionTarget<PlannedDeploymentTarget> => ({
     id: target.name,
     vars: target.vars,
@@ -71,6 +72,10 @@ export const createExecutionPlan = async (
       })),
     data: {
       ...target,
+      deploymentGroup: {
+        name: group.name,
+        path: group.path,
+      },
       executionRoleArn: getExecutionRoleArn(
         configSetType,
         callerIdentity,
@@ -86,7 +91,7 @@ export const createExecutionPlan = async (
     id: group.path,
     targets: group.targets
       .filter((target) => hasConfigSetsWithStage(target, stageName))
-      .map((target) => convertToExecutionTarget(target, stageName))
+      .map((target) => convertToExecutionTarget(target, stageName, group))
       .filter(({ configSets }) => configSets.length > 0),
   })
 
