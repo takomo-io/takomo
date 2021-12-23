@@ -4,7 +4,7 @@ import {
   TIMEOUT,
 } from "@takomo/test-integration"
 import { fileExists, parseYamlFile, sleep } from "@takomo/util"
-import fs from "fs"
+import { unlink } from "fs"
 import { ORG_B_MASTER_ACCOUNT_ID } from "./env"
 
 // First, make sure that there is no existing organization left from previous test runs
@@ -12,7 +12,7 @@ beforeEach(async () => {
   await aws.organizations.deleteOrganizationIfPresent()
   await sleep(10000)
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  await fs.unlink("./configs/organization/organization.yml", () => {})
+  await unlink("./configs/organization/organization.yml", () => {})
 }, TIMEOUT)
 
 afterAll(async () => {
