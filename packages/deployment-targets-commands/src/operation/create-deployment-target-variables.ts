@@ -12,8 +12,6 @@ export const createDeploymentTargetVariables = ({
   ctx,
   target,
 }: CreateDeploymentTargetVariablesProps): any => {
-  console.log(JSON.stringify(target, undefined, 2))
-  console.log(JSON.stringify(ctx, undefined, 2))
   return deepCopy({
     env: ctx.variables.env,
     var: target.vars,

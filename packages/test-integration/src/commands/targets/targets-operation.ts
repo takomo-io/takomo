@@ -1,4 +1,12 @@
-import { StackName, Tag, TagKey, TagValue } from "@takomo/aws-model"
+import {
+  StackName,
+  StackOutput,
+  StackOutputKey,
+  StackOutputValue,
+  Tag,
+  TagKey,
+  TagValue,
+} from "@takomo/aws-model"
 import { ConfigSetName } from "@takomo/config-sets"
 import { CommandStatus } from "@takomo/core"
 import { DeploymentTargetsOperationOutput } from "@takomo/deployment-targets-commands"
@@ -36,6 +44,7 @@ export interface ExpectStackResultProps {
   readonly stackPath: StackPath
   readonly stackName: StackName
   readonly tags?: Record<TagKey, TagValue>
+  readonly outputs?: Record<StackOutputKey, StackOutputValue>
   readonly message?: string
   readonly success?: boolean
   readonly status?: CommandStatus
@@ -209,6 +218,32 @@ const createDeploymentGroupResultMatcher = (
                         )
 
                         expect(actual).toStrictEqual(expectedStackResult.tags)
+                      }
+
+                      if (expectedStackResult.outputs) {
+                        const cfStack =
+                          await stackResult.stack.getCurrentCloudFormationStack()
+
+                        if (!cfStack) {
+                          throw new Error(
+                            `Expected stack '${expectedStackResult.stackPath}' to exists`,
+                          )
+                        }
+
+                        const actual = cfStack.outputs.reduce(
+                          (
+                            collected: Record<StackOutputKey, StackOutputValue>,
+                            output: StackOutput,
+                          ) => ({
+                            ...collected,
+                            [output.key]: output.value,
+                          }),
+                          {},
+                        )
+
+                        expect(actual).toStrictEqual(
+                          expectedStackResult.outputs,
+                        )
                       }
                     }
                   }
