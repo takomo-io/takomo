@@ -49,6 +49,9 @@
       "path": "./node_modules/cz-lerna-changelog"
     }
   },
+  "resolutions": {
+    "depcheck/@babel/parser": "7.16.4"
+  },
   "devDependencies": {
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
