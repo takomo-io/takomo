@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-commands",
-  "version": "3.39.1",
+  "version": "3.40.0",
   "description": "Takomo Deployment Targets Commands",
   "homepage": "https://docs.takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",

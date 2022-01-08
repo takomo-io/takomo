@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.40.0](https://github.com/takomo-io/takomo/compare/v3.39.1...v3.40.0) (2022-01-08)
+
+
+### Features
+
+* **deployment targets:** expose deployment group information ([#333](https://github.com/takomo-io/takomo/issues/333)) ([a7c02bf](https://github.com/takomo-io/takomo/commit/a7c02bf20e11c0c1818048aded325f52d59080a7))
+
+
+
+
+
 ## [3.39.1](https://github.com/takomo-io/takomo/compare/v3.39.0...v3.39.1) (2021-12-12)
 
 **Note:** Version bump only for package integration-test-organization-creation
