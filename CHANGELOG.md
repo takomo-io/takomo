@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.40.1](https://github.com/takomo-io/takomo/compare/v3.40.0...v3.40.1) (2022-01-17)
+
+
+### Bug Fixes
+
+* add Jakarta region (ap-southeast-3) to list of allowed regions ([#335](https://github.com/takomo-io/takomo/issues/335)) ([29055e3](https://github.com/takomo-io/takomo/commit/29055e3f9d8c95dcb6793372cc6d9271a745fad6))
+* fix diffing of stack policies ([#336](https://github.com/takomo-io/takomo/issues/336)) ([ce812e9](https://github.com/takomo-io/takomo/commit/ce812e989897bb7a23e063ee2a062aa7ffaabce2))
+
+
+
+
+
 # [3.40.0](https://github.com/takomo-io/takomo/compare/v3.39.1...v3.40.0) (2022-01-08)
 
 
