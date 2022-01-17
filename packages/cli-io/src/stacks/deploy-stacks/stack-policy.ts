@@ -11,7 +11,8 @@ const ensureContentsEndsWithLineFeed = (content: string): string =>
   content.endsWith("\n") ? content : content + "\n"
 
 type PolicyOperationType = "create" | "delete" | "update" | "retain"
-const resolvePolicyOperation = (
+
+export const resolvePolicyOperation = (
   current: StackPolicyBody | undefined,
   updated: StackPolicyBody | undefined,
 ): PolicyOperationType => {
@@ -34,7 +35,10 @@ const resolvePolicyOperation = (
     return "delete"
   }
 
-  if (current === updated) {
+  const currentFormatted = current ? prettyPrintJson(current) : ""
+  const updatedFormatted = updated ? prettyPrintJson(updated) : ""
+
+  if (currentFormatted === updatedFormatted) {
     return "retain"
   }
 
@@ -69,7 +73,7 @@ export const printStackPolicy = (
         marginBottom: true,
       })
       io.message({
-        text: stack.stackPolicy!,
+        text: prettyPrintJson(stack.stackPolicy!),
         transform: (str) =>
           green(
             str
@@ -96,8 +100,12 @@ export const printStackPolicy = (
 
       io.message({
         text: diffStrings(
-          ensureContentsEndsWithLineFeed(existingStack!.stackPolicyBody!),
-          ensureContentsEndsWithLineFeed(ALLOW_ALL_STACK_POLICY),
+          ensureContentsEndsWithLineFeed(
+            prettyPrintJson(existingStack!.stackPolicyBody!),
+          ),
+          ensureContentsEndsWithLineFeed(
+            prettyPrintJson(ALLOW_ALL_STACK_POLICY),
+          ),
         ),
         indent: 2,
       })
@@ -109,9 +117,11 @@ export const printStackPolicy = (
         marginBottom: true,
       })
       const current = ensureContentsEndsWithLineFeed(
-        existingStack?.stackPolicyBody ?? "",
+        prettyPrintJson(existingStack!.stackPolicyBody!),
       )
-      const updated = ensureContentsEndsWithLineFeed(stack.stackPolicy ?? "")
+      const updated = ensureContentsEndsWithLineFeed(
+        prettyPrintJson(stack.stackPolicy!),
+      )
       const diffOutput = diffStrings(current, updated)
       io.message({ text: diffOutput, indent: 2 })
       break
