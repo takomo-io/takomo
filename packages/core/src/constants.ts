@@ -9,6 +9,7 @@ export const DEFAULT_REGIONS: ReadonlyArray<Region> = [
   "ap-south-1",
   "ap-southeast-1",
   "ap-southeast-2",
+  "ap-southeast-3",
   "ca-central-1",
   "cn-north-1",
   "cn-northwest-1",
