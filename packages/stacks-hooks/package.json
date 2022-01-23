@@ -35,7 +35,7 @@
     "ramda": "0.27.1"
   },
   "devDependencies": {
-    "aws-sdk": "2.1033.0"
+    "aws-sdk": "2.1062.0"
   },
   "engines": {
     "node": ">=14.4.0"

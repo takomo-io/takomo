@@ -33,8 +33,8 @@
     "@takomo/stacks-model": "3.40.1",
     "@takomo/stacks-schema": "3.40.1",
     "@takomo/util": "3.38.1",
-    "joi": "17.4.0",
-    "neverthrow": "3.1.3"
+    "joi": "17.5.0",
+    "neverthrow": "4.3.1"
   },
   "devDependencies": {
     "@takomo/aws-clients": "3.38.1"

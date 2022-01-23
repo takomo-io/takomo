@@ -2,7 +2,7 @@ import {
   ListAccountsIO,
   ListAccountsOutput,
 } from "@takomo/organization-commands"
-import date from "date-and-time"
+import { formatTimestamp } from "@takomo/util"
 import Table from "easy-table"
 import { createBaseIO } from "../../cli-io"
 import { formatAccountStatus } from "../../formatters"
@@ -21,7 +21,7 @@ export const createListAccountsIO = (props: IOProps): ListAccountsIO => {
         .cell("Name", a.name)
         .cell("Email", a.email)
         .cell("Status", formatAccountStatus(a.status))
-        .cell("Joined", date.format(a.joinedTimestamp, "YYYY-MM-DD HH:mm:ss Z"))
+        .cell("Joined", formatTimestamp(a.joinedTimestamp))
         .newRow()
     })
 

@@ -47,7 +47,7 @@
     "@takomo/stacks-model": "3.40.1",
     "@takomo/test-unit": "3.38.1",
     "@takomo/util": "3.38.1",
-    "aws-sdk": "2.1033.0",
+    "aws-sdk": "2.1062.0",
     "ramda": "0.27.1"
   },
   "engines": {

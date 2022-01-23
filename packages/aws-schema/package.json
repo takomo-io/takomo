@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@takomo/aws-model": "3.38.1",
-    "joi": "17.4.0"
+    "joi": "17.5.0"
   },
   "devDependencies": {
     "@takomo/test-unit": "3.38.1"
