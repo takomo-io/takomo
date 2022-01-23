@@ -40,11 +40,11 @@
     "@takomo/stacks-commands": "3.40.1",
     "@takomo/stacks-model": "3.40.1",
     "@takomo/util": "3.38.1",
-    "date-and-time": "0.14.2",
+    "date-and-time": "2.1.0",
     "easy-table": "1.2.0",
     "inquirer": "8.1.2",
     "inquirer-autocomplete-prompt": "1.4.0",
-    "joi": "17.4.0",
+    "joi": "17.5.0",
     "ramda": "0.27.1",
     "ts-dedent": "2.2.0"
   },

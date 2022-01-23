@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@takomo/util": "3.38.1",
-    "joi": "17.4.0"
+    "joi": "17.5.0"
   },
   "engines": {
     "node": ">=14.4.0"
