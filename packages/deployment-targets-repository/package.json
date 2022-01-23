@@ -2,7 +2,7 @@
   "name": "@takomo/deployment-targets-repository",
   "version": "3.40.1",
   "description": "Takomo Deployment Targets Repository",
-  "homepage": "https://docs.takomo.io",
+  "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",

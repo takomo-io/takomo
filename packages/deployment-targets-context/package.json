@@ -2,7 +2,7 @@
   "name": "@takomo/deployment-targets-context",
   "version": "3.40.1",
   "description": "Takomo Deployment Targets Context",
-  "homepage": "https://docs.takomo.io",
+  "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",

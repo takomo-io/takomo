@@ -2,7 +2,7 @@
   "name": "@takomo/aws-model",
   "version": "3.38.1",
   "description": "Takomo AWS model",
-  "homepage": "https://docs.takomo.io",
+  "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",

@@ -2,7 +2,7 @@
   "name": "@takomo/organization-commands",
   "version": "3.40.1",
   "description": "Takomo Organization Commands",
-  "homepage": "https://docs.takomo.io",
+  "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",

@@ -157,8 +157,10 @@ export const onError = (e: any): void => {
   console.log(red(`  Takomo version:  ${version}`))
   console.log()
   console.log(red("Get support:"))
-  console.log(red(`  Docs:  https://takomo.io`))
-  console.log(red(`  Bugs:  https://github.com/takomo-io/takomo/issues`))
+  console.log(red(`  Docs:      https://takomo.io`))
+  console.log(red(`  Bugs:      https://github.com/takomo-io/takomo/issues`))
+  console.log(red(`  Gitter:    https://gitter.im/takomo-io/community`))
+  console.log(red(`  Telegram:  https://t.me/takomo_io`))
   console.log()
   process.exit(1)
 }
