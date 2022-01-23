@@ -1,5 +1,6 @@
 export * from "./collections"
 export * from "./colors"
+export { formatTimestamp } from "./date"
 export { TakomoError, TakomoErrorProps, ValidationError } from "./errors"
 export { executeShellCommand } from "./exec"
 export * from "./files"

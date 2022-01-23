@@ -13,13 +13,13 @@ import {
 } from "@takomo/stacks-model"
 import {
   collectFromHierarchy,
+  formatTimestamp,
   formatYaml,
   LogLevel,
   table,
   TkmLogger,
   toPrettyJson,
 } from "@takomo/util"
-import date from "date-and-time"
 import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus, formatStackEvent } from "../formatters"
@@ -176,8 +176,7 @@ export interface IOProps extends BaseIOProps {
   readonly hideOutput?: boolean
 }
 
-export const formatDate = (d: any): string =>
-  d ? date.format(d, "YYYY-MM-DD HH:mm:ss Z") : "-"
+export const formatDate = (d: any): string => (d ? formatTimestamp(d) : "-")
 
 export const createStacksOperationListenerInternal = (
   logger: TkmLogger,

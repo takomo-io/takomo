@@ -1,4 +1,4 @@
-import date from "date-and-time"
+import { formatTimestamp } from "./date"
 import { indentLines } from "./strings"
 import { formatYaml } from "./yaml"
 
@@ -157,7 +157,7 @@ export interface TkmLogger {
   childLogger(name: string): TkmLogger
 }
 
-const timestamp = (): string => date.format(new Date(), "YYYY-MM-DD HH:mm:ss Z")
+const timestamp = (): string => formatTimestamp(new Date())
 
 const defaultFilterFn = (obj: any): any => obj
 
