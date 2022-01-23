@@ -1,6 +1,6 @@
 {
   "name": "@takomo/cli-io",
-  "version": "3.40.1",
+  "version": "3.40.2",
   "description": "Takomo CLI IO",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,19 +27,19 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.38.1",
-    "@takomo/config-sets": "3.40.1",
-    "@takomo/core": "3.40.1",
-    "@takomo/deployment-targets-commands": "3.40.1",
-    "@takomo/execution-plans": "3.40.1",
-    "@takomo/iam-commands": "3.40.1",
-    "@takomo/init-command": "3.40.1",
-    "@takomo/organization-commands": "3.40.1",
-    "@takomo/organization-context": "3.40.1",
-    "@takomo/organization-model": "3.38.1",
-    "@takomo/stacks-commands": "3.40.1",
-    "@takomo/stacks-model": "3.40.1",
-    "@takomo/util": "3.38.1",
+    "@takomo/aws-model": "3.40.2",
+    "@takomo/config-sets": "3.40.2",
+    "@takomo/core": "3.40.2",
+    "@takomo/deployment-targets-commands": "3.40.2",
+    "@takomo/execution-plans": "3.40.2",
+    "@takomo/iam-commands": "3.40.2",
+    "@takomo/init-command": "3.40.2",
+    "@takomo/organization-commands": "3.40.2",
+    "@takomo/organization-context": "3.40.2",
+    "@takomo/organization-model": "3.40.2",
+    "@takomo/stacks-commands": "3.40.2",
+    "@takomo/stacks-model": "3.40.2",
+    "@takomo/util": "3.40.2",
     "easy-table": "1.2.0",
     "inquirer": "8.1.2",
     "inquirer-autocomplete-prompt": "1.4.0",
@@ -48,7 +48,7 @@
     "ts-dedent": "2.2.0"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.38.1"
+    "@takomo/test-unit": "3.40.2"
   },
   "engines": {
     "node": ">=14.4.0"

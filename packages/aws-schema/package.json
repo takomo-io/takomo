@@ -1,6 +1,6 @@
 {
   "name": "@takomo/aws-schema",
-  "version": "3.38.1",
+  "version": "3.40.2",
   "description": "Takomo AWS schema",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,11 +27,11 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.38.1",
+    "@takomo/aws-model": "3.40.2",
     "joi": "17.5.0"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.38.1"
+    "@takomo/test-unit": "3.40.2"
   },
   "engines": {
     "node": ">=14.4.0"

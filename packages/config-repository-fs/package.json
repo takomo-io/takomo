@@ -1,6 +1,6 @@
 {
   "name": "@takomo/config-repository-fs",
-  "version": "3.40.1",
+  "version": "3.40.2",
   "description": "Takomo Filesystem Config Repository",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,26 +27,26 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.38.1",
-    "@takomo/aws-model": "3.38.1",
-    "@takomo/config-sets": "3.40.1",
-    "@takomo/core": "3.40.1",
-    "@takomo/deployment-targets-config": "3.40.1",
-    "@takomo/deployment-targets-context": "3.40.1",
-    "@takomo/deployment-targets-model": "3.40.1",
-    "@takomo/deployment-targets-repository": "3.40.1",
-    "@takomo/init-command": "3.40.1",
-    "@takomo/organization-account-repository": "3.40.1",
-    "@takomo/organization-config": "3.40.1",
-    "@takomo/organization-context": "3.40.1",
-    "@takomo/organization-model": "3.38.1",
-    "@takomo/stacks-config": "3.40.1",
-    "@takomo/stacks-context": "3.40.1",
-    "@takomo/stacks-hooks": "3.40.1",
-    "@takomo/stacks-model": "3.40.1",
-    "@takomo/stacks-resolvers": "3.40.1",
-    "@takomo/stacks-schema": "3.40.1",
-    "@takomo/util": "3.38.1",
+    "@takomo/aws-clients": "3.40.2",
+    "@takomo/aws-model": "3.40.2",
+    "@takomo/config-sets": "3.40.2",
+    "@takomo/core": "3.40.2",
+    "@takomo/deployment-targets-config": "3.40.2",
+    "@takomo/deployment-targets-context": "3.40.2",
+    "@takomo/deployment-targets-model": "3.40.2",
+    "@takomo/deployment-targets-repository": "3.40.2",
+    "@takomo/init-command": "3.40.2",
+    "@takomo/organization-account-repository": "3.40.2",
+    "@takomo/organization-config": "3.40.2",
+    "@takomo/organization-context": "3.40.2",
+    "@takomo/organization-model": "3.40.2",
+    "@takomo/stacks-config": "3.40.2",
+    "@takomo/stacks-context": "3.40.2",
+    "@takomo/stacks-hooks": "3.40.2",
+    "@takomo/stacks-model": "3.40.2",
+    "@takomo/stacks-resolvers": "3.40.2",
+    "@takomo/stacks-schema": "3.40.2",
+    "@takomo/util": "3.40.2",
     "aws-sdk": "2.1062.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.2.0",
@@ -57,7 +57,7 @@
     "ts-dedent": "2.2.0"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.38.1"
+    "@takomo/test-unit": "3.40.2"
   },
   "engines": {
     "node": ">=14.4.0"
