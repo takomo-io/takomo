@@ -1,4 +1,4 @@
-import { SSM } from "aws-sdk"
+import { SSM } from "@aws-sdk/client-ssm"
 import { AwsClientProps, createClient } from "../common/client"
 
 /**
@@ -12,15 +12,16 @@ export interface SsmClient {
  * @hidden
  */
 export const createSsmClient = (props: AwsClientProps): SsmClient => {
-  const { withClientPromise } = createClient({
+  const { withClient } = createClient({
     ...props,
     clientConstructor: (configuration) => new SSM(configuration),
   })
 
   const getParameterValue = (name: string): Promise<string> =>
-    withClientPromise(
-      (c) => c.getParameter({ Name: name, WithDecryption: true }),
-      (r) => r.Parameter!.Value!,
+    withClient((c) =>
+      c
+        .getParameter({ Name: name, WithDecryption: true })
+        .then((r) => r.Parameter!.Value!),
     )
 
   return {

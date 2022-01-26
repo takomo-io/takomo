@@ -6,18 +6,6 @@ export { createUndeployTargetsIO } from "./deployment-targets/undeploy-targets-i
 export { formatCommandStatus } from "./formatters"
 export { createGenerateIamPoliciesIO } from "./iam/generate-iam-policies-io"
 export { createInitProjectIO } from "./init-project-io"
-export { createBootstrapAccountsIO } from "./organization/accounts/bootstrap-accounts-io"
-export { createCreateAccountAliasIO } from "./organization/accounts/create-account-alias-io"
-export { createCreateAccountIO } from "./organization/accounts/create-account-io"
-export { createDeleteAccountAliasIO } from "./organization/accounts/delete-account-alias-io"
-export { createDeployAccountsIO } from "./organization/accounts/deploy-accounts-io"
-export { createListAccountsIO } from "./organization/accounts/list-accounts-io"
-export { createListAccountsStacksIO } from "./organization/accounts/list-accounts-stacks-io"
-export { createTearDownAccountsIO } from "./organization/accounts/tear-down-accounts-io"
-export { createUndeployAccountsIO } from "./organization/accounts/undeploy-accounts-io"
-export { createCreateOrganizationIO } from "./organization/create-organization-io"
-export { createDeployOrganizationIO } from "./organization/deploy-organization-io"
-export { createDescribeOrganizationIO } from "./organization/describe-organization-io"
 export { IOProps } from "./stacks/common"
 export {
   CONFIRM_DEPLOY_ANSWER_CANCEL,

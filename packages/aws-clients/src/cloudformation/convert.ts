@@ -1,3 +1,4 @@
+import * as CF from "@aws-sdk/client-cloudformation"
 import {
   CausingEntity,
   ChangeSet,
@@ -48,19 +49,8 @@ import {
   TemplateDescription,
   TemplateSummary,
 } from "@takomo/aws-model"
-import { CloudFormation } from "aws-sdk"
-import {
-  DescribeChangeSetOutput,
-  DescribeStackDriftDetectionStatusOutput,
-  DescribeStackEventsOutput,
-  DescribeStacksOutput,
-  GetTemplateSummaryOutput,
-  ResourceTargetDefinition as CFResourceTargetDefinition,
-} from "aws-sdk/clients/cloudformation"
 
-const convertStackInternal = (
-  s: CloudFormation.Stack,
-): CloudFormationStack => ({
+const convertStackInternal = (s: CF.Stack): CloudFormationStack => ({
   id: s.StackId as StackId,
   name: s.StackName as StackName,
   parameters: (s.Parameters ?? []).map((p) => ({
@@ -72,7 +62,7 @@ const convertStackInternal = (
   enableTerminationProtection:
     s.EnableTerminationProtection as EnableTerminationProtection,
   capabilities: s.Capabilities as StackCapability[],
-  creationTime: s.CreationTime,
+  creationTime: s.CreationTime as Date,
   lastUpdatedTime: s.LastUpdatedTime,
   outputs: (s.Outputs ?? []).map((o) => ({
     key: o.OutputKey as StackOutputKey,
@@ -95,7 +85,7 @@ const convertStackInternal = (
  */
 export const convertStack = ({
   Stacks,
-}: DescribeStacksOutput): CloudFormationStack => {
+}: CF.DescribeStacksOutput): CloudFormationStack => {
   if (!Stacks) {
     throw new Error("Expected Stacks to be defined")
   }
@@ -113,11 +103,11 @@ export const convertStack = ({
  */
 export const convertStacks = ({
   Stacks,
-}: DescribeStacksOutput): ReadonlyArray<CloudFormationStack> =>
+}: CF.DescribeStacksOutput): ReadonlyArray<CloudFormationStack> =>
   (Stacks ?? []).map(convertStackInternal)
 
 const convertResourceChangeTarget = (
-  target?: CFResourceTargetDefinition,
+  target?: CF.ResourceTargetDefinition,
 ): ResourceTargetDefinition | undefined => {
   if (!target) {
     return undefined
@@ -133,7 +123,7 @@ const convertResourceChangeTarget = (
 /**
  * @hidden
  */
-export const convertChangeSet = (o: DescribeChangeSetOutput): ChangeSet => ({
+export const convertChangeSet = (o: CF.DescribeChangeSetOutput): ChangeSet => ({
   id: o.ChangeSetId as ChangeSetId,
   name: o.ChangeSetName as ChangeSetName,
   stackId: o.StackId as StackId,
@@ -174,7 +164,7 @@ export const convertChangeSet = (o: DescribeChangeSetOutput): ChangeSet => ({
  */
 export const convertTemplateSummary = ({
   Parameters,
-}: GetTemplateSummaryOutput): TemplateSummary => ({
+}: CF.GetTemplateSummaryOutput): TemplateSummary => ({
   parameters: (Parameters ?? []).map((p) => ({
     key: p.ParameterKey as StackParameterKey,
     noEcho: p.NoEcho as StackParameterNoEcho,
@@ -188,7 +178,7 @@ export const convertTemplateSummary = ({
  */
 export const convertStackEvents = ({
   StackEvents,
-}: DescribeStackEventsOutput): StackEvent[] =>
+}: CF.DescribeStackEventsOutput): StackEvent[] =>
   (StackEvents ?? []).map((e) => ({
     id: e.EventId as EventId,
     clientRequestToken: e.ClientRequestToken as ClientRequestToken,
@@ -200,14 +190,14 @@ export const convertStackEvents = ({
     resourceType: e.ResourceType as ResourceType,
     stackId: e.StackId as StackId,
     stackName: e.StackName as StackName,
-    timestamp: e.Timestamp,
+    timestamp: e.Timestamp as Date,
   }))
 
 /**
  * @hidden
  */
 export const convertStackDriftDetectionStatus = (
-  d: DescribeStackDriftDetectionStatusOutput,
+  d: CF.DescribeStackDriftDetectionStatusOutput,
 ): StackDriftDetectionStatusOutput => ({
   detectionStatus: d.DetectionStatus as StackDriftDetectionStatus,
   detectionStatusReason:
@@ -221,13 +211,13 @@ export const convertStackDriftDetectionStatus = (
 
 export const convertStackSummaries = ({
   StackSummaries,
-}: CloudFormation.ListStacksOutput): ReadonlyArray<DetailedCloudFormationStackSummary> =>
+}: CF.ListStacksOutput): ReadonlyArray<DetailedCloudFormationStackSummary> =>
   (StackSummaries ?? []).map((s) => ({
     id: s.StackId as StackId,
     name: s.StackName as StackName,
     status: s.StackStatus as StackStatus,
     statusReason: s.StackStatusReason as StackStatusReason,
-    creationTime: s.CreationTime,
+    creationTime: s.CreationTime as Date,
     lastUpdatedTime: s.LastUpdatedTime,
     deletionTime: s.DeletionTime,
     driftInformation: {

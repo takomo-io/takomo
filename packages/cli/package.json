@@ -37,8 +37,6 @@
     "@takomo/deployment-targets-model": "3.40.2",
     "@takomo/iam-commands": "3.40.2",
     "@takomo/init-command": "3.40.2",
-    "@takomo/organization-commands": "3.40.2",
-    "@takomo/organization-model": "3.40.2",
     "@takomo/stacks-commands": "3.40.2",
     "@takomo/stacks-model": "3.40.2",
     "@takomo/util": "3.40.2",

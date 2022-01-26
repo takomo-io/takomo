@@ -1,5 +1,5 @@
+import { IAM } from "@aws-sdk/client-iam"
 import { AccountAlias } from "@takomo/aws-model"
-import { IAM } from "aws-sdk"
 import { AwsClientProps, createClient } from "../common/client"
 
 /**
@@ -22,19 +22,19 @@ export const createIamClient = (props: AwsClientProps): IamClient => {
 
   const createAccountAlias = (alias: AccountAlias): Promise<boolean> =>
     getClient()
-      .then((c) => c.createAccountAlias({ AccountAlias: alias }).promise())
+      .then((c) => c.createAccountAlias({ AccountAlias: alias }))
       .then(() => true)
 
   const deleteAccountAlias = (alias: AccountAlias): Promise<boolean> =>
     getClient()
-      .then((c) => c.deleteAccountAlias({ AccountAlias: alias }).promise())
+      .then((c) => c.deleteAccountAlias({ AccountAlias: alias }))
       .then(() => true)
 
   const describeAccountAlias = (): Promise<AccountAlias | undefined> =>
     getClient()
-      .then((c) => c.listAccountAliases({}).promise())
+      .then((c) => c.listAccountAliases({}))
       .then((res) =>
-        res.AccountAliases.length > 0 ? res.AccountAliases[0] : undefined,
+        res.AccountAliases!.length! > 0 ? res.AccountAliases![0] : undefined,
       )
 
   return {

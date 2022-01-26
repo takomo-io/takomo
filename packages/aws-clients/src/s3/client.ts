@@ -1,11 +1,11 @@
-import { S3 } from "aws-sdk"
+import { S3 } from "@aws-sdk/client-s3"
 import { AwsClientProps, createClient } from "../common/client"
 
 /**
  * @hidden
  */
 export interface S3Client {
-  putObject: (
+  readonly putObject: (
     bucketName: string,
     key: string,
     object: string,
@@ -16,7 +16,7 @@ export interface S3Client {
  * @hidden
  */
 export const createS3Client = (props: AwsClientProps): S3Client => {
-  const { withClientPromise } = createClient({
+  const { withClient } = createClient({
     ...props,
     clientConstructor: (config) => new S3(config),
   })
@@ -26,14 +26,14 @@ export const createS3Client = (props: AwsClientProps): S3Client => {
     key: string,
     object: string,
   ): Promise<boolean> =>
-    withClientPromise(
-      (c) =>
-        c.putObject({
+    withClient((c) =>
+      c
+        .putObject({
           Bucket: bucketName,
           Key: key,
           Body: object,
-        }),
-      () => true,
+        })
+        .then(() => true),
     )
 
   return {

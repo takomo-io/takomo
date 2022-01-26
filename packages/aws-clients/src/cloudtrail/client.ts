@@ -1,5 +1,5 @@
+import { CloudTrail } from "@aws-sdk/client-cloudtrail"
 import { CloudTrailEvent } from "@takomo/aws-model"
-import { CloudTrail } from "aws-sdk"
 import { AwsClientProps, createClient } from "../common/client"
 import { convertCloudTrailEvents } from "./convert"
 

@@ -14,7 +14,7 @@ interface PagedOperationV2Props<T, P, R extends PagedResponse> {
   /**
    * API operation to execute.
    */
-  readonly operation: (params: P) => Request<R, AWSError>
+  readonly operation: (params: P) => Promise<R>
 
   /**
    * Parameters for the API operation.
@@ -67,10 +67,16 @@ export interface AwsClient<C> {
     onSuccess: (result: R) => T,
     onError?: (e: any) => T,
   ) => Promise<T>
+  // TODO: Delete this once not used
   readonly withClientPromiseBulkhead: <T, R>(
     bulkhead: IPolicy,
     fn: (client: C) => Request<R, AWSError>,
     onSuccess: (result: R) => T,
+    onError?: (e: any) => T,
+  ) => Promise<T>
+  readonly withClientBulkhead: <T>(
+    bulkhead: IPolicy,
+    fn: (client: C) => Promise<T>,
     onError?: (e: any) => T,
   ) => Promise<T>
   readonly withClientPromiseScheduler: <T, R>(
@@ -80,8 +86,14 @@ export interface AwsClient<C> {
     onSuccess: (result: R) => T,
     onError?: (e: any) => T,
   ) => Promise<T>
+  readonly withClientScheduler: <T>(
+    taskId: string,
+    scheduler: Scheduler,
+    fn: (client: C) => Promise<T>,
+    onError?: (e: any) => T,
+  ) => Promise<T>
   readonly pagedOperation: <T, P, R extends PagedResponse>(
-    operation: (params: P) => Request<R, AWSError>,
+    operation: (params: P) => Promise<R>,
     params: P,
     extractor: (response: R) => ReadonlyArray<T> | undefined,
     nextToken?: string,
@@ -91,7 +103,7 @@ export interface AwsClient<C> {
   ) => Promise<ReadonlyArray<T>>
   readonly pagedOperationBulkhead: <T, P, R extends PagedResponse>(
     bulkhead: IPolicy,
-    operation: (params: P) => Request<R, AWSError>,
+    operation: (params: P) => Promise<R>,
     params: P,
     extractor: (response: R) => ReadonlyArray<T> | undefined,
     nextToken?: string,
@@ -153,9 +165,6 @@ export const buildApiCallProps = (
   }
 }
 
-/**
- * @hidden
- */
 export const createClient = <C>({
   credentials,
   logger,
@@ -252,6 +261,20 @@ export const createClient = <C>({
         throw e
       })
 
+  const withClientBulkhead = <T>(
+    bulkhead: IPolicy,
+    fn: (client: C) => Promise<T>,
+    onError?: (e: any) => T,
+  ): Promise<T> =>
+    getClient()
+      .then((client) => bulkhead.execute(() => fn(client)))
+      .catch((e) => {
+        if (onError) {
+          return onError(e)
+        }
+        throw e
+      })
+
   const withClientPromiseScheduler = <T, R>(
     taskId: string,
     scheduler: Scheduler,
@@ -271,8 +294,23 @@ export const createClient = <C>({
         throw e
       })
 
+  const withClientScheduler = <T>(
+    taskId: string,
+    scheduler: Scheduler,
+    fn: (client: C) => Promise<T>,
+    onError?: (e: any) => T,
+  ): Promise<T> =>
+    getClient()
+      .then((client) => scheduler.execute<T>({ taskId, fn: () => fn(client) }))
+      .catch((e) => {
+        if (onError) {
+          return onError(e)
+        }
+        throw e
+      })
+
   const pagedOperation = async <T, P, R extends PagedResponse>(
-    operation: (params: P) => Request<R, AWSError>,
+    operation: (params: P) => Promise<R>,
     params: P,
     extractor: (response: R) => ReadonlyArray<T> | undefined,
     nextToken?: string,
@@ -280,7 +318,7 @@ export const createClient = <C>({
     const response = await operation({
       ...params,
       NextToken: nextToken,
-    }).promise()
+    })
 
     const items = extractor(response) || []
     if (!response.NextToken) {
@@ -309,7 +347,7 @@ export const createClient = <C>({
     const response = await operation({
       ...params,
       NextToken: nextToken,
-    }).promise()
+    })
 
     const items = (extractor(response) ?? []).filter(filter)
 
@@ -336,7 +374,7 @@ export const createClient = <C>({
 
   const pagedOperationBulkhead = async <T, P, R extends PagedResponse>(
     bulkhead: IPolicy,
-    operation: (params: P) => Request<R, AWSError>,
+    operation: (params: P) => Promise<R>,
     params: P,
     extractor: (response: R) => ReadonlyArray<T> | undefined,
     nextToken?: string,
@@ -345,7 +383,7 @@ export const createClient = <C>({
       operation({
         ...params,
         NextToken: nextToken,
-      }).promise(),
+      }),
     )
 
     const items = extractor(response) || []
@@ -370,9 +408,11 @@ export const createClient = <C>({
     logger,
     getClient,
     withClient,
+    withClientBulkhead,
     withClientPromise,
     withClientPromiseBulkhead,
     withClientPromiseScheduler,
+    withClientScheduler,
     pagedOperation,
     pagedOperationV2,
     pagedOperationBulkhead,

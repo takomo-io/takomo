@@ -8,10 +8,6 @@ import {
 import { CloudTrailClient, createCloudTrailClient } from "./cloudtrail/client"
 import { ApiCallProps, AwsClientProps } from "./common/client"
 import { createIamClient, IamClient } from "./iam/client"
-import {
-  createOrganizationsClient,
-  OrganizationsClient,
-} from "./organizations/client"
 import { createS3Client, S3Client } from "./s3/client"
 import { createSecretsClient, SecretsClient } from "./secrets/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
@@ -38,13 +34,7 @@ export interface AwsClientProvider {
   ) => CloudFormationClient
 
   readonly createCloudTrailClient: (props: AwsClientProps) => CloudTrailClient
-
   readonly createIamClient: (props: AwsClientProps) => IamClient
-
-  readonly createOrganizationsClient: (
-    props: AwsClientProps,
-  ) => OrganizationsClient
-
   readonly createS3Client: (props: AwsClientProps) => S3Client
   readonly createStsClient: (props: AwsClientProps) => StsClient
   readonly createSsmClient: (props: AwsClientProps) => SsmClient
@@ -151,11 +141,6 @@ export const createAwsClientProvider = ({
     },
     createIamClient: (props: AwsClientProps): IamClient => {
       const client = createIamClient({ ...props, listener })
-      regions.add(props.region)
-      return client
-    },
-    createOrganizationsClient: (props: AwsClientProps): OrganizationsClient => {
-      const client = createOrganizationsClient({ ...props, listener })
       regions.add(props.region)
       return client
     },

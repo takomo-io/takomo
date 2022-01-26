@@ -70,11 +70,14 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
     await cloudFormationClient.initiateStackDeletion({
       StackName: stack.name,
     })
-    await cloudFormationClient.waitUntilStackIsDeleted(
-      stack.name,
-      changeSet.stackId,
-      uuid(),
-    )
+
+    await cloudFormationClient.waitStackDeleteToComplete({
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      eventListener: () => {},
+      stackId: changeSet.stackId,
+      clientToken: uuid(),
+    })
+
     logger.debug("Temporary stack deleted successfully")
   } else {
     logger.debug("Delete change set")

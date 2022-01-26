@@ -36,10 +36,6 @@
     "@takomo/deployment-targets-model": "3.40.2",
     "@takomo/deployment-targets-repository": "3.40.2",
     "@takomo/init-command": "3.40.2",
-    "@takomo/organization-account-repository": "3.40.2",
-    "@takomo/organization-config": "3.40.2",
-    "@takomo/organization-context": "3.40.2",
-    "@takomo/organization-model": "3.40.2",
     "@takomo/stacks-config": "3.40.2",
     "@takomo/stacks-context": "3.40.2",
     "@takomo/stacks-hooks": "3.40.2",
@@ -53,8 +49,7 @@
     "joi": "17.5.0",
     "ramda": "0.27.1",
     "readdirp": "3.6.0",
-    "semver": "7.3.5",
-    "ts-dedent": "2.2.0"
+    "semver": "7.3.5"
   },
   "devDependencies": {
     "@takomo/test-unit": "3.40.2"
