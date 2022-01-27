@@ -19,10 +19,8 @@ export const uploadTemplate: StackOperationStep<TemplateBodyHolder> = async (
 
   logger.debugObject("Template bucket configured:", () => templateBucket)
 
-  const credentials = await stack.credentialManager.getCredentials()
-
-  const s3Client = ctx.awsClientProvider.createS3Client({
-    credentials,
+  const s3Client = await ctx.awsClientProvider.createS3Client({
+    credentialProvider: stack.credentialManager.getCredentialProvider(),
     region: stack.region,
     id: uuid(),
     logger,

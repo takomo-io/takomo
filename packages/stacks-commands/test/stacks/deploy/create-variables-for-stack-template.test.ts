@@ -1,7 +1,7 @@
+import { Credentials } from "@aws-sdk/types"
 import { CredentialManager } from "@takomo/aws-clients"
 import { InternalStack } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { mock } from "jest-mock-extended"
 import { createVariablesForStackTemplate } from "../../../src/stacks/deploy/steps/prepare-template"
 
@@ -42,6 +42,7 @@ describe("#createVariablesForStackTemplate", () => {
       dependencies: ["/vpc.yml"],
       hooks: [],
       ignore: false,
+      obsolete: false,
       terminationProtection: false,
       name: "stack-x",
       parameters: new Map(),
@@ -184,6 +185,7 @@ describe("#createVariablesForStackTemplate", () => {
       dependencies: [],
       hooks: [],
       ignore: false,
+      obsolete: false,
       terminationProtection: false,
       name: "stack-x",
       parameters: new Map(),

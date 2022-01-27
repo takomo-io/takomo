@@ -1,6 +1,6 @@
+import { ChangeSetType } from "@takomo/aws-model"
 import { defaultCapabilities, StackOperationType } from "@takomo/stacks-model"
 import { uuid } from "@takomo/util"
-import { ChangeSetType } from "aws-sdk/clients/cloudformation"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateSummaryHolder } from "../states"
 
@@ -18,47 +18,48 @@ export const resolveChangeSetType = (
   }
 }
 
-export const initiateChangeSetCreate: StackOperationStep<TemplateSummaryHolder> =
-  async (state) => {
-    const {
-      stack,
-      operationType,
-      templateS3Url,
-      templateBody,
-      parameters,
-      tags,
-      logger,
-      transitions,
-    } = state
+export const initiateChangeSetCreate: StackOperationStep<
+  TemplateSummaryHolder
+> = async (state) => {
+  const {
+    stack,
+    operationType,
+    templateS3Url,
+    templateBody,
+    parameters,
+    tags,
+    logger,
+    transitions,
+  } = state
 
-    const clientToken = uuid()
-    const changeSetName = `change-${clientToken}`
-    const changeSetType = resolveChangeSetType(operationType)
-    const templateLocation = templateS3Url || templateBody
-    const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
+  const clientToken = uuid()
+  const changeSetName = `change-${clientToken}`
+  const changeSetType = resolveChangeSetType(operationType)
+  const templateLocation = templateS3Url || templateBody
+  const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
 
-    logger.info("Create change set")
-    logger.debugObject("Change set data:", {
-      clientToken,
-      name: changeSetName,
-      type: changeSetType,
-    })
+  logger.info("Create change set")
+  logger.debugObject("Change set data:", {
+    clientToken,
+    name: changeSetName,
+    type: changeSetType,
+  })
 
-    const changeSetId = await stack.getCloudFormationClient().createChangeSet({
-      StackName: stack.name,
-      ChangeSetType: changeSetType,
-      [templateKey]: templateLocation,
-      ChangeSetName: changeSetName,
-      Capabilities: stack.capabilities?.slice() ?? defaultCapabilities,
-      Parameters: parameters.map((p) => ({
-        ParameterKey: p.key,
-        ParameterValue: p.value,
-        UsePreviousValue: false,
-      })),
-      Tags: tags.map((t) => ({ Key: t.key, Value: t.value })),
-    })
+  const changeSetId = await stack.getCloudFormationClient().createChangeSet({
+    StackName: stack.name,
+    ChangeSetType: changeSetType,
+    [templateKey]: templateLocation,
+    ChangeSetName: changeSetName,
+    Capabilities: stack.capabilities?.slice() ?? defaultCapabilities,
+    Parameters: parameters.map((p) => ({
+      ParameterKey: p.key,
+      ParameterValue: p.value,
+      UsePreviousValue: false,
+    })),
+    Tags: tags.map((t) => ({ Key: t.key, Value: t.value })),
+  })
 
-    logger.debug(`Change set created successfully with id ${changeSetId}`)
+  logger.debug(`Change set created successfully with id ${changeSetId}`)
 
-    return transitions.waitChangeSetToBeReady({ ...state, changeSetName })
-  }
+  return transitions.waitChangeSetToBeReady({ ...state, changeSetName })
+}

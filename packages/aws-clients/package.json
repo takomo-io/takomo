@@ -29,7 +29,6 @@
   "dependencies": {
     "@takomo/aws-model": "3.40.2",
     "@takomo/util": "3.40.2",
-    "aws-sdk": "2.1062.0",
     "@aws-sdk/client-s3": "3.48.0",
     "@aws-sdk/client-sts": "3.48.0",
     "@aws-sdk/client-iam": "3.48.0",
@@ -37,6 +36,9 @@
     "@aws-sdk/client-ssm": "3.48.0",
     "@aws-sdk/client-secrets-manager": "3.48.0",
     "@aws-sdk/client-cloudformation": "3.48.0",
+    "@aws-sdk/credential-provider-node": "3.48.0",
+    "@aws-sdk/credential-providers": "3.48.0",
+    "@aws-sdk/types": "3.47.1",
     "cockatiel": "2.0.1",
     "lodash.takerightwhile": "4.6.0",
     "ramda": "0.27.1"

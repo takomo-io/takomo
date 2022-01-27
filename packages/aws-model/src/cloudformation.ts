@@ -275,6 +275,7 @@ export interface StackEvent {
 export type ChangeSetId = string
 export type ChangeSetName = string
 export type ChangeSetStatusReason = string
+export type ChangeSetType = "CREATE" | "UPDATE"
 export type ChangeSetStatus =
   | "CREATE_PENDING"
   | "CREATE_IN_PROGRESS"

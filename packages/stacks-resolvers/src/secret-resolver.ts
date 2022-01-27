@@ -60,10 +60,8 @@ const init = async (props: any): Promise<Resolver> => ({
       },
     )
 
-    const credentials = await credentialManager.getCredentials()
-
-    const secretsClient = ctx.awsClientProvider.createSecretsClient({
-      credentials,
+    const secretsClient = await ctx.awsClientProvider.createSecretsClient({
+      credentialProvider: credentialManager.getCredentialProvider(),
       region,
       logger,
       id: "secret",

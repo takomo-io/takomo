@@ -1,7 +1,6 @@
 import { prepareAwsEnvVariables } from "@takomo/aws-clients"
 import { assertRecursively } from "@takomo/test-unit"
 import { parseYamlString } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { exec } from "child_process"
 
 interface CliAssertions {
@@ -59,7 +58,7 @@ const createCliAssertions = (
 }
 
 export const executeWithCli = (command: string): CliAssertions => {
-  const credentials = new Credentials(global.reservation.credentials)
+  const credentials = global.reservation.credentials
 
   const vars = global.reservation
     ? global.reservation.accounts

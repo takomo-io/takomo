@@ -1,8 +1,8 @@
+import { Credentials } from "@aws-sdk/types"
 import { CredentialManager } from "@takomo/aws-clients"
 import { StackName } from "@takomo/aws-model"
 import { InternalStack, StackPath } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { mock } from "jest-mock-extended"
 
 export interface TestStackProps {

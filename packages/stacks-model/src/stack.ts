@@ -1,3 +1,4 @@
+import { Credentials } from "@aws-sdk/types"
 import { CloudFormationClient, CredentialManager } from "@takomo/aws-clients"
 import {
   AccountId,
@@ -12,7 +13,6 @@ import {
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
 import { FilePath, TkmLogger } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { ROOT_STACK_GROUP_PATH } from "./constants"
 import { HookExecutor } from "./hook"

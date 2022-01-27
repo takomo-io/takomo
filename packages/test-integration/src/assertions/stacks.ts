@@ -1,3 +1,5 @@
+import { Stack } from "@aws-sdk/client-cloudformation"
+import { Credentials } from "@aws-sdk/types"
 import {
   AccountId,
   Region,
@@ -22,7 +24,6 @@ import {
 } from "@takomo/stacks-commands"
 import { StackPath, StackResult } from "@takomo/stacks-model"
 import { prettyPrintJson, toPrettyJson } from "@takomo/util"
-import { CloudFormation, Credentials } from "aws-sdk"
 import { aws } from "../aws-api"
 
 export interface ExpectStackResultProps {
@@ -77,7 +78,7 @@ export interface ExpectDeployedCfStackProps {
   accountId: AccountId
   credentials: Credentials
   roleName: string
-  expected?: Partial<CloudFormation.Stack>
+  expected?: Partial<Stack>
   expectedTags?: Record<TagKey, TagValue>
   expectedOutputs?: Record<StackOutputKey, StackOutputValue>
   expectedStackPolicy?: StackPolicyBody

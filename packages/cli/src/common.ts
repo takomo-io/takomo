@@ -1,3 +1,4 @@
+import { Credentials } from "@aws-sdk/types"
 import {
   createAwsClientProvider,
   initDefaultCredentialManager,
@@ -29,7 +30,6 @@ import {
   red,
   TkmLogger,
 } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import Table from "easy-table"
 import inquirer from "inquirer"
 import os from "os"

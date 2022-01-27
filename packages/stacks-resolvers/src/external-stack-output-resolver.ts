@@ -37,11 +37,10 @@ const init = async (props: any): Promise<Resolver> => {
         },
       )
 
-      const credentials = await credentialManager.getCredentials()
       const identity = await credentialManager.getCallerIdentity()
 
-      const cf = ctx.awsClientProvider.createCloudFormationClient({
-        credentials,
+      const cf = await ctx.awsClientProvider.createCloudFormationClient({
+        credentialProvider: credentialManager.getCredentialProvider(),
         region,
         logger,
         identity,

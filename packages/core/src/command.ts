@@ -1,8 +1,8 @@
+import { Credentials } from "@aws-sdk/types"
 import { AwsClientProvider, CredentialManager } from "@takomo/aws-clients"
 import { InternalAwsClientProvider } from "@takomo/aws-clients/src/aws-client-provider"
 import { IamRoleArn, Region } from "@takomo/aws-model"
 import { FilePath, LogLevel, Timer, TkmLogger } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { InternalTakomoProjectConfig, TakomoProjectConfig } from "./config"
 import { Variables } from "./variables"
 

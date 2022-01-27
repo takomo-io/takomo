@@ -1,3 +1,4 @@
+import { Credentials } from "@aws-sdk/types"
 import { CredentialManager, prepareAwsEnvVariables } from "@takomo/aws-clients"
 import { CallerIdentity, IamRoleArn, IamRoleName } from "@takomo/aws-model"
 import {
@@ -19,7 +20,6 @@ import {
   Timer,
   TkmLogger,
 } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
 import { extname } from "path"
@@ -266,10 +266,6 @@ const getCredentialsForMapCommand = async (
     )
     .then((deploymentRole) => getCredentialManager(ctx, deploymentRole))
     .then((c) => c.getCredentials())
-    .then(async (c) => {
-      await c.getPromise()
-      return c
-    })
 
 const getCredentialsForReduceCommand = async (
   ctx: DeploymentTargetsContext,
@@ -279,9 +275,7 @@ const getCredentialsForReduceCommand = async (
     ? await ctx.credentialManager.createCredentialManagerForRole(reduceRoleArn)
     : ctx.credentialManager
 
-  const credentials = await credentialManager.getCredentials()
-  await credentials.getPromise()
-  return credentials
+  return await credentialManager.getCredentials()
 }
 
 export const processDeploymentTarget = async (

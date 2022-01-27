@@ -1,24 +1,16 @@
+import { CloudFormation, Stack } from "@aws-sdk/client-cloudformation"
+import { EC2 } from "@aws-sdk/client-ec2"
+import { SecretsManager } from "@aws-sdk/client-secrets-manager"
+import { SSM } from "@aws-sdk/client-ssm"
+import { STS } from "@aws-sdk/client-sts"
+import { Credentials } from "@aws-sdk/types"
 import {
   AwsClientProvider,
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
 import { CallerIdentity, StackPolicyBody } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
-import {
-  CloudFormation,
-  Credentials,
-  EC2,
-  Organizations,
-  SecretsManager,
-  SSM,
-  STS,
-} from "aws-sdk"
-import { Organization, PolicyType, Root } from "aws-sdk/clients/organizations"
 import { mock } from "jest-mock-extended"
-
-const organizationsClient = new Organizations({
-  region: "us-east-1",
-})
 
 const ssmClient = (region: string, credentials: Credentials): SSM =>
   new SSM({ region, credentials })
@@ -39,43 +31,6 @@ const cloudFormationClient = (
   credentials: Credentials,
 ): CloudFormation => new CloudFormation({ region, credentials })
 
-const listAWSServiceAccessForOrganization = async (): Promise<string[]> =>
-  organizationsClient
-    .listAWSServiceAccessForOrganization()
-    .promise()
-    .then((res) =>
-      res.EnabledServicePrincipals!.map((s) => s.ServicePrincipal!),
-    )
-
-const describeOrganization = async (): Promise<Organization> =>
-  organizationsClient
-    .describeOrganization()
-    .promise()
-    .then((res) => res.Organization!)
-
-const getRootOrganizationalUnit = async (): Promise<Root> =>
-  organizationsClient
-    .listRoots()
-    .promise()
-    .then((res) => res.Roots![0])
-
-const getEnabledPolicyTypes = async (): Promise<PolicyType[]> =>
-  getRootOrganizationalUnit().then((root) =>
-    root.PolicyTypes!.map((p) => p.Type!),
-  )
-
-const deleteOrganization = async (): Promise<boolean> =>
-  organizationsClient
-    .deleteOrganization()
-    .promise()
-    .then(() => true)
-
-const deleteOrganizationIfPresent = async (): Promise<boolean> =>
-  describeOrganization()
-    .then(() => deleteOrganization())
-    .then(() => true)
-    .catch(() => false)
-
 export type DescribeStackArgs = {
   credentials: Credentials
   iamRoleArn?: string
@@ -88,7 +43,7 @@ const describeStack = async ({
   stackName,
   iamRoleArn,
   region,
-}: DescribeStackArgs): Promise<CloudFormation.Stack> => {
+}: DescribeStackArgs): Promise<Stack> => {
   const cp = await initDefaultCredentialManager(
     () => Promise.resolve(""),
     mock<TkmLogger>(),
@@ -101,7 +56,6 @@ const describeStack = async ({
 
   return cloudFormationClient(region, await stackCp.getCredentials())
     .describeStacks({ StackName: stackName })
-    .promise()
     .then((res) => res.Stacks![0])
 }
 
@@ -123,7 +77,6 @@ const getStackPolicy = async ({
 
   return cloudFormationClient(region, await stackCp.getCredentials())
     .getStackPolicy({ StackName: stackName })
-    .promise()
     .then((r) => r.StackPolicyBody!)
 }
 
@@ -198,7 +151,6 @@ const putParameter = async ({
       Type: encrypted ? "SecureString" : "String",
       Value: value,
     })
-    .promise()
     .then(() => true)
 }
 
@@ -227,7 +179,6 @@ const createSecret = async (
       SecretString: value,
       Tags: [{ Key: "test-resource", Value: "true" }],
     })
-    .promise()
     .then((r) => ({
       arn: r.ARN!,
       secretId: r.VersionId!,
@@ -256,7 +207,6 @@ const putSecret = async (args: PutSecretArgs): Promise<PutSecretResponse> => {
       SecretId: secretId,
       SecretString: value,
     })
-    .promise()
     .then((r) => ({
       arn: r.ARN!,
       secretId: r.VersionId!,
@@ -288,18 +238,15 @@ const tagVpc = async ({
 
   return client
     .describeVpcs({})
-    .promise()
     .then(
       ({ Vpcs }) =>
         Vpcs!.filter(({ CidrBlock }) => CidrBlock === cidr)[0].VpcId!,
     )
     .then((vpcId) =>
-      client
-        .createTags({
-          Tags: [{ Key: tagKey, Value: tagValue }],
-          Resources: [vpcId],
-        })
-        .promise(),
+      client.createTags({
+        Tags: [{ Key: tagKey, Value: tagValue }],
+        Resources: [vpcId],
+      }),
     )
     .then(() => true)
 }
@@ -309,18 +256,9 @@ const getCallerIdentity = async (
 ): Promise<CallerIdentity> =>
   stsClient(credentials)
     .getCallerIdentity({})
-    .promise()
     .then((r) => ({ accountId: r.Account!, arn: r.Arn!, userId: r.UserId! }))
 
 export const aws = {
-  organizations: {
-    describeOrganization,
-    getRoot: getRootOrganizationalUnit,
-    getEnabledPolicyTypes,
-    deleteOrganization,
-    deleteOrganizationIfPresent,
-    listAWSServiceAccessForOrganization,
-  },
   cloudFormation: {
     describeStack,
     getStackPolicy,

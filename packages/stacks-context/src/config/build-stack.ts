@@ -207,8 +207,8 @@ export const buildStack = async (
         const exactPath = `${stackPath}/${region}`
         const stackLogger = logger.childLogger(exactPath)
         const cloudFormationClient =
-          ctx.awsClientProvider.createCloudFormationClient({
-            credentials,
+          await ctx.awsClientProvider.createCloudFormationClient({
+            credentialProvider: credentialManager.getCredentialProvider(),
             region,
             identity,
             id: exactPath,

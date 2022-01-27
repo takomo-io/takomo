@@ -44,7 +44,15 @@
     "@takomo/stacks-model": "3.40.2",
     "@takomo/test-unit": "3.40.2",
     "@takomo/util": "3.40.2",
-    "aws-sdk": "2.1062.0"
+    "@aws-sdk/types": "3.47.1",
+    "@aws-sdk/client-s3": "3.48.0",
+    "@aws-sdk/client-sts": "3.48.0",
+    "@aws-sdk/client-iam": "3.48.0",
+    "@aws-sdk/client-cloudtrail": "3.48.0",
+    "@aws-sdk/client-ssm": "3.48.0",
+    "@aws-sdk/client-ec2": "3.48.0",
+    "@aws-sdk/client-secrets-manager": "3.48.0",
+    "@aws-sdk/client-cloudformation": "3.48.0"
   },
   "engines": {
     "node": ">=14.17.1"

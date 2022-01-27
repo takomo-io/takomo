@@ -13,16 +13,18 @@ import { createSecretsClient, SecretsClient } from "./secrets/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
 import { createStsClient, StsClient } from "./sts/client"
 
-const makeCredentialsRegionHash = ({
+const makeCredentialsRegionHash = async ({
   region,
-  credentials,
+  credentialProvider,
   identity,
-}: AwsClientProps): string => {
+}: AwsClientProps): Promise<string> => {
   if (identity) {
     return checksum([region, identity.accountId].join(":"))
   }
 
-  const { accessKeyId, secretAccessKey, sessionToken } = credentials
+  const { accessKeyId, secretAccessKey, sessionToken } =
+    await credentialProvider()
+
   return checksum(
     [region, accessKeyId, secretAccessKey, sessionToken].join(":"),
   )
@@ -31,14 +33,17 @@ const makeCredentialsRegionHash = ({
 export interface AwsClientProvider {
   readonly createCloudFormationClient: (
     props: AwsClientProps,
-  ) => CloudFormationClient
-
-  readonly createCloudTrailClient: (props: AwsClientProps) => CloudTrailClient
-  readonly createIamClient: (props: AwsClientProps) => IamClient
-  readonly createS3Client: (props: AwsClientProps) => S3Client
-  readonly createStsClient: (props: AwsClientProps) => StsClient
-  readonly createSsmClient: (props: AwsClientProps) => SsmClient
-  readonly createSecretsClient: (props: AwsClientProps) => SecretsClient
+  ) => Promise<CloudFormationClient>
+  readonly createCloudTrailClient: (
+    props: AwsClientProps,
+  ) => Promise<CloudTrailClient>
+  readonly createIamClient: (props: AwsClientProps) => Promise<IamClient>
+  readonly createS3Client: (props: AwsClientProps) => Promise<S3Client>
+  readonly createStsClient: (props: AwsClientProps) => Promise<StsClient>
+  readonly createSsmClient: (props: AwsClientProps) => Promise<SsmClient>
+  readonly createSecretsClient: (
+    props: AwsClientProps,
+  ) => Promise<SecretsClient>
 }
 
 /**
@@ -116,10 +121,11 @@ export const createAwsClientProvider = ({
   return {
     getRegions: (): ReadonlyArray<Region> => Array.from(regions),
     getApiCalls: (): ReadonlyArray<ApiCallProps> => apiCalls.slice(),
-    createCloudFormationClient: (
+    createCloudFormationClient: async (
       props: AwsClientProps,
-    ): CloudFormationClient => {
-      const controls = getConcurrencyControls(makeCredentialsRegionHash(props))
+    ): Promise<CloudFormationClient> => {
+      const hash = await makeCredentialsRegionHash(props)
+      const controls = getConcurrencyControls(hash)
 
       const client = createCloudFormationClient({
         listener,
@@ -134,32 +140,36 @@ export const createAwsClientProvider = ({
 
       return client
     },
-    createCloudTrailClient: (props: AwsClientProps): CloudTrailClient => {
+    createCloudTrailClient: async (
+      props: AwsClientProps,
+    ): Promise<CloudTrailClient> => {
       const client = createCloudTrailClient({ ...props, listener })
       regions.add(props.region)
       return client
     },
-    createIamClient: (props: AwsClientProps): IamClient => {
+    createIamClient: async (props: AwsClientProps): Promise<IamClient> => {
       const client = createIamClient({ ...props, listener })
       regions.add(props.region)
       return client
     },
-    createS3Client: (props: AwsClientProps): S3Client => {
+    createS3Client: async (props: AwsClientProps): Promise<S3Client> => {
       const client = createS3Client({ ...props, listener })
       regions.add(props.region)
       return client
     },
-    createStsClient: (props: AwsClientProps): StsClient => {
+    createStsClient: async (props: AwsClientProps): Promise<StsClient> => {
       const client = createStsClient({ ...props, listener })
       regions.add(props.region)
       return client
     },
-    createSsmClient: (props: AwsClientProps): SsmClient => {
+    createSsmClient: async (props: AwsClientProps): Promise<SsmClient> => {
       const client = createSsmClient({ ...props, listener })
       regions.add(props.region)
       return client
     },
-    createSecretsClient: (props: AwsClientProps): SecretsClient => {
+    createSecretsClient: async (
+      props: AwsClientProps,
+    ): Promise<SecretsClient> => {
       const client = createSecretsClient({ ...props, listener })
       regions.add(props.region)
       return client

@@ -1,11 +1,9 @@
+import { StackStatus } from "@takomo/aws-model"
 import { validateStackCredentialManagersWithAllowedAccountIds } from "@takomo/stacks-context"
 import { TakomoError } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
 import { StacksUndeployPlan, StackUndeployOperation } from "./plan"
 
-export const isStackReadyForUndeploy = (
-  stackStatus: CloudFormation.StackStatus,
-): boolean =>
+export const isStackReadyForUndeploy = (stackStatus: StackStatus): boolean =>
   [
     "ROLLBACK_COMPLETE",
     "CREATE_FAILED",

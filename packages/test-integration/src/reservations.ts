@@ -1,5 +1,5 @@
+import { Credentials } from "@aws-sdk/types"
 import { AccountId } from "@takomo/aws-model"
-import { Credentials } from "aws-sdk"
 
 export interface TestReservation {
   readonly credentials: Credentials
@@ -14,7 +14,7 @@ export interface SingleAccountTestReservation {
 export const withReservation = (
   testFn: (reservation: TestReservation) => Promise<any>,
 ): (() => Promise<any>) => {
-  const credentials = new Credentials(global.reservation.credentials)
+  const credentials = global.reservation.credentials
   const accountIds = global.reservation.accounts.map((a) => a.accountId!)
   return () => testFn({ credentials, accountIds })
 }
@@ -22,7 +22,7 @@ export const withReservation = (
 export const withSingleAccountReservation = (
   testFn: (reservation: SingleAccountTestReservation) => Promise<any>,
 ): (() => Promise<any>) => {
-  const credentials = new Credentials(global.reservation.credentials)
+  const credentials = global.reservation.credentials
   const accountIds = global.reservation.accounts.map((a) => a.accountId!)
   if (accountIds.length !== 1) {
     throw new Error(`Expected only one account but got ${accountIds.length}`)

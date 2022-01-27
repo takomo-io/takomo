@@ -1,8 +1,6 @@
+import { CredentialProvider } from "@aws-sdk/types"
 import { CallerIdentity, Region } from "@takomo/aws-model"
 import { randomInt, Scheduler, TkmLogger } from "@takomo/util"
-import { Credentials } from "aws-sdk"
-import { AWSError } from "aws-sdk/lib/error"
-import { Request } from "aws-sdk/lib/request"
 import { IPolicy } from "cockatiel"
 import https from "https"
 
@@ -62,28 +60,9 @@ export interface AwsClient<C> {
   readonly logger: TkmLogger
   readonly getClient: () => Promise<C>
   readonly withClient: <T>(fn: (client: C) => Promise<T>) => Promise<T>
-  readonly withClientPromise: <T, R>(
-    fn: (client: C) => Request<R, AWSError>,
-    onSuccess: (result: R) => T,
-    onError?: (e: any) => T,
-  ) => Promise<T>
-  // TODO: Delete this once not used
-  readonly withClientPromiseBulkhead: <T, R>(
-    bulkhead: IPolicy,
-    fn: (client: C) => Request<R, AWSError>,
-    onSuccess: (result: R) => T,
-    onError?: (e: any) => T,
-  ) => Promise<T>
   readonly withClientBulkhead: <T>(
     bulkhead: IPolicy,
     fn: (client: C) => Promise<T>,
-    onError?: (e: any) => T,
-  ) => Promise<T>
-  readonly withClientPromiseScheduler: <T, R>(
-    taskId: string,
-    scheduler: Scheduler,
-    fn: (client: C) => Request<R, AWSError>,
-    onSuccess: (result: R) => T,
     onError?: (e: any) => T,
   ) => Promise<T>
   readonly withClientScheduler: <T>(
@@ -111,7 +90,7 @@ export interface AwsClient<C> {
 }
 
 export interface AwsClientProps {
-  readonly credentials: Credentials
+  readonly credentialProvider: CredentialProvider
   readonly region: Region
   readonly logger: TkmLogger
   readonly id: string
@@ -166,7 +145,7 @@ export const buildApiCallProps = (
 }
 
 export const createClient = <C>({
-  credentials,
+  credentialProvider,
   logger,
   region,
   clientConstructor,
@@ -222,44 +201,13 @@ export const createClient = <C>({
   const client = clientConstructor({
     ...clientOptions,
     region,
-    credentials,
+    credentials: credentialProvider,
   })
 
   const getClient = async (): Promise<C> => client
 
   const withClient = <T>(fn: (client: C) => Promise<T>): Promise<T> =>
     getClient().then(fn)
-
-  const withClientPromise = <T, R>(
-    fn: (client: C) => Request<R, AWSError>,
-    onSuccess: (result: R) => T,
-    onError?: (e: any) => T,
-  ): Promise<T> =>
-    getClient()
-      .then((client) => fn(client).promise())
-      .then(onSuccess)
-      .catch((e) => {
-        if (onError) {
-          return onError(e)
-        }
-        throw e
-      })
-
-  const withClientPromiseBulkhead = <T, R>(
-    bulkhead: IPolicy,
-    fn: (client: C) => Request<R, AWSError>,
-    onSuccess: (result: R) => T,
-    onError?: (e: any) => T,
-  ): Promise<T> =>
-    getClient()
-      .then((client) => bulkhead.execute(() => fn(client).promise()))
-      .then(onSuccess)
-      .catch((e) => {
-        if (onError) {
-          return onError(e)
-        }
-        throw e
-      })
 
   const withClientBulkhead = <T>(
     bulkhead: IPolicy,
@@ -268,25 +216,6 @@ export const createClient = <C>({
   ): Promise<T> =>
     getClient()
       .then((client) => bulkhead.execute(() => fn(client)))
-      .catch((e) => {
-        if (onError) {
-          return onError(e)
-        }
-        throw e
-      })
-
-  const withClientPromiseScheduler = <T, R>(
-    taskId: string,
-    scheduler: Scheduler,
-    fn: (client: C) => Request<R, AWSError>,
-    onSuccess: (result: R) => T,
-    onError?: (e: any) => T,
-  ): Promise<T> =>
-    getClient()
-      .then((client) =>
-        scheduler.execute<R>({ taskId, fn: () => fn(client).promise() }),
-      )
-      .then(onSuccess)
       .catch((e) => {
         if (onError) {
           return onError(e)
@@ -409,9 +338,6 @@ export const createClient = <C>({
     getClient,
     withClient,
     withClientBulkhead,
-    withClientPromise,
-    withClientPromiseBulkhead,
-    withClientPromiseScheduler,
     withClientScheduler,
     pagedOperation,
     pagedOperationV2,
