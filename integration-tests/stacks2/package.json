@@ -25,8 +25,7 @@
     "@takomo/aws-model": "3.40.2",
     "@takomo/stacks-model": "3.40.2",
     "@takomo/test-integration": "3.40.2",
-    "@takomo/util": "3.40.2",
-    "@aws-sdk/types": "3.47.1"
+    "@takomo/util": "3.40.2"
   },
   "devDependencies": {
     "@takomo/cli": "3.40.2",
