@@ -1,5 +1,5 @@
 import { SecretsManager } from "@aws-sdk/client-secrets-manager"
-import { AwsClientProps, createClient } from "../common/client"
+import { AwsClientProps } from "../common/client"
 
 interface GetSecretValueProps {
   readonly secretId: string
@@ -18,9 +18,9 @@ export interface SecretsClient {
  * @hidden
  */
 export const createSecretsClient = (props: AwsClientProps): SecretsClient => {
-  const { withClient } = createClient({
-    ...props,
-    clientConstructor: (configuration) => new SecretsManager(configuration),
+  const client = new SecretsManager({
+    region: props.region,
+    credentials: props.credentialProvider,
   })
 
   const getSecretValue = ({
@@ -28,15 +28,13 @@ export const createSecretsClient = (props: AwsClientProps): SecretsClient => {
     versionStage,
     versionId,
   }: GetSecretValueProps): Promise<string> =>
-    withClient((c) =>
-      c
-        .getSecretValue({
-          SecretId: secretId,
-          VersionId: versionId,
-          VersionStage: versionStage,
-        })
-        .then((r) => r.SecretString!),
-    )
+    client
+      .getSecretValue({
+        SecretId: secretId,
+        VersionId: versionId,
+        VersionStage: versionStage,
+      })
+      .then((r) => r.SecretString!)
 
   return {
     getSecretValue,

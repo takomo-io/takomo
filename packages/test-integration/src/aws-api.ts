@@ -3,38 +3,38 @@ import { EC2 } from "@aws-sdk/client-ec2"
 import { SecretsManager } from "@aws-sdk/client-secrets-manager"
 import { SSM } from "@aws-sdk/client-ssm"
 import { STS } from "@aws-sdk/client-sts"
-import { Credentials } from "@aws-sdk/types"
+import { CredentialProvider, Credentials } from "@aws-sdk/types"
 import {
   AwsClientProvider,
   initDefaultCredentialManager,
 } from "@takomo/aws-clients"
-import { CallerIdentity, StackPolicyBody } from "@takomo/aws-model"
+import { CallerIdentity, Region, StackPolicyBody } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
 
-const ssmClient = (region: string, credentials: Credentials): SSM =>
+const ssmClient = (region: Region, credentials: CredentialProvider): SSM =>
   new SSM({ region, credentials })
 
 const secretsClient = (
-  region: string,
-  credentials: Credentials,
+  region: Region,
+  credentials: CredentialProvider,
 ): SecretsManager => new SecretsManager({ region, credentials })
 
-const ec2Client = (region: string, credentials: Credentials): EC2 =>
+const ec2Client = (region: Region, credentials: CredentialProvider): EC2 =>
   new EC2({ region, credentials })
 
-const stsClient = (credentials: Credentials): STS =>
+const stsClient = (credentials: CredentialProvider): STS =>
   new STS({ region: "us-east-1", credentials })
 
 const cloudFormationClient = (
-  region: string,
-  credentials: Credentials,
+  region: Region,
+  credentials: CredentialProvider,
 ): CloudFormation => new CloudFormation({ region, credentials })
 
 export type DescribeStackArgs = {
   credentials: Credentials
   iamRoleArn?: string
-  region: string
+  region: Region
   stackName: string
 }
 
@@ -54,7 +54,7 @@ const describeStack = async ({
     ? await cp.createCredentialManagerForRole(iamRoleArn)
     : cp
 
-  return cloudFormationClient(region, await stackCp.getCredentials())
+  return cloudFormationClient(region, stackCp.getCredentialProvider())
     .describeStacks({ StackName: stackName })
     .then((res) => res.Stacks![0])
 }
@@ -75,7 +75,7 @@ const getStackPolicy = async ({
     ? await cp.createCredentialManagerForRole(iamRoleArn)
     : cp
 
-  return cloudFormationClient(region, await stackCp.getCredentials())
+  return cloudFormationClient(region, stackCp.getCredentialProvider())
     .getStackPolicy({ StackName: stackName })
     .then((r) => r.StackPolicyBody!)
 }
@@ -145,7 +145,7 @@ const putParameter = async ({
     ? await cp.createCredentialManagerForRole(iamRoleArn)
     : cp
 
-  return ssmClient(region, await ssmCp.getCredentials())
+  return ssmClient(region, await ssmCp.getCredentialProvider())
     .putParameter({
       Name: name,
       Type: encrypted ? "SecureString" : "String",
@@ -173,7 +173,7 @@ const createSecret = async (
     ? await cp.createCredentialManagerForRole(iamRoleArn)
     : cp
 
-  return secretsClient(region, await secretCp.getCredentials())
+  return secretsClient(region, await secretCp.getCredentialProvider())
     .createSecret({
       Name: name,
       SecretString: value,
@@ -202,7 +202,7 @@ const putSecret = async (args: PutSecretArgs): Promise<PutSecretResponse> => {
     ? await cp.createCredentialManagerForRole(iamRoleArn)
     : cp
 
-  return secretsClient(region, await secretCp.getCredentials())
+  return secretsClient(region, await secretCp.getCredentialProvider())
     .putSecretValue({
       SecretId: secretId,
       SecretString: value,
@@ -234,7 +234,7 @@ const tagVpc = async ({
     ? await cp.createCredentialManagerForRole(iamRoleArn)
     : cp
 
-  const client = ec2Client(region, await ec2Cp.getCredentials())
+  const client = ec2Client(region, await ec2Cp.getCredentialProvider())
 
   return client
     .describeVpcs({})
@@ -254,7 +254,7 @@ const tagVpc = async ({
 const getCallerIdentity = async (
   credentials: Credentials,
 ): Promise<CallerIdentity> =>
-  stsClient(credentials)
+  stsClient(async () => credentials)
     .getCallerIdentity({})
     .then((r) => ({ accountId: r.Account!, arn: r.Arn!, userId: r.UserId! }))
 

@@ -7,7 +7,6 @@ import {
 } from "./cloudformation/client"
 import { CloudTrailClient, createCloudTrailClient } from "./cloudtrail/client"
 import { ApiCallProps, AwsClientProps } from "./common/client"
-import { createIamClient, IamClient } from "./iam/client"
 import { createS3Client, S3Client } from "./s3/client"
 import { createSecretsClient, SecretsClient } from "./secrets/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
@@ -37,7 +36,6 @@ export interface AwsClientProvider {
   readonly createCloudTrailClient: (
     props: AwsClientProps,
   ) => Promise<CloudTrailClient>
-  readonly createIamClient: (props: AwsClientProps) => Promise<IamClient>
   readonly createS3Client: (props: AwsClientProps) => Promise<S3Client>
   readonly createStsClient: (props: AwsClientProps) => Promise<StsClient>
   readonly createSsmClient: (props: AwsClientProps) => Promise<SsmClient>
@@ -144,11 +142,6 @@ export const createAwsClientProvider = ({
       props: AwsClientProps,
     ): Promise<CloudTrailClient> => {
       const client = createCloudTrailClient({ ...props, listener })
-      regions.add(props.region)
-      return client
-    },
-    createIamClient: async (props: AwsClientProps): Promise<IamClient> => {
-      const client = createIamClient({ ...props, listener })
       regions.add(props.region)
       return client
     },

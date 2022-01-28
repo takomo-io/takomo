@@ -32,7 +32,13 @@ import { arrayToMap, Scheduler, sleep, uuid } from "@takomo/util"
 import { IPolicy } from "cockatiel"
 import takeRightWhile from "lodash.takerightwhile"
 import R from "ramda"
-import { AwsClientProps, createClient } from "../common/client"
+import {
+  AwsClientProps,
+  pagedOperationBulkhead,
+  pagedOperationV2,
+  withClientBulkhead,
+  withClientScheduler,
+} from "../common/client"
 import {
   convertChangeSet,
   convertStack,
@@ -167,16 +173,9 @@ interface CloudFormationClientProps extends AwsClientProps {
 export const createCloudFormationClient = (
   props: CloudFormationClientProps,
 ): CloudFormationClient => {
-  const {
-    withClientBulkhead,
-    withClientScheduler,
-    pagedOperationBulkhead,
-    pagedOperationV2,
-    withClient,
-    getClient,
-  } = createClient({
-    ...props,
-    clientConstructor: (config) => new CloudFormation(config),
+  const client = new CloudFormation({
+    region: props.region,
+    credentials: props.credentialProvider,
   })
 
   const {
@@ -192,27 +191,21 @@ export const createCloudFormationClient = (
   const getStackPolicy = (
     stackName: string,
   ): Promise<StackPolicyBody | undefined> =>
-    withClient((c) =>
-      c
-        .getStackPolicy({ StackName: stackName })
-        .then((r) => r.StackPolicyBody!),
-    )
+    client
+      .getStackPolicy({ StackName: stackName })
+      .then((r) => r.StackPolicyBody!)
 
   const detectDrift = (stackName: StackName): Promise<StackDriftDetectionId> =>
-    withClient((c) =>
-      c
-        .detectStackDrift({ StackName: stackName })
-        .then((r) => r.StackDriftDetectionId!),
-    )
+    client
+      .detectStackDrift({ StackName: stackName })
+      .then((r) => r.StackDriftDetectionId!)
 
   const describeStackDriftDetectionStatus = (
     id: StackDriftDetectionId,
   ): Promise<StackDriftDetectionStatusOutput> =>
-    withClient((c) =>
-      c
-        .describeStackDriftDetectionStatus({ StackDriftDetectionId: id })
-        .then(convertStackDriftDetectionStatus),
-    )
+    client
+      .describeStackDriftDetectionStatus({ StackDriftDetectionId: id })
+      .then(convertStackDriftDetectionStatus)
 
   const waitDriftDetectionToComplete = async (
     id: StackDriftDetectionId,
@@ -229,48 +222,44 @@ export const createCloudFormationClient = (
   }
 
   const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
-    withClientBulkhead(validateTemplateBulkhead, (c) =>
+    withClientBulkhead(client, validateTemplateBulkhead, (c) =>
       c.validateTemplate(input).then(() => true),
     )
 
   const describeStack = (
     stackName: string,
   ): Promise<CloudFormationStack | undefined> =>
-    withClient((c) =>
-      c
-        .describeStacks({ StackName: stackName })
-        .then(convertStack)
-        .catch((e) => {
-          if (e.code === "ValidationError") {
-            if (e.message === `Stack with id ${stackName} does not exist`) {
-              return undefined
-            }
+    client
+      .describeStacks({ StackName: stackName })
+      .then(convertStack)
+      .catch((e) => {
+        if (e.code === "ValidationError") {
+          if (e.message === `Stack with id ${stackName} does not exist`) {
+            return undefined
           }
+        }
 
-          throw e
-        }),
-    )
+        throw e
+      })
 
   const listNotDeletedStacks = (
     stackNames?: ReadonlyArray<StackName>,
   ): Promise<Map<StackName, DetailedCloudFormationStackSummary>> => {
     const collectedNames = new Set<StackName>()
-    return withClient((c) =>
-      pagedOperationV2({
-        operation: (params) => c.listStacks(params),
-        params: { StackStatusFilter: ACTIVE_STACK_STATUSES.slice() },
-        extractor: convertStackSummaries,
-        filter: (s) => !stackNames || stackNames.includes(s.name),
-        onPage: (items) => {
-          if (!stackNames) {
-            return false
-          }
+    return pagedOperationV2({
+      operation: (params) => client.listStacks(params),
+      params: { StackStatusFilter: ACTIVE_STACK_STATUSES.slice() },
+      extractor: convertStackSummaries,
+      filter: (s) => !stackNames || stackNames.includes(s.name),
+      onPage: (items) => {
+        if (!stackNames) {
+          return false
+        }
 
-          items.forEach((item) => collectedNames.add(item.name))
-          return stackNames.every((s) => collectedNames.has(s))
-        },
-      }),
-    ).then((stacks) => new Map(arrayToMap(stacks, (s) => s.name)))
+        items.forEach((item) => collectedNames.add(item.name))
+        return stackNames.every((s) => collectedNames.has(s))
+      },
+    }).then((stacks) => new Map(arrayToMap(stacks, (s) => s.name)))
   }
 
   const getNotDeletedStack = async (
@@ -357,24 +346,22 @@ export const createCloudFormationClient = (
   const getTemplateSummary = (
     input: GetTemplateSummaryInput,
   ): Promise<TemplateSummary> =>
-    withClientScheduler(uuid(), getTemplateSummaryScheduler, (c) =>
+    withClientScheduler(client, uuid(), getTemplateSummaryScheduler, (c) =>
       c.getTemplateSummary(input).then(convertTemplateSummary),
     )
 
   const getCurrentTemplate = (stackName: string): Promise<string> =>
-    withClient((c) =>
-      c
-        .getTemplate({ StackName: stackName, TemplateStage: "Original" })
-        .then((res) => res.TemplateBody!),
-    )
+    client
+      .getTemplate({ StackName: stackName, TemplateStage: "Original" })
+      .then((res) => res.TemplateBody!)
 
   const initiateStackDeletion = (input: DeleteStackInput): Promise<boolean> =>
-    withClient((c) => c.deleteStack(input).then(() => true))
+    client.deleteStack(input).then(() => true)
 
   const createChangeSet = (
     params: CreateChangeSetInput,
   ): Promise<ChangeSetId> =>
-    withClient((c) => c.createChangeSet(params).then((res) => res.Id!))
+    client.createChangeSet(params).then((res) => res.Id!)
 
   const deleteChangeSet = (
     stackName: string,
@@ -385,7 +372,7 @@ export const createCloudFormationClient = (
       ChangeSetName: changeSetName,
     }
 
-    return withClient((c) => c.deleteChangeSet(params).then(() => true))
+    return client.deleteChangeSet(params).then(() => true)
   }
 
   const describeChangeSet = (
@@ -397,7 +384,7 @@ export const createCloudFormationClient = (
       StackName: stackName,
     }
 
-    return withClient((c) => c.describeChangeSet(params).then(convertChangeSet))
+    return client.describeChangeSet(params).then(convertChangeSet)
   }
 
   const waitUntilChangeSetIsReady = async (
@@ -426,13 +413,11 @@ export const createCloudFormationClient = (
   const describeStackEvents = (
     stackName: string,
   ): Promise<ReadonlyArray<StackEvent>> =>
-    withClient((c) =>
-      pagedOperationBulkhead(
-        describeEventsBulkhead,
-        (params) => c.describeStackEvents(params),
-        { StackName: stackName },
-        convertStackEvents,
-      ),
+    pagedOperationBulkhead(
+      describeEventsBulkhead,
+      (params) => client.describeStackEvents(params),
+      { StackName: stackName },
+      convertStackEvents,
     )
 
   const cancelStackUpdate = (stackName: string): Promise<string> => {
@@ -441,9 +426,9 @@ export const createCloudFormationClient = (
       ClientRequestToken: uuid(),
     }
 
-    return withClient((c) =>
-      c.cancelUpdateStack(params).then(() => params.ClientRequestToken),
-    )
+    return client
+      .cancelUpdateStack(params)
+      .then(() => params.ClientRequestToken)
   }
 
   const continueUpdateRollback = (
@@ -454,43 +439,39 @@ export const createCloudFormationClient = (
       ClientRequestToken: uuid(),
     }
 
-    return withClient((c) =>
-      c.continueUpdateRollback(params).then(() => params.ClientRequestToken),
-    )
+    return client
+      .continueUpdateRollback(params)
+      .then(() => params.ClientRequestToken)
   }
 
   const createStack = (params: CreateStackInput): Promise<StackId> =>
-    withClient((c) => c.createStack(params).then((res) => res.StackId!))
+    client.createStack(params).then((res) => res.StackId!)
 
   const updateStack = (params: UpdateStackInput): Promise<boolean> =>
-    withClient((c) =>
-      c
-        .updateStack(params)
-        .then(() => true)
-        .catch((e) => {
-          if (
-            e.code === "ValidationError" &&
-            e.message === "No updates are to be performed."
-          ) {
-            return false
-          }
+    client
+      .updateStack(params)
+      .then(() => true)
+      .catch((e) => {
+        if (
+          e.Code === "ValidationError" &&
+          e.message === "No updates are to be performed."
+        ) {
+          return false
+        }
 
-          throw e
-        }),
-    )
+        throw e
+      })
 
   const updateTerminationProtection = (
     stackName: string,
     enable: boolean,
   ): Promise<boolean> =>
-    withClient((c) =>
-      c
-        .updateTerminationProtection({
-          EnableTerminationProtection: enable,
-          StackName: stackName,
-        })
-        .then(() => true),
-    )
+    client
+      .updateTerminationProtection({
+        EnableTerminationProtection: enable,
+        StackName: stackName,
+      })
+      .then(() => true)
 
   const waitStackDeployToComplete = async (
     props: WaitStackDeployToCompleteProps,
@@ -658,6 +639,8 @@ export const createCloudFormationClient = (
     })
   }
 
+  const getNativeClient = async (): Promise<CloudFormation> => client
+
   return {
     continueUpdateRollback,
     validateTemplate,
@@ -685,7 +668,7 @@ export const createCloudFormationClient = (
     describeStackDriftDetectionStatus,
     waitDriftDetectionToComplete,
     waitStackRollbackToComplete,
-    getNativeClient: getClient,
+    getNativeClient,
   }
 }
 

@@ -1,4 +1,5 @@
 import { Credentials } from "@aws-sdk/types"
+import { CredentialManager } from "@takomo/aws-clients"
 import { StackName } from "@takomo/aws-model"
 import { InternalStack, StackPath } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
@@ -38,12 +39,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
     stackGroupPath: "/",
     getCloudFormationClient: jest.fn(),
     toProps: jest.fn(),
-    credentialManager: {
-      createCredentialManagerForRole: jest.fn(),
-      getCallerIdentity: jest.fn(),
-      getCredentials: jest.fn(),
-      name: "",
-    },
+    credentialManager: mock<CredentialManager>(),
     getCurrentCloudFormationStack: jest.fn(),
     credentials: mock<Credentials>(),
   }

@@ -79,6 +79,9 @@ export const createCredentialManager = ({
       logger,
       credentialProvider: fromTemporaryCredentials({
         masterCredentials: credentialProvider,
+        clientConfig: {
+          region: "us-east-1",
+        },
         params: {
           RoleArn: iamRoleArn,
           DurationSeconds: 3600,
