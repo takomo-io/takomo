@@ -233,7 +233,7 @@ export const createCloudFormationClient = (
       .describeStacks({ StackName: stackName })
       .then(convertStack)
       .catch((e) => {
-        if (e.code === "ValidationError") {
+        if (e.Code === "ValidationError") {
           if (e.message === `Stack with id ${stackName} does not exist`) {
             return undefined
           }
