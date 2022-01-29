@@ -5,6 +5,7 @@ import { CallerIdentity, CredentialsError, IamRoleArn } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
 import R from "ramda"
 import { AwsClientProvider } from "../aws-client-provider"
+import { customRetryStrategy } from "./retry"
 
 /**
  * Provides AWS credentials that can be used to invoke AWS APIs.
@@ -81,6 +82,7 @@ export const createCredentialManager = ({
         masterCredentials: credentialProvider,
         clientConfig: {
           region: "us-east-1",
+          retryStrategy: customRetryStrategy(),
         },
         params: {
           RoleArn: iamRoleArn,

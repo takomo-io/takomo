@@ -1,6 +1,7 @@
 import { CloudTrail } from "@aws-sdk/client-cloudtrail"
 import { CloudTrailEvent } from "@takomo/aws-model"
 import { AwsClientProps, pagedOperation } from "../common/client"
+import { customRetryStrategy } from "../common/retry"
 import { convertCloudTrailEvents } from "./convert"
 
 /**
@@ -22,6 +23,7 @@ export const createCloudTrailClient = (
   const client = new CloudTrail({
     region: props.region,
     credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
   })
 
   const lookupEvents = (

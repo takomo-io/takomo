@@ -1,5 +1,6 @@
 import { SSM } from "@aws-sdk/client-ssm"
 import { AwsClientProps } from "../common/client"
+import { customRetryStrategy } from "../common/retry"
 
 /**
  * @hidden
@@ -15,6 +16,7 @@ export const createSsmClient = (props: AwsClientProps): SsmClient => {
   const client = new SSM({
     region: props.region,
     credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
   })
 
   const getParameterValue = (name: string): Promise<string> =>

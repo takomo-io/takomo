@@ -1,6 +1,7 @@
 import { STS } from "@aws-sdk/client-sts"
 import { CallerIdentity } from "@takomo/aws-model"
 import { AwsClientProps } from "../common/client"
+import { customRetryStrategy } from "../common/retry"
 
 /**
  * @hidden
@@ -16,6 +17,7 @@ export const createStsClient = (props: AwsClientProps): StsClient => {
   const client = new STS({
     region: props.region,
     credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
   })
 
   const getCallerIdentity = (): Promise<CallerIdentity> =>

@@ -29,6 +29,7 @@ const deploy = (
 const undeploy = (autoConfirmEnabled: boolean): StacksOperationOutputMatcher =>
   executeUndeployStacksCommand({
     autoConfirmEnabled,
+    logLevel: "trace",
     projectDir: "configs/sam",
     var: [`timeout=1`],
     answers: { confirmUndeploy: "CONTINUE", chooseCommandPath: "/" },
@@ -37,7 +38,7 @@ const undeploy = (autoConfirmEnabled: boolean): StacksOperationOutputMatcher =>
 const stackName = "sam"
 const stackPath = "/sam.yml/eu-north-1"
 
-describe("SAM", () => {
+describe.skip("SAM", () => {
   test("Deploy", () =>
     deploy(1, true)
       .expectCommandToSucceed()

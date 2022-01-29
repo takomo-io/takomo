@@ -39,6 +39,7 @@ import {
   withClientBulkhead,
   withClientScheduler,
 } from "../common/client"
+import { customRetryStrategy } from "../common/retry"
 import {
   convertChangeSet,
   convertStack,
@@ -173,11 +174,6 @@ interface CloudFormationClientProps extends AwsClientProps {
 export const createCloudFormationClient = (
   props: CloudFormationClientProps,
 ): CloudFormationClient => {
-  const client = new CloudFormation({
-    region: props.region,
-    credentials: props.credentialProvider,
-  })
-
   const {
     logger,
     describeEventsBulkhead,
@@ -187,6 +183,26 @@ export const createCloudFormationClient = (
     waitStackDeleteToCompletePollInterval,
     waitStackRollbackToCompletePollInterval,
   } = props
+
+  const client = new CloudFormation({
+    region: props.region,
+    credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
+    logger: {
+      warn: (content: object) => {
+        logger.warn(`${content}`)
+      },
+      info: (content: object) => {
+        logger.info(`${content}`)
+      },
+      error: (content: object) => {
+        logger.error(`${content}`)
+      },
+      debug: (content: object) => {
+        logger.debug(`${content}`)
+      },
+    },
+  })
 
   const getStackPolicy = (
     stackName: string,

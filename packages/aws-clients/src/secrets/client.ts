@@ -1,5 +1,6 @@
 import { SecretsManager } from "@aws-sdk/client-secrets-manager"
 import { AwsClientProps } from "../common/client"
+import { customRetryStrategy } from "../common/retry"
 
 interface GetSecretValueProps {
   readonly secretId: string
@@ -21,6 +22,7 @@ export const createSecretsClient = (props: AwsClientProps): SecretsClient => {
   const client = new SecretsManager({
     region: props.region,
     credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
   })
 
   const getSecretValue = ({

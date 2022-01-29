@@ -1,5 +1,6 @@
 import { S3 } from "@aws-sdk/client-s3"
 import { AwsClientProps } from "../common/client"
+import { customRetryStrategy } from "../common/retry"
 
 /**
  * @hidden
@@ -19,6 +20,7 @@ export const createS3Client = (props: AwsClientProps): S3Client => {
   const client = new S3({
     region: props.region,
     credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
   })
 
   const putObject = (

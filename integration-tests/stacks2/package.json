@@ -19,7 +19,8 @@
     "clean:deps": "rm -rf node_modules",
     "clean:all": "rm -rf node_modules dist && rm -f yarn.lock",
     "depcheck": "depcheck --ignores=@babel/core,@babel/preset-env,@babel/preset-typescript,babel-jest,@types/jest,typescript,@takomo/test-custom-resolver-name,@takomo/test-custom-resolver-code,@takomo/test-custom-helper-uppercase,@takomo/test-custom-helper-lowercase",
-    "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose"
+    "integration-test2": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose",
+    "integration-test": "jest test  --verbose --testNamePattern=^SAM --ci"
   },
   "dependencies": {
     "@takomo/aws-model": "3.40.2",
