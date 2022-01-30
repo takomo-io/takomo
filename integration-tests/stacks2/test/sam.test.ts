@@ -38,7 +38,7 @@ const undeploy = (autoConfirmEnabled: boolean): StacksOperationOutputMatcher =>
 const stackName = "sam"
 const stackPath = "/sam.yml/eu-north-1"
 
-describe.skip("SAM", () => {
+describe("SAM", () => {
   test("Deploy", () =>
     deploy(1, true)
       .expectCommandToSucceed()

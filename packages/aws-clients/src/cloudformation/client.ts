@@ -184,22 +184,24 @@ export const createCloudFormationClient = (
     waitStackRollbackToCompletePollInterval,
   } = props
 
+  const childLogger = logger.childLogger("aws-sdk")
+
   const client = new CloudFormation({
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
     logger: {
       warn: (content: object) => {
-        logger.warn(`${content}`)
+        childLogger.warn(JSON.stringify(content))
       },
       info: (content: object) => {
-        logger.info(`${content}`)
+        childLogger.info(JSON.stringify(content))
       },
       error: (content: object) => {
-        logger.error(`${content}`)
+        childLogger.error(JSON.stringify(content))
       },
       debug: (content: object) => {
-        logger.debug(`${content}`)
+        childLogger.debug(JSON.stringify(content))
       },
     },
   })
