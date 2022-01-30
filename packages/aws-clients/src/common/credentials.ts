@@ -5,6 +5,7 @@ import { CallerIdentity, CredentialsError, IamRoleArn } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
 import R from "ramda"
 import { AwsClientProvider } from "../aws-client-provider"
+import { customLogger } from "./logger"
 import { customRetryStrategy } from "./retry"
 
 /**
@@ -83,6 +84,7 @@ export const createCredentialManager = ({
         clientConfig: {
           region: "us-east-1",
           retryStrategy: customRetryStrategy(),
+          logger: customLogger(logger),
         },
         params: {
           RoleArn: iamRoleArn,

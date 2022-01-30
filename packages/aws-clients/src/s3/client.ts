@@ -1,5 +1,6 @@
 import { S3 } from "@aws-sdk/client-s3"
-import { AwsClientProps } from "../common/client"
+import { InternalAwsClientProps } from "../common/client"
+import { customLogger } from "../common/logger"
 import { customRetryStrategy } from "../common/retry"
 
 /**
@@ -16,12 +17,15 @@ export interface S3Client {
 /**
  * @hidden
  */
-export const createS3Client = (props: AwsClientProps): S3Client => {
+export const createS3Client = (props: InternalAwsClientProps): S3Client => {
   const client = new S3({
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
+    logger: customLogger(props.logger),
   })
+
+  client.middlewareStack.use(props.middleware)
 
   const putObject = (
     bucketName: string,

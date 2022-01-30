@@ -7,6 +7,7 @@ import {
 } from "./cloudformation/client"
 import { CloudTrailClient, createCloudTrailClient } from "./cloudtrail/client"
 import { ApiCallProps, AwsClientProps } from "./common/client"
+import { createApiRequestListenerPlugin } from "./common/request-listener"
 import { createS3Client, S3Client } from "./s3/client"
 import { createSecretsClient, SecretsClient } from "./secrets/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
@@ -126,12 +127,12 @@ export const createAwsClientProvider = ({
       const controls = getConcurrencyControls(hash)
 
       const client = createCloudFormationClient({
-        listener,
         ...props,
         ...controls,
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
         waitStackRollbackToCompletePollInterval: 2000,
+        middleware: createApiRequestListenerPlugin(props.id, listener),
       })
 
       regions.add(props.region)
@@ -141,29 +142,44 @@ export const createAwsClientProvider = ({
     createCloudTrailClient: async (
       props: AwsClientProps,
     ): Promise<CloudTrailClient> => {
-      const client = createCloudTrailClient({ ...props, listener })
+      const client = createCloudTrailClient({
+        ...props,
+        middleware: createApiRequestListenerPlugin(props.id, listener),
+      })
       regions.add(props.region)
       return client
     },
     createS3Client: async (props: AwsClientProps): Promise<S3Client> => {
-      const client = createS3Client({ ...props, listener })
+      const client = createS3Client({
+        ...props,
+        middleware: createApiRequestListenerPlugin(props.id, listener),
+      })
       regions.add(props.region)
       return client
     },
     createStsClient: async (props: AwsClientProps): Promise<StsClient> => {
-      const client = createStsClient({ ...props, listener })
+      const client = createStsClient({
+        ...props,
+        middleware: createApiRequestListenerPlugin(props.id, listener),
+      })
       regions.add(props.region)
       return client
     },
     createSsmClient: async (props: AwsClientProps): Promise<SsmClient> => {
-      const client = createSsmClient({ ...props, listener })
+      const client = createSsmClient({
+        ...props,
+        middleware: createApiRequestListenerPlugin(props.id, listener),
+      })
       regions.add(props.region)
       return client
     },
     createSecretsClient: async (
       props: AwsClientProps,
     ): Promise<SecretsClient> => {
-      const client = createSecretsClient({ ...props, listener })
+      const client = createSecretsClient({
+        ...props,
+        middleware: createApiRequestListenerPlugin(props.id, listener),
+      })
       regions.add(props.region)
       return client
     },

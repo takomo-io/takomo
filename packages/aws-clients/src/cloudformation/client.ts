@@ -33,12 +33,13 @@ import { IPolicy } from "cockatiel"
 import takeRightWhile from "lodash.takerightwhile"
 import R from "ramda"
 import {
-  AwsClientProps,
+  InternalAwsClientProps,
   pagedOperationBulkhead,
   pagedOperationV2,
   withClientBulkhead,
   withClientScheduler,
 } from "../common/client"
+import { customLogger } from "../common/logger"
 import { customRetryStrategy } from "../common/retry"
 import {
   convertChangeSet,
@@ -159,7 +160,7 @@ const findTerminalEvent = (
       isTerminalResourceStatus(resourceStatus),
   )
 
-interface CloudFormationClientProps extends AwsClientProps {
+interface CloudFormationClientProps extends InternalAwsClientProps {
   readonly describeEventsBulkhead: IPolicy
   readonly getTemplateSummaryScheduler: Scheduler
   readonly validateTemplateBulkhead: IPolicy
@@ -176,6 +177,7 @@ export const createCloudFormationClient = (
 ): CloudFormationClient => {
   const {
     logger,
+    middleware,
     describeEventsBulkhead,
     getTemplateSummaryScheduler,
     validateTemplateBulkhead,
@@ -184,27 +186,14 @@ export const createCloudFormationClient = (
     waitStackRollbackToCompletePollInterval,
   } = props
 
-  const childLogger = logger.childLogger("aws-sdk")
-
   const client = new CloudFormation({
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
-    logger: {
-      warn: (content: object) => {
-        childLogger.warn(JSON.stringify(content))
-      },
-      info: (content: object) => {
-        childLogger.info(JSON.stringify(content))
-      },
-      error: (content: object) => {
-        childLogger.error(JSON.stringify(content))
-      },
-      debug: (content: object) => {
-        childLogger.debug(JSON.stringify(content))
-      },
-    },
+    logger: customLogger(logger),
   })
+
+  client.middlewareStack.use(middleware)
 
   const getStackPolicy = (
     stackName: string,

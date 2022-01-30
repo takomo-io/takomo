@@ -1,5 +1,6 @@
 import { SecretsManager } from "@aws-sdk/client-secrets-manager"
-import { AwsClientProps } from "../common/client"
+import { InternalAwsClientProps } from "../common/client"
+import { customLogger } from "../common/logger"
 import { customRetryStrategy } from "../common/retry"
 
 interface GetSecretValueProps {
@@ -18,12 +19,17 @@ export interface SecretsClient {
 /**
  * @hidden
  */
-export const createSecretsClient = (props: AwsClientProps): SecretsClient => {
+export const createSecretsClient = (
+  props: InternalAwsClientProps,
+): SecretsClient => {
   const client = new SecretsManager({
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
+    logger: customLogger(props.logger),
   })
+
+  client.middlewareStack.use(props.middleware)
 
   const getSecretValue = ({
     secretId,

@@ -1,5 +1,6 @@
 import { SSM } from "@aws-sdk/client-ssm"
-import { AwsClientProps } from "../common/client"
+import { InternalAwsClientProps } from "../common/client"
+import { customLogger } from "../common/logger"
 import { customRetryStrategy } from "../common/retry"
 
 /**
@@ -12,12 +13,15 @@ export interface SsmClient {
 /**
  * @hidden
  */
-export const createSsmClient = (props: AwsClientProps): SsmClient => {
+export const createSsmClient = (props: InternalAwsClientProps): SsmClient => {
   const client = new SSM({
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
+    logger: customLogger(props.logger),
   })
+
+  client.middlewareStack.use(props.middleware)
 
   const getParameterValue = (name: string): Promise<string> =>
     client
