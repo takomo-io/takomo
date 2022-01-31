@@ -29,7 +29,6 @@ const deploy = (
 const undeploy = (autoConfirmEnabled: boolean): StacksOperationOutputMatcher =>
   executeUndeployStacksCommand({
     autoConfirmEnabled,
-    logLevel: "trace",
     projectDir: "configs/sam",
     var: [`timeout=1`],
     answers: { confirmUndeploy: "CONTINUE", chooseCommandPath: "/" },
