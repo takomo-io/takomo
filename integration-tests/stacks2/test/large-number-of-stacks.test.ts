@@ -17,7 +17,7 @@ const createStacks = (count: number) => {
   return list
 }
 
-const stacks = createStacks(120)
+const stacks = createStacks(60)
 
 describe("Large number of stacks", () => {
   test("First deploy", () =>

@@ -1,3 +1,4 @@
+import { getDefaultRoleAssumer } from "@aws-sdk/client-sts"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { fromTemporaryCredentials } from "@aws-sdk/credential-providers"
 import { CredentialProvider, Credentials } from "@aws-sdk/types"
@@ -128,50 +129,33 @@ export const createCredentialManager = ({
 }
 
 const initDefaultCredentialProviderChain = async (
-  mfaTokenCodeProvider: (mfaSerial: string) => Promise<string>,
+  logger: TkmLogger,
+  mfaCodeProvider: (mfaSerial: string) => Promise<string>,
   credentials?: Credentials,
 ): Promise<CredentialProvider> => {
-  // const tokenCodeFn = (
-  //   mfaSerial: string,
-  //   callback: (err?: Error, token?: string) => void,
-  // ) => {
-  //   mfaTokenCodeProvider(mfaSerial)
-  //     .then((token) => callback(undefined, token))
-  //     .catch(callback)
-  // }
-
   if (credentials) {
     return async () => credentials
   }
 
-  return defaultProvider()
-  // const providers = [
-  //   () => new EnvironmentCredentials("AWS"),
-  //   () => new EnvironmentCredentials("AMAZON"),
-  //   () => new ECSCredentials(),
-  //   () => new SharedIniFileCredentials({ tokenCodeFn }),
-  //   () => new ProcessCredentials(),
-  // ]
-  //
-  // if (await isAwsMetaEndpointAvailable()) {
-  //   providers.push(() => new EC2MetadataCredentials())
-  // }
-  //
-  // return credentials
-  //   ? new CredentialProviderChain([() => credentials, ...providers])
-  //   : new CredentialProviderChain(providers)
+  return defaultProvider({
+    mfaCodeProvider,
+    roleAssumer: getDefaultRoleAssumer({
+      region: "us-east-1",
+      logger: customLogger(logger),
+    }),
+  })
 }
 
 /**
  * @hidden
  */
 export const initDefaultCredentialManager = async (
-  mfaTokenCodeProvider: (mfaSerial: string) => Promise<string>,
+  mfaCodeProvider: (mfaSerial: string) => Promise<string>,
   logger: TkmLogger,
   awsClientProvider: AwsClientProvider,
   credentials?: Credentials,
 ): Promise<InternalCredentialManager> =>
-  initDefaultCredentialProviderChain(mfaTokenCodeProvider, credentials).then(
+  initDefaultCredentialProviderChain(logger, mfaCodeProvider, credentials).then(
     (credentialProvider) =>
       createCredentialManager({
         name: "default",
