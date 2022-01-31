@@ -11,8 +11,6 @@ import {
   createUndeployTargetsIO,
   UserActions,
 } from "@takomo/cli-io"
-import { Choice } from "@takomo/cli-io/src/cli-io"
-import { QuestionOptions } from "@takomo/cli-io/src/user-actions"
 import {
   DeploymentTargetsOperationIO,
   DeploymentTargetsRunIO,
@@ -29,6 +27,7 @@ import {
 } from "@takomo/stacks-commands"
 import { CommandPath, ROOT_STACK_GROUP_PATH } from "@takomo/stacks-model"
 import { TkmLogger } from "@takomo/util"
+import { anyArray, anyBoolean, mock } from "jest-mock-extended"
 
 export interface TestDeployStacksIOAnswers {
   confirmDeploy: ConfirmDeployAnswer
@@ -44,78 +43,21 @@ export const createTestDeployStacksIO = (
     chooseCommandPath: ROOT_STACK_GROUP_PATH,
   },
 ): DeployStacksIO => {
-  const actions: UserActions = {
-    confirm: async (message: string, marginTop: boolean): Promise<boolean> => {
-      logger.info(`confirm invoked with message: ${message}`)
-      throw new Error("Not implemented")
-    },
-    question: async (
-      message: string,
-      marginTop: boolean,
-      options: QuestionOptions,
-    ): Promise<string> => {
-      logger.info(
-        `question invoked with message: ${message}, options: ${JSON.stringify(
-          options,
-        )}`,
-      )
-      throw new Error("Not implemented")
-    },
-    choose: async <T>(
-      message: string,
-      choices: Choice<T>[],
-      marginTop: boolean,
-    ): Promise<T> => {
-      logger.info(
-        `choose invoked with message: ${message}, choices: ${JSON.stringify(
-          choices,
-        )}`,
-      )
-      if (message === "How do you want to continue?") {
-        logger.info(`Return answer: ${answers.confirmDeploy}`)
-        return answers.confirmDeploy as unknown as T
-      }
-      if (message === "How do you want to continue the deployment?") {
-        logger.info(`Return answer: ${answers.confirmStackDeploy}`)
-        return answers.confirmStackDeploy as unknown as T
-      }
+  const actions = mock<UserActions>()
 
-      throw new Error("Not implemented")
-    },
-    chooseMany: async <T>(
-      message: string,
-      choices: Choice<T>[],
-      marginTop: boolean,
-    ): Promise<T[]> => {
-      logger.info(
-        `chooseMany invoked with message: ${message}, choices: ${JSON.stringify(
-          choices,
-        )}`,
-      )
-      throw new Error("Not implemented")
-    },
-    autocomplete: async (
-      message: string,
-      source: (answersSoFar: any, input: string) => Promise<string[]>,
-    ): Promise<string> => {
-      logger.info(`chooseMany invoked with message: ${message}`)
-      throw new Error("Not implemented")
-    },
-  }
-  //
-  // // Mock confirm deploy
-  // actions.choose
-  //   .calledWith("How do you want to continue?", anyArray(), anyBoolean())
-  //   .mockReturnValue(Promise.resolve(answers.confirmDeploy))
-  //
-  // // Mock confirm single stack deploy
-  // actions.choose
-  //   .calledWith(
-  //     "How do you want to continue the deployment?",
-  //     anyArray(),
-  //     anyBoolean(),
-  //   )
-  //   .mockReturnValue(Promise.resolve(answers.confirmStackDeploy))
+  // Mock confirm deploy
+  actions.choose
+    .calledWith("How do you want to continue?", anyArray(), anyBoolean())
+    .mockReturnValue(Promise.resolve(answers.confirmDeploy))
+
+  // Mock confirm single stack deploy
+  actions.choose
+    .calledWith(
+      "How do you want to continue the deployment?",
+      anyArray(),
+      anyBoolean(),
+    )
+    .mockReturnValue(Promise.resolve(answers.confirmStackDeploy))
 
   return {
     ...createDeployStacksIO({ logger, actions }),
