@@ -1,6 +1,16 @@
 import {
+  CloudFormation,
+  CreateChangeSetInput,
+  CreateStackInput,
+  DeleteStackInput,
+  GetTemplateSummaryInput,
+  UpdateStackInput,
+  ValidateTemplateInput,
+} from "@aws-sdk/client-cloudformation"
+import {
   ACTIVE_STACK_STATUSES,
   ChangeSet,
+  ChangeSetId,
   ClientRequestToken,
   CloudFormationStack,
   CloudFormationStackSummary,
@@ -15,21 +25,22 @@ import {
   StackId,
   StackName,
   StackPolicyBody,
+  StackStatus,
   TemplateSummary,
 } from "@takomo/aws-model"
 import { arrayToMap, Scheduler, sleep, uuid } from "@takomo/util"
-import { CloudFormation } from "aws-sdk"
-import {
-  CreateChangeSetInput,
-  CreateStackInput,
-  DeleteStackInput,
-  UpdateStackInput,
-  ValidateTemplateInput,
-} from "aws-sdk/clients/cloudformation"
 import { IPolicy } from "cockatiel"
 import takeRightWhile from "lodash.takerightwhile"
 import R from "ramda"
-import { AwsClientProps, createClient } from "../common/client"
+import {
+  InternalAwsClientProps,
+  pagedOperationBulkhead,
+  pagedOperationV2,
+  withClientBulkhead,
+  withClientScheduler,
+} from "../common/client"
+import { customLogger } from "../common/logger"
+import { customRetryStrategy } from "../common/retry"
 import {
   convertChangeSet,
   convertStack,
@@ -64,7 +75,7 @@ export interface CloudFormationClient {
   ) => Promise<DetailedCloudFormationStack>
 
   readonly getTemplateSummary: (
-    input: CloudFormation.GetTemplateSummaryInput,
+    input: GetTemplateSummaryInput,
   ) => Promise<TemplateSummary>
 
   readonly getCurrentTemplate: (stackName: string) => Promise<string>
@@ -73,7 +84,7 @@ export interface CloudFormationClient {
 
   readonly createChangeSet: (
     params: CreateChangeSetInput,
-  ) => Promise<CloudFormation.ChangeSetId>
+  ) => Promise<ChangeSetId>
 
   readonly deleteChangeSet: (
     stackName: string,
@@ -108,39 +119,6 @@ export interface CloudFormationClient {
     stackName: string,
     enable: boolean,
   ) => Promise<boolean>
-
-  /**
-   * Replaced with waitStackDeployToComplete.
-   *
-   * To be removed in Takomo 4.0.0.
-   *
-   * @deprecated
-   */
-  readonly waitUntilStackCreateOrUpdateCompletes: (
-    stackName: string,
-    clientRequestToken: string,
-    eventListener: (event: StackEvent) => void,
-    timeoutConfig: TimeoutConfig,
-    latestEventId?: string,
-    allEvents?: ReadonlyArray<StackEvent>,
-  ) => Promise<ChangeSetCompletionResponse>
-
-  /**
-   * Replaced with waitStackDeleteToComplete.
-   *
-   * To be removed in Takomo 4.0.0.
-   *
-   * @deprecated
-   */
-  readonly waitUntilStackIsDeleted: (
-    stackName: string,
-    stackArn: string,
-    clientRequestToken: string,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    eventListener?: (event: StackEvent) => void,
-    latestEventId?: string,
-    allEvents?: ReadonlyArray<StackEvent>,
-  ) => Promise<StackDeleteCompletionResponse>
 
   readonly getNativeClient: () => Promise<CloudFormation>
 
@@ -182,7 +160,7 @@ const findTerminalEvent = (
       isTerminalResourceStatus(resourceStatus),
   )
 
-interface CloudFormationClientProps extends AwsClientProps {
+interface CloudFormationClientProps extends InternalAwsClientProps {
   readonly describeEventsBulkhead: IPolicy
   readonly getTemplateSummaryScheduler: Scheduler
   readonly validateTemplateBulkhead: IPolicy
@@ -198,20 +176,8 @@ export const createCloudFormationClient = (
   props: CloudFormationClientProps,
 ): CloudFormationClient => {
   const {
-    withClientPromise,
-    withClientPromiseBulkhead,
-    withClientPromiseScheduler,
-    pagedOperationBulkhead,
-    pagedOperationV2,
-    withClient,
-    getClient,
-  } = createClient({
-    ...props,
-    clientConstructor: (config) => new CloudFormation(config),
-  })
-
-  const {
     logger,
+    middleware,
     describeEventsBulkhead,
     getTemplateSummaryScheduler,
     validateTemplateBulkhead,
@@ -220,27 +186,33 @@ export const createCloudFormationClient = (
     waitStackRollbackToCompletePollInterval,
   } = props
 
+  const client = new CloudFormation({
+    region: props.region,
+    credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
+    logger: customLogger(logger),
+  })
+
+  client.middlewareStack.use(middleware)
+
   const getStackPolicy = (
     stackName: string,
   ): Promise<StackPolicyBody | undefined> =>
-    withClientPromise(
-      (c) => c.getStackPolicy({ StackName: stackName }),
-      (r) => r.StackPolicyBody!,
-    )
+    client
+      .getStackPolicy({ StackName: stackName })
+      .then((r) => r.StackPolicyBody!)
 
   const detectDrift = (stackName: StackName): Promise<StackDriftDetectionId> =>
-    withClientPromise(
-      (c) => c.detectStackDrift({ StackName: stackName }),
-      (r) => r.StackDriftDetectionId,
-    )
+    client
+      .detectStackDrift({ StackName: stackName })
+      .then((r) => r.StackDriftDetectionId!)
 
   const describeStackDriftDetectionStatus = (
     id: StackDriftDetectionId,
   ): Promise<StackDriftDetectionStatusOutput> =>
-    withClientPromise(
-      (c) => c.describeStackDriftDetectionStatus({ StackDriftDetectionId: id }),
-      convertStackDriftDetectionStatus,
-    )
+    client
+      .describeStackDriftDetectionStatus({ StackDriftDetectionId: id })
+      .then(convertStackDriftDetectionStatus)
 
   const waitDriftDetectionToComplete = async (
     id: StackDriftDetectionId,
@@ -257,49 +229,44 @@ export const createCloudFormationClient = (
   }
 
   const validateTemplate = (input: ValidateTemplateInput): Promise<boolean> =>
-    withClientPromiseBulkhead(
-      validateTemplateBulkhead,
-      (c) => c.validateTemplate(input),
-      () => true,
+    withClientBulkhead(client, validateTemplateBulkhead, (c) =>
+      c.validateTemplate(input).then(() => true),
     )
 
   const describeStack = (
     stackName: string,
   ): Promise<CloudFormationStack | undefined> =>
-    withClientPromise(
-      (c) => c.describeStacks({ StackName: stackName }),
-      convertStack,
-      (e) => {
-        if (e.code === "ValidationError") {
+    client
+      .describeStacks({ StackName: stackName })
+      .then(convertStack)
+      .catch((e) => {
+        if (e.Code === "ValidationError") {
           if (e.message === `Stack with id ${stackName} does not exist`) {
             return undefined
           }
         }
 
         throw e
-      },
-    )
+      })
 
   const listNotDeletedStacks = (
     stackNames?: ReadonlyArray<StackName>,
   ): Promise<Map<StackName, DetailedCloudFormationStackSummary>> => {
     const collectedNames = new Set<StackName>()
-    return withClient((c) =>
-      pagedOperationV2({
-        operation: (params) => c.listStacks(params),
-        params: { StackStatusFilter: ACTIVE_STACK_STATUSES.slice() },
-        extractor: convertStackSummaries,
-        filter: (s) => !stackNames || stackNames.includes(s.name),
-        onPage: (items) => {
-          if (!stackNames) {
-            return false
-          }
+    return pagedOperationV2({
+      operation: (params) => client.listStacks(params),
+      params: { StackStatusFilter: ACTIVE_STACK_STATUSES.slice() },
+      extractor: convertStackSummaries,
+      filter: (s) => !stackNames || stackNames.includes(s.name),
+      onPage: (items) => {
+        if (!stackNames) {
+          return false
+        }
 
-          items.forEach((item) => collectedNames.add(item.name))
-          return stackNames.every((s) => collectedNames.has(s))
-        },
-      }),
-    ).then((stacks) => new Map(arrayToMap(stacks, (s) => s.name)))
+        items.forEach((item) => collectedNames.add(item.name))
+        return stackNames.every((s) => collectedNames.has(s))
+      },
+    }).then((stacks) => new Map(arrayToMap(stacks, (s) => s.name)))
   }
 
   const getNotDeletedStack = async (
@@ -384,34 +351,24 @@ export const createCloudFormationClient = (
   }
 
   const getTemplateSummary = (
-    input: CloudFormation.GetTemplateSummaryInput,
+    input: GetTemplateSummaryInput,
   ): Promise<TemplateSummary> =>
-    withClientPromiseScheduler(
-      uuid(),
-      getTemplateSummaryScheduler,
-      (c) => c.getTemplateSummary(input),
-      convertTemplateSummary,
+    withClientScheduler(client, uuid(), getTemplateSummaryScheduler, (c) =>
+      c.getTemplateSummary(input).then(convertTemplateSummary),
     )
 
   const getCurrentTemplate = (stackName: string): Promise<string> =>
-    withClientPromise(
-      (c) => c.getTemplate({ StackName: stackName, TemplateStage: "Original" }),
-      (res) => res.TemplateBody!,
-    )
+    client
+      .getTemplate({ StackName: stackName, TemplateStage: "Original" })
+      .then((res) => res.TemplateBody!)
 
   const initiateStackDeletion = (input: DeleteStackInput): Promise<boolean> =>
-    withClientPromise(
-      (c) => c.deleteStack(input),
-      () => true,
-    )
+    client.deleteStack(input).then(() => true)
 
   const createChangeSet = (
     params: CreateChangeSetInput,
-  ): Promise<CloudFormation.ChangeSetId> =>
-    withClientPromise(
-      (c) => c.createChangeSet(params),
-      (res) => res.Id!,
-    )
+  ): Promise<ChangeSetId> =>
+    client.createChangeSet(params).then((res) => res.Id!)
 
   const deleteChangeSet = (
     stackName: string,
@@ -422,10 +379,7 @@ export const createCloudFormationClient = (
       ChangeSetName: changeSetName,
     }
 
-    return withClientPromise(
-      (c) => c.deleteChangeSet(params),
-      () => true,
-    )
+    return client.deleteChangeSet(params).then(() => true)
   }
 
   const describeChangeSet = (
@@ -437,10 +391,7 @@ export const createCloudFormationClient = (
       StackName: stackName,
     }
 
-    return withClientPromise(
-      (c) => c.describeChangeSet(params),
-      convertChangeSet,
-    )
+    return client.describeChangeSet(params).then(convertChangeSet)
   }
 
   const waitUntilChangeSetIsReady = async (
@@ -469,13 +420,11 @@ export const createCloudFormationClient = (
   const describeStackEvents = (
     stackName: string,
   ): Promise<ReadonlyArray<StackEvent>> =>
-    withClient((c) =>
-      pagedOperationBulkhead(
-        describeEventsBulkhead,
-        (params) => c.describeStackEvents(params),
-        { StackName: stackName },
-        convertStackEvents,
-      ),
+    pagedOperationBulkhead(
+      describeEventsBulkhead,
+      (params) => client.describeStackEvents(params),
+      { StackName: stackName },
+      convertStackEvents,
     )
 
   const cancelStackUpdate = (stackName: string): Promise<string> => {
@@ -484,10 +433,9 @@ export const createCloudFormationClient = (
       ClientRequestToken: uuid(),
     }
 
-    return withClientPromise(
-      (c) => c.cancelUpdateStack(params),
-      () => params.ClientRequestToken,
-    )
+    return client
+      .cancelUpdateStack(params)
+      .then(() => params.ClientRequestToken)
   }
 
   const continueUpdateRollback = (
@@ -498,128 +446,39 @@ export const createCloudFormationClient = (
       ClientRequestToken: uuid(),
     }
 
-    return withClientPromise(
-      (c) => c.continueUpdateRollback(params),
-      () => params.ClientRequestToken,
-    )
+    return client
+      .continueUpdateRollback(params)
+      .then(() => params.ClientRequestToken)
   }
 
   const createStack = (params: CreateStackInput): Promise<StackId> =>
-    withClientPromise(
-      (c) => c.createStack(params),
-      (res) => res.StackId!,
-    )
+    client.createStack(params).then((res) => res.StackId!)
 
   const updateStack = (params: UpdateStackInput): Promise<boolean> =>
-    withClientPromise(
-      (c) => c.updateStack(params),
-      () => true,
-      (e) => {
+    client
+      .updateStack(params)
+      .then(() => true)
+      .catch((e) => {
         if (
-          e.code === "ValidationError" &&
+          e.Code === "ValidationError" &&
           e.message === "No updates are to be performed."
         ) {
           return false
         }
 
         throw e
-      },
-    )
+      })
 
   const updateTerminationProtection = (
     stackName: string,
     enable: boolean,
   ): Promise<boolean> =>
-    withClientPromise(
-      (c) =>
-        c.updateTerminationProtection({
-          EnableTerminationProtection: enable,
-          StackName: stackName,
-        }),
-      () => true,
-    )
-
-  const waitUntilStackCreateOrUpdateCompletes = async (
-    stackName: string,
-    clientRequestToken: string,
-    eventListener: (event: StackEvent) => void,
-    timeoutConfig: TimeoutConfig,
-    latestEventId: string | null = null,
-    allEvents: ReadonlyArray<StackEvent> = [],
-  ): Promise<ChangeSetCompletionResponse> => {
-    await sleep(2000)
-
-    const stack = await describeStack(stackName)
-    if (stack === undefined) {
-      throw new Error(
-        `Stack ${stackName} with name ${stackName} does not exists`,
-      )
-    }
-
-    const events = (await describeStackEvents(stack.id)).slice().reverse()
-    const newEvents = takeRightWhile(
-      events,
-      (e) => e.id !== latestEventId,
-    ).filter((e) => e.clientRequestToken === clientRequestToken)
-
-    newEvents.forEach(eventListener)
-
-    const updatedEvents = [...allEvents, ...newEvents]
-
-    switch (stack.status) {
-      case "CREATE_COMPLETE":
-      case "DELETE_COMPLETE":
-      case "ROLLBACK_COMPLETE":
-      case "UPDATE_COMPLETE":
-      case "ROLLBACK_FAILED":
-      case "CREATE_FAILED":
-      case "DELETE_FAILED":
-      case "UPDATE_ROLLBACK_COMPLETE":
-      case "UPDATE_ROLLBACK_FAILED":
-        return {
-          events: updatedEvents,
-          stackStatus: stack.status,
-          timeoutConfig,
-        }
-      default:
-        const latestEvent = R.last(events)
-        const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
-
-        if (timeoutConfig.timeout !== 0) {
-          const elapsedTime = Date.now() - timeoutConfig.startTime
-          if (elapsedTime > timeoutConfig.timeout * 1000) {
-            if (stack.status === "UPDATE_IN_PROGRESS") {
-              const cancelClientToken = await cancelStackUpdate(stackName)
-              return waitUntilStackCreateOrUpdateCompletes(
-                stackName,
-                cancelClientToken,
-                eventListener,
-                {
-                  timeout: 0,
-                  timeoutOccurred: true,
-                  startTime: timeoutConfig.startTime,
-                },
-                newLatestEventId,
-                updatedEvents,
-              )
-            } else {
-              console.log(
-                `Timeout exceeded but stack update can't be cancelled because stack status ${stack.status} != UPDATE_IN_PROGRESS`,
-              )
-            }
-          }
-        }
-
-        return waitUntilStackCreateOrUpdateCompletes(
-          stackName,
-          clientRequestToken,
-          eventListener,
-          timeoutConfig,
-          newLatestEventId,
-          updatedEvents,
-        )
-    }
-  }
+    client
+      .updateTerminationProtection({
+        EnableTerminationProtection: enable,
+        StackName: stackName,
+      })
+      .then(() => true)
 
   const waitStackDeployToComplete = async (
     props: WaitStackDeployToCompleteProps,
@@ -700,54 +559,6 @@ export const createCloudFormationClient = (
     })
   }
 
-  const waitUntilStackIsDeleted = async (
-    stackName: string,
-    stackArn: string,
-    clientRequestToken: string,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    eventListener: (event: StackEvent) => void = () => {},
-    latestEventId: string | null = null,
-    allEvents: ReadonlyArray<StackEvent> = [],
-  ): Promise<StackDeleteCompletionResponse> => {
-    await sleep(2000)
-
-    const stack = await describeStack(stackArn)
-    if (stack === undefined) {
-      throw new Error(`Stack ${stackName} with arn ${stackArn} does not exists`)
-    }
-
-    const events = (await describeStackEvents(stackArn)).slice().reverse()
-
-    const newEvents = takeRightWhile(
-      events,
-      (e) => e.id !== latestEventId,
-    ).filter((e) => e.clientRequestToken === clientRequestToken)
-
-    newEvents.forEach(eventListener)
-
-    const updatedEvents = [...allEvents, ...newEvents]
-
-    switch (stack.status) {
-      case "DELETE_COMPLETE":
-      case "DELETE_FAILED":
-        return {
-          events: updatedEvents,
-          stackStatus: stack.status,
-        }
-      default:
-        const latestEvent = R.last(events)
-        const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
-        return waitUntilStackIsDeleted(
-          stackName,
-          stackArn,
-          clientRequestToken,
-          eventListener,
-          newLatestEventId,
-          updatedEvents,
-        )
-    }
-  }
-
   const waitStackDeleteToComplete = async (
     props: WaitStackDeleteToCompleteProps,
   ): Promise<WaitStackDeleteToCompleteResponse> => {
@@ -815,9 +626,14 @@ export const createCloudFormationClient = (
     const terminalEvent = findTerminalEvent(stackId, updatedEvents)
 
     if (terminalEvent) {
+      const stack = await describeStack(stackId)
+      if (!stack) {
+        throw new Error(`Expected stack ${stackId} to be found`)
+      }
+
       return {
         events: updatedEvents,
-        stackStatus: terminalEvent.resourceStatus,
+        stackStatus: stack.status,
       }
     }
 
@@ -829,6 +645,8 @@ export const createCloudFormationClient = (
       allEvents: updatedEvents,
     })
   }
+
+  const getNativeClient = async (): Promise<CloudFormation> => client
 
   return {
     continueUpdateRollback,
@@ -850,16 +668,14 @@ export const createCloudFormationClient = (
     createStack,
     updateStack,
     updateTerminationProtection,
-    waitUntilStackCreateOrUpdateCompletes,
     waitStackDeployToComplete,
-    waitUntilStackIsDeleted,
     waitStackDeleteToComplete,
     getStackPolicy,
     detectDrift,
     describeStackDriftDetectionStatus,
     waitDriftDetectionToComplete,
     waitStackRollbackToComplete,
-    getNativeClient: getClient,
+    getNativeClient,
   }
 }
 
@@ -877,7 +693,7 @@ export interface TimeoutConfig {
  */
 export interface ChangeSetCompletionResponse {
   readonly events: ReadonlyArray<StackEvent>
-  readonly stackStatus: CloudFormation.StackStatus
+  readonly stackStatus: StackStatus
   readonly timeoutConfig: TimeoutConfig
 }
 
@@ -926,7 +742,7 @@ export interface WaitStackDeleteToCompleteProps {
  */
 export interface StackDeleteCompletionResponse {
   readonly events: ReadonlyArray<StackEvent>
-  readonly stackStatus: CloudFormation.StackStatus
+  readonly stackStatus: StackStatus
 }
 
 /**
@@ -945,5 +761,5 @@ export interface WaitStackRollbackToCompleteProps {
  */
 export interface StackRollbackCompleteResponse {
   readonly events: ReadonlyArray<StackEvent>
-  readonly stackStatus: CloudFormation.StackStatus
+  readonly stackStatus: StackStatus
 }

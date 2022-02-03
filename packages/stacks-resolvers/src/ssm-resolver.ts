@@ -33,10 +33,8 @@ const init = async (props: any): Promise<Resolver> => ({
       },
     )
 
-    const credentials = await credentialManager.getCredentials()
-
-    const ssm = ctx.awsClientProvider.createSsmClient({
-      credentials,
+    const ssm = await ctx.awsClientProvider.createSsmClient({
+      credentialProvider: credentialManager.getCredentialProvider(),
       region,
       logger,
       id: "ssm",

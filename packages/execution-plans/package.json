@@ -35,7 +35,7 @@
     "cockatiel": "2.0.1"
   },
   "engines": {
-    "node": ">=14.4.0"
+    "node": ">=14.17.1"
   },
   "os": [
     "darwin",

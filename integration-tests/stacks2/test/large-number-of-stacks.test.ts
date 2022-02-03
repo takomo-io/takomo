@@ -19,7 +19,7 @@ const createStacks = (count: number) => {
 
 const stacks = createStacks(120)
 
-describe("Large number of stacks", () => {
+describe.skip("Large number of stacks", () => {
   test("First deploy", () =>
     executeDeployStacksCommand({ projectDir, var: ["template=first.yml"] })
       .expectCommandToSucceed()

@@ -25,11 +25,11 @@ const getEventsFromRegion = async (
   endTime: Date,
 ): Promise<ReadonlyArray<CloudTrailEvent>> => {
   const credentials = await credentialManager.getCredentials()
-  const ct = awsClientProvider.createCloudTrailClient({
+  const ct = await awsClientProvider.createCloudTrailClient({
     logger,
     region,
     id: "cloudtrail",
-    credentials,
+    credentialProvider: async () => credentials,
   })
 
   return ct.lookupEvents(startTime, endTime)

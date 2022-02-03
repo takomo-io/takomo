@@ -11,7 +11,5 @@ export {
   initDefaultCredentialManager,
   InternalCredentialManager,
 } from "./common/credentials"
-export { IamClient } from "./iam/client"
-export { OrganizationsClient } from "./organizations/client"
 export { S3Client } from "./s3/client"
 export { prepareAwsEnvVariables } from "./util"

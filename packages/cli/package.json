@@ -37,12 +37,10 @@
     "@takomo/deployment-targets-model": "3.40.2",
     "@takomo/iam-commands": "3.40.2",
     "@takomo/init-command": "3.40.2",
-    "@takomo/organization-commands": "3.40.2",
-    "@takomo/organization-model": "3.40.2",
     "@takomo/stacks-commands": "3.40.2",
     "@takomo/stacks-model": "3.40.2",
     "@takomo/util": "3.40.2",
-    "aws-sdk": "2.1062.0",
+    "@aws-sdk/types": "3.47.1",
     "dotenv": "8.2.0",
     "easy-table": "1.2.0",
     "inquirer": "8.1.2",
@@ -51,7 +49,7 @@
     "yargs": "17.0.1"
   },
   "engines": {
-    "node": ">=14.4.0"
+    "node": ">=14.17.1"
   },
   "os": [
     "darwin",

@@ -17,7 +17,7 @@ const stacks = R.range(1, 21)
   )
   .flat()
 
-describe("High number of stacks", () => {
+describe.skip("High number of stacks", () => {
   test("Deploy", () =>
     executeDeployStacksCommand({
       projectDir,

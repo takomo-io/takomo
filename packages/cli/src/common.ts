@@ -1,3 +1,4 @@
+import { Credentials } from "@aws-sdk/types"
 import {
   createAwsClientProvider,
   initDefaultCredentialManager,
@@ -29,7 +30,6 @@ import {
   red,
   TkmLogger,
 } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import Table from "easy-table"
 import inquirer from "inquirer"
 import os from "os"
@@ -225,7 +225,7 @@ export const onComplete = async ({
     const apiCallsByClient = R.groupBy(R.prop("clientId"), allApiCalls)
     const clientIds = Object.keys(apiCallsByClient).sort()
     clientIds.forEach((clientId) => {
-      clientsTable.cell("Id", clientId).newRow()
+      clientsTable.cell("Client id", clientId).newRow()
       const clientApiCalls = apiCallsByClient[clientId]
       const clientApiCallsByAction = R.groupBy(
         (a) => `${a.api}:${a.action}`,
@@ -239,15 +239,12 @@ export const onComplete = async ({
         const totalTime = R.sum(times)
 
         clientsTable
-          .cell("Id", `  ${actionName}`)
+          .cell("Client id", `  ${actionName}`)
           .cell("Count", calls.length)
-          .cell("Time total", formatElapsedMillis(totalTime * 1000))
-          .cell("Time min", formatElapsedMillis(Math.min(...times) * 1000))
-          .cell("Time max", formatElapsedMillis(Math.max(...times) * 1000))
-          .cell(
-            "Time avg",
-            formatElapsedMillis((totalTime / calls.length) * 1000),
-          )
+          .cell("Time total", formatElapsedMillis(totalTime))
+          .cell("Time min", formatElapsedMillis(Math.min(...times)))
+          .cell("Time max", formatElapsedMillis(Math.max(...times)))
+          .cell("Time avg", formatElapsedMillis(totalTime / calls.length))
           .cell(
             "Retries",
             calls.reduce((sum, { retries }) => sum + retries, 0),
@@ -256,7 +253,7 @@ export const onComplete = async ({
       })
     })
 
-    clientsTable.newRow().cell("Id", "Total").newRow()
+    clientsTable.newRow().cell("Client id", "Total").newRow()
 
     const totalApiCallsByAction = R.groupBy(
       (a) => `${a.api}:${a.action}`,
@@ -270,15 +267,12 @@ export const onComplete = async ({
         const totalTime = R.sum(times)
 
         clientsTable
-          .cell("Id", `  ${action}`)
+          .cell("Client id", `  ${action}`)
           .cell("Count", calls.length)
-          .cell("Time total", formatElapsedMillis(totalTime * 1000))
-          .cell("Time min", formatElapsedMillis(Math.min(...times) * 1000))
-          .cell("Time max", formatElapsedMillis(Math.max(...times) * 1000))
-          .cell(
-            "Time avg",
-            formatElapsedMillis((totalTime / calls.length) * 1000),
-          )
+          .cell("Time total", formatElapsedMillis(totalTime))
+          .cell("Time min", formatElapsedMillis(Math.min(...times)))
+          .cell("Time max", formatElapsedMillis(Math.max(...times)))
+          .cell("Time avg", formatElapsedMillis(totalTime / calls.length))
           .cell(
             "Retries",
             calls.reduce((sum, { retries }) => sum + retries, 0),

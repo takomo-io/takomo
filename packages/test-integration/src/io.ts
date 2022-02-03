@@ -1,23 +1,12 @@
 import {
-  createBootstrapAccountsIO,
   createBootstrapTargetsIO,
-  createCreateAccountAliasIO,
-  createCreateOrganizationIO,
-  createDeleteAccountAliasIO,
-  createDeployAccountsIO,
-  createDeployOrganizationIO,
   createDeployStacksIO,
   createDeployTargetsIO,
-  createDescribeOrganizationIO,
   createDetectDriftIO,
   createInitProjectIO,
-  createListAccountsIO,
-  createListAccountsStacksIO,
   createListStacksIO,
   createRunTargetsIO,
-  createTearDownAccountsIO,
   createTearDownTargetsIO,
-  createUndeployAccountsIO,
   createUndeployStacksIO,
   createUndeployTargetsIO,
   UserActions,
@@ -27,16 +16,6 @@ import {
   DeploymentTargetsRunIO,
 } from "@takomo/deployment-targets-commands"
 import { InitProjectIO } from "@takomo/init-command"
-import {
-  AccountsOperationIO,
-  CreateAccountAliasIO,
-  CreateOrganizationIO,
-  DeleteAccountAliasIO,
-  DeployOrganizationIO,
-  DescribeOrganizationIO,
-  ListAccountsIO,
-  ListAccountsStacksIO,
-} from "@takomo/organization-commands"
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
@@ -113,22 +92,6 @@ export const createTestListStacksIO = (logger: TkmLogger): ListStacksIO =>
 export const createTestDetectDriftIO = (logger: TkmLogger): DetectDriftIO =>
   createDetectDriftIO({ logger })
 
-export const createTestCreateAccountAliasIO = (
-  logger: TkmLogger,
-): CreateAccountAliasIO => createCreateAccountAliasIO({ logger })
-
-export const createTestDeleteAccountAliasIO = (
-  logger: TkmLogger,
-): DeleteAccountAliasIO => createDeleteAccountAliasIO({ logger })
-
-export const createTestDescribeOrganizationIO = (
-  logger: TkmLogger,
-): DescribeOrganizationIO => createDescribeOrganizationIO({ logger })
-
-export const createTestCreateOrganizationIO = (
-  logger: TkmLogger,
-): CreateOrganizationIO => createCreateOrganizationIO({ logger })
-
 export const createTestDeployTargetsIO = (
   logger: TkmLogger,
 ): DeploymentTargetsOperationIO => createDeployTargetsIO({ logger })
@@ -149,32 +112,5 @@ export const createTestRunTargetsIO = (
   logger: TkmLogger,
 ): DeploymentTargetsRunIO => createRunTargetsIO({ logger })
 
-export const createTestListAccountsIO = (logger: TkmLogger): ListAccountsIO =>
-  createListAccountsIO({ logger })
-
-export const createTestDeployAccountsIO = (
-  logger: TkmLogger,
-): AccountsOperationIO => createDeployAccountsIO({ logger })
-
-export const createTestUndeployAccountsIO = (
-  logger: TkmLogger,
-): AccountsOperationIO => createUndeployAccountsIO({ logger })
-
-export const createTestTeardownAccountsIO = (
-  logger: TkmLogger,
-): AccountsOperationIO => createTearDownAccountsIO({ logger })
-
-export const createTestBootstrapAccountsIO = (
-  logger: TkmLogger,
-): AccountsOperationIO => createBootstrapAccountsIO({ logger })
-
-export const createTestDeployOrganizationIO = (
-  logger: TkmLogger,
-): DeployOrganizationIO => createDeployOrganizationIO({ logger })
-
 export const createTestInitProjectIO = (logger: TkmLogger): InitProjectIO =>
   createInitProjectIO({ logger })
-
-export const createTestListAccountsStacks = (
-  logger: TkmLogger,
-): ListAccountsStacksIO => createListAccountsStacksIO({ logger })

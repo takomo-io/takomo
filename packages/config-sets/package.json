@@ -38,7 +38,7 @@
     "@takomo/test-unit": "3.40.2"
   },
   "engines": {
-    "node": ">=14.4.0"
+    "node": ">=14.17.1"
   },
   "os": [
     "darwin",

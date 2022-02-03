@@ -1,5 +1,7 @@
-import { SecretsManager } from "aws-sdk"
-import { AwsClientProps, createClient } from "../common/client"
+import { SecretsManager } from "@aws-sdk/client-secrets-manager"
+import { InternalAwsClientProps } from "../common/client"
+import { customLogger } from "../common/logger"
+import { customRetryStrategy } from "../common/retry"
 
 interface GetSecretValueProps {
   readonly secretId: string
@@ -17,26 +19,30 @@ export interface SecretsClient {
 /**
  * @hidden
  */
-export const createSecretsClient = (props: AwsClientProps): SecretsClient => {
-  const { withClientPromise } = createClient({
-    ...props,
-    clientConstructor: (configuration) => new SecretsManager(configuration),
+export const createSecretsClient = (
+  props: InternalAwsClientProps,
+): SecretsClient => {
+  const client = new SecretsManager({
+    region: props.region,
+    credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
+    logger: customLogger(props.logger),
   })
+
+  client.middlewareStack.use(props.middleware)
 
   const getSecretValue = ({
     secretId,
     versionStage,
     versionId,
   }: GetSecretValueProps): Promise<string> =>
-    withClientPromise(
-      (c) =>
-        c.getSecretValue({
-          SecretId: secretId,
-          VersionId: versionId,
-          VersionStage: versionStage,
-        }),
-      (r) => r.SecretString!,
-    )
+    client
+      .getSecretValue({
+        SecretId: secretId,
+        VersionId: versionId,
+        VersionStage: versionStage,
+      })
+      .then((r) => r.SecretString!)
 
   return {
     getSecretValue,

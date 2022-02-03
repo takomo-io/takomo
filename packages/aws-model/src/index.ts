@@ -9,6 +9,7 @@ export {
   ChangeSetName,
   ChangeSetStatus,
   ChangeSetStatusReason,
+  ChangeSetType,
   ChangeSource,
   ChangeType,
   CloudFormationStack,

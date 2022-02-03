@@ -23,7 +23,9 @@ export type StackStatus =
   | "DELETE_IN_PROGRESS"
   | "DELETE_FAILED"
   | "DELETE_COMPLETE"
+  | "DELETE_SKIPPED"
   | "UPDATE_IN_PROGRESS"
+  | "UPDATE_FAILED"
   | "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS"
   | "UPDATE_COMPLETE"
   | "UPDATE_ROLLBACK_IN_PROGRESS"
@@ -273,6 +275,7 @@ export interface StackEvent {
 export type ChangeSetId = string
 export type ChangeSetName = string
 export type ChangeSetStatusReason = string
+export type ChangeSetType = "CREATE" | "UPDATE"
 export type ChangeSetStatus =
   | "CREATE_PENDING"
   | "CREATE_IN_PROGRESS"

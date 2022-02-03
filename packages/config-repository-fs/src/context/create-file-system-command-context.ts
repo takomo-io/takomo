@@ -1,3 +1,4 @@
+import { Credentials } from "@aws-sdk/types"
 import { InternalAwsClientProvider } from "@takomo/aws-clients"
 import {
   Features,
@@ -6,7 +7,6 @@ import {
   TakomoBuildInfo,
 } from "@takomo/core"
 import { FilePath, LogLevel, TkmLogger, VarFileOption } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { createProjectFilePaths, ProjectFilePaths } from "../constants"
 import { loadProjectConfig } from "../project/config"
 import { buildVariables } from "./build-variables"

@@ -1,3 +1,4 @@
+import { Credentials } from "@aws-sdk/types"
 import { CloudFormationClient, CredentialManager } from "@takomo/aws-clients"
 import { StackName } from "@takomo/aws-model"
 import {
@@ -9,7 +10,6 @@ import {
   StackPath,
 } from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
-import { Credentials } from "aws-sdk"
 import { mock } from "jest-mock-extended"
 
 export interface TestStackGroupProps {

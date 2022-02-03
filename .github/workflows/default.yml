@@ -12,23 +12,6 @@ on:
       - master
 
 env:
-  TKM_ORG_A_ID: ${{ secrets.TKM_ORG_A_ID }}
-  TKM_ORG_A_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_A_MASTER_ACCOUNT_ID }}
-  TKM_ORG_A_MASTER_ACCOUNT_NAME: ${{ secrets.TKM_ORG_A_MASTER_ACCOUNT_NAME }}
-  TKM_ORG_A_ACCOUNT_1_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_1_ID }}
-  TKM_ORG_A_ACCOUNT_2_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_2_ID }}
-  TKM_ORG_A_ACCOUNT_3_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_3_ID }}
-  TKM_ORG_A_ACCOUNT_4_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_4_ID }}
-  TKM_ORG_A_ACCOUNT_5_ID: ${{ secrets.TKM_ORG_A_ACCOUNT_5_ID }}
-
-  TKM_ORG_B_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_B_MASTER_ACCOUNT_ID }}
-
-  TKM_ORG_3_MASTER_ACCOUNT_ID: ${{ secrets.TKM_ORG_3_MASTER_ACCOUNT_ID }}
-  TKM_ORG_3_ACCOUNT_01_ID: ${{ secrets.TKM_ORG_3_ACCOUNT_01_ID }}
-  TKM_ORG_3_ACCOUNT_01_NAME: ${{ secrets.TKM_ORG_3_ACCOUNT_01_NAME }}
-  TKM_ORG_3_ACCOUNT_01_EMAIL: ${{ secrets.TKM_ORG_3_ACCOUNT_01_EMAIL }}
-  TKM_ORG_3_ACCOUNT_02_ID: ${{ secrets.TKM_ORG_3_ACCOUNT_02_ID }}
-  TKM_ORG_3_ACCOUNT_03_ID: ${{ secrets.TKM_ORG_3_ACCOUNT_03_ID }}
 
   RECYCLER_HOSTNAME: ${{ secrets.RECYCLER_HOSTNAME }}
   RECYCLER_BASEPATH: ${{ secrets.RECYCLER_BASEPATH }}
@@ -70,7 +53,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.4.0
+          node-version: 14.17.1
       - uses: actions/cache@v2
         with:
           path: node_modules
@@ -90,7 +73,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.4.0
+          node-version: 14.17.1
       - uses: actions/cache@v2
         with:
           path: node_modules
@@ -110,7 +93,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.4.0
+          node-version: 14.17.1
       - uses: actions/cache@v2
         with:
           path: node_modules
@@ -130,7 +113,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.4.0
+          node-version: 14.17.1
       - uses: actions/cache@v2
         with:
           path: node_modules
@@ -143,75 +126,6 @@ jobs:
           key: packages-${{ github.sha }}
       - run: yarn workspace integration-test-deployment-targets integration-test
 
-  organization-creation-test:
-    runs-on: ubuntu-18.04
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.4.0
-      - uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v2
-        with:
-          path: |
-            packages
-            integration-tests
-          key: packages-${{ github.sha }}
-      - run: yarn workspace integration-test-organization-creation integration-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_B_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_B_AWS_SECRET_ACCESS_KEY }}
-
-  organization-test:
-    runs-on: ubuntu-18.04
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.4.0
-      - uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v2
-        with:
-          path: |
-            packages
-            integration-tests
-          key: packages-${{ github.sha }}
-      - run: yarn workspace integration-test-organization integration-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_A_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_A_AWS_SECRET_ACCESS_KEY }}
-
-  organization2-test:
-    runs-on: ubuntu-18.04
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.4.0
-      - uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v2
-        with:
-          path: |
-            packages
-            integration-tests
-          key: packages-${{ github.sha }}
-      - run: yarn workspace integration-test-organization2 integration-test
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TKM_ORG_3_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TKM_ORG_3_AWS_SECRET_ACCESS_KEY }}
-
   cli-test:
     runs-on: ubuntu-18.04
     needs: build
@@ -219,7 +133,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.4.0
+          node-version: 14.17.1
       - uses: actions/cache@v2
         with:
           path: node_modules
@@ -240,15 +154,12 @@ jobs:
       - stacks-test
       - stacks2-test
       - deployment-targets-test
-      - organization-creation-test
-      - organization-test
-      - organization2-test
       - cli-test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.4.0
+          node-version: 14.17.1
       - uses: actions/cache@v2
         with:
           path: node_modules
@@ -274,15 +185,12 @@ jobs:
       - stacks-test
       - stacks2-test
       - deployment-targets-test
-      - organization-creation-test
-      - organization-test
-      - organization2-test
       - cli-test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.4.0
+          node-version: 14.17.1
       - uses: actions/cache@v2
         with:
           path: node_modules

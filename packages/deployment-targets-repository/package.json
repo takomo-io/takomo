@@ -37,7 +37,7 @@
     "readdirp": "3.6.0"
   },
   "engines": {
-    "node": ">=14.4.0"
+    "node": ">=14.17.1"
   },
   "os": [
     "darwin",

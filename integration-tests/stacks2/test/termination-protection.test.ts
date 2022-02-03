@@ -4,7 +4,6 @@ import {
   executeUndeployStacksCommand,
 } from "@takomo/test-integration"
 import { TakomoError } from "@takomo/util/src"
-import { Credentials } from "aws-sdk"
 
 const stackName = "termination-protection"
 const stackPath = "/a.yml/eu-north-1"
@@ -25,7 +24,7 @@ describe("Termination protection", () => {
 
     const stack = await aws.cloudFormation.describeStack({
       stackName,
-      credentials: new Credentials(global.reservation.credentials),
+      credentials: global.reservation.credentials,
       iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
       region: "eu-north-1",
     })
@@ -56,7 +55,7 @@ describe("Termination protection", () => {
       .assert()
 
     const stack = await aws.cloudFormation.describeStack({
-      credentials: new Credentials(global.reservation.credentials),
+      credentials: global.reservation.credentials,
       iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
       stackName: "termination-protection",
       region: "eu-north-1",

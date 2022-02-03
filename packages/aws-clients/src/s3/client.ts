@@ -1,11 +1,13 @@
-import { S3 } from "aws-sdk"
-import { AwsClientProps, createClient } from "../common/client"
+import { S3 } from "@aws-sdk/client-s3"
+import { InternalAwsClientProps } from "../common/client"
+import { customLogger } from "../common/logger"
+import { customRetryStrategy } from "../common/retry"
 
 /**
  * @hidden
  */
 export interface S3Client {
-  putObject: (
+  readonly putObject: (
     bucketName: string,
     key: string,
     object: string,
@@ -15,26 +17,28 @@ export interface S3Client {
 /**
  * @hidden
  */
-export const createS3Client = (props: AwsClientProps): S3Client => {
-  const { withClientPromise } = createClient({
-    ...props,
-    clientConstructor: (config) => new S3(config),
+export const createS3Client = (props: InternalAwsClientProps): S3Client => {
+  const client = new S3({
+    region: props.region,
+    credentials: props.credentialProvider,
+    retryStrategy: customRetryStrategy(),
+    logger: customLogger(props.logger),
   })
+
+  client.middlewareStack.use(props.middleware)
 
   const putObject = (
     bucketName: string,
     key: string,
     object: string,
   ): Promise<boolean> =>
-    withClientPromise(
-      (c) =>
-        c.putObject({
-          Bucket: bucketName,
-          Key: key,
-          Body: object,
-        }),
-      () => true,
-    )
+    client
+      .putObject({
+        Bucket: bucketName,
+        Key: key,
+        Body: object,
+      })
+      .then(() => true)
 
   return {
     putObject,
