@@ -7,6 +7,7 @@ import {
   ProjectConfigRepository,
 } from "@takomo/init-command"
 import { createConsoleLogger, createTimer } from "@takomo/util"
+import { basename } from "path"
 import {
   createInitProjectOutputMatcher,
   InitProjectOutputMatcher,
@@ -26,6 +27,7 @@ export const createTestProjectConfigRepository = async ({
     ctx,
     logger: createConsoleLogger({
       logLevel: ctx.logLevel,
+      name: basename(expect.getState().testPath),
     }),
   })
 
@@ -69,6 +71,7 @@ export const executeInitProjectCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
+      name: basename(expect.getState().testPath),
     })
 
     const { project, createSamples, regions } = props

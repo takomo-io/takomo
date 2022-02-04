@@ -1,6 +1,7 @@
 import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets-commands"
 import { createConsoleLogger, createTimer } from "@takomo/util"
+import { basename } from "path"
 import { createTestUndeployTargetsIO } from "../../io"
 import { createCtxAndConfigRepository } from "./common"
 import {
@@ -28,6 +29,7 @@ export const executeUndeployTargetsCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
+      name: basename(expect.getState().testPath),
     })
 
     const credentialManager = await initDefaultCredentialManager(

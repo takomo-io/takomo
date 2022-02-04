@@ -18,6 +18,7 @@ import {
   FilePath,
   LogLevel,
 } from "@takomo/util"
+import { basename } from "path"
 import {
   createDetectDriftOutputMatcher,
   createListStacksOutputMatcher,
@@ -58,6 +59,7 @@ export const createTestStacksConfigRepository = async ({
     ctx,
     logger: createConsoleLogger({
       logLevel: ctx.logLevel,
+      name: basename(expect.getState().testPath),
     }),
   })
 
@@ -109,6 +111,7 @@ export const executeDeployStacksCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
+      name: basename(expect.getState().testPath),
     })
 
     const credentialManager = await initDefaultCredentialManager(
@@ -151,6 +154,7 @@ export const executeUndeployStacksCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
+      name: basename(expect.getState().testPath),
     })
 
     const credentialManager = await initDefaultCredentialManager(
@@ -197,6 +201,7 @@ export const executeListStacksCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
+      name: basename(expect.getState().testPath),
     })
 
     const credentialManager = await initDefaultCredentialManager(
@@ -236,6 +241,7 @@ export const executeDetectDriftCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
+      name: basename(expect.getState().testPath),
     })
 
     const credentialManager = await initDefaultCredentialManager(
