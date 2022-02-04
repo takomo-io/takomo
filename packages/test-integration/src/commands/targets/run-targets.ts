@@ -6,6 +6,7 @@ import {
   DeploymentTargetsRunOutput,
 } from "@takomo/deployment-targets-commands"
 import { createConsoleLogger, createTimer } from "@takomo/util"
+import { basename } from "path"
 import { createTestRunTargetsIO } from "../../io"
 import { ExecuteCommandProps } from "../common"
 import { createCtxAndConfigRepository } from "./common"
@@ -89,6 +90,7 @@ export const executeRunTargetsCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
+      name: basename(expect.getState().testPath),
     })
 
     const credentialManager = await initDefaultCredentialManager(
