@@ -7,6 +7,8 @@ import { randomInt } from "@takomo/util"
 
 const ADDITIONAL_RETRYABLE_ERROR_CODES = ["UnknownEndpoint", "NetworkingError"]
 
+// Unhandled error in step 'enrich-current-stack': Error: AWS SDK error wrapper for TimeoutError: socket hang up
+
 /**
  * @hidden
  */

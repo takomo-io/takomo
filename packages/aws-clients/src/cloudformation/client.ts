@@ -40,6 +40,7 @@ import {
   withClientScheduler,
 } from "../common/client"
 import { customLogger } from "../common/logger"
+import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import {
   convertChangeSet,
@@ -191,6 +192,7 @@ export const createCloudFormationClient = (
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
     logger: customLogger(logger),
+    requestHandler: customRequestHandler(25),
   })
 
   client.middlewareStack.use(middleware)
