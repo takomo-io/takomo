@@ -77,7 +77,10 @@ export class ResolverRegistry {
         )
       }
 
-      const { error } = schema.validate(props, { abortEarly: false })
+      const { error } = schema.validate(props, {
+        abortEarly: false,
+        convert: false,
+      })
       if (error) {
         const details = error.details.map((d) => `  - ${d.message}`).join("\n")
         throw new TakomoError(

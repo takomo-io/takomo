@@ -55,6 +55,7 @@ export const buildDeploymentConfig = async (
     regions: ctx.regions,
   }).validate(record, {
     abortEarly: false,
+    convert: false,
   })
 
   if (error) {
@@ -173,7 +174,10 @@ const validateDeploymentTargets = async (
       schemaConfig,
     )
 
-    const { error } = schema.validate(allTargets, { abortEarly: false })
+    const { error } = schema.validate(allTargets, {
+      abortEarly: false,
+      convert: false,
+    })
     if (error) {
       const details = error.details.map(R.prop("message"))
       return new ValidationError(
@@ -201,7 +205,10 @@ const validateDeploymentTargets = async (
         schemaConfig,
       )
 
-      const { error } = schema.validate(targets, { abortEarly: false })
+      const { error } = schema.validate(targets, {
+        abortEarly: false,
+        convert: false,
+      })
       if (error) {
         const details = error.details.map(R.prop("message"))
         return new ValidationError(

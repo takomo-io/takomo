@@ -28,6 +28,7 @@ export const buildStackGroupConfig = (
     regions: ctx.regions,
   }).validate(record, {
     abortEarly: false,
+    convert: false,
   })
 
   if (error) {

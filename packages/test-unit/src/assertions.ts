@@ -11,7 +11,10 @@ type ExpectedValidationSuccessAssertion = (value: unknown) => void
 export const expectValidationErrors =
   (validator: AnySchema): ExpectedValidationErrorAssertion =>
   (value: unknown, ...expectedMessages: string[]) => {
-    const { error } = validator.validate(value, { abortEarly: false })
+    const { error } = validator.validate(value, {
+      abortEarly: false,
+      convert: false,
+    })
     if (error === undefined) {
       fail("Expected an error to be defined")
     }
@@ -28,7 +31,10 @@ export const expectValidationErrors =
 export const expectNoValidationError =
   (validator: AnySchema): ExpectedValidationSuccessAssertion =>
   (value: unknown) => {
-    const { error } = validator.validate(value, { abortEarly: false })
+    const { error } = validator.validate(value, {
+      abortEarly: false,
+      convert: false,
+    })
     expect(error).toBeUndefined()
   }
 

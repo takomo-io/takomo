@@ -95,7 +95,10 @@ const loadExternallyPersistedDeploymentTargets = async (
   })
 
   deploymentTargets.forEach((wrapper) => {
-    const { error } = schema.validate(wrapper.item, { abortEarly: false })
+    const { error } = schema.validate(wrapper.item, {
+      abortEarly: false,
+      convert: false,
+    })
     if (error) {
       const details = error.details.map((m) => `  - ${m.message}`).join("\n")
       throw new TakomoError(

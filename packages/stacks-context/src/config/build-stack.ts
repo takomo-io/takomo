@@ -58,7 +58,10 @@ const validateData = (
   data: Vars,
 ): void => {
   schemas.forEach((schema) => {
-    const { error } = schema.validate(data, { abortEarly: false })
+    const { error } = schema.validate(data, {
+      abortEarly: false,
+      convert: false,
+    })
     if (error) {
       const details = error.details.map((d) => `  - ${d.message}`).join("\n")
       throw new TakomoError(
@@ -75,7 +78,10 @@ const validateTags = (
 ): void => {
   schemas.forEach((schema) => {
     const tagsObject = mapToObject(tags)
-    const { error } = schema.validate(tagsObject, { abortEarly: false })
+    const { error } = schema.validate(tagsObject, {
+      abortEarly: false,
+      convert: false,
+    })
     if (error) {
       const details = error.details.map((d) => `  - ${d.message}`).join("\n")
       throw new TakomoError(
@@ -91,7 +97,9 @@ const validateName = (
   name: StackName,
 ): void => {
   schemas.forEach((schema) => {
-    const { error } = schema.label("name").validate(name, { abortEarly: false })
+    const { error } = schema
+      .label("name")
+      .validate(name, { abortEarly: false, convert: false })
     if (error) {
       const details = error.details.map((d) => `  - ${d.message}`).join("\n")
       throw new TakomoError(

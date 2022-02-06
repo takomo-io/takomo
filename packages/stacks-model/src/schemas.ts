@@ -211,7 +211,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -257,7 +260,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -303,7 +309,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -349,7 +358,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -395,7 +407,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -439,7 +454,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -483,7 +501,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -529,7 +550,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
@@ -573,7 +597,10 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)
