@@ -147,7 +147,7 @@ describe("#loadProjectConfig", () => {
   test("with extends", async () => {
     const config = await doLoadProjectConfig("project-config-08.yml")
     expect(config).toStrictEqual({
-      requiredVersion: ">1.0.0",
+      requiredVersion: ">1.0.0 || >=4.0.0-alpha.0",
       organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-west-1", "us-east-1"],
