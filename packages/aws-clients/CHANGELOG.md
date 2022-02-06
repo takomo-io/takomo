@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.0](https://github.com/takomo-io/takomo/compare/v3.40.2...v4.0.0-alpha.0) (2022-02-06)
+
+
+### Features
+
+* disable automatic conversion in Joi validation ([#344](https://github.com/takomo-io/takomo/issues/344)) ([bdbf0c0](https://github.com/takomo-io/takomo/commit/bdbf0c0b3e508e4873df9c734f7da15e8299071e))
+* prepare release 4.0.0 ([406f3d3](https://github.com/takomo-io/takomo/commit/406f3d3c65fdfedb1fbec895ac8c530511b0ed9f))
+
+
+### BREAKING CHANGES
+
+* Joi validation no longer convert validated values
+* Remove organization management commands, upgrade AWS SDK to v3, require nodejs 14.17.1
+
+
+
+
+
 ## [3.40.2](https://github.com/takomo-io/takomo/compare/v3.40.1...v3.40.2) (2022-01-23)
 
 **Note:** Version bump only for package @takomo/aws-clients
