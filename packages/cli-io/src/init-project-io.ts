@@ -24,7 +24,10 @@ const validateProject = (input: string): string | boolean => {
     return true
   }
 
-  const { error } = projectSchema.validate({ project: input })
+  const { error } = projectSchema.validate(
+    { project: input },
+    { convert: false },
+  )
   if (error) {
     return error.message
   }

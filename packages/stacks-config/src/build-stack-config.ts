@@ -30,6 +30,7 @@ export const buildStackConfig = (
     regions: ctx.regions,
   }).validate(record, {
     abortEarly: false,
+    convert: false,
   })
 
   if (error) {

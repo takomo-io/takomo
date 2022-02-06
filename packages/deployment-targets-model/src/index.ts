@@ -58,7 +58,10 @@ export const createDeploymentTargetsSchemaRegistry = (
           )
         }
 
-        const { error } = schema.validate(props, { abortEarly: false })
+        const { error } = schema.validate(props, {
+          abortEarly: false,
+          convert: false,
+        })
         if (error) {
           const details = error.details
             .map((d) => `  - ${d.message}`)

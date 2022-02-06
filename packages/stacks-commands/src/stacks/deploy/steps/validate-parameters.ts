@@ -30,6 +30,7 @@ const validateParameterSchemas = (
     if (parameter.schema) {
       const { error } = parameter.schema.validate(parameter.value, {
         abortEarly: false,
+        convert: false,
       })
 
       if (error) {
@@ -47,7 +48,10 @@ const validateParameterSchemas = (
   const paramsObject = arrayToObject(parameters, R.prop("key"), R.prop("value"))
 
   return schemas.parameters.reduce((collected, schema) => {
-    const { error } = schema.validate(paramsObject, { abortEarly: false })
+    const { error } = schema.validate(paramsObject, {
+      abortEarly: false,
+      convert: false,
+    })
     if (error) {
       return [...collected, ...error.details.map((d) => d.message)]
     }

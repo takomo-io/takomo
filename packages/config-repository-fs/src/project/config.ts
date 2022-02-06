@@ -126,6 +126,7 @@ export const parseProjectConfigItem = (
 ): InternalTakomoProjectConfig => {
   const { error } = takomoProjectConfigFileSchema.validate(contents, {
     abortEarly: false,
+    convert: false,
   })
   if (error) {
     const details = error.details.map((d) => `  - ${d.message}`).join("\n")

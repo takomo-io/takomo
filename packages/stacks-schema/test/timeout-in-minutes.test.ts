@@ -8,7 +8,7 @@ const { timeoutInMinutes } = createStacksSchemas({
   regions: [],
 })
 
-const valid = [10, "6", 0]
+const valid = [10, 6, 0]
 
 const invalid: Array<[unknown, string]> = [
   [-1, '"value" must be greater than or equal to 0'],
