@@ -1,4 +1,7 @@
-import { getDefaultRoleAssumer } from "@aws-sdk/client-sts"
+import {
+  getDefaultRoleAssumer,
+  getDefaultRoleAssumerWithWebIdentity,
+} from "@aws-sdk/client-sts"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { fromTemporaryCredentials } from "@aws-sdk/credential-providers"
 import { CredentialProvider, Credentials } from "@aws-sdk/types"
@@ -140,6 +143,10 @@ const initDefaultCredentialProviderChain = async (
   return defaultProvider({
     mfaCodeProvider,
     roleAssumer: getDefaultRoleAssumer({
+      region: "us-east-1",
+      logger: customLogger(logger),
+    }),
+    roleAssumerWithWebIdentity: getDefaultRoleAssumerWithWebIdentity({
       region: "us-east-1",
       logger: customLogger(logger),
     }),

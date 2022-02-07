@@ -44,6 +44,9 @@ const apiRequestListenerMiddleware =
     return response
   }
 
+/**
+ * @hidden
+ */
 const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
   AbsoluteLocation = {
   name: "apiRequestListener",
@@ -52,7 +55,9 @@ const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
   priority: "low",
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * @hidden
+ */
 export const createApiRequestListenerPlugin = (
   clientId: string,
   listener: ClientListener,
