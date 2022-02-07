@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.1](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2022-02-07)
+
+**Note:** Version bump only for package @takomo/config-sets
+
+
+
+
+
 # [4.0.0-alpha.0](https://github.com/takomo-io/takomo/compare/v3.40.2...v4.0.0-alpha.0) (2022-02-06)
 
 

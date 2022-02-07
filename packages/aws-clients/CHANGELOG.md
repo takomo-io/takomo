@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.1](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* fix assuming of web identity ([#346](https://github.com/takomo-io/takomo/issues/346)) ([ee7a684](https://github.com/takomo-io/takomo/commit/ee7a684f47a9de503514738957ed00dd26391b27))
+
+
+
+
+
 # [4.0.0-alpha.0](https://github.com/takomo-io/takomo/compare/v3.40.2...v4.0.0-alpha.0) (2022-02-06)
 
 

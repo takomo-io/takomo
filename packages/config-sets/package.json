@@ -1,6 +1,6 @@
 {
   "name": "@takomo/config-sets",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "description": "Takomo Config Sets",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -28,9 +28,9 @@
   },
   "dependencies": {
     "@takomo/aws-model": "4.0.0-alpha.0",
-    "@takomo/core": "4.0.0-alpha.0",
-    "@takomo/stacks-model": "4.0.0-alpha.0",
-    "@takomo/stacks-schema": "4.0.0-alpha.0",
+    "@takomo/core": "4.0.0-alpha.1",
+    "@takomo/stacks-model": "4.0.0-alpha.1",
+    "@takomo/stacks-schema": "4.0.0-alpha.1",
     "joi": "17.5.0",
     "ramda": "0.27.1"
   },
