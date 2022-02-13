@@ -16,3 +16,8 @@ export const toPrettyJson = (obj: unknown): string =>
  * @hidden
  */
 export const compactJson = (json: string): string => stringify(JSON.parse(json))
+
+/**
+ * @hidden
+ */
+export const toCompactJson = (json: unknown): string => stringify(json)
