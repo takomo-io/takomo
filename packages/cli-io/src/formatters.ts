@@ -1,5 +1,4 @@
 import {
-  AccountStatus,
   ResourceStatus,
   StackDriftStatus,
   StackEvent,
@@ -102,14 +101,3 @@ export const formatStackEvent = (e: StackEvent): string =>
     formatResourceStatus(e.resourceStatus),
     e.resourceStatusReason,
   ].join(" ")
-
-export const formatAccountStatus = (status: AccountStatus): string => {
-  switch (status) {
-    case "ACTIVE":
-      return green(status)
-    case "SUSPENDED":
-      return grey(status)
-    default:
-      throw new Error(`Unsupported account status state: ${status}`)
-  }
-}
