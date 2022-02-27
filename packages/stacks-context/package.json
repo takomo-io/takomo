@@ -40,7 +40,7 @@
     "ramda": "0.27.1"
   },
   "devDependencies": {
-    "@aws-sdk/types": "3.47.1"
+    "@aws-sdk/types": "3.50.0"
   },
   "engines": {
     "node": ">=14.17.1"

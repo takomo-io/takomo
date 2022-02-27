@@ -1,6 +1,5 @@
 import { S3 } from "@aws-sdk/client-s3"
 import { InternalAwsClientProps } from "../common/client"
-import { customLogger } from "../common/logger"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 
@@ -23,7 +22,6 @@ export const createS3Client = (props: InternalAwsClientProps): S3Client => {
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
-    logger: customLogger(props.logger),
     requestHandler: customRequestHandler(25),
   })
 

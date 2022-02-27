@@ -11,10 +11,11 @@ import {
   MetadataBearer,
   Pluggable,
 } from "@aws-sdk/types"
+import { TkmLogger, toCompactJson } from "@takomo/util"
 import { ClientListener } from "./client"
 
 const apiRequestListenerMiddleware =
-  (clientId: string, listener: ClientListener) =>
+  (logger: TkmLogger, clientId: string, listener: ClientListener) =>
   <Output extends MetadataBearer = MetadataBearer>(
     next: InitializeHandler<any, Output>,
     context: HandlerExecutionContext,
@@ -22,14 +23,31 @@ const apiRequestListenerMiddleware =
   async (
     args: InitializeHandlerArguments<any>,
   ): Promise<InitializeHandlerOutput<Output>> => {
-    const { clientName, commandName } = context
+    const {
+      clientName,
+      commandName,
+      inputFilterSensitiveLog,
+      outputFilterSensitiveLog,
+    } = context
 
     const start = process.hrtime.bigint()
     const response = await next(args)
     const end = process.hrtime.bigint()
     const total = end - start
 
-    const { $metadata } = response.output
+    const { $metadata, ...outputWithoutMetadata } = response.output
+
+    if (logger.logLevel === "trace") {
+      logger.trace(
+        toCompactJson({
+          clientName,
+          commandName,
+          input: inputFilterSensitiveLog(args.input),
+          output: outputFilterSensitiveLog(outputWithoutMetadata),
+          metadata: $metadata,
+        }),
+      )
+    }
 
     listener.onApiCall({
       clientId,
@@ -59,12 +77,13 @@ const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
  * @hidden
  */
 export const createApiRequestListenerPlugin = (
+  logger: TkmLogger,
   clientId: string,
   listener: ClientListener,
 ): Pluggable<any, any> => ({
   applyToStack: (clientStack) => {
     clientStack.add(
-      apiRequestListenerMiddleware(clientId, listener),
+      apiRequestListenerMiddleware(logger, clientId, listener),
       apiRequestListenerMiddlewareOptions,
     )
   },

@@ -1,7 +1,6 @@
 import { CloudTrail } from "@aws-sdk/client-cloudtrail"
 import { CloudTrailEvent } from "@takomo/aws-model"
 import { InternalAwsClientProps, pagedOperation } from "../common/client"
-import { customLogger } from "../common/logger"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import { convertCloudTrailEvents } from "./convert"
@@ -26,7 +25,6 @@ export const createCloudTrailClient = (
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
-    logger: customLogger(props.logger),
     requestHandler: customRequestHandler(25),
   })
 

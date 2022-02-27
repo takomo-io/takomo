@@ -6,12 +6,23 @@ import {
   StackOperationType,
   StackResult,
 } from "@takomo/stacks-model"
-import { Timer } from "@takomo/util"
+import { Timer, TkmLogger } from "@takomo/util"
 import { StacksOperationListener } from "../common/model"
 import { executeSteps } from "../common/steps"
 import { DeployStacksIO, DeployState } from "./model"
 import { InitialDeployStackState } from "./states"
 import { createDeployStackTransitions } from "./transitions"
+
+const logStackConfig = (
+  logger: TkmLogger,
+  stack: InternalStack,
+  confidentialValuesLoggingEnabled: boolean,
+): void => {
+  const filterFn = confidentialValuesLoggingEnabled
+    ? () => stack
+    : () => ({ ...stack, credentials: "*****" })
+  logger.debugObject("Stack config:", () => stack, filterFn)
+}
 
 export const deployStack = async (
   timer: Timer,
@@ -34,7 +45,7 @@ export const deployStack = async (
     logger.info(`Stack status: PENDING`)
   }
 
-  logger.debugObject("Stack config:", () => stack)
+  logStackConfig(logger, stack, ctx.confidentialValuesLoggingEnabled)
 
   const variables = {
     ...ctx.variables,

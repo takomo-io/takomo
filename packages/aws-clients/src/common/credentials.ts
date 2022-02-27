@@ -1,6 +1,6 @@
 import {
-  getDefaultRoleAssumer,
-  getDefaultRoleAssumerWithWebIdentity,
+  AssumeRoleCommandInput,
+  AssumeRoleWithWebIdentityCommandInput,
 } from "@aws-sdk/client-sts"
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { fromTemporaryCredentials } from "@aws-sdk/credential-providers"
@@ -9,7 +9,6 @@ import { CallerIdentity, CredentialsError, IamRoleArn } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
 import R from "ramda"
 import { AwsClientProvider } from "../aws-client-provider"
-import { customLogger } from "./logger"
 import { customRetryStrategy } from "./retry"
 
 /**
@@ -88,7 +87,6 @@ export const createCredentialManager = ({
         clientConfig: {
           region: "us-east-1",
           retryStrategy: customRetryStrategy(),
-          logger: customLogger(logger),
         },
         params: {
           RoleArn: iamRoleArn,
@@ -133,6 +131,7 @@ export const createCredentialManager = ({
 
 const initDefaultCredentialProviderChain = async (
   logger: TkmLogger,
+  awsClientProvider: AwsClientProvider,
   mfaCodeProvider: (mfaSerial: string) => Promise<string>,
   credentials?: Credentials,
 ): Promise<CredentialProvider> => {
@@ -142,14 +141,11 @@ const initDefaultCredentialProviderChain = async (
 
   return defaultProvider({
     mfaCodeProvider,
-    roleAssumer: getDefaultRoleAssumer({
-      region: "us-east-1",
-      logger: customLogger(logger),
-    }),
-    roleAssumerWithWebIdentity: getDefaultRoleAssumerWithWebIdentity({
-      region: "us-east-1",
-      logger: customLogger(logger),
-    }),
+    roleAssumer: customDefaultRoleAssumer(logger, awsClientProvider),
+    roleAssumerWithWebIdentity: customDefaultRoleAssumerWithWebIdentity(
+      logger,
+      awsClientProvider,
+    ),
   })
 }
 
@@ -162,12 +158,55 @@ export const initDefaultCredentialManager = async (
   awsClientProvider: AwsClientProvider,
   credentials?: Credentials,
 ): Promise<InternalCredentialManager> =>
-  initDefaultCredentialProviderChain(logger, mfaCodeProvider, credentials).then(
-    (credentialProvider) =>
-      createCredentialManager({
-        name: "default",
-        logger,
-        awsClientProvider,
-        credentialProvider,
-      }),
+  initDefaultCredentialProviderChain(
+    logger,
+    awsClientProvider,
+    mfaCodeProvider,
+    credentials,
+  ).then((credentialProvider) =>
+    createCredentialManager({
+      name: "default",
+      logger,
+      awsClientProvider,
+      credentialProvider,
+    }),
   )
+
+type RoleAssumer = (
+  sourceCredentials: Credentials,
+  params: AssumeRoleCommandInput,
+) => Promise<Credentials>
+
+const customDefaultRoleAssumer =
+  (logger: TkmLogger, awsClientProvider: AwsClientProvider): RoleAssumer =>
+  async (sourceCredentials, params) => {
+    const id = "defaultRoleAssumer"
+    const sts = await awsClientProvider.createStsClient({
+      id,
+      logger: logger.childLogger(id),
+      credentialProvider: async () => sourceCredentials,
+      region: "us-east-1",
+    })
+
+    return sts.assumeRole(params)
+  }
+
+type RoleAssumerWithWebIdentity = (
+  params: AssumeRoleWithWebIdentityCommandInput,
+) => Promise<Credentials>
+
+const customDefaultRoleAssumerWithWebIdentity =
+  (
+    logger: TkmLogger,
+    awsClientProvider: AwsClientProvider,
+  ): RoleAssumerWithWebIdentity =>
+  async (params) => {
+    const id = "defaultRoleAssumerWithWebIdentity"
+    const sts = await awsClientProvider.createStsClient({
+      id,
+      region: "us-east-1",
+      logger: logger.childLogger(id),
+    })
+
+    return sts.assumeRoleWithWebIdentity(params)
+  }

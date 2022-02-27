@@ -1,6 +1,5 @@
 import { SecretsManager } from "@aws-sdk/client-secrets-manager"
 import { InternalAwsClientProps } from "../common/client"
-import { customLogger } from "../common/logger"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 
@@ -27,7 +26,6 @@ export const createSecretsClient = (
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
-    logger: customLogger(props.logger),
     requestHandler: customRequestHandler(25),
   })
 
