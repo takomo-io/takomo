@@ -42,11 +42,14 @@ interface PagedOperationV2Props<T, P, R extends PagedResponse> {
 }
 
 export interface AwsClientProps {
-  readonly credentialProvider: CredentialProvider
+  readonly credentialProvider?: CredentialProvider
   readonly region: Region
   readonly logger: TkmLogger
   readonly id: string
-  readonly identity?: CallerIdentity
+}
+
+export interface CloudFormationClientProps extends AwsClientProps {
+  readonly identity: CallerIdentity
 }
 
 /**

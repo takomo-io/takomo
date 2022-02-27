@@ -1,4 +1,4 @@
-import { Region } from "@takomo/aws-model"
+import { CallerIdentity, Region } from "@takomo/aws-model"
 import { checksum, createScheduler, Scheduler, TkmLogger } from "@takomo/util"
 import { IPolicy, Policy } from "cockatiel"
 import {
@@ -6,33 +6,25 @@ import {
   createCloudFormationClient,
 } from "./cloudformation/client"
 import { CloudTrailClient, createCloudTrailClient } from "./cloudtrail/client"
-import { ApiCallProps, AwsClientProps } from "./common/client"
+import {
+  ApiCallProps,
+  AwsClientProps,
+  CloudFormationClientProps,
+} from "./common/client"
 import { createApiRequestListenerPlugin } from "./common/request-listener"
 import { createS3Client, S3Client } from "./s3/client"
 import { createSecretsClient, SecretsClient } from "./secrets/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
 import { createStsClient, StsClient } from "./sts/client"
 
-const makeCredentialsRegionHash = async ({
-  region,
-  credentialProvider,
-  identity,
-}: AwsClientProps): Promise<string> => {
-  if (identity) {
-    return checksum([region, identity.accountId].join(":"))
-  }
-
-  const { accessKeyId, secretAccessKey, sessionToken } =
-    await credentialProvider()
-
-  return checksum(
-    [region, accessKeyId, secretAccessKey, sessionToken].join(":"),
-  )
-}
+const makeIdentityRegionHash = (
+  region: Region,
+  identity: CallerIdentity,
+): string => checksum([region, identity.accountId].join(":"))
 
 export interface AwsClientProvider {
   readonly createCloudFormationClient: (
-    props: AwsClientProps,
+    props: CloudFormationClientProps,
   ) => Promise<CloudFormationClient>
   readonly createCloudTrailClient: (
     props: AwsClientProps,
@@ -121,9 +113,9 @@ export const createAwsClientProvider = ({
     getRegions: (): ReadonlyArray<Region> => Array.from(regions),
     getApiCalls: (): ReadonlyArray<ApiCallProps> => apiCalls.slice(),
     createCloudFormationClient: async (
-      props: AwsClientProps,
+      props: CloudFormationClientProps,
     ): Promise<CloudFormationClient> => {
-      const hash = await makeCredentialsRegionHash(props)
+      const hash = makeIdentityRegionHash(props.region, props.identity)
       const controls = getConcurrencyControls(hash)
 
       const client = createCloudFormationClient({
@@ -132,7 +124,7 @@ export const createAwsClientProvider = ({
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
         waitStackRollbackToCompletePollInterval: 2000,
-        middleware: createApiRequestListenerPlugin(props.id, listener),
+        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })
 
       regions.add(props.region)
@@ -144,7 +136,7 @@ export const createAwsClientProvider = ({
     ): Promise<CloudTrailClient> => {
       const client = createCloudTrailClient({
         ...props,
-        middleware: createApiRequestListenerPlugin(props.id, listener),
+        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })
       regions.add(props.region)
       return client
@@ -152,7 +144,7 @@ export const createAwsClientProvider = ({
     createS3Client: async (props: AwsClientProps): Promise<S3Client> => {
       const client = createS3Client({
         ...props,
-        middleware: createApiRequestListenerPlugin(props.id, listener),
+        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })
       regions.add(props.region)
       return client
@@ -160,7 +152,7 @@ export const createAwsClientProvider = ({
     createStsClient: async (props: AwsClientProps): Promise<StsClient> => {
       const client = createStsClient({
         ...props,
-        middleware: createApiRequestListenerPlugin(props.id, listener),
+        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })
       regions.add(props.region)
       return client
@@ -168,7 +160,7 @@ export const createAwsClientProvider = ({
     createSsmClient: async (props: AwsClientProps): Promise<SsmClient> => {
       const client = createSsmClient({
         ...props,
-        middleware: createApiRequestListenerPlugin(props.id, listener),
+        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })
       regions.add(props.region)
       return client
@@ -178,7 +170,7 @@ export const createAwsClientProvider = ({
     ): Promise<SecretsClient> => {
       const client = createSecretsClient({
         ...props,
-        middleware: createApiRequestListenerPlugin(props.id, listener),
+        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })
       regions.add(props.region)
       return client

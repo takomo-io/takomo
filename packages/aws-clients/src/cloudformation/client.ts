@@ -39,7 +39,6 @@ import {
   withClientBulkhead,
   withClientScheduler,
 } from "../common/client"
-import { customLogger } from "../common/logger"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import {
@@ -191,7 +190,6 @@ export const createCloudFormationClient = (
     region: props.region,
     credentials: props.credentialProvider,
     retryStrategy: customRetryStrategy(),
-    logger: customLogger(logger),
     requestHandler: customRequestHandler(25),
   })
 
