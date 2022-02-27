@@ -51,13 +51,6 @@ export const run = (props: RunProps = { showHelpOnFail: true }): void => {
       default: false,
       global: true,
     })
-    .option("load-aws-sdk-config", {
-      description:
-        "Prefer loading credentials from configuration file over the credentials file",
-      boolean: true,
-      default: false,
-      global: true,
-    })
     .option("dir", {
       alias: "d",
       description: "Path to project dir",

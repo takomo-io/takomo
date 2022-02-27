@@ -66,10 +66,6 @@ export const initCommandContext = async (
     process.env.AWS_PROFILE = argv.profile
   }
 
-  if (argv["load-aws-sdk-config"]) {
-    process.env.AWS_SDK_LOAD_CONFIG = "true"
-  }
-
   const buildInfo = {
     version,
   }
