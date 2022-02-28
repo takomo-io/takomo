@@ -24,7 +24,7 @@
     "@takomo/test-integration": "4.0.0-alpha.1"
   },
   "devDependencies": {
-    "@aws-sdk/client-sts": "3.48.0",
+    "@aws-sdk/client-sts": "3.53.0",
     "dotenv": "8.2.0",
     "jest-environment-testenv-recycler": "0.0.13"
   }
