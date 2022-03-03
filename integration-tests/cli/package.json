@@ -1,7 +1,7 @@
 {
   "name": "integration-test-cli",
   "private": true,
-  "version": "3.40.2",
+  "version": "3.40.3",
   "description": "Takomo integration tests for CLI",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose"
   },
   "dependencies": {
-    "@takomo/cli": "3.40.2",
+    "@takomo/cli": "3.40.3",
     "source-map-support": "0.5.21",
     "yargs": "17.0.1"
   },

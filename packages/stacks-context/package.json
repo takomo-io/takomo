@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-context",
-  "version": "3.40.2",
+  "version": "3.40.3",
   "description": "Takomo Stacks Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,15 +27,15 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "3.40.2",
-    "@takomo/aws-model": "3.40.2",
-    "@takomo/aws-schema": "3.40.2",
-    "@takomo/core": "3.40.2",
-    "@takomo/stacks-config": "3.40.2",
-    "@takomo/stacks-hooks": "3.40.2",
-    "@takomo/stacks-model": "3.40.2",
-    "@takomo/stacks-resolvers": "3.40.2",
-    "@takomo/util": "3.40.2",
+    "@takomo/aws-clients": "3.40.3",
+    "@takomo/aws-model": "3.40.3",
+    "@takomo/aws-schema": "3.40.3",
+    "@takomo/core": "3.40.3",
+    "@takomo/stacks-config": "3.40.3",
+    "@takomo/stacks-hooks": "3.40.3",
+    "@takomo/stacks-model": "3.40.3",
+    "@takomo/stacks-resolvers": "3.40.3",
+    "@takomo/util": "3.40.3",
     "joi": "17.5.0",
     "ramda": "0.27.1"
   },

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.40.3](https://github.com/takomo-io/takomo/compare/v3.40.2...v3.40.3) (2022-03-03)
+
+**Note:** Version bump only for package integration-test-organization
+
+
+
+
+
 ## [3.40.2](https://github.com/takomo-io/takomo/compare/v3.40.1...v3.40.2) (2022-01-23)
 
 **Note:** Version bump only for package integration-test-organization

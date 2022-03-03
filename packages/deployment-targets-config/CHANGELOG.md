@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.40.3](https://github.com/takomo-io/takomo/compare/v3.40.2...v3.40.3) (2022-03-03)
+
+
+### Bug Fixes
+
+* fix merging of deployment variables ([9180450](https://github.com/takomo-io/takomo/commit/91804506caa36b69ddef02fd88cd12a5d930e0a3))
+
+
+
+
+
 ## [3.40.2](https://github.com/takomo-io/takomo/compare/v3.40.1...v3.40.2) (2022-01-23)
 
 **Note:** Version bump only for package @takomo/deployment-targets-config

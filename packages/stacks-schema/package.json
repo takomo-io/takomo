@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-schema",
-  "version": "3.40.2",
+  "version": "3.40.3",
   "description": "Takomo Stacks Schema",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,14 +27,14 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-model": "3.40.2",
-    "@takomo/aws-schema": "3.40.2",
-    "@takomo/stacks-model": "3.40.2",
-    "@takomo/util": "3.40.2",
+    "@takomo/aws-model": "3.40.3",
+    "@takomo/aws-schema": "3.40.3",
+    "@takomo/stacks-model": "3.40.3",
+    "@takomo/util": "3.40.3",
     "joi": "17.5.0"
   },
   "devDependencies": {
-    "@takomo/test-unit": "3.40.2",
+    "@takomo/test-unit": "3.40.3",
     "aws-sdk": "2.1062.0"
   },
   "engines": {
