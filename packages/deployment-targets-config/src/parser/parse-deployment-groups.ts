@@ -12,7 +12,7 @@ import {
   Vars,
 } from "@takomo/core"
 import { DeploymentGroupPath, Label } from "@takomo/deployment-targets-model"
-import { deepCopy } from "@takomo/util"
+import { merge } from "@takomo/util"
 import R from "ramda"
 import { DeploymentGroupConfig } from "../model"
 import { fillMissingDeploymentGroups } from "../util"
@@ -62,7 +62,7 @@ const parseDeploymentGroup = (
   const labels = R.uniq([...inheritedLabels, ...configuredLabels])
 
   const targetsSchema = parseTargetSchemas(group?.targetsSchema)
-  const vars = deepCopy({ ...inheritedVars, ...parseVars(group?.vars) })
+  const vars = merge(inheritedVars, parseVars(group?.vars))
 
   const deploymentRole =
     parseCommandRole(group?.deploymentRole) ?? inheritedDeploymentRole
