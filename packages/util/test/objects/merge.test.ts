@@ -39,6 +39,19 @@ describe("#merge", () => {
     expect(merge(a, b)).toStrictEqual(expected)
   })
 
+  test("two objects with partly overlapping properties", () => {
+    const a = { name: "Don", color: "red", code: "123", nested: { a: 1, b: 2 } }
+    const b = { name: "El Zorro", age: 13, nested: { a: 3 } }
+    const expected = {
+      name: "El Zorro",
+      age: 13,
+      color: "red",
+      code: "123",
+      nested: { a: 3, b: 2 },
+    }
+    expect(merge(a, b)).toStrictEqual(expected)
+  })
+
   test("three objects with partly overlapping properties", () => {
     const a = { name: "Don", color: "red" }
     const b = { name: "El Zorro", age: 13 }
