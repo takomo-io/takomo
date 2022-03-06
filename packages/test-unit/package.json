@@ -1,6 +1,6 @@
 {
   "name": "@takomo/test-unit",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.2",
   "description": "Takomo unit test utils",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,7 +27,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/util": "4.0.0-alpha.0",
+    "@takomo/util": "4.0.0-alpha.2",
     "joi": "17.5.0"
   },
   "engines": {

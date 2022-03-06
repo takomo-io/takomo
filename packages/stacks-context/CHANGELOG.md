@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.2](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2022-03-06)
+
+
+### Features
+
+* logging improvements ([#347](https://github.com/takomo-io/takomo/issues/347)) ([d0a489a](https://github.com/takomo-io/takomo/commit/d0a489a4dbe3fefa6fb3837af6b1cddd209fb24e))
+
+
+
+
+
 # [4.0.0-alpha.1](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2022-02-07)
 
 **Note:** Version bump only for package @takomo/stacks-context

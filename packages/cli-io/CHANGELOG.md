@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.2](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2022-03-06)
+
+
+### Features
+
+* remove --load-aws-sdk-config command line option ([#348](https://github.com/takomo-io/takomo/issues/348)) ([6a7ba85](https://github.com/takomo-io/takomo/commit/6a7ba85b093cccc95a333585849f3d802ae423de))
+
+
+### BREAKING CHANGES
+
+* Remove --load-aws-sdk-config command line option
+
+
+
+
+
 # [4.0.0-alpha.1](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.0...v4.0.0-alpha.1) (2022-02-07)
 
 **Note:** Version bump only for package @takomo/cli-io

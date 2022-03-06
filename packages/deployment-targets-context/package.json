@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-context",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "description": "Takomo Deployment Targets Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,13 +27,13 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "4.0.0-alpha.1",
-    "@takomo/config-sets": "4.0.0-alpha.1",
-    "@takomo/core": "4.0.0-alpha.1",
-    "@takomo/deployment-targets-config": "4.0.0-alpha.1",
-    "@takomo/deployment-targets-model": "4.0.0-alpha.1",
-    "@takomo/stacks-context": "4.0.0-alpha.1",
-    "@takomo/util": "4.0.0-alpha.0"
+    "@takomo/aws-clients": "4.0.0-alpha.2",
+    "@takomo/config-sets": "4.0.0-alpha.2",
+    "@takomo/core": "4.0.0-alpha.2",
+    "@takomo/deployment-targets-config": "4.0.0-alpha.2",
+    "@takomo/deployment-targets-model": "4.0.0-alpha.2",
+    "@takomo/stacks-context": "4.0.0-alpha.2",
+    "@takomo/util": "4.0.0-alpha.2"
   },
   "engines": {
     "node": ">=14.17.1"
