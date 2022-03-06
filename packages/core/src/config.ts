@@ -1,16 +1,6 @@
 import { Region } from "@takomo/aws-model"
 import { FilePath, TakomoError } from "@takomo/util"
 
-export type AccountRepositoryType = string
-export interface AccountRepositoryConfig {
-  readonly type: AccountRepositoryType
-  readonly [key: string]: unknown
-}
-
-export interface TakomoProjectOrganizationConfig {
-  readonly repository?: AccountRepositoryConfig
-}
-
 export type DeploymentTargetRepositoryType = string
 export interface DeploymentTargetRepositoryConfig {
   readonly type: DeploymentTargetRepositoryType
@@ -48,7 +38,6 @@ export const defaultFeatures = (): Features => ({
  */
 export interface TakomoProjectConfig {
   readonly requiredVersion?: string
-  readonly organization?: TakomoProjectOrganizationConfig
   readonly deploymentTargets?: TakomoProjectDeploymentTargetsConfig
   readonly regions: ReadonlyArray<Region>
 }

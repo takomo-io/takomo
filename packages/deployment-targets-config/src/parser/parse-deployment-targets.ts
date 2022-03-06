@@ -12,12 +12,12 @@ import {
   Vars,
 } from "@takomo/core"
 import { Label } from "@takomo/deployment-targets-model"
-import { deepCopy } from "@takomo/util"
+import { merge } from "@takomo/util"
 import R from "ramda"
 import { DeploymentTargetConfig } from "../model"
 import { parseDeploymentStatus } from "./parse-deployment-status"
 
-const parseDeploymentTarget = (
+export const parseDeploymentTarget = (
   value: any,
   inheritedVars: Vars,
   inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
@@ -44,7 +44,7 @@ const parseDeploymentTarget = (
 
   const configuredLabels = parseStringArray(value.labels)
   const labels = R.uniq([...inheritedLabels, ...configuredLabels])
-  const vars = deepCopy({ ...inheritedVars, ...parseVars(value.vars) })
+  const vars = merge(inheritedVars, parseVars(value.vars))
 
   const deploymentRole =
     parseCommandRole(value.deploymentRole) ?? inheritedDeploymentRole

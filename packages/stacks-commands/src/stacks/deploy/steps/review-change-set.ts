@@ -33,8 +33,11 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
   if (answer === "CANCEL") {
     if (changeSet && !currentStack) {
       logger.info("Clean up temporary stack")
+      const clientToken = uuid()
+
       await cloudFormationClient.initiateStackDeletion({
         StackName: stack.name,
+        ClientRequestToken: clientToken,
       })
 
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -42,7 +45,7 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
 
       await cloudFormationClient.waitStackDeleteToComplete({
         stackId: changeSet.stackId,
-        clientToken: uuid(),
+        clientToken,
         eventListener,
       })
 

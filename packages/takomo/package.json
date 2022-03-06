@@ -1,13 +1,12 @@
 {
   "name": "takomo",
   "version": "4.0.0-alpha.1",
-  "description": "Organize, configure and deploy CloudFormation stacks. Manage AWS organization.",
+  "description": "Organize, configure and deploy CloudFormation stacks.",
   "keywords": [
     "aws",
     "cloudformation",
     "cfn",
     "deploy",
-    "aws organizations",
     "cli",
     "cloudformation templates",
     "cloudformation stacks",

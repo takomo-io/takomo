@@ -23,8 +23,6 @@ export {
   TakomoBuildInfo,
 } from "./command"
 export {
-  AccountRepositoryConfig,
-  AccountRepositoryType,
   defaultFeatures,
   DeploymentTargetRepositoryConfig,
   DeploymentTargetRepositoryType,
@@ -35,7 +33,6 @@ export {
   InternalTakomoProjectConfig,
   TakomoProjectConfig,
   TakomoProjectDeploymentTargetsConfig,
-  TakomoProjectOrganizationConfig,
 } from "./config"
 export { DEFAULT_REGIONS } from "./constants"
 export {
