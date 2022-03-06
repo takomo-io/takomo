@@ -1,0 +1,4 @@
+helpersDir: my-helpers
+varFiles:
+  - bbb/example.yml
+  - ../other.yml

@@ -18,6 +18,7 @@ import {
   TakomoError,
 } from "@takomo/util"
 import Joi from "joi"
+import { dirname } from "path"
 import R from "ramda"
 import semver from "semver"
 
@@ -135,12 +136,14 @@ export const parseProjectConfigItem = (
     )
   }
 
+  const dirPath = dirname(absolutePath)
+
   const regions = contents.regions ?? []
   const resolvers = parseExternalResolvers(contents.resolvers)
   const helpers = parseExternalHandlebarsHelpers(contents.helpers)
   const features = parseFeatures(contents.features)
-  const varFiles = parseFilePaths(projectDir, contents.varFiles)
-  const helpersDir = parseFilePaths(projectDir, contents.helpersDir)
+  const varFiles = parseFilePaths(dirPath, contents.varFiles)
+  const helpersDir = parseFilePaths(dirPath, contents.helpersDir)
 
   return {
     regions: mergeArrays({ first: parentConfig.regions, second: regions }),
@@ -161,7 +164,6 @@ export const parseProjectConfigItem = (
     features: { ...parentConfig.features, ...features },
     varFiles: mergeArrays({ first: parentConfig.varFiles, second: varFiles }),
     requiredVersion: contents.requiredVersion ?? parentConfig.requiredVersion,
-    organization: contents.organization ?? parentConfig.organization,
     deploymentTargets:
       contents.deploymentTargets ?? parentConfig.deploymentTargets,
   }
@@ -250,9 +252,6 @@ const varFiles = [Joi.string(), Joi.array().items(Joi.string())]
 export const takomoProjectConfigFileSchema = Joi.object({
   extends: Joi.string(),
   requiredVersion: Joi.string(),
-  organization: Joi.object({
-    repository: accountRepository,
-  }),
   deploymentTargets: Joi.object({
     repository: deploymentTargetRepository,
   }),

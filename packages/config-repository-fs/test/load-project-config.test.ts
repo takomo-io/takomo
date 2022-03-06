@@ -7,19 +7,20 @@ import { FilePath } from "@takomo/util"
 import { join } from "path"
 import { loadProjectConfig } from "../src/project/config"
 
-const projectDir = `${process.cwd()}/test`
-
 const doLoadProjectConfig = (
+  projectDir: FilePath,
   pathToFile: FilePath,
 ): Promise<InternalTakomoProjectConfig> =>
-  loadProjectConfig(projectDir, `${process.cwd()}/test/${pathToFile}`, {})
+  loadProjectConfig(projectDir, pathToFile, {})
 
 describe("#loadProjectConfig", () => {
   test("with empty file", async () => {
-    const config = await doLoadProjectConfig("project-config-01.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-01.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: undefined,
-      organization: undefined,
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
@@ -31,10 +32,12 @@ describe("#loadProjectConfig", () => {
   })
 
   test("with a single region", async () => {
-    const config = await doLoadProjectConfig("project-config-02.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-02.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: undefined,
-      organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-west-1"],
       resolvers: [],
@@ -46,10 +49,12 @@ describe("#loadProjectConfig", () => {
   })
 
   test("with multiple regions", async () => {
-    const config = await doLoadProjectConfig("project-config-03.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-03.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: undefined,
-      organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-north-1", "us-east-1"],
       resolvers: [],
@@ -61,10 +66,12 @@ describe("#loadProjectConfig", () => {
   })
 
   test("with resolvers", async () => {
-    const config = await doLoadProjectConfig("project-config-04.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-04.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: undefined,
-      organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
       helpers: [],
@@ -88,10 +95,12 @@ describe("#loadProjectConfig", () => {
   })
 
   test("with helpers", async () => {
-    const config = await doLoadProjectConfig("project-config-05.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-05.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: undefined,
-      organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
       resolvers: [],
@@ -115,25 +124,32 @@ describe("#loadProjectConfig", () => {
   })
 
   test("with var files", async () => {
-    const config = await doLoadProjectConfig("project-config-06.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-06.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: undefined,
-      organization: undefined,
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
       helpers: [],
       helpersDir: [],
-      varFiles: [join(projectDir, "file1.json"), join(projectDir, "file2.yml")],
+      varFiles: [
+        join(`${process.cwd()}/test`, "file1.json"),
+        join(`${process.cwd()}/test`, "file2.yml"),
+      ],
       features: defaultFeatures(),
     })
   })
 
   test("with helper dirs", async () => {
-    const config = await doLoadProjectConfig("project-config-07.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-07.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: undefined,
-      organization: undefined,
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
@@ -145,16 +161,39 @@ describe("#loadProjectConfig", () => {
   })
 
   test("with extends", async () => {
-    const config = await doLoadProjectConfig("project-config-08.yml")
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-08.yml`,
+    )
     expect(config).toStrictEqual({
       requiredVersion: ">1.0.0 || >=4.0.0-alpha.0",
-      organization: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-west-1", "us-east-1"],
       resolvers: [],
       helpers: [],
-      helpersDir: [join(projectDir, "my-helpers")],
+      helpersDir: [join(`${process.cwd()}/test`, "my-helpers")],
       varFiles: [],
+      features: defaultFeatures(),
+    })
+  })
+
+  test("extends with complex file hierarchies", async () => {
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test/config-file-hierarchy/aaa`,
+      `${process.cwd()}/test/config-file-hierarchy/aaa/one.yml`,
+    )
+
+    expect(config).toStrictEqual({
+      requiredVersion: undefined,
+      deploymentTargets: undefined,
+      regions: DEFAULT_REGIONS,
+      resolvers: [],
+      helpers: [],
+      helpersDir: [`${process.cwd()}/test/config-file-hierarchy/my-helpers`],
+      varFiles: [
+        `${process.cwd()}/test/config-file-hierarchy/bbb/example.yml`,
+        `${process.cwd()}/test/other.yml`,
+      ],
       features: defaultFeatures(),
     })
   })
