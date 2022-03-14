@@ -6,7 +6,7 @@
 ![node-current](https://img.shields.io/node/v/takomo)
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/takomo-io/community)
 
-Takomo makes it easy to organize, parameterize and deploy your CloudFormation stacks across multiple regions and accounts. In addition to stacks, you can also manage accounts, organizational units and service control policies that belong to your AWS organization.
+Takomo makes it easy to organize, parameterize and deploy your CloudFormation stacks across multiple regions and accounts.
 
 # Quick Start
 
@@ -69,4 +69,4 @@ You can delete the stack with command:
 
 ## Next Steps
 
-Take a look at https://docs.takomo.io for more documentation.
+Take a look at https://takomo.io for more documentation.
