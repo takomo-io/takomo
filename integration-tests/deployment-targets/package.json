@@ -1,7 +1,7 @@
 {
   "name": "integration-test-deployment-targets",
   "private": true,
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0",
   "description": "",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -20,8 +20,8 @@
     "integration-test": "jest test --passWithNoTests --runInBand --ci --verbose"
   },
   "dependencies": {
-    "@takomo/core": "4.0.0-alpha.2",
-    "@takomo/test-integration": "4.0.0-alpha.2"
+    "@takomo/core": "4.0.0",
+    "@takomo/test-integration": "4.0.0"
   },
   "devDependencies": {
     "@aws-sdk/client-sts": "3.53.0",

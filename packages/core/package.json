@@ -1,6 +1,6 @@
 {
   "name": "@takomo/core",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0",
   "description": "Takomo Core",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -28,13 +28,13 @@
   },
   "dependencies": {
     "@aws-sdk/types": "3.53.0",
-    "@takomo/aws-clients": "4.0.0-alpha.2",
-    "@takomo/aws-model": "4.0.0-alpha.2",
-    "@takomo/util": "4.0.0-alpha.2",
+    "@takomo/aws-clients": "4.0.0",
+    "@takomo/aws-model": "4.0.0",
+    "@takomo/util": "4.0.0",
     "joi": "17.5.0"
   },
   "devDependencies": {
-    "@takomo/test-unit": "4.0.0-alpha.2"
+    "@takomo/test-unit": "4.0.0"
   },
   "engines": {
     "node": ">=14.17.1"
