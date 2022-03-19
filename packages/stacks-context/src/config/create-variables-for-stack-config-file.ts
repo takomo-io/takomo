@@ -23,5 +23,6 @@ export const createVariablesForStackConfigFile = (
       },
     },
     stackGroup: stackGroupVariables,
+    parent: stackGroupVariables,
   }
 }
