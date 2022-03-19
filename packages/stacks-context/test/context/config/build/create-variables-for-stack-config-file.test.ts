@@ -61,6 +61,44 @@ describe("#createVariablesForStackConfigFile", () => {
       "/applicationName/regionName/stackName.yml",
     )
 
+    const stackGroupVariables = {
+      name: "regionName",
+      accountIds: ["123456789012", "222222222222"],
+      project: "my project",
+      regions: ["eu-west-1", "eu-north-1"],
+      commandRole: {
+        iamRoleArn: "arn:aws:iam::123456789012:role/admin",
+      },
+      path: "/applicationName/regionName",
+      pathSegments: ["applicationName", "regionName"],
+      isRoot: true,
+      terminationProtection: false,
+      templateBucket: {
+        keyPrefix: "mytemplates/",
+        name: "mybucket",
+      },
+      timeout: {
+        create: 10,
+        update: 20,
+      },
+      capabilities: ["CAPABILITY_IAM"],
+      tags: [
+        {
+          key: "key",
+          value: "value",
+        },
+        { key: "foo", value: "bar" },
+      ],
+      data: {
+        age: 12,
+        code: "en",
+        box: {
+          key: "a",
+        },
+        list: [1, 2, 3],
+      },
+    }
+
     expect(stackVariables).toStrictEqual({
       env: {
         PASSWORD: "abc",
@@ -71,43 +109,8 @@ describe("#createVariablesForStackConfigFile", () => {
       context: {
         projectDir: "/tmp",
       },
-      stackGroup: {
-        name: "regionName",
-        accountIds: ["123456789012", "222222222222"],
-        project: "my project",
-        regions: ["eu-west-1", "eu-north-1"],
-        commandRole: {
-          iamRoleArn: "arn:aws:iam::123456789012:role/admin",
-        },
-        path: "/applicationName/regionName",
-        pathSegments: ["applicationName", "regionName"],
-        isRoot: true,
-        terminationProtection: false,
-        templateBucket: {
-          keyPrefix: "mytemplates/",
-          name: "mybucket",
-        },
-        timeout: {
-          create: 10,
-          update: 20,
-        },
-        capabilities: ["CAPABILITY_IAM"],
-        tags: [
-          {
-            key: "key",
-            value: "value",
-          },
-          { key: "foo", value: "bar" },
-        ],
-        data: {
-          age: 12,
-          code: "en",
-          box: {
-            key: "a",
-          },
-          list: [1, 2, 3],
-        },
-      },
+      stackGroup: stackGroupVariables,
+      parent: stackGroupVariables,
       stack: {
         path: "/applicationName/regionName/stackName.yml",
         pathSegments: ["applicationName", "regionName", "stackName.yml"],
