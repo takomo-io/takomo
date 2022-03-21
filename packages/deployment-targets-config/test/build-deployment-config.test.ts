@@ -5,7 +5,7 @@ import { parseYaml, TkmLogger } from "@takomo/util"
 import { readFileSync } from "fs"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { buildDeploymentConfig } from "../src"
+import { buildDeploymentConfig, DeploymentConfig } from "../src"
 
 const ctx: CommandContext = {
   regions: ["eu-north-1"],
@@ -292,5 +292,191 @@ describe("#buildDeploymentConfig", () => {
     expect(result.error.messages[0]).toStrictEqual(
       "Target 'foobar' is defined more than once in the configuration.",
     )
+  })
+
+  test("deployment roles", async () => {
+    const record = readConfig("05.yml")
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      new Map(),
+      new Map(),
+      record,
+    )
+
+    if (result.isErr()) {
+      fail("Expected result to be ok")
+    }
+
+    const expected: DeploymentConfig = {
+      configSets: [],
+      deploymentRoleName: undefined,
+      deploymentRole: undefined,
+      bootstrapRole: undefined,
+      bootstrapRoleName: undefined,
+      deploymentGroups: [
+        {
+          name: "aaa",
+          deploymentRoleName: "myDeployer",
+          deploymentRole: undefined,
+          bootstrapRole: undefined,
+          bootstrapRoleName: undefined,
+          description: undefined,
+          targets: [],
+          targetsSchema: [],
+          priority: 0,
+          bootstrapConfigSets: [],
+          configSets: [],
+          labels: [],
+          path: "aaa",
+          vars: {
+            test: "yes",
+          },
+          status: "active",
+          children: [
+            {
+              name: "bbb",
+              deploymentRoleName: "myDeployer",
+              deploymentRole: undefined,
+              bootstrapRole: undefined,
+              bootstrapRoleName: undefined,
+              description: undefined,
+              targets: [],
+              targetsSchema: [],
+              priority: 0,
+              bootstrapConfigSets: [],
+              configSets: [],
+              labels: [],
+              path: "aaa/bbb",
+              vars: {
+                test: "yes",
+              },
+              status: "active",
+              children: [],
+            },
+            {
+              name: "ccc",
+              deploymentRoleName: "Admin",
+              deploymentRole: undefined,
+              bootstrapRole: undefined,
+              bootstrapRoleName: undefined,
+              description: undefined,
+              targets: [],
+              targetsSchema: [],
+              priority: 0,
+              bootstrapConfigSets: [],
+              configSets: [],
+              labels: [],
+              path: "aaa/ccc",
+              vars: {
+                test: "yes",
+              },
+              status: "active",
+              children: [],
+            },
+          ],
+        },
+      ],
+      vars: {
+        test: "yes",
+      },
+      targetsSchema: [],
+    }
+
+    expect(result.value).toStrictEqual(expected)
+  })
+
+  test("deployment roles from top-level", async () => {
+    const record = readConfig("06.yml")
+    const result = await buildDeploymentConfig(
+      ctx,
+      logger,
+      schemaRegistry,
+      new Map(),
+      new Map(),
+      record,
+    )
+
+    if (result.isErr()) {
+      fail("Expected result to be ok")
+    }
+
+    const expected: DeploymentConfig = {
+      configSets: [],
+      deploymentRoleName: "SuperAdmin",
+      deploymentRole: undefined,
+      bootstrapRole: undefined,
+      bootstrapRoleName: undefined,
+      deploymentGroups: [
+        {
+          name: "aaa",
+          deploymentRoleName: "SuperAdmin",
+          deploymentRole: undefined,
+          bootstrapRole: undefined,
+          bootstrapRoleName: undefined,
+          description: undefined,
+          targets: [],
+          targetsSchema: [],
+          priority: 0,
+          bootstrapConfigSets: [],
+          configSets: [],
+          labels: [],
+          path: "aaa",
+          vars: {
+            test: "yes",
+          },
+          status: "active",
+          children: [
+            {
+              name: "bbb",
+              deploymentRoleName: "myDeployer",
+              deploymentRole: undefined,
+              bootstrapRole: undefined,
+              bootstrapRoleName: undefined,
+              description: undefined,
+              targets: [],
+              targetsSchema: [],
+              priority: 0,
+              bootstrapConfigSets: [],
+              configSets: [],
+              labels: [],
+              path: "aaa/bbb",
+              vars: {
+                test: "yes",
+              },
+              status: "active",
+              children: [],
+            },
+            {
+              name: "ccc",
+              deploymentRoleName: "SuperAdmin",
+              deploymentRole: undefined,
+              bootstrapRole: undefined,
+              bootstrapRoleName: undefined,
+              description: undefined,
+              targets: [],
+              targetsSchema: [],
+              priority: 0,
+              bootstrapConfigSets: [],
+              configSets: [],
+              labels: [],
+              path: "aaa/ccc",
+              vars: {
+                test: "yes",
+              },
+              status: "active",
+              children: [],
+            },
+          ],
+        },
+      ],
+      vars: {
+        test: "yes",
+      },
+      targetsSchema: [],
+    }
+
+    expect(result.value).toStrictEqual(expected)
   })
 })

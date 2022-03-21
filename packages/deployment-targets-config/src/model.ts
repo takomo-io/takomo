@@ -55,4 +55,8 @@ export interface DeploymentConfig {
   readonly configSets: ReadonlyArray<ConfigSet>
   readonly vars: Vars
   readonly deploymentGroups: ReadonlyArray<DeploymentGroupConfig>
+  readonly deploymentRole?: CommandRole
+  readonly deploymentRoleName?: IamRoleName
+  readonly bootstrapRole?: CommandRole
+  readonly bootstrapRoleName?: IamRoleName
 }
