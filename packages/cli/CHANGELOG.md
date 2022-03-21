@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/takomo-io/takomo/compare/v4.0.0...v4.1.0) (2022-03-21)
+
+**Note:** Version bump only for package @takomo/cli
+
+
+
+
+
 # [4.0.0](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.2...v4.0.0) (2022-03-14)
 
 **Note:** Version bump only for package @takomo/cli

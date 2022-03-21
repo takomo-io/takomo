@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/takomo-io/takomo/compare/v4.0.0...v4.1.0) (2022-03-21)
+
+
+### Features
+
+* **stacks:** expose stack group in parent variable ([#351](https://github.com/takomo-io/takomo/issues/351)) ([f8f0f0d](https://github.com/takomo-io/takomo/commit/f8f0f0d45b1c30dc7211b804fc9324f8c57ef689)), closes [#350](https://github.com/takomo-io/takomo/issues/350)
+
+
+
+
+
 # [4.0.0](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.2...v4.0.0) (2022-03-14)
 
 **Note:** Version bump only for package Takomo

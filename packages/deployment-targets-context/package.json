@@ -1,6 +1,6 @@
 {
   "name": "@takomo/deployment-targets-context",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Takomo Deployment Targets Context",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -32,7 +32,7 @@
     "@takomo/core": "4.0.0",
     "@takomo/deployment-targets-config": "4.0.0",
     "@takomo/deployment-targets-model": "4.0.0",
-    "@takomo/stacks-context": "4.0.0",
+    "@takomo/stacks-context": "4.1.0",
     "@takomo/util": "4.0.0"
   },
   "engines": {
