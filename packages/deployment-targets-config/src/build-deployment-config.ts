@@ -4,7 +4,12 @@ import {
   mergeConfigSets,
   parseConfigSets,
 } from "@takomo/config-sets"
-import { CommandContext, parseVars } from "@takomo/core"
+import {
+  CommandContext,
+  parseCommandRole,
+  parseOptionalString,
+  parseVars,
+} from "@takomo/core"
 import {
   DeploymentGroupPath,
   DeploymentTargetsSchemaRegistry,
@@ -73,10 +78,19 @@ export const buildDeploymentConfig = async (
   const parsedConfigSets = parseConfigSets(record.configSets)
   const configSets = mergeConfigSets(parsedConfigSets, externalConfigSets)
 
+  const deploymentRole = parseCommandRole(record.deploymentRole)
+  const deploymentRoleName = parseOptionalString(record.deploymentRoleName)
+  const bootstrapRole = parseCommandRole(record.bootstrapRole)
+  const bootstrapRoleName = parseOptionalString(record.bootstrapRoleName)
+
   const deploymentGroups = parseDeploymentGroups(
     externalDeploymentTargets,
     record.deploymentGroups,
     vars,
+    deploymentRole,
+    deploymentRoleName,
+    bootstrapRole,
+    bootstrapRoleName,
   )
 
   const configuredStackGroups = deploymentGroups
@@ -140,6 +154,10 @@ export const buildDeploymentConfig = async (
     configSets,
     deploymentGroups,
     targetsSchema,
+    deploymentRole,
+    deploymentRoleName,
+    bootstrapRole,
+    bootstrapRoleName,
   })
 }
 

@@ -1,0 +1,6 @@
+deploymentRoleName: SuperAdmin
+deploymentGroups:
+  aaa: {}
+  aaa/bbb:
+    deploymentRoleName: myDeployer
+  aaa/ccc: {}

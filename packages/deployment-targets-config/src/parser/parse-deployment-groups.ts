@@ -129,6 +129,10 @@ export const parseDeploymentGroups = (
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   value: any,
   inheritedVars: Vars,
+  inheritedDeploymentRole: CommandRole | undefined,
+  inheritedDeploymentRoleName: IamRoleName | undefined,
+  inheritedBootstrapRole: CommandRole | undefined,
+  inheritedBootstrapRoleName: IamRoleName | undefined,
 ): DeploymentGroupConfig[] => {
   if (value === null || value === undefined) {
     return []
@@ -148,10 +152,10 @@ export const parseDeploymentGroups = (
       [],
       [],
       [],
-      undefined,
-      undefined,
-      undefined,
-      undefined,
+      inheritedDeploymentRole,
+      inheritedDeploymentRoleName,
+      inheritedBootstrapRole,
+      inheritedBootstrapRoleName,
     ),
   )
 }

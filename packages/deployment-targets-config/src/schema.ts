@@ -54,5 +54,9 @@ export const createDeploymentTargetsConfigSchema = (
     vars,
     deploymentGroups,
     configSets,
+    deploymentRole: iamRoleArn,
+    deploymentRoleName: iamRoleName,
+    bootstrapRole: iamRoleArn,
+    bootstrapRoleName: iamRoleName,
   })
 }
