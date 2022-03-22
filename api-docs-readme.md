@@ -14,7 +14,7 @@ Here are some links to the most important types:
 - [Resolver](interfaces/stacks_model_src.Resolver.html) - Used to resolve parameter values at deployment time
 - [ResolverProvider](interfaces/stacks_model_src.ResolverProvider.html) - Used to initialize ResolverProvider objects
 - [Hook](interfaces/stacks_model_src.Hook.html) - Used to execute actions during stack operations
-- [HookProvider](modules/stacks_model_src.HookProvider.html) - Used to initialize Hook objects
+- [HookProvider](interfaces/stacks_model_src.HookProvider.html) - Used to initialize Hook objects
 - [CommandContext](interfaces/core_src.CommandContext.html) - Provides access to the current project configuration
 - [StackContext](interfaces/stacks_model_src.StacksContext.html) - Provides access to the current stacks and project configuration
 
