@@ -119,8 +119,25 @@ export const buildErrorMessage = <E extends Error>(
  */
 export interface TemplateEngine {
   readonly registerHelper: (name: string, fn: any) => void
-  readonly registerPartial: (name: string, partialString: string) => void
+  readonly registerPartial: (
+    name: string,
+    partialString: string,
+    partialSource: string,
+  ) => void
   readonly renderTemplate: (string: string, variables: any) => string
+}
+
+/**
+ * @hidden
+ */
+export class PartialAlreadyRegisteredError extends TakomoError {
+  constructor(name: string, source: string, existingSource: string) {
+    const message = `Partial with name '${name}' already registered from ${existingSource}`
+    super(message, {
+      info: `Could not register partial ${name} from source ${source} because a partial with the same name is already registered`,
+      instructions: ["Use another name to register your partial"],
+    })
+  }
 }
 
 /**
@@ -128,12 +145,27 @@ export interface TemplateEngine {
  */
 export const createTemplateEngine = (): TemplateEngine => {
   const instance = hb.create()
+  const registeredPartials = new Map<string, string>()
 
   const registerHelper = (name: string, fn: any): void => {
     instance.registerHelper(name, fn)
   }
 
-  const registerPartial = (name: string, partialString: string): void => {
+  const registerPartial = (
+    name: string,
+    partialString: string,
+    partialSource: string,
+  ): void => {
+    const existingSource = registeredPartials.get(name)
+    if (existingSource) {
+      throw new PartialAlreadyRegisteredError(
+        name,
+        partialSource,
+        existingSource,
+      )
+    }
+
+    registeredPartials.set(name, partialSource)
     const partial = instance.compile(partialString)
     instance.registerPartial(name, partial)
   }

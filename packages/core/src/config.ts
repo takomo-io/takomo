@@ -67,6 +67,7 @@ export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly features: Features
   readonly varFiles: ReadonlyArray<FilePath>
   readonly helpersDir: ReadonlyArray<FilePath>
+  readonly partialsDir: ReadonlyArray<FilePath>
 }
 
 /**

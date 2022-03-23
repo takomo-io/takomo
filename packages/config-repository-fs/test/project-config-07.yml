@@ -1,1 +1,4 @@
 helpersDir: /tmp/custom
+partialsDir:
+  - one/two
+  - /other

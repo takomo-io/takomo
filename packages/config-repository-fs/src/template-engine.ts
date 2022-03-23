@@ -44,12 +44,14 @@ export const loadTemplateHelpers = async (
 }
 
 export const loadTemplatePartials = async (
-  partialsDir: FilePath,
+  partialsDirs: ReadonlyArray<FilePath>,
   logger: TkmLogger,
   te: TemplateEngine,
 ): Promise<void> => {
-  if (await dirExists(partialsDir)) {
-    logger.debug(`Found partials dir: ${partialsDir}`)
+  for (const partialsDir of partialsDirs) {
+    if (!(await dirExists(partialsDir))) {
+      throw new TakomoError(`Partials dir ${partialsDir} does not exists`)
+    }
 
     const partialFiles = await readdirp.promise(partialsDir, {
       alwaysStat: true,
@@ -60,11 +62,11 @@ export const loadTemplatePartials = async (
     for (const partialFile of partialFiles) {
       const name = partialFile.fullPath.substr(partialsDir.length + 1)
 
-      logger.debug(`Register partial: ${name}`)
+      logger.debug(
+        `Register partial '${name}' from file ${partialFile.fullPath}`,
+      )
       const contents = await readFileContents(partialFile.fullPath)
-      te.registerPartial(name, contents)
+      te.registerPartial(name, contents, partialFile.fullPath)
     }
-  } else {
-    logger.debug("Partials dir not found")
   }
 }
