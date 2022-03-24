@@ -1,0 +1,5 @@
+{{> xxx/test.txt }}
+
+{{> b.yml }}
+
+{{> a.yml }}

@@ -1,0 +1,5 @@
+Resources:
+  LG:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref Name

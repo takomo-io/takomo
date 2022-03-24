@@ -19,16 +19,20 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-01.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
       helpers: [],
       helpersDir: [],
+      partialsDir: [],
       varFiles: [],
       features: defaultFeatures(),
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
   test("with a single region", async () => {
@@ -36,16 +40,20 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-02.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: ["eu-west-1"],
       resolvers: [],
       helpers: [],
       helpersDir: [],
+      partialsDir: [],
       varFiles: [],
       features: defaultFeatures(),
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
   test("with multiple regions", async () => {
@@ -53,16 +61,20 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-03.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-north-1", "us-east-1"],
       resolvers: [],
       helpers: [],
       helpersDir: [],
+      partialsDir: [],
       varFiles: [],
       features: defaultFeatures(),
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
   test("with resolvers", async () => {
@@ -70,12 +82,14 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-04.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
       helpers: [],
       helpersDir: [],
+      partialsDir: [],
       varFiles: [],
       features: defaultFeatures(),
       resolvers: [
@@ -91,7 +105,9 @@ describe("#loadProjectConfig", () => {
           name: "a-better-name",
         },
       ],
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
   test("with helpers", async () => {
@@ -99,7 +115,8 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-05.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: ["eu-central-1", "us-east-1"],
@@ -120,7 +137,10 @@ describe("#loadProjectConfig", () => {
         },
       ],
       helpersDir: [],
-    })
+      partialsDir: [],
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
   test("with var files", async () => {
@@ -128,36 +148,44 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-06.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
       helpers: [],
       helpersDir: [],
+      partialsDir: [],
       varFiles: [
         join(`${process.cwd()}/test`, "file1.json"),
         join(`${process.cwd()}/test`, "file2.yml"),
       ],
       features: defaultFeatures(),
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
-  test("with helper dirs", async () => {
+  test("with helper dirs and partials", async () => {
     const config = await doLoadProjectConfig(
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-07.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
       helpers: [],
       helpersDir: ["/tmp/custom"],
+      partialsDir: [join(`${process.cwd()}/test`, "one", "two"), "/other"],
       varFiles: [],
       features: defaultFeatures(),
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
   test("with extends", async () => {
@@ -165,16 +193,20 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test`,
       `${process.cwd()}/test/project-config-08.yml`,
     )
-    expect(config).toStrictEqual({
+
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: ">1.0.0 || >=4.0.0-alpha.0",
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-west-1", "us-east-1"],
       resolvers: [],
       helpers: [],
       helpersDir: [join(`${process.cwd()}/test`, "my-helpers")],
+      partialsDir: [],
       varFiles: [],
       features: defaultFeatures(),
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 
   test("extends with complex file hierarchies", async () => {
@@ -183,18 +215,21 @@ describe("#loadProjectConfig", () => {
       `${process.cwd()}/test/config-file-hierarchy/aaa/one.yml`,
     )
 
-    expect(config).toStrictEqual({
+    const expected: InternalTakomoProjectConfig = {
       requiredVersion: undefined,
       deploymentTargets: undefined,
       regions: DEFAULT_REGIONS,
       resolvers: [],
       helpers: [],
       helpersDir: [`${process.cwd()}/test/config-file-hierarchy/my-helpers`],
+      partialsDir: [],
       varFiles: [
         `${process.cwd()}/test/config-file-hierarchy/bbb/example.yml`,
         `${process.cwd()}/test/other.yml`,
       ],
       features: defaultFeatures(),
-    })
+    }
+
+    expect(config).toStrictEqual(expected)
   })
 })

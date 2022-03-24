@@ -144,6 +144,7 @@ export const parseProjectConfigItem = (
   const features = parseFeatures(contents.features)
   const varFiles = parseFilePaths(dirPath, contents.varFiles)
   const helpersDir = parseFilePaths(dirPath, contents.helpersDir)
+  const partialsDir = parseFilePaths(dirPath, contents.partialsDir)
 
   return {
     regions: mergeArrays({ first: parentConfig.regions, second: regions }),
@@ -160,6 +161,10 @@ export const parseProjectConfigItem = (
     helpersDir: mergeArrays({
       first: parentConfig.helpersDir,
       second: helpersDir,
+    }),
+    partialsDir: mergeArrays({
+      first: parentConfig.partialsDir,
+      second: partialsDir,
     }),
     features: { ...parentConfig.features, ...features },
     varFiles: mergeArrays({ first: parentConfig.varFiles, second: varFiles }),
@@ -216,15 +221,6 @@ export const collectProjectConfigFileHierarchy = async (
 
 const { variableName } = createCommonSchema()
 
-const accountRepositoryType = Joi.string()
-  .min(1)
-  .max(40)
-  .regex(/^[a-zA-Z0-9-_]+$/)
-
-const accountRepository = Joi.object({
-  type: accountRepositoryType.required(),
-}).unknown(true)
-
 const deploymentTargetRepositoryType = Joi.string()
   .min(1)
   .max(40)
@@ -259,6 +255,7 @@ export const takomoProjectConfigFileSchema = Joi.object({
   resolvers: Joi.array().items(Joi.string(), externalResolver),
   helpers: Joi.array().items(Joi.string(), externalHandlebarsHelper),
   helpersDir: [Joi.string(), Joi.array().items(Joi.string())],
+  partialsDir: [Joi.string(), Joi.array().items(Joi.string())],
   varFiles,
   features,
 })
@@ -270,6 +267,7 @@ const createDefaultProjectConfig = (
   resolvers: [],
   helpers: [],
   helpersDir: [],
+  partialsDir: [],
   varFiles: [],
   features: defaultFeatures(),
 })

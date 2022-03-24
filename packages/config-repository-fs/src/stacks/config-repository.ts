@@ -87,9 +87,16 @@ export const createFileSystemStacksConfigRepository = async ({
     ? [helpersDir, ...additionalHelpersDirs]
     : additionalHelpersDirs
 
+  const defaultPartialsDirExists = await dirExists(partialsDir)
+  const additionalPartialsDirs = ctx.projectConfig.partialsDir
+
+  const partialsDirs = defaultPartialsDirExists
+    ? [partialsDir, ...additionalPartialsDirs]
+    : additionalPartialsDirs
+
   await Promise.all([
     loadTemplateHelpers(helpersDirs, logger, templateEngine),
-    loadTemplatePartials(partialsDir, logger, templateEngine),
+    loadTemplatePartials(partialsDirs, logger, templateEngine),
   ])
 
   const getStackTemplateContentsFromFile = async (
