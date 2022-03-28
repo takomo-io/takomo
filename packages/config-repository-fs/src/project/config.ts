@@ -145,6 +145,7 @@ export const parseProjectConfigItem = (
   const varFiles = parseFilePaths(dirPath, contents.varFiles)
   const helpersDir = parseFilePaths(dirPath, contents.helpersDir)
   const partialsDir = parseFilePaths(dirPath, contents.partialsDir)
+  const schemasDir = parseFilePaths(dirPath, contents.schemasDir)
 
   return {
     regions: mergeArrays({ first: parentConfig.regions, second: regions }),
@@ -165,6 +166,10 @@ export const parseProjectConfigItem = (
     partialsDir: mergeArrays({
       first: parentConfig.partialsDir,
       second: partialsDir,
+    }),
+    schemasDir: mergeArrays({
+      first: parentConfig.schemasDir,
+      second: schemasDir,
     }),
     features: { ...parentConfig.features, ...features },
     varFiles: mergeArrays({ first: parentConfig.varFiles, second: varFiles }),
@@ -256,6 +261,7 @@ export const takomoProjectConfigFileSchema = Joi.object({
   helpers: Joi.array().items(Joi.string(), externalHandlebarsHelper),
   helpersDir: [Joi.string(), Joi.array().items(Joi.string())],
   partialsDir: [Joi.string(), Joi.array().items(Joi.string())],
+  schemasDir: [Joi.string(), Joi.array().items(Joi.string())],
   varFiles,
   features,
 })
@@ -268,6 +274,7 @@ const createDefaultProjectConfig = (
   helpers: [],
   helpersDir: [],
   partialsDir: [],
+  schemasDir: [],
   varFiles: [],
   features: defaultFeatures(),
 })
