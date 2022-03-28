@@ -28,6 +28,7 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: [],
       partialsDir: [],
+      schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
     }
@@ -49,6 +50,7 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: [],
       partialsDir: [],
+      schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
     }
@@ -70,6 +72,7 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: [],
       partialsDir: [],
+      schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
     }
@@ -90,6 +93,7 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: [],
       partialsDir: [],
+      schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
       resolvers: [
@@ -138,6 +142,7 @@ describe("#loadProjectConfig", () => {
       ],
       helpersDir: [],
       partialsDir: [],
+      schemasDir: [],
     }
 
     expect(config).toStrictEqual(expected)
@@ -157,6 +162,7 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: [],
       partialsDir: [],
+      schemasDir: [],
       varFiles: [
         join(`${process.cwd()}/test`, "file1.json"),
         join(`${process.cwd()}/test`, "file2.yml"),
@@ -181,6 +187,7 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: ["/tmp/custom"],
       partialsDir: [join(`${process.cwd()}/test`, "one", "two"), "/other"],
+      schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
     }
@@ -202,6 +209,7 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: [join(`${process.cwd()}/test`, "my-helpers")],
       partialsDir: [],
+      schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
     }
@@ -223,10 +231,33 @@ describe("#loadProjectConfig", () => {
       helpers: [],
       helpersDir: [`${process.cwd()}/test/config-file-hierarchy/my-helpers`],
       partialsDir: [],
+      schemasDir: [],
       varFiles: [
         `${process.cwd()}/test/config-file-hierarchy/bbb/example.yml`,
         `${process.cwd()}/test/other.yml`,
       ],
+      features: defaultFeatures(),
+    }
+
+    expect(config).toStrictEqual(expected)
+  })
+
+  test("with schemas dir", async () => {
+    const config = await doLoadProjectConfig(
+      `${process.cwd()}/test`,
+      `${process.cwd()}/test/project-config-09.yml`,
+    )
+
+    const expected: InternalTakomoProjectConfig = {
+      requiredVersion: undefined,
+      deploymentTargets: undefined,
+      regions: DEFAULT_REGIONS,
+      resolvers: [],
+      helpers: [],
+      helpersDir: [],
+      partialsDir: [],
+      schemasDir: ["/tmp"],
+      varFiles: [],
       features: defaultFeatures(),
     }
 

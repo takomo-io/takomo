@@ -94,6 +94,13 @@ export const createFileSystemStacksConfigRepository = async ({
     ? [partialsDir, ...additionalPartialsDirs]
     : additionalPartialsDirs
 
+  const defaultSchemasDirExists = await dirExists(schemasDir)
+  const additionalSchemasDirs = ctx.projectConfig.schemasDir
+
+  const schemasDirs = defaultSchemasDirExists
+    ? [schemasDir, ...additionalSchemasDirs]
+    : additionalSchemasDirs
+
   await Promise.all([
     loadTemplateHelpers(helpersDirs, logger, templateEngine),
     loadTemplatePartials(partialsDirs, logger, templateEngine),
@@ -170,7 +177,7 @@ export const createFileSystemStacksConfigRepository = async ({
       await Promise.all([
         loadCustomResolvers(resolversDir, logger, resolverRegistry),
         loadCustomHooks(hooksDir, logger, hookRegistry),
-        loadCustomSchemas({ schemasDir, logger, registry: schemaRegistry }),
+        loadCustomSchemas({ schemasDirs, logger, registry: schemaRegistry }),
       ])
     },
 
