@@ -1,6 +1,6 @@
 {
   "name": "@takomo/aws-model",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "description": "Takomo AWS model",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,7 +27,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/util": "4.0.0"
+    "@takomo/util": "4.2.0"
   },
   "engines": {
     "node": ">=14.17.1"

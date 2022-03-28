@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/takomo-io/takomo/compare/v4.1.0...v4.2.0) (2022-03-28)
+
+
+### Features
+
+* **schemas:** add schemasDir property to takomo.yml to make it possible to load schemas from custom ([#358](https://github.com/takomo-io/takomo/issues/358)) ([c93508c](https://github.com/takomo-io/takomo/commit/c93508c04572683f697181b47a13c9bedd4e9b42)), closes [#357](https://github.com/takomo-io/takomo/issues/357)
+* **stacks:** add partialsDir property to project config file to make it possible to provide custom ([#356](https://github.com/takomo-io/takomo/issues/356)) ([f0741de](https://github.com/takomo-io/takomo/commit/f0741debd7778894af36342d1f04587641984736)), closes [#355](https://github.com/takomo-io/takomo/issues/355)
+
+
+
+
+
 # [4.0.0](https://github.com/takomo-io/takomo/compare/v4.0.0-alpha.2...v4.0.0) (2022-03-14)
 
 **Note:** Version bump only for package @takomo/core

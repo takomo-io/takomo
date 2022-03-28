@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-hooks",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "description": "Takomo Stacks Hooks",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -27,10 +27,10 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@takomo/aws-clients": "4.0.0",
-    "@takomo/aws-model": "4.0.0",
-    "@takomo/stacks-model": "4.0.0",
-    "@takomo/util": "4.0.0",
+    "@takomo/aws-clients": "4.2.0",
+    "@takomo/aws-model": "4.2.0",
+    "@takomo/stacks-model": "4.2.0",
+    "@takomo/util": "4.2.0",
     "folder-hash": "4.0.1",
     "ramda": "0.27.1"
   },
