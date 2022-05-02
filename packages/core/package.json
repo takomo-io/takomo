@@ -27,11 +27,11 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@aws-sdk/types": "3.53.0",
+    "@aws-sdk/types": "3.78.0",
     "@takomo/aws-clients": "4.2.0",
     "@takomo/aws-model": "4.2.0",
     "@takomo/util": "4.2.0",
-    "joi": "17.5.0"
+    "joi": "17.6.0"
   },
   "devDependencies": {
     "@takomo/test-unit": "4.2.0"
