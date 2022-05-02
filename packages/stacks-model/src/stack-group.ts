@@ -4,13 +4,12 @@ import {
   StackCapability,
   StackPolicyBody,
   TagKey,
-  TagValue,
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { HookConfig } from "./hook"
 import { Schemas } from "./schemas"
-import { InternalStack } from "./stack"
+import { InternalStack, RawTagValue } from "./stack"
 
 export type StackGroupPath = string
 export type StackGroupName = string
@@ -30,7 +29,7 @@ export interface StackGroupProps {
   children: ReadonlyArray<StackGroup>
   stacks: ReadonlyArray<InternalStack>
   timeout?: TimeoutConfig
-  tags: Map<TagKey, TagValue>
+  tags: Map<TagKey, RawTagValue>
   hooks: ReadonlyArray<HookConfig>
   data: Vars
   capabilities?: ReadonlyArray<StackCapability>
@@ -58,7 +57,7 @@ export interface StackGroup {
   readonly children: ReadonlyArray<StackGroup>
   readonly stacks: ReadonlyArray<InternalStack>
   readonly timeout?: TimeoutConfig
-  readonly tags: Map<TagKey, TagValue>
+  readonly tags: Map<TagKey, RawTagValue>
   readonly hooks: ReadonlyArray<HookConfig>
   readonly data: Record<string, unknown>
   readonly capabilities?: ReadonlyArray<StackCapability>

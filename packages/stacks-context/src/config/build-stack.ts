@@ -10,6 +10,7 @@ import {
   InternalStack,
   isWithinCommandPath,
   normalizeStackPath,
+  RawTagValue,
   SchemaRegistry,
   StackGroup,
   StackPath,
@@ -74,7 +75,7 @@ const validateData = (
 const validateTags = (
   stackPath: StackPath,
   schemas: ReadonlyArray<AnySchema>,
-  tags: Map<string, string>,
+  tags: Map<string, RawTagValue>,
 ): void => {
   schemas.forEach((schema) => {
     const tagsObject = mapToObject(tags)
