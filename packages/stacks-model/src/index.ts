@@ -18,6 +18,7 @@ export {
   createStack,
   InternalStack,
   normalizeStackPath,
+  RawTagValue,
   Stack,
   StackPath,
   StackProps,

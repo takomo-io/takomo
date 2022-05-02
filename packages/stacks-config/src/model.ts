@@ -6,11 +6,11 @@ import {
   StackParameterKey,
   StackPolicyBody,
   TagKey,
-  TagValue,
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
 import {
   HookConfig,
+  RawTagValue,
   ResolverName,
   StackPath,
   TemplateBucketConfig,
@@ -91,7 +91,7 @@ export interface StackConfig {
   readonly commandRole?: CommandRole
   readonly timeout?: TimeoutConfig
   readonly depends: ReadonlyArray<StackPath>
-  readonly tags: Map<TagKey, TagValue>
+  readonly tags: Map<TagKey, RawTagValue>
   readonly inheritTags: boolean
   readonly parameters: Map<StackParameterKey, ParameterConfigs>
   readonly data: Vars
@@ -111,7 +111,7 @@ export interface StackGroupConfig {
   readonly accountIds?: ReadonlyArray<AccountId>
   readonly commandRole?: CommandRole
   readonly templateBucket?: TemplateBucketConfig
-  readonly tags: Map<TagKey, TagValue>
+  readonly tags: Map<TagKey, RawTagValue>
   readonly inheritTags: boolean
   readonly timeout?: TimeoutConfig
   readonly hooks: ReadonlyArray<HookConfig>

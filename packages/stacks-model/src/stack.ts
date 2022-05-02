@@ -9,7 +9,6 @@ import {
   StackParameterKey,
   StackPolicyBody,
   TagKey,
-  TagValue,
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
 import { FilePath, TkmLogger } from "@takomo/util"
@@ -19,6 +18,8 @@ import { HookExecutor } from "./hook"
 import { ResolverExecutor } from "./resolver"
 import { Schemas } from "./schemas"
 import { StackGroupName, StackGroupPath } from "./stack-group"
+
+export type RawTagValue = string | number | boolean
 
 /**
  * Stack path.
@@ -47,7 +48,7 @@ export interface StackProps {
   region: Region
   accountIds: ReadonlyArray<AccountId>
   commandRole?: CommandRole
-  tags: Map<TagKey, TagValue>
+  tags: Map<TagKey, RawTagValue>
   timeout: TimeoutConfig
   parameters: Map<StackParameterKey, ResolverExecutor>
   dependencies: ReadonlyArray<StackPath>
@@ -148,7 +149,7 @@ export interface InternalStack extends Stack {
   readonly templateBucket?: TemplateBucketConfig
   readonly accountIds: ReadonlyArray<AccountId>
   readonly commandRole?: CommandRole
-  readonly tags: Map<TagKey, TagValue>
+  readonly tags: Map<TagKey, RawTagValue>
   readonly timeout: TimeoutConfig
   readonly parameters: Map<StackParameterKey, ResolverExecutor>
   readonly hooks: ReadonlyArray<HookExecutor>

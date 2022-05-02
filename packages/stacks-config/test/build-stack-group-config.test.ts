@@ -1,5 +1,7 @@
 import { AwsClientProvider } from "@takomo/aws-clients/src"
+import { TagKey } from "@takomo/aws-model"
 import { CommandContext, TakomoProjectConfig } from "@takomo/core"
+import { RawTagValue } from "@takomo/stacks-model"
 import { mock } from "jest-mock-extended"
 import { buildStackGroupConfig } from "../src"
 
@@ -73,8 +75,8 @@ describe("#buildStackGroupConfig", () => {
       project: "example-project",
       regions: ["eu-west-1"],
       accountIds: undefined,
-      tags: new Map([
-        ["first", "1"],
+      tags: new Map<TagKey, RawTagValue>([
+        ["first", 1],
         ["second", "b"],
       ]),
       inheritTags: true,
