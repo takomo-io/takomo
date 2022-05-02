@@ -37,7 +37,7 @@
     "@takomo/stacks-resolvers": "4.2.0",
     "@takomo/util": "4.2.0",
     "joi": "17.6.0",
-    "ramda": "0.27.1"
+    "ramda": "0.28.0"
   },
   "devDependencies": {
     "@aws-sdk/types": "3.78.0"

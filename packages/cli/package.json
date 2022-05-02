@@ -45,7 +45,7 @@
     "easy-table": "1.2.0",
     "inquirer": "8.1.2",
     "joi": "17.6.0",
-    "ramda": "0.27.1",
+    "ramda": "0.28.0",
     "yargs": "17.0.1"
   },
   "engines": {

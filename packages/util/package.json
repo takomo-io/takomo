@@ -38,7 +38,7 @@
     "lodash.merge": "4.6.2",
     "p-queue": "6.6.2",
     "pretty-ms": "7.0.1",
-    "ramda": "0.27.1",
+    "ramda": "0.28.0",
     "strip-ansi": "6.0.0",
     "uuid": "8.3.2"
   },
