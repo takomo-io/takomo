@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://github.com/takomo-io/takomo/compare/v4.2.0...v4.2.1) (2022-05-02)
+
+
+### Bug Fixes
+
+* retain original tag value type when constructing stack tags from configuration files. ([#361](https://github.com/takomo-io/takomo/issues/361)) ([4eb0314](https://github.com/takomo-io/takomo/commit/4eb03146c38da27903085ef8fb3874cf541a87db)), closes [#360](https://github.com/takomo-io/takomo/issues/360)
+
+
+
+
+
 # [4.2.0](https://github.com/takomo-io/takomo/compare/v4.1.0...v4.2.0) (2022-03-28)
 
 
