@@ -27,7 +27,7 @@
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@aws-sdk/types": "3.53.0",
+    "@aws-sdk/types": "3.78.0",
     "@takomo/aws-clients": "4.2.0",
     "@takomo/aws-model": "4.2.0",
     "@takomo/config-sets": "4.2.0",
@@ -43,8 +43,8 @@
     "@takomo/stacks-schema": "4.2.0",
     "@takomo/util": "4.2.0",
     "cockatiel": "2.0.1",
-    "joi": "17.5.0",
-    "ramda": "0.27.1"
+    "joi": "17.6.0",
+    "ramda": "0.28.0"
   },
   "engines": {
     "node": ">=14.17.1"

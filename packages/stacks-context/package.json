@@ -36,11 +36,11 @@
     "@takomo/stacks-model": "4.2.0",
     "@takomo/stacks-resolvers": "4.2.0",
     "@takomo/util": "4.2.0",
-    "joi": "17.5.0",
-    "ramda": "0.27.1"
+    "joi": "17.6.0",
+    "ramda": "0.28.0"
   },
   "devDependencies": {
-    "@aws-sdk/types": "3.50.0"
+    "@aws-sdk/types": "3.78.0"
   },
   "engines": {
     "node": ">=14.17.1"

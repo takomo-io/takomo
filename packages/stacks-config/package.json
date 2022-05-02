@@ -33,7 +33,7 @@
     "@takomo/stacks-model": "4.2.0",
     "@takomo/stacks-schema": "4.2.0",
     "@takomo/util": "4.2.0",
-    "joi": "17.5.0",
+    "joi": "17.6.0",
     "neverthrow": "4.3.1"
   },
   "devDependencies": {
