@@ -203,10 +203,11 @@ const handler = (argv: Arguments<CommandArgs>) =>
       outputFormat: argv[OUTPUT_OPT] as OutputFormat,
     }),
     io: (ctx, logger) => createRunTargetsIO({ logger }),
-    configRepository: (ctx, logger) =>
+    configRepository: (ctx, logger, credentialManager) =>
       createFileSystemDeploymentTargetsConfigRepository({
         ctx,
         logger,
+        credentialManager,
         pathToDeploymentConfigFile: argv[CONFIG_FILE_OPT],
         ...ctx.filePaths,
       }),

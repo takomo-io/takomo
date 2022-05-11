@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@takomo/aws-model": "4.2.1",
+    "@takomo/aws-clients": "4.2.1",
     "@takomo/core": "4.2.1",
     "@takomo/deployment-targets-config": "4.2.1",
     "@takomo/deployment-targets-model": "4.2.1",

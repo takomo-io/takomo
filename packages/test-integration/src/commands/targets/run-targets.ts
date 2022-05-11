@@ -1,4 +1,3 @@
-import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { IamRoleArn, IamRoleName } from "@takomo/aws-model"
 import { OutputFormat } from "@takomo/core"
 import {
@@ -77,6 +76,11 @@ export const executeRunTargetsCommand = (
   createTargetsRunOutputMatcher(async () => {
     const logLevel = props.logLevel ?? "info"
 
+    const logger = createConsoleLogger({
+      logLevel,
+      name: basename(expect.getState().testPath),
+    })
+
     const ctxAndConfig = await createCtxAndConfigRepository({
       projectDir: props.projectDir,
       autoConfirmEnabled: props.autoConfirmEnabled ?? true,
@@ -86,23 +90,11 @@ export const executeRunTargetsCommand = (
       pathToDeploymentConfigFile: props.configFile,
       feature: props.feature ?? [],
       logLevel,
-    })
-
-    const logger = createConsoleLogger({
-      logLevel,
-      name: basename(expect.getState().testPath),
-    })
-
-    const credentialManager = await initDefaultCredentialManager(
-      () => Promise.resolve(""),
       logger,
-      ctxAndConfig.ctx.awsClientProvider,
-      ctxAndConfig.ctx.credentials,
-    )
+    })
 
     return deploymentTargetsRunCommand({
       ...ctxAndConfig,
-      credentialManager,
       io: createTestRunTargetsIO(logger),
       input: {
         timer: createTimer("total"),

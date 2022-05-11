@@ -98,14 +98,6 @@ export const convertStack = ({
   return convertStackInternal(s)
 }
 
-/**
- * @hidden
- */
-export const convertStacks = ({
-  Stacks,
-}: CF.DescribeStacksOutput): ReadonlyArray<CloudFormationStack> =>
-  (Stacks ?? []).map(convertStackInternal)
-
 const convertResourceChangeTarget = (
   target?: CF.ResourceTargetDefinition,
 ): ResourceTargetDefinition | undefined => {

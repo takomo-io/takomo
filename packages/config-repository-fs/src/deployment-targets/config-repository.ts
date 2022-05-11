@@ -1,3 +1,4 @@
+import { CredentialManager } from "@takomo/aws-clients"
 import { ConfigSetName } from "@takomo/config-sets"
 import { CommandContext } from "@takomo/core"
 import {
@@ -13,6 +14,7 @@ import {
   createDeploymentTargetConfigItemSchema,
   createDeploymentTargetRepositoryRegistry,
   createFileSystemDeploymentTargetRepositoryProvider,
+  createOrganizationDeploymentTargetRepositoryProvider,
   DeploymentTargetRepository,
 } from "@takomo/deployment-targets-repository"
 import { StacksConfigRepository } from "@takomo/stacks-context"
@@ -40,6 +42,7 @@ interface FileSystemDeploymentTargetsConfigRepositoryProps
   readonly deploymentDir: FilePath
   readonly configSetsDir: FilePath
   readonly defaultDeploymentConfigFileName: string
+  readonly credentialManager: CredentialManager
 }
 
 const resolveConfigFilePath = (
@@ -54,6 +57,7 @@ const initDeploymentTargetsRepository = async (
   ctx: CommandContext,
   logger: TkmLogger,
   templateEngine: TemplateEngine,
+  credentialManager: CredentialManager,
 ): Promise<DeploymentTargetRepository | undefined> => {
   if (ctx.projectConfig?.deploymentTargets?.repository === undefined) {
     return undefined
@@ -65,11 +69,17 @@ const initDeploymentTargetsRepository = async (
     createFileSystemDeploymentTargetRepositoryProvider(),
   )
 
+  registry.registerDeploymentTargetRepositoryProvider(
+    "organization",
+    createOrganizationDeploymentTargetRepositoryProvider(),
+  )
+
   return registry.initDeploymentTargetRepository({
     logger,
     ctx,
     templateEngine,
     config: ctx.projectConfig.deploymentTargets.repository,
+    credentialManager,
   })
 }
 
@@ -77,11 +87,13 @@ const loadExternallyPersistedDeploymentTargets = async (
   ctx: CommandContext,
   logger: TkmLogger,
   templateEngine: TemplateEngine,
+  credentialManager: CredentialManager,
 ): Promise<Map<DeploymentGroupPath, ReadonlyArray<unknown>>> => {
   const repository = await initDeploymentTargetsRepository(
     ctx,
     logger,
     templateEngine,
+    credentialManager,
   )
 
   if (!repository) {
@@ -135,6 +147,7 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
     logger,
     ctx,
     stacksDir,
+    credentialManager,
   } = props
 
   const hookRegistry = createHookRegistry({ logger })
@@ -191,6 +204,7 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
           ctx,
           logger,
           stacksConfigRepository.templateEngine,
+          credentialManager,
         )
 
       const externalConfigSets = await loadConfigSetsFromConfigSetsDir(

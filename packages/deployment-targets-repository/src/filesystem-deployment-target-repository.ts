@@ -3,11 +3,9 @@ import {
   DeploymentTargetName,
 } from "@takomo/deployment-targets-model"
 import {
-  createFile,
   dirExists,
   expandFilePath,
   FilePath,
-  formatYaml,
   parseYaml,
   readFileContents,
   renderTemplate,
@@ -15,7 +13,7 @@ import {
   TemplateEngine,
   TkmLogger,
 } from "@takomo/util"
-import { basename, dirname, join, relative } from "path"
+import { basename, dirname, relative } from "path"
 import readdirp from "readdirp"
 import {
   DeploymentTargetConfigItem,
@@ -179,15 +177,6 @@ export const createFileSystemDeploymentTargetRepositoryProvider =
         )
 
         return {
-          putDeploymentTarget: async (
-            item: DeploymentTargetConfigItem,
-          ): Promise<void> => {
-            const pathToFile = join(expandedDir, `${item.name}.yml`)
-            logger.info(`Persist account '${item.name}' to file: ${pathToFile}`)
-            const contents = formatYaml(item)
-            logger.trace("File contents:", () => contents)
-            await createFile(pathToFile, contents)
-          },
           listDeploymentTargets: async (): Promise<
             ReadonlyArray<DeploymentTargetConfigItemWrapper>
           > => deploymentTargets,
