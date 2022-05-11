@@ -73,9 +73,10 @@ export const createOrganizationsClient = (
       new ListOrganizationalUnitsForParentCommand({ ParentId: parent.id }),
     )
 
-    const allOus = OrganizationalUnits.map((ou) => convertOU(ou, parent.path))
+    const ous = OrganizationalUnits.map((ou) => convertOU(ou, parent.path))
+    const allOus = new Array<OU>(...ous)
 
-    for (const ou of allOus) {
+    for (const ou of ous) {
       const children = await listOrganizationalUnitsForParent(ou)
       allOus.push(...children)
     }
@@ -85,12 +86,12 @@ export const createOrganizationsClient = (
 
   const listOrganizationalUnits = async (): Promise<Array<OU>> => {
     const { Roots = [] } = await client.send(new ListRootsCommand({}))
-    const rootOus: Array<OU> = Roots.map(convertRoot)
+    const rootOus: ReadonlyArray<OU> = Roots.map(convertRoot)
 
-    const allOus = new Array<OU>()
+    const allOus = new Array<OU>(...rootOus)
     for (const ou of rootOus) {
       const children = await listOrganizationalUnitsForParent(ou)
-      rootOus.push(...children)
+      allOus.push(...children)
     }
 
     return allOus
