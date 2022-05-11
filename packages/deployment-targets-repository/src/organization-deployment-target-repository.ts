@@ -128,11 +128,11 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
         }
 
         if (organizationReaderRoleArn) {
-          logger.debug(
+          logger.info(
             `Load deployment targets from AWS organization using role ${organizationReaderRoleArn}`,
           )
         } else {
-          logger.debug("Load deployment targets from AWS organization")
+          logger.info("Load deployment targets from AWS organization")
         }
 
         const cm = organizationReaderRoleArn
