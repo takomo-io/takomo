@@ -31,7 +31,7 @@
     "@takomo/aws-model": "4.2.1",
     "@takomo/stacks-model": "4.2.1",
     "@takomo/util": "4.2.1",
-    "folder-hash": "4.0.1",
+    "folder-hash": "4.0.2",
     "ramda": "0.28.0"
   },
   "devDependencies": {
