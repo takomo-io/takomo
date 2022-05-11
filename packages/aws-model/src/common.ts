@@ -35,3 +35,4 @@ export type AccountName = string
 
 export type ServicePrincipal = string
 export type Arn = string
+export type AccountStatus = "ACTIVE" | "PENDING_CLOSURE" | "SUSPENDED"

@@ -1,6 +1,7 @@
 import { Credentials } from "@aws-sdk/types"
 import {
   createAwsClientProvider,
+  CredentialManager,
   initDefaultCredentialManager,
   InternalCredentialManager,
 } from "@takomo/aws-clients"
@@ -364,6 +365,7 @@ interface HandleProps<
   configRepository: (
     ctx: FileSystemCommandContext,
     logger: TkmLogger,
+    credentialManager: CredentialManager,
   ) => Promise<C>
   executor: CommandHandler<C, I, IN, OUT>
 }
@@ -412,12 +414,17 @@ export const handle = async <
     logger.debugObject("Input arguments:", () => input)
     const io = props.io(ctx, logger)
 
-    const configRepository = await props.configRepository(ctx, logger)
     const credentialManager = await initDefaultCredentialManager(
       promptMfaCode,
       logger,
       ctx.awsClientProvider,
       ctx.credentials,
+    )
+
+    const configRepository = await props.configRepository(
+      ctx,
+      logger,
+      credentialManager,
     )
 
     const startTime = new Date()

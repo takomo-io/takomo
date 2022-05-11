@@ -71,6 +71,7 @@ export {
   AccountEmail,
   AccountId,
   AccountName,
+  AccountStatus,
   Arn,
   ClientRequestToken,
   IamRoleArn,
@@ -84,4 +85,5 @@ export {
 } from "./common"
 export { CallerIdentity } from "./credentials"
 export { CredentialsError } from "./error"
+export { Account, OU, OUArn, OUId, OUName, OUPath } from "./organizations"
 export { makeIamRoleArn } from "./util"

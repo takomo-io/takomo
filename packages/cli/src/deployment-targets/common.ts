@@ -142,10 +142,11 @@ const createTargetsOperationHandler =
         prune: false,
       }),
       io: (ctx, logger) => io({ logger }),
-      configRepository: (ctx, logger) =>
+      configRepository: (ctx, logger, credentialManager) =>
         createFileSystemDeploymentTargetsConfigRepository({
           ctx,
           logger,
+          credentialManager,
           pathToDeploymentConfigFile: argv[CONFIG_FILE_OPT],
           ...ctx.filePaths,
         }),

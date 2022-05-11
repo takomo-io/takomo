@@ -12,6 +12,10 @@ import {
   CloudFormationClientProps,
 } from "./common/client"
 import { createApiRequestListenerPlugin } from "./common/request-listener"
+import {
+  createOrganizationsClient,
+  OrganizationsClient,
+} from "./organizations/client"
 import { createS3Client, S3Client } from "./s3/client"
 import { createSecretsClient, SecretsClient } from "./secrets/client"
 import { createSsmClient, SsmClient } from "./ssm/client"
@@ -35,6 +39,9 @@ export interface AwsClientProvider {
   readonly createSecretsClient: (
     props: AwsClientProps,
   ) => Promise<SecretsClient>
+  readonly createOrganizationsClient: (
+    props: AwsClientProps,
+  ) => Promise<OrganizationsClient>
 }
 
 /**
@@ -169,6 +176,16 @@ export const createAwsClientProvider = ({
       props: AwsClientProps,
     ): Promise<SecretsClient> => {
       const client = createSecretsClient({
+        ...props,
+        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
+      })
+      regions.add(props.region)
+      return client
+    },
+    createOrganizationsClient: async (
+      props: AwsClientProps,
+    ): Promise<OrganizationsClient> => {
+      const client = createOrganizationsClient({
         ...props,
         middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })

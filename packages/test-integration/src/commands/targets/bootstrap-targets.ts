@@ -1,4 +1,3 @@
-import { initDefaultCredentialManager } from "@takomo/aws-clients"
 import { deploymentTargetsOperationCommand } from "@takomo/deployment-targets-commands"
 import { createConsoleLogger, createTimer } from "@takomo/util"
 import { basename } from "path"
@@ -16,6 +15,11 @@ export const executeBootstrapTargetsCommand = (
   createTargetsOperationOutputMatcher(async () => {
     const logLevel = props.logLevel ?? "info"
 
+    const logger = createConsoleLogger({
+      logLevel,
+      name: basename(expect.getState().testPath),
+    })
+
     const ctxAndConfig = await createCtxAndConfigRepository({
       projectDir: props.projectDir,
       autoConfirmEnabled: props.autoConfirmEnabled ?? true,
@@ -25,23 +29,11 @@ export const executeBootstrapTargetsCommand = (
       pathToDeploymentConfigFile: props.configFile,
       feature: props.feature ?? [],
       logLevel,
-    })
-
-    const logger = createConsoleLogger({
-      logLevel,
-      name: basename(expect.getState().testPath),
-    })
-
-    const credentialManager = await initDefaultCredentialManager(
-      () => Promise.resolve(""),
       logger,
-      ctxAndConfig.ctx.awsClientProvider,
-      ctxAndConfig.ctx.credentials,
-    )
+    })
 
     return deploymentTargetsOperationCommand({
       ...ctxAndConfig,
-      credentialManager,
       io: createTestBootstrapTargetsIO(logger),
       input: {
         timer: createTimer("total"),
