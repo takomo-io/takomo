@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://github.com/takomo-io/takomo/compare/v4.2.1...v4.3.0) (2022-05-11)
+
+
+### Features
+
+* **deployment targets:** add support to load deployment targets from AWS organization ([#363](https://github.com/takomo-io/takomo/issues/363)) ([0815db0](https://github.com/takomo-io/takomo/commit/0815db09e10e686a5940ba7b76c13615fc8ae28a)), closes [#362](https://github.com/takomo-io/takomo/issues/362)
+
+
+
+
+
 ## [4.2.1](https://github.com/takomo-io/takomo/compare/v4.2.0...v4.2.1) (2022-05-02)
 
 
