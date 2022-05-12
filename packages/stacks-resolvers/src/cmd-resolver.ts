@@ -1,10 +1,11 @@
+import { prepareAwsEnvVariables } from "@takomo/aws-clients"
 import {
   Resolver,
   ResolverInput,
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "@takomo/stacks-model"
-import { deepCopy, executeShellCommand, expandFilePath } from "@takomo/util"
+import { executeShellCommand, expandFilePath } from "@takomo/util"
 import { ObjectSchema } from "joi"
 import R from "ramda"
 
@@ -43,19 +44,18 @@ const init = async ({
         `Resolving value for parameter '${parameterName}' with command: ${command}`,
       )
 
-      const env = deepCopy(process.env)
+      const credentials =
+        exposeStackCredentials === true
+          ? await stack.credentialManager.getCredentials()
+          : undefined
 
-      if (exposeStackCredentials === true) {
-        const credentials = await stack.credentialManager.getCredentials()
-        env.AWS_ACCESS_KEY_ID = credentials.accessKeyId
-        env.AWS_SECRET_ACCESS_KEY = credentials.secretAccessKey
-        env.AWS_SESSION_TOKEN = credentials.sessionToken
-        env.AWS_SECURITY_TOKEN = credentials.sessionToken
-      }
+      const region = exposeStackRegion === true ? stack.region : undefined
 
-      if (exposeStackRegion === true) {
-        env.AWS_DEFAULT_REGION = stack.region
-      }
+      const env = prepareAwsEnvVariables({
+        env: process.env,
+        credentials,
+        region,
+      })
 
       const { stdout, success, error } = await executeShellCommand({
         command,
