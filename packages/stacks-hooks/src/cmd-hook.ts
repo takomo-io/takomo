@@ -1,5 +1,6 @@
+import { prepareAwsEnvVariables } from "@takomo/aws-clients"
 import { Hook, HookInput, HookOutput } from "@takomo/stacks-model"
-import { deepCopy, executeShellCommand, expandFilePath } from "@takomo/util"
+import { executeShellCommand, expandFilePath } from "@takomo/util"
 import R from "ramda"
 
 const safeEnvVariablePattern = /^[a-zA-Z_]+[a-zA-Z0-9_]*$/
@@ -50,37 +51,50 @@ export class CmdHook implements Hook {
         ? expandFilePath(ctx.projectDir, this.cwd)
         : ctx.projectDir
 
-      const env = {
-        ...deepCopy(process.env),
-        TKM_COMMAND_STAGE: stage,
-        TKM_COMMAND_OPERATION: operation,
-      }
+      const hookValues = Object.entries(variables.hooks ?? {})
+        .filter(([hookName]) => {
+          if (!safeEnvVariablePattern.test(hookName)) {
+            logger.warn(
+              `Value of hook '${hookName}' could not be exposed in environment variables because the hook name contains unsafe characters`,
+            )
+            return false
+          }
 
-      if (status) {
-        env.TKM_COMMAND_STATUS = status
-      }
+          return true
+        })
+        .reduce(
+          (collected, [hookName, value]) => ({
+            ...collected,
+            [`TKM_HOOK_${hookName}`]: value,
+          }),
+          {},
+        )
 
-      Object.entries(variables.hooks ?? {}).forEach(([hookName, value]) => {
-        if (safeEnvVariablePattern.test(hookName)) {
-          env[`TKM_HOOK_${hookName}`] = value
-        } else {
-          logger.warn(
-            `Value of hook '${hookName}' could not be exposed in environment variables because the hook name contains unsafe characters`,
-          )
-        }
+      const additionalVariables: Record<string, string> = status
+        ? {
+            ...hookValues,
+            TKM_COMMAND_STAGE: stage,
+            TKM_COMMAND_OPERATION: operation,
+            TKM_COMMAND_STATUS: status,
+          }
+        : {
+            ...hookValues,
+            TKM_COMMAND_STAGE: stage,
+            TKM_COMMAND_OPERATION: operation,
+          }
+
+      const credentials = this.exposeStackCredentials
+        ? await stack.credentialManager.getCredentials()
+        : undefined
+
+      const region = this.exposeStackRegion ? stack.region : undefined
+
+      const env = prepareAwsEnvVariables({
+        env: process.env,
+        credentials,
+        region,
+        additionalVariables,
       })
-
-      if (this.exposeStackCredentials) {
-        const credentials = await stack.credentialManager.getCredentials()
-        env.AWS_ACCESS_KEY_ID = credentials.accessKeyId
-        env.AWS_SECRET_ACCESS_KEY = credentials.secretAccessKey
-        env.AWS_SESSION_TOKEN = credentials.sessionToken
-        env.AWS_SECURITY_TOKEN = credentials.sessionToken
-      }
-
-      if (this.exposeStackRegion) {
-        env.AWS_DEFAULT_REGION = stack.region
-      }
 
       const { stdout, success, error } = await executeShellCommand({
         cwd,
