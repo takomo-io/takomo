@@ -1,6 +1,6 @@
 {
   "name": "@takomo/stacks-commands",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "description": "Takomo Stacks Commands",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -31,8 +31,8 @@
     "@takomo/aws-clients": "4.3.0",
     "@takomo/aws-model": "4.3.0",
     "@takomo/core": "4.3.0",
-    "@takomo/stacks-context": "4.3.0",
-    "@takomo/stacks-hooks": "4.3.0",
+    "@takomo/stacks-context": "4.3.1",
+    "@takomo/stacks-hooks": "4.3.1",
     "@takomo/stacks-model": "4.3.0",
     "@takomo/stacks-schema": "4.3.0",
     "@takomo/util": "4.2.1",

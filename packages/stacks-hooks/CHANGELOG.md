@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.1](https://github.com/takomo-io/takomo/compare/v4.3.0...v4.3.1) (2022-05-13)
+
+
+### Bug Fixes
+
+* clean AWS environment variables ([#367](https://github.com/takomo-io/takomo/issues/367)) ([37a80a3](https://github.com/takomo-io/takomo/commit/37a80a332b278c89c45edd95833e632a6ff3aaf0))
+
+
+
+
+
 # [4.3.0](https://github.com/takomo-io/takomo/compare/v4.2.1...v4.3.0) (2022-05-11)
 
 **Note:** Version bump only for package @takomo/stacks-hooks

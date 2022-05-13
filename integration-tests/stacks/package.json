@@ -1,7 +1,7 @@
 {
   "name": "integration-test-stacks",
   "private": true,
-  "version": "4.3.0",
+  "version": "4.3.1",
   "description": "Takomo integration tests for stacks",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -22,9 +22,9 @@
     "integration-test": "jest test --passWithNoTests --maxWorkers=10 --ci --verbose"
   },
   "dependencies": {
-    "@takomo/cli": "4.3.0",
+    "@takomo/cli": "4.3.1",
     "@takomo/stacks-model": "4.3.0",
-    "@takomo/test-integration": "4.3.0",
+    "@takomo/test-integration": "4.3.1",
     "@takomo/util": "4.2.1",
     "ramda": "0.27.1",
     "source-map-support": "0.5.21",
