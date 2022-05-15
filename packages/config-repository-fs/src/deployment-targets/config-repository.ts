@@ -1,6 +1,6 @@
 import { CredentialManager } from "@takomo/aws-clients"
 import { ConfigSetName } from "@takomo/config-sets"
-import { CommandContext } from "@takomo/core"
+import { Cache, CommandContext } from "@takomo/core"
 import {
   buildDeploymentConfig,
   DeploymentConfig,
@@ -29,6 +29,7 @@ import {
 } from "@takomo/util"
 import { basename, join } from "path"
 import R from "ramda"
+import { createFileSystemCache } from "../cache"
 import { loadConfigSetsFromConfigSetsDir } from "../config-sets/config-sets-loader"
 import {
   createFileSystemStacksConfigRepository,
@@ -58,6 +59,7 @@ const initDeploymentTargetsRepository = async (
   logger: TkmLogger,
   templateEngine: TemplateEngine,
   credentialManager: CredentialManager,
+  cache: Cache,
 ): Promise<DeploymentTargetRepository | undefined> => {
   if (ctx.projectConfig?.deploymentTargets?.repository === undefined) {
     return undefined
@@ -80,6 +82,7 @@ const initDeploymentTargetsRepository = async (
     templateEngine,
     config: ctx.projectConfig.deploymentTargets.repository,
     credentialManager,
+    cache,
   })
 }
 
@@ -88,12 +91,14 @@ const loadExternallyPersistedDeploymentTargets = async (
   logger: TkmLogger,
   templateEngine: TemplateEngine,
   credentialManager: CredentialManager,
+  cache: Cache,
 ): Promise<Map<DeploymentGroupPath, ReadonlyArray<unknown>>> => {
   const repository = await initDeploymentTargetsRepository(
     ctx,
     logger,
     templateEngine,
     credentialManager,
+    cache,
   )
 
   if (!repository) {
@@ -148,7 +153,13 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
     ctx,
     stacksDir,
     credentialManager,
+    cacheDir,
   } = props
+
+  const cache = createFileSystemCache(logger, cacheDir)
+  if (ctx.resetCache) {
+    await cache.reset()
+  }
 
   const hookRegistry = createHookRegistry({ logger })
   const resolverRegistry = new ResolverRegistry(logger)
@@ -205,6 +216,7 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
           logger,
           stacksConfigRepository.templateEngine,
           credentialManager,
+          cache,
         )
 
       const externalConfigSets = await loadConfigSetsFromConfigSetsDir(

@@ -1,3 +1,4 @@
+export { Cache } from "./cache"
 export {
   CANCELLED,
   CommandContext,

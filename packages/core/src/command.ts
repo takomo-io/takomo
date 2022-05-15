@@ -149,6 +149,11 @@ export const resolveCommandOutputBase = (
  */
 export interface CommandContext {
   /**
+   * Reset cache before executing operation.
+   */
+  readonly resetCache: boolean
+
+  /**
    * No confirmation to operations is asked if auto-confirm is enabled.
    */
   readonly autoConfirmEnabled: boolean

@@ -36,6 +36,7 @@ import inquirer from "inquirer"
 import os from "os"
 import R from "ramda"
 import { Arguments } from "yargs"
+import { RESET_CACHE_OPT } from "./constants"
 import { parseFeaturesFromArgs } from "./options/parse-features-from-args"
 import { parseLogLevel } from "./options/parse-log-level"
 import { parseOutputFormat } from "./options/parse-output-format"
@@ -74,6 +75,7 @@ export const initCommandContext = async (
   const statisticsEnabled = parseBoolean(argv.stats, false)
   const autoConfirmEnabled = parseBoolean(argv.yes, false)
   const quiet = parseBoolean(argv.quiet, false)
+  const resetCache = parseBoolean(argv[RESET_CACHE_OPT], false)
   const projectDir = resolveProjectDir(argv.dir)
   const logLevel = parseLogLevel(argv.log, quiet)
   const outputFormat = parseOutputFormat(argv.output)
@@ -99,6 +101,7 @@ export const initCommandContext = async (
 
   return createFileSystemCommandContext({
     quiet,
+    resetCache,
     outputFormat,
     logLevel,
     autoConfirmEnabled,

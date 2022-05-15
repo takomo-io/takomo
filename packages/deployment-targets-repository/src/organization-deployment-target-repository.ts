@@ -100,6 +100,7 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
         ctx,
         config,
         credentialManager,
+        cache,
       }): Promise<DeploymentTargetRepository> => {
         const organizationReaderRoleArn = config.organizationReaderRoleArn
         if (
@@ -127,41 +128,70 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
           )
         }
 
-        if (organizationReaderRoleArn) {
-          logger.info(
-            `Load deployment targets from AWS organization using role ${organizationReaderRoleArn}`,
+        const cacheEnabled = config.cache ?? false
+        if (typeof cacheEnabled !== "boolean") {
+          throw new TakomoError(
+            "Invalid deployment target repository config - 'cache' property must be of type 'boolean'",
           )
-        } else {
-          logger.info("Load deployment targets from AWS organization")
         }
 
-        const cm = organizationReaderRoleArn
-          ? await credentialManager.createCredentialManagerForRole(
-              organizationReaderRoleArn as string,
+        const listDeploymentTargets = async (): Promise<
+          ReadonlyArray<DeploymentTargetConfigItemWrapper>
+        > => {
+          const cacheKey = "deployment-target-repository/organization.v1.json"
+
+          if (cacheEnabled) {
+            const cachedConfig = await cache.get(cacheKey)
+
+            if (cachedConfig) {
+              logger.info("Deployment targets found from cache")
+              const deserializedConfig = JSON.parse(cachedConfig)
+              return deserializedConfig as ReadonlyArray<DeploymentTargetConfigItemWrapper>
+            }
+          }
+
+          if (organizationReaderRoleArn) {
+            logger.info(
+              `Load deployment targets from AWS organization using role ${organizationReaderRoleArn}`,
             )
-          : credentialManager
+          } else {
+            logger.info("Load deployment targets from AWS organization")
+          }
 
-        const client = await ctx.awsClientProvider.createOrganizationsClient({
-          logger,
-          id: "organizations",
-          region: "us-east-1",
-          credentialProvider: cm.getCredentialProvider(),
-        })
+          const cm = organizationReaderRoleArn
+            ? await credentialManager.createCredentialManagerForRole(
+                organizationReaderRoleArn as string,
+              )
+            : credentialManager
 
-        const deploymentTargets = await loadTargets(
-          client,
-          inferDeploymentGroupPathFromOUPath,
-          inferDeploymentTargetNameFromAccountName,
-        )
+          const client = await ctx.awsClientProvider.createOrganizationsClient({
+            logger,
+            id: "organizations",
+            region: "us-east-1",
+            credentialProvider: cm.getCredentialProvider(),
+          })
 
-        logger.debug(
-          `Loaded ${deploymentTargets.length} deployment targets from AWS organization`,
-        )
+          const deploymentTargets = await loadTargets(
+            client,
+            inferDeploymentGroupPathFromOUPath,
+            inferDeploymentTargetNameFromAccountName,
+          )
+
+          logger.debug(
+            `Loaded ${deploymentTargets.length} deployment targets from AWS organization`,
+          )
+
+          const deploymentTargetsList = deploymentTargets.flat().slice()
+
+          if (cacheEnabled) {
+            await cache.put(cacheKey, JSON.stringify(deploymentTargetsList))
+          }
+
+          return deploymentTargetsList
+        }
 
         return {
-          listDeploymentTargets: async (): Promise<
-            ReadonlyArray<DeploymentTargetConfigItemWrapper>
-          > => deploymentTargets.flat().slice(),
+          listDeploymentTargets,
         }
       },
     }

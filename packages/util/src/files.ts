@@ -1,4 +1,4 @@
-import fs, { mkdir, readFile, writeFile } from "fs"
+import fs, { mkdir, readFile, rm, writeFile } from "fs"
 import { join } from "path"
 import { promisify } from "util"
 
@@ -39,7 +39,18 @@ export const dirExists = async (pathToDir: FilePath): Promise<boolean> =>
  */
 export const createDir = async (pathToDir: FilePath): Promise<boolean> =>
   new Promise((resolve, reject) => {
-    mkdir(pathToDir, (err) => {
+    mkdir(pathToDir, { recursive: true }, (err) => {
+      if (err) reject(err)
+      else resolve(true)
+    })
+  })
+
+/**
+ * @hidden
+ */
+export const removeDir = async (pathToDir: FilePath): Promise<boolean> =>
+  new Promise((resolve, reject) => {
+    rm(pathToDir, { recursive: true }, (err) => {
       if (err) reject(err)
       else resolve(true)
     })
@@ -71,7 +82,7 @@ export const expandFilePath = (
   }
 
   if (filePath.startsWith("./")) {
-    return join(baseDir, filePath.substr(2))
+    return join(baseDir, filePath.slice(2))
   }
 
   return join(baseDir, filePath)
