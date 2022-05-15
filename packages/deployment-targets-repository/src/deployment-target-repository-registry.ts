@@ -42,6 +42,7 @@ export const createDeploymentTargetRepositoryRegistry =
         logger,
         templateEngine,
         credentialManager,
+        cache,
       }: InitDeploymentTargetRepositoryProps): Promise<DeploymentTargetRepository> => {
         const provider = providers.get(config.type)
         if (!provider) {
@@ -56,6 +57,7 @@ export const createDeploymentTargetRepositoryRegistry =
           templateEngine,
           logger,
           credentialManager,
+          cache,
         })
       },
     }

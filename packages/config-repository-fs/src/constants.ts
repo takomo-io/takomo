@@ -9,13 +9,12 @@ export const HELPERS_DIR = "helpers"
 export const SCHEMAS_DIR = "schemas"
 export const HOOKS_DIR = "hooks"
 export const RESOLVERS_DIR = "resolvers"
-export const ORGANIZATION_DIR = "organization"
 export const DEPLOYMENT_DIR = "deployment"
 export const CONFIG_SETS_DIR = "config-sets"
 export const DEFAULT_DEPLOYMENT_CONFIG_FILE = "targets.yml"
-export const DEFAULT_ORGANIZATION_CONFIG_FILE = "organization.yml"
 export const STACK_GROUP_CONFIG_FILE_NAME = "config.yml"
 export const TAKOMO_PROJECT_CONFIG_FILE_NAME = "takomo.yml"
+export const CACHE_DIR = ".takomo-cache"
 
 export interface ProjectFilePaths {
   readonly projectDir: FilePath
@@ -33,12 +32,7 @@ export interface ProjectFilePaths {
   readonly defaultDeploymentConfigFileName: string
   readonly deploymentDir: FilePath
   readonly configSetsDir: FilePath
-  readonly organizationDir: FilePath
-  readonly organizationTagPoliciesDir: FilePath
-  readonly organizationBackupPoliciesDir: FilePath
-  readonly organizationServiceControlPoliciesDir: FilePath
-  readonly organizationAiServicesOptOutPoliciesDir: FilePath
-  readonly defaultOrganizationConfigFileName: string
+  readonly cacheDir: FilePath
 }
 
 export const createProjectFilePaths = (
@@ -59,26 +53,5 @@ export const createProjectFilePaths = (
   defaultDeploymentConfigFileName: DEFAULT_DEPLOYMENT_CONFIG_FILE,
   deploymentDir: path.join(projectDir, DEPLOYMENT_DIR),
   configSetsDir: path.join(projectDir, CONFIG_SETS_DIR),
-  organizationDir: path.join(projectDir, ORGANIZATION_DIR),
-  organizationTagPoliciesDir: path.join(
-    projectDir,
-    ORGANIZATION_DIR,
-    "tag-policies",
-  ),
-  organizationBackupPoliciesDir: path.join(
-    projectDir,
-    ORGANIZATION_DIR,
-    "backup-policies",
-  ),
-  organizationServiceControlPoliciesDir: path.join(
-    projectDir,
-    ORGANIZATION_DIR,
-    "service-control-policies",
-  ),
-  organizationAiServicesOptOutPoliciesDir: path.join(
-    projectDir,
-    ORGANIZATION_DIR,
-    "ai-services-opt-out-policies",
-  ),
-  defaultOrganizationConfigFileName: DEFAULT_ORGANIZATION_CONFIG_FILE,
+  cacheDir: path.join(projectDir, CACHE_DIR),
 })

@@ -17,6 +17,7 @@ import {
   EXCLUDE_TARGET_OPT,
   LABEL_OPT,
   outputFormatOptions,
+  RESET_CACHE_OPT,
   TARGET_OPT,
 } from "../constants"
 import { GROUPS_OPT } from "./common"
@@ -50,6 +51,7 @@ type CommandArgs = {
   readonly [CAPTURE_AFTER_OPT]: string | undefined
   readonly [CAPTURE_BEFORE_OPT]: string | undefined
   readonly [CAPTURE_LAST_LINE_OPT]: boolean
+  readonly [RESET_CACHE_OPT]: boolean
 }
 
 const command = `run [${GROUPS_OPT}..]`
@@ -171,6 +173,13 @@ const builder = (yargs: Argv<CommandArgs>) =>
         global: false,
         demandOption: false,
       },
+      [RESET_CACHE_OPT]: {
+        description: "Reset cache before executing the operation",
+        boolean: true,
+        default: false,
+        global: false,
+        demandOption: false,
+      },
     })
     .positional(GROUPS_OPT, {
       description: "Deployment groups to include in the operation",
@@ -201,6 +210,7 @@ const handler = (argv: Arguments<CommandArgs>) =>
       reduceRoleArn: argv[REDUCE_ROLE_ARN_OPT],
       reduceCommand: argv[REDUCE_OPT],
       outputFormat: argv[OUTPUT_OPT] as OutputFormat,
+      resetCache: argv[RESET_CACHE_OPT],
     }),
     io: (ctx, logger) => createRunTargetsIO({ logger }),
     configRepository: (ctx, logger, credentialManager) =>

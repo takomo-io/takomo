@@ -36,6 +36,7 @@ export interface FileSystemStacksConfigRepositoryProps {
   readonly partialsDir: FilePath
   readonly templatesDir: FilePath
   readonly schemasDir: FilePath
+  readonly cacheDir: FilePath
   readonly configFileExtension: string
   readonly stackGroupConfigFileName: string
 }

@@ -1,6 +1,10 @@
 import { CredentialManager } from "@takomo/aws-clients"
 import { Region } from "@takomo/aws-model"
-import { CommandContext, DeploymentTargetRepositoryConfig } from "@takomo/core"
+import {
+  Cache,
+  CommandContext,
+  DeploymentTargetRepositoryConfig,
+} from "@takomo/core"
 import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
 import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
 import { createDeploymentTargetsSchemas } from "@takomo/deployment-targets-schema"
@@ -29,6 +33,7 @@ export interface InitDeploymentTargetRepositoryProps {
   readonly templateEngine: TemplateEngine
   readonly logger: TkmLogger
   readonly credentialManager: CredentialManager
+  readonly cache: Cache
 }
 
 export interface DeploymentTargetRepositoryProvider {

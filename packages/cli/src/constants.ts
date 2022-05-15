@@ -12,6 +12,7 @@ export const EXCLUDE_LABEL_OPT = "exclude-label"
 export const ROLE_NAME_OPT = "role-name"
 export const CONFIG_FILE_OPT = "config-file"
 export const CONFIG_SET_OPT = "config-set"
+export const RESET_CACHE_OPT = "reset-cache"
 
 export const outputFormatOptions = {
   [OUTPUT_OPT]: {

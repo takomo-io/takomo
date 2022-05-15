@@ -17,6 +17,7 @@ export interface FileSystemCommandContext extends InternalCommandContext {
 
 export interface CreateFileSystemCommandContextProps {
   readonly quiet: boolean
+  readonly resetCache: boolean
   readonly outputFormat: OutputFormat
   readonly logLevel: LogLevel
   readonly autoConfirmEnabled: boolean
@@ -53,6 +54,7 @@ export const createFileSystemCommandContext = async (
     vars,
     varFilePaths,
     envFilePaths,
+    resetCache,
   } = props
 
   const filePaths = createProjectFilePaths(projectDir)
@@ -82,6 +84,7 @@ export const createFileSystemCommandContext = async (
     variables,
     projectDir,
     quiet,
+    resetCache,
     outputFormat,
     logLevel,
     autoConfirmEnabled,
