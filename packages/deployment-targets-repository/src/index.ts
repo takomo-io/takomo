@@ -1,5 +1,6 @@
 export {
   createDeploymentTargetConfigItemSchema,
+  DeploymentTargetConfigItem,
   DeploymentTargetRepository,
 } from "./deployment-target-repository"
 export { createDeploymentTargetRepositoryRegistry } from "./deployment-target-repository-registry"

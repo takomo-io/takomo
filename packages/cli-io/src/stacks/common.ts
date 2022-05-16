@@ -173,7 +173,7 @@ export const printStacksOperationOutput = (
 
 export interface IOProps extends BaseIOProps {
   readonly logger: TkmLogger
-  readonly hideOutput?: boolean
+  readonly quiet?: boolean
 }
 
 export const formatDate = (d: any): string => (d ? formatTimestamp(d) : "-")

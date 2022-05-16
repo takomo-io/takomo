@@ -212,7 +212,7 @@ const handler = (argv: Arguments<CommandArgs>) =>
       outputFormat: argv[OUTPUT_OPT] as OutputFormat,
       resetCache: argv[RESET_CACHE_OPT],
     }),
-    io: (ctx, logger) => createRunTargetsIO({ logger }),
+    io: (ctx, logger) => createRunTargetsIO({ logger, quiet: ctx.quiet }),
     configRepository: (ctx, logger, credentialManager) =>
       createFileSystemDeploymentTargetsConfigRepository({
         ctx,
