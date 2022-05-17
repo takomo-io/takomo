@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/takomo-io/takomo/compare/v4.3.1...v4.4.0) (2022-05-17)
+
+
+### Features
+
+* **deployment targets:** add support to load deployment targets from multiple repositories ([#371](https://github.com/takomo-io/takomo/issues/371)) ([1f9bf22](https://github.com/takomo-io/takomo/commit/1f9bf22549d0332fd08a2a3f3945ec12256aa448)), closes [#369](https://github.com/takomo-io/takomo/issues/369)
+
+
+
+
+
 ## [4.3.1](https://github.com/takomo-io/takomo/compare/v4.3.0...v4.3.1) (2022-05-13)
 
 **Note:** Version bump only for package integration-test-deployment-targets

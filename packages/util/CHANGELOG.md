@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/takomo-io/takomo/compare/v4.3.1...v4.4.0) (2022-05-17)
+
+
+### Features
+
+* implement file system cache ([#370](https://github.com/takomo-io/takomo/issues/370)) ([e33eaf5](https://github.com/takomo-io/takomo/commit/e33eaf52f879f06360c8701e24bc754e44fdc41a)), closes [#368](https://github.com/takomo-io/takomo/issues/368)
+
+
+
+
+
 ## [4.2.1](https://github.com/takomo-io/takomo/compare/v4.2.0...v4.2.1) (2022-05-02)
 
 **Note:** Version bump only for package @takomo/util

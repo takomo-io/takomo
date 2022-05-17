@@ -1,6 +1,6 @@
 {
   "name": "@takomo/aws-clients",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Takomo AWS Clients",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -39,8 +39,8 @@
     "@aws-sdk/middleware-retry": "3.80.0",
     "@aws-sdk/node-http-handler": "3.78.0",
     "@aws-sdk/types": "3.78.0",
-    "@takomo/aws-model": "4.3.0",
-    "@takomo/util": "4.2.1",
+    "@takomo/aws-model": "4.4.0",
+    "@takomo/util": "4.4.0",
     "cockatiel": "2.0.1",
     "lodash.takerightwhile": "4.6.0",
     "ramda": "0.28.0"
