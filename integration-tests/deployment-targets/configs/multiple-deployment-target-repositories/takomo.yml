@@ -1,0 +1,12 @@
+deploymentTargets:
+  repository:
+    - id: first
+      type: filesystem
+      dir: targets-one
+      inferDeploymentTargetNameFromFileName: true
+      inferDeploymentGroupPathFromDirName: true
+    - id: second
+      type: filesystem
+      dir: targets-two
+      inferDeploymentTargetNameFromFileName: true
+      inferDeploymentGroupPathFromDirName: true

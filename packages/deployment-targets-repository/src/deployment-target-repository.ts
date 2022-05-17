@@ -6,13 +6,17 @@ import {
   DeploymentTargetRepositoryConfig,
 } from "@takomo/core"
 import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
-import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
+import {
+  DeploymentGroupPath,
+  DeploymentTargetName,
+} from "@takomo/deployment-targets-model"
 import { createDeploymentTargetsSchemas } from "@takomo/deployment-targets-schema"
 import { TemplateEngine, TkmLogger } from "@takomo/util"
 import Joi from "joi"
 
 export interface DeploymentTargetConfigItem
   extends Partial<DeploymentTargetConfig> {
+  readonly name: DeploymentTargetName
   readonly deploymentGroupPath: DeploymentGroupPath
 }
 

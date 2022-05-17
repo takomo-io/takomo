@@ -67,7 +67,7 @@ const resolveDeploymentTargetName = (
     inferDeploymentTargetNameFromFileName,
     pathToFile,
   }: LoadDeploymentTargetFileProps,
-): DeploymentTargetName | undefined =>
+): DeploymentTargetName =>
   inferDeploymentTargetNameFromFileName
     ? inferDeploymentTargetName(pathToFile)
     : item.name

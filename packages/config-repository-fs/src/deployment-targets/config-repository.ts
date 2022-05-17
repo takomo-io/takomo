@@ -35,6 +35,7 @@ import {
   createFileSystemStacksConfigRepository,
   FileSystemStacksConfigRepositoryProps,
 } from "../stacks/config-repository"
+import { mergeDeploymentTargetConfigs } from "./merge-deployment-target-configs"
 import { parseConfigFile } from "./parser"
 
 interface FileSystemDeploymentTargetsConfigRepositoryProps
@@ -54,15 +55,18 @@ const resolveConfigFilePath = (
     ? pathToConfigFile
     : join(deploymentDir, pathToConfigFile)
 
-const initDeploymentTargetsRepository = async (
+const initDeploymentTargetsRepositories = async (
   ctx: CommandContext,
   logger: TkmLogger,
   templateEngine: TemplateEngine,
   credentialManager: CredentialManager,
   cache: Cache,
-): Promise<DeploymentTargetRepository | undefined> => {
-  if (ctx.projectConfig?.deploymentTargets?.repository === undefined) {
-    return undefined
+): Promise<ReadonlyArray<DeploymentTargetRepository>> => {
+  const repositoryConfigs =
+    ctx.projectConfig?.deploymentTargets?.repository ?? []
+
+  if (repositoryConfigs.length === 0) {
+    return []
   }
 
   const registry = createDeploymentTargetRepositoryRegistry()
@@ -76,14 +80,18 @@ const initDeploymentTargetsRepository = async (
     createOrganizationDeploymentTargetRepositoryProvider(),
   )
 
-  return registry.initDeploymentTargetRepository({
-    logger,
-    ctx,
-    templateEngine,
-    config: ctx.projectConfig.deploymentTargets.repository,
-    credentialManager,
-    cache,
-  })
+  return Promise.all(
+    repositoryConfigs.map((config) =>
+      registry.initDeploymentTargetRepository({
+        logger,
+        ctx,
+        templateEngine,
+        config,
+        credentialManager,
+        cache,
+      }),
+    ),
+  )
 }
 
 const loadExternallyPersistedDeploymentTargets = async (
@@ -93,7 +101,7 @@ const loadExternallyPersistedDeploymentTargets = async (
   credentialManager: CredentialManager,
   cache: Cache,
 ): Promise<Map<DeploymentGroupPath, ReadonlyArray<unknown>>> => {
-  const repository = await initDeploymentTargetsRepository(
+  const repositories = await initDeploymentTargetsRepositories(
     ctx,
     logger,
     templateEngine,
@@ -101,11 +109,15 @@ const loadExternallyPersistedDeploymentTargets = async (
     cache,
   )
 
-  if (!repository) {
+  if (repositories.length === 0) {
     return new Map()
   }
 
-  const deploymentTargets = await repository.listDeploymentTargets()
+  const deploymentTargetsList = await Promise.all(
+    repositories.map((r) => r.listDeploymentTargets()),
+  )
+
+  const deploymentTargets = deploymentTargetsList.flat()
 
   const schema = createDeploymentTargetConfigItemSchema({
     regions: ctx.regions,
@@ -124,13 +136,14 @@ const loadExternallyPersistedDeploymentTargets = async (
     }
   })
 
+  const mergedDeploymentTargets = mergeDeploymentTargetConfigs(
+    deploymentTargets.map(R.prop("item")),
+  )
+
   return new Map(
     Array.from(
       Object.entries(
-        R.groupBy(
-          (a) => a.deploymentGroupPath,
-          deploymentTargets.map((w) => w.item),
-        ),
+        R.groupBy(R.prop("deploymentGroupPath"), mergedDeploymentTargets),
       ),
     ),
   )

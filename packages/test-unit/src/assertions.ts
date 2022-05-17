@@ -117,7 +117,7 @@ const assertRecursivelyInternal = (
 export const assertRecursively = (actual: unknown, expected: unknown): void => {
   const error = assertRecursivelyInternal(["$"], actual, expected)
   if (error) {
-    fail(
+    throw new Error(
       `${error}\n\nactual:\n${toPrettyJson(
         actual,
       )}\n\nexpected:\n${toPrettyJson(expected)}`,

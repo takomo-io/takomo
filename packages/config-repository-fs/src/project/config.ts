@@ -8,6 +8,7 @@ import {
   Features,
   InternalTakomoProjectConfig,
   parseStringArray,
+  TakomoProjectDeploymentTargetsConfig,
 } from "@takomo/core"
 import {
   expandFilePath,
@@ -115,6 +116,29 @@ export const parseFeatures = (value: any): Features => {
   return { ...defaults, ...value }
 }
 
+export const parseDeploymentTargetsConfig = (
+  value: any,
+): TakomoProjectDeploymentTargetsConfig | undefined => {
+  if (value === null || value === undefined) {
+    return undefined
+  }
+
+  const repository = value.repository
+  if (!repository) {
+    return {}
+  }
+
+  if (Array.isArray(repository)) {
+    return {
+      repository,
+    }
+  }
+
+  return {
+    repository: [repository],
+  }
+}
+
 interface ConfigFileItem {
   readonly absolutePath: FilePath
   readonly contents: any
@@ -146,6 +170,9 @@ export const parseProjectConfigItem = (
   const helpersDir = parseFilePaths(dirPath, contents.helpersDir)
   const partialsDir = parseFilePaths(dirPath, contents.partialsDir)
   const schemasDir = parseFilePaths(dirPath, contents.schemasDir)
+  const deploymentTargets = parseDeploymentTargetsConfig(
+    contents.deploymentTargets,
+  )
 
   return {
     regions: mergeArrays({ first: parentConfig.regions, second: regions }),
@@ -174,8 +201,7 @@ export const parseProjectConfigItem = (
     features: { ...parentConfig.features, ...features },
     varFiles: mergeArrays({ first: parentConfig.varFiles, second: varFiles }),
     requiredVersion: contents.requiredVersion ?? parentConfig.requiredVersion,
-    deploymentTargets:
-      contents.deploymentTargets ?? parentConfig.deploymentTargets,
+    deploymentTargets: deploymentTargets ?? parentConfig.deploymentTargets,
   }
 }
 
@@ -235,6 +261,10 @@ const deploymentTargetRepository = Joi.object({
   type: deploymentTargetRepositoryType.required(),
 }).unknown(true)
 
+const deploymentTargetRepositoryWithId = deploymentTargetRepository.keys({
+  id: Joi.string().required(),
+})
+
 const externalResolver = Joi.object({
   name: variableName,
 }).unknown(true)
@@ -254,7 +284,10 @@ export const takomoProjectConfigFileSchema = Joi.object({
   extends: Joi.string(),
   requiredVersion: Joi.string(),
   deploymentTargets: Joi.object({
-    repository: deploymentTargetRepository,
+    repository: [
+      deploymentTargetRepository,
+      Joi.array().items(deploymentTargetRepositoryWithId).unique("id"),
+    ],
   }),
   regions: Joi.array().items(Joi.string()).unique(),
   resolvers: Joi.array().items(Joi.string(), externalResolver),

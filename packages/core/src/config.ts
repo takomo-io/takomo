@@ -8,7 +8,7 @@ export interface DeploymentTargetRepositoryConfig {
 }
 
 export interface TakomoProjectDeploymentTargetsConfig {
-  readonly repository?: DeploymentTargetRepositoryConfig
+  readonly repository?: ReadonlyArray<DeploymentTargetRepositoryConfig>
 }
 
 /**

@@ -22,43 +22,47 @@ export const createDeploymentTargetRepositoryRegistry =
       DeploymentTargetRepositoryType,
       DeploymentTargetRepositoryProvider
     >()
-    return {
-      registerDeploymentTargetRepositoryProvider: (
-        type: DeploymentTargetRepositoryType,
-        provider: DeploymentTargetRepositoryProvider,
-      ): void => {
-        if (providers.has(type)) {
-          throw new TakomoError(
-            `Deployment target repository provider already registered for type '${type}'`,
-          )
-        }
 
-        providers.set(type, provider)
-      },
+    const registerDeploymentTargetRepositoryProvider = (
+      type: DeploymentTargetRepositoryType,
+      provider: DeploymentTargetRepositoryProvider,
+    ): void => {
+      if (providers.has(type)) {
+        throw new TakomoError(
+          `Deployment target repository provider already registered for type '${type}'`,
+        )
+      }
 
-      initDeploymentTargetRepository: ({
+      providers.set(type, provider)
+    }
+
+    const initDeploymentTargetRepository = ({
+      ctx,
+      config,
+      logger,
+      templateEngine,
+      credentialManager,
+      cache,
+    }: InitDeploymentTargetRepositoryProps): Promise<DeploymentTargetRepository> => {
+      const provider = providers.get(config.type)
+      if (!provider) {
+        throw new TakomoError(
+          `Unknown account repository type: '${config.type}'`,
+        )
+      }
+
+      return provider.initDeploymentTargetRepository({
         ctx,
         config,
-        logger,
         templateEngine,
+        logger,
         credentialManager,
         cache,
-      }: InitDeploymentTargetRepositoryProps): Promise<DeploymentTargetRepository> => {
-        const provider = providers.get(config.type)
-        if (!provider) {
-          throw new TakomoError(
-            `Unknown account repository type: '${config.type}'`,
-          )
-        }
+      })
+    }
 
-        return provider.initDeploymentTargetRepository({
-          ctx,
-          config,
-          templateEngine,
-          logger,
-          credentialManager,
-          cache,
-        })
-      },
+    return {
+      registerDeploymentTargetRepositoryProvider,
+      initDeploymentTargetRepository,
     }
   }

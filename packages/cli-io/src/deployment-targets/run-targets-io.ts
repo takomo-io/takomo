@@ -14,7 +14,7 @@ const confirmDescription =
   "Targets will be run in the order they are listed."
 
 export const createRunTargetsIO = (props: IOProps): DeploymentTargetsRunIO => {
-  const { logger } = props
+  const { logger, quiet = false } = props
 
   const io = createBaseIO(props)
 
@@ -77,7 +77,9 @@ export const createRunTargetsIO = (props: IOProps): DeploymentTargetsRunIO => {
   const printOutput = (
     output: DeploymentTargetsRunOutput,
   ): DeploymentTargetsRunOutput => {
-    io.header({ text: "Targets run summary", marginTop: true })
+    if (!quiet) {
+      io.header({ text: "Targets run summary", marginTop: true })
+    }
 
     if (output.result) {
       if (typeof output.result === "string") {

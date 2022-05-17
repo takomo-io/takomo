@@ -1,5 +1,9 @@
 import { OrganizationsClient } from "@takomo/aws-clients"
-import { Account } from "@takomo/aws-model"
+import { Account, OUPath } from "@takomo/aws-model"
+import {
+  DeploymentGroupPath,
+  DeploymentTargetName,
+} from "@takomo/deployment-targets-model"
 import { TakomoError } from "@takomo/util"
 import {
   DeploymentTargetConfigItemWrapper,
@@ -7,7 +11,7 @@ import {
   DeploymentTargetRepositoryProvider,
 } from "./deployment-target-repository"
 
-const buildDeploymentTargetName = ({ name, id }: Account) =>
+export const buildDeploymentTargetName = ({ name, id }: Account) =>
   name
     .toLowerCase()
     .replace(/[():\/]/g, "")
@@ -20,24 +24,40 @@ const buildDeploymentTargetName = ({ name, id }: Account) =>
   "-" +
   id
 
-const loadTargetsFromOUHierarchy = async (
-  client: OrganizationsClient,
-  inferDeploymentTargetNameFromAccountName: boolean,
-): Promise<ReadonlyArray<DeploymentTargetConfigItemWrapper>> => {
+export const resolveDeploymentGroupPath = (
+  ouPath: OUPath,
+  rootDeploymentGroupPath?: DeploymentGroupPath,
+): DeploymentGroupPath =>
+  rootDeploymentGroupPath
+    ? ouPath.replace("ROOT", rootDeploymentGroupPath)
+    : ouPath
+
+const loadTargetsFromOUHierarchy = async ({
+  source,
+  client,
+  inferDeploymentTargetNameFromAccountName,
+  rootDeploymentGroupPath,
+}: LoadTargetsProps): Promise<
+  ReadonlyArray<DeploymentTargetConfigItemWrapper>
+> => {
   const ous = await client.listOrganizationalUnits()
   const deploymentTargets = await Promise.all(
     ous.map(async (ou) => {
       const accounts = await client.listAccountsForOU(ou.id)
       const targets: ReadonlyArray<DeploymentTargetConfigItemWrapper> =
         accounts.map((a) => ({
-          source: "aws organization",
+          source,
           item: {
-            name: inferDeploymentTargetNameFromAccountName
-              ? buildDeploymentTargetName(a)
-              : a.id,
+            name: resolveDeploymentTargetName(
+              a,
+              inferDeploymentTargetNameFromAccountName,
+            ),
             status: "active",
             labels: [],
-            deploymentGroupPath: ou.path,
+            deploymentGroupPath: resolveDeploymentGroupPath(
+              ou.path,
+              rootDeploymentGroupPath,
+            ),
             vars: {},
             bootstrapConfigSets: [],
             configSets: [],
@@ -52,20 +72,33 @@ const loadTargetsFromOUHierarchy = async (
   return deploymentTargets.flat()
 }
 
-const loadTargetsFromAccounts = async (
-  client: OrganizationsClient,
+export const resolveDeploymentTargetName = (
+  account: Account,
   inferDeploymentTargetNameFromAccountName: boolean,
-): Promise<ReadonlyArray<DeploymentTargetConfigItemWrapper>> => {
+): DeploymentTargetName =>
+  inferDeploymentTargetNameFromAccountName
+    ? buildDeploymentTargetName(account)
+    : account.id
+
+const loadTargetsFromAccounts = async ({
+  source,
+  client,
+  inferDeploymentTargetNameFromAccountName,
+  rootDeploymentGroupPath = "ROOT",
+}: LoadTargetsProps): Promise<
+  ReadonlyArray<DeploymentTargetConfigItemWrapper>
+> => {
   const accounts = await client.listAccounts()
   return accounts.map((a) => ({
-    source: "aws organization",
+    source,
     item: {
-      name: inferDeploymentTargetNameFromAccountName
-        ? buildDeploymentTargetName(a)
-        : a.id,
+      name: resolveDeploymentTargetName(
+        a,
+        inferDeploymentTargetNameFromAccountName,
+      ),
       status: "active",
       labels: [],
-      deploymentGroupPath: "ROOT",
+      deploymentGroupPath: rootDeploymentGroupPath,
       vars: {},
       bootstrapConfigSets: [],
       configSets: [],
@@ -74,23 +107,20 @@ const loadTargetsFromAccounts = async (
   }))
 }
 
-const loadTargets = async (
-  client: OrganizationsClient,
-  inferDeploymentGroupPathFromOUPath: boolean,
-  inferDeploymentTargetNameFromAccountName: boolean,
-): Promise<ReadonlyArray<DeploymentTargetConfigItemWrapper>> => {
-  if (inferDeploymentGroupPathFromOUPath) {
-    return loadTargetsFromOUHierarchy(
-      client,
-      inferDeploymentTargetNameFromAccountName,
-    )
-  }
-
-  return loadTargetsFromAccounts(
-    client,
-    inferDeploymentTargetNameFromAccountName,
-  )
+interface LoadTargetsProps {
+  readonly source: string
+  readonly client: OrganizationsClient
+  readonly inferDeploymentGroupPathFromOUPath: boolean
+  readonly inferDeploymentTargetNameFromAccountName: boolean
+  readonly rootDeploymentGroupPath?: DeploymentGroupPath
 }
+
+const loadTargets = async (
+  props: LoadTargetsProps,
+): Promise<ReadonlyArray<DeploymentTargetConfigItemWrapper>> =>
+  props.inferDeploymentGroupPathFromOUPath
+    ? loadTargetsFromOUHierarchy(props)
+    : loadTargetsFromAccounts(props)
 
 export const createOrganizationDeploymentTargetRepositoryProvider =
   (): DeploymentTargetRepositoryProvider => {
@@ -102,6 +132,21 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
         credentialManager,
         cache,
       }): Promise<DeploymentTargetRepository> => {
+        const id = config.id
+        if (id === null || id === undefined) {
+          throw new TakomoError(
+            "Invalid deployment target repository config - 'id' property is required",
+          )
+        }
+
+        if (typeof id !== "string") {
+          throw new TakomoError(
+            "Invalid deployment target repository config - 'id' property must be of type 'string'",
+          )
+        }
+
+        const cacheKey = `deployment-target-repository/organization-${id}.v1.json`
+
         const organizationReaderRoleArn = config.organizationReaderRoleArn
         if (
           organizationReaderRoleArn &&
@@ -135,11 +180,19 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
           )
         }
 
+        const rootDeploymentGroupPath = config.rootDeploymentGroupPath
+        if (
+          rootDeploymentGroupPath &&
+          typeof rootDeploymentGroupPath !== "string"
+        ) {
+          throw new TakomoError(
+            "Invalid deployment target repository config - 'rootDeploymentGroupPath' property must be of type 'string'",
+          )
+        }
+
         const listDeploymentTargets = async (): Promise<
           ReadonlyArray<DeploymentTargetConfigItemWrapper>
         > => {
-          const cacheKey = "deployment-target-repository/organization.v1.json"
-
           if (cacheEnabled) {
             const cachedConfig = await cache.get(cacheKey)
 
@@ -152,10 +205,10 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
 
           if (organizationReaderRoleArn) {
             logger.info(
-              `Load deployment targets from AWS organization using role ${organizationReaderRoleArn}`,
+              `Load deployment targets from AWS organization '${id}' using role ${organizationReaderRoleArn}`,
             )
           } else {
-            logger.info("Load deployment targets from AWS organization")
+            logger.info(`Load deployment targets from AWS organization '${id}'`)
           }
 
           const cm = organizationReaderRoleArn
@@ -166,19 +219,22 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
 
           const client = await ctx.awsClientProvider.createOrganizationsClient({
             logger,
-            id: "organizations",
+            id: `organization-${id}`,
             region: "us-east-1",
             credentialProvider: cm.getCredentialProvider(),
           })
 
-          const deploymentTargets = await loadTargets(
+          const deploymentTargets = await loadTargets({
+            source: `organization ${id}`,
             client,
             inferDeploymentGroupPathFromOUPath,
             inferDeploymentTargetNameFromAccountName,
-          )
+            rootDeploymentGroupPath:
+              rootDeploymentGroupPath as DeploymentGroupPath,
+          })
 
           logger.debug(
-            `Loaded ${deploymentTargets.length} deployment targets from AWS organization`,
+            `Loaded ${deploymentTargets.length} deployment targets from AWS organization '${id}'`,
           )
 
           const deploymentTargetsList = deploymentTargets.flat().slice()
