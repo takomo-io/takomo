@@ -22,6 +22,7 @@ import {
   EXCLUDE_LABEL_OPT,
   EXCLUDE_TARGET_OPT,
   LABEL_OPT,
+  RESET_CACHE_OPT,
   TARGET_OPT,
 } from "../constants"
 
@@ -37,6 +38,7 @@ export interface DeploymentTargetsOperationCommandArgs {
   readonly [COMMAND_PATH_OPT]: CommandPath | undefined
   readonly [CONFIG_SET_OPT]: ConfigSetName | undefined
   readonly [CONFIG_FILE_OPT]: FilePath | undefined
+  readonly [RESET_CACHE_OPT]: boolean
 }
 
 export const deploymentTargetsOperationBuilder = (
@@ -101,6 +103,13 @@ export const deploymentTargetsOperationBuilder = (
         global: false,
         demandOption: false,
       },
+      [RESET_CACHE_OPT]: {
+        description: "Reset cache before executing the operation",
+        boolean: true,
+        default: false,
+        global: false,
+        demandOption: false,
+      },
     })
     .positional(GROUPS_OPT, {
       description: "Deployment groups to include in the operation",
@@ -138,6 +147,7 @@ const createTargetsOperationHandler =
         excludeLabels: argv[EXCLUDE_LABEL_OPT],
         commandPath: argv[COMMAND_PATH_OPT],
         configSetName: argv[CONFIG_SET_OPT],
+        resetCache: argv[RESET_CACHE_OPT],
         expectNoChanges: false,
         prune: false,
       }),
