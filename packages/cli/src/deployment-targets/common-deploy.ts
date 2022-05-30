@@ -17,6 +17,7 @@ import {
   EXCLUDE_TARGET_OPT,
   EXPECT_NO_CHANGES_OPT,
   LABEL_OPT,
+  RESET_CACHE_OPT,
   TARGET_OPT,
 } from "../constants"
 import { DeploymentTargetsOperationCommandArgs, GROUPS_OPT } from "./common"
@@ -103,6 +104,13 @@ const deploymentTargetsDeployBuilder = (
         default: false,
         demandOption: false,
       },
+      [RESET_CACHE_OPT]: {
+        description: "Reset cache before executing the operation",
+        boolean: true,
+        default: false,
+        global: false,
+        demandOption: false,
+      },
     })
     .positional(GROUPS_OPT, {
       description: "Deployment groups to include in the operation",
@@ -141,6 +149,7 @@ const createTargetsDeployHandler =
         commandPath: argv[COMMAND_PATH_OPT],
         configSetName: argv[CONFIG_SET_OPT],
         expectNoChanges: argv[EXPECT_NO_CHANGES_OPT],
+        resetCache: argv[RESET_CACHE_OPT],
         prune: false,
       }),
       io: (ctx, logger) => io({ logger }),
