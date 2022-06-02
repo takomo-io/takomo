@@ -1,4 +1,9 @@
-import { ChecksumHook, CmdHook, HookRegistry } from "@takomo/stacks-hooks"
+import {
+  ChecksumHook,
+  CmdHook,
+  HookRegistry,
+  PutToS3Hook,
+} from "@takomo/stacks-hooks"
 import { HookConfig, HookExecutor, HookProvider } from "@takomo/stacks-model"
 
 export const coreHookProviders = (): ReadonlyArray<HookProvider> => [
@@ -9,6 +14,10 @@ export const coreHookProviders = (): ReadonlyArray<HookProvider> => [
   {
     type: "checksum",
     init: (props: any) => Promise.resolve(new ChecksumHook(props)),
+  },
+  {
+    type: "put-to-s3",
+    init: (props: any) => Promise.resolve(new PutToS3Hook(props)),
   },
 ]
 

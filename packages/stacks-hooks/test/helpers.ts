@@ -1,7 +1,13 @@
 import { Credentials } from "@aws-sdk/types"
 import { CredentialManager } from "@takomo/aws-clients"
 import { StackName } from "@takomo/aws-model"
-import { InternalStack, StackPath } from "@takomo/stacks-model"
+import {
+  HookInput,
+  InternalStack,
+  Stack,
+  StackPath,
+  StacksContext,
+} from "@takomo/stacks-model"
 import { createConsoleLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
 
@@ -44,3 +50,26 @@ export const createStack = (props: TestStackProps): InternalStack => {
     credentials: mock<Credentials>(),
   }
 }
+
+const credentialManager = mock<CredentialManager>()
+credentialManager.getCredentials.mockReturnValue(
+  Promise.resolve(
+    mock<Credentials>({
+      accessKeyId: "xxxx",
+      secretAccessKey: "yyyy",
+      sessionToken: "zzzz",
+    }),
+  ),
+)
+
+export const mockHookInput = (
+  overrideDefaults?: Partial<HookInput>,
+): HookInput => ({
+  logger: createConsoleLogger({ logLevel: "info" }),
+  operation: "create",
+  stage: "before",
+  variables: { var: {}, hooks: {}, context: { projectDir: "" }, env: {} },
+  ctx: mock<StacksContext>({ projectDir: process.cwd() }),
+  stack: mock<Stack>({ region: "eu-central-1", credentialManager }),
+  ...overrideDefaults,
+})

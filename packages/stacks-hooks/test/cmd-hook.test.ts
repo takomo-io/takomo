@@ -1,30 +1,9 @@
-import { Credentials } from "@aws-sdk/types"
-import { CredentialManager } from "@takomo/aws-clients"
-import { HookInput, Stack, StacksContext } from "@takomo/stacks-model"
-import { createConsoleLogger } from "@takomo/util"
-import { mock } from "jest-mock-extended"
+import { HookInput } from "@takomo/stacks-model"
 import { join } from "path"
 import { CmdHook } from "../src"
+import { mockHookInput } from "./helpers"
 
-const credentialManager = mock<CredentialManager>()
-credentialManager.getCredentials.mockReturnValue(
-  Promise.resolve(
-    mock<Credentials>({
-      accessKeyId: "xxxx",
-      secretAccessKey: "yyyy",
-      sessionToken: "zzzz",
-    }),
-  ),
-)
-
-const input: HookInput = {
-  logger: createConsoleLogger({ logLevel: "info" }),
-  operation: "create",
-  stage: "before",
-  variables: { var: {}, hooks: {}, context: { projectDir: "" }, env: {} },
-  ctx: mock<StacksContext>({ projectDir: process.cwd() }),
-  stack: mock<Stack>({ region: "eu-central-1", credentialManager }),
-}
+const input = mockHookInput()
 
 const expectSuccess = async (
   hook: CmdHook,
