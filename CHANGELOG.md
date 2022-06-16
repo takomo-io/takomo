@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/takomo-io/takomo/compare/v4.4.0...v4.5.0) (2022-06-16)
+
+
+### Features
+
+* add reset cache option to all deployment targets commands ([#373](https://github.com/takomo-io/takomo/issues/373)) ([acba595](https://github.com/takomo-io/takomo/commit/acba5959bdab2dc8e0d52953ce275c2da6f8ba32))
+
+
+
+
+
 # [4.4.0](https://github.com/takomo-io/takomo/compare/v4.3.1...v4.4.0) (2022-05-17)
 
 
