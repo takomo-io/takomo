@@ -1,12 +1,8 @@
 import { TemplateConfig } from "./model"
 
-export const parseTemplate = (value: any): TemplateConfig => {
+export const parseTemplate = (value: any): TemplateConfig | undefined => {
   if (value === null || value === undefined) {
-    return {
-      filename: undefined,
-      inline: undefined,
-      dynamic: true,
-    }
+    return undefined
   }
 
   if (typeof value === "string") {

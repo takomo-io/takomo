@@ -33,6 +33,7 @@ export const createStackGroupConfigSchema = (
     timeoutObject,
     schemas,
     inheritTags,
+    blueprintPath,
   } = createStacksSchemas({ ...props })
 
   const timeout = [timeoutInMinutes, timeoutObject]
@@ -50,6 +51,7 @@ export const createStackGroupConfigSchema = (
     timeout,
     schemas,
     inheritTags,
+    blueprint: blueprintPath,
     accountIds: [accountId, accountIds],
     commandRole: iamRoleArn,
     capabilities: stackCapabilities,
@@ -60,6 +62,7 @@ export const createStackGroupConfigSchema = (
 
 interface CreateStackConfigSchemaProps {
   readonly regions: ReadonlyArray<Region>
+  readonly configType: "stack" | "blueprint"
 }
 
 export const createStackConfigSchema = (
@@ -91,10 +94,14 @@ export const createStackConfigSchema = (
     parameters,
     schemas,
     inheritTags,
+    blueprintPath,
   } = createStacksSchemas({ ...props })
 
   const timeout = [timeoutInMinutes, timeoutObject]
   const stackPaths = Joi.array().items(relativeStackPath).unique()
+
+  const blueprint =
+    props.configType === "stack" ? blueprintPath : blueprintPath.forbidden()
 
   return Joi.object({
     project,
@@ -111,6 +118,7 @@ export const createStackConfigSchema = (
     timeout,
     schemas,
     inheritTags,
+    blueprint,
     accountIds: [accountId, accountIds],
     commandRole: iamRoleArn,
     name: stackName,

@@ -6,6 +6,7 @@ export const TEMPLATES_DIR = "templates"
 export const STACKS_DIR = "stacks"
 export const PARTIALS_DIR = "partials"
 export const HELPERS_DIR = "helpers"
+export const BLUEPRINTS_DIR = "blueprints"
 export const SCHEMAS_DIR = "schemas"
 export const HOOKS_DIR = "hooks"
 export const RESOLVERS_DIR = "resolvers"
@@ -24,6 +25,7 @@ export interface ProjectFilePaths {
   readonly hooksDir: FilePath
   readonly resolversDir: FilePath
   readonly helpersDir: FilePath
+  readonly blueprintsDir: FilePath
   readonly schemasDir: FilePath
   readonly projectConfigFile: FilePath
   readonly stackGroupConfigFileName: string
@@ -46,6 +48,7 @@ export const createProjectFilePaths = (
   stacksDir: path.join(projectDir, STACKS_DIR),
   templatesDir: path.join(projectDir, TEMPLATES_DIR),
   schemasDir: path.join(projectDir, SCHEMAS_DIR),
+  blueprintsDir: path.join(projectDir, BLUEPRINTS_DIR),
   projectConfigFile: path.join(projectDir, TAKOMO_PROJECT_CONFIG_FILE_NAME),
   projectConfigFileName: TAKOMO_PROJECT_CONFIG_FILE_NAME,
   stackGroupConfigFileName: STACK_GROUP_CONFIG_FILE_NAME,

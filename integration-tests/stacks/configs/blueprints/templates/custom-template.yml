@@ -1,0 +1,9 @@
+Parameters:
+  Name:
+    Type: String
+Resources:
+  LG1:
+    Type: AWS::Logs::LogGroup
+Outputs:
+  Message:
+    Value: !Sub Hello ${Name}

@@ -18,11 +18,7 @@ describe("Cmd hook that exposes stack credentials", () => {
       .expectCommandToFail("Failed")
       .expectFailureStackResult({
         ...stack,
-        errorMessage:
-          "Shell command exited with code 255.\n" +
-          "\n" +
-          "stderr:\n" +
-          'Unable to locate credentials. You can configure credentials by running "aws configure".\n',
+        errorMessageToContain: "Unable to locate credentials",
         message: "Error",
       })
       .assert())

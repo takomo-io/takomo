@@ -7,14 +7,14 @@ const emptyStackConfig = {
   accountIds: undefined,
   commandRole: undefined,
   data: {},
-  depends: [],
+  depends: undefined,
   hooks: [],
   name: undefined,
   parameters: new Map(),
   project: undefined,
   regions: [],
   tags: new Map(),
-  template: { dynamic: true, filename: undefined, inline: undefined },
+  template: undefined,
   templateBucket: undefined,
   timeout: undefined,
   capabilities: undefined,
@@ -24,7 +24,8 @@ const emptyStackConfig = {
   stackPolicy: undefined,
   stackPolicyDuringUpdate: undefined,
   schemas: undefined,
-  inheritTags: true,
+  inheritTags: undefined,
+  blueprint: undefined,
 }
 
 const ctx: CommandContext = {
@@ -47,11 +48,12 @@ const ctx: CommandContext = {
   awsClientProvider: mock<AwsClientProvider>(),
   quiet: false,
   outputFormat: "text",
+  resetCache: false,
 }
 
 describe("#buildStackConfig", () => {
   test("empty config object", () => {
-    expect(buildStackConfig(ctx, {})._unsafeUnwrap()).toStrictEqual(
+    expect(buildStackConfig(ctx, {}, "stack")._unsafeUnwrap()).toStrictEqual(
       emptyStackConfig,
     )
   })

@@ -57,4 +57,12 @@ describe("#parseTemplate", () => {
       filename: undefined,
     })
   })
+  test("undefined value", () => {
+    const actual = parseTemplate(undefined)
+    expect(actual).toBeUndefined()
+  })
+  test("null value", () => {
+    const actual = parseTemplate(null)
+    expect(actual).toBeUndefined()
+  })
 })
