@@ -1,8 +1,9 @@
 import { IamRoleArn, StackEvent } from "@takomo/aws-model"
 import { CommandStatus, EnvVars, Variables } from "@takomo/core"
-import { ParameterConfig } from "@takomo/stacks-config"
+import { ParameterConfig, StackConfig } from "@takomo/stacks-config"
 import { HookRegistry } from "@takomo/stacks-hooks"
 import {
+  BlueprintPath,
   CommandPath,
   InternalStack,
   Resolver,
@@ -200,6 +201,11 @@ export interface StacksConfigRepository {
   getStackTemplateContents: (
     props: StacksConfigRepositoryProps,
   ) => Promise<string>
+
+  getBlueprint: (
+    blueprint: BlueprintPath,
+    variables: any,
+  ) => Promise<StackConfig>
 
   buildConfigTree: () => Promise<ConfigTree>
 

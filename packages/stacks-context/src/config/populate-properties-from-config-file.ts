@@ -4,7 +4,7 @@ import {
   SchemaRegistry,
   StackGroup,
 } from "@takomo/stacks-model"
-import { TkmLogger } from "@takomo/util"
+import { merge, mergeArrays, TkmLogger } from "@takomo/util"
 import { StackGroupConfigNode } from "./config-tree"
 import { mergeStackGroupSchemas } from "./merge-stack-group-schemas"
 
@@ -80,8 +80,13 @@ export const populatePropertiesFromConfigFile = async (
     props.tags = configFile.tags
   }
 
-  props.data = { ...stackGroup.data, ...configFile.data }
-  props.hooks = [...stackGroup.hooks, ...configFile.hooks]
+  props.data = merge(stackGroup.data, configFile.data)
+  props.hooks = mergeArrays({
+    first: stackGroup.hooks,
+    second: configFile.hooks,
+    allowDuplicates: false,
+    equals: (a, b) => a.name === b.name,
+  })
   props.schemas = await mergeStackGroupSchemas(
     ctx,
     schemaRegistry,

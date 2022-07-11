@@ -1,6 +1,5 @@
 import {
   CommandContext,
-  parseBoolean,
   parseCommandRole,
   parseOptionalBoolean,
   parseOptionalString,
@@ -25,9 +24,11 @@ import { createStackConfigSchema } from "./schema"
 export const buildStackConfig = (
   ctx: CommandContext,
   record: Record<string, unknown>,
+  configType: "stack" | "blueprint",
 ): Result<StackConfig, ValidationError> => {
   const { error } = createStackConfigSchema({
     regions: ctx.regions,
+    configType,
   }).validate(record, {
     abortEarly: false,
     convert: false,
@@ -67,10 +68,11 @@ export const buildStackConfig = (
     regions: parseStringArray(record.regions),
     name: parseOptionalString(record.name),
     timeout: parseTimeout(record.timeout),
-    depends: parseStringArray(record.depends),
+    depends: parseOptionalStringArray(record.depends),
     templateBucket: parseTemplateBucket(record.templateBucket),
     tags: parseTags(record.tags),
-    inheritTags: parseBoolean(record.inheritTags, true),
+    inheritTags: parseOptionalBoolean(record.inheritTags),
     parameters: parseParameters(record.parameters),
+    blueprint: parseOptionalString(record.blueprint),
   })
 }

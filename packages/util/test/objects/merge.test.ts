@@ -78,4 +78,25 @@ describe("#merge", () => {
     }
     expect(merge(a, b, c)).toStrictEqual(expected)
   })
+
+  test("Two empty arrays", () => {
+    const a: string[] = []
+    const b: string[] = []
+    const expected: string[] = []
+    expect(merge(a, b)).toStrictEqual(expected)
+  })
+
+  test("Two arrays with equal contents", () => {
+    const a = ["1", "2"]
+    const b = ["1", "2"]
+    const expected = ["1", "2"]
+    expect(merge(a, b)).toStrictEqual(expected)
+  })
+
+  test("Two arrays with non-equal contents", () => {
+    const a = ["1", "2"]
+    const b = ["3"]
+    const expected = ["3", "2"]
+    expect(merge(a, b)).toStrictEqual(expected)
+  })
 })

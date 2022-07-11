@@ -1,0 +1,11 @@
+Parameters:
+  Name:
+    Type: String
+Resources:
+  LG1:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref Name
+Outputs:
+  OtherMessage:
+    Value: !Sub Goodbye, ${Name}!

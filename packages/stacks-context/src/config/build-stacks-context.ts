@@ -114,6 +114,7 @@ export const buildStacksContext = async ({
     hookRegistry,
     commandPath ?? ROOT_STACK_GROUP_PATH,
     configTree,
+    configRepository,
   )
 
   const stackGroups = collectStackGroups(rootStackGroup)

@@ -1,0 +1,5 @@
+template: many-params.yml
+regions: eu-north-1
+parameters:
+  One: a
+  Two: b

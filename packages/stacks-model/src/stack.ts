@@ -27,6 +27,11 @@ export type RawTagValue = string | number | boolean
 export type StackPath = string
 
 /**
+ * Blueprint path.
+ */
+export type BlueprintPath = string
+
+/**
  * @hidden
  */
 export interface Template {

@@ -1,6 +1,6 @@
 export * from "./command"
 export * from "./common"
-export { ROOT_STACK_GROUP_PATH } from "./constants"
+export { ROOT_STACK_GROUP_PATH, StackPropertyDefaults } from "./constants"
 export { InternalStacksContext, StacksContext } from "./context"
 export * from "./hook"
 export * from "./resolver"
@@ -15,6 +15,7 @@ export {
   Schemas,
 } from "./schemas"
 export {
+  BlueprintPath,
   createStack,
   InternalStack,
   normalizeStackPath,

@@ -1,12 +1,21 @@
 import { CredentialManager } from "@takomo/aws-clients"
-import { IamRoleArn, StackName } from "@takomo/aws-model"
+import {
+  AccountId,
+  IamRoleArn,
+  Region,
+  StackCapability,
+  StackName,
+  StackPolicyBody,
+  TagKey,
+} from "@takomo/aws-model"
 import { createAwsSchemas } from "@takomo/aws-schema"
-import { CommandContext, Vars } from "@takomo/core"
-import { TemplateConfig } from "@takomo/stacks-config"
+import { CommandContext, CommandRole, Project, Vars } from "@takomo/core"
+import { StackConfig, TemplateConfig } from "@takomo/stacks-config"
 import { HookRegistry } from "@takomo/stacks-hooks"
 import {
   CommandPath,
   createStack,
+  HookConfig,
   InternalStack,
   isWithinCommandPath,
   normalizeStackPath,
@@ -14,19 +23,25 @@ import {
   SchemaRegistry,
   StackGroup,
   StackPath,
+  StackPropertyDefaults,
   StackProps,
   Template,
+  TemplateBucketConfig,
+  TimeoutConfig,
 } from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
-  deepCopy,
   mapToObject,
+  merge,
+  mergeArrays,
+  mergeMaps,
   TakomoError,
   TkmLogger,
   validate,
 } from "@takomo/util"
 import { AnySchema } from "joi"
 import R from "ramda"
+import { StacksConfigRepository } from "../model"
 import { StackConfigNode } from "./config-tree"
 import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file"
 import { getCredentialManager } from "./get-credential-provider"
@@ -36,9 +51,15 @@ import { mergeStackSchemas } from "./merge-stack-schemas"
 import { buildParameters } from "./parameters"
 import { ProcessStatus } from "./process-config-tree"
 
-const buildTemplate = (
+export interface StackPropBuilderProps {
+  readonly stackConfig: StackConfig
+  readonly stackGroup: StackGroup
+  readonly blueprint?: StackConfig
+}
+
+const buildTemplateInternal = (
   stackPath: StackPath,
-  { filename, dynamic, inline }: TemplateConfig,
+  { inline, filename, dynamic }: TemplateConfig,
 ): Template => {
   if (inline) {
     return {
@@ -49,7 +70,25 @@ const buildTemplate = (
 
   return {
     dynamic,
-    filename: filename ?? stackPath.substr(1),
+    filename: filename ?? stackPath.slice(1),
+  }
+}
+
+export const buildTemplate = (
+  { stackConfig, blueprint }: StackPropBuilderProps,
+  stackPath: StackPath,
+): Template => {
+  if (stackConfig.template) {
+    return buildTemplateInternal(stackPath, stackConfig.template)
+  }
+
+  if (blueprint?.template) {
+    return buildTemplateInternal(stackPath, blueprint.template)
+  }
+
+  return {
+    dynamic: true,
+    filename: stackPath.slice(1),
   }
 }
 
@@ -110,6 +149,176 @@ const validateName = (
   })
 }
 
+export const buildStackName = (
+  { stackConfig, blueprint, stackGroup }: StackPropBuilderProps,
+  stackPath: StackPath,
+): string =>
+  stackConfig.name ??
+  blueprint?.name ??
+  makeStackName(
+    stackPath,
+    stackConfig.project ?? blueprint?.project ?? stackGroup.project,
+  )
+
+export const buildRegions = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): ReadonlyArray<Region> => {
+  if (stackConfig.regions.length > 0) {
+    return stackConfig.regions
+  }
+
+  if (blueprint && blueprint.regions.length > 0) {
+    return blueprint.regions
+  }
+
+  return stackGroup.regions
+}
+
+export const buildAccountIds = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): ReadonlyArray<AccountId> =>
+  stackConfig.accountIds ?? blueprint?.accountIds ?? stackGroup.accountIds
+
+export const buildCommandRole = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): CommandRole | undefined =>
+  stackConfig.commandRole ?? blueprint?.commandRole ?? stackGroup.commandRole
+
+export const buildCapabilities = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): ReadonlyArray<StackCapability> | undefined =>
+  stackConfig.capabilities ?? blueprint?.capabilities ?? stackGroup.capabilities
+
+export const buildIgnore = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): boolean =>
+  stackConfig.ignore ?? blueprint?.ignore ?? stackGroup.ignore
+
+export const buildObsolete = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): boolean =>
+  stackConfig.obsolete ?? blueprint?.obsolete ?? stackGroup.obsolete
+
+export const buildTerminationProtection = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): boolean =>
+  stackConfig.terminationProtection ??
+  blueprint?.terminationProtection ??
+  stackGroup.terminationProtection
+
+export const buildStackPolicy = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): StackPolicyBody | undefined =>
+  stackConfig.stackPolicy ?? blueprint?.stackPolicy ?? stackGroup.stackPolicy
+
+export const buildProject = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): Project | undefined =>
+  stackConfig.project ?? blueprint?.project ?? stackGroup.project
+
+export const buildTimeout = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): TimeoutConfig =>
+  stackConfig.timeout ??
+  blueprint?.timeout ??
+  stackGroup.timeout ??
+  StackPropertyDefaults.timeout()
+
+export const buildTemplateBucket = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): TemplateBucketConfig | undefined =>
+  stackConfig.templateBucket ??
+  blueprint?.templateBucket ??
+  stackGroup.templateBucket ??
+  StackPropertyDefaults.templateBucket()
+
+export const buildDependencies = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): ReadonlyArray<StackPath> => {
+  const depends =
+    stackConfig.depends ?? blueprint?.depends ?? StackPropertyDefaults.depends()
+  return depends.map((d) => normalizeStackPath(stackGroup.path, d))
+}
+
+export const buildStackPolicyDuringUpdate = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): StackPolicyBody | undefined =>
+  stackConfig.stackPolicyDuringUpdate ??
+  blueprint?.stackPolicyDuringUpdate ??
+  stackGroup.stackPolicyDuringUpdate
+
+export const buildData = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): Record<string, unknown> =>
+  merge(stackGroup.data, blueprint?.data ?? {}, stackConfig.data)
+
+export const buildTags = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): Map<TagKey, RawTagValue> => {
+  const inheritTags =
+    stackConfig.inheritTags ??
+    blueprint?.inheritTags ??
+    StackPropertyDefaults.inheritTags()
+
+  const inheritedTags = inheritTags ? new Map(stackGroup.tags) : new Map()
+
+  return mergeMaps(
+    inheritedTags,
+    blueprint?.tags ?? new Map(),
+    stackConfig.tags,
+  )
+}
+
+export const buildHookConfigs = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StackPropBuilderProps): ReadonlyArray<HookConfig> => {
+  const baseHooks = mergeArrays({
+    first: stackGroup.hooks,
+    second: blueprint?.hooks ?? [],
+    allowDuplicates: false,
+    equals: (a, b) => a.name === b.name,
+  })
+
+  return mergeArrays({
+    first: baseHooks,
+    second: stackConfig.hooks,
+    allowDuplicates: false,
+    equals: (a, b) => a.name === b.name,
+  })
+}
+
 export const buildStack = async (
   ctx: CommandContext,
   logger: TkmLogger,
@@ -122,6 +331,7 @@ export const buildStack = async (
   stackGroup: StackGroup,
   commandPath: CommandPath,
   status: ProcessStatus,
+  configRepository: StacksConfigRepository,
 ): Promise<InternalStack[]> => {
   const { stackName } = createAwsSchemas({ regions: ctx.regions })
 
@@ -135,28 +345,43 @@ export const buildStack = async (
   )
 
   const stackConfig = await node.getConfig(stackVariables)
+  const blueprint = stackConfig.blueprint
+    ? await configRepository.getBlueprint(stackConfig.blueprint, stackVariables)
+    : undefined
 
-  const name =
-    stackConfig.name ||
-    makeStackName(stackPath, stackConfig.project || stackGroup.project)
+  const builderProps: StackPropBuilderProps = {
+    stackConfig,
+    blueprint,
+    stackGroup,
+  }
 
-  const regions =
-    stackConfig.regions.length > 0 ? stackConfig.regions : stackGroup.regions
+  const hookConfigs = buildHookConfigs(builderProps)
+  const name = buildStackName(builderProps, stackPath)
+  const regions = buildRegions(builderProps)
+  const commandRole = buildCommandRole(builderProps)
+  const template = buildTemplate(builderProps, stackPath)
+  const accountIds = buildAccountIds(builderProps)
+  const capabilities = buildCapabilities(builderProps)
+  const ignore = buildIgnore(builderProps)
+  const obsolete = buildObsolete(builderProps)
+  const terminationProtection = buildTerminationProtection(builderProps)
+  const stackPolicy = buildStackPolicy(builderProps)
+  const stackPolicyDuringUpdate = buildStackPolicyDuringUpdate(builderProps)
+  const project = buildProject(builderProps)
+
+  const parameters = await buildParameters(
+    ctx,
+    stackPath,
+    mergeMaps(blueprint?.parameters ?? new Map(), stackConfig.parameters),
+    resolverRegistry,
+    schemaRegistry,
+  )
 
   if (regions.length === 0) {
     throw new TakomoError(`Stack ${stackPath} has no regions`)
   }
 
-  const template = buildTemplate(stackPath, stackConfig.template)
   validate(stackName, name, `Name of stack ${stackPath} is not valid`)
-
-  const parameters = await buildParameters(
-    ctx,
-    stackPath,
-    stackConfig.parameters,
-    resolverRegistry,
-    schemaRegistry,
-  )
 
   R.uniq(
     Array.from(parameters.values())
@@ -174,34 +399,13 @@ export const buildStack = async (
       )
     })
 
-  const accountIds = stackConfig.accountIds || stackGroup.accountIds
-  const hookConfigs = [...stackGroup.hooks, ...stackConfig.hooks]
   const hooks = await initializeHooks(hookConfigs, hookRegistry)
 
-  const commandRole = stackConfig.commandRole || stackGroup.commandRole
   const credentialManager = await getCredentialManager(
     commandRole,
     defaultCredentialManager,
     credentialManagers,
   )
-
-  const capabilities = stackConfig.capabilities || stackGroup.capabilities
-  const ignore =
-    stackConfig.ignore !== undefined ? stackConfig.ignore : stackGroup.ignore
-
-  const obsolete =
-    stackConfig.obsolete !== undefined
-      ? stackConfig.obsolete
-      : stackGroup.obsolete
-
-  const terminationProtection =
-    stackConfig.terminationProtection !== undefined
-      ? stackConfig.terminationProtection
-      : stackGroup.terminationProtection
-
-  const stackPolicy = stackConfig.stackPolicy ?? stackGroup.stackPolicy
-  const stackPolicyDuringUpdate =
-    stackConfig.stackPolicyDuringUpdate ?? stackGroup.stackPolicyDuringUpdate
 
   const credentials = await credentialManager.getCredentials()
   const identity = await credentialManager.getCallerIdentity()
@@ -230,11 +434,14 @@ export const buildStack = async (
           exactPath,
           stackGroup.schemas,
           stackConfig.schemas,
+          blueprint?.schemas,
         )
 
-        const inheritedTags = stackConfig.inheritTags
-          ? new Map(stackGroup.tags)
-          : new Map()
+        const tags = buildTags(builderProps)
+        const data = buildData(builderProps)
+        const timeout = buildTimeout(builderProps)
+        const templateBucket = buildTemplateBucket(builderProps)
+        const dependencies = buildDependencies(builderProps)
 
         const props: StackProps = {
           name,
@@ -255,24 +462,16 @@ export const buildStack = async (
           stackPolicyDuringUpdate,
           path: exactPath,
           stackGroupPath: stackGroup.path,
-          project: stackConfig.project ?? stackGroup.project,
-          tags: inheritedTags,
-          timeout: stackConfig.timeout ??
-            stackGroup.timeout ?? { create: 0, update: 0 },
-          dependencies: stackConfig.depends.map((d) =>
-            normalizeStackPath(stackGroup.path, d),
-          ),
+          project,
+          tags,
+          timeout,
+          dependencies,
           dependents: [],
-          templateBucket:
-            stackConfig.templateBucket ?? stackGroup.templateBucket,
-          data: deepCopy({ ...stackGroup.data, ...stackConfig.data }),
+          templateBucket,
+          data,
           logger: stackLogger,
           schemas,
         }
-
-        stackConfig.tags.forEach((value, key) => {
-          props.tags.set(key, value)
-        })
 
         validateData(exactPath, schemas?.data ?? [], props.data)
         validateTags(exactPath, schemas?.tags ?? [], props.tags)

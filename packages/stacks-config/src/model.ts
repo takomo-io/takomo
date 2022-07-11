@@ -9,6 +9,7 @@ import {
 } from "@takomo/aws-model"
 import { CommandRole, Project, Vars } from "@takomo/core"
 import {
+  BlueprintPath,
   HookConfig,
   RawTagValue,
   ResolverName,
@@ -84,15 +85,15 @@ export interface TemplateConfig {
 export interface StackConfig {
   readonly project?: Project
   readonly name?: StackName
-  readonly template: TemplateConfig
+  readonly template?: TemplateConfig
   readonly templateBucket?: TemplateBucketConfig
   readonly regions: ReadonlyArray<Region>
   readonly accountIds?: ReadonlyArray<AccountId>
   readonly commandRole?: CommandRole
   readonly timeout?: TimeoutConfig
-  readonly depends: ReadonlyArray<StackPath>
+  readonly depends?: ReadonlyArray<StackPath>
   readonly tags: Map<TagKey, RawTagValue>
-  readonly inheritTags: boolean
+  readonly inheritTags?: boolean
   readonly parameters: Map<StackParameterKey, ParameterConfigs>
   readonly data: Vars
   readonly hooks: ReadonlyArray<HookConfig>
@@ -103,6 +104,7 @@ export interface StackConfig {
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly schemas?: SchemasConfig
+  readonly blueprint?: BlueprintPath
 }
 
 export interface StackGroupConfig {

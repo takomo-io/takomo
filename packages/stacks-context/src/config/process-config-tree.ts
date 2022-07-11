@@ -22,6 +22,7 @@ import {
   checkObsoleteDependencies,
   processStackDependencies,
 } from "../dependencies"
+import { StacksConfigRepository } from "../model"
 import { buildStack } from "./build-stack"
 import { ConfigTree, StackGroupConfigNode } from "./config-tree"
 import { doCreateStackGroup } from "./create-stack-group"
@@ -105,6 +106,7 @@ const processStackGroupConfigNode = async (
   commandPath: CommandPath,
   status: ProcessStatus,
   node: StackGroupConfigNode,
+  configRepository: StacksConfigRepository,
 ): Promise<void> => {
   logger.trace(`Process stack group config node with path '${node.path}'`)
   if (!isWithinCommandPath(commandPath, node.path)) {
@@ -159,6 +161,7 @@ const processStackGroupConfigNode = async (
         status.getStackGroup(node.path),
         commandPath,
         status,
+        configRepository,
       ),
     ),
   )
@@ -181,6 +184,7 @@ const processStackGroupConfigNode = async (
         commandPath,
         status,
         child,
+        configRepository,
       ),
     ),
   )
@@ -196,6 +200,7 @@ export const processConfigTree = async (
   hookRegistry: HookRegistry,
   commandPath: CommandPath,
   configTree: ConfigTree,
+  configRepository: StacksConfigRepository,
 ): Promise<StackGroup> => {
   const item = configTree.rootStackGroup
   const status = new ProcessStatus()
@@ -216,6 +221,7 @@ export const processConfigTree = async (
         cp,
         status,
         item,
+        configRepository,
       )
     }
 

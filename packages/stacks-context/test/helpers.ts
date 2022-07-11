@@ -1,8 +1,19 @@
 import { Credentials } from "@aws-sdk/types"
 import { CloudFormationClient, CredentialManager } from "@takomo/aws-clients"
-import { StackName } from "@takomo/aws-model"
 import {
+  AccountId,
+  Region,
+  StackCapability,
+  StackName,
+  StackPolicyBody,
+  TagKey,
+} from "@takomo/aws-model"
+import { CommandRole, Project } from "@takomo/core"
+import { StackConfig, TemplateConfig } from "@takomo/stacks-config"
+import {
+  HookConfig,
   InternalStack,
+  RawTagValue,
   ROOT_STACK_GROUP_PATH,
   StackGroup,
   StackGroupName,
@@ -12,32 +23,45 @@ import {
 import { createConsoleLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
 
-export interface TestStackGroupProps {
-  name: StackGroupName
-  path: StackGroupPath
+export interface CreateStackGroupProps {
+  name?: StackGroupName
+  path?: StackGroupPath
+  project?: Project
   stacks?: InternalStack[]
   children?: StackGroup[]
+  capabilities?: ReadonlyArray<StackCapability>
+  regions?: ReadonlyArray<Region>
+  accountIds?: ReadonlyArray<AccountId>
+  commandRole?: CommandRole
+  ignore?: boolean
+  obsolete?: boolean
+  terminationProtection?: boolean
+  stackPolicy?: StackPolicyBody
+  stackPolicyDuringUpdate?: StackPolicyBody
+  tags?: Map<TagKey, RawTagValue>
+  data?: Record<string, any>
+  hooks?: ReadonlyArray<HookConfig>
 }
 
-export const createStackGroup = (props: TestStackGroupProps): StackGroup => {
-  return {
-    name: props.name,
-    path: props.path,
-    root: props.path === ROOT_STACK_GROUP_PATH,
-    stacks: props.stacks || [],
-    children: props.children || [],
-    regions: ["us-east-1"],
-    accountIds: [],
-    tags: new Map(),
-    hooks: [],
-    data: {},
-    capabilities: [],
-    ignore: false,
-    obsolete: false,
-    terminationProtection: false,
-    toProps: jest.fn(),
-  }
-}
+export const createStackGroup = (
+  props: CreateStackGroupProps = {},
+): StackGroup => ({
+  name: "not-set",
+  path: ROOT_STACK_GROUP_PATH,
+  root: props.path === ROOT_STACK_GROUP_PATH,
+  stacks: [],
+  children: [],
+  regions: [],
+  accountIds: [],
+  tags: new Map(),
+  hooks: [],
+  data: {},
+  ignore: false,
+  obsolete: false,
+  terminationProtection: false,
+  toProps: jest.fn(),
+  ...props,
+})
 
 export interface TestStackProps {
   path: StackPath
@@ -113,3 +137,34 @@ export const createStack = (
 
   return stack
 }
+
+export interface CreateStackConfigProps {
+  name?: StackName
+  project?: string
+  regions?: ReadonlyArray<Region>
+  accountIds?: ReadonlyArray<AccountId>
+  capabilities?: ReadonlyArray<StackCapability>
+  template?: TemplateConfig
+  commandRole?: CommandRole
+  ignore?: boolean
+  obsolete?: boolean
+  terminationProtection?: boolean
+  stackPolicy?: StackPolicyBody
+  stackPolicyDuringUpdate?: StackPolicyBody
+  tags?: Map<TagKey, RawTagValue>
+  inheritTags?: boolean
+  depends?: ReadonlyArray<StackPath>
+  data?: Record<string, any>
+  hooks?: ReadonlyArray<HookConfig>
+}
+
+export const createStackConfig = (
+  props: CreateStackConfigProps = {},
+): StackConfig => ({
+  data: {},
+  regions: [],
+  hooks: [],
+  tags: new Map(),
+  parameters: new Map(),
+  ...props,
+})

@@ -341,7 +341,7 @@ export const onComplete = async ({
     console.log()
   }
 
-  if (output.outputFormat === "text") {
+  if (!ctx.quiet && output.outputFormat === "text") {
     console.log()
     console.log(
       `Completed in ${output.timer.getFormattedTimeElapsed()} with status: ${formatCommandStatus(
