@@ -1,0 +1,17 @@
+Parameters:
+  One:
+    Type: String
+  Two:
+    Type: String
+  Three:
+    Type: String
+Resources:
+  LG1:
+    Type: AWS::Logs::LogGroup
+Outputs:
+  One:
+    Value: !Ref One
+  Two:
+    Value: !Ref Two
+  Three:
+    Value: !Ref Three

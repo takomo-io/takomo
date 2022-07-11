@@ -8,13 +8,19 @@ export const mergeStackSchemas = async (
   stackPath: StackPath,
   inheritedSchemas?: Schemas,
   schemasConfig?: SchemasConfig,
+  blueprintSchemasConfig?: SchemasConfig,
 ): Promise<Schemas | undefined> => {
-  if (!schemasConfig) {
+  if (!schemasConfig && !blueprintSchemasConfig) {
     return inheritedSchemas
   }
 
+  const joinedDataSchemas = [
+    ...(blueprintSchemasConfig?.data ?? []),
+    ...(schemasConfig?.data ?? []),
+  ]
+
   const dataSchemas = await Promise.all(
-    schemasConfig.data.map((schemaConfig) =>
+    joinedDataSchemas.map((schemaConfig) =>
       schemaRegistry.initStackDataSchema(
         ctx,
         stackPath,
@@ -24,8 +30,13 @@ export const mergeStackSchemas = async (
     ),
   )
 
+  const joinedTagsSchemas = [
+    ...(blueprintSchemasConfig?.tags ?? []),
+    ...(schemasConfig?.tags ?? []),
+  ]
+
   const tagsSchemas = await Promise.all(
-    schemasConfig.tags.map((schemaConfig) =>
+    joinedTagsSchemas.map((schemaConfig) =>
       schemaRegistry.initStackTagsSchema(
         ctx,
         stackPath,
@@ -35,8 +46,13 @@ export const mergeStackSchemas = async (
     ),
   )
 
+  const joinedParametersSchemas = [
+    ...(blueprintSchemasConfig?.parameters ?? []),
+    ...(schemasConfig?.parameters ?? []),
+  ]
+
   const parametersSchemas = await Promise.all(
-    schemasConfig.parameters.map((schemaConfig) =>
+    joinedParametersSchemas.map((schemaConfig) =>
       schemaRegistry.initStackParametersSchema(
         ctx,
         stackPath,
@@ -46,8 +62,13 @@ export const mergeStackSchemas = async (
     ),
   )
 
+  const joinedNameSchemas = [
+    ...(blueprintSchemasConfig?.name ?? []),
+    ...(schemasConfig?.name ?? []),
+  ]
+
   const nameSchemas = await Promise.all(
-    schemasConfig.name.map((schemaConfig) =>
+    joinedNameSchemas.map((schemaConfig) =>
       schemaRegistry.initStackNameSchema(
         ctx,
         stackPath,

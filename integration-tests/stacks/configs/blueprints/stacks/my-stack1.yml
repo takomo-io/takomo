@@ -1,0 +1,4 @@
+blueprint: sample1.yml
+name: a-better-name
+parameters:
+  Name: James

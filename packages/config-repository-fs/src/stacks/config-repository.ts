@@ -1,15 +1,21 @@
 import { InternalCommandContext } from "@takomo/core"
+import { StackConfig } from "@takomo/stacks-config"
 import {
   ConfigTree,
   StacksConfigRepository,
   StacksConfigRepositoryProps,
 } from "@takomo/stacks-context"
 import { HookRegistry } from "@takomo/stacks-hooks"
-import { ROOT_STACK_GROUP_PATH, SchemaRegistry } from "@takomo/stacks-model"
+import {
+  BlueprintPath,
+  ROOT_STACK_GROUP_PATH,
+  SchemaRegistry,
+} from "@takomo/stacks-model"
 import { ResolverRegistry } from "@takomo/stacks-resolvers"
 import {
   createTemplateEngine,
   dirExists,
+  fileExists,
   FilePath,
   readFileContents,
   renderTemplate,
@@ -24,6 +30,7 @@ import {
   loadCustomResolvers,
   loadCustomSchemas,
 } from "./extensions"
+import { parseBlueprintConfigFile } from "./parser"
 
 export interface FileSystemStacksConfigRepositoryProps {
   readonly ctx: InternalCommandContext
@@ -34,6 +41,7 @@ export interface FileSystemStacksConfigRepositoryProps {
   readonly hooksDir: FilePath
   readonly helpersDir: FilePath
   readonly partialsDir: FilePath
+  readonly blueprintsDir: FilePath
   readonly templatesDir: FilePath
   readonly schemasDir: FilePath
   readonly cacheDir: FilePath
@@ -53,6 +61,7 @@ export const createFileSystemStacksConfigRepository = async ({
   stackGroupConfigFileName,
   templatesDir,
   schemasDir,
+  blueprintsDir,
 }: FileSystemStacksConfigRepositoryProps): Promise<StacksConfigRepository> => {
   const templateEngine = createTemplateEngine()
 
@@ -196,6 +205,24 @@ export const createFileSystemStacksConfigRepository = async ({
       }
 
       throw new Error("Expected either filename or inline to be defined")
+    },
+
+    getBlueprint: async (
+      blueprint: BlueprintPath,
+      variables: any,
+    ): Promise<StackConfig> => {
+      const pathToBlueprint = path.join(blueprintsDir, blueprint)
+      if (!(await fileExists(pathToBlueprint))) {
+        throw new Error(`Blueprint file ${blueprint} not found!`)
+      }
+
+      return parseBlueprintConfigFile(
+        ctx,
+        variables,
+        templateEngine,
+        logger,
+        pathToBlueprint,
+      )
     },
 
     templateEngine,

@@ -32,7 +32,8 @@ describe("Run", () => {
       executeRunTargetsCommand({
         projectDir,
         targets: ["one"],
-        mapCommand: "aws sts get-caller-identity --query Account --output text",
+        mapCommand:
+          "aws sts get-caller-identity --query Account --output text --region eu-central-1",
       })
         .expectCommandToSucceed([`${accountIds[0]}\n`])
         .assert(),
@@ -46,7 +47,8 @@ describe("Run", () => {
       return executeRunTargetsCommand({
         projectDir,
         targets: ["three"],
-        mapCommand: "aws sts get-caller-identity --query Account --output text",
+        mapCommand:
+          "aws sts get-caller-identity --query Account --output text --region eu-central-1",
       })
         .expectCommandToSucceed([`${accountId}\n`])
         .assert()
@@ -149,7 +151,8 @@ describe("Run", () => {
         projectDir,
         targets: ["one"],
         disableMapRole: true,
-        mapCommand: "aws sts get-caller-identity --query Account --output text",
+        mapCommand:
+          "aws sts get-caller-identity --query Account --output text --region eu-central-1",
       })
         .expectCommandToSucceed([`${accountId}\n`])
         .assert()
@@ -249,7 +252,7 @@ describe("Run", () => {
         disableMapRole: true,
         mapCommand: "echo hello",
         reduceCommand:
-          "aws sts get-caller-identity --query Account --output text",
+          "aws sts get-caller-identity --query Account --output text --region eu-central-1",
       })
         .expectCommandToSucceed(`${accountId}\n`)
         .assert()
@@ -266,7 +269,7 @@ describe("Run", () => {
         reduceRoleArn: `arn:aws:iam::${accountIds[0]}:role/OrganizationAccountAccessRole`,
         mapCommand: "echo hello",
         reduceCommand:
-          "aws sts get-caller-identity --query Account --output text",
+          "aws sts get-caller-identity --query Account --output text --region eu-central-1",
       })
         .expectCommandToSucceed(`${accountIds[0]}\n`)
         .assert(),

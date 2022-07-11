@@ -67,8 +67,6 @@ export const arrayToMap = <T>(
   keyExtractor: (item: T) => string,
 ): Map<string, T> => new Map(items.map((item) => [keyExtractor(item), item]))
 
-type Primitive = string | number | boolean
-
 /**
  * @hidden
  */
@@ -114,3 +112,16 @@ export const mergeArrays = <T>({
     return [...collected, lastDuplicate]
   }, new Array<T>())
 }
+
+/**
+ * @hidden
+ */
+export const mergeMaps = <T>(
+  ...maps: ReadonlyArray<Map<string, T>>
+): Map<string, T> =>
+  new Map(
+    maps.reduce(
+      (collected, map) => [...collected, ...map],
+      new Array<[string, T]>(),
+    ),
+  )

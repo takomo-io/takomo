@@ -33,6 +33,7 @@ export interface StacksSchemas {
   hookOperation: StringSchema
   templateBucket: ObjectSchema
   schemas: ObjectSchema
+  blueprintPath: StringSchema
 }
 
 export const createStacksSchemas = (
@@ -297,6 +298,10 @@ export const createStacksSchemas = (
 
   const inheritTags = Joi.boolean()
 
+  const blueprintPath = Joi.string()
+    .max(100)
+    .regex(/^([a-zA-Z][a-zA-Z0-9-_/]*)+\.yml/)
+
   return {
     commandPath,
     stackGroupPath,
@@ -318,5 +323,6 @@ export const createStacksSchemas = (
     templateBucket,
     schemas,
     inheritTags,
+    blueprintPath,
   }
 }

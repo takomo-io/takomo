@@ -7,6 +7,7 @@ import {
   parseOptionalStringArray,
   parseStringArray,
 } from "@takomo/core"
+import { StackPropertyDefaults } from "@takomo/stacks-model"
 import { ValidationError } from "@takomo/util"
 import { err, ok, Result } from "neverthrow"
 import { StackGroupConfig } from "./model"
@@ -66,7 +67,10 @@ export const buildStackGroupConfig = (
     regions: parseStringArray(record.regions),
     templateBucket: parseTemplateBucket(record.templateBucket),
     tags: parseTags(record.tags),
-    inheritTags: parseBoolean(record.inheritTags, true),
+    inheritTags: parseBoolean(
+      record.inheritTags,
+      StackPropertyDefaults.inheritTags(),
+    ),
     timeout: parseTimeout(record.timeout),
   })
 }

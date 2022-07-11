@@ -15,15 +15,48 @@ import {
   TkmLogger,
 } from "@takomo/util"
 
+export const parseBlueprintConfigFile = async (
+  ctx: CommandContext,
+  variables: any,
+  templateEngine: TemplateEngine,
+  logger: TkmLogger,
+  pathToFile: FilePath,
+): Promise<StackConfig> =>
+  parseStackConfigFileInternal(
+    ctx,
+    variables,
+    templateEngine,
+    logger,
+    pathToFile,
+    "blueprint",
+  )
+
 export const parseStackConfigFile = async (
   ctx: CommandContext,
   variables: any,
   templateEngine: TemplateEngine,
   logger: TkmLogger,
   pathToFile: FilePath,
+): Promise<StackConfig> =>
+  parseStackConfigFileInternal(
+    ctx,
+    variables,
+    templateEngine,
+    logger,
+    pathToFile,
+    "stack",
+  )
+
+const parseStackConfigFileInternal = async (
+  ctx: CommandContext,
+  variables: any,
+  templateEngine: TemplateEngine,
+  logger: TkmLogger,
+  pathToFile: FilePath,
+  configType: "blueprint" | "stack",
 ): Promise<StackConfig> => {
   const contents = await readFileContents(pathToFile)
-  logger.traceText(`Raw stack config contents:`, contents)
+  logger.traceText(`Raw ${configType} file ${pathToFile} contents:`, contents)
 
   const filterFn = ctx.confidentialValuesLoggingEnabled
     ? (obj: any) => obj
@@ -35,7 +68,7 @@ export const parseStackConfigFile = async (
       }
 
   logger.traceObject(
-    `Render stack config file using variables:`,
+    `Render ${configType} file ${pathToFile} using variables:`,
     variables,
     filterFn,
   )
@@ -47,17 +80,20 @@ export const parseStackConfigFile = async (
     variables,
   )
 
-  logger.traceText(`Final rendered stack config contents:`, rendered)
+  logger.traceText(
+    `Final rendered ${configType} file ${pathToFile} contents:`,
+    rendered,
+  )
 
   const parsedFile = (await parseYaml(pathToFile, rendered)) || {}
-  const result = await buildStackConfig(ctx, parsedFile)
+  const result = await buildStackConfig(ctx, parsedFile, configType)
   if (result.isOk()) {
     return result.value
   }
 
   const details = result.error.messages.map((m) => `- ${m}`).join("\n")
   throw new TakomoError(
-    `Validation errors in stack configuration file ${pathToFile}:\n${details}`,
+    `Validation errors in ${configType} file ${pathToFile}:\n${details}`,
   )
 }
 

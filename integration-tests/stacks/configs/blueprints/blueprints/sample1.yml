@@ -1,0 +1,5 @@
+regions: eu-north-1
+template: sample1-template.yml
+name: sample-blueprint1
+parameters:
+  Name: Spider-Man

@@ -5,6 +5,7 @@ import {
   ParameterConfigs,
   SingleParameterConfig,
 } from "@takomo/stacks-config"
+import { SchemaRegistry } from "@takomo/stacks-model"
 import {
   coreResolverProviders,
   ResolverRegistry,
@@ -20,6 +21,8 @@ const logger = createConsoleLogger({
 const registry = new ResolverRegistry(logger)
 coreResolverProviders().forEach((p) => registry.registerBuiltInProvider(p))
 
+const schemaRegistry = mock<SchemaRegistry>()
+
 describe("#buildParameters", () => {
   describe("should build correct parameters", () => {
     it("when a an empty config is given", async () => {
@@ -29,6 +32,7 @@ describe("#buildParameters", () => {
         "/stack.yml",
         config,
         registry,
+        schemaRegistry,
       )
       expect(parameters.size).toBe(0)
     })
@@ -50,6 +54,7 @@ describe("#buildParameters", () => {
         "/stack.yml",
         config,
         registry,
+        schemaRegistry,
       )
       expect(parameters.size).toBe(1)
 
@@ -75,6 +80,7 @@ describe("#buildParameters", () => {
         "/stack.yml",
         config,
         registry,
+        schemaRegistry,
       )
       expect(parameters.size).toBe(1)
 
@@ -98,6 +104,7 @@ describe("#buildParameters", () => {
         "/stack.yml",
         config,
         registry,
+        schemaRegistry,
       )
       expect(parameters.size).toBe(1)
 
@@ -136,6 +143,7 @@ describe("#buildParameters", () => {
         "/stack.yml",
         config,
         registry,
+        schemaRegistry,
       )
       expect(parameters.size).toBe(1)
 
@@ -175,6 +183,7 @@ describe("#buildParameters", () => {
         "/stack.yml",
         config,
         registry,
+        schemaRegistry,
       )
       expect(parameters.size).toBe(1)
 

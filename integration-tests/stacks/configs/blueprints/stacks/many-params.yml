@@ -1,0 +1,3 @@
+blueprint: some/params.yml
+parameters:
+  Three: c
