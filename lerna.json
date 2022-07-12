@@ -2,6 +2,7 @@
   "version": "4.5.0",
   "npmClient": "yarn",
   "useWorkspaces": true,
+  "useNx": false,
   "packages": [
     "packages/*",
     "integration-tests/*"
