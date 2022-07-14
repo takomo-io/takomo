@@ -46,6 +46,10 @@ describe("#resolveOperationType", () => {
     expect(resolveOperationType("UPDATE_ROLLBACK_FAILED")).toBe("UPDATE")
   })
 
+  test("when IMPORT_COMPLETE is given returns UPDATE", () => {
+    expect(resolveOperationType("IMPORT_COMPLETE")).toBe("UPDATE")
+  })
+
   test("when REVIEW_IN_PROGRESS is given returns RECREATE", () => {
     expect(resolveOperationType("REVIEW_IN_PROGRESS")).toBe("RECREATE")
   })
