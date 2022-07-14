@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/takomo-io/takomo/compare/v4.5.0...v4.6.0) (2022-07-14)
+
+
+### Bug Fixes
+
+* add IMPORT_COMPLETE to list of supported stack statuses ([#381](https://github.com/takomo-io/takomo/issues/381)) ([7b9e0b5](https://github.com/takomo-io/takomo/commit/7b9e0b599e1f202a681d12862cec5e073164c525)), closes [#380](https://github.com/takomo-io/takomo/issues/380)
+
+
+
+
+
 # [4.4.0](https://github.com/takomo-io/takomo/compare/v4.3.1...v4.4.0) (2022-05-17)
 
 **Note:** Version bump only for package @takomo/stacks-commands

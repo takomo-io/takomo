@@ -1,6 +1,6 @@
 {
   "name": "@takomo/config-repository-fs",
-  "version": "4.4.0",
+  "version": "4.6.0",
   "description": "Takomo Filesystem Config Repository",
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
@@ -28,22 +28,22 @@
   },
   "dependencies": {
     "@aws-sdk/types": "3.78.0",
-    "@takomo/aws-clients": "4.4.0",
-    "@takomo/aws-model": "4.4.0",
-    "@takomo/config-sets": "4.4.0",
-    "@takomo/core": "4.4.0",
-    "@takomo/deployment-targets-config": "4.4.0",
-    "@takomo/deployment-targets-context": "4.4.0",
-    "@takomo/deployment-targets-model": "4.4.0",
-    "@takomo/deployment-targets-repository": "4.4.0",
-    "@takomo/init-command": "4.4.0",
-    "@takomo/stacks-config": "4.4.0",
-    "@takomo/stacks-context": "4.4.0",
-    "@takomo/stacks-hooks": "4.4.0",
-    "@takomo/stacks-model": "4.4.0",
-    "@takomo/stacks-resolvers": "4.4.0",
-    "@takomo/stacks-schema": "4.4.0",
-    "@takomo/util": "4.4.0",
+    "@takomo/aws-clients": "4.6.0",
+    "@takomo/aws-model": "4.6.0",
+    "@takomo/config-sets": "4.6.0",
+    "@takomo/core": "4.6.0",
+    "@takomo/deployment-targets-config": "4.6.0",
+    "@takomo/deployment-targets-context": "4.6.0",
+    "@takomo/deployment-targets-model": "4.6.0",
+    "@takomo/deployment-targets-repository": "4.6.0",
+    "@takomo/init-command": "4.6.0",
+    "@takomo/stacks-config": "4.6.0",
+    "@takomo/stacks-context": "4.6.0",
+    "@takomo/stacks-hooks": "4.6.0",
+    "@takomo/stacks-model": "4.6.0",
+    "@takomo/stacks-resolvers": "4.6.0",
+    "@takomo/stacks-schema": "4.6.0",
+    "@takomo/util": "4.6.0",
     "dotenv-expand": "5.1.0",
     "easy-table": "1.2.0",
     "joi": "17.6.0",
@@ -52,7 +52,7 @@
     "semver": "7.3.7"
   },
   "devDependencies": {
-    "@takomo/test-unit": "4.4.0"
+    "@takomo/test-unit": "4.6.0"
   },
   "engines": {
     "node": ">=14.17.1"
