@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/takomo-io/takomo/compare/v4.5.0...v4.6.0) (2022-07-14)
+
+
+### Bug Fixes
+
+* add IMPORT_COMPLETE to list of supported stack statuses ([#381](https://github.com/takomo-io/takomo/issues/381)) ([7b9e0b5](https://github.com/takomo-io/takomo/commit/7b9e0b599e1f202a681d12862cec5e073164c525)), closes [#380](https://github.com/takomo-io/takomo/issues/380)
+
+
+### Features
+
+* add support for blueprints property to stack configs ([#378](https://github.com/takomo-io/takomo/issues/378)) ([3a435f0](https://github.com/takomo-io/takomo/commit/3a435f024a5f3f8f82e632be3adb0c9030d7972a)), closes [#376](https://github.com/takomo-io/takomo/issues/376)
+
+
+
+
+
 # [4.5.0](https://github.com/takomo-io/takomo/compare/v4.4.0...v4.5.0) (2022-06-16)
 
 

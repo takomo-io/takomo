@@ -1,7 +1,7 @@
 {
   "name": "integration-test-deployment-targets",
   "private": true,
-  "version": "4.5.0",
+  "version": "4.6.0",
   "description": "",
   "author": "henri@takomo.io",
   "license": "MIT",
@@ -22,9 +22,9 @@
     "integration-test": "jest test --passWithNoTests --runInBand --ci --verbose"
   },
   "dependencies": {
-    "@takomo/cli": "4.5.0",
-    "@takomo/core": "4.4.0",
-    "@takomo/test-integration": "4.5.0",
+    "@takomo/cli": "4.6.0",
+    "@takomo/core": "4.6.0",
+    "@takomo/test-integration": "4.6.0",
     "source-map-support": "0.5.21"
   },
   "devDependencies": {

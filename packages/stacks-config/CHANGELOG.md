@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/takomo-io/takomo/compare/v4.5.0...v4.6.0) (2022-07-14)
+
+
+### Features
+
+* add support for blueprints property to stack configs ([#378](https://github.com/takomo-io/takomo/issues/378)) ([3a435f0](https://github.com/takomo-io/takomo/commit/3a435f024a5f3f8f82e632be3adb0c9030d7972a)), closes [#376](https://github.com/takomo-io/takomo/issues/376)
+
+
+
+
+
 # [4.4.0](https://github.com/takomo-io/takomo/compare/v4.3.1...v4.4.0) (2022-05-17)
 
 **Note:** Version bump only for package @takomo/stacks-config
