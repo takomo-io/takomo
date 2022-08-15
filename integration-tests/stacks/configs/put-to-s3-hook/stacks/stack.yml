@@ -1,0 +1,10 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-west-1
+hooks:
+  - name: first
+    type: put-to-s3
+    stage: after
+    dir: app
+    bucket: {{ var.bucketName }}
+    key: {{ var.key }}
+    content: {{ var.content }}

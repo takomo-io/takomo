@@ -11,13 +11,12 @@ describe("Checksum hook", () => {
       .expectStackCreateSuccess({
         stackName,
         stackPath,
-      })
-      .expectDeployedCfStackV2({
-        stackPath,
-        outputs: {
-          Checksum: "KBUSI+pY0rw2rs9H7eqjuDUKoxk=",
-          Checksum2: "571c86eec81a3afb8f0dc87bb3a16dcb7578a544",
-        },
+        expectDeployedStack: {
+          outputs: {
+            Checksum: "KBUSI+pY0rw2rs9H7eqjuDUKoxk=",
+            Checksum2: "571c86eec81a3afb8f0dc87bb3a16dcb7578a544",
+          }
+        }
       })
       .assert())
 })

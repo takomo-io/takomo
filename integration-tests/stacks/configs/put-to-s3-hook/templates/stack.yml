@@ -1,0 +1,8 @@
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: {{ var.bucketName }}
+      Tags:
+        - Key: test-resource
+          Value: true

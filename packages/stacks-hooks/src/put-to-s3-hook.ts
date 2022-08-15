@@ -29,7 +29,6 @@ export class PutToS3Hook implements Hook {
           this.iamRoleArn,
         )
       : ctx.credentialManager
-    console.log("CR MANAGER: ", crManager)
     const s3Client = await ctx.awsClientProvider.createS3Client({
       logger,
       credentialProvider: crManager.getCredentialProvider(),
@@ -39,6 +38,9 @@ export class PutToS3Hook implements Hook {
     return s3Client
       .putObject(this.bucket, this.key, this.content)
       .then((response) => ({ success: response }))
-      .catch((error) => ({ success: false, error }))
+      .catch((error) => {
+        logger.error(`Failed to write to bucket ${this.bucket}`, error)
+        return { success: false, error }
+      })
   }
 }
