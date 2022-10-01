@@ -62,9 +62,7 @@ export const executeWithCli = (command: string): CliAssertions => {
 
   const vars = global.reservation
     ? global.reservation.accounts
-        .map(
-          (slot, index) => ` --var ACCOUNT_${index + 1}_ID=${slot.accountId}`,
-        )
+        .map((slot, index) => ` --var ACCOUNT_${index + 1}_ID=${slot.id}`)
         .join("")
     : ""
 

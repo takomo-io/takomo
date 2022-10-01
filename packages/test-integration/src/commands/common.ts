@@ -26,7 +26,7 @@ export const createTestCommandContext = async (
 
   const vars = global.reservation
     ? global.reservation.accounts.map(
-        (slot, index) => `ACCOUNT_${index + 1}_ID=${slot.accountId}`,
+        (slot, index) => `ACCOUNT_${index + 1}_ID=${slot.id}`,
       )
     : []
 
