@@ -1,7 +1,7 @@
 export {}
 
 export interface AccountSlot {
-  accountId: string | null
+  id: string
 }
 
 export interface ReservationCredentials {

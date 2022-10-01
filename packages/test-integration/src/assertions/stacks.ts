@@ -91,6 +91,7 @@ export interface ExpectDeployedCfStackPropsV2 {
   outputs?: Record<StackOutputKey, StackOutputValue>
   description?: string
   stackPolicy?: StackPolicyBody
+  terminationProtection?: boolean
 }
 
 export interface StackResultsMatcher {
@@ -323,6 +324,7 @@ const createStackResultsMatcher = (
     tags,
     description,
     stackPolicy,
+    terminationProtection,
   }: ExpectDeployedCfStackPropsV2) => {
     const deployedStackMatcher: DeployedCfStackAssertion = async (
       output: StacksOperationOutput,
@@ -348,7 +350,7 @@ const createStackResultsMatcher = (
         iamRoleArn: `arn:aws:iam::${accountId}:role/OrganizationAccountAccessRole`,
       }
 
-      const [stack, actualStackPolicy]: [any, any] = await Promise.all([
+      const [stack, actualStackPolicy] = await Promise.all([
         aws.cloudFormation.describeStack(params),
         aws.cloudFormation.getStackPolicy(params),
       ])
@@ -361,12 +363,12 @@ const createStackResultsMatcher = (
 
       return () => {
         if (description) {
-          expect(stack["Description"]).toStrictEqual(description)
+          expect(stack.Description).toStrictEqual(description)
         }
 
         if (tags) {
-          const actual = stack["Tags"]!.reduce(
-            (collected: any, tag: any) => ({
+          const actual = (stack.Tags ?? []).reduce(
+            (collected, tag) => ({
               ...collected,
               [tag.Key!]: tag.Value!,
             }),
@@ -377,8 +379,8 @@ const createStackResultsMatcher = (
         }
 
         if (outputs) {
-          const actual = stack["Outputs"]!.reduce(
-            (collected: any, o: any) => ({
+          const actual = (stack.Outputs ?? []).reduce(
+            (collected, o) => ({
               ...collected,
               [o.OutputKey!]: o.OutputValue!,
             }),
@@ -396,6 +398,12 @@ const createStackResultsMatcher = (
 
           expect(prettyActualStackPolicy).toStrictEqual(
             prettyExpectedStackPolicy,
+          )
+        }
+
+        if (terminationProtection !== undefined) {
+          expect(stack.EnableTerminationProtection).toStrictEqual(
+            terminationProtection,
           )
         }
       }
