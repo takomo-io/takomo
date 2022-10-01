@@ -1,5 +1,4 @@
 import {
-  aws,
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
 } from "@takomo/test-integration"
@@ -10,8 +9,8 @@ const stackPath = "/a.yml/eu-north-1"
 const projectDir = "configs/termination-protection"
 
 describe("Termination protection", () => {
-  test("Create a stack with termination protection enabled", async () => {
-    await executeDeployStacksCommand({
+  test("Create a stack with termination protection enabled", () =>
+    executeDeployStacksCommand({
       projectDir,
       var: ["terminationProtection=true"],
     })
@@ -19,17 +18,11 @@ describe("Termination protection", () => {
       .expectStackCreateSuccess({
         stackName,
         stackPath,
+        expectDeployedStack: {
+          terminationProtection: true,
+        },
       })
-      .assert()
-
-    const stack = await aws.cloudFormation.describeStack({
-      stackName,
-      credentials: global.reservation.credentials,
-      iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
-      region: "eu-north-1",
-    })
-    expect(stack.EnableTerminationProtection).toBeTruthy()
-  })
+      .assert())
 
   test("Try to undeploy", () =>
     executeUndeployStacksCommand({
@@ -42,8 +35,8 @@ describe("Termination protection", () => {
       ),
     ))
 
-  test("Disable termination protection", async () => {
-    await executeDeployStacksCommand({
+  test("Disable termination protection", () =>
+    executeDeployStacksCommand({
       projectDir,
       var: ["terminationProtection=false"],
     })
@@ -51,17 +44,11 @@ describe("Termination protection", () => {
       .expectStackUpdateSuccess({
         stackName,
         stackPath,
+        expectDeployedStack: {
+          terminationProtection: false,
+        },
       })
-      .assert()
-
-    const stack = await aws.cloudFormation.describeStack({
-      credentials: global.reservation.credentials,
-      iamRoleArn: `arn:aws:iam::${global.reservation.accounts[0].accountId}:role/OrganizationAccountAccessRole`,
-      stackName: "termination-protection",
-      region: "eu-north-1",
-    })
-    expect(stack.EnableTerminationProtection).toBeFalsy()
-  })
+      .assert())
 
   test("Undeploy", () =>
     executeUndeployStacksCommand({

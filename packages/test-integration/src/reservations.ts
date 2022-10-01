@@ -15,7 +15,7 @@ export const withReservation = (
   testFn: (reservation: TestReservation) => Promise<any>,
 ): (() => Promise<any>) => {
   const credentials = global.reservation.credentials
-  const accountIds = global.reservation.accounts.map((a) => a.accountId!)
+  const accountIds = global.reservation.accounts.map((a) => a.id)
   return () => testFn({ credentials, accountIds })
 }
 
@@ -23,7 +23,7 @@ export const withSingleAccountReservation = (
   testFn: (reservation: SingleAccountTestReservation) => Promise<any>,
 ): (() => Promise<any>) => {
   const credentials = global.reservation.credentials
-  const accountIds = global.reservation.accounts.map((a) => a.accountId!)
+  const accountIds = global.reservation.accounts.map((a) => a.id)
   if (accountIds.length !== 1) {
     throw new Error(`Expected only one account but got ${accountIds.length}`)
   }
