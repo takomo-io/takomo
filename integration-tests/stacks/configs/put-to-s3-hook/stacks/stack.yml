@@ -4,7 +4,16 @@ hooks:
   - name: first
     type: put-to-s3
     stage: after
-    dir: app
     bucket: {{ var.bucketName }}
     key: {{ var.key }}
     content: {{ var.content }}
+  - name: second
+    type: put-to-s3
+    stage: after
+    role: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+    bucket: {{ var.bucketName }}
+    key: {{ var.key2 }}
+    content:
+      another:
+        content: as object
+        example: [1,2,3]

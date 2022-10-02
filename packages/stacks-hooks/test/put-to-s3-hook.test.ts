@@ -71,7 +71,7 @@ describe("Put to S3 Hook", () => {
     s3Client.putObject.mockResolvedValue(true)
     const putToS3Hook = new PutToS3Hook({
       ...hookConfig,
-      iamRoleArn: "test-arn",
+      role: "test-arn",
     })
     const response = await putToS3Hook.execute(input)
     expect(response).toEqual({ success: true })

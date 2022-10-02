@@ -1,5 +1,6 @@
 import { CloudFormation, Stack } from "@aws-sdk/client-cloudformation"
 import { EC2 } from "@aws-sdk/client-ec2"
+import { S3 } from "@aws-sdk/client-s3"
 import { SecretsManager } from "@aws-sdk/client-secrets-manager"
 import { SSM } from "@aws-sdk/client-ssm"
 import { STS } from "@aws-sdk/client-sts"
@@ -11,6 +12,9 @@ import {
 import { CallerIdentity, Region, StackPolicyBody } from "@takomo/aws-model"
 import { TkmLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
+
+const s3Client = (region: Region, credentials: CredentialProvider): S3 =>
+  new S3({ region, credentials })
 
 const ssmClient = (region: Region, credentials: CredentialProvider): SSM =>
   new SSM({ region, credentials })
@@ -78,6 +82,14 @@ const getStackPolicy = async ({
   return cloudFormationClient(region, stackCp.getCredentialProvider())
     .getStackPolicy({ StackName: stackName })
     .then((r) => r.StackPolicyBody!)
+}
+
+export type GetObjectContentArgs = {
+  credentials: Credentials
+  bucket: string
+  key: string
+  region: string
+  iamRoleArn: string
 }
 
 export type PutParamArgs = {
@@ -258,6 +270,44 @@ const getCallerIdentity = async (
     .getCallerIdentity({})
     .then((r) => ({ accountId: r.Account!, arn: r.Arn!, userId: r.UserId! }))
 
+const getObjectContent = async ({
+  credentials,
+  key,
+  bucket,
+  region,
+  iamRoleArn,
+}: GetObjectContentArgs): Promise<string> => {
+  const cp = await initDefaultCredentialManager(
+    () => Promise.resolve(""),
+    mock<TkmLogger>(),
+    mock<AwsClientProvider>(),
+    credentials,
+  )
+
+  const s3Cp = iamRoleArn
+    ? await cp.createCredentialManagerForRole(iamRoleArn)
+    : cp
+
+  const s3 = s3Client(region, s3Cp.getCredentialProvider())
+
+  const { Body } = await s3.getObject({ Key: key, Bucket: bucket })
+  return new Promise((resolve, reject) => {
+    if (!Body) {
+      reject("No Body on response")
+      return
+    }
+
+    const chunks: Uint8Array[] = []
+    const stream = Body as any
+    stream.on("data", (chunk: any) => chunks.push(Buffer.from(chunk)))
+    stream.on("error", reject)
+    stream.on("end", () => {
+      const bodyAsString = Buffer.concat(chunks).toString("utf-8")
+      resolve(bodyAsString)
+    })
+  })
+}
+
 export const aws = {
   cloudFormation: {
     describeStack,
@@ -272,4 +322,7 @@ export const aws = {
   },
   ec2: { tagVpc },
   sts: { getCallerIdentity },
+  s3: {
+    getObjectContent,
+  },
 }
