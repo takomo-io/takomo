@@ -52,7 +52,7 @@
     "@takomo/util": "4.6.0"
   },
   "engines": {
-    "node": ">=14.17.1"
+    "node": ">=16.17.0"
   },
   "os": [
     "darwin",
