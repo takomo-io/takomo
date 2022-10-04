@@ -1,4 +1,4 @@
-import { TakomoError } from "@takomo/util"
+import { TakomoError } from "../takomo-util"
 
 /**
  * @hidden

@@ -1,4 +1,7 @@
-import { isTerminalResourceStatus, ResourceStatus } from "../src"
+import {
+  isTerminalResourceStatus,
+  ResourceStatus,
+} from "../../src/takomo-aws-model"
 
 const cases: Array<[ResourceStatus, boolean]> = [
   ["CREATE_IN_PROGRESS", false],
