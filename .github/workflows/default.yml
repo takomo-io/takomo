@@ -22,7 +22,7 @@ env:
 jobs:
 
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -48,7 +48,7 @@ jobs:
           key: packages-${{ github.sha }}
 
   unit-test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -68,7 +68,7 @@ jobs:
       - run: yarn test
 
   stacks-test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -88,7 +88,7 @@ jobs:
       - run: yarn workspace integration-test-stacks integration-test
 
   stacks2-test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -108,7 +108,7 @@ jobs:
       - run: yarn workspace integration-test-stacks2 integration-test
 
   deployment-targets-test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -128,7 +128,7 @@ jobs:
       - run: yarn workspace integration-test-deployment-targets integration-test
 
   cli-test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - uses: actions/checkout@v2
@@ -148,7 +148,7 @@ jobs:
       - run: yarn workspace integration-test-cli integration-test
 
   docs:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/master'
     needs:
       - unit-test
@@ -180,7 +180,7 @@ jobs:
           DOCS_BASE: /api-docs/next/
 
   put-metrics:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs:
       - unit-test
       - stacks-test
