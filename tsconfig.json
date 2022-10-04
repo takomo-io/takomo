@@ -1,9 +1,17 @@
 {
-  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "baseUrl": "./packages",
-    "paths": {
-      "@takomo/*": ["*/src"]
-    }
-  }
+    "target": "ES2020",
+    "module": "CommonJS",
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "lib": ["ES2020", "dom"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["test/**/*", "node_modules", "dist"]
 }

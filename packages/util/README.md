@@ -1,3 +1,0 @@
-# Takomo - Util
-
-Utilities.
