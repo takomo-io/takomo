@@ -48,7 +48,7 @@ import {
   TagValue,
   TemplateDescription,
   TemplateSummary,
-} from "@takomo/aws-model"
+} from "../../takomo-aws-model"
 
 const convertStackInternal = (s: CF.Stack): CloudFormationStack => ({
   id: s.StackId as StackId,

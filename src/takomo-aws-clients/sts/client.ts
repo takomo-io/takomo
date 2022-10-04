@@ -6,7 +6,7 @@ import {
   STS,
 } from "@aws-sdk/client-sts"
 import { Credentials } from "@aws-sdk/types"
-import { CallerIdentity } from "@takomo/aws-model"
+import { CallerIdentity } from "../../takomo-aws-model"
 import { InternalAwsClientProps } from "../common/client"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"

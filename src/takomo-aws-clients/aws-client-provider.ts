@@ -1,6 +1,6 @@
-import { CallerIdentity, Region } from "@takomo/aws-model"
-import { checksum, createScheduler, Scheduler, TkmLogger } from "@takomo/util"
 import { IPolicy, Policy } from "cockatiel"
+import { CallerIdentity, Region } from "../takomo-aws-model"
+import { checksum, createScheduler, Scheduler, TkmLogger } from "../takomo-util"
 import {
   CloudFormationClient,
   createCloudFormationClient,

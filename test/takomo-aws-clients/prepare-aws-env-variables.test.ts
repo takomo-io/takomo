@@ -1,6 +1,6 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { prepareAwsEnvVariables } from "../src/util"
+import { prepareAwsEnvVariables } from "../../src/takomo-aws-clients"
 
 describe("#prepareAwsEnvVariables", () => {
   test("removes all aws env variables", () => {

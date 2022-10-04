@@ -1,5 +1,5 @@
 import { CloudTrail } from "@aws-sdk/client-cloudtrail"
-import { CloudTrailEvent } from "@takomo/aws-model"
+import { CloudTrailEvent } from "../../takomo-aws-model"
 import { InternalAwsClientProps, pagedOperation } from "../common/client"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"

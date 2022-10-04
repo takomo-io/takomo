@@ -2,7 +2,7 @@
  * @hidden
  */
 import { LookupEventsResponse } from "@aws-sdk/client-cloudtrail"
-import { CloudTrailEvent } from "@takomo/aws-model"
+import { CloudTrailEvent } from "../../takomo-aws-model"
 
 export const convertCloudTrailEvents = ({
   Events,

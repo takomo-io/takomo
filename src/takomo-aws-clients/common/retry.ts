@@ -3,7 +3,7 @@ import {
   StandardRetryStrategy,
 } from "@aws-sdk/middleware-retry"
 import { RetryStrategy } from "@aws-sdk/types"
-import { randomInt } from "@takomo/util"
+import { randomInt } from "../../takomo-util"
 
 const ADDITIONAL_RETRYABLE_ERROR_CODES = ["UnknownEndpoint", "NetworkingError"]
 

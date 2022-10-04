@@ -1,5 +1,5 @@
-import { ChangeSet } from "@takomo/aws-model"
-import { evaluateRules, Rule } from "@takomo/util"
+import { ChangeSet } from "../../../takomo-aws-model"
+import { evaluateRules, Rule } from "../../../takomo-util"
 
 /**
  * @hidden

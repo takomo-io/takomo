@@ -1,5 +1,5 @@
 import * as CF from "@aws-sdk/client-organizations"
-import { Account, AccountStatus, OU, OUPath } from "@takomo/aws-model"
+import { Account, AccountStatus, OU, OUPath } from "../../takomo-aws-model"
 
 /**
  * @hidden

@@ -7,6 +7,9 @@ import {
   UpdateStackInput,
   ValidateTemplateInput,
 } from "@aws-sdk/client-cloudformation"
+import { IPolicy } from "cockatiel"
+import takeRightWhile from "lodash.takerightwhile"
+import R from "ramda"
 import {
   ACTIVE_STACK_STATUSES,
   ChangeSet,
@@ -27,11 +30,8 @@ import {
   StackPolicyBody,
   StackStatus,
   TemplateSummary,
-} from "@takomo/aws-model"
-import { arrayToMap, Scheduler, sleep, uuid } from "@takomo/util"
-import { IPolicy } from "cockatiel"
-import takeRightWhile from "lodash.takerightwhile"
-import R from "ramda"
+} from "../../takomo-aws-model"
+import { arrayToMap, Scheduler, sleep, uuid } from "../../takomo-util"
 import {
   InternalAwsClientProps,
   pagedOperationBulkhead,

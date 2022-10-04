@@ -1,7 +1,7 @@
 import { Credentials } from "@aws-sdk/types"
-import { Region } from "@takomo/aws-model"
-import { deepCopy } from "@takomo/util"
 import R from "ramda"
+import { Region } from "../takomo-aws-model"
+import { deepCopy } from "../takomo-util"
 
 type AwsEnvVariableName =
   | "AWS_ACCESS_KEY_ID"

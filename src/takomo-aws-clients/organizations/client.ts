@@ -5,7 +5,7 @@ import {
   paginateListAccounts,
   paginateListAccountsForParent,
 } from "@aws-sdk/client-organizations"
-import { Account, AccountStatus, OU, OUId } from "@takomo/aws-model"
+import { Account, AccountStatus, OU, OUId } from "../../takomo-aws-model"
 import { InternalAwsClientProps } from "../common/client"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
