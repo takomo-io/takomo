@@ -1,4 +1,7 @@
-import { CommandOutputBase, resolveCommandOutputBase } from "../src/command"
+import {
+  CommandOutputBase,
+  resolveCommandOutputBase,
+} from "../../src/takomo-core"
 
 const successful: CommandOutputBase = {
   success: true,

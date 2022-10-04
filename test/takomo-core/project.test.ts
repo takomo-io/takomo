@@ -1,8 +1,5 @@
-import {
-  expectNoValidationError,
-  expectValidationErrors,
-} from "@takomo/test-unit"
-import { createCommonSchema } from "../src"
+import { createCommonSchema } from "../../src/takomo-core"
+import { expectNoValidationError, expectValidationErrors } from "../assertions"
 
 const { project } = createCommonSchema()
 

@@ -1,5 +1,5 @@
-import { Region } from "@takomo/aws-model"
-import { FilePath, TakomoError } from "@takomo/util"
+import { Region } from "../takomo-aws-model"
+import { FilePath, TakomoError } from "../takomo-util"
 
 export type DeploymentTargetRepositoryType = string
 export interface DeploymentTargetRepositoryConfig {

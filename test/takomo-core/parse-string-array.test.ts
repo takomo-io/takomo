@@ -1,4 +1,4 @@
-import { parseStringArray } from "../src/parser"
+import { parseStringArray } from "../../src/takomo-core"
 
 const cases: Array<[unknown, string[]]> = [
   [undefined, []],
