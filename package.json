@@ -20,7 +20,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "build-if-changed": "lerna run build-if-changed",
-    "clean:all": "lerna run 'clean:all' --parallel && rm -rf node_modules && rm -f yarn.lock",
+    "clean:all": "lerna run 'clean:all' --parallel && rm -rf node_modules && rm -f yarn.lock && rm -rf .yarn/cache",
     "clean:deps": "lerna run 'clean:deps' --parallel && rm -rf node_modules",
     "clean:dist": "lerna run 'clean:dist' --parallel",
     "depcheck": "lerna run depcheck --parallel",
