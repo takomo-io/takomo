@@ -1,4 +1,4 @@
-import { LogWriter } from "@takomo/util"
+import { LogWriter } from "../src/takomo-util"
 
 interface LogOutput {
   value: string

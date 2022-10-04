@@ -1,5 +1,5 @@
-import { toPrettyJson } from "@takomo/util"
 import { AnySchema } from "joi"
+import { toPrettyJson } from "../src/takomo-util"
 
 type ExpectedValidationErrorAssertion = (
   value: unknown,
