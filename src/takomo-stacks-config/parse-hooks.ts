@@ -1,4 +1,4 @@
-import { HookConfig } from "@takomo/stacks-model"
+import { HookConfig } from "../takomo-stacks-model"
 
 export const parseHooks = (value: unknown): ReadonlyArray<HookConfig> => {
   if (!value) {

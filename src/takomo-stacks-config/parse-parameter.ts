@@ -1,4 +1,4 @@
-import { parseOptionalBoolean } from "@takomo/core"
+import { parseOptionalBoolean } from "../takomo-core"
 import {
   ListParameterConfig,
   ParameterConfig,

@@ -1,3 +1,4 @@
+import { err, ok, Result } from "neverthrow"
 import {
   CommandContext,
   parseCommandRole,
@@ -5,9 +6,8 @@ import {
   parseOptionalString,
   parseOptionalStringArray,
   parseStringArray,
-} from "@takomo/core"
-import { ValidationError } from "@takomo/util"
-import { err, ok, Result } from "neverthrow"
+} from "../takomo-core"
+import { ValidationError } from "../takomo-util"
 import { StackConfig } from "./model"
 import { parseAccountIds } from "./parse-account-ids"
 import { parseData } from "./parse-data"

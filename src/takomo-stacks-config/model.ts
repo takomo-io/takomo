@@ -6,8 +6,8 @@ import {
   StackParameterKey,
   StackPolicyBody,
   TagKey,
-} from "@takomo/aws-model"
-import { CommandRole, Project, Vars } from "@takomo/core"
+} from "../takomo-aws-model"
+import { CommandRole, Project, Vars } from "../takomo-core"
 import {
   BlueprintPath,
   HookConfig,
@@ -16,8 +16,8 @@ import {
   StackPath,
   TemplateBucketConfig,
   TimeoutConfig,
-} from "@takomo/stacks-model"
-import { FilePath } from "@takomo/util"
+} from "../takomo-stacks-model"
+import { FilePath } from "../takomo-util"
 
 export interface SchemaConfig {
   readonly name: string

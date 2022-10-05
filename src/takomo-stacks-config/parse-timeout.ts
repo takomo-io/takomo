@@ -1,4 +1,4 @@
-import { TimeoutConfig } from "@takomo/stacks-model"
+import { TimeoutConfig } from "../takomo-stacks-model"
 
 export const parseTimeout = (value: any): TimeoutConfig | undefined => {
   if (!value) {

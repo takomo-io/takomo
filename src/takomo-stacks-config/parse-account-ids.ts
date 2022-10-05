@@ -1,4 +1,4 @@
-import { AccountId } from "@takomo/aws-model"
+import { AccountId } from "../takomo-aws-model"
 
 export const parseAccountIds = (
   value: any,

@@ -1,4 +1,4 @@
-import { StackParameterKey } from "@takomo/aws-model"
+import { StackParameterKey } from "../takomo-aws-model"
 import { ParameterConfigs } from "./model"
 import { parseParameter } from "./parse-parameter"
 

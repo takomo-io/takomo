@@ -127,6 +127,7 @@
     "cockatiel": "2.0.1",
     "lodash.takerightwhile": "4.6.0",
     "ramda": "0.28.0",
-    "folder-hash": "4.0.2"
+    "folder-hash": "4.0.2",
+    "neverthrow": "4.3.1"
   }
 }

@@ -1,4 +1,4 @@
-import { TemplateBucketConfig } from "@takomo/stacks-model"
+import { TemplateBucketConfig } from "../takomo-stacks-model"
 
 export const parseTemplateBucket = (
   value: any,
