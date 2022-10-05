@@ -1,3 +1,0 @@
-# Takomo - CLI
-
-Takomo CLI

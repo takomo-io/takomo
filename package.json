@@ -135,6 +135,8 @@
     "inquirer": "8.1.2",
     "inquirer-autocomplete-prompt": "1.4.0",
     "ramda": "0.28.0",
-    "ts-dedent": "2.2.0"
+    "ts-dedent": "2.2.0",
+    "dotenv": "8.2.0",
+    "yargs": "17.0.1"
   }
 }
