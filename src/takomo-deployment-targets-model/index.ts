@@ -1,12 +1,12 @@
-import { CommandContext } from "@takomo/core"
+import Joi, { AnySchema } from "joi"
+import { CommandContext } from "../takomo-core"
 import {
   createSchemaRegistry,
   defaultSchema,
   SchemaName,
   SchemaRegistry,
-} from "@takomo/stacks-model"
-import { TakomoError, TkmLogger } from "@takomo/util"
-import Joi, { AnySchema } from "joi"
+} from "../takomo-stacks-model"
+import { TakomoError, TkmLogger } from "../takomo-util"
 
 export type DeploymentGroupName = string
 export type DeploymentTargetName = string
