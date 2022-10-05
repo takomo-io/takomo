@@ -1,8 +1,8 @@
-import { Region } from "@takomo/aws-model"
-import { createAwsSchemas } from "@takomo/aws-schema"
-import { createConfigSetsSchemas } from "@takomo/config-sets"
-import { createCommonSchema } from "@takomo/core"
 import Joi, { ObjectSchema, StringSchema } from "joi"
+import { Region } from "../takomo-aws-model"
+import { createAwsSchemas } from "../takomo-aws-schema"
+import { createConfigSetsSchemas } from "../takomo-config-sets"
+import { createCommonSchema } from "../takomo-core"
 
 export interface DeploymentTargetsSchemas {
   readonly deploymentTargetName: StringSchema

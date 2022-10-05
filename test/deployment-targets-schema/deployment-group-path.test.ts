@@ -1,8 +1,5 @@
-import {
-  expectNoValidationError,
-  expectValidationErrors,
-} from "@takomo/test-unit"
-import { createDeploymentTargetsSchemas } from "../src"
+import { createDeploymentTargetsSchemas } from "../../src/takomo-deployment-targets-schema"
+import { expectNoValidationError, expectValidationErrors } from "../assertions"
 
 const { deploymentGroupPath } = createDeploymentTargetsSchemas({
   regions: ["eu-west-1"],
