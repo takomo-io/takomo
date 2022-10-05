@@ -126,12 +126,15 @@
     "@aws-sdk/types": "3.78.0",
     "cockatiel": "2.0.1",
     "lodash.takerightwhile": "4.6.0",
-    "ramda": "0.28.0",
     "folder-hash": "4.0.2",
     "neverthrow": "4.3.1",
     "jmespath": "0.16.0",
     "dotenv-expand": "5.1.0",
     "readdirp": "3.6.0",
-    "semver": "7.3.7"
+    "semver": "7.3.7",
+    "inquirer": "8.1.2",
+    "inquirer-autocomplete-prompt": "1.4.0",
+    "ramda": "0.28.0",
+    "ts-dedent": "2.2.0"
   }
 }
