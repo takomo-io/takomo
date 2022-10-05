@@ -1,11 +1,11 @@
-import { createAwsSchemas } from "@takomo/aws-schema"
+import Joi, { AnySchema } from "joi"
+import { createAwsSchemas } from "../takomo-aws-schema"
 import {
   CommandContext,
   CommandHandler,
   createCommonSchema,
-} from "@takomo/core"
-import { validateInput } from "@takomo/util"
-import Joi, { AnySchema } from "joi"
+} from "../takomo-core"
+import { validateInput } from "../takomo-util"
 import {
   InitProjectInput,
   InitProjectIO,
