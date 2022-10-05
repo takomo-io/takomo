@@ -1,19 +1,19 @@
-import { CredentialManager } from "@takomo/aws-clients"
+import { CredentialManager } from "../takomo-aws-clients"
 import {
   ConfigSet,
   ConfigSetContext,
   ConfigSetName,
   DEFAULT_STAGE_NAME,
   StageName,
-} from "@takomo/config-sets"
-import { InternalCommandContext } from "@takomo/core"
+} from "../takomo-config-sets"
+import { InternalCommandContext } from "../takomo-core"
 import {
   DeploymentConfig,
   DeploymentGroupConfig,
-} from "@takomo/deployment-targets-config"
-import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
-import { StacksConfigRepository } from "@takomo/stacks-context"
-import { collectFromHierarchy, TkmLogger } from "@takomo/util"
+} from "../takomo-deployment-targets-config"
+import { DeploymentGroupPath } from "../takomo-deployment-targets-model"
+import { StacksConfigRepository } from "../takomo-stacks-context"
+import { collectFromHierarchy, TkmLogger } from "../takomo-util"
 
 export interface DeploymentTargetsConfigRepository
   extends StacksConfigRepository {
