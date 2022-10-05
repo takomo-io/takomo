@@ -1,15 +1,15 @@
-import { AwsClientProvider, CredentialManager } from "@takomo/aws-clients"
+import Joi, { AnySchema } from "joi"
+import R from "ramda"
+import { AwsClientProvider, CredentialManager } from "../takomo-aws-clients"
 import {
   AccountId,
   CloudTrailEvent,
   IamRoleName,
   Region,
-} from "@takomo/aws-model"
-import { createAwsSchemas } from "@takomo/aws-schema"
-import { CommandContext, CommandHandler } from "@takomo/core"
-import { TkmLogger, validateInput } from "@takomo/util"
-import Joi, { AnySchema } from "joi"
-import R from "ramda"
+} from "../takomo-aws-model"
+import { createAwsSchemas } from "../takomo-aws-schema"
+import { CommandContext, CommandHandler } from "../takomo-core"
+import { TkmLogger, validateInput } from "../takomo-util"
 import {
   GenerateIamPoliciesInput,
   GenerateIamPoliciesIO,
