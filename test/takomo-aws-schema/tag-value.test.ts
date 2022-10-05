@@ -1,8 +1,5 @@
-import {
-  expectNoValidationError,
-  expectValidationErrors,
-} from "@takomo/test-unit"
-import { createAwsSchemas } from "../src"
+import { createAwsSchemas } from "../../src/takomo-aws-schema"
+import { expectNoValidationError, expectValidationErrors } from "../assertions"
 
 const { tagValue } = createAwsSchemas({ regions: [] })
 

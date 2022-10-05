@@ -1,5 +1,5 @@
-import { Region } from "@takomo/aws-model"
 import Joi, { AnySchema, ArraySchema, ObjectSchema, StringSchema } from "joi"
+import { Region } from "../takomo-aws-model"
 
 export interface AwsSchemas {
   region: StringSchema
