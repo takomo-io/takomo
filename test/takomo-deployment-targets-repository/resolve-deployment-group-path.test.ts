@@ -1,6 +1,6 @@
-import { OUPath } from "@takomo/aws-model"
-import { DeploymentGroupPath } from "@takomo/deployment-targets-model"
-import { resolveDeploymentGroupPath } from "../src/organization-deployment-target-repository"
+import { OUPath } from "../../src/takomo-aws-model"
+import { DeploymentGroupPath } from "../../src/takomo-deployment-targets-model"
+import { resolveDeploymentGroupPath } from "../../src/takomo-deployment-targets-repository/organization-deployment-target-repository"
 
 const cases: Array<
   [OUPath, DeploymentGroupPath | undefined, DeploymentGroupPath]

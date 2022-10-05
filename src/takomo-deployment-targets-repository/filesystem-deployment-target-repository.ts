@@ -1,7 +1,9 @@
+import { basename, dirname, relative } from "path"
+import readdirp from "readdirp"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "@takomo/deployment-targets-model"
+} from "../takomo-deployment-targets-model"
 import {
   dirExists,
   expandFilePath,
@@ -12,9 +14,7 @@ import {
   TakomoError,
   TemplateEngine,
   TkmLogger,
-} from "@takomo/util"
-import { basename, dirname, relative } from "path"
-import readdirp from "readdirp"
+} from "../takomo-util"
 import {
   DeploymentTargetConfigItem,
   DeploymentTargetConfigItemWrapper,

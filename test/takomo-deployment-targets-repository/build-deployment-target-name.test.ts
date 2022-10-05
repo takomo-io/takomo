@@ -1,5 +1,5 @@
-import { Account } from "@takomo/aws-model"
-import { buildDeploymentTargetName } from "../src/organization-deployment-target-repository"
+import { Account } from "../../src/takomo-aws-model"
+import { buildDeploymentTargetName } from "../../src/takomo-deployment-targets-repository/organization-deployment-target-repository"
 
 const account = (name: string, id: string): Account => ({
   name,

@@ -1,10 +1,10 @@
-import { OrganizationsClient } from "@takomo/aws-clients"
-import { Account, OUPath } from "@takomo/aws-model"
+import { OrganizationsClient } from "../takomo-aws-clients"
+import { Account, OUPath } from "../takomo-aws-model"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "@takomo/deployment-targets-model"
-import { TakomoError } from "@takomo/util"
+} from "../takomo-deployment-targets-model"
+import { TakomoError } from "../takomo-util"
 import {
   DeploymentTargetConfigItemWrapper,
   DeploymentTargetRepository,

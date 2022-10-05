@@ -1,5 +1,5 @@
-import { DeploymentTargetRepositoryType } from "@takomo/core"
-import { TakomoError } from "@takomo/util"
+import { DeploymentTargetRepositoryType } from "../takomo-core"
+import { TakomoError } from "../takomo-util"
 import {
   DeploymentTargetRepository,
   DeploymentTargetRepositoryProvider,

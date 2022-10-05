@@ -1,18 +1,18 @@
-import { CredentialManager } from "@takomo/aws-clients"
-import { Region } from "@takomo/aws-model"
+import Joi from "joi"
+import { CredentialManager } from "../takomo-aws-clients"
+import { Region } from "../takomo-aws-model"
 import {
   Cache,
   CommandContext,
   DeploymentTargetRepositoryConfig,
-} from "@takomo/core"
-import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
+} from "../takomo-core"
+import { DeploymentTargetConfig } from "../takomo-deployment-targets-config"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "@takomo/deployment-targets-model"
-import { createDeploymentTargetsSchemas } from "@takomo/deployment-targets-schema"
-import { TemplateEngine, TkmLogger } from "@takomo/util"
-import Joi from "joi"
+} from "../takomo-deployment-targets-model"
+import { createDeploymentTargetsSchemas } from "../takomo-deployment-targets-schema"
+import { TemplateEngine, TkmLogger } from "../takomo-util"
 
 export interface DeploymentTargetConfigItem
   extends Partial<DeploymentTargetConfig> {

@@ -1,4 +1,4 @@
-import { inferDeploymentTargetName } from "../src/filesystem-deployment-target-repository"
+import { inferDeploymentTargetName } from "../../src/takomo-deployment-targets-repository/filesystem-deployment-target-repository"
 
 const cases: string[][] = [
   ["/targets/workloads/target.yml", "target"],
