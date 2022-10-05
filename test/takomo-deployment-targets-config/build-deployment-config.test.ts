@@ -1,16 +1,20 @@
-import { AwsClientProvider } from "@takomo/aws-clients"
-import { CommandContext, TakomoProjectConfig } from "@takomo/core"
-import { DeploymentTargetsSchemaRegistry } from "@takomo/deployment-targets-model"
-import { parseYaml, TkmLogger } from "@takomo/util"
 import { readFileSync } from "fs"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { buildDeploymentConfig, DeploymentConfig } from "../src"
+import { AwsClientProvider } from "../../src/takomo-aws-clients"
+import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
+import {
+  buildDeploymentConfig,
+  DeploymentConfig,
+} from "../../src/takomo-deployment-targets-config"
+import { DeploymentTargetsSchemaRegistry } from "../../src/takomo-deployment-targets-model"
+import { parseYaml, TkmLogger } from "../../src/takomo-util"
 
 const ctx: CommandContext = {
   regions: ["eu-north-1"],
   variables: { var: { test: "yes" }, context: { projectDir: "/tmp" }, env: {} },
   outputFormat: "text",
+  resetCache: false,
   quiet: false,
   projectDir: "/tmp",
   autoConfirmEnabled: false,

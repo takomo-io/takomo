@@ -1,4 +1,4 @@
-import { fillMissingDeploymentGroups } from "../src/util"
+import { fillMissingDeploymentGroups } from "../../src/takomo-deployment-targets-config/util"
 
 const cases: [any, any][] = [
   [{ root: {} }, { root: {} }],

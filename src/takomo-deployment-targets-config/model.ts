@@ -1,17 +1,17 @@
-import { AccountId, IamRoleName } from "@takomo/aws-model"
+import { AccountId, IamRoleName } from "../takomo-aws-model"
 import {
   ConfigSet,
   ConfigSetInstruction,
   ConfigSetInstructionsHolder,
-} from "@takomo/config-sets"
-import { CommandRole, Vars } from "@takomo/core"
+} from "../takomo-config-sets"
+import { CommandRole, Vars } from "../takomo-core"
 import {
   DeploymentGroupName,
   DeploymentGroupPath,
   DeploymentStatus,
   DeploymentTargetName,
   Label,
-} from "@takomo/deployment-targets-model"
+} from "../takomo-deployment-targets-model"
 
 export interface SchemaConfig {
   readonly name: string

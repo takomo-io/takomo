@@ -1,27 +1,27 @@
+import { err, ok, Result } from "neverthrow"
+import R from "ramda"
 import {
   ConfigSet,
   ConfigSetName,
   mergeConfigSets,
   parseConfigSets,
-} from "@takomo/config-sets"
+} from "../takomo-config-sets"
 import {
   CommandContext,
   parseCommandRole,
   parseOptionalString,
   parseVars,
-} from "@takomo/core"
+} from "../takomo-core"
 import {
   DeploymentGroupPath,
   DeploymentTargetsSchemaRegistry,
-} from "@takomo/deployment-targets-model"
+} from "../takomo-deployment-targets-model"
 import {
   collectFromHierarchy,
   merge,
   TkmLogger,
   ValidationError,
-} from "@takomo/util"
-import { err, ok, Result } from "neverthrow"
-import R from "ramda"
+} from "../takomo-util"
 import { DeploymentConfig, DeploymentGroupConfig, SchemaConfig } from "./model"
 import { parseDeploymentGroups } from "./parser/parse-deployment-groups"
 import { parseTargetSchemas } from "./parser/parse-target-schemas"

@@ -1,7 +1,7 @@
-import { ConfigSetInstruction } from "@takomo/config-sets"
-import { Label } from "@takomo/deployment-targets-model"
-import { DeploymentTargetConfig } from "../src"
-import { parseDeploymentTarget } from "../src/parser/parse-deployment-targets"
+import { ConfigSetInstruction } from "../../src/takomo-config-sets"
+import { DeploymentTargetConfig } from "../../src/takomo-deployment-targets-config"
+import { parseDeploymentTarget } from "../../src/takomo-deployment-targets-config/parser/parse-deployment-targets"
+import { Label } from "../../src/takomo-deployment-targets-model"
 
 describe("#parseDeploymentTarget", () => {
   test("simple", () => {

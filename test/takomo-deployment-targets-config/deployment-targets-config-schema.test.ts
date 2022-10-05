@@ -1,8 +1,8 @@
-import { expectNoValidationError } from "@takomo/test-unit"
-import { parseYaml } from "@takomo/util"
 import { readdirSync, readFileSync } from "fs"
 import { join } from "path"
-import { createDeploymentTargetsConfigSchema } from "../src/schema"
+import { createDeploymentTargetsConfigSchema } from "../../src/takomo-deployment-targets-config/schema"
+import { parseYaml } from "../../src/takomo-util"
+import { expectNoValidationError } from "../assertions"
 
 const schema = createDeploymentTargetsConfigSchema({ regions: ["eu-west-1"] })
 

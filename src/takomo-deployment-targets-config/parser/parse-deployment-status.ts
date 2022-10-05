@@ -1,4 +1,4 @@
-import { DeploymentStatus } from "@takomo/deployment-targets-model"
+import { DeploymentStatus } from "../../takomo-deployment-targets-model"
 
 export const parseDeploymentStatus = (value: any): DeploymentStatus => {
   if (!value) {

@@ -1,19 +1,22 @@
-import { IamRoleName } from "@takomo/aws-model"
+import R from "ramda"
+import { IamRoleName } from "../../takomo-aws-model"
 import {
   ConfigSetInstruction,
   mergeConfigSetInstructions,
   parseConfigSetInstructions,
-} from "@takomo/config-sets"
+} from "../../takomo-config-sets"
 import {
   CommandRole,
   parseCommandRole,
   parseStringArray,
   parseVars,
   Vars,
-} from "@takomo/core"
-import { DeploymentGroupPath, Label } from "@takomo/deployment-targets-model"
-import { merge } from "@takomo/util"
-import R from "ramda"
+} from "../../takomo-core"
+import {
+  DeploymentGroupPath,
+  Label,
+} from "../../takomo-deployment-targets-model"
+import { merge } from "../../takomo-util"
 import { DeploymentGroupConfig } from "../model"
 import { fillMissingDeploymentGroups } from "../util"
 import { parseDeploymentStatus } from "./parse-deployment-status"
