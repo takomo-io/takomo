@@ -1,13 +1,17 @@
-import { CredentialManager } from "@takomo/aws-clients"
+import { CredentialManager } from "../../takomo-aws-clients"
 import {
   ConfigSet,
   ConfigSetName,
   ConfigSetType,
   StageName,
-} from "@takomo/config-sets"
-import { CommandOutput, CommandOutputBase, OperationState } from "@takomo/core"
-import { CommandPath } from "@takomo/stacks-model"
-import { Timer, TkmLogger } from "@takomo/util"
+} from "../../takomo-config-sets"
+import {
+  CommandOutput,
+  CommandOutputBase,
+  OperationState,
+} from "../../takomo-core"
+import { CommandPath } from "../../takomo-stacks-model"
+import { Timer, TkmLogger } from "../../takomo-util"
 import { ExecutionGroupId, ExecutionTargetId } from "../model"
 
 export interface CommandPathExecutionResult<R extends CommandOutput>

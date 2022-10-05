@@ -1,11 +1,11 @@
-import { CredentialManager } from "@takomo/aws-clients"
-import { ConfigSetContext } from "@takomo/config-sets"
+import { CredentialManager } from "../../../takomo-aws-clients"
+import { ConfigSetContext } from "../../../takomo-config-sets"
 import {
   CommandOutput,
   OperationState,
   resolveCommandOutputBase,
-} from "@takomo/core"
-import { Timer, TkmLogger } from "@takomo/util"
+} from "../../../takomo-core"
+import { Timer, TkmLogger } from "../../../takomo-util"
 import {
   ConfigSetExecutionResult,
   ConfigSetExecutionTarget,

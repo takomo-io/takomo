@@ -1,21 +1,24 @@
-import { CredentialManager } from "@takomo/aws-clients"
-import { ConfigSetContext, ConfigSetName } from "@takomo/config-sets"
-import { CommandOutput, CommandOutputBase } from "@takomo/core"
-import { createConsoleLogger, createTimer } from "@takomo/util"
 import { mock } from "jest-mock-extended"
+import { CredentialManager } from "../../../../src/takomo-aws-clients"
+import {
+  ConfigSetContext,
+  ConfigSetName,
+} from "../../../../src/takomo-config-sets"
+import { CommandOutput, CommandOutputBase } from "../../../../src/takomo-core"
 import {
   ConfigSetPlanExecutionResult,
   ConfigSetTargetExecutionResult,
   ConfigSetTargetListener,
-} from "../../../src"
-import { executeConfigSetPlan } from "../../../src/config-set/execute/plan"
+  executeConfigSetPlan,
+} from "../../../../src/takomo-execution-plans"
 import {
   ConfigSetExecutionPlan,
   ConfigSetTargetExecutor,
   ConfigSetTargetExecutorProps,
   ConfigSetTargetListenerProvider,
-} from "../../../src/config-set/model"
-import { ExecutionTargetId } from "../../../src/model"
+} from "../../../../src/takomo-execution-plans/config-set/model"
+import { ExecutionTargetId } from "../../../../src/takomo-execution-plans/model"
+import { createConsoleLogger, createTimer } from "../../../../src/takomo-util"
 
 const logger = createConsoleLogger({
   logLevel: "info",
