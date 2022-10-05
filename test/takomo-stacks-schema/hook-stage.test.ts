@@ -1,8 +1,5 @@
-import {
-  expectNoValidationError,
-  expectValidationErrors,
-} from "@takomo/test-unit"
-import { createStacksSchemas } from "../src"
+import { createStacksSchemas } from "../../src/takomo-stacks-schema"
+import { expectNoValidationError, expectValidationErrors } from "../assertions"
 
 const { hookStage } = createStacksSchemas({
   regions: [],

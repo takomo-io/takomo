@@ -1,9 +1,6 @@
-import { Region } from "@takomo/aws-model"
-import {
-  expectNoValidationError,
-  expectValidationErrors,
-} from "@takomo/test-unit"
-import { createStacksSchemas } from "../src"
+import { Region } from "../../src/takomo-aws-model"
+import { createStacksSchemas } from "../../src/takomo-stacks-schema"
+import { expectNoValidationError, expectValidationErrors } from "../assertions"
 
 const regions: ReadonlyArray<Region> = ["eu-west-1", "us-east-1"]
 

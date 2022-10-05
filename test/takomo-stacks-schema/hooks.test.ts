@@ -1,4 +1,4 @@
-import { createStacksSchemas } from "../src"
+import { createStacksSchemas } from "../../src/takomo-stacks-schema"
 
 const { hooks } = createStacksSchemas({
   regions: [],

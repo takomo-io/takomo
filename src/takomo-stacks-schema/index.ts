@@ -1,5 +1,3 @@
-import { Region } from "@takomo/aws-model"
-import { createAwsSchemas } from "@takomo/aws-schema"
 import Joi, {
   ArraySchema,
   BooleanSchema,
@@ -7,6 +5,8 @@ import Joi, {
   ObjectSchema,
   StringSchema,
 } from "joi"
+import { Region } from "../takomo-aws-model"
+import { createAwsSchemas } from "../takomo-aws-schema"
 
 interface CreateStacksSchemasProps {
   readonly regions: ReadonlyArray<Region>

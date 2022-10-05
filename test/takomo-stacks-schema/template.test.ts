@@ -1,6 +1,6 @@
-import { expectNoValidationError } from "@takomo/test-unit"
 import Joi from "joi"
-import { createStacksSchemas } from "../src"
+import { createStacksSchemas } from "../../src/takomo-stacks-schema"
+import { expectNoValidationError } from "../assertions"
 
 const { template } = createStacksSchemas({
   regions: [],
