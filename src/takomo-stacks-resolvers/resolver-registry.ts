@@ -1,14 +1,14 @@
-import { StackParameterKey } from "@takomo/aws-model"
 import { CommandContext, ExternalResolverConfig } from "@takomo/core"
 import { ParameterConfig } from "@takomo/stacks-config"
+import Joi from "joi"
+import { StackParameterKey } from "../takomo-aws-model"
 import {
   Resolver,
   ResolverName,
   ResolverProvider,
   StackPath,
-} from "@takomo/stacks-model"
-import { TakomoError, TakomoErrorProps, TkmLogger } from "@takomo/util"
-import Joi from "joi"
+} from "../takomo-stacks-model"
+import { TakomoError, TakomoErrorProps, TkmLogger } from "../takomo-util"
 
 class InvalidResolverProviderConfigurationError extends TakomoError {
   constructor(

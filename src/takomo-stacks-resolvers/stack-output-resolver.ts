@@ -1,13 +1,13 @@
-import { createAwsSchemas } from "@takomo/aws-schema"
+import { ObjectSchema } from "joi"
+import { createAwsSchemas } from "../takomo-aws-schema"
 import {
   Resolver,
   ResolverInput,
   ResolverProvider,
   ResolverProviderSchemaProps,
   StackPath,
-} from "@takomo/stacks-model"
-import { createStacksSchemas } from "@takomo/stacks-schema"
-import { ObjectSchema } from "joi"
+} from "../takomo-stacks-model"
+import { createStacksSchemas } from "../takomo-stacks-schema"
 
 const init = async (props: any): Promise<Resolver> => ({
   dependencies: (): StackPath[] => [props.stack],

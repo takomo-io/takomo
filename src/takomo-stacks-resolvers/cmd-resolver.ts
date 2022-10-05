@@ -1,13 +1,13 @@
-import { prepareAwsEnvVariables } from "@takomo/aws-clients"
+import { ObjectSchema } from "joi"
+import R from "ramda"
+import { prepareAwsEnvVariables } from "../takomo-aws-clients"
 import {
   Resolver,
   ResolverInput,
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "@takomo/stacks-model"
-import { executeShellCommand, expandFilePath } from "@takomo/util"
-import { ObjectSchema } from "joi"
-import R from "ramda"
+} from "../takomo-stacks-model"
+import { executeShellCommand, expandFilePath } from "../takomo-util"
 
 type Capture = "last-line" | "all"
 

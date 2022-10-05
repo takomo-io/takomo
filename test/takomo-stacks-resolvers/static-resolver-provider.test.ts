@@ -1,12 +1,9 @@
-import { CommandContext } from "@takomo/core"
-import {
-  expectNoValidationError,
-  expectValidationErrors,
-} from "@takomo/test-unit"
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { defaultSchema } from "../src/resolver-registry"
-import { createStaticResolverProvider } from "../src/static-resolver"
+import { CommandContext } from "../../src/takomo-core"
+import { defaultSchema } from "../../src/takomo-stacks-resolvers/resolver-registry"
+import { createStaticResolverProvider } from "../../src/takomo-stacks-resolvers/static-resolver"
+import { expectNoValidationError, expectValidationErrors } from "../assertions"
 
 const provider = createStaticResolverProvider()
 

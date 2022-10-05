@@ -1,3 +1,0 @@
-# Takomo - Stacks Resolvers
-
-Resolvers.

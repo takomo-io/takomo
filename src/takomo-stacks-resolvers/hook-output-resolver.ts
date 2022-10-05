@@ -1,11 +1,11 @@
+import { ObjectSchema } from "joi"
 import {
   Resolver,
   ResolverInput,
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "@takomo/stacks-model"
-import { createStacksSchemas } from "@takomo/stacks-schema"
-import { ObjectSchema } from "joi"
+} from "../takomo-stacks-model"
+import { createStacksSchemas } from "../takomo-stacks-schema"
 
 const init = async ({ hook }: any): Promise<Resolver> => {
   if (!hook) {

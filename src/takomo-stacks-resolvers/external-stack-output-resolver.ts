@@ -1,13 +1,13 @@
-import { IamRoleArn } from "@takomo/aws-model"
-import { createAwsSchemas } from "@takomo/aws-schema"
+import { ObjectSchema } from "joi"
+import { IamRoleArn } from "../takomo-aws-model"
+import { createAwsSchemas } from "../takomo-aws-schema"
 import {
   Resolver,
   ResolverInput,
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "@takomo/stacks-model"
-import { uuid } from "@takomo/util"
-import { ObjectSchema } from "joi"
+} from "../takomo-stacks-model"
+import { uuid } from "../takomo-util"
 
 const init = async (props: any): Promise<Resolver> => {
   return {

@@ -1,13 +1,10 @@
-import { AwsClientProvider } from "@takomo/aws-clients/src"
-import { CommandContext, TakomoProjectConfig } from "@takomo/core"
-import {
-  expectNoValidationError,
-  expectValidationErrors,
-} from "@takomo/test-unit"
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { createExternalStackOutputResolverProvider } from "../src/external-stack-output-resolver"
-import { defaultSchema } from "../src/resolver-registry"
+import { AwsClientProvider } from "../../src/takomo-aws-clients"
+import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
+import { createExternalStackOutputResolverProvider } from "../../src/takomo-stacks-resolvers/external-stack-output-resolver"
+import { defaultSchema } from "../../src/takomo-stacks-resolvers/resolver-registry"
+import { expectNoValidationError, expectValidationErrors } from "../assertions"
 
 const provider = createExternalStackOutputResolverProvider()
 
@@ -25,6 +22,7 @@ const ctx: CommandContext = {
       projectDir: "",
     },
   },
+  resetCache: false,
   confidentialValuesLoggingEnabled: false,
   statisticsEnabled: true,
   iamGeneratePoliciesInstructionsEnabled: false,

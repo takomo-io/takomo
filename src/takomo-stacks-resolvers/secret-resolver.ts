@@ -1,14 +1,14 @@
-import { IamRoleArn } from "@takomo/aws-model"
-import { createAwsSchemas } from "@takomo/aws-schema"
+import jmespath from "jmespath"
+import { ObjectSchema } from "joi"
+import { IamRoleArn } from "../takomo-aws-model"
+import { createAwsSchemas } from "../takomo-aws-schema"
 import {
   Resolver,
   ResolverInput,
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "@takomo/stacks-model"
-import { TkmLogger } from "@takomo/util"
-import jmespath from "jmespath"
-import { ObjectSchema } from "joi"
+} from "../takomo-stacks-model"
+import { TkmLogger } from "../takomo-util"
 
 const parseSecret = (logger: TkmLogger, secretValue: string): unknown => {
   try {

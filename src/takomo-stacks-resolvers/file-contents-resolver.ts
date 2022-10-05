@@ -1,11 +1,11 @@
+import { ObjectSchema } from "joi"
 import {
   Resolver,
   ResolverInput,
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "@takomo/stacks-model"
-import { expandFilePath, fileExists, readFileContents } from "@takomo/util"
-import { ObjectSchema } from "joi"
+} from "../takomo-stacks-model"
+import { expandFilePath, fileExists, readFileContents } from "../takomo-util"
 
 const init = async ({ file }: any): Promise<Resolver> => {
   if (!file) {

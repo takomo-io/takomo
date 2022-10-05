@@ -1,4 +1,4 @@
-import { ResolverProvider } from "@takomo/stacks-model"
+import { ResolverProvider } from "../takomo-stacks-model"
 import { createCmdResolverProvider } from "./cmd-resolver"
 import { createExternalStackOutputResolverProvider } from "./external-stack-output-resolver"
 import { createFileContentsResolverProvider } from "./file-contents-resolver"
