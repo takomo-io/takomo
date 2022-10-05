@@ -1,7 +1,7 @@
 import {
   deployStacksCommandIamPolicy,
   undeployStacksCommandIamPolicy,
-} from "@takomo/stacks-commands"
+} from "../../takomo-stacks-commands"
 
 export const deployTargetsOperationCommandIamPolicy = (): string =>
   deployStacksCommandIamPolicy()

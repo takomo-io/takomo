@@ -1,12 +1,12 @@
-import { Region } from "@takomo/aws-model"
-import { CommandHandler } from "@takomo/core"
+import Joi from "joi"
+import { Region } from "../../takomo-aws-model"
+import { CommandHandler } from "../../takomo-core"
 import {
   createDeploymentTargetsContext,
   DeploymentTargetsConfigRepository,
-} from "@takomo/deployment-targets-context"
-import { createDeploymentTargetsSchemas } from "@takomo/deployment-targets-schema"
-import { validateInput } from "@takomo/util"
-import Joi from "joi"
+} from "../../takomo-deployment-targets-context"
+import { createDeploymentTargetsSchemas } from "../../takomo-deployment-targets-schema"
+import { validateInput } from "../../takomo-util"
 import {
   DeploymentTargetsRunInput,
   DeploymentTargetsRunIO,

@@ -1,17 +1,25 @@
 import { Credentials } from "@aws-sdk/types"
-import { CredentialManager, prepareAwsEnvVariables } from "@takomo/aws-clients"
-import { CallerIdentity, IamRoleArn, IamRoleName } from "@takomo/aws-model"
+import { exec } from "child_process"
+import { IPolicy, Policy } from "cockatiel"
+import { extname } from "path"
+import R from "ramda"
+import { promisify } from "util"
+import {
+  CredentialManager,
+  prepareAwsEnvVariables,
+} from "../../takomo-aws-clients"
+import { CallerIdentity, IamRoleArn, IamRoleName } from "../../takomo-aws-model"
 import {
   CommandRole,
   CommandStatus,
   OperationState,
   resolveCommandOutputBase,
-} from "@takomo/core"
+} from "../../takomo-core"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "@takomo/deployment-targets-config"
-import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
+} from "../../takomo-deployment-targets-config"
+import { DeploymentTargetsContext } from "../../takomo-deployment-targets-context"
 import {
   expandFilePath,
   FilePath,
@@ -19,12 +27,7 @@ import {
   readFileContents,
   Timer,
   TkmLogger,
-} from "@takomo/util"
-import { exec } from "child_process"
-import { IPolicy, Policy } from "cockatiel"
-import { extname } from "path"
-import R from "ramda"
-import { promisify } from "util"
+} from "../../takomo-util"
 import { DeploymentTargetsListener } from "../operation/model"
 import {
   DeploymentGroupRunResult,

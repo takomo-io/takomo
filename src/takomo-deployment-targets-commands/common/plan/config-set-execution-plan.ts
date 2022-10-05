@@ -2,18 +2,18 @@ import {
   ConfigSetType,
   getConfigSetsByType,
   StageName,
-} from "@takomo/config-sets"
+} from "../../../takomo-config-sets"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "@takomo/deployment-targets-config"
-import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
+} from "../../../takomo-deployment-targets-config"
+import { DeploymentTargetsContext } from "../../../takomo-deployment-targets-context"
 import {
   ConfigSetExecutionGroup,
   ConfigSetExecutionPlan,
   ConfigSetExecutionTarget,
-} from "@takomo/execution-plans"
-import { TkmLogger } from "@takomo/util"
+} from "../../../takomo-execution-plans"
+import { TkmLogger } from "../../../takomo-util"
 import {
   createConfigSetExecutionPlan,
   TargetsSelectionCriteria,

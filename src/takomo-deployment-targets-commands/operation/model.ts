@@ -1,24 +1,24 @@
-import { ConfigSetName, ConfigSetType } from "@takomo/config-sets"
-import { CommandInput, IO, OutputFormat } from "@takomo/core"
-import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
+import { ConfigSetName, ConfigSetType } from "../../takomo-config-sets"
+import { CommandInput, IO, OutputFormat } from "../../takomo-core"
+import { DeploymentTargetsContext } from "../../takomo-deployment-targets-context"
 import {
   DeploymentGroupPath,
   DeploymentTargetNamePattern,
   Label,
-} from "@takomo/deployment-targets-model"
+} from "../../takomo-deployment-targets-model"
 import {
   ConfigSetExecutionPlan,
   ConfigSetPlanExecutionResult,
   ConfigSetTargetListener,
   CreateConfigSetTargetListenerProps,
-} from "@takomo/execution-plans"
+} from "../../takomo-execution-plans"
 import {
   DeployStacksIO,
   StacksOperationOutput,
   UndeployStacksIO,
-} from "@takomo/stacks-commands"
-import { CommandPath, DeploymentOperation } from "@takomo/stacks-model"
-import { Timer, TkmLogger } from "@takomo/util"
+} from "../../takomo-stacks-commands"
+import { CommandPath, DeploymentOperation } from "../../takomo-stacks-model"
+import { Timer, TkmLogger } from "../../takomo-util"
 import { PlannedDeploymentTarget } from "../common/plan/model"
 
 export type ConfirmOperationAnswer =

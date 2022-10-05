@@ -1,22 +1,22 @@
-import { CredentialManager } from "@takomo/aws-clients"
-import { InternalCommandContext, OutputFormat } from "@takomo/core"
+import { CredentialManager } from "../../takomo-aws-clients"
+import { InternalCommandContext, OutputFormat } from "../../takomo-core"
 import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
-} from "@takomo/deployment-targets-context"
+} from "../../takomo-deployment-targets-context"
 import {
   ConfigSetTargetExecutorProps,
   executeConfigSetPlan,
-} from "@takomo/execution-plans"
+} from "../../takomo-execution-plans"
 import {
   deployStacksCommand,
   StacksOperationInput,
   StacksOperationOutput,
   undeployStacksCommand,
-} from "@takomo/stacks-commands"
-import { StacksConfigRepository } from "@takomo/stacks-context"
-import { DeploymentOperation } from "@takomo/stacks-model"
-import { TakomoError, TkmLogger } from "@takomo/util"
+} from "../../takomo-stacks-commands"
+import { StacksConfigRepository } from "../../takomo-stacks-context"
+import { DeploymentOperation } from "../../takomo-stacks-model"
+import { TakomoError, TkmLogger } from "../../takomo-util"
 import { PlannedDeploymentTarget } from "../common/plan/model"
 import { createDeploymentTargetVariables } from "./create-deployment-target-variables"
 import {

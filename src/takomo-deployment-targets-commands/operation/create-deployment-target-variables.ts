@@ -1,7 +1,7 @@
-import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
-import { ConfigSetExecutionTarget } from "@takomo/execution-plans"
-import { deepCopy } from "@takomo/util"
-import { PlannedDeploymentTarget } from "../../src"
+import { DeploymentTargetsContext } from "../../takomo-deployment-targets-context"
+import { ConfigSetExecutionTarget } from "../../takomo-execution-plans"
+import { deepCopy } from "../../takomo-util"
+import { PlannedDeploymentTarget } from "../common/plan/model"
 
 interface CreateDeploymentTargetVariablesProps {
   readonly ctx: DeploymentTargetsContext

@@ -1,5 +1,5 @@
-import { OutputFormat } from "@takomo/core"
-import { Timer } from "@takomo/util"
+import { OutputFormat } from "../../takomo-core"
+import { Timer } from "../../takomo-util"
 import { createExecutionPlan } from "../common/plan/config-set-execution-plan"
 import { confirmOperation } from "./confirm"
 import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"

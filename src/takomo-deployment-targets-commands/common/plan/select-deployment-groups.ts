@@ -1,21 +1,21 @@
+import R from "ramda"
 import {
   ConfigSetName,
   ConfigSetType,
   getConfigSetsByType,
-} from "@takomo/config-sets"
+} from "../../../takomo-config-sets"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "@takomo/deployment-targets-config"
-import { DeploymentTargetsContext } from "@takomo/deployment-targets-context"
+} from "../../../takomo-deployment-targets-config"
+import { DeploymentTargetsContext } from "../../../takomo-deployment-targets-context"
 import {
   DeploymentGroupPath,
   DeploymentTargetNamePattern,
   Label,
-} from "@takomo/deployment-targets-model"
-import { CommandPath } from "@takomo/stacks-model"
-import { collectFromHierarchy, TakomoError } from "@takomo/util"
-import R from "ramda"
+} from "../../../takomo-deployment-targets-model"
+import { CommandPath } from "../../../takomo-stacks-model"
+import { collectFromHierarchy, TakomoError } from "../../../takomo-util"
 import { createDeploymentTargetNamePatternMatcher } from "./create-deployment-target-name-pattern-matcher"
 
 export interface SelectDeploymentGroupsProps {

@@ -1,5 +1,5 @@
-import { DeploymentTargetConfig } from "@takomo/deployment-targets-config"
-import { DeploymentTargetNamePattern } from "@takomo/deployment-targets-model"
+import { DeploymentTargetConfig } from "../../../takomo-deployment-targets-config"
+import { DeploymentTargetNamePattern } from "../../../takomo-deployment-targets-model"
 
 type Matcher = (target: DeploymentTargetConfig) => boolean
 

@@ -1,18 +1,18 @@
-import { IamRoleArn, IamRoleName } from "@takomo/aws-model"
+import { IamRoleArn, IamRoleName } from "../../takomo-aws-model"
 import {
   CommandInput,
   CommandOutput,
   CommandOutputBase,
   IO,
-} from "@takomo/core"
-import { DeploymentGroupConfig } from "@takomo/deployment-targets-config"
+} from "../../takomo-core"
+import { DeploymentGroupConfig } from "../../takomo-deployment-targets-config"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   DeploymentTargetNamePattern,
   Label,
-} from "@takomo/deployment-targets-model"
-import { Timer } from "@takomo/util"
+} from "../../takomo-deployment-targets-model"
+import { Timer } from "../../takomo-util"
 import { DeploymentTargetsListener } from "../operation/model"
 
 export interface DeploymentTargetsRunInput extends CommandInput {
