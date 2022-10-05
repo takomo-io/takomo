@@ -1,3 +1,5 @@
+import { mock } from "jest-mock-extended"
+import { executeHooks } from "../../src/takomo-stacks-hooks"
 import {
   Hook,
   HookExecutor,
@@ -7,10 +9,8 @@ import {
   InternalStacksContext,
   Stack,
   StackOperationVariables,
-} from "@takomo/stacks-model"
-import { createConsoleLogger } from "@takomo/util"
-import { mock } from "jest-mock-extended"
-import { executeHooks } from "../src"
+} from "../../src/takomo-stacks-model"
+import { createConsoleLogger } from "../../src/takomo-util"
 
 class ThrowingHook implements Hook {
   private readonly error: Error

@@ -1,10 +1,10 @@
 import { Credentials } from "@aws-sdk/types"
-import { CredentialManager } from "@takomo/aws-clients"
-import { HookInput, Stack, StacksContext } from "@takomo/stacks-model"
-import { createConsoleLogger } from "@takomo/util"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { CmdHook } from "../src"
+import { CredentialManager } from "../../src/takomo-aws-clients"
+import { CmdHook } from "../../src/takomo-stacks-hooks"
+import { HookInput, Stack, StacksContext } from "../../src/takomo-stacks-model"
+import { createConsoleLogger } from "../../src/takomo-util"
 
 const credentialManager = mock<CredentialManager>()
 credentialManager.getCredentials.mockReturnValue(
