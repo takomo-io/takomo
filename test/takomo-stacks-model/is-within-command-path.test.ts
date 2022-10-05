@@ -1,4 +1,4 @@
-import { isWithinCommandPath } from "../src/util"
+import { isWithinCommandPath } from "../../src/takomo-stacks-model"
 
 type Case = [string, string, boolean]
 

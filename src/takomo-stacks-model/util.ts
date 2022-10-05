@@ -1,5 +1,5 @@
-import { StackName } from "@takomo/aws-model"
 import R from "ramda"
+import { StackName } from "../takomo-aws-model"
 import { CommandPath } from "./command"
 import { InternalStack, Stack, StackPath } from "./stack"
 

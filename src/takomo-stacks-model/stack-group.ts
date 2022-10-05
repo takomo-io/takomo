@@ -4,8 +4,8 @@ import {
   StackCapability,
   StackPolicyBody,
   TagKey,
-} from "@takomo/aws-model"
-import { CommandRole, Project, Vars } from "@takomo/core"
+} from "../takomo-aws-model"
+import { CommandRole, Project, Vars } from "../takomo-core"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { HookConfig } from "./hook"
 import { Schemas } from "./schemas"

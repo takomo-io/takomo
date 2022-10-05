@@ -1,4 +1,4 @@
-import { TkmLogger } from "@takomo/util"
+import { TkmLogger } from "../takomo-util"
 import { StackOperationVariables } from "./command"
 import { StacksContext } from "./context"
 import { Stack } from "./stack"

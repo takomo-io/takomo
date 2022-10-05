@@ -1,7 +1,7 @@
-import { StackParameterKey } from "@takomo/aws-model"
-import { CommandContext } from "@takomo/core"
-import { FilePath, TakomoError, TkmLogger } from "@takomo/util"
 import Joi, { AnySchema } from "joi"
+import { StackParameterKey } from "../takomo-aws-model"
+import { CommandContext } from "../takomo-core"
+import { FilePath, TakomoError, TkmLogger } from "../takomo-util"
 import { StackPath } from "./stack"
 import { StackGroupPath } from "./stack-group"
 
