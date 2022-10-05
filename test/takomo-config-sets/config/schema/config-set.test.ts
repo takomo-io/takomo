@@ -1,5 +1,5 @@
-import { expectNoValidationError } from "@takomo/test-unit"
-import { createConfigSetsSchemas } from "../../../src"
+import { createConfigSetsSchemas } from "../../../../src/takomo-config-sets"
+import { expectNoValidationError } from "../../../assertions"
 
 const { configSet } = createConfigSetsSchemas({ regions: [] })
 

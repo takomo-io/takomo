@@ -1,8 +1,8 @@
+import { createConfigSetsSchemas } from "../../../../src/takomo-config-sets"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "@takomo/test-unit"
-import { createConfigSetsSchemas } from "../../../src/"
+} from "../../../assertions"
 
 const { configSetName } = createConfigSetsSchemas({ regions: [] })
 

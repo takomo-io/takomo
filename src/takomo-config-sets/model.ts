@@ -1,5 +1,5 @@
-import { Vars } from "@takomo/core"
-import { CommandPath } from "@takomo/stacks-model"
+import { Vars } from "../takomo-core"
+import { CommandPath } from "../takomo-stacks-model"
 
 export type ConfigSetName = string
 export type StageName = string

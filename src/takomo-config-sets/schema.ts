@@ -1,7 +1,7 @@
-import { Region } from "@takomo/aws-model"
-import { createCommonSchema } from "@takomo/core"
-import { createStacksSchemas } from "@takomo/stacks-schema"
 import Joi, { ObjectSchema, StringSchema } from "joi"
+import { Region } from "../takomo-aws-model"
+import { createCommonSchema } from "../takomo-core"
+import { createStacksSchemas } from "../takomo-stacks-schema"
 
 interface CreateConfigSetsSchemasProps {
   readonly regions: ReadonlyArray<Region>

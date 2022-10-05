@@ -1,4 +1,4 @@
-import { mergeConfigSets } from "../src/parser"
+import { mergeConfigSets } from "../../src/takomo-config-sets"
 
 describe("#mergeConfigSets", () => {
   test("Empty inputs", () => {
