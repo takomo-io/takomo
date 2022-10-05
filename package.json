@@ -1,8 +1,17 @@
 {
-  "name": "Takomo",
-  "version": "0.0.1",
-  "private": true,
-  "description": "Takomo monorepo",
+  "name": "takomo",
+  "version": "xxxxx",
+  "description": "Organize, configure and deploy CloudFormation stacks.",
+  "keywords": [
+    "aws",
+    "cloudformation",
+    "cfn",
+    "deploy",
+    "cli",
+    "cloudformation templates",
+    "cloudformation stacks",
+    "cloudformation deployment"
+  ],
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
@@ -11,25 +20,31 @@
   },
   "license": "MIT",
   "author": "henri@takomo.io",
-  "workspaces": [
-    "packages/*",
-    "integration-tests/*"
+  "type": "commonjs",
+  "main": "dist/index",
+  "types": "dist/index",
+  "bin": {
+    "takomo": "bin/tkm",
+    "tkm": "bin/tkm"
+  },
+  "files": [
+    "dist"
   ],
+  "engines": {
+    "node": ">=16.17.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "api-docs": "typedoc",
-    "bootstrap": "lerna bootstrap",
-    "build": "lerna run build",
-    "build-if-changed": "lerna run build-if-changed",
-    "clean:all": "lerna run 'clean:all' --parallel && rm -rf node_modules && rm -f yarn.lock",
-    "clean:deps": "lerna run 'clean:deps' --parallel && rm -rf node_modules",
-    "clean:dist": "lerna run 'clean:dist' --parallel",
     "depcheck": "lerna run depcheck --parallel",
-    "publish-packages": "lerna publish from-package --yes",
-    "publish-version": "lerna version --exact --create-release github",
-    "sort-package-json": "sort-package-json 'package.json' 'packages/*/package.json'",
-    "test": "lerna run test",
-    "watch": "lerna run watch --parallel",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "tsc"
   },
   "commitlint": {
     "extends": [
@@ -78,14 +93,11 @@
     "@typescript-eslint/parser": "5.23.0",
     "babel-jest": "27.4.6",
     "depcheck": "1.4.3",
-    "dotenv": "10.0.0",
     "eslint": "8.15.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
     "jest": "27.4.7",
     "jest-mock-extended": "2.0.4",
-    "lerna": "5.1.8",
-    "nx": "14.4.2",
     "lint-staged": "12.4.1",
     "prettier": "2.7.0",
     "prettier-plugin-organize-imports": "2.3.4",
@@ -136,7 +148,8 @@
     "inquirer-autocomplete-prompt": "1.4.0",
     "ramda": "0.28.0",
     "ts-dedent": "2.2.0",
-    "dotenv": "8.2.0",
-    "yargs": "17.0.1"
+    "dotenv": "10.0.0",
+    "yargs": "17.0.1",
+    "source-map-support": "0.5.21"
   }
 }

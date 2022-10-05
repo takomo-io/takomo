@@ -1,3 +1,3 @@
-import { run } from "@takomo/cli"
 import "source-map-support/register"
+import { run } from "./takomo-cli"
 run()
