@@ -1,7 +1,7 @@
-import { CommandContext, ExternalResolverConfig } from "@takomo/core"
-import { ParameterConfig } from "@takomo/stacks-config"
 import Joi from "joi"
 import { StackParameterKey } from "../takomo-aws-model"
+import { CommandContext, ExternalResolverConfig } from "../takomo-core"
+import { ParameterConfig } from "../takomo-stacks-config"
 import {
   Resolver,
   ResolverName,

@@ -44,7 +44,8 @@
     "api-docs": "typedoc",
     "depcheck": "lerna run depcheck --parallel",
     "prepare": "husky install",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf node_modules && rm -f yarn.lock"
   },
   "commitlint": {
     "extends": [

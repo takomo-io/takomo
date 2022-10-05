@@ -1,4 +1,3 @@
-import { createStacksSchemas } from "@takomo/stacks-schema"
 import Joi, { AnySchema } from "joi"
 import { CommandContext, CommandHandler } from "../../../takomo-core"
 import {
@@ -6,6 +5,7 @@ import {
   StacksConfigRepository,
 } from "../../../takomo-stacks-context"
 import { InternalStacksContext } from "../../../takomo-stacks-model"
+import { createStacksSchemas } from "../../../takomo-stacks-schema"
 import { validateInput } from "../../../takomo-util"
 import {
   StacksOperationOutput,
