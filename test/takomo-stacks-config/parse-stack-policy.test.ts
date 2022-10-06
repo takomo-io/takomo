@@ -1,4 +1,4 @@
-import { parseStackPolicy } from "../src/parse-stack-policy"
+import { parseStackPolicy } from "../../src/takomo-stacks-config/parse-stack-policy"
 
 describe("#parseTemplate", () => {
   test("when a string is given", () => {

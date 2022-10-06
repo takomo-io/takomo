@@ -1,10 +1,54 @@
 import { mock } from "jest-mock-extended"
+import {
+  CredentialManager,
+  InternalAwsClientProvider,
+} from "../../../src/takomo-aws-clients"
+import {
+  InternalCommandContext,
+  InternalTakomoProjectConfig,
+  TakomoBuildInfo,
+} from "../../../src/takomo-core"
 import { PlannedDeploymentTarget } from "../../../src/takomo-deployment-targets-commands"
 import { createDeploymentTargetVariables } from "../../../src/takomo-deployment-targets-commands/operation/create-deployment-target-variables"
-import { DeploymentTargetsContext } from "../../../src/takomo-deployment-targets-context"
+import { DeploymentConfig } from "../../../src/takomo-deployment-targets-config"
+import {
+  DeploymentTargetsConfigRepository,
+  DeploymentTargetsContext,
+} from "../../../src/takomo-deployment-targets-context"
 import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans"
+import { createConsoleLogger } from "../../../src/takomo-util"
 
-const ctx = mock<DeploymentTargetsContext>()
+const ctx: DeploymentTargetsContext = {
+  autoConfirmEnabled: false,
+  awsClientProvider: mock<InternalAwsClientProvider>(),
+  buildInfo: mock<TakomoBuildInfo>(),
+  resetCache: false,
+  commandContext: mock<InternalCommandContext>(),
+  confidentialValuesLoggingEnabled: false,
+  configRepository: mock<DeploymentTargetsConfigRepository>(),
+  credentialManager: mock<CredentialManager>(),
+  deploymentConfig: mock<DeploymentConfig>(),
+  getConfigSet: jest.fn(),
+  getDeploymentGroup: jest.fn(),
+  getStages: jest.fn(),
+  hasConfigSet: jest.fn(),
+  hasDeploymentGroup: jest.fn(),
+  iamGeneratePoliciesInstructionsEnabled: false,
+  logLevel: "info",
+  logger: createConsoleLogger({ logLevel: "info" }),
+  outputFormat: "text",
+  projectConfig: mock<InternalTakomoProjectConfig>(),
+  projectDir: "",
+  quiet: false,
+  regions: [],
+  rootDeploymentGroups: [],
+  statisticsEnabled: false,
+  variables: {
+    env: { LANG: "FI" },
+    context: { projectDir: "/tmp" },
+    var: { code: "123", task: { priority: 1 } },
+  },
+}
 
 const target: ConfigSetExecutionTarget<PlannedDeploymentTarget> = {
   configSets: [],

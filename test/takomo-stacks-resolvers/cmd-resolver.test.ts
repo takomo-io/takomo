@@ -118,7 +118,7 @@ describe("Cmd resolver", () => {
   test("Capture last line output from cat command", () =>
     expectSuccess(
       {
-        command: "cat test/sample.txt",
+        command: "cat test/takomo-stacks-resolvers/sample.txt",
         capture: "last-line",
       },
       "line 6",

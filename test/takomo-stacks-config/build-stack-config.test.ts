@@ -1,7 +1,7 @@
-import { AwsClientProvider } from "@takomo/aws-clients"
-import { CommandContext, TakomoProjectConfig } from "@takomo/core"
 import { mock } from "jest-mock-extended"
-import { buildStackConfig } from "../src"
+import { AwsClientProvider } from "../../src/takomo-aws-clients"
+import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
+import { buildStackConfig } from "../../src/takomo-stacks-config"
 
 const emptyStackConfig = {
   accountIds: undefined,

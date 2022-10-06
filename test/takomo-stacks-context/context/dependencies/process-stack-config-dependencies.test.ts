@@ -1,4 +1,4 @@
-import { processStackDependencies } from "../../../src/dependencies"
+import { processStackDependencies } from "../../../../src/takomo-stacks-context/dependencies"
 import { createStack } from "../../helpers"
 
 describe("process stack config dependencies", () => {

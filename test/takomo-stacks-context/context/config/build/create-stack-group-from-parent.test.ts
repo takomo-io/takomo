@@ -1,5 +1,5 @@
-import { createRootStackGroup } from "../../../../src/config/create-root-stack-group"
-import { createStackGroupFromParent } from "../../../../src/config/create-stack-group-from-parent"
+import { createRootStackGroup } from "../../../../../src/takomo-stacks-context/config/create-root-stack-group"
+import { createStackGroupFromParent } from "../../../../../src/takomo-stacks-context/config/create-stack-group-from-parent"
 
 describe("create stack group config from parent", () => {
   test("using root as parent", () => {

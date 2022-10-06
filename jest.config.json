@@ -1,5 +1,6 @@
 {
   "testEnvironment": "node",
-    "testRegex": ["/test/.*\\.(test)?\\.(ts)$"],
-    "moduleFileExtensions": ["ts", "js", "json", "node"]
+  "testRegex": ["/test/.*\\.(test)?\\.(ts)$"],
+  "moduleFileExtensions": ["ts", "js", "json", "node"],
+  "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/integration-tests/"]
 }

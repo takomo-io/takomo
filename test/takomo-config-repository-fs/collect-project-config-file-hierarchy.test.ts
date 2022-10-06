@@ -1,7 +1,12 @@
 import { join } from "path"
 import { collectProjectConfigFileHierarchy } from "../../src/takomo-config-repository-fs/project/config"
 
-const projectDir = join(process.cwd(), "test", "config-file-hierarchy")
+const projectDir = join(
+  process.cwd(),
+  "test",
+  "takomo-config-repository-fs",
+  "config-file-hierarchy",
+)
 
 describe("#collectProjectConfigFileHierarchy", () => {
   test("no hierarchy", async () => {

@@ -1,4 +1,4 @@
-import { createRootStackGroup } from "../../../../src/config/create-root-stack-group"
+import { createRootStackGroup } from "../../../../../src/takomo-stacks-context/config/create-root-stack-group"
 
 describe("create root stack group config", () => {
   test("for root", () => {

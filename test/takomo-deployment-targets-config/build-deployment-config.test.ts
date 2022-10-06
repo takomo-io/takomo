@@ -31,7 +31,11 @@ const readConfig = (file: string) =>
   parseYaml(
     file,
     readFileSync(
-      join(process.cwd(), "test/build-deployment-config", file),
+      join(
+        process.cwd(),
+        "test/takomo-deployment-targets-config/build-deployment-config",
+        file,
+      ),
     ).toString("utf-8"),
   )
 

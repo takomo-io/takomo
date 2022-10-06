@@ -6,7 +6,7 @@ import { expectNoValidationError } from "../assertions"
 
 const schema = createDeploymentTargetsConfigSchema({ regions: ["eu-west-1"] })
 
-const validFilesDir = `${process.cwd()}/test/deployment-targets-config-schema/valid`
+const validFilesDir = `${process.cwd()}/test/takomo-deployment-targets-config/deployment-targets-config-schema/valid`
 const readFile = (file: string) =>
   parseYaml(file, readFileSync(join(validFilesDir, file)).toString("utf-8"))
 

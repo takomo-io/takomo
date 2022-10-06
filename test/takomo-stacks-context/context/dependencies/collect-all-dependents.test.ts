@@ -1,4 +1,4 @@
-import { collectAllDependents } from "../../../src/dependencies"
+import { collectAllDependents } from "../../../../src/takomo-stacks-context/dependencies"
 import { createStack } from "../../helpers"
 
 describe("collect all dependents", () => {

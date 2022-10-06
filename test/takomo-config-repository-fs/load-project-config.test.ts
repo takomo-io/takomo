@@ -16,8 +16,8 @@ const doLoadProjectConfig = (
 describe("#loadProjectConfig", () => {
   test("with empty file", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-01.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-01.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -38,8 +38,8 @@ describe("#loadProjectConfig", () => {
 
   test("with a single region", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-02.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-02.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -60,8 +60,8 @@ describe("#loadProjectConfig", () => {
 
   test("with multiple regions", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-03.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-03.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -82,8 +82,8 @@ describe("#loadProjectConfig", () => {
 
   test("with resolvers", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-04.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-04.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -116,8 +116,8 @@ describe("#loadProjectConfig", () => {
 
   test("with helpers", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-05.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-05.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -150,8 +150,8 @@ describe("#loadProjectConfig", () => {
 
   test("with var files", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-06.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-06.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -164,8 +164,8 @@ describe("#loadProjectConfig", () => {
       partialsDir: [],
       schemasDir: [],
       varFiles: [
-        join(`${process.cwd()}/test`, "file1.json"),
-        join(`${process.cwd()}/test`, "file2.yml"),
+        join(`${process.cwd()}/test/takomo-config-repository-fs`, "file1.json"),
+        join(`${process.cwd()}/test/takomo-config-repository-fs`, "file2.yml"),
       ],
       features: defaultFeatures(),
     }
@@ -175,8 +175,8 @@ describe("#loadProjectConfig", () => {
 
   test("with helper dirs and partials", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-07.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-07.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -186,7 +186,10 @@ describe("#loadProjectConfig", () => {
       resolvers: [],
       helpers: [],
       helpersDir: ["/tmp/custom"],
-      partialsDir: [join(`${process.cwd()}/test`, "one", "two"), "/other"],
+      partialsDir: [
+        join(`${process.cwd()}/test/takomo-config-repository-fs`, "one", "two"),
+        "/other",
+      ],
       schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
@@ -197,17 +200,19 @@ describe("#loadProjectConfig", () => {
 
   test("with extends", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-08.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-08.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
-      requiredVersion: ">1.0.0 || >=4.0.0-alpha.0",
+      requiredVersion: ">1.0.0 || >=5.0.0-alpha.0",
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-west-1", "us-east-1"],
       resolvers: [],
       helpers: [],
-      helpersDir: [join(`${process.cwd()}/test`, "my-helpers")],
+      helpersDir: [
+        join(`${process.cwd()}/test/takomo-config-repository-fs`, "my-helpers"),
+      ],
       partialsDir: [],
       schemasDir: [],
       varFiles: [],
@@ -219,8 +224,8 @@ describe("#loadProjectConfig", () => {
 
   test("extends with complex file hierarchies", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/config-file-hierarchy/aaa`,
-      `${process.cwd()}/test/config-file-hierarchy/aaa/one.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs/config-file-hierarchy/aaa`,
+      `${process.cwd()}/test/takomo-config-repository-fs/config-file-hierarchy/aaa/one.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {
@@ -229,12 +234,14 @@ describe("#loadProjectConfig", () => {
       regions: DEFAULT_REGIONS,
       resolvers: [],
       helpers: [],
-      helpersDir: [`${process.cwd()}/test/config-file-hierarchy/my-helpers`],
+      helpersDir: [
+        `${process.cwd()}/test/takomo-config-repository-fs/config-file-hierarchy/my-helpers`,
+      ],
       partialsDir: [],
       schemasDir: [],
       varFiles: [
-        `${process.cwd()}/test/config-file-hierarchy/bbb/example.yml`,
-        `${process.cwd()}/test/other.yml`,
+        `${process.cwd()}/test/takomo-config-repository-fs/config-file-hierarchy/bbb/example.yml`,
+        `${process.cwd()}/test/takomo-config-repository-fs/other.yml`,
       ],
       features: defaultFeatures(),
     }
@@ -244,8 +251,8 @@ describe("#loadProjectConfig", () => {
 
   test("with schemas dir", async () => {
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test`,
-      `${process.cwd()}/test/project-config-09.yml`,
+      `${process.cwd()}/test/takomo-config-repository-fs`,
+      `${process.cwd()}/test/takomo-config-repository-fs/project-config-09.yml`,
     )
 
     const expected: InternalTakomoProjectConfig = {

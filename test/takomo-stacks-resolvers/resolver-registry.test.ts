@@ -141,7 +141,8 @@ describe("#initResolver", () => {
   test("throws an error if schema function returns other than Joi schema object", async () => {
     const registry = new ResolverRegistry(logger)
     await registry.registerProviderFromFile(
-      process.cwd() + "/test/invalid-resolver-bad-schema2.js",
+      process.cwd() +
+        "/test/takomo-stacks-resolvers/invalid-resolver-bad-schema2.js",
     )
 
     await expect(
@@ -167,7 +168,7 @@ describe("#registerProviderFromFile", () => {
     test("registers provider successfully", async () => {
       const registry = new ResolverRegistry(logger)
       await registry.registerProviderFromFile(
-        process.cwd() + "/test/my-resolver.js",
+        process.cwd() + "/test/takomo-stacks-resolvers/my-resolver.js",
       )
       expect(registry.hasProvider("my-cool-resolver")).toBeTruthy()
 
@@ -189,7 +190,7 @@ describe("#registerProviderFromFile", () => {
     test("uses schema to validate resolver configuration", async () => {
       const registry = new ResolverRegistry(logger)
       await registry.registerProviderFromFile(
-        process.cwd() + "/test/my-resolver.js",
+        process.cwd() + "/test/takomo-stacks-resolvers/my-resolver.js",
       )
       expect(registry.hasProvider("my-cool-resolver")).toBeTruthy()
 
@@ -214,7 +215,9 @@ describe("#registerProviderFromFile", () => {
 
   describe("when given a provider without name", () => {
     test("throws an error", async () => {
-      const pathToProvider = process.cwd() + "/test/invalid-resolver-no-name.js"
+      const pathToProvider =
+        process.cwd() +
+        "/test/takomo-stacks-resolvers/invalid-resolver-no-name.js"
       const register = () =>
         new ResolverRegistry(logger).registerProviderFromFile(pathToProvider)
 
@@ -227,7 +230,9 @@ describe("#registerProviderFromFile", () => {
 
   describe("when given a provider without init", () => {
     test("throws an error", async () => {
-      const pathToProvider = process.cwd() + "/test/invalid-resolver-no-init.js"
+      const pathToProvider =
+        process.cwd() +
+        "/test/takomo-stacks-resolvers/invalid-resolver-no-init.js"
       const register = () =>
         new ResolverRegistry(logger).registerProviderFromFile(pathToProvider)
 
@@ -241,7 +246,8 @@ describe("#registerProviderFromFile", () => {
   describe("when given a provider with invalid schema", () => {
     test("throws an error", async () => {
       const pathToProvider =
-        process.cwd() + "/test/invalid-resolver-bad-schema.js"
+        process.cwd() +
+        "/test/takomo-stacks-resolvers/invalid-resolver-bad-schema.js"
       const register = () =>
         new ResolverRegistry(logger).registerProviderFromFile(pathToProvider)
 

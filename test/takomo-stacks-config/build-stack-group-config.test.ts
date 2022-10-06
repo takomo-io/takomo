@@ -1,9 +1,9 @@
-import { AwsClientProvider } from "@takomo/aws-clients/src"
-import { TagKey } from "@takomo/aws-model"
-import { CommandContext, TakomoProjectConfig } from "@takomo/core"
-import { RawTagValue } from "@takomo/stacks-model"
 import { mock } from "jest-mock-extended"
-import { buildStackGroupConfig } from "../src"
+import { AwsClientProvider } from "../../src/takomo-aws-clients"
+import { TagKey } from "../../src/takomo-aws-model"
+import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
+import { buildStackGroupConfig } from "../../src/takomo-stacks-config"
+import { RawTagValue } from "../../src/takomo-stacks-model"
 
 const emptyStackGroupConfig = {
   commandRole: undefined,
@@ -34,6 +34,7 @@ const ctx: CommandContext = {
     },
     var: {},
   },
+  resetCache: false,
   logLevel: "info",
   regions: [],
   autoConfirmEnabled: true,

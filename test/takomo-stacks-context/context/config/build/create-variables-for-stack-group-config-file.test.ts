@@ -1,5 +1,5 @@
-import { StackGroup } from "@takomo/stacks-model"
-import { createVariablesForStackGroupConfigFile } from "../../../../src/config/create-variables-for-stack-group-config-file"
+import { createVariablesForStackGroupConfigFile } from "../../../../../src/takomo-stacks-context/config/create-variables-for-stack-group-config-file"
+import { StackGroup } from "../../../../../src/takomo-stacks-model"
 
 describe("#createVariablesForStackGroupConfigFile", () => {
   test("returns correct variables", () => {

@@ -13,7 +13,7 @@ describe("SchemaRegistry#hasProvider", () => {
   it("return true if the given schema is registered", async () => {
     const sr = createSchemaRegistry(logger)
     await sr.registerProviderFromFile(
-      `${process.cwd()}/test/schema-files/my-schema.js`,
+      `${process.cwd()}/test/takomo-stacks-model/schema-files/my-schema.js`,
     )
     expect(sr.hasProvider("my-schema")).toStrictEqual(true)
   })
@@ -22,7 +22,7 @@ describe("SchemaRegistry#hasProvider", () => {
 describe("SchemaRegistry#registerProviderFromFile", () => {
   const sr = createSchemaRegistry(logger)
   it("fails when schema file is empty", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/empty.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/empty.js`
     await expect(async () =>
       sr.registerProviderFromFile(pathToSchema),
     ).rejects.toThrow(
@@ -30,7 +30,7 @@ describe("SchemaRegistry#registerProviderFromFile", () => {
     )
   })
   it("fails when schema file has name property of invalid type", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/invalid-name-type.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/invalid-name-type.js`
     await expect(async () =>
       sr.registerProviderFromFile(pathToSchema),
     ).rejects.toThrow(
@@ -38,7 +38,7 @@ describe("SchemaRegistry#registerProviderFromFile", () => {
     )
   })
   it("fails when schema file has no init function", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/missing-init.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/missing-init.js`
     await expect(async () =>
       sr.registerProviderFromFile(pathToSchema),
     ).rejects.toThrow(
@@ -46,7 +46,7 @@ describe("SchemaRegistry#registerProviderFromFile", () => {
     )
   })
   it("fails when schema file has init of invalid type", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/invalid-init-type.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/invalid-init-type.js`
     await expect(async () =>
       sr.registerProviderFromFile(pathToSchema),
     ).rejects.toThrow(
@@ -57,19 +57,19 @@ describe("SchemaRegistry#registerProviderFromFile", () => {
 
 describe("SchemaRegistry#registerProviderFromFile", () => {
   it("succeeds when schema file has name property of type string", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/my-schema.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/my-schema.js`
     const sr = createSchemaRegistry(logger)
     await sr.registerProviderFromFile(pathToSchema)
     expect(sr.hasProvider("my-schema")).toStrictEqual(true)
   })
   it("succeeds when schema file has name property of type function", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/my-schema-f.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/my-schema-f.js`
     const sr = createSchemaRegistry(logger)
     await sr.registerProviderFromFile(pathToSchema)
     expect(sr.hasProvider("my-schema-f")).toStrictEqual(true)
   })
   it("succeeds when schema file has schema property", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/my-schema-with-schema.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/my-schema-with-schema.js`
     const sr = createSchemaRegistry(logger)
     await sr.registerProviderFromFile(pathToSchema)
     expect(sr.hasProvider("my-schema-with-schema")).toStrictEqual(true)
@@ -78,7 +78,7 @@ describe("SchemaRegistry#registerProviderFromFile", () => {
 
 describe("SchemaRegistry#initParameterSchema", () => {
   it("succeeds", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/my-schema.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/my-schema.js`
     const sr = createSchemaRegistry(logger)
     await sr.registerProviderFromFile(pathToSchema)
     const schema = await sr.initParameterSchema(
@@ -93,7 +93,7 @@ describe("SchemaRegistry#initParameterSchema", () => {
   })
 
   it("fails when schema property doesn't match the given schema", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/max-length.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/max-length.js`
     const sr = createSchemaRegistry(logger)
     await sr.registerProviderFromFile(pathToSchema)
     await expect(async () =>
@@ -124,7 +124,7 @@ describe("SchemaRegistry#initParameterSchema", () => {
   })
 
   it("fails when schema function does not return Joi object", async () => {
-    const pathToSchema = `${process.cwd()}/test/schema-files/invalid-schema-return-type.js`
+    const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/invalid-schema-return-type.js`
     const sr = createSchemaRegistry(logger)
     await sr.registerProviderFromFile(pathToSchema)
     await expect(async () =>

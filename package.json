@@ -1,6 +1,6 @@
 {
   "name": "takomo",
-  "version": "xxxxx",
+  "version": "5.0.0-alpha.0",
   "description": "Organize, configure and deploy CloudFormation stacks.",
   "keywords": [
     "aws",
@@ -45,6 +45,7 @@
     "depcheck": "lerna run depcheck --parallel",
     "prepare": "husky install",
     "build": "tsc",
+    "test": "jest",
     "clean": "rm -rf node_modules && rm -f yarn.lock"
   },
   "commitlint": {
