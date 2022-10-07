@@ -6,7 +6,7 @@ const stackName = "app",
 
 describe("Inline template", () => {
   test("Deploy", () =>
-    executeDeployStacksCommand({ projectDir, logLevel: "debug" })
+    executeDeployStacksCommand({ projectDir })
       .expectCommandToSucceed()
       .expectStackCreateSuccess({
         stackName,
