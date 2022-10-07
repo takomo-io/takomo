@@ -45,7 +45,8 @@
     "depcheck": "lerna run depcheck --parallel",
     "prepare": "husky install",
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --selectProjects test --maxWorkers=10 --ci --verbose",
+    "integration-test": "jest --selectProjects integration-test --maxWorkers=10 --ci --verbose",
     "clean": "rm -rf node_modules && rm -f yarn.lock"
   },
   "commitlint": {
@@ -110,7 +111,15 @@
     "typescript": "4.7.4",
     "@commitlint/cli": "17.0.2",
     "@commitlint/config-conventional": "17.0.2",
-    "husky": "8.0.1"
+    "husky": "8.0.1",
+    "tmp": "0.2.1",
+    "@types/tmp": "0.2.3",
+    "@aws-sdk/client-ec2": "3.81.0",
+    "@takomo/test-custom-helper-lowercase": "0.0.1",
+    "@takomo/test-custom-helper-uppercase": "0.0.1",
+    "@takomo/test-custom-resolver-code": "0.0.1",
+    "@takomo/test-custom-resolver-name": "0.0.1",
+    "jest-environment-testenv-recycler": "0.0.17"
   },
   "dependencies": {
     "chalk": "4.1.2",

@@ -1,6 +1,3 @@
 {
-  "testEnvironment": "node",
-  "testRegex": ["/test/.*\\.(test)?\\.(ts)$"],
-  "moduleFileExtensions": ["ts", "js", "json", "node"],
-  "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/integration-tests/"]
+  "projects": ["<rootDir>/test/jest.config.json", "<rootDir>/integration-test/jest.config.json"]
 }

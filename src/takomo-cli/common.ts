@@ -49,7 +49,7 @@ export interface RunProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../package.json")
+const { version } = require("../../package.json")
 
 const resolveProjectDir = (projectDirArg: any): FilePath => {
   if (projectDirArg) {

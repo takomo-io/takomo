@@ -15,7 +15,6 @@ on:
 env:
 
   RECYCLER_HOSTNAME: ${{ secrets.RECYCLER_HOSTNAME }}
-  RECYCLER_BASEPATH: ${{ secrets.RECYCLER_BASEPATH }}
   RECYCLER_USERNAME: ${{ secrets.RECYCLER_USERNAME }}
   RECYCLER_PASSWORD: ${{ secrets.RECYCLER_PASSWORD }}
 
@@ -62,3 +61,22 @@ jobs:
             dist
           key: packages-${{ github.sha }}
       - run: yarn test
+
+  integration-test:
+    runs-on: ubuntu-20.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.17.0
+      - uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            dist
+          key: packages-${{ github.sha }}
+      - run: yarn integration-test

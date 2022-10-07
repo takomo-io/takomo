@@ -13,5 +13,5 @@
     "outDir": "./dist"
   },
   "include": ["src/**/*"],
-  "exclude": ["test/**/*", "node_modules", "dist"]
+  "exclude": ["test/**/*", "integration-test/**/*", "node_modules", "dist"],
 }
