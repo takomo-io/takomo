@@ -1,3 +1,0 @@
-name: sample-{{ target.name }}
-regions: eu-north-1
-template: {{ var.template }}

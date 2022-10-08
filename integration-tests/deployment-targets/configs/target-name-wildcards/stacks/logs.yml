@@ -1,3 +1,0 @@
-name: {{ var.name }}
-regions: eu-west-1
-commandRole: arn:aws:iam::{{ var.accountId }}:role/OrganizationAccountAccessRole

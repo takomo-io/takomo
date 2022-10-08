@@ -1,4 +1,0 @@
-accountId: "{{ var.ACCOUNT_2_ID }}"
-deploymentGroupPath: nested/group
-vars:
-  logGroupName: fourthLogs

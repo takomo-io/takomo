@@ -1,9 +1,0 @@
-deploymentGroups:
-  all:
-    configSets:
-      - aaa
-      - bbb
-    targets:
-      - name: first
-        vars:
-          accountId: "{{ var.ACCOUNT_1_ID }}"

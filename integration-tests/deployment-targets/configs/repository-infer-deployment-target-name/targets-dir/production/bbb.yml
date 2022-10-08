@@ -1,4 +1,0 @@
-accountId: "{{ var.ACCOUNT_2_ID }}"
-deploymentGroupPath: production
-vars:
-  logGroupName: thirdLogs

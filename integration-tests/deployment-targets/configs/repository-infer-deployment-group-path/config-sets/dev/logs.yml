@@ -1,5 +1,0 @@
-regions: eu-north-1
-name: {{ var.stackName }}
-template: logs.yml
-parameters:
-  LogGroupName: {{ var.logGroupName }}

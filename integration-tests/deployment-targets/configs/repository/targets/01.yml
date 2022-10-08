@@ -1,6 +1,0 @@
-name: first
-deploymentGroupPath: development
-deploymentRoleName: OrganizationAccountAccessRole
-accountId: "{{ var.ACCOUNT_1_ID }}"
-vars:
-  logGroupName: firstlogs

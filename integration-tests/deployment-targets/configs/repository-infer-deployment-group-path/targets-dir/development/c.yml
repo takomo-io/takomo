@@ -1,5 +1,0 @@
-name: c
-accountId: "{{ var.ACCOUNT_1_ID }}"
-vars:
-  logGroupName: secondLogs
-  stackName: second
