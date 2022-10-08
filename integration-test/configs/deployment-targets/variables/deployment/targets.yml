@@ -1,0 +1,28 @@
+vars:
+  color: red
+  nested:
+    name: hello
+
+deploymentGroups:
+
+  Environments/Dev:
+    configSets: super
+    targets:
+      - name: one
+        vars:
+          accountId: "{{ var.ACCOUNT_1_ID }}"
+      - name: two
+        vars:
+          accountId: "{{ var.ACCOUNT_2_ID }}"
+          color: green
+
+  Environments/Test:
+    configSets: super
+    vars:
+      color: blue
+    targets:
+      - name: three
+        vars:
+          accountId: "{{ var.ACCOUNT_3_ID }}"
+          nested:
+            name: last

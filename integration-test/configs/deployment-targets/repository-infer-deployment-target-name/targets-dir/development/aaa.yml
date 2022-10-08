@@ -1,0 +1,5 @@
+accountId: "{{ var.ACCOUNT_1_ID }}"
+deploymentGroupPath: development
+vars:
+  logGroupName: firstlogs
+  stackName: first

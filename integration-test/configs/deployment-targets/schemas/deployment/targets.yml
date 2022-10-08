@@ -1,0 +1,43 @@
+targetsSchema: root
+
+vars:
+  owner: john.hernandez@acme.com
+
+deploymentGroups:
+  workload:
+    configSets: common
+  workload/marketing:
+    targets:
+      - name: one
+        accountId: "{{ var.ACCOUNT_1_ID }}"
+        deploymentRoleName: OrganizationAccountAccessRole
+        vars:
+          cost-center: 1234
+          logGroupName: one
+  workload/analytics:
+    targets:
+      - name: two
+        accountId: "{{ var.ACCOUNT_1_ID }}"
+        deploymentRoleName: OrganizationAccountAccessRole
+        vars:
+          cost-center: 5678
+          logGroupName: two
+  sandbox:
+    configSets: others
+    targets:
+      - name: three
+        accountId: "{{ var.ACCOUNT_2_ID }}"
+        deploymentRoleName: OrganizationAccountAccessRole
+        vars:
+          cost-center: 9999
+          logGroupName: three
+
+configSets:
+  common:
+    description: Development logs
+    commandPaths:
+      - /common
+  others:
+    description: Production logs
+    commandPaths:
+      - /others

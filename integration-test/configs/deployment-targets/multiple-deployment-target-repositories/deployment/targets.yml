@@ -1,0 +1,4 @@
+deploymentGroups:
+  sandbox: {}
+  workload/development: {}
+  workload/production: {}

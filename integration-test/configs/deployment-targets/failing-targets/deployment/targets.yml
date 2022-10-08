@@ -1,0 +1,13 @@
+deploymentGroups:
+  application:
+    deploymentRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+    vars:
+      template: sample.yml
+    configSets: sample
+    targets:
+      - name: aaa
+      - name: bbb
+        vars:
+          template: sample-fail.yml
+      - name: ccc
+      - name: ddd

@@ -1,0 +1,15 @@
+deploymentGroups:
+  GroupA/Child:
+    configSets: example
+    targets:
+      - name: one
+        deploymentRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+      - name: two
+        deploymentRole: arn:aws:iam::{{ var.ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
+
+configSets:
+  example:
+    description: Example configs
+    projectDir: others
+    commandPaths:
+      - /example.yml/eu-west-1

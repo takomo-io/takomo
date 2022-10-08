@@ -1,0 +1,18 @@
+deploymentGroups:
+  Example:
+    targets:
+      - name: one
+        bootstrapRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+        vars:
+          accountId: "{{ var.ACCOUNT_1_ID }}"
+      - name: two
+        bootstrapRole: arn:aws:iam::{{ var.ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
+        bootstrapConfigSets: logs2
+        vars:
+          accountId: "{{ var.ACCOUNT_2_ID }}"
+
+configSets:
+  logs2:
+    description: Logging configs 2
+    commandPaths:
+      - /logs-2.yml
