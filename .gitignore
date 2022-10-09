@@ -7,3 +7,4 @@ coverage
 api-docs
 .checksum
 .DS_Store
+.env

@@ -1,8 +1,17 @@
 {
-  "name": "Takomo",
-  "version": "0.0.1",
-  "private": true,
-  "description": "Takomo monorepo",
+  "name": "takomo",
+  "version": "5.0.0-alpha.0",
+  "description": "Organize, configure and deploy CloudFormation stacks.",
+  "keywords": [
+    "aws",
+    "cloudformation",
+    "cfn",
+    "deploy",
+    "cli",
+    "cloudformation templates",
+    "cloudformation stacks",
+    "cloudformation deployment"
+  ],
   "homepage": "https://takomo.io",
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
@@ -11,25 +20,34 @@
   },
   "license": "MIT",
   "author": "henri@takomo.io",
-  "workspaces": [
-    "packages/*",
-    "integration-tests/*"
+  "type": "commonjs",
+  "main": "dist/index",
+  "types": "dist/index",
+  "bin": {
+    "takomo": "bin/tkm",
+    "tkm": "bin/tkm"
+  },
+  "files": [
+    "dist"
   ],
+  "engines": {
+    "node": ">=16.17.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "api-docs": "typedoc",
-    "bootstrap": "lerna bootstrap",
-    "build": "lerna run build",
-    "build-if-changed": "lerna run build-if-changed",
-    "clean:all": "lerna run 'clean:all' --parallel && rm -rf node_modules && rm -f yarn.lock",
-    "clean:deps": "lerna run 'clean:deps' --parallel && rm -rf node_modules",
-    "clean:dist": "lerna run 'clean:dist' --parallel",
     "depcheck": "lerna run depcheck --parallel",
-    "publish-packages": "lerna publish from-package --yes",
-    "publish-version": "lerna version --exact --create-release github",
-    "sort-package-json": "sort-package-json 'package.json' 'packages/*/package.json'",
-    "test": "lerna run test",
-    "watch": "lerna run watch --parallel",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "tsc",
+    "test": "jest --selectProjects test --maxWorkers=10 --ci --verbose",
+    "integration-test": "jest --selectProjects integration-test --maxWorkers=10 --ci --verbose",
+    "clean": "rm -rf node_modules && rm -f yarn.lock"
   },
   "commitlint": {
     "extends": [
@@ -78,14 +96,11 @@
     "@typescript-eslint/parser": "5.23.0",
     "babel-jest": "27.4.6",
     "depcheck": "1.4.3",
-    "dotenv": "10.0.0",
     "eslint": "8.15.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
     "jest": "27.4.7",
     "jest-mock-extended": "2.0.4",
-    "lerna": "5.1.8",
-    "nx": "14.4.2",
     "lint-staged": "12.4.1",
     "prettier": "2.7.0",
     "prettier-plugin-organize-imports": "2.3.4",
@@ -96,6 +111,56 @@
     "typescript": "4.7.4",
     "@commitlint/cli": "17.0.2",
     "@commitlint/config-conventional": "17.0.2",
-    "husky": "8.0.1"
+    "husky": "8.0.1",
+    "tmp": "0.2.1",
+    "@types/tmp": "0.2.3",
+    "@aws-sdk/client-ec2": "3.81.0",
+    "@takomo/test-custom-helper-lowercase": "0.0.1",
+    "@takomo/test-custom-helper-uppercase": "0.0.1",
+    "@takomo/test-custom-resolver-code": "0.0.1",
+    "@takomo/test-custom-resolver-name": "0.0.1",
+    "jest-environment-testenv-recycler": "0.0.17"
+  },
+  "dependencies": {
+    "chalk": "4.1.2",
+    "date-and-time": "2.1.0",
+    "diff": "5.0.0",
+    "easy-table": "1.2.0",
+    "handlebars": "4.7.7",
+    "joi": "17.6.0",
+    "js-yaml": "4.1.0",
+    "json-stable-stringify": "1.0.1",
+    "lodash.merge": "4.6.2",
+    "p-queue": "6.6.2",
+    "pretty-ms": "7.0.1",
+    "strip-ansi": "6.0.0",
+    "uuid": "8.3.2",
+    "@aws-sdk/client-cloudformation": "3.81.0",
+    "@aws-sdk/client-cloudtrail": "3.81.0",
+    "@aws-sdk/client-organizations": "3.78.0",
+    "@aws-sdk/client-s3": "3.81.0",
+    "@aws-sdk/client-secrets-manager": "3.81.0",
+    "@aws-sdk/client-ssm": "3.81.0",
+    "@aws-sdk/client-sts": "3.81.0",
+    "@aws-sdk/credential-provider-node": "3.81.0",
+    "@aws-sdk/credential-providers": "3.81.0",
+    "@aws-sdk/middleware-retry": "3.80.0",
+    "@aws-sdk/node-http-handler": "3.78.0",
+    "@aws-sdk/types": "3.78.0",
+    "cockatiel": "2.0.1",
+    "lodash.takerightwhile": "4.6.0",
+    "folder-hash": "4.0.2",
+    "neverthrow": "4.3.1",
+    "jmespath": "0.16.0",
+    "dotenv-expand": "5.1.0",
+    "readdirp": "3.6.0",
+    "semver": "7.3.7",
+    "inquirer": "8.1.2",
+    "inquirer-autocomplete-prompt": "1.4.0",
+    "ramda": "0.28.0",
+    "ts-dedent": "2.2.0",
+    "dotenv": "10.0.0",
+    "yargs": "17.0.1",
+    "source-map-support": "0.5.21"
   }
 }

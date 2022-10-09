@@ -1,0 +1,70 @@
+import { ObjectSchema } from "joi"
+import { IamRoleArn } from "../takomo-aws-model"
+import { createAwsSchemas } from "../takomo-aws-schema"
+import {
+  Resolver,
+  ResolverInput,
+  ResolverProvider,
+  ResolverProviderSchemaProps,
+} from "../takomo-stacks-model"
+
+const init = async (props: any): Promise<Resolver> => ({
+  iamRoleArns: (): IamRoleArn[] =>
+    props.commandRole ? [props.commandRole] : [],
+  resolve: async ({
+    ctx,
+    stack,
+    logger,
+    parameterName,
+  }: ResolverInput): Promise<any> => {
+    const credentialManager = props.commandRole
+      ? await ctx.credentialManager.createCredentialManagerForRole(
+          props.commandRole,
+        )
+      : stack.credentialManager
+
+    const region = props.region ?? stack.region
+    logger.debugObject(
+      `Resolving value for parameter '${parameterName}' using ssm resolver:`,
+      {
+        region,
+        name: props.name,
+        commandRole: props.commandRole,
+      },
+    )
+
+    const ssm = await ctx.awsClientProvider.createSsmClient({
+      credentialProvider: credentialManager.getCredentialProvider(),
+      region,
+      logger,
+      id: "ssm",
+    })
+
+    return ssm.getParameterValue(props.name)
+  },
+})
+
+const schema = ({
+  joi,
+  base,
+  ctx,
+}: ResolverProviderSchemaProps): ObjectSchema => {
+  const { region, iamRoleArn } = createAwsSchemas({ regions: ctx.regions })
+  return base.keys({
+    region,
+    commandRole: iamRoleArn,
+    name: joi
+      .string()
+      .regex(/^[a-zA-Z0-9_.\-/]+$/)
+      .max(2048)
+      .required(),
+  })
+}
+
+const name = "ssm"
+
+export const createSsmResolverProvider = (): ResolverProvider => ({
+  name,
+  init,
+  schema,
+})
