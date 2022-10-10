@@ -5,6 +5,13 @@ dist
 .idea
 coverage
 api-docs
-.checksum
 .DS_Store
 .env
+
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

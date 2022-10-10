@@ -34,7 +34,7 @@ jobs:
           key: npm-${{ hashFiles('yarn.lock') }}
       - name: Install dependencies
         if: steps.node_modules.outputs.cache-hit != 'true'
-        run: yarn
+        run: yarn install
       - name: Build
         run: yarn build
       - uses: actions/cache@v2
