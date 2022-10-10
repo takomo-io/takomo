@@ -12,5 +12,5 @@ const successCases = [
 ]
 
 describe("tkm stacks deploy", () => {
-  test.each(successCases)("success %#", expectSuccess, 10000)
+  test.each(successCases)("success %#", expectSuccess)
 })

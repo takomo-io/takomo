@@ -79,6 +79,7 @@
     "@babel/preset-typescript": "7.16.7",
     "@commitlint/cli": "17.0.2",
     "@commitlint/config-conventional": "17.0.2",
+    "@jest/console": "29.1.2",
     "@takomo/test-custom-helper-lowercase": "0.0.1",
     "@takomo/test-custom-helper-uppercase": "0.0.1",
     "@takomo/test-custom-resolver-code": "0.0.1",
