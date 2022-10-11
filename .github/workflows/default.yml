@@ -23,21 +23,21 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16.17.0
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: node_modules
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
       - name: Install dependencies
         if: steps.node_modules.outputs.cache-hit != 'true'
-        run: yarn
+        run: yarn install
       - name: Build
         run: yarn build
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             dist
@@ -47,15 +47,15 @@ jobs:
     runs-on: ubuntu-20.04
     needs: build
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16.17.0
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             dist
@@ -66,15 +66,15 @@ jobs:
     runs-on: ubuntu-20.04
     needs: build
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16.17.0
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: node_modules
           key: npm-${{ hashFiles('yarn.lock') }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             dist

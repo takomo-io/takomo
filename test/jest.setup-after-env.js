@@ -15,4 +15,4 @@ global.console = new CustomConsole(
   simpleFormatter,
 )
 
-jest.setTimeout(1000 * 60 * 10)
+jest.setTimeout(1000 * 60 * 2)
