@@ -7,9 +7,10 @@ export const continueUpdateRollback: StackOperationStep<
   const { transitions, stack, currentStack, logger } = state
   logger.info("Continue update rollback")
 
-  const continueStackRollbackClientToken = await stack
-    .getCloudFormationClient()
-    .continueUpdateRollback(stack.name)
+  const client = await stack.getCloudFormationClient()
+  const continueStackRollbackClientToken = await client.continueUpdateRollback(
+    stack.name,
+  )
 
   return transitions.waitStackRollbackToComplete({
     ...state,

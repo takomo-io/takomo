@@ -26,7 +26,7 @@ export const detectDrift = async (
         return { current, stack }
       }
 
-      const client = stack.getCloudFormationClient()
+      const client = await stack.getCloudFormationClient()
       const id = await client.detectDrift(stack.name)
       const driftDetectionStatus = await client.waitDriftDetectionToComplete(id)
       return { stack, current, driftDetectionStatus }

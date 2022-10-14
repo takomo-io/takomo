@@ -31,7 +31,8 @@ export const initiateStackUpdate: StackOperationStep<
       ? ALLOW_ALL_STACK_POLICY
       : stack.stackPolicy
 
-  const hasChanges = await stack.getCloudFormationClient().updateStack({
+  const client = await stack.getCloudFormationClient()
+  const hasChanges = await client.updateStack({
     Capabilities: capabilities,
     ClientRequestToken: clientToken,
     Parameters: parameters.map((p) => ({

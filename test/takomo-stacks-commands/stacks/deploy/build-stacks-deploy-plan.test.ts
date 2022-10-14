@@ -69,7 +69,10 @@ const stack = ({
   const cfClient = mock<CloudFormationClient>({ listNotDeletedStacks })
 
   const s = mock<InternalStack>({ name, path, region, dependencies, obsolete })
-  s.getCloudFormationClient.mockReturnValue(cfClient)
+  s.getCloudFormationClient.mockReturnValue(Promise.resolve(cfClient))
+  s.getCredentials.mockReturnValue(
+    Promise.resolve({ accessKeyId: "", secretAccessKey: "", sessionToken: "" }),
+  )
 
   allStacks.push(s)
   if (!status) {

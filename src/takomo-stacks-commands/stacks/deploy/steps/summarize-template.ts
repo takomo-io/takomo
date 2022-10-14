@@ -8,11 +8,10 @@ export const summarizeTemplate: StackOperationStep<
   const value = templateS3Url || templateBody
   const key = templateS3Url ? "TemplateURL" : "TemplateBody"
 
-  const templateSummary = await stack
-    .getCloudFormationClient()
-    .getTemplateSummary({
-      [key]: value,
-    })
+  const client = await stack.getCloudFormationClient()
+  const templateSummary = await client.getTemplateSummary({
+    [key]: value,
+  })
 
   return transitions.validateParameters({
     ...state,

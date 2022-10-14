@@ -104,7 +104,7 @@ const createDeploymentGroupResultMatcher = (
 
         expect(result.results).toHaveLength(prop.targetResults.length)
 
-        for (const [i, targetResult] of result.results.entries()) {
+        for (const [i, targetResult] of Array.from(result.results.entries())) {
           const expected =
             prop.unorderedTargets === true
               ? prop.targetResults.find((a) => a.name === targetResult.targetId)
@@ -134,7 +134,9 @@ const createDeploymentGroupResultMatcher = (
               expected.configSetResults.length,
             )
 
-            for (const [j, configSetResult] of targetResult.results.entries()) {
+            for (const [j, configSetResult] of Array.from(
+              targetResult.results.entries(),
+            )) {
               const expectedConfigSetResult = expected.configSetResults![j]
               expect(configSetResult.configSetName).toStrictEqual(
                 expectedConfigSetResult.configSet,
@@ -145,10 +147,9 @@ const createDeploymentGroupResultMatcher = (
                   expectedConfigSetResult.commandPathResults.length,
                 )
 
-                for (const [
-                  k,
-                  commandPathResult,
-                ] of configSetResult.results.entries()) {
+                for (const [k, commandPathResult] of Array.from(
+                  configSetResult.results.entries(),
+                )) {
                   const expectedCommandPathResult =
                     expectedConfigSetResult.commandPathResults![k]
 
@@ -167,10 +168,9 @@ const createDeploymentGroupResultMatcher = (
                       expectedCommandPathResult.stackResults.length,
                     )
 
-                    for (const [
-                      n,
-                      stackResult,
-                    ] of commandPathResult.result.results.entries()) {
+                    for (const [n, stackResult] of Array.from(
+                      commandPathResult.result.results.entries(),
+                    )) {
                       const expectedStackResult =
                         expectedCommandPathResult.stackResults![n]
 

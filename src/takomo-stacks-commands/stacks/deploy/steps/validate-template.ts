@@ -8,7 +8,8 @@ export const validateTemplate: StackOperationStep<
   const value = templateS3Url || templateBody
   const key = templateS3Url ? "TemplateURL" : "TemplateBody"
 
-  await stack.getCloudFormationClient().validateTemplate({
+  const client = await stack.getCloudFormationClient()
+  await client.validateTemplate({
     [key]: value,
   })
 

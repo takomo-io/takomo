@@ -97,9 +97,11 @@ export const waitChangeSetToBeReady: StackOperationStep<
     transitions,
     expectNoChanges,
   } = state
-  const changeSet = await stack
-    .getCloudFormationClient()
-    .waitUntilChangeSetIsReady(stack.name, changeSetName)
+  const client = await stack.getCloudFormationClient()
+  const changeSet = await client.waitUntilChangeSetIsReady(
+    stack.name,
+    changeSetName,
+  )
 
   const terminationProtectionChanged = currentStack
     ? currentStack.enableTerminationProtection !== stack.terminationProtection

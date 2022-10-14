@@ -407,9 +407,6 @@ export const buildStack = async (
     credentialManagers,
   )
 
-  const credentials = await credentialManager.getCredentials()
-  const identity = await credentialManager.getCallerIdentity()
-
   return await Promise.all(
     regions
       .filter((region) =>
@@ -419,14 +416,16 @@ export const buildStack = async (
       .map(async (region) => {
         const exactPath = `${stackPath}/${region}`
         const stackLogger = logger.childLogger(exactPath)
-        const cloudFormationClient =
-          await ctx.awsClientProvider.createCloudFormationClient({
+        const getCloudFormationClient = async () => {
+          const identity = await credentialManager.getCallerIdentity()
+          return ctx.awsClientProvider.createCloudFormationClient({
             credentialProvider: credentialManager.getCredentialProvider(),
             region,
             identity,
             id: exactPath,
             logger: stackLogger,
           })
+        }
 
         const schemas = await mergeStackSchemas(
           ctx,
@@ -450,14 +449,13 @@ export const buildStack = async (
           parameters,
           commandRole,
           credentialManager,
-          credentials,
           hooks,
           ignore,
           obsolete,
           terminationProtection,
           capabilities,
           accountIds,
-          cloudFormationClient,
+          getCloudFormationClient,
           stackPolicy,
           stackPolicyDuringUpdate,
           path: exactPath,

@@ -9,7 +9,8 @@ export const initiateStackDeletion: StackOperationStep<
 
   const clientToken = uuid()
 
-  await stack.getCloudFormationClient().initiateStackDeletion({
+  const client = await stack.getCloudFormationClient()
+  await client.initiateStackDeletion({
     StackName: currentStack.id,
     ClientRequestToken: clientToken,
   })

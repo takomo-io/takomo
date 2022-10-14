@@ -338,7 +338,8 @@ const createStackResultsMatcher = (
         )
       }
 
-      const { name, region, credentials } = actualStackResult.stack
+      const { name, region } = actualStackResult.stack
+      const credentials = await actualStackResult.stack.getCredentials()
 
       const { accountId } =
         await actualStackResult.stack.credentialManager.getCallerIdentity()

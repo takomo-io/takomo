@@ -14,7 +14,8 @@ export const initiateStackCreate: StackOperationStep<
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
   const capabilities = stack.capabilities?.slice() ?? defaultCapabilities
 
-  const stackId = await stack.getCloudFormationClient().createStack({
+  const client = await stack.getCloudFormationClient()
+  const stackId = await client.createStack({
     Capabilities: capabilities,
     ClientRequestToken: clientToken,
     DisableRollback: false,

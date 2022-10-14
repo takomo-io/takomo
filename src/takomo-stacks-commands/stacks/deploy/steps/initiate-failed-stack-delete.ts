@@ -8,7 +8,7 @@ export const initiateFailedStackDelete: StackOperationStep<
   const { transitions, stack, currentStack, logger } = state
   logger.info("Delete stack in failed state")
 
-  const client = stack.getCloudFormationClient()
+  const client = await stack.getCloudFormationClient()
   await client.updateTerminationProtection(stack.name, false)
 
   const deleteFailedStackClientToken = uuid()

@@ -18,6 +18,7 @@ import { HookExecutor } from "./hook"
 import { ResolverExecutor } from "./resolver"
 import { Schemas } from "./schemas"
 import { StackGroupName, StackGroupPath } from "./stack-group"
+import { CloudFormation } from "@aws-sdk/client-cloudformation"
 
 export type RawTagValue = string | number | boolean
 
@@ -61,13 +62,12 @@ export interface StackProps {
   data: Vars
   hooks: ReadonlyArray<HookExecutor>
   credentialManager: CredentialManager
-  credentials: Credentials
   capabilities?: ReadonlyArray<StackCapability>
   ignore: boolean
   obsolete: boolean
   terminationProtection: boolean
   logger: TkmLogger
-  cloudFormationClient: CloudFormationClient
+  getCloudFormationClient: () => Promise<CloudFormationClient>
   stackPolicy?: StackPolicyBody
   stackPolicyDuringUpdate?: StackPolicyBody
   schemas?: Schemas
@@ -125,7 +125,7 @@ export interface Stack {
   /**
    * Credentials associated with the stack
    */
-  readonly credentials: Credentials
+  readonly getCredentials: () => Promise<Credentials>
 
   /**
    * Logger instance associated with the stack
@@ -133,13 +133,12 @@ export interface Stack {
   readonly logger: TkmLogger
 
   /**
-   * Returns a client that can be used to invoke CloudFormation API using the
-   * credentials associated with the stack.
+   * Get CloudFormation client
    */
-  readonly getCloudFormationClient: () => CloudFormationClient
+  readonly getClient: () => Promise<CloudFormation>
 
   /**
-   * Returns the current CloudFormation stack matching the stack
+   * Get current CloudFormation stack
    */
   readonly getCurrentCloudFormationStack: () => Promise<
     CloudFormationStack | undefined
@@ -165,6 +164,7 @@ export interface InternalStack extends Stack {
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly schemas?: Schemas
+  readonly getCloudFormationClient: () => Promise<CloudFormationClient>
   readonly toProps: () => StackProps
 }
 
@@ -177,7 +177,6 @@ export const createStack = (props: StackProps): InternalStack => {
     capabilities,
     commandRole,
     credentialManager,
-    credentials,
     data,
     dependents,
     dependencies,
@@ -196,26 +195,30 @@ export const createStack = (props: StackProps): InternalStack => {
     templateBucket,
     terminationProtection,
     timeout,
-    cloudFormationClient,
+    getCloudFormationClient,
     stackPolicy,
     stackPolicyDuringUpdate,
     schemas,
   } = props
 
-  const getCloudFormationClient = () => cloudFormationClient
+  const getClient = async () =>
+    getCloudFormationClient().then((c) => c.getNativeClient())
 
   const getCurrentCloudFormationStack = () =>
-    getCloudFormationClient().describeStack(name)
+    getCloudFormationClient().then((c) => c.describeStack(name))
+
+  const getCredentials = () => credentialManager.getCredentials()
 
   return {
     accountIds,
     capabilities,
     commandRole,
-    credentials,
+    getCredentials,
     credentialManager,
     data,
     dependents,
     dependencies,
+    getClient,
     getCloudFormationClient,
     getCurrentCloudFormationStack,
     hooks,

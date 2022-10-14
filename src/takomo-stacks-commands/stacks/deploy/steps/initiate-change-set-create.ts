@@ -48,7 +48,8 @@ export const initiateChangeSetCreate: StackOperationStep<
     type: changeSetType,
   })
 
-  const changeSetId = await stack.getCloudFormationClient().createChangeSet({
+  const client = await stack.getCloudFormationClient()
+  const changeSetId = await client.createChangeSet({
     StackName: stack.name,
     ChangeSetType: changeSetType,
     [templateKey]: templateLocation,

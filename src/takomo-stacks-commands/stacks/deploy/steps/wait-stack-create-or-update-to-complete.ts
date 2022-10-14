@@ -22,9 +22,10 @@ export const waitStackCreateOrUpdateToComplete: StackOperationStep<
     },
   }
 
-  const { stackStatus, events } = await stack
-    .getCloudFormationClient()
-    .waitStackDeployToComplete(waitProps)
+  const client = await stack.getCloudFormationClient()
+  const { stackStatus, events } = await client.waitStackDeployToComplete(
+    waitProps,
+  )
 
   const success =
     stackStatus === "UPDATE_COMPLETE" || stackStatus === "CREATE_COMPLETE"
