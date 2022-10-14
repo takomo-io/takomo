@@ -1,6 +1,7 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { executeDeployStacksCommand } from "../../src/commands/stacks"
+import { pathToConfigs } from "../../src/util"
 
-const projectDir = `${process.cwd()}/integration-test/configs/obsolete-dependency`
+const projectDir = pathToConfigs("obsolete", "obsolete-dependency")
 
 describe("deploying stacks", () => {
   test("fails if stack depends on obsolete stack", () =>

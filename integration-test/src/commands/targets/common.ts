@@ -1,5 +1,5 @@
 import {
-  CredentialManager,
+  InternalCredentialManager,
   initDefaultCredentialManager,
 } from "../../../../src/takomo-aws-clients"
 import {
@@ -15,7 +15,7 @@ import { CreateCtxAndConfigRepositoryProps } from "../stacks"
 interface CtxAndConfigRepository {
   readonly ctx: InternalCommandContext
   readonly configRepository: DeploymentTargetsConfigRepository
-  readonly credentialManager: CredentialManager
+  readonly credentialManager: InternalCredentialManager
 }
 
 export interface CreateDeploymentTargetsCtxAndConfigRepositoryProps
@@ -26,7 +26,7 @@ export interface CreateDeploymentTargetsCtxAndConfigRepositoryProps
 
 export interface CreateTestDeploymentTargetsConfigRepositoryProps {
   readonly ctx: FileSystemCommandContext
-  readonly credentialManager: CredentialManager
+  readonly credentialManager: InternalCredentialManager
   readonly pathToDeploymentConfigFile?: string
 }
 

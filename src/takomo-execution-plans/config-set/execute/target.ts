@@ -1,4 +1,4 @@
-import { CredentialManager } from "../../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { ConfigSetContext } from "../../../takomo-config-sets"
 import {
   CommandOutput,
@@ -21,7 +21,7 @@ export interface ExecuteTargetProps<R extends CommandOutput, C> {
   readonly logger: TkmLogger
   readonly ctx: ConfigSetContext
   readonly timer: Timer
-  readonly defaultCredentialManager: CredentialManager
+  readonly defaultCredentialManager: InternalCredentialManager
 }
 
 export const executeTarget = async <R extends CommandOutput, C>({

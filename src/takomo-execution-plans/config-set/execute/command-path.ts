@@ -1,4 +1,4 @@
-import { CredentialManager } from "../../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { ConfigSet } from "../../../takomo-config-sets"
 import { CommandOutput, OperationState } from "../../../takomo-core"
 import { CommandPath } from "../../../takomo-stacks-model"
@@ -16,7 +16,7 @@ export interface ExecuteCommandPathProps<R extends CommandOutput, C> {
   readonly state: OperationState
   readonly executor: ConfigSetTargetExecutor<R, C>
   readonly logger: TkmLogger
-  readonly defaultCredentialManager: CredentialManager
+  readonly defaultCredentialManager: InternalCredentialManager
   readonly configSet: ConfigSet
 }
 

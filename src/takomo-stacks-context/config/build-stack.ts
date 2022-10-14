@@ -1,6 +1,9 @@
 import { AnySchema } from "joi"
 import R from "ramda"
-import { CredentialManager } from "../../takomo-aws-clients"
+import {
+  CredentialManager,
+  InternalCredentialManager,
+} from "../../takomo-aws-clients"
 import {
   AccountId,
   IamRoleArn,
@@ -322,8 +325,8 @@ export const buildHookConfigs = ({
 export const buildStack = async (
   ctx: CommandContext,
   logger: TkmLogger,
-  defaultCredentialManager: CredentialManager,
-  credentialManagers: Map<IamRoleArn, CredentialManager>,
+  defaultCredentialManager: InternalCredentialManager,
+  credentialManagers: Map<IamRoleArn, InternalCredentialManager>,
   resolverRegistry: ResolverRegistry,
   schemaRegistry: SchemaRegistry,
   hookRegistry: HookRegistry,

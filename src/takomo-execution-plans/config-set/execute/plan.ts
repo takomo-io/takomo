@@ -1,4 +1,4 @@
-import { CredentialManager } from "../../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { ConfigSetContext } from "../../../takomo-config-sets"
 import {
   CommandOutput,
@@ -24,7 +24,7 @@ export interface ExecuteConfigSetPlanProps<R extends CommandOutput, C> {
   readonly executor: ConfigSetTargetExecutor<R, C>
   readonly concurrentTargets: number
   readonly targetListenerProvider: ConfigSetTargetListenerProvider
-  readonly defaultCredentialManager: CredentialManager
+  readonly defaultCredentialManager: InternalCredentialManager
 }
 
 export const executeConfigSetPlan = async <R extends CommandOutput, C>({

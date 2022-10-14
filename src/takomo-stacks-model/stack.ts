@@ -1,5 +1,9 @@
 import { Credentials } from "@aws-sdk/types"
-import { CloudFormationClient, CredentialManager } from "../takomo-aws-clients"
+import {
+  CloudFormationClient,
+  CredentialManager,
+  InternalCredentialManager,
+} from "../takomo-aws-clients"
 import {
   AccountId,
   CloudFormationStack,
@@ -61,7 +65,7 @@ export interface StackProps {
   dependents: ReadonlyArray<StackPath>
   data: Vars
   hooks: ReadonlyArray<HookExecutor>
-  credentialManager: CredentialManager
+  credentialManager: InternalCredentialManager
   capabilities?: ReadonlyArray<StackCapability>
   ignore: boolean
   obsolete: boolean
@@ -165,6 +169,7 @@ export interface InternalStack extends Stack {
   readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly schemas?: Schemas
   readonly getCloudFormationClient: () => Promise<CloudFormationClient>
+  readonly credentialManager: InternalCredentialManager
   readonly toProps: () => StackProps
 }
 

@@ -1,6 +1,7 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { executeDeployStacksCommand } from "../../src/commands/stacks"
+import { pathToConfigs } from "../../src/util"
 
-const projectDir = `${process.cwd()}/integration-test/configs/obsolete-deploys`
+const projectDir = pathToConfigs("obsolete", "obsolete-deploys")
 
 describe("deploying obsolete stacks", () => {
   test("obsolete stacks are not deployed", () =>

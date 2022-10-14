@@ -1,5 +1,8 @@
 import R from "ramda"
-import { CredentialManager } from "../../takomo-aws-clients"
+import {
+  CredentialManager,
+  InternalCredentialManager,
+} from "../../takomo-aws-clients"
 import { IamRoleArn } from "../../takomo-aws-model"
 import { CommandContext } from "../../takomo-core"
 import { HookRegistry } from "../../takomo-stacks-hooks"
@@ -98,8 +101,8 @@ const populateChildrenAndStacks = (
 const processStackGroupConfigNode = async (
   ctx: CommandContext,
   logger: TkmLogger,
-  credentialManager: CredentialManager,
-  credentialManagers: Map<IamRoleArn, CredentialManager>,
+  credentialManager: InternalCredentialManager,
+  credentialManagers: Map<IamRoleArn, InternalCredentialManager>,
   resolverRegistry: ResolverRegistry,
   schemaRegistry: SchemaRegistry,
   hookRegistry: HookRegistry,
@@ -193,8 +196,8 @@ const processStackGroupConfigNode = async (
 export const processConfigTree = async (
   ctx: CommandContext,
   logger: TkmLogger,
-  credentialManager: CredentialManager,
-  credentialManagers: Map<IamRoleArn, CredentialManager>,
+  credentialManager: InternalCredentialManager,
+  credentialManagers: Map<IamRoleArn, InternalCredentialManager>,
   resolverRegistry: ResolverRegistry,
   schemaRegistry: SchemaRegistry,
   hookRegistry: HookRegistry,

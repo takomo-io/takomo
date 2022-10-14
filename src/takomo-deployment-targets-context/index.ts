@@ -1,4 +1,7 @@
-import { CredentialManager } from "../takomo-aws-clients"
+import {
+  CredentialManager,
+  InternalCredentialManager,
+} from "../takomo-aws-clients"
 import {
   ConfigSet,
   ConfigSetContext,
@@ -30,7 +33,7 @@ export interface DeploymentTargetsContext
   readonly deploymentConfig: DeploymentConfig
   readonly rootDeploymentGroups: ReadonlyArray<DeploymentGroupConfig>
   readonly logger: TkmLogger
-  readonly credentialManager: CredentialManager
+  readonly credentialManager: InternalCredentialManager
   readonly getDeploymentGroup: (
     path: DeploymentGroupPath,
   ) => DeploymentGroupConfig
@@ -43,7 +46,7 @@ interface CreateDeploymentTargetsContextProps {
   readonly ctx: InternalCommandContext
   readonly logger: TkmLogger
   readonly configRepository: DeploymentTargetsConfigRepository
-  readonly credentialManager: CredentialManager
+  readonly credentialManager: InternalCredentialManager
 }
 
 export const createDeploymentTargetsContext = async ({

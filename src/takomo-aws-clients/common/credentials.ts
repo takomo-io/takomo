@@ -54,11 +54,16 @@ export interface CredentialManager {
  * @hidden
  */
 export interface InternalCredentialManager extends CredentialManager {
+  readonly iamRoleArn?: IamRoleArn
   readonly children: Map<string, InternalCredentialManager>
+  readonly createCredentialManagerForRole: (
+    iamRoleArn: IamRoleArn,
+  ) => Promise<InternalCredentialManager>
 }
 
 interface CredentialManagerProps {
   readonly name: string
+  readonly iamRoleArn?: IamRoleArn
   readonly credentialProvider: CredentialProvider
   readonly awsClientProvider: AwsClientProvider
   readonly logger: TkmLogger
@@ -72,6 +77,7 @@ export const createCredentialManager = ({
   credentialProvider,
   logger,
   awsClientProvider,
+  iamRoleArn: cmIamRoleArn,
 }: CredentialManagerProps): InternalCredentialManager => {
   const children = new Map<string, InternalCredentialManager>()
 
@@ -81,8 +87,9 @@ export const createCredentialManager = ({
 
   const createCredentialManagerForRole = async (
     iamRoleArn: IamRoleArn,
-  ): Promise<CredentialManager> => {
+  ): Promise<InternalCredentialManager> => {
     const child = createCredentialManager({
+      iamRoleArn,
       name: `${name}/${iamRoleArn}`,
       awsClientProvider,
       logger,
@@ -130,6 +137,7 @@ export const createCredentialManager = ({
     getCallerIdentity,
     getCredentials,
     getCredentialProvider,
+    iamRoleArn: cmIamRoleArn,
   }
 }
 

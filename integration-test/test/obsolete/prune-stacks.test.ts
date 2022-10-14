@@ -1,9 +1,10 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../../src/commands/stacks"
+import { pathToConfigs } from "../../src/util"
 
-const projectDir = `${process.cwd()}/integration-test/configs/prune-stacks`
+const projectDir = pathToConfigs("obsolete", "prune-stacks")
 
 describe("prune obsolete stacks", () => {
   test("deploy all", () =>
