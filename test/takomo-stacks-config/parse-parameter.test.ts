@@ -1,4 +1,7 @@
-import { ParameterConfig } from "../../src/takomo-stacks-config"
+import {
+  ParameterConfig,
+  SingleParameterConfig,
+} from "../../src/takomo-stacks-config"
 import { parseParameter } from "../../src/takomo-stacks-config/parse-parameter"
 
 const singleParameterCases: Array<[unknown, ParameterConfig]> = [
@@ -263,7 +266,7 @@ describe("#parseParameter", () => {
     (value, expected) => {
       const config = parseParameter(value)
       if (!config.isList) {
-        expect(config.config).toStrictEqual(expected)
+        expect((config as SingleParameterConfig).config).toStrictEqual(expected)
       } else {
         fail("Expected config to be SingleParameterConfig")
       }
