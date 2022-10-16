@@ -1111,10 +1111,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.0.1"\
       ],\
       [\
-        "@types/glob",\
-        "npm:7.2.0"\
-      ],\
-      [\
         "@types/graceful-fs",\
         "npm:4.1.5"\
       ],\
@@ -1707,10 +1703,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.1.4"\
       ],\
       [\
-        "detect-indent",\
-        "npm:6.1.0"\
-      ],\
-      [\
         "detect-newline",\
         "npm:3.1.0"\
       ],\
@@ -1985,10 +1977,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "get-stream",\
         "npm:6.0.1"\
-      ],\
-      [\
-        "git-hooks-list",\
-        "npm:1.0.3"\
       ],\
       [\
         "git-raw-commits",\
@@ -3036,7 +3024,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "shiki",\
-        "npm:0.10.1"\
+        "npm:0.11.1"\
       ],\
       [\
         "signal-exit",\
@@ -3065,14 +3053,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "socks-proxy-agent",\
         "npm:7.0.0"\
-      ],\
-      [\
-        "sort-object-keys",\
-        "npm:1.1.3"\
-      ],\
-      [\
-        "sort-package-json",\
-        "npm:1.57.0"\
       ],\
       [\
         "source-map",\
@@ -3280,7 +3260,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "typedoc",\
-        "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.22.17"\
+        "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.23.16"\
       ],\
       [\
         "typescript",\
@@ -3360,7 +3340,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "vscode-textmate",\
-        "npm:5.2.0"\
+        "npm:6.0.0"\
       ],\
       [\
         "w3c-hr-time",\
@@ -3547,13 +3527,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ramda", "npm:0.28.0"],\
             ["readdirp", "npm:3.6.0"],\
             ["semver", "npm:7.3.7"],\
-            ["sort-package-json", "npm:1.57.0"],\
             ["source-map-support", "npm:0.5.21"],\
             ["strip-ansi", "npm:6.0.0"],\
             ["tmp", "npm:0.2.1"],\
             ["ts-dedent", "npm:2.2.0"],\
             ["ts-node", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:10.9.1"],\
-            ["typedoc", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.22.17"],\
+            ["typedoc", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.23.16"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=701156"],\
             ["uuid", "npm:8.3.2"],\
             ["yargs", "npm:17.0.1"]\
@@ -8793,17 +8772,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@types/glob", [\
-        ["npm:7.2.0", {\
-          "packageLocation": "./.yarn/cache/@types-glob-npm-7.2.0-772334bf9a-6ae717fedf.zip/node_modules/@types/glob/",\
-          "packageDependencies": [\
-            ["@types/glob", "npm:7.2.0"],\
-            ["@types/minimatch", "npm:5.1.2"],\
-            ["@types/node", "npm:18.8.3"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@types/graceful-fs", [\
         ["npm:4.1.5", {\
           "packageLocation": "./.yarn/cache/@types-graceful-fs-npm-4.1.5-91d62e1050-d076bb61f4.zip/node_modules/@types/graceful-fs/",\
@@ -8955,13 +8923,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-minimatch-npm-3.0.5-802bb0797f-c41d136f67.zip/node_modules/@types/minimatch/",\
           "packageDependencies": [\
             ["@types/minimatch", "npm:3.0.5"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:5.1.2", {\
-          "packageLocation": "./.yarn/cache/@types-minimatch-npm-5.1.2-aab9c394d3-0391a28286.zip/node_modules/@types/minimatch/",\
-          "packageDependencies": [\
-            ["@types/minimatch", "npm:5.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10880,15 +10841,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["detect-indent", [\
-        ["npm:6.1.0", {\
-          "packageLocation": "./.yarn/cache/detect-indent-npm-6.1.0-d8c441ff7a-ab953a73c7.zip/node_modules/detect-indent/",\
-          "packageDependencies": [\
-            ["detect-indent", "npm:6.1.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["detect-newline", [\
         ["npm:3.1.0", {\
           "packageLocation": "./.yarn/cache/detect-newline-npm-3.1.0-6d33fa8d37-ae6cd429c4.zip/node_modules/detect-newline/",\
@@ -11751,15 +11703,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["git-hooks-list", [\
-        ["npm:1.0.3", {\
-          "packageLocation": "./.yarn/cache/git-hooks-list-npm-1.0.3-6264e08e82-a1dd03d39c.zip/node_modules/git-hooks-list/",\
-          "packageDependencies": [\
-            ["git-hooks-list", "npm:1.0.3"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["git-raw-commits", [\
         ["npm:2.0.11", {\
           "packageLocation": "./.yarn/cache/git-raw-commits-npm-2.0.11-b090f2f684-c178af4363.zip/node_modules/git-raw-commits/",\
@@ -11847,21 +11790,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["globby", [\
-        ["npm:10.0.0", {\
-          "packageLocation": "./.yarn/cache/globby-npm-10.0.0-cb35d8adf9-fbff58d2fc.zip/node_modules/globby/",\
-          "packageDependencies": [\
-            ["globby", "npm:10.0.0"],\
-            ["@types/glob", "npm:7.2.0"],\
-            ["array-union", "npm:2.1.0"],\
-            ["dir-glob", "npm:3.0.1"],\
-            ["fast-glob", "npm:3.2.12"],\
-            ["glob", "npm:7.2.3"],\
-            ["ignore", "npm:5.2.0"],\
-            ["merge2", "npm:1.4.1"],\
-            ["slash", "npm:3.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:11.1.0", {\
           "packageLocation": "./.yarn/cache/globby-npm-11.1.0-bdcdf20c71-b4be8885e0.zip/node_modules/globby/",\
           "packageDependencies": [\
@@ -12381,13 +12309,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/is-plain-obj-npm-1.1.0-1046f64c0b-0ee0480779.zip/node_modules/is-plain-obj/",\
           "packageDependencies": [\
             ["is-plain-obj", "npm:1.1.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:2.1.0", {\
-          "packageLocation": "./.yarn/cache/is-plain-obj-npm-2.1.0-8dffd7ae9c-cec9100678.zip/node_modules/is-plain-obj/",\
-          "packageDependencies": [\
-            ["is-plain-obj", "npm:2.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -15148,13 +15069,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["shiki", [\
-        ["npm:0.10.1", {\
-          "packageLocation": "./.yarn/cache/shiki-npm-0.10.1-2c9519a6d0-fb746f3cb3.zip/node_modules/shiki/",\
+        ["npm:0.11.1", {\
+          "packageLocation": "./.yarn/cache/shiki-npm-0.11.1-b9c0a01cc1-2a4ebc3b46.zip/node_modules/shiki/",\
           "packageDependencies": [\
-            ["shiki", "npm:0.10.1"],\
+            ["shiki", "npm:0.11.1"],\
             ["jsonc-parser", "npm:3.2.0"],\
             ["vscode-oniguruma", "npm:1.6.2"],\
-            ["vscode-textmate", "npm:5.2.0"]\
+            ["vscode-textmate", "npm:6.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -15245,30 +15166,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["agent-base", "npm:6.0.2"],\
             ["debug", "virtual:57e0236e96705379df47070edacd8770cbe7ffeeeceaa4ff2f7da6d406821d9ea9e22a9f8f3a27f7bcc53423c9e923c2c164bb573c79e52a48d774f31275f918#npm:4.3.4"],\
             ["socks", "npm:2.7.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["sort-object-keys", [\
-        ["npm:1.1.3", {\
-          "packageLocation": "./.yarn/cache/sort-object-keys-npm-1.1.3-314a377026-abea944d67.zip/node_modules/sort-object-keys/",\
-          "packageDependencies": [\
-            ["sort-object-keys", "npm:1.1.3"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["sort-package-json", [\
-        ["npm:1.57.0", {\
-          "packageLocation": "./.yarn/cache/sort-package-json-npm-1.57.0-e9381da2ff-15758ba6b1.zip/node_modules/sort-package-json/",\
-          "packageDependencies": [\
-            ["sort-package-json", "npm:1.57.0"],\
-            ["detect-indent", "npm:6.1.0"],\
-            ["detect-newline", "npm:3.1.0"],\
-            ["git-hooks-list", "npm:1.0.3"],\
-            ["globby", "npm:10.0.0"],\
-            ["is-plain-obj", "npm:2.1.0"],\
-            ["sort-object-keys", "npm:1.1.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -15665,13 +15562,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ramda", "npm:0.28.0"],\
             ["readdirp", "npm:3.6.0"],\
             ["semver", "npm:7.3.7"],\
-            ["sort-package-json", "npm:1.57.0"],\
             ["source-map-support", "npm:0.5.21"],\
             ["strip-ansi", "npm:6.0.0"],\
             ["tmp", "npm:0.2.1"],\
             ["ts-dedent", "npm:2.2.0"],\
             ["ts-node", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:10.9.1"],\
-            ["typedoc", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.22.17"],\
+            ["typedoc", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.23.16"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=701156"],\
             ["uuid", "npm:8.3.2"],\
             ["yargs", "npm:17.0.1"]\
@@ -16099,23 +15995,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["typedoc", [\
-        ["npm:0.22.17", {\
-          "packageLocation": "./.yarn/cache/typedoc-npm-0.22.17-5938fc9393-3a2f492477.zip/node_modules/typedoc/",\
+        ["npm:0.23.16", {\
+          "packageLocation": "./.yarn/cache/typedoc-npm-0.23.16-fc7ce57bae-3574ee4a5f.zip/node_modules/typedoc/",\
           "packageDependencies": [\
-            ["typedoc", "npm:0.22.17"]\
+            ["typedoc", "npm:0.23.16"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.22.17", {\
-          "packageLocation": "./.yarn/__virtual__/typedoc-virtual-d0514a4452/0/cache/typedoc-npm-0.22.17-5938fc9393-3a2f492477.zip/node_modules/typedoc/",\
+        ["virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.23.16", {\
+          "packageLocation": "./.yarn/__virtual__/typedoc-virtual-1c322daf27/0/cache/typedoc-npm-0.23.16-fc7ce57bae-3574ee4a5f.zip/node_modules/typedoc/",\
           "packageDependencies": [\
-            ["typedoc", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.22.17"],\
+            ["typedoc", "virtual:433dc928b73894bbacaa893708322bce8891979caf16dfdf0919eef7232896cf4c0beff290422916f3de20af6f23665b4df7c4f61fd41c26d305c9fb46ff764b#npm:0.23.16"],\
             ["@types/typescript", null],\
-            ["glob", "npm:8.0.3"],\
             ["lunr", "npm:2.3.9"],\
             ["marked", "npm:4.1.1"],\
             ["minimatch", "npm:5.1.0"],\
-            ["shiki", "npm:0.10.1"],\
+            ["shiki", "npm:0.11.1"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=701156"]\
           ],\
           "packagePeers": [\
@@ -16338,10 +16233,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["vscode-textmate", [\
-        ["npm:5.2.0", {\
-          "packageLocation": "./.yarn/cache/vscode-textmate-npm-5.2.0-82267678b1-5449b42d45.zip/node_modules/vscode-textmate/",\
+        ["npm:6.0.0", {\
+          "packageLocation": "./.yarn/cache/vscode-textmate-npm-6.0.0-7ba9c4bb0b-ff6f17a406.zip/node_modules/vscode-textmate/",\
           "packageDependencies": [\
-            ["vscode-textmate", "npm:5.2.0"]\
+            ["vscode-textmate", "npm:6.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
