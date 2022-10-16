@@ -78,6 +78,7 @@ export const undeployStacksCommand: CommandHandler<
         ctx,
         logger: io,
         credentialManager,
+        validateCommandRoles: false,
       }),
     )
     .then((ctx) => undeployStacks(ctx, configRepository, io, input))

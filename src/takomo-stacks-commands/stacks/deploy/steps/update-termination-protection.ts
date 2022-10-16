@@ -6,9 +6,11 @@ export const updateTerminationProtection: StackOperationStep<
 > = async (state: UpdateStackHolder) => {
   const { stack, transitions, logger } = state
 
-  await stack
-    .getCloudFormationClient()
-    .updateTerminationProtection(stack.name, stack.terminationProtection)
+  const client = await stack.getCloudFormationClient()
+  await client.updateTerminationProtection(
+    stack.name,
+    stack.terminationProtection,
+  )
 
   logger.info("Termination protection updated")
 

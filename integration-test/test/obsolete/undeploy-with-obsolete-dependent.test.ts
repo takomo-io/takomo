@@ -1,9 +1,10 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../../src/commands/stacks"
+import { pathToConfigs } from "../../src/util"
 
-const projectDir = `${process.cwd()}/integration-test/configs/undeploy-with-obsolete-dependent`
+const projectDir = pathToConfigs("obsolete", "undeploy-with-obsolete-dependent")
 
 const primaryStack = {
   stackName: "primary",

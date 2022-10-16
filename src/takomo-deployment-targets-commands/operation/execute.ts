@@ -1,4 +1,4 @@
-import { CredentialManager } from "../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
 import { InternalCommandContext, OutputFormat } from "../../takomo-core"
 import {
   DeploymentTargetsConfigRepository,
@@ -39,7 +39,7 @@ const executeOperationInternal = async (
   operation: DeploymentOperation,
   input: StacksOperationInput,
   account: PlannedDeploymentTarget,
-  credentialManager: CredentialManager,
+  credentialManager: InternalCredentialManager,
   io: DeploymentTargetsOperationIO,
   ctx: InternalCommandContext,
   configRepository: StacksConfigRepository,

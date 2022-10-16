@@ -15,13 +15,12 @@ export const waitStackRollbackToComplete: StackOperationStep<
 
   const eventListener = R.curry(io.printStackEvent)(stack.path)
 
-  const { events, stackStatus } = await stack
-    .getCloudFormationClient()
-    .waitStackRollbackToComplete({
-      eventListener,
-      stackId: currentStack.id,
-      clientToken: continueStackRollbackClientToken,
-    })
+  const client = await stack.getCloudFormationClient()
+  const { events, stackStatus } = await client.waitStackRollbackToComplete({
+    eventListener,
+    stackId: currentStack.id,
+    clientToken: continueStackRollbackClientToken,
+  })
 
   if (stackStatus !== "UPDATE_ROLLBACK_COMPLETE") {
     return transitions.failStackOperation({
@@ -31,9 +30,7 @@ export const waitStackRollbackToComplete: StackOperationStep<
     })
   }
 
-  const updateStack = await stack
-    .getCloudFormationClient()
-    .getNotDeletedStack(stack.name)
+  const updateStack = await client.getNotDeletedStack(stack.name)
 
   return transitions.enrichCurrentStack({
     ...state,

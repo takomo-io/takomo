@@ -156,10 +156,6 @@ export const createDeployStacksIO = (
       marginTop: true,
     })
 
-    const stacksMap = new Map(
-      operations.map((o) => o.stack).map((s) => [s.path, s]),
-    )
-
     const maxStackPathLength = R.apply(
       Math.max,
       operations.map((o) => o.stack.path.length),
@@ -295,9 +291,8 @@ export const createDeployStacksIO = (
     )
 
     if (answer === "REVIEW_TEMPLATE") {
-      const currentTemplateBody = await stack
-        .getCloudFormationClient()
-        .getCurrentTemplate(stack.name)
+      const client = await stack.getCloudFormationClient()
+      const currentTemplateBody = await client.getCurrentTemplate(stack.name)
 
       const safeCurrentTemplateBody =
         ensureContentsEndsWithLineFeed(currentTemplateBody)

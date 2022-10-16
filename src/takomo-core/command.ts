@@ -3,6 +3,7 @@ import {
   AwsClientProvider,
   CredentialManager,
   InternalAwsClientProvider,
+  InternalCredentialManager,
 } from "../takomo-aws-clients"
 import { IamRoleArn, Region } from "../takomo-aws-model"
 import { FilePath, LogLevel, Timer, TkmLogger } from "../takomo-util"
@@ -251,7 +252,7 @@ export interface CommandHandlerArgs<
   readonly configRepository: C
   readonly io: I
   readonly input: IN
-  readonly credentialManager: CredentialManager
+  readonly credentialManager: InternalCredentialManager
 }
 
 /**

@@ -1,12 +1,12 @@
-import { CredentialManager } from "../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
 import { IamRoleArn } from "../../takomo-aws-model"
 import { CommandRole } from "../../takomo-core"
 
 export const getCredentialManager = async (
   commandRole: CommandRole | undefined,
-  defaultCredentialManager: CredentialManager,
-  credentialManagers: Map<IamRoleArn, CredentialManager>,
-): Promise<CredentialManager> => {
+  defaultCredentialManager: InternalCredentialManager,
+  credentialManagers: Map<IamRoleArn, InternalCredentialManager>,
+): Promise<InternalCredentialManager> => {
   if (!commandRole) {
     return defaultCredentialManager
   }

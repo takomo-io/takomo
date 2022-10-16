@@ -1,4 +1,7 @@
-import { CredentialManager } from "../../takomo-aws-clients"
+import {
+  CredentialManager,
+  InternalCredentialManager,
+} from "../../takomo-aws-clients"
 import { IamRoleArn } from "../../takomo-aws-model"
 import { InternalCommandContext } from "../../takomo-core"
 import { createHookRegistry } from "../../takomo-stacks-hooks"
@@ -31,9 +34,10 @@ export interface BuildConfigContextInput {
   readonly configRepository: StacksConfigRepository
   readonly ctx: InternalCommandContext
   readonly logger: TkmLogger
-  readonly credentialManager: CredentialManager
+  readonly credentialManager: InternalCredentialManager
   readonly commandPath?: CommandPath
   readonly ignoreDependencies?: boolean
+  readonly validateCommandRoles?: boolean
 }
 
 export const validateCommandPath = (
@@ -72,6 +76,7 @@ export const buildStacksContext = async ({
   credentialManager,
   commandPath,
   configRepository,
+  validateCommandRoles = true,
 }: BuildConfigContextInput): Promise<InternalStacksContext> => {
   logger.info("Load configuration")
 
@@ -101,7 +106,7 @@ export const buildStacksContext = async ({
     schemaRegistry,
   )
 
-  const credentialManagers = new Map<IamRoleArn, CredentialManager>()
+  const credentialManagers = new Map<IamRoleArn, InternalCredentialManager>()
   const templateEngine = configRepository.templateEngine
 
   const rootStackGroup = await processConfigTree(
@@ -121,9 +126,13 @@ export const buildStacksContext = async ({
   const stacks = collectStacks(stackGroups)
   const stacksByPath = arrayToMap(stacks, (s) => s.path)
 
-  await Promise.all(
-    Array.from(credentialManagers.values()).map((cm) => cm.getCallerIdentity()),
-  )
+  if (validateCommandRoles) {
+    await Promise.all(
+      Array.from(credentialManagers.values()).map((cm) =>
+        cm.getCallerIdentity(),
+      ),
+    )
+  }
 
   return {
     ...ctx,

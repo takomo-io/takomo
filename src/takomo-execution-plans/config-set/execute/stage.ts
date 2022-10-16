@@ -1,4 +1,4 @@
-import { CredentialManager } from "../../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { ConfigSetContext } from "../../../takomo-config-sets"
 import {
   CommandOutput,
@@ -25,7 +25,7 @@ interface ExecuteStageProps<R extends CommandOutput, C> {
   readonly currentStageNumber: number
   readonly stageCount: number
   readonly targetListenerProvider: ConfigSetTargetListenerProvider
-  readonly defaultCredentialManager: CredentialManager
+  readonly defaultCredentialManager: InternalCredentialManager
   readonly timer: Timer
 }
 

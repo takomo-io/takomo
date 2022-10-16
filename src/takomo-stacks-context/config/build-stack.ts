@@ -1,6 +1,9 @@
 import { AnySchema } from "joi"
 import R from "ramda"
-import { CredentialManager } from "../../takomo-aws-clients"
+import {
+  CredentialManager,
+  InternalCredentialManager,
+} from "../../takomo-aws-clients"
 import {
   AccountId,
   IamRoleArn,
@@ -322,8 +325,8 @@ export const buildHookConfigs = ({
 export const buildStack = async (
   ctx: CommandContext,
   logger: TkmLogger,
-  defaultCredentialManager: CredentialManager,
-  credentialManagers: Map<IamRoleArn, CredentialManager>,
+  defaultCredentialManager: InternalCredentialManager,
+  credentialManagers: Map<IamRoleArn, InternalCredentialManager>,
   resolverRegistry: ResolverRegistry,
   schemaRegistry: SchemaRegistry,
   hookRegistry: HookRegistry,
@@ -407,9 +410,6 @@ export const buildStack = async (
     credentialManagers,
   )
 
-  const credentials = await credentialManager.getCredentials()
-  const identity = await credentialManager.getCallerIdentity()
-
   return await Promise.all(
     regions
       .filter((region) =>
@@ -419,14 +419,16 @@ export const buildStack = async (
       .map(async (region) => {
         const exactPath = `${stackPath}/${region}`
         const stackLogger = logger.childLogger(exactPath)
-        const cloudFormationClient =
-          await ctx.awsClientProvider.createCloudFormationClient({
+        const getCloudFormationClient = async () => {
+          const identity = await credentialManager.getCallerIdentity()
+          return ctx.awsClientProvider.createCloudFormationClient({
             credentialProvider: credentialManager.getCredentialProvider(),
             region,
             identity,
             id: exactPath,
             logger: stackLogger,
           })
+        }
 
         const schemas = await mergeStackSchemas(
           ctx,
@@ -450,14 +452,13 @@ export const buildStack = async (
           parameters,
           commandRole,
           credentialManager,
-          credentials,
           hooks,
           ignore,
           obsolete,
           terminationProtection,
           capabilities,
           accountIds,
-          cloudFormationClient,
+          getCloudFormationClient,
           stackPolicy,
           stackPolicyDuringUpdate,
           path: exactPath,

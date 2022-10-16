@@ -1,4 +1,7 @@
-import { CredentialManager } from "../../takomo-aws-clients"
+import {
+  CredentialManager,
+  InternalCredentialManager,
+} from "../../takomo-aws-clients"
 import {
   ConfigSet,
   ConfigSetName,
@@ -57,7 +60,7 @@ export interface ConfigSetPlanExecutionResult<R extends CommandOutput>
 export interface ConfigSetTargetExecutorProps<C> {
   readonly state: OperationState
   readonly target: ConfigSetExecutionTarget<C>
-  readonly defaultCredentialManager: CredentialManager
+  readonly defaultCredentialManager: InternalCredentialManager
   readonly commandPath: CommandPath
   readonly timer: Timer
   readonly configSet: ConfigSet

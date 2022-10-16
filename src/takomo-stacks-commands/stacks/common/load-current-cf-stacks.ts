@@ -6,17 +6,24 @@ import {
 import { getStackNames, InternalStack } from "../../../takomo-stacks-model"
 import { arrayToMap, checksum, TkmLogger } from "../../../takomo-util"
 
-const makeCredentialsRegionHash = ({
-  region,
-  credentials: { accessKeyId, secretAccessKey, sessionToken },
-}: InternalStack): string =>
-  checksum([region, accessKeyId, secretAccessKey, sessionToken].join(":"))
+const makeCredentialsRegionHash = async (
+  stack: InternalStack,
+): Promise<string> => {
+  const { accessKeyId, secretAccessKey, sessionToken } =
+    await stack.getCredentials()
+
+  return checksum(
+    [stack.region, accessKeyId, secretAccessKey, sessionToken].join(":"),
+  )
+}
 
 const loadCfStacks = (
   stacks: ReadonlyArray<InternalStack>,
 ): Promise<Map<StackName, CloudFormationStackSummary>> => {
   const stackNames = getStackNames(stacks)
-  return stacks[0].getCloudFormationClient().listNotDeletedStacks(stackNames)
+  return stacks[0]
+    .getCloudFormationClient()
+    .then((client) => client.listNotDeletedStacks(stackNames))
 }
 
 export interface StackPair {
@@ -24,14 +31,40 @@ export interface StackPair {
   readonly current?: CloudFormationStackSummary
 }
 
+const buildHashStackMap = (
+  stackHashPairs: ReadonlyArray<[string, InternalStack]>,
+): Map<string, InternalStack[]> => {
+  const stackHashMap = new Map<string, InternalStack[]>()
+  stackHashPairs.forEach(([hash, stack]) => {
+    const stacks = stackHashMap.get(hash)
+    if (stacks) {
+      stacks.push(stack)
+    } else {
+      stackHashMap.set(hash, [stack])
+    }
+  })
+
+  return stackHashMap
+}
+
 export const loadCurrentCfStacks = async (
   logger: TkmLogger,
   stacks: ReadonlyArray<InternalStack>,
 ): Promise<ReadonlyArray<StackPair>> => {
   logger.info("Load current stacks")
-  const stacksByHash = R.groupBy(makeCredentialsRegionHash, stacks)
+
+  const stackHashPairs: ReadonlyArray<[string, InternalStack]> =
+    await Promise.all(
+      stacks.map(async (stack) => {
+        const hash = await makeCredentialsRegionHash(stack)
+        return [hash, stack]
+      }),
+    )
+
+  const stackHashMap = buildHashStackMap(stackHashPairs)
+
   const pairs = await Promise.all(
-    Object.values(stacksByHash).map(async (stacks) => {
+    Array.from(stackHashMap.values()).map(async (stacks) => {
       const cfStacks = await loadCfStacks(stacks)
       return stacks.map((stack) => ({
         stack,

@@ -1,5 +1,5 @@
 import { IPolicy, Policy } from "cockatiel"
-import { CredentialManager } from "../../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { ConfigSetContext } from "../../../takomo-config-sets"
 import {
   CommandOutput,
@@ -31,7 +31,7 @@ interface ConvertToOperationProps<R extends CommandOutput, C> {
   readonly logger: TkmLogger
   readonly ctx: ConfigSetContext
   readonly executor: ConfigSetTargetExecutor<R, C>
-  readonly defaultCredentialManager: CredentialManager
+  readonly defaultCredentialManager: InternalCredentialManager
 }
 
 const convertToOperation =
@@ -74,7 +74,7 @@ export interface ExecuteGroupProps<R extends CommandOutput, C> {
   readonly ctx: ConfigSetContext
   readonly executor: ConfigSetTargetExecutor<R, C>
   readonly concurrentTargets: number
-  readonly defaultCredentialManager: CredentialManager
+  readonly defaultCredentialManager: InternalCredentialManager
 }
 
 export const executeGroup = async <R extends CommandOutput, C>({

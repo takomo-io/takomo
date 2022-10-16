@@ -6,9 +6,8 @@ export const enrichCurrentStack: StackOperationStep<
 > = async (state) => {
   const { stack, transitions, currentStack } = state
 
-  const detailedStack = await stack
-    .getCloudFormationClient()
-    .enrichStackSummary(currentStack)
+  const client = await stack.getCloudFormationClient()
+  const detailedStack = await client.enrichStackSummary(currentStack)
 
   return transitions.executeBeforeDeployHooks({
     ...state,

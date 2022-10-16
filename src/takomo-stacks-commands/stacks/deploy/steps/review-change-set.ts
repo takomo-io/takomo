@@ -28,7 +28,7 @@ export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (
     changeSet,
   )
 
-  const cloudFormationClient = stack.getCloudFormationClient()
+  const cloudFormationClient = await stack.getCloudFormationClient()
 
   if (answer === "CANCEL") {
     if (changeSet && !currentStack) {

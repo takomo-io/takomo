@@ -1,9 +1,10 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../../src/commands/stacks"
+import { pathToConfigs } from "../../src/util"
 
-const projectDir = `${process.cwd()}/integration-test/configs/undeploy`
+const projectDir = pathToConfigs("undeploy", "simple")
 const stacks = [
   {
     stackPath: "/foo.yml/eu-west-1",

@@ -1,9 +1,10 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../../src/commands/stacks"
+import { pathToConfigs } from "../../src/util"
 
-const projectDir = `${process.cwd()}/integration-test/configs/prune-stacks-complex`
+const projectDir = pathToConfigs("obsolete", "prune-stacks-complex")
 
 const stack1 = {
   stackName: "hello-1",

@@ -9,13 +9,13 @@ export const waitStackDeleteToComplete: StackOperationStep<
 
   const eventListener = R.curry(io.printStackEvent)(stack.path)
 
-  const { events, stackStatus } = await stack
-    .getCloudFormationClient()
-    .waitStackDeleteToComplete({
-      clientToken,
-      eventListener,
-      stackId: currentStack.id,
-    })
+  const client = await stack.getCloudFormationClient()
+
+  const { events, stackStatus } = await client.waitStackDeleteToComplete({
+    clientToken,
+    eventListener,
+    stackId: currentStack.id,
+  })
 
   if (stackStatus !== "DELETE_COMPLETE") {
     return transitions.executeAfterUndeployHooks({
