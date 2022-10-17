@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('../.pnp.cjs').setup()
 var semver = require("semver")
 var requiredVersion = "16.17.0"
 if (!semver.satisfies(process.version, ">=" + requiredVersion)) {
@@ -17,4 +18,5 @@ if (!semver.satisfies(process.version, ">=" + requiredVersion)) {
     process.exit(1)
 }
 
-require('../dist/index.js');
+const { run } = require('../dist/index.js')
+run()

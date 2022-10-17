@@ -5,6 +5,7 @@ import {
   Cache,
   CommandContext,
   DeploymentTargetRepositoryConfig,
+  InternalCommandContext,
 } from "../takomo-core"
 import { DeploymentTargetConfig } from "../takomo-deployment-targets-config"
 import {
@@ -33,7 +34,7 @@ export interface DeploymentTargetRepository {
 
 export interface InitDeploymentTargetRepositoryProps {
   readonly config: DeploymentTargetRepositoryConfig
-  readonly ctx: CommandContext
+  readonly ctx: InternalCommandContext
   readonly templateEngine: TemplateEngine
   readonly logger: TkmLogger
   readonly credentialManager: CredentialManager

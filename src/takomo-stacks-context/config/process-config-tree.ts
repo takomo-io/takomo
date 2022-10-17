@@ -1,10 +1,7 @@
 import R from "ramda"
-import {
-  CredentialManager,
-  InternalCredentialManager,
-} from "../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
 import { IamRoleArn } from "../../takomo-aws-model"
-import { CommandContext } from "../../takomo-core"
+import { InternalCommandContext } from "../../takomo-core"
 import { HookRegistry } from "../../takomo-stacks-hooks"
 import {
   CommandPath,
@@ -61,15 +58,6 @@ export class ProcessStatus {
     return stackGroup
   }
 
-  getStack = (path: StackPath): InternalStack => {
-    const stack = this.#stacks.get(path)
-    if (!stack) {
-      throw new Error(`Stack '${path}' is not processed`)
-    }
-
-    return stack
-  }
-
   getNewlyProcessedStacks = (): InternalStack[] =>
     Array.from(this.#newStacks.values())
   getStackGroups = (): StackGroup[] => Array.from(this.#stackGroups.values())
@@ -99,7 +87,7 @@ const populateChildrenAndStacks = (
 }
 
 const processStackGroupConfigNode = async (
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   logger: TkmLogger,
   credentialManager: InternalCredentialManager,
   credentialManagers: Map<IamRoleArn, InternalCredentialManager>,
@@ -194,7 +182,7 @@ const processStackGroupConfigNode = async (
 }
 
 export const processConfigTree = async (
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   logger: TkmLogger,
   credentialManager: InternalCredentialManager,
   credentialManagers: Map<IamRoleArn, InternalCredentialManager>,

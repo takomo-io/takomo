@@ -7,6 +7,9 @@ import { stacksCmd } from "./stacks"
 
 export { initCommandContext } from "./common"
 
+/**
+ * @hidden
+ */
 export const run = (props: RunProps = { showHelpOnFail: true }): void => {
   yargs
     .command(stacksCmd(props))

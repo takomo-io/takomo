@@ -17,8 +17,6 @@ import {
   OrganizationsClient,
 } from "./organizations/client"
 import { createS3Client, S3Client } from "./s3/client"
-import { createSecretsClient, SecretsClient } from "./secrets/client"
-import { createSsmClient, SsmClient } from "./ssm/client"
 import { createStsClient, StsClient } from "./sts/client"
 
 const makeIdentityRegionHash = (
@@ -35,10 +33,6 @@ export interface AwsClientProvider {
   ) => Promise<CloudTrailClient>
   readonly createS3Client: (props: AwsClientProps) => Promise<S3Client>
   readonly createStsClient: (props: AwsClientProps) => Promise<StsClient>
-  readonly createSsmClient: (props: AwsClientProps) => Promise<SsmClient>
-  readonly createSecretsClient: (
-    props: AwsClientProps,
-  ) => Promise<SecretsClient>
   readonly createOrganizationsClient: (
     props: AwsClientProps,
   ) => Promise<OrganizationsClient>
@@ -158,24 +152,6 @@ export const createAwsClientProvider = ({
     },
     createStsClient: async (props: AwsClientProps): Promise<StsClient> => {
       const client = createStsClient({
-        ...props,
-        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
-      })
-      regions.add(props.region)
-      return client
-    },
-    createSsmClient: async (props: AwsClientProps): Promise<SsmClient> => {
-      const client = createSsmClient({
-        ...props,
-        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
-      })
-      regions.add(props.region)
-      return client
-    },
-    createSecretsClient: async (
-      props: AwsClientProps,
-    ): Promise<SecretsClient> => {
-      const client = createSecretsClient({
         ...props,
         middleware: createApiRequestListenerPlugin(logger, props.id, listener),
       })

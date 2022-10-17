@@ -9,6 +9,10 @@ import {
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
 import { TkmLogger } from "../takomo-util"
+import {
+  GetSecretValueCommand,
+  SecretsManagerClient,
+} from "@aws-sdk/client-secrets-manager"
 
 const parseSecret = (logger: TkmLogger, secretValue: string): unknown => {
   try {
@@ -60,18 +64,20 @@ const init = async (props: any): Promise<Resolver> => ({
       },
     )
 
-    const secretsClient = await ctx.awsClientProvider.createSecretsClient({
-      credentialProvider: credentialManager.getCredentialProvider(),
+    const client = new SecretsManagerClient({
       region,
-      logger,
-      id: "secret",
+      credentials: credentialManager.getCredentialProvider(),
     })
 
-    const secretValue = await secretsClient.getSecretValue({
-      secretId: props.secretId,
-      versionId: props.versionId,
-      versionStage: props.versionStage,
-    })
+    const secretValue = await client
+      .send(
+        new GetSecretValueCommand({
+          SecretId: props.secretId,
+          VersionId: props.versionId,
+          VersionStage: props.versionStage,
+        }),
+      )
+      .then((r) => r.SecretString!)
 
     if (!props.query) {
       return secretValue

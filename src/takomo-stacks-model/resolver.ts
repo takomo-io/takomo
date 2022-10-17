@@ -3,7 +3,6 @@ import { IamRoleArn, StackParameterKey } from "../takomo-aws-model"
 import { CommandContext } from "../takomo-core"
 import { TkmLogger } from "../takomo-util"
 import { StackOperationVariables } from "./command"
-import { GetterOrConst } from "./common"
 import { StacksContext } from "./context"
 import { Stack, StackPath } from "./stack"
 
@@ -31,7 +30,7 @@ export interface Resolver {
    * The stacks are added to the list of stacks that the stack where this
    * resolver is used depends on.
    */
-  readonly dependencies?: GetterOrConst<StackPath[]>
+  readonly dependencies?: StackPath[] | (() => StackPath[])
 
   /**
    * An optional list of IAM roles needed to resolve the parameter value.
@@ -39,13 +38,13 @@ export interface Resolver {
    * The credentials used to deploy the stack that uses this resolver must
    * have sufficient permissions to assume the listed IAM roles.
    */
-  readonly iamRoleArns?: GetterOrConst<IamRoleArn[]>
+  readonly iamRoleArns?: IamRoleArn[] | (() => IamRoleArn[])
 
   /**
    * An optional boolean indicating whether the resolved parameter value
    * is confidential and should be concealed from the logs.
    */
-  readonly confidential?: GetterOrConst<boolean>
+  readonly confidential?: boolean | (() => boolean)
 }
 
 /**

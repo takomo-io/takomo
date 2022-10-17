@@ -47,6 +47,8 @@ export {
   StackDriftStatus,
   StackEvent,
   StackId,
+  StackDriftInformation,
+  BaseCloudFormationStack,
   StackName,
   StackOutput,
   StackOutputDescription,

@@ -46,24 +46,6 @@ export interface StackOperationVariables extends Variables {
   readonly hooks: HookOutputValues
 }
 
-/**
- * Type representing either a function that returns a value
- * or a constant value.
- */
-type GetterOrConst<T> = () => T | T
-
-const getValue = <T>(defaultValue: T, value?: GetterOrConst<T>): T => {
-  if (value === undefined) {
-    return defaultValue
-  }
-
-  if (typeof value === "function") {
-    return value()
-  }
-
-  return value
-}
-
 export class SingleResolverExecutor implements ResolverExecutor {
   readonly #name: ResolverName
   readonly #resolver: Resolver
@@ -90,18 +72,48 @@ export class SingleResolverExecutor implements ResolverExecutor {
   isConfidential = (): boolean => {
     if (this.#confidential === true) {
       return true
-    } else if (this.#confidential === false) {
+    }
+
+    if (this.#confidential === false) {
       return false
     }
 
-    return getValue(false, this.#resolver.confidential)
+    if (this.#resolver.confidential === undefined) {
+      return false
+    }
+
+    if (typeof this.#resolver.confidential === "function") {
+      return this.#resolver.confidential()
+    }
+
+    return this.#resolver.confidential
   }
 
   isImmutable = (): boolean => this.#immutable
 
-  getIamRoleArns = (): IamRoleArn[] => getValue([], this.#resolver.iamRoleArns)
+  getIamRoleArns = (): IamRoleArn[] => {
+    if (!this.#resolver.iamRoleArns) {
+      return []
+    }
 
-  getDependencies = (): StackPath[] => getValue([], this.#resolver.dependencies)
+    if (typeof this.#resolver.iamRoleArns === "function") {
+      return this.#resolver.iamRoleArns()
+    }
+
+    return this.#resolver.iamRoleArns
+  }
+
+  getDependencies = (): StackPath[] => {
+    if (!this.#resolver.dependencies) {
+      return []
+    }
+
+    if (typeof this.#resolver.dependencies === "function") {
+      return this.#resolver.dependencies()
+    }
+
+    return this.#resolver.dependencies
+  }
 
   getName = (): ResolverName => this.#name
 

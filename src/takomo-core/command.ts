@@ -31,9 +31,6 @@ export interface CommandRole {
   readonly iamRoleArn: IamRoleArn
 }
 
-/**
- * @hidden
- */
 export type OutputFormat = "text" | "json" | "yaml"
 
 /**
@@ -211,11 +208,6 @@ export interface CommandContext {
    * Project configuration.
    */
   readonly projectConfig: TakomoProjectConfig
-
-  /**
-   * AWS client provider.
-   */
-  readonly awsClientProvider: AwsClientProvider
 
   /**
    * Show command to generate IAM policies.
