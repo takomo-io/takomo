@@ -1,9 +1,6 @@
 import { AnySchema } from "joi"
 import R from "ramda"
-import {
-  CredentialManager,
-  InternalCredentialManager,
-} from "../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
 import {
   AccountId,
   IamRoleArn,
@@ -14,7 +11,13 @@ import {
   TagKey,
 } from "../../takomo-aws-model"
 import { createAwsSchemas } from "../../takomo-aws-schema"
-import { CommandContext, CommandRole, Project, Vars } from "../../takomo-core"
+import {
+  CommandContext,
+  CommandRole,
+  InternalCommandContext,
+  Project,
+  Vars,
+} from "../../takomo-core"
 import { StackConfig, TemplateConfig } from "../../takomo-stacks-config"
 import { HookRegistry } from "../../takomo-stacks-hooks"
 import {
@@ -323,7 +326,7 @@ export const buildHookConfigs = ({
 }
 
 export const buildStack = async (
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   logger: TkmLogger,
   defaultCredentialManager: InternalCredentialManager,
   credentialManagers: Map<IamRoleArn, InternalCredentialManager>,

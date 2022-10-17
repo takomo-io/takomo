@@ -2,7 +2,7 @@ import { basename, join } from "path"
 import R from "ramda"
 import { CredentialManager } from "../../takomo-aws-clients"
 import { ConfigSetName } from "../../takomo-config-sets"
-import { Cache, CommandContext } from "../../takomo-core"
+import { Cache, InternalCommandContext } from "../../takomo-core"
 import {
   buildDeploymentConfig,
   DeploymentConfig,
@@ -56,7 +56,7 @@ const resolveConfigFilePath = (
     : join(deploymentDir, pathToConfigFile)
 
 const initDeploymentTargetsRepositories = async (
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   logger: TkmLogger,
   templateEngine: TemplateEngine,
   credentialManager: CredentialManager,
@@ -95,7 +95,7 @@ const initDeploymentTargetsRepositories = async (
 }
 
 const loadExternallyPersistedDeploymentTargets = async (
-  ctx: CommandContext,
+  ctx: InternalCommandContext,
   logger: TkmLogger,
   templateEngine: TemplateEngine,
   credentialManager: CredentialManager,

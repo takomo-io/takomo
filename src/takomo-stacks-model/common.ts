@@ -1,10 +1,4 @@
 /**
- * Type representing either a function that returns a value
- * or a constant value.
- */
-export type GetterOrConst<T> = () => T | T
-
-/**
  * @hidden
  */
 export interface TimeoutConfig {

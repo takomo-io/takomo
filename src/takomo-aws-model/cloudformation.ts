@@ -188,7 +188,7 @@ export interface DetailedCloudFormationStackSummary
   readonly templateDescription: TemplateDescription
 }
 
-interface BaseCloudFormationStack<P> extends CloudFormationStackSummary {
+export interface BaseCloudFormationStack<P> extends CloudFormationStackSummary {
   readonly parameters: ReadonlyArray<P>
   readonly capabilities: ReadonlyArray<StackCapability>
   readonly enableTerminationProtection: EnableTerminationProtection

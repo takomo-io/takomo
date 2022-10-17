@@ -7,7 +7,10 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
-import { uuid } from "../takomo-util"
+import {
+  CloudFormationClient,
+  DescribeStacksCommand,
+} from "@aws-sdk/client-cloudformation"
 
 const init = async (props: any): Promise<Resolver> => {
   return {
@@ -37,29 +40,30 @@ const init = async (props: any): Promise<Resolver> => {
         },
       )
 
-      const identity = await credentialManager.getCallerIdentity()
-
-      const cf = await ctx.awsClientProvider.createCloudFormationClient({
-        credentialProvider: credentialManager.getCredentialProvider(),
+      const client = new CloudFormationClient({
         region,
-        logger,
-        identity,
-        id: uuid(),
+        credentials: credentialManager.getCredentialProvider(),
       })
 
-      const cfStack = await cf.describeStack(props.stack)
-      if (!cfStack) {
+      const { Stacks = [] } = await client.send(
+        new DescribeStacksCommand({ StackName: props.stack }),
+      )
+
+      if (Stacks.length === 0) {
         throw new Error(`No such stack: ${props.stack}`)
       }
 
-      const output = cfStack.outputs.find((o) => o.key === props.output)
-      if (!output) {
+      const output = (Stacks[0].Outputs ?? []).find(
+        (o) => o.OutputKey === props.output,
+      )
+
+      if (!output?.OutputValue) {
         throw new Error(
           `Stack ${props.stack} does not have output: ${props.output}`,
         )
       }
 
-      return output.value
+      return output.OutputValue
     },
   }
 }

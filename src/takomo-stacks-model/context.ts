@@ -1,5 +1,5 @@
 import { CredentialManager } from "../takomo-aws-clients"
-import { CommandContext } from "../takomo-core"
+import { CommandContext, InternalCommandContext } from "../takomo-core"
 import { TemplateEngine } from "../takomo-util"
 import { InternalStack, Stack, StackPath } from "./stack"
 import { StackGroup, StackGroupPath } from "./stack-group"
@@ -42,7 +42,7 @@ export interface StacksContext extends CommandContext {
 /**
  * @hidden
  */
-export interface InternalStacksContext extends CommandContext {
+export interface InternalStacksContext extends InternalCommandContext {
   readonly concurrentStacks: number
   readonly credentialManager: CredentialManager
   readonly templateEngine: TemplateEngine

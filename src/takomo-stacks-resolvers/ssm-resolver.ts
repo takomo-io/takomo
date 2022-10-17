@@ -7,6 +7,7 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
+import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm"
 
 const init = async (props: any): Promise<Resolver> => ({
   iamRoleArns: (): IamRoleArn[] =>
@@ -33,14 +34,14 @@ const init = async (props: any): Promise<Resolver> => ({
       },
     )
 
-    const ssm = await ctx.awsClientProvider.createSsmClient({
-      credentialProvider: credentialManager.getCredentialProvider(),
+    const client = new SSMClient({
       region,
-      logger,
-      id: "ssm",
+      credentials: credentialManager.getCredentialProvider(),
     })
 
-    return ssm.getParameterValue(props.name)
+    return client
+      .send(new GetParameterCommand({ Name: props.name, WithDecryption: true }))
+      .then((r) => r.Parameter!.Value!)
   },
 })
 
