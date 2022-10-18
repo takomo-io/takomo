@@ -29,7 +29,10 @@
     "tkm": "bin/tkm"
   },
   "files": [
-    "dist"
+    "dist",
+    ".pnp.cjs",
+    ".pnp.loader.mjs",
+    ".yarn/cache/install-state.gz"
   ],
   "engines": {
     "node": ">=16.17.0"
@@ -111,7 +114,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "husky": "8.0.1",
     "jest": "27.4.7",
-    "jest-environment-testenv-recycler": "0.0.17",
+    "jest-environment-testenv-recycler": "0.0.18",
     "jest-mock-extended": "2.0.4",
     "lint-staged": "12.4.1",
     "prettier": "2.7.0",

@@ -6759,13 +6759,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-environment-testenv-recycler@npm:0.0.17":
-  version: 0.0.17
-  resolution: "jest-environment-testenv-recycler@npm:0.0.17"
+"jest-environment-testenv-recycler@npm:0.0.18":
+  version: 0.0.18
+  resolution: "jest-environment-testenv-recycler@npm:0.0.18"
   dependencies:
     jest-environment-node: 27.4.4
-    testenv-recycler: 0.0.14
-  checksum: ea6d90ed83046c0879dea452843051d4cea872aae91e205ccedd8df96c3ac33b43201766473e5d83278e381d0e57442b052138628a3426f2463f791718082e7a
+    testenv-recycler: 0.0.15
+  checksum: 972e32c0cde3286151b4c48f9ba5b0ea258942228f725226c8c5a98180921b694c7ab2eb3f6bab229bacf564fd4abee178d3e873fa72b389baed19b4953c7edd
   languageName: node
   linkType: hard
 
@@ -9350,7 +9350,7 @@ __metadata:
     inquirer: 8.1.2
     inquirer-autocomplete-prompt: 1.4.0
     jest: 27.4.7
-    jest-environment-testenv-recycler: 0.0.17
+    jest-environment-testenv-recycler: 0.0.18
     jest-mock-extended: 2.0.4
     jmespath: 0.16.0
     joi: 17.6.0
@@ -9418,10 +9418,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"testenv-recycler@npm:0.0.14":
-  version: 0.0.14
-  resolution: "testenv-recycler@npm:0.0.14"
-  checksum: f832b5b5655297fff392058ee84d58beb2fd0b76a287c34deaf447f28c3bf79ac035f21ed650624ec6648599d5405ba9f0983e90aeedf1570a839ea1b189436e
+"testenv-recycler@npm:0.0.15":
+  version: 0.0.15
+  resolution: "testenv-recycler@npm:0.0.15"
+  checksum: 5d0436d5842adc13a46b554b7205337157f4b75fdabb293483cee70e4c87a6f52ed2d3fb8d84456d6a30fc4e372613041273c21b3bf173d3d97b62e331ace098
   languageName: node
   linkType: hard
 
