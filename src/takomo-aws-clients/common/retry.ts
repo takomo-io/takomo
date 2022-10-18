@@ -5,7 +5,11 @@ import {
 import { RetryStrategy } from "@aws-sdk/types"
 import { randomInt } from "../../takomo-util"
 
-const ADDITIONAL_RETRYABLE_ERROR_CODES = ["UnknownEndpoint", "NetworkingError"]
+const ADDITIONAL_RETRYABLE_ERROR_CODES = [
+  "UnknownEndpoint",
+  "NetworkingError",
+  "TimeoutError",
+]
 
 /**
  * @hidden
