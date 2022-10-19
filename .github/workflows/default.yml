@@ -7,10 +7,8 @@ on:
     branches:
       - feature/**
       - feat/**
-      - release/**
       - fix/**
       - chore/**
-      - master
 
 env:
 
@@ -31,12 +29,12 @@ jobs:
         id: node_modules
         with:
           path: node_modules
-          key: npm-${{ hashFiles('yarn.lock') }}
+          key: npm-${{ hashFiles('package-lock.json') }}
       - name: Install dependencies
         if: steps.node_modules.outputs.cache-hit != 'true'
-        run: yarn install
+        run: npm install
       - name: Build
-        run: yarn build
+        run: npm run build
       - uses: actions/cache@v3
         with:
           path: |
@@ -54,13 +52,13 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: node_modules
-          key: npm-${{ hashFiles('yarn.lock') }}
+          key: npm-${{ hashFiles('package-lock.json') }}
       - uses: actions/cache@v3
         with:
           path: |
             dist
           key: packages-${{ github.sha }}
-      - run: yarn test
+      - run: npm test
 
   integration-test:
     runs-on: ubuntu-20.04
@@ -73,10 +71,10 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: node_modules
-          key: npm-${{ hashFiles('yarn.lock') }}
+          key: npm-${{ hashFiles('package-lock.json') }}
       - uses: actions/cache@v3
         with:
           path: |
             dist
           key: packages-${{ github.sha }}
-      - run: yarn integration-test
+      - run: npm run integration-test

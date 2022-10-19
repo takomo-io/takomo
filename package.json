@@ -16,9 +16,8 @@
   "bugs": "https://github.com/takomo-io/takomo/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/takomo-io/takomo.git"
+    "url": "git@github.com:takomo-io/takomo.git"
   },
-  "packageManager": "yarn@3.2.4",
   "license": "MIT",
   "author": "henri@takomo.io",
   "type": "commonjs",
@@ -46,12 +45,11 @@
   },
   "scripts": {
     "api-docs": "typedoc",
-    "depcheck": "lerna run depcheck --parallel",
     "prepare": "husky install",
     "build": "tsc",
     "test": "jest --selectProjects test --maxWorkers=10 --ci --verbose",
     "integration-test": "jest --selectProjects integration-test --maxWorkers=10 --ci --verbose",
-    "clean": "rm -rf node_modules && rm -f yarn.lock"
+    "clean": "rm -f package-lock.json && rm -rf node_modules"
   },
   "commitlint": {
     "extends": [
@@ -114,7 +112,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "husky": "8.0.1",
     "jest": "27.4.7",
-    "jest-environment-testenv-recycler": "0.0.18",
+    "jest-environment-testenv-recycler": "0.0.19",
     "jest-mock-extended": "2.0.4",
     "lint-staged": "12.4.1",
     "prettier": "2.7.0",
@@ -123,7 +121,8 @@
     "tmp": "0.2.1",
     "ts-node": "10.9.1",
     "typedoc": "0.23.16",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "semantic-release": "19.0.5"
   },
   "dependencies": {
     "@aws-sdk/client-cloudformation": "3.186.0",
