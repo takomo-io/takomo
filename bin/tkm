@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-require('../.pnp.cjs').setup()
 var semver = require("semver")
 var requiredVersion = "16.17.0"
 if (!semver.satisfies(process.version, ">=" + requiredVersion)) {
