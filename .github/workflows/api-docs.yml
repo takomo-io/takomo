@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.17.0
+      - uses: actions/cache@v3
+        id: node_modules
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+      - name: Install dependencies
+        if: steps.node_modules.outputs.cache-hit != 'true'
+        run: npm install
+      - name: Build
+        run: npm run build
+      - uses: actions/cache@v3
+        with:
+          path: |
+            dist
+          key: packages-${{ github.sha }}
+
+  api-docs:
+    runs-on: ubuntu-20.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.17.0
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            dist
+          key: packages-${{ github.sha }}
+      - run: npm run api-docs -- --name "Takomo ${{ github.ref_name }}"
+      - run: ./ci/publish-api-docs.sh ${{ github.ref_name }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
