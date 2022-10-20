@@ -97,7 +97,7 @@ const formatStackOperation = (
       return green(`${createKey}(stack will be created)`)
     case "RECREATE":
       const recreateKey = `± ${stackPath}:`.padEnd(columnLength + 4)
-      return orange(`${recreateKey}(stack will replaced)`)
+      return orange(`${recreateKey}(stack will be replaced)`)
     case "UPDATE":
       const updateKey = `~ ${stackPath}:`.padEnd(columnLength + 4)
       return yellow(`${updateKey}(stack will be updated)`)
