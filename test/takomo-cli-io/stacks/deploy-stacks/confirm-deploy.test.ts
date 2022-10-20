@@ -153,7 +153,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
       
       Following stacks will be deployed:
       
-        ${orange("± /rds.yml/eu-west-1:          (stack will replaced)")}
+        ${orange("± /rds.yml/eu-west-1:          (stack will be replaced)")}
             name:                      rds
             status:                    ${red("CREATE_FAILED")}
             account id:                123456789012
