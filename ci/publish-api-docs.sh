@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+VERSION=$(echo $1 | cut -c 2- | tr '.' '-')
+DOCS_BASE=/api-docs/$VERSION
+
 # Change to dir containing this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"

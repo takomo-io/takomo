@@ -28,10 +28,7 @@
     "tkm": "bin/tkm"
   },
   "files": [
-    "dist",
-    ".pnp.cjs",
-    ".pnp.loader.mjs",
-    ".yarn/cache/install-state.gz"
+    "dist"
   ],
   "engines": {
     "node": ">=16.17.0"
