@@ -41,7 +41,6 @@
     "access": "public"
   },
   "scripts": {
-    "api-docs": "typedoc",
     "prepare": "husky install",
     "build": "tsc",
     "test": "jest --selectProjects test --maxWorkers=10 --ci --verbose",
