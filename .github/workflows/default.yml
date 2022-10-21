@@ -5,7 +5,6 @@ concurrency: default
 on:
   push:
     branches:
-      - feature/**
       - feat/**
       - fix/**
       - chore/**
