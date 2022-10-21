@@ -1,7 +1,8 @@
 {
   "entryPoints": [
-    "src/index.ts",
+    "src/index.ts"
   ],
   "gaID": "UA-165592316-1",
-  "out": "api-docs"
+  "out": "api-docs",
+  "readme": "none"
 }

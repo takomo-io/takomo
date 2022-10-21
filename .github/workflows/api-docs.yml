@@ -1,9 +1,9 @@
-name: Release
+name: API docs
 
 on:
   push:
     tags:
-      - v*
+      - '*'
 
 jobs:
 

@@ -36,6 +36,12 @@ Upgrade dependencies with [npm-check-updates](https://www.npmjs.com/package/npm-
 npx ncu  --interactive
 ```
 
+Build API docs:
+
+```
+npx typedoc
+```
+
 ## Integration tests
 
 To run integration tests, you need to have credentials to Takomo's testing environment. You can ask credentials from maintainers.
