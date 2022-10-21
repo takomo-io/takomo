@@ -19,5 +19,9 @@ export {
   DeploymentTargetsRunInput,
   DeploymentTargetsRunIO,
   DeploymentTargetsRunOutput,
+  MapFunction,
+  MapFunctionProps,
+  ReduceFunction,
+  ReduceFunctionProps,
   TargetsRunPlan,
 } from "./run/model"

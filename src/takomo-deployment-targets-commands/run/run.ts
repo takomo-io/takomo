@@ -35,6 +35,8 @@ import {
   DeploymentTargetsRunInput,
   DeploymentTargetsRunIO,
   DeploymentTargetsRunOutput,
+  MapFunction,
+  ReduceFunction,
   TargetsRunPlan,
 } from "./model"
 
@@ -129,11 +131,11 @@ const runJsMapFunction = async ({
   logger.debug(`Run map function from file: ${mapFunctionFullPath}`)
 
   // eslint-disable-next-line
-  const mapperFn = require(mapFunctionFullPath)
+  const mapperFn: MapFunction<unknown> = require(mapFunctionFullPath)
 
   return mapperFn({
     credentials,
-    target: target,
+    target,
     deploymentGroupPath: group.path,
     args: mapArgs,
   })
@@ -223,7 +225,7 @@ const runJsReduceFunction = ({
   const fullReduceFunctionPath = expandFilePath(ctx.projectDir, reduceCommand)
 
   // eslint-disable-next-line
-  const reduceFn = require(fullReduceFunctionPath)
+  const reduceFn: ReduceFunction<unknown> = require(fullReduceFunctionPath)
 
   return reduceFn({
     credentials,

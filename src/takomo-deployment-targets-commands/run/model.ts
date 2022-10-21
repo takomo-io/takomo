@@ -1,3 +1,4 @@
+import { Credentials } from "@aws-sdk/types"
 import { IamRoleArn, IamRoleName } from "../../takomo-aws-model"
 import {
   CommandInput,
@@ -5,7 +6,10 @@ import {
   CommandOutputBase,
   IO,
 } from "../../takomo-core"
-import { DeploymentGroupConfig } from "../../takomo-deployment-targets-config"
+import {
+  DeploymentGroupConfig,
+  DeploymentTargetConfig,
+} from "../../takomo-deployment-targets-config"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
@@ -59,3 +63,19 @@ export interface DeploymentGroupRunResult extends CommandOutputBase {
   readonly timer: Timer
   readonly results: ReadonlyArray<DeploymentTargetRunResult>
 }
+
+export interface MapFunctionProps {
+  readonly credentials?: Credentials
+  readonly target: DeploymentTargetConfig
+  readonly deploymentGroupPath: DeploymentGroupPath
+  readonly args: unknown
+}
+
+export type MapFunction<T> = (props: MapFunctionProps) => Promise<T>
+
+export interface ReduceFunctionProps<T> {
+  readonly credentials?: Credentials
+  readonly targets: ReadonlyArray<T>
+}
+
+export type ReduceFunction<T> = (props: ReduceFunctionProps<T>) => Promise<T>
