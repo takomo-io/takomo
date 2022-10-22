@@ -36,6 +36,12 @@ Upgrade dependencies with [npm-check-updates](https://www.npmjs.com/package/npm-
 npx ncu  --interactive
 ```
 
+Check for unused dependencies:
+
+```
+npx depcheck
+```
+
 Build API docs:
 
 ```
