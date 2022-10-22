@@ -1,4 +1,4 @@
-import { bold, FormattedTable, indentLines, LogWriter } from "../takomo-util"
+import { bold, indentLines, LogWriter } from "../takomo-util"
 import { createInquirerUserActions, UserActions } from "./user-actions"
 
 export interface Choice<T> {
@@ -14,14 +14,6 @@ interface MessageProps {
   readonly transform?: (msg: string) => string
 }
 
-interface TableProps {
-  readonly table: FormattedTable
-  readonly marginTop?: boolean
-  readonly marginBottom?: boolean
-  readonly showHeaders?: boolean
-  readonly indent?: number
-}
-
 export interface BaseIO extends UserActions {
   print: (text?: any, ...optionalParams: any[]) => void
   subheader: (props: MessageProps) => void
@@ -33,7 +25,6 @@ export interface BaseIO extends UserActions {
     marginBottom: boolean,
     indent: number,
   ) => void
-  table: (props: TableProps) => void
 }
 
 export interface BaseIOProps {
@@ -96,27 +87,6 @@ export const createBaseIO = ({
       }
 
       print(indentLines(lines.join("\n"), indent))
-      if (marginBottom) {
-        print()
-      }
-    },
-    table: ({
-      table,
-      marginBottom,
-      marginTop,
-      showHeaders,
-      indent,
-    }: TableProps) => {
-      if (marginTop) {
-        print()
-      }
-
-      table.print({
-        indent,
-        showHeaders,
-        writer: print,
-      })
-
       if (marginBottom) {
         print()
       }

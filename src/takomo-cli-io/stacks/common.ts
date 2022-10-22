@@ -1,3 +1,4 @@
+import Table from "easy-table"
 import { StackEvent, StackName } from "../../takomo-aws-model"
 import { CommandStatus } from "../../takomo-core"
 import {
@@ -16,7 +17,6 @@ import {
   formatTimestamp,
   formatYaml,
   LogLevel,
-  table,
   TkmLogger,
   toPrettyJson,
 } from "../../takomo-util"
@@ -140,23 +140,20 @@ export const printStacksOperationOutput = (
     (r) => !r.success && r.status === "FAILED",
   )
 
-  const headers = ["Path", "Name", "Status", "Time", "Message"]
-  const resultsTable = output.results.reduce(
-    (tbl, r) =>
-      tbl.row(
-        r.stack.path,
-        r.stack.name,
-        formatCommandStatus(r.status),
-        r.timer.getFormattedTimeElapsed(),
-        r.message,
-      ),
-    table({ headers }),
-  )
+  const table = new Table()
+  output.results.forEach((result) => {
+    table
+      .cell("Path", result.stack.path)
+      .cell("Name", result.stack.name)
+      .cell("Status", formatCommandStatus(result.status))
+      .cell("Time", result.timer.getFormattedTimeElapsed())
+      .cell("Message", result.message)
+      .newRow()
+  })
 
-  io.table({
+  io.message({
     marginTop: true,
-    marginBottom: true,
-    table: resultsTable,
+    text: table.toString(),
   })
 
   if (failed.length > 0) {
