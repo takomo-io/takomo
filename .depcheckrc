@@ -5,5 +5,18 @@ ignores: [
   "babel-jest",
   "@types/jest",
   "jest-mock-extended",
-  "dotenv"
+  "dotenv",
+  "@commitlint/cli",
+  "@commitlint/config-conventional",
+  "@takomo/test-custom-helper-lowercase",
+  "@takomo/test-custom-helper-uppercase",
+  "@takomo/test-custom-resolver-code",
+  "@takomo/test-custom-resolver-name",
+  "depcheck",
+  "prettier-plugin-organize-imports",
+  "pretty-quick",
+  "ts-node",
+  "typedoc",
+  "semantic-release",
+  "npm-check-updates"
 ]
