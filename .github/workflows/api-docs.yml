@@ -3,7 +3,7 @@ name: API docs
 on:
   push:
     tags:
-      - '*'
+      - v*
 
 jobs:
 
@@ -47,7 +47,7 @@ jobs:
           path: |
             dist
           key: packages-${{ github.sha }}
-      - run: npm run api-docs -- --name "Takomo ${{ github.ref_name }}"
+      - run: npx typedoc --name "Takomo ${{ github.ref_name }}"
       - run: ./ci/publish-api-docs.sh ${{ github.ref_name }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}

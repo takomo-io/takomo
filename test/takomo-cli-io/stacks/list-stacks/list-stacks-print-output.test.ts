@@ -1,5 +1,6 @@
 import dedent from "ts-dedent"
 import { createListStacksIO } from "../../../../src/takomo-cli-io"
+import { formatDate } from "../../../../src/takomo-cli-io/stacks/common"
 import {
   createConsoleLogger,
   createTimer,
@@ -16,7 +17,7 @@ const createIO = (writer: LogWriter) =>
 
 describe("ListStacksIO#printOutput", () => {
   test("single stack", () => {
-    const now = new Date("2022-10-21 22:56:26")
+    const now = new Date()
     const output = { value: "" }
     const io = createIO(createCapturingLogWriter(output))
     io.printOutput({
@@ -40,9 +41,9 @@ describe("ListStacksIO#printOutput", () => {
     
     Path                   Name    Status           Created                    Updated                  
     ---------------------  ------  ---------------  -------------------------  -------------------------
-    /stackA.yml/eu-west-1  stackA  ${green(
-      "CREATE_COMPLETE",
-    )}  2022-10-21 22:56:26 +0300  2022-10-21 22:56:26 +0300
+    /stackA.yml/eu-west-1  stackA  ${green("CREATE_COMPLETE")}  ${formatDate(
+      now,
+    )}  ${formatDate(now)}
     
     
     `
