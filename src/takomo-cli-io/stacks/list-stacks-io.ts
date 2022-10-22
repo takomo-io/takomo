@@ -1,5 +1,6 @@
+import Table from "easy-table"
 import { ListStacksIO, ListStacksOutput } from "../../takomo-stacks-commands"
-import { formatYaml, table, toPrettyJson } from "../../takomo-util"
+import { formatYaml, toPrettyJson } from "../../takomo-util"
 import { createBaseIO } from "../cli-io"
 import { formatStackStatus } from "../formatters"
 import { formatDate, IOProps } from "./common"
@@ -36,25 +37,21 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
         })
         break
       default:
-        const headers = ["Path", "Name", "Status", "Created", "Updated"]
+        const table = new Table()
 
-        const stacksTable = results.reduce(
-          (tbl, stack) =>
-            tbl.row(
-              stack.path,
-              stack.name,
-              formatStackStatus(stack.status),
-              formatDate(stack.createdTime),
-              formatDate(stack.updatedTime),
-            ),
-          table({ headers }),
-        )
+        results.forEach((stack) => {
+          table
+            .cell("Path", stack.path)
+            .cell("Name", stack.name)
+            .cell("Status", formatStackStatus(stack.status))
+            .cell("Created", formatDate(stack.createdTime))
+            .cell("Updated", formatDate(stack.updatedTime))
+            .newRow()
+        })
 
-        io.table({
-          showHeaders: true,
+        io.message({
+          text: table.toString(),
           marginTop: true,
-          marginBottom: true,
-          table: stacksTable,
         })
     }
 

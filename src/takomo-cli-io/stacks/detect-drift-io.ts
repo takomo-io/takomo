@@ -1,5 +1,5 @@
+import Table from "easy-table"
 import { DetectDriftIO, DetectDriftOutput } from "../../takomo-stacks-commands"
-import { table } from "../../takomo-util"
 import { createBaseIO } from "../cli-io"
 import { formatDriftStatus, formatStackStatus } from "../formatters"
 import { IOProps } from "./common"
@@ -9,31 +9,29 @@ export const createDetectDriftIO = (props: IOProps): DetectDriftIO => {
   const io = createBaseIO(props)
 
   const printOutput = (output: DetectDriftOutput): DetectDriftOutput => {
-    const headers = [
-      "Path",
-      "Name",
-      "Status",
-      "Drift status",
-      "Drifted resources",
-    ]
+    const table = new Table()
 
-    const stacksTable = output.stacks.reduce(
-      (tbl, { stack, current, driftDetectionStatus }) =>
-        tbl.row(
-          stack.path,
-          stack.name,
-          formatStackStatus(current?.status),
+    output.stacks.forEach(({ stack, current, driftDetectionStatus }) => {
+      table
+        .cell("Path", stack.path)
+        .cell("Name", stack.name)
+        .cell("Status", formatStackStatus(current?.status))
+        .cell(
+          "Drift status",
           formatDriftStatus(driftDetectionStatus?.stackDriftStatus),
+        )
+        .cell(
+          "Drifted resources",
           driftDetectionStatus?.driftedStackResourceCount ?? 0,
-        ),
-      table({ headers }),
-    )
-
-    io.table({
-      showHeaders: true,
-      marginTop: true,
-      table: stacksTable,
+        )
+        .newRow()
     })
+
+    io.message({
+      text: table.toString(),
+      marginTop: true,
+    })
+
     return output
   }
 
