@@ -122,12 +122,14 @@ const formatStackOperationType = (type: StackOperationType): string => {
 const ensureContentsEndsWithLineFeed = (content: string): string =>
   content.endsWith("\n") ? content : content + "\n"
 
-export type DeployStacksIOProps = IOProps
+export interface DeployStacksIOProps extends IOProps {
+  readonly target?: string
+}
 
 export const createDeployStacksIO = (
   props: DeployStacksIOProps,
 ): DeployStacksIO => {
-  const { logger } = props
+  const { logger, target } = props
   const io = createBaseIO(props)
 
   // TODO: Come up some other solution
@@ -234,7 +236,12 @@ export const createDeployStacksIO = (
   }
 
   const printOutput = (output: StacksOperationOutput): StacksOperationOutput =>
-    printStacksOperationOutput(io, output, logger.logLevel)
+    printStacksOperationOutput({
+      io,
+      output,
+      logLevel: logger.logLevel,
+      target,
+    })
 
   const confirmStackDeploy = async (
     stack: InternalStack,

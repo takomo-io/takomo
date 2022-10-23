@@ -86,23 +86,36 @@ interface OutputStackResult {
   readonly status: CommandStatus
   readonly time: number
   readonly message: string
+  readonly target?: string
 }
 
-const toOutputStackResult = (result: StackResult): OutputStackResult => ({
+const toOutputStackResult = (
+  result: StackResult,
+  target?: string,
+): OutputStackResult => ({
   path: result.stack.path,
   name: result.stack.name,
   status: result.status,
   time: result.timer.getSecondsElapsed(),
   message: result.message,
+  target,
 })
 
-export const printStacksOperationOutput = (
-  io: BaseIO,
-  output: StacksOperationOutput,
-  logLevel: LogLevel,
-): StacksOperationOutput => {
+interface PrintStacksOperationOutputProps {
+  readonly io: BaseIO
+  readonly output: StacksOperationOutput
+  readonly logLevel: LogLevel
+  readonly target?: string
+}
+
+export const printStacksOperationOutput = ({
+  io,
+  output,
+  logLevel,
+  target,
+}: PrintStacksOperationOutputProps): StacksOperationOutput => {
   const { outputFormat, results } = output
-  const stacks = results.map(toOutputStackResult)
+  const stacks = results.map((r) => toOutputStackResult(r, target))
 
   if (outputFormat === "json") {
     io.message({
@@ -142,6 +155,10 @@ export const printStacksOperationOutput = (
 
   const table = new Table()
   output.results.forEach((result) => {
+    if (target) {
+      table.cell("Target", target)
+    }
+
     table
       .cell("Path", result.stack.path)
       .cell("Name", result.stack.name)

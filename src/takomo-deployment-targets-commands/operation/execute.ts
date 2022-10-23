@@ -38,7 +38,7 @@ interface CreateExecutorProps {
 const executeOperationInternal = async (
   operation: DeploymentOperation,
   input: StacksOperationInput,
-  account: PlannedDeploymentTarget,
+  target: PlannedDeploymentTarget,
   credentialManager: InternalCredentialManager,
   io: DeploymentTargetsOperationIO,
   ctx: InternalCommandContext,
@@ -57,7 +57,7 @@ const executeOperationInternal = async (
         ctx,
         credentialManager,
         configRepository,
-        io: io.createStackDeployIO(logger),
+        io: io.createStackDeployIO(logger, target),
       })
     case "undeploy":
       return undeployStacksCommand({
@@ -68,7 +68,7 @@ const executeOperationInternal = async (
         ctx,
         credentialManager,
         configRepository,
-        io: io.createStackUndeployIO(logger),
+        io: io.createStackUndeployIO(logger, target),
       })
     default:
       throw new Error(`Unsupported operation: ${operation}`)

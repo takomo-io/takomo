@@ -70,12 +70,14 @@ const getConfirmUndeployText = (prune: boolean): ReadonlyArray<string> =>
         "Following stacks will be undeployed:",
       ]
 
-export type UndeployStacksIOProps = IOProps
+export interface UndeployStacksIOProps extends IOProps {
+  readonly target?: string
+}
 
 export const createUndeployStacksIO = (
   props: UndeployStacksIOProps,
 ): UndeployStacksIO => {
-  const { logger } = props
+  const { logger, target } = props
   const io = createBaseIO(props)
 
   const confirmUndeploy = async ({
@@ -159,7 +161,12 @@ export const createUndeployStacksIO = (
     logger.info(stackPath + " - " + formatStackEvent(e))
 
   const printOutput = (output: StacksOperationOutput): StacksOperationOutput =>
-    printStacksOperationOutput(io, output, logger.logLevel)
+    printStacksOperationOutput({
+      io,
+      output,
+      logLevel: logger.logLevel,
+      target,
+    })
 
   const chooseCommandPath = (rootStackGroup: StackGroup) =>
     chooseCommandPathInternal(io, rootStackGroup)
