@@ -56,8 +56,14 @@ export interface DeploymentTargetsListener {
 
 export interface DeploymentTargetsOperationIO
   extends IO<DeploymentTargetsOperationOutput> {
-  readonly createStackDeployIO: (logger: TkmLogger) => DeployStacksIO
-  readonly createStackUndeployIO: (logger: TkmLogger) => UndeployStacksIO
+  readonly createStackDeployIO: (
+    logger: TkmLogger,
+    target: PlannedDeploymentTarget,
+  ) => DeployStacksIO
+  readonly createStackUndeployIO: (
+    logger: TkmLogger,
+    target: PlannedDeploymentTarget,
+  ) => UndeployStacksIO
   readonly confirmOperation: (
     plan: TargetsExecutionPlan,
   ) => Promise<ConfirmOperationAnswer>

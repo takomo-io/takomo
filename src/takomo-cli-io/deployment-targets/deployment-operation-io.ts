@@ -5,6 +5,7 @@ import {
   ConfirmOperationAnswer,
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
+  PlannedDeploymentTarget,
   TargetsExecutionPlan,
 } from "../../takomo-deployment-targets-commands"
 import { DeployStacksIO, UndeployStacksIO } from "../../takomo-stacks-commands"
@@ -72,11 +73,15 @@ export const createDeploymentTargetsOperationIO = (
   const { logger, messages } = props
   const io = createBaseIO(props)
 
-  const createStackDeployIO = (logger: TkmLogger): DeployStacksIO =>
-    createDeployStacksIO({ logger })
+  const createStackDeployIO = (
+    logger: TkmLogger,
+    target: PlannedDeploymentTarget,
+  ): DeployStacksIO => createDeployStacksIO({ logger, target: target.name })
 
-  const createStackUndeployIO = (logger: TkmLogger): UndeployStacksIO =>
-    createUndeployStacksIO({ logger })
+  const createStackUndeployIO = (
+    logger: TkmLogger,
+    target: PlannedDeploymentTarget,
+  ): UndeployStacksIO => createUndeployStacksIO({ logger, target: target.name })
 
   const printOutput = (
     output: DeploymentTargetsOperationOutput,

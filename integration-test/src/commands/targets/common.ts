@@ -1,6 +1,6 @@
 import {
-  InternalCredentialManager,
   initDefaultCredentialManager,
+  InternalCredentialManager,
 } from "../../../../src/takomo-aws-clients"
 import {
   createFileSystemDeploymentTargetsConfigRepository,
