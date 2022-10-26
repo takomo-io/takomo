@@ -1,3 +1,4 @@
+import R from "ramda"
 import { StackStatus } from "../../../takomo-aws-model"
 import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context"
 import { TakomoError } from "../../../takomo-util"
@@ -41,12 +42,33 @@ export const validateStacksStatus = (
   }
 }
 
+const validateCredentialManagers = async (
+  plan: StacksDeployPlan,
+): Promise<void> => {
+  const credentialManagers = plan.operations.map(
+    (operation) => operation.stack.credentialManager,
+  )
+
+  const uniqueCredentialManagers = R.uniqBy(
+    (cm) => cm.iamRoleArn ?? "",
+    credentialManagers,
+  )
+
+  await Promise.all(
+    uniqueCredentialManagers.map((cm) => cm.getCallerIdentity()),
+  )
+}
+
 export const validateStacksDeployPlan = async (
   plan: StacksDeployPlan,
 ): Promise<void> => {
   const { operations } = plan
+
+  await validateCredentialManagers(plan)
+
   await validateStackCredentialManagersWithAllowedAccountIds(
     operations.map((o) => o.stack),
   )
+
   validateStacksStatus(operations)
 }

@@ -76,6 +76,7 @@ export const deployStacksCommand: CommandHandler<
         commandPath: input.interactive ? undefined : input.commandPath,
         logger: io,
         credentialManager,
+        validateCommandRoles: false,
       }),
     )
     .then((ctx) => deployStacks(ctx, configRepository, io, input))
