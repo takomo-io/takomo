@@ -95,16 +95,21 @@ export const buildStacksUndeployPlan = async (
     .filter(pruneFilter)
 
   const sortedStacks = sortStacksForUndeploy(stacksToUndeploy)
+
+  const selectedStacks = ignoreDependencies
+    ? sortedStacks.filter((stack) =>
+        isWithinCommandPath(stack.path, commandPath),
+      )
+    : sortedStacks
+
   const operations = await Promise.all(
-    sortedStacks.map((stack) =>
+    selectedStacks.map((stack) =>
       convertToUndeployOperation(stacksByPath, stack, prune),
     ),
   )
 
   return {
     prune,
-    operations: ignoreDependencies
-      ? operations.filter((o) => isWithinCommandPath(o.stack.path, commandPath))
-      : operations,
+    operations,
   }
 }
