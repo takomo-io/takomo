@@ -3,11 +3,11 @@ import {
   CloudFormationStackSummary,
   DetailedChangeSet,
   DetailedCloudFormationStack,
-  StackEvent,
   StackId,
   TemplateBody,
   TemplateSummary,
 } from "../../../takomo-aws-model"
+import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../../takomo-core"
 import { StacksConfigRepository } from "../../../takomo-stacks-context"
 import {

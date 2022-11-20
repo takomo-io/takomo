@@ -1,15 +1,9 @@
 import Table from "easy-table"
 import prettyMs from "pretty-ms"
 
-/**
- * @hidden
- */
 export const formatElapsedMillis = (milliseconds: number): string =>
   prettyMs(milliseconds)
 
-/**
- * @hidden
- */
 export interface Timer {
   readonly name: string
   readonly startTime: number
@@ -20,9 +14,6 @@ export interface Timer {
   readonly getFormattedTimeElapsed: () => string
 }
 
-/**
- * @hidden
- */
 export const createTimer = (name: string): Timer => {
   const children: Timer[] = []
   const startTime = Date.now()
@@ -73,9 +64,6 @@ const collectTimerItems = (timer: Timer, table: Table, depth: number): void => {
   })
 }
 
-/**
- * @hidden
- */
 export const printTimer = (timer: Timer): string => {
   const table = new Table()
   collectTimerItems(timer, table, 0)

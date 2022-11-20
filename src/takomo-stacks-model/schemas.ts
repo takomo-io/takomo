@@ -45,9 +45,6 @@ export interface SchemaProvider {
   readonly schema?: (props: SchemaProps) => Joi.ObjectSchema
 }
 
-/**
- * @hidden
- */
 export interface SchemaRegistry {
   readonly initParameterSchema: (
     ctx: CommandContext,

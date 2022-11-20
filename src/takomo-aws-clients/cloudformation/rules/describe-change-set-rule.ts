@@ -1,9 +1,6 @@
 import { ChangeSet } from "../../../takomo-aws-model"
 import { evaluateRules, Rule } from "../../../takomo-util"
 
-/**
- * @hidden
- */
 export type DescribeChangeSetResult =
   | "PENDING"
   | "READY"
@@ -13,16 +10,10 @@ export type DescribeChangeSetResult =
 
 type DescribeChangeSetRuleRule = Rule<ChangeSet, DescribeChangeSetResult>
 
-/**
- * @hidden
- */
 export const changeSetReadyRule: DescribeChangeSetRuleRule = ({
   status,
 }: ChangeSet) => (status === "CREATE_COMPLETE" ? "READY" : undefined)
 
-/**
- * @hidden
- */
 export const changeSetPendingRule: DescribeChangeSetRuleRule = ({
   status,
 }: ChangeSet) =>
@@ -30,16 +21,10 @@ export const changeSetPendingRule: DescribeChangeSetRuleRule = ({
     ? "PENDING"
     : undefined
 
-/**
- * @hidden
- */
 export const changeSetFailedRule: DescribeChangeSetRuleRule = ({
   status,
 }: ChangeSet) => (status === "FAILED" ? "FAILED" : undefined)
 
-/**
- * @hidden
- */
 export const changeSetNoChangesRule: DescribeChangeSetRuleRule = ({
   status,
   statusReason,
@@ -62,9 +47,6 @@ const rules = [
   changeSetFailedRule,
 ]
 
-/**
- * @hidden
- */
 export const evaluateDescribeChangeSet = (
   changeSet: ChangeSet,
 ): DescribeChangeSetResult => evaluateRules(rules, changeSet, () => "ERROR")

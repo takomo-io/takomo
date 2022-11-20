@@ -3,17 +3,11 @@ import { expandFilePath, fileExists, FilePath, readFileContents } from "./files"
 import { merge } from "./objects"
 import { parseYamlFile } from "./yaml"
 
-/**
- * @hidden
- */
 export interface VarFileOption {
   readonly filePath: FilePath
   readonly variableName?: string
 }
 
-/**
- * @hidden
- */
 export const loadVariablesFromFile = async (
   baseDir: FilePath,
   fileName: FilePath,
@@ -36,9 +30,6 @@ export const loadVariablesFromFile = async (
   return (await readFileContents(pathToVarsFile)).trim()
 }
 
-/**
- * @hidden
- */
 export const loadVariablesFromFiles = async (
   projectDir: FilePath,
   varsArray: ReadonlyArray<VarFileOption>,

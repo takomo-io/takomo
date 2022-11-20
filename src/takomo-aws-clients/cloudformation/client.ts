@@ -24,13 +24,14 @@ import {
   ResourceStatus,
   StackDriftDetectionId,
   StackDriftDetectionStatusOutput,
-  StackEvent,
   StackId,
   StackName,
   StackPolicyBody,
   StackStatus,
   TemplateSummary,
 } from "../../takomo-aws-model"
+
+import { StackEvent } from "../../takomo-aws-model/cloudformation"
 import { arrayToMap, Scheduler, sleep, uuid } from "../../takomo-util"
 import {
   InternalAwsClientProps,
@@ -169,9 +170,6 @@ interface CloudFormationClientProps extends InternalAwsClientProps {
   readonly waitStackRollbackToCompletePollInterval: number
 }
 
-/**
- * @hidden
- */
 export const createCloudFormationClient = (
   props: CloudFormationClientProps,
 ): CloudFormationClient => {
@@ -679,36 +677,18 @@ export const createCloudFormationClient = (
   }
 }
 
-/**
- * @hidden
- */
 export interface TimeoutConfig {
   readonly startTime: number
   readonly timeout: number
   readonly timeoutOccurred: boolean
 }
 
-/**
- * @hidden
- */
-export interface ChangeSetCompletionResponse {
-  readonly events: ReadonlyArray<StackEvent>
-  readonly stackStatus: StackStatus
-  readonly timeoutConfig: TimeoutConfig
-}
-
-/**
- * @hidden
- */
 export interface WaitStackDeployToCompleteResponse {
   readonly events: ReadonlyArray<StackEvent>
   readonly stackStatus: ResourceStatus
   readonly timeoutConfig: TimeoutConfig
 }
 
-/**
- * @hidden
- */
 export interface WaitStackDeployToCompleteProps {
   readonly stackId: StackId
   readonly clientToken: ClientRequestToken
@@ -718,17 +698,11 @@ export interface WaitStackDeployToCompleteProps {
   readonly latestEventId?: EventId
 }
 
-/**
- * @hidden
- */
 export interface WaitStackDeleteToCompleteResponse {
   readonly events: ReadonlyArray<StackEvent>
   readonly stackStatus: ResourceStatus
 }
 
-/**
- * @hidden
- */
 export interface WaitStackDeleteToCompleteProps {
   readonly stackId: StackId
   readonly clientToken: ClientRequestToken
@@ -737,17 +711,6 @@ export interface WaitStackDeleteToCompleteProps {
   readonly latestEventId?: EventId
 }
 
-/**
- * @hidden
- */
-export interface StackDeleteCompletionResponse {
-  readonly events: ReadonlyArray<StackEvent>
-  readonly stackStatus: StackStatus
-}
-
-/**
- * @hidden
- */
 export interface WaitStackRollbackToCompleteProps {
   readonly stackId: StackId
   readonly clientToken: ClientRequestToken
@@ -756,9 +719,6 @@ export interface WaitStackRollbackToCompleteProps {
   readonly latestEventId?: EventId
 }
 
-/**
- * @hidden
- */
 export interface StackRollbackCompleteResponse {
   readonly events: ReadonlyArray<StackEvent>
   readonly stackStatus: StackStatus

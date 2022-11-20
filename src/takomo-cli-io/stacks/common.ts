@@ -1,5 +1,6 @@
 import Table from "easy-table"
-import { StackEvent, StackName } from "../../takomo-aws-model"
+import { StackName } from "../../takomo-aws-model"
+import { StackEvent } from "../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../takomo-core"
 import {
   StacksOperationListener,

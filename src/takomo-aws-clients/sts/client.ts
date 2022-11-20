@@ -11,9 +11,6 @@ import { InternalAwsClientProps } from "../common/client"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 
-/**
- * @hidden
- */
 export interface StsClient {
   readonly getCallerIdentity: () => Promise<CallerIdentity>
   readonly assumeRole: (input: AssumeRoleCommandInput) => Promise<Credentials>
@@ -22,9 +19,6 @@ export interface StsClient {
   ) => Promise<Credentials>
 }
 
-/**
- * @hidden
- */
 export const createStsClient = (props: InternalAwsClientProps): StsClient => {
   const client = new STS({
     region: props.region,

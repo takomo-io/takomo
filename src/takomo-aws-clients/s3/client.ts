@@ -3,9 +3,6 @@ import { InternalAwsClientProps } from "../common/client"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 
-/**
- * @hidden
- */
 export interface S3Client {
   readonly putObject: (
     bucketName: string,
@@ -14,9 +11,6 @@ export interface S3Client {
   ) => Promise<boolean>
 }
 
-/**
- * @hidden
- */
 export const createS3Client = (props: InternalAwsClientProps): S3Client => {
   const client = new S3({
     region: props.region,

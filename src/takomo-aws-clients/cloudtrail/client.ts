@@ -5,9 +5,6 @@ import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import { convertCloudTrailEvents } from "./convert"
 
-/**
- * @hidden
- */
 export interface CloudTrailClient {
   readonly lookupEvents: (
     startTime: Date,
@@ -15,9 +12,6 @@ export interface CloudTrailClient {
   ) => Promise<ReadonlyArray<CloudTrailEvent>>
 }
 
-/**
- * @hidden
- */
 export const createCloudTrailClient = (
   props: InternalAwsClientProps,
 ): CloudTrailClient => {

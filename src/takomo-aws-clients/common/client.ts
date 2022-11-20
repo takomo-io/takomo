@@ -52,16 +52,10 @@ export interface CloudFormationClientProps extends AwsClientProps {
   readonly identity: CallerIdentity
 }
 
-/**
- * @hidden
- */
 export interface InternalAwsClientProps extends AwsClientProps {
   readonly middleware: Pluggable<any, any>
 }
 
-/**
- * @hidden
- */
 export interface ApiCallProps {
   readonly clientId: string
   readonly api: string
@@ -72,16 +66,10 @@ export interface ApiCallProps {
   readonly retries: number
 }
 
-/**
- * @hidden
- */
 export interface ClientListener {
   readonly onApiCall: (props: ApiCallProps) => void
 }
 
-/**
- * @hidden
- */
 export const pagedOperation = async <T, P, R extends PagedResponse>(
   operation: (params: P) => Promise<R>,
   params: P,
@@ -104,9 +92,6 @@ export const pagedOperation = async <T, P, R extends PagedResponse>(
   ]
 }
 
-/**
- * @hidden
- */
 export const withClientScheduler = <C, T>(
   client: C,
   taskId: string,
@@ -121,9 +106,6 @@ export const withClientScheduler = <C, T>(
     throw e
   })
 
-/**
- * @hidden
- */
 export const pagedOperationBulkhead = async <T, P, R extends PagedResponse>(
   bulkhead: IPolicy,
   operation: (params: P) => Promise<R>,
@@ -155,9 +137,6 @@ export const pagedOperationBulkhead = async <T, P, R extends PagedResponse>(
   ]
 }
 
-/**
- * @hidden
- */
 export const pagedOperationV2 = async <T, P, R extends PagedResponse>({
   operation,
   params,
@@ -194,9 +173,6 @@ export const pagedOperationV2 = async <T, P, R extends PagedResponse>({
   ]
 }
 
-/**
- * @hidden
- */
 export const withClientBulkhead = <C, T>(
   client: C,
   bulkhead: IPolicy,

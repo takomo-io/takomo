@@ -3,9 +3,6 @@ import { diffLines } from "diff"
 import { v4 } from "uuid"
 import { green, red } from "./colors"
 
-/**
- * @hidden
- */
 export const indentLines = (string: string, indent = 2): string => {
   const padding = " ".repeat(indent)
   return string
@@ -14,15 +11,9 @@ export const indentLines = (string: string, indent = 2): string => {
     .join("\n")
 }
 
-/**
- * @hidden
- */
 export const checksum = (string: string): string =>
   crypto.createHash("sha256").update(string, "utf8").digest("hex")
 
-/**
- * @hidden
- */
 export const splitTextInLines = (
   lineWidth: number,
   ...lines: ReadonlyArray<string>
@@ -46,9 +37,6 @@ export const splitTextInLines = (
     .reverse()
 }
 
-/**
- * @hidden
- */
 export const uuid = v4
 
 const processChange = (
@@ -68,9 +56,6 @@ const addedLine = (line: string) => green(`+ ${line}`)
 const removedLine = (line: string) => red(`- ${line}`)
 const unchangedLine = (line: string) => `  ${line}`
 
-/**
- * @hidden
- */
 export const diffStrings = (current: string, updated: string): string =>
   diffLines(current, updated, {})
     .map(({ removed, added, value }) => {
