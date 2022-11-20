@@ -1,4 +1,4 @@
-import { StackEvent } from "../../../takomo-aws-model"
+import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../../takomo-core"
 import { InternalStack, StackOperationType } from "../../../takomo-stacks-model"
 import { Timer } from "../../../takomo-util"

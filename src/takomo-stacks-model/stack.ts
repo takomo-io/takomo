@@ -1,3 +1,4 @@
+import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
 import {
   CloudFormationClient,
@@ -22,7 +23,6 @@ import { HookExecutor } from "./hook"
 import { ResolverExecutor } from "./resolver"
 import { Schemas } from "./schemas"
 import { StackGroupName, StackGroupPath } from "./stack-group"
-import { CloudFormation } from "@aws-sdk/client-cloudformation"
 
 export type RawTagValue = string | number | boolean
 
@@ -36,18 +36,12 @@ export type StackPath = string
  */
 export type BlueprintPath = string
 
-/**
- * @hidden
- */
 export interface Template {
   readonly dynamic: boolean
   readonly filename?: FilePath
   readonly inline?: string
 }
 
-/**
- * @hidden
- */
 export interface StackProps {
   project?: Project
   path: StackPath
@@ -149,9 +143,6 @@ export interface Stack {
   >
 }
 
-/**
- * @hidden
- */
 export interface InternalStack extends Stack {
   readonly template: Template
   readonly templateBucket?: TemplateBucketConfig
@@ -173,9 +164,6 @@ export interface InternalStack extends Stack {
   readonly toProps: () => StackProps
 }
 
-/**
- * @hidden
- */
 export const createStack = (props: StackProps): InternalStack => {
   const {
     accountIds,
@@ -272,9 +260,6 @@ const normalizeStackPathInternal = (
   )
 }
 
-/**
- * @hidden
- */
 export const normalizeStackPath = (
   parentPath: StackGroupPath,
   stackPath: StackPath,

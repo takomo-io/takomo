@@ -1,3 +1,7 @@
+import {
+  CloudFormationClient,
+  DescribeStacksCommand,
+} from "@aws-sdk/client-cloudformation"
 import { ObjectSchema } from "joi"
 import { IamRoleArn } from "../takomo-aws-model"
 import { createAwsSchemas } from "../takomo-aws-schema"
@@ -7,10 +11,6 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
-import {
-  CloudFormationClient,
-  DescribeStacksCommand,
-} from "@aws-sdk/client-cloudformation"
 
 const init = async (props: any): Promise<Resolver> => {
   return {

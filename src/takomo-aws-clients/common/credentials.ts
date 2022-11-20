@@ -50,9 +50,6 @@ export interface CredentialManager {
   ) => Promise<CredentialManager>
 }
 
-/**
- * @hidden
- */
 export interface InternalCredentialManager extends CredentialManager {
   readonly iamRoleArn?: IamRoleArn
   readonly children: Map<string, InternalCredentialManager>
@@ -69,9 +66,6 @@ interface CredentialManagerProps {
   readonly logger: TkmLogger
 }
 
-/**
- * @hidden
- */
 export const createCredentialManager = ({
   name,
   credentialProvider,
@@ -161,9 +155,6 @@ const initDefaultCredentialProviderChain = async (
   })
 }
 
-/**
- * @hidden
- */
 export const initDefaultCredentialManager = async (
   mfaCodeProvider: (mfaSerial: string) => Promise<string>,
   logger: TkmLogger,

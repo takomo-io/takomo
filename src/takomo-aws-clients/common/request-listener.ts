@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 import {
   AbsoluteLocation,
   HandlerExecutionContext,
@@ -62,9 +59,6 @@ const apiRequestListenerMiddleware =
     return response
   }
 
-/**
- * @hidden
- */
 const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
   AbsoluteLocation = {
   name: "apiRequestListener",
@@ -73,9 +67,6 @@ const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
   priority: "low",
 }
 
-/**
- * @hidden
- */
 export const createApiRequestListenerPlugin = (
   logger: TkmLogger,
   clientId: string,

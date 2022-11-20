@@ -5,9 +5,6 @@ interface CollectFromHierarchyProps<T> {
   readonly filter?: (node: T) => boolean
 }
 
-/**
- * @hidden
- */
 export const collectFromHierarchy = <T>(
   root: T,
   extractChildren: (node: T) => ReadonlyArray<T>,
@@ -32,9 +29,6 @@ export const collectFromHierarchy = <T>(
   )
 }
 
-/**
- * @hidden
- */
 export const mapToObject = (
   map: Map<string, unknown>,
 ): Record<string, unknown> =>
@@ -43,9 +37,6 @@ export const mapToObject = (
     {},
   )
 
-/**
- * @hidden
- */
 export const arrayToObject = <T extends object>(
   array: ReadonlyArray<T>,
   keyExtractor: (item: T) => string,
@@ -59,17 +50,11 @@ export const arrayToObject = <T extends object>(
     {},
   )
 
-/**
- * @hidden
- */
 export const arrayToMap = <T>(
   items: ReadonlyArray<T>,
   keyExtractor: (item: T) => string,
 ): Map<string, T> => new Map(items.map((item) => [keyExtractor(item), item]))
 
-/**
- * @hidden
- */
 export const findNonUniques = <Primitive>(
   items: ReadonlyArray<Primitive>,
 ): ReadonlyArray<Primitive> =>
@@ -84,9 +69,6 @@ interface MergeArraysProps<T> {
   readonly allowDuplicates?: boolean
 }
 
-/**
- * @hidden
- */
 export const mergeArrays = <T>({
   first,
   second,
@@ -113,9 +95,6 @@ export const mergeArrays = <T>({
   }, new Array<T>())
 }
 
-/**
- * @hidden
- */
 export const mergeMaps = <T>(
   ...maps: ReadonlyArray<Map<string, T>>
 ): Map<string, T> =>

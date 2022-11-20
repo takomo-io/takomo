@@ -1,5 +1,5 @@
 import R from "ramda"
-import { StackEvent } from "../../takomo-aws-model"
+import { StackEvent } from "../../takomo-aws-model/cloudformation"
 import {
   ConfirmUndeployAnswer,
   StacksOperationOutput,

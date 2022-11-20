@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 import { LookupEventsResponse } from "@aws-sdk/client-cloudtrail"
 import { CloudTrailEvent } from "../../takomo-aws-model"
 

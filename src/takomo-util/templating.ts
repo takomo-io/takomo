@@ -60,9 +60,6 @@ interface ErrorSpec {
   readonly message?: string
 }
 
-/**
- * @hidden
- */
 export const buildErrorMessage = <E extends Error>(
   description: string,
   contents: string,
@@ -127,9 +124,6 @@ export interface TemplateEngine {
   readonly renderTemplate: (string: string, variables: any) => string
 }
 
-/**
- * @hidden
- */
 export class PartialAlreadyRegisteredError extends TakomoError {
   constructor(name: string, source: string, existingSource: string) {
     const message = `Partial with name '${name}' already registered from ${existingSource}`
@@ -140,9 +134,6 @@ export class PartialAlreadyRegisteredError extends TakomoError {
   }
 }
 
-/**
- * @hidden
- */
 export const createTemplateEngine = (): TemplateEngine => {
   const instance = hb.create()
   const registeredPartials = new Map<string, string>()
@@ -186,9 +177,6 @@ export const createTemplateEngine = (): TemplateEngine => {
   }
 }
 
-/**
- * @hidden
- */
 export const renderTemplate = async (
   templateEngine: TemplateEngine,
   filePath: string,

@@ -2,17 +2,19 @@ import "source-map-support/register"
 export {} from ""
 export { CredentialManager } from "./takomo-aws-clients"
 export {
-  BaseCloudFormationStack,
   CallerIdentity,
   CloudFormationStack,
   StackCapability,
-  StackDriftInformation,
-  StackDriftStatus,
   StackOutput,
   StackParameter,
   StackStatus,
   Tag,
 } from "./takomo-aws-model"
+export {
+  BaseCloudFormationStack,
+  StackDriftInformation,
+  StackDriftStatus,
+} from "./takomo-aws-model/cloudformation"
 export { run } from "./takomo-cli"
 export {
   ConfigSetInstruction,

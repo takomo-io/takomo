@@ -1,9 +1,8 @@
+import { ResourceStatus, StackStatus } from "../takomo-aws-model"
 import {
-  ResourceStatus,
   StackDriftStatus,
   StackEvent,
-  StackStatus,
-} from "../takomo-aws-model"
+} from "../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../takomo-core"
 import { cyan, green, grey, red, yellow } from "../takomo-util"
 

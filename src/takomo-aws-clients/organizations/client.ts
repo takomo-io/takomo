@@ -11,18 +11,12 @@ import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import { convertAccount, convertOU, convertRoot } from "./convert"
 
-/**
- * @hidden
- */
 export interface OrganizationsClient {
   readonly listAccounts: () => Promise<ReadonlyArray<Account>>
   readonly listAccountsForOU: (ouId: OUId) => Promise<ReadonlyArray<Account>>
   readonly listOrganizationalUnits: () => Promise<ReadonlyArray<OU>>
 }
 
-/**
- * @hidden
- */
 export const createOrganizationsClient = (
   props: InternalAwsClientProps,
 ): OrganizationsClient => {

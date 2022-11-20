@@ -1,6 +1,3 @@
-/**
- * Identity used to invoke AWS APIs.
- */
 import { AccountId, UserId } from "./common"
 
 /**

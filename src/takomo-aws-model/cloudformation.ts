@@ -39,9 +39,6 @@ export type StackStatus =
   | "IMPORT_ROLLBACK_FAILED"
   | "IMPORT_ROLLBACK_COMPLETE"
 
-/**
- * @hidden
- */
 export const ACTIVE_STACK_STATUSES: ReadonlyArray<StackStatus> = [
   "CREATE_IN_PROGRESS",
   "CREATE_FAILED",
@@ -350,9 +347,6 @@ export type ChangeSet = BaseChangeSet<StackParameter>
 
 export type DetailedChangeSet = BaseChangeSet<DetailedStackParameter>
 
-/**
- * @hidden
- */
 export const isTerminalResourceStatus = (status: ResourceStatus): boolean => {
   switch (status) {
     case "CREATE_COMPLETE":
@@ -374,9 +368,6 @@ export const isTerminalResourceStatus = (status: ResourceStatus): boolean => {
   }
 }
 
-/**
- * @hidden
- */
 export const ALLOW_ALL_STACK_POLICY = `{
   "Statement": [
     {

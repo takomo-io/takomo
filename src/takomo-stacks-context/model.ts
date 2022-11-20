@@ -1,5 +1,6 @@
 import { AnySchema } from "joi"
-import { IamRoleArn, StackEvent } from "../takomo-aws-model"
+import { IamRoleArn } from "../takomo-aws-model"
+import { StackEvent } from "../takomo-aws-model/cloudformation"
 import { CommandStatus, EnvVars, Variables } from "../takomo-core"
 import { ParameterConfig, StackConfig } from "../takomo-stacks-config"
 import { HookRegistry } from "../takomo-stacks-hooks"

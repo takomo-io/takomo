@@ -4,20 +4,11 @@ import { TakomoError } from "./errors"
 import { FilePath, readFileContents } from "./files"
 import { buildErrorMessage } from "./templating"
 
-/**
- * @hidden
- */
 export type YamlFormattedString = string
 
-/**
- * @hidden
- */
 export const parseYamlString = (contents: YamlFormattedString): unknown =>
   yaml.load(contents)
 
-/**
- * @hidden
- */
 export const parseYaml = (
   filePath: FilePath,
   contents: YamlFormattedString,
@@ -51,15 +42,9 @@ export const parseYaml = (
   }
 }
 
-/**
- * @hidden
- */
 export const parseYamlFile = async (pathToYamlFile: FilePath): Promise<any> =>
   readFileContents(pathToYamlFile).then((c) => parseYaml(pathToYamlFile, c))
 
-/**
- * @hidden
- */
 export const formatYaml = (object: unknown): YamlFormattedString =>
   yaml.dump(JSON.parse(stringify(object)), {
     skipInvalid: true,

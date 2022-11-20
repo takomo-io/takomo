@@ -1,4 +1,5 @@
-import { CloudFormationStack, StackEvent } from "../../../takomo-aws-model"
+import { CloudFormationStack } from "../../../takomo-aws-model"
+import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../../takomo-core"
 import {
   InternalStacksContext,
