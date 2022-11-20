@@ -19,7 +19,8 @@ import {
   StackOperationType,
   StackPath,
 } from "../../../takomo-stacks-model"
-import { bold, diffStrings, green, orange, yellow } from "../../../takomo-util"
+import { bold, green, orange, yellow } from "../../../utils/colors"
+import { diffStrings } from "../../../utils/strings"
 import { createBaseIO } from "../../cli-io"
 import { formatStackEvent, formatStackStatus } from "../../formatters"
 import {

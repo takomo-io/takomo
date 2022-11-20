@@ -2,12 +2,9 @@ import { mock } from "jest-mock-extended"
 import dedent from "ts-dedent"
 import { createDeployStacksIO } from "../../../../src/takomo-cli-io"
 import { InternalStack, StackResult } from "../../../../src/takomo-stacks-model"
-import {
-  createConsoleLogger,
-  green,
-  LogWriter,
-  Timer,
-} from "../../../../src/takomo-util"
+import { green } from "../../../../src/utils/colors"
+import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
+import { Timer } from "../../../../src/utils/timer"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 import { mockInternalStack } from "../../mocks"
 

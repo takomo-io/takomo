@@ -1,7 +1,7 @@
 import R from "ramda"
 import { StackStatus } from "../../../takomo-aws-model"
 import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context"
-import { TakomoError } from "../../../takomo-util"
+import { TakomoError } from "../../../utils/errors"
 import { StackDeployOperation, StacksDeployPlan } from "./plan"
 
 export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>

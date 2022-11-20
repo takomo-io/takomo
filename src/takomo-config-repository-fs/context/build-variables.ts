@@ -1,16 +1,15 @@
 import dotenv from "dotenv"
 import dotenvExpand from "dotenv-expand"
 import { ContextVars, Variables } from "../../takomo-core"
+import { TakomoError } from "../../utils/errors"
 import {
   expandFilePath,
   fileExists,
   FilePath,
-  loadVariablesFromFiles,
-  merge,
   readFileContents,
-  TakomoError,
-  VarFileOption,
-} from "../../takomo-util"
+} from "../../utils/files"
+import { merge } from "../../utils/objects"
+import { loadVariablesFromFiles, VarFileOption } from "../../utils/variables"
 
 const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
   projectDir: FilePath,

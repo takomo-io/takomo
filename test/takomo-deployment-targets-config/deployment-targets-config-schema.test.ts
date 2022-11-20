@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "fs"
 import { join } from "path"
 import { createDeploymentTargetsConfigSchema } from "../../src/takomo-deployment-targets-config/schema"
-import { parseYaml } from "../../src/takomo-util"
+import { parseYaml } from "../../src/utils/yaml"
 import { expectNoValidationError } from "../assertions"
 
 const schema = createDeploymentTargetsConfigSchema({ regions: ["eu-west-1"] })

@@ -8,11 +8,8 @@ import {
   PlannedDeploymentTarget,
   TargetsExecutionPlan,
 } from "../../../../src/takomo-deployment-targets-commands"
-import {
-  bold,
-  createConsoleLogger,
-  LogWriter,
-} from "../../../../src/takomo-util"
+import { bold } from "../../../../src/utils/colors"
+import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 
 const actions = mock<UserActions>()

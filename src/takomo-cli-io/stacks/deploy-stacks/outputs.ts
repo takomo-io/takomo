@@ -1,4 +1,4 @@
-import { bold } from "../../../takomo-util"
+import { bold } from "../../../utils/colors"
 import { BaseIO } from "../../cli-io"
 
 export const printOutputs = (io: BaseIO): void => {

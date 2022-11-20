@@ -30,14 +30,13 @@ export const executeUndeployContext = async (
 
   if (!autoConfirm && (await io.confirmUndeploy(plan)) !== "CONTINUE") {
     io.info("Undeploy cancelled")
-    timer.stop()
     return {
       success: true,
       status: "CANCELLED",
       message: "Cancelled",
       results: [],
       outputFormat: input.outputFormat,
-      timer,
+      timer: timer.stop(),
     }
   }
 
@@ -75,12 +74,10 @@ export const executeUndeployContext = async (
 
   const results = await Promise.all(Array.from(executions.values()))
 
-  timer.stop()
-
   return {
     ...resolveCommandOutputBase(results),
     outputFormat: input.outputFormat,
     results,
-    timer,
+    timer: timer.stop(),
   }
 }

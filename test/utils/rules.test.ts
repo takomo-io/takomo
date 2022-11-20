@@ -1,4 +1,4 @@
-import { evaluateRules } from "../../src/takomo-util"
+import { evaluateRules } from "../../src/utils/rules"
 
 describe("#evaluateRules", () => {
   test.concurrent(

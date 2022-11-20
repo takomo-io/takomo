@@ -1,5 +1,5 @@
 import { IamRoleArn } from "../takomo-aws-model"
-import { TakomoError } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
 import { CommandRole } from "./command"
 import { Vars } from "./variables"
 

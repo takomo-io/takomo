@@ -6,7 +6,7 @@ import {
   StackPath,
   StackProps,
 } from "../takomo-stacks-model"
-import { TakomoError } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
 import { ObsoleteDependenciesError } from "./errors"
 
 export const checkCyclicDependenciesForStack = (

@@ -4,12 +4,9 @@ import {
   HookProvider,
   HookType,
 } from "../takomo-stacks-model"
-import {
-  FilePath,
-  TakomoError,
-  TakomoErrorProps,
-  TkmLogger,
-} from "../takomo-util"
+import { TakomoError, TakomoErrorProps } from "../utils/errors"
+import { FilePath } from "../utils/files"
+import { TkmLogger } from "../utils/logging"
 
 class InvalidHookProviderConfigurationError extends TakomoError {
   constructor(

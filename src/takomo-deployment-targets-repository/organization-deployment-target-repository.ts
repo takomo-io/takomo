@@ -4,7 +4,7 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "../takomo-deployment-targets-model"
-import { TakomoError } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
 import {
   DeploymentTargetConfigItemWrapper,
   DeploymentTargetRepository,

@@ -8,7 +8,7 @@ import {
 } from "../../../../src/takomo-config-repository-fs"
 import { InternalCommandContext } from "../../../../src/takomo-core"
 import { DeploymentTargetsConfigRepository } from "../../../../src/takomo-deployment-targets-context"
-import { createConsoleLogger, TkmLogger } from "../../../../src/takomo-util"
+import { createConsoleLogger, TkmLogger } from "../../../../src/utils/logging"
 import { createTestCommandContext } from "../common"
 import { CreateCtxAndConfigRepositoryProps } from "../stacks"
 

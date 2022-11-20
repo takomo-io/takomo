@@ -3,7 +3,6 @@ import { CredentialManager } from "../takomo-aws-clients"
 import { Region } from "../takomo-aws-model"
 import {
   Cache,
-  CommandContext,
   DeploymentTargetRepositoryConfig,
   InternalCommandContext,
 } from "../takomo-core"
@@ -13,7 +12,8 @@ import {
   DeploymentTargetName,
 } from "../takomo-deployment-targets-model"
 import { createDeploymentTargetsSchemas } from "../takomo-deployment-targets-schema"
-import { TemplateEngine, TkmLogger } from "../takomo-util"
+import { TkmLogger } from "../utils/logging"
+import { TemplateEngine } from "../utils/templating"
 
 export interface DeploymentTargetConfigItem
   extends Partial<DeploymentTargetConfig> {

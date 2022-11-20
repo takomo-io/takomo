@@ -1,7 +1,7 @@
 import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../../takomo-core"
 import { InternalStack, StackOperationType } from "../../../takomo-stacks-model"
-import { Timer } from "../../../takomo-util"
+import { Timer } from "../../../utils/timer"
 import { StacksOperationListener } from "./model"
 import { StackOperationTransitions } from "./transitions"
 

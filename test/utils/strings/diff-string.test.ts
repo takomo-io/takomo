@@ -1,4 +1,5 @@
-import { diffStrings, green, red } from "../../../src/takomo-util"
+import { green, red } from "../../../src/utils/colors"
+import { diffStrings } from "../../../src/utils/strings"
 
 // old, updated, expected
 const cases = [

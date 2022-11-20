@@ -12,14 +12,13 @@ import { StackDeployOperation } from "../../../../src/takomo-stacks-commands"
 import { StackOperationType } from "../../../../src/takomo-stacks-model"
 import {
   bold,
-  createConsoleLogger,
   cyan,
   green,
-  LogWriter,
   orange,
   red,
   yellow,
-} from "../../../../src/takomo-util"
+} from "../../../../src/utils/colors"
+import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 import { mockInternalStack, MockInternalStackProps } from "../../mocks"
 

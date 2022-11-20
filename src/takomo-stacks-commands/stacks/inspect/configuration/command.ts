@@ -15,7 +15,8 @@ import {
   StackPath,
 } from "../../../../takomo-stacks-model"
 import { createStacksSchemas } from "../../../../takomo-stacks-schema"
-import { arrayToMap, validateInput } from "../../../../takomo-util"
+import { arrayToMap } from "../../../../utils/collections"
+import { validateInput } from "../../../../utils/validation"
 import { collectStackDependencies } from "../../deploy/plan"
 import {
   ShowConfigurationInput,
@@ -98,14 +99,12 @@ export const showConfigurationCommand: CommandHandler<
     .then((stacks) => {
       const { timer } = input
 
-      timer.stop()
-
       const output: ShowConfigurationOutput = {
         success: true,
         status: "SUCCESS",
         message: "Success",
         outputFormat: input.outputFormat,
-        timer,
+        timer: timer.stop(),
         stacks,
       }
 

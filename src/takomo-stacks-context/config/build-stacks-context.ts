@@ -1,7 +1,4 @@
-import {
-  CredentialManager,
-  InternalCredentialManager,
-} from "../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
 import { IamRoleArn } from "../../takomo-aws-model"
 import { InternalCommandContext } from "../../takomo-core"
 import { createHookRegistry } from "../../takomo-stacks-hooks"
@@ -18,7 +15,8 @@ import {
   coreResolverProviders,
   ResolverRegistry,
 } from "../../takomo-stacks-resolvers"
-import { arrayToMap, collectFromHierarchy, TkmLogger } from "../../takomo-util"
+import { arrayToMap, collectFromHierarchy } from "../../utils/collections"
+import { TkmLogger } from "../../utils/logging"
 import { isStackGroupPath } from "../common"
 import {
   CommandPathMatchesNoStacksError,

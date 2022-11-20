@@ -2,7 +2,7 @@ import {
   InternalStacksContext,
   isNotObsolete,
 } from "../../../takomo-stacks-model"
-import { TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
 import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
 import { DetectDriftInput, DetectDriftOutput } from "./model"
 
@@ -33,8 +33,6 @@ export const detectDrift = async (
     }),
   )
 
-  timer.stop()
-
   const driftFound = stacks.some(
     (s) => s.driftDetectionStatus?.stackDriftStatus === "DRIFTED",
   )
@@ -44,7 +42,7 @@ export const detectDrift = async (
     status: driftFound ? "FAILED" : "SUCCESS",
     message: driftFound ? "Failed" : "Success",
     outputFormat: input.outputFormat,
-    timer,
+    timer: timer.stop(),
     stacks,
   }
 }

@@ -12,7 +12,7 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
-import { TkmLogger } from "../takomo-util"
+import { TkmLogger } from "../utils/logging"
 
 const parseSecret = (logger: TkmLogger, secretValue: string): unknown => {
   try {

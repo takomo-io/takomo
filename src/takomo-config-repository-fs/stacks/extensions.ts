@@ -2,7 +2,8 @@ import readdirp from "readdirp"
 import { HookRegistry } from "../../takomo-stacks-hooks"
 import { SchemaRegistry } from "../../takomo-stacks-model"
 import { ResolverRegistry } from "../../takomo-stacks-resolvers"
-import { dirExists, FilePath, TkmLogger } from "../../takomo-util"
+import { dirExists, FilePath } from "../../utils/files"
+import { TkmLogger } from "../../utils/logging"
 
 export const loadCustomResolvers = async (
   resolversDir: FilePath,

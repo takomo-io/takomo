@@ -1,10 +1,6 @@
 import tmp from "tmp"
-import {
-  dirExists,
-  fileExists,
-  parseYamlFile,
-  readFileContents,
-} from "../../src/takomo-util"
+import { dirExists, fileExists, readFileContents } from "../../src/utils/files"
+import { parseYamlFile } from "../../src/utils/yaml"
 import { executeInitProjectCommand } from "../src/commands/init"
 
 const assertCreatedFiles = async (

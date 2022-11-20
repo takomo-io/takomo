@@ -16,7 +16,7 @@ import {
   DeploymentTargetNamePattern,
   Label,
 } from "../../takomo-deployment-targets-model"
-import { Timer } from "../../takomo-util"
+import { Timer } from "../../utils/timer"
 import { DeploymentTargetsListener } from "../operation/model"
 
 export interface DeploymentTargetsRunInput extends CommandInput {

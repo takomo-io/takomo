@@ -5,7 +5,7 @@ import {
   ResourceChangeAction,
   ResourceChangeReplacement,
 } from "../../../takomo-aws-model"
-import { bold, green, orange, red, yellow } from "../../../takomo-util"
+import { bold, green, orange, red, yellow } from "../../../utils/colors"
 import { BaseIO } from "../../cli-io"
 
 type ResourceOperation = "update" | "create" | "remove" | "replace"

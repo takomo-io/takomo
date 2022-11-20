@@ -1,4 +1,4 @@
-import { mergeMaps } from "../../../src/takomo-util"
+import { mergeMaps } from "../../../src/utils/collections"
 
 describe("#mergeMaps", () => {
   test("single empty maps", () => {

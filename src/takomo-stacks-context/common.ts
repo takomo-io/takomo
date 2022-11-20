@@ -1,5 +1,5 @@
 import { CommandPath, InternalStack } from "../takomo-stacks-model"
-import { TakomoError } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
 
 export const isStackGroupPath = (commandPath: CommandPath): boolean =>
   !commandPath.includes(".yml")

@@ -1,5 +1,5 @@
 import { createStackGroup, StackGroup } from "../../takomo-stacks-model"
-import { deepCopy } from "../../takomo-util"
+import { deepCopy } from "../../utils/objects"
 import { StackGroupConfigNode } from "./config-tree"
 
 export const createStackGroupFromParent = (

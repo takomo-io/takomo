@@ -6,7 +6,7 @@ import {
 } from "../../../takomo-stacks-context"
 import { InternalStacksContext } from "../../../takomo-stacks-model"
 import { createStacksSchemas } from "../../../takomo-stacks-schema"
-import { validateInput } from "../../../takomo-util"
+import { validateInput } from "../../../utils/validation"
 import { StacksDeployOperationInput, StacksOperationOutput } from "../../model"
 import { executeDeployContext } from "./execute-deploy-context"
 import { DeployStacksIO } from "./model"

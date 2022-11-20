@@ -6,12 +6,11 @@ import {
   TemplateSummary,
 } from "../../../../takomo-aws-model"
 import { InternalStack } from "../../../../takomo-stacks-model"
-import {
-  arrayToMap,
-  indentLines,
-  prettyPrintJson,
-  TakomoError,
-} from "../../../../takomo-util"
+
+import { arrayToMap } from "../../../../utils/collections"
+import { TakomoError } from "../../../../utils/errors"
+import { prettyPrintJson } from "../../../../utils/json"
+import { indentLines } from "../../../../utils/strings"
 import { StackOperationStep } from "../../common/steps"
 import { ChangeSetNameHolder } from "../states"
 

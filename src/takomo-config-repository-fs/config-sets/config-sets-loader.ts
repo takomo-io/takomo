@@ -2,7 +2,8 @@ import R from "ramda"
 import readdirp from "readdirp"
 import { ConfigSet, ConfigSetName } from "../../takomo-config-sets"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model"
-import { arrayToMap, FilePath } from "../../takomo-util"
+import { arrayToMap } from "../../utils/collections"
+import { FilePath } from "../../utils/files"
 
 export const loadConfigSetsFromConfigSetsDir = async (
   configSetsDir: FilePath,

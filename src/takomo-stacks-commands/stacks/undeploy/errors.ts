@@ -1,5 +1,5 @@
 import { InternalStack } from "../../../takomo-stacks-model"
-import { TakomoError } from "../../../takomo-util"
+import { TakomoError } from "../../../utils/errors"
 
 export class IncompatibleIgnoreDependenciesOptionOnDeleteError extends TakomoError {
   constructor(stacks: ReadonlyArray<InternalStack>) {

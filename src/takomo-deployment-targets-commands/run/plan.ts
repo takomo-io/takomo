@@ -4,7 +4,8 @@ import {
   DeploymentTargetConfig,
 } from "../../takomo-deployment-targets-config"
 import { DeploymentTargetsContext } from "../../takomo-deployment-targets-context"
-import { collectFromHierarchy, TakomoError } from "../../takomo-util"
+import { collectFromHierarchy } from "../../utils/collections"
+import { TakomoError } from "../../utils/errors"
 import { createDeploymentTargetNamePatternMatcher } from "../common/plan/create-deployment-target-name-pattern-matcher"
 import { confirmRun } from "./confirm"
 import {
@@ -97,10 +98,8 @@ export const planRun = async ({
   const selectedTargets = grs.map((g) => g.targets).flat()
 
   if (selectedTargets.length === 0) {
-    timer.stop()
-
     return {
-      timer,
+      timer: timer.stop(),
       success: true,
       status: "SKIPPED",
       message: "No targets",

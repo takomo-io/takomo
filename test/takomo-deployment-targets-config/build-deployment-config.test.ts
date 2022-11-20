@@ -1,14 +1,14 @@
 import { readFileSync } from "fs"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { AwsClientProvider } from "../../src/takomo-aws-clients"
 import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
 import {
   buildDeploymentConfig,
   DeploymentConfig,
 } from "../../src/takomo-deployment-targets-config"
 import { DeploymentTargetsSchemaRegistry } from "../../src/takomo-deployment-targets-model"
-import { parseYaml, TkmLogger } from "../../src/takomo-util"
+import { TkmLogger } from "../../src/utils/logging"
+import { parseYaml } from "../../src/utils/yaml"
 
 const ctx: CommandContext = {
   regions: ["eu-north-1"],
@@ -18,7 +18,6 @@ const ctx: CommandContext = {
   quiet: false,
   projectDir: "/tmp",
   autoConfirmEnabled: false,
-  awsClientProvider: mock<AwsClientProvider>(),
   confidentialValuesLoggingEnabled: false,
   iamGeneratePoliciesInstructionsEnabled: false,
   credentials: undefined,

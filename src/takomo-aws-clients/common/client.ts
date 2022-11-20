@@ -1,7 +1,8 @@
 import { CredentialProvider, Pluggable } from "@aws-sdk/types"
 import { IPolicy } from "cockatiel"
 import { CallerIdentity, Region } from "../../takomo-aws-model"
-import { Scheduler, TkmLogger } from "../../takomo-util"
+import { TkmLogger } from "../../utils/logging"
+import { Scheduler } from "../../utils/scheduler"
 
 interface PagedResponse {
   readonly NextToken?: string

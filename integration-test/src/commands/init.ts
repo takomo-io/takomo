@@ -7,7 +7,8 @@ import {
   initProjectCommand,
   ProjectConfigRepository,
 } from "../../../src/takomo-init-command"
-import { createConsoleLogger, createTimer } from "../../../src/takomo-util"
+import { createConsoleLogger } from "../../../src/utils/logging"
+import { Timer } from "../../../src/utils/timer"
 import {
   createInitProjectOutputMatcher,
   InitProjectOutputMatcher,
@@ -88,7 +89,7 @@ export const executeInitProjectCommand = (
       credentialManager,
       io: createTestInitProjectIO(logger),
       input: {
-        timer: createTimer("total"),
+        timer: new Timer("total"),
         outputFormat: "text",
         project,
         createSamples,

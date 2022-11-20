@@ -16,7 +16,8 @@ import {
   TagKey,
 } from "../takomo-aws-model"
 import { CommandRole, Project, Vars } from "../takomo-core"
-import { FilePath, TkmLogger } from "../takomo-util"
+import { FilePath } from "../utils/files"
+import { TkmLogger } from "../utils/logging"
 import { TemplateBucketConfig, TimeoutConfig } from "./common"
 import { ROOT_STACK_GROUP_PATH } from "./constants"
 import { HookExecutor } from "./hook"

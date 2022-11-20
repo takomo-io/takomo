@@ -1,4 +1,4 @@
-import { uuid } from "../../src/takomo-util"
+import { uuid } from "../../src/utils/strings"
 import { executeDeployStacksCommand } from "../src/commands/stacks"
 
 const projectDir = `${process.cwd()}/integration-test/configs/template-bucket`

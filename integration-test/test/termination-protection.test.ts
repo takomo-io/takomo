@@ -1,4 +1,4 @@
-import { TakomoError } from "../../src/takomo-util"
+import { TakomoError } from "../../src/utils/errors"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,

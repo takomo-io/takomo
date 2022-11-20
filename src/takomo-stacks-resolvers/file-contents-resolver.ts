@@ -5,7 +5,7 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
-import { expandFilePath, fileExists, readFileContents } from "../takomo-util"
+import { expandFilePath, fileExists, readFileContents } from "../utils/files"
 
 const init = async ({ file }: any): Promise<Resolver> => {
   if (!file) {

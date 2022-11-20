@@ -1,7 +1,7 @@
 import { mock } from "jest-mock-extended"
 import {
-  CredentialManager,
   InternalAwsClientProvider,
+  InternalCredentialManager,
 } from "../../../src/takomo-aws-clients"
 import {
   InternalCommandContext,
@@ -16,7 +16,7 @@ import {
   DeploymentTargetsContext,
 } from "../../../src/takomo-deployment-targets-context"
 import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans"
-import { createConsoleLogger } from "../../../src/takomo-util"
+import { createConsoleLogger } from "../../../src/utils/logging"
 
 const ctx: DeploymentTargetsContext = {
   autoConfirmEnabled: false,
@@ -26,7 +26,7 @@ const ctx: DeploymentTargetsContext = {
   commandContext: mock<InternalCommandContext>(),
   confidentialValuesLoggingEnabled: false,
   configRepository: mock<DeploymentTargetsConfigRepository>(),
-  credentialManager: mock<CredentialManager>(),
+  credentialManager: mock<InternalCredentialManager>(),
   deploymentConfig: mock<DeploymentConfig>(),
   getConfigSet: jest.fn(),
   getDeploymentGroup: jest.fn(),

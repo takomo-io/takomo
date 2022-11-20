@@ -59,4 +59,5 @@ export {
   StackOperationVariables,
   StacksContext,
 } from "./takomo-stacks-model"
-export { LogLevel, TemplateEngine, TkmLogger } from "./takomo-util"
+export { LogLevel, TkmLogger } from "./utils/logging"
+export { TemplateEngine } from "./utils/templating"

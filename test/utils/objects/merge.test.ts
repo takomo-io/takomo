@@ -1,4 +1,4 @@
-import { merge } from "../../../src/takomo-util"
+import { merge } from "../../../src/utils/objects"
 
 describe("#merge", () => {
   test("a single empty object", () => {

@@ -1,5 +1,5 @@
 import R from "ramda"
-import { arrayToObject } from "../../../src/takomo-util"
+import { arrayToObject } from "../../../src/utils/collections"
 
 describe("#mapToObject", () => {
   describe("returns correct value when", () => {

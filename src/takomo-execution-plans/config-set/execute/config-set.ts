@@ -1,14 +1,12 @@
-import {
-  CredentialManager,
-  InternalCredentialManager,
-} from "../../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { ConfigSetContext } from "../../../takomo-config-sets"
 import {
   CommandOutput,
   OperationState,
   resolveCommandOutputBase,
 } from "../../../takomo-core"
-import { Timer, TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
+import { Timer } from "../../../utils/timer"
 import {
   CommandPathExecutionResult,
   ConfigSetExecution,
@@ -62,11 +60,10 @@ export const executeConfigSet = async <R extends CommandOutput, C>({
     results.push(result)
   }
 
-  timer.stop()
   return {
     ...resolveCommandOutputBase(results),
     configSetName: executionConfigSet.name,
     results,
-    timer,
+    timer: timer.stop(),
   }
 }

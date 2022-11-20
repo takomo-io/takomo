@@ -1,5 +1,5 @@
 import path from "path"
-import { FilePath } from "../takomo-util"
+import { FilePath } from "../utils/files"
 
 export const CONFIG_FILE_EXTENSION = ".yml"
 export const TEMPLATES_DIR = "templates"

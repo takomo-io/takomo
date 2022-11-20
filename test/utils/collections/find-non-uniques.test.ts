@@ -1,4 +1,4 @@
-import { findNonUniques } from "../../../src/takomo-util"
+import { findNonUniques } from "../../../src/utils/collections"
 
 const cases: unknown[][][] = [
   [[], []],

@@ -1,7 +1,7 @@
 import Joi, { AnySchema } from "joi"
 import { IamRoleArn, StackParameterKey } from "../takomo-aws-model"
 import { CommandContext } from "../takomo-core"
-import { TkmLogger } from "../takomo-util"
+import { TkmLogger } from "../utils/logging"
 import { StackOperationVariables } from "./command"
 import { StacksContext } from "./context"
 import { Stack, StackPath } from "./stack"

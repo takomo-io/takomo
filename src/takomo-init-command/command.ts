@@ -5,7 +5,7 @@ import {
   CommandHandler,
   createCommonSchema,
 } from "../takomo-core"
-import { validateInput } from "../takomo-util"
+import { validateInput } from "../utils/validation"
 import {
   InitProjectInput,
   InitProjectIO,
@@ -23,15 +23,13 @@ const initProject = async (
   const info = await io.promptProjectInformation(ctx, input)
   const description = await configRepository.putProjectConfig(info)
 
-  timer.stop()
-
   return {
     description,
     message: "Success",
     status: "SUCCESS",
     success: true,
     outputFormat: input.outputFormat,
-    timer,
+    timer: timer.stop(),
   }
 }
 

@@ -6,7 +6,7 @@ import {
   StackPath,
   StackResult,
 } from "../../../takomo-stacks-model"
-import { createTimer, Timer } from "../../../takomo-util"
+import { Timer } from "../../../utils/timer"
 import { StacksDeployOperationInput, StacksOperationOutput } from "../../model"
 import { StacksOperationListener } from "../common/model"
 import { deployStack } from "./deploy-stack"
@@ -77,12 +77,12 @@ const executeStacksInParallel = async (
   }, map)
 
   const results = await Promise.all(Array.from(executions.values()))
-  timer.stop()
+
   return {
     ...resolveCommandOutputBase(results),
     outputFormat,
     results,
-    timer,
+    timer: timer.stop(),
   }
 }
 
@@ -111,14 +111,13 @@ export const executeDeployContext = async (
   const confirmAnswer = await confirmDeploy(autoConfirm, plan, io)
 
   if (confirmAnswer === "CANCEL") {
-    timer.stop()
     return {
       outputFormat: input.outputFormat,
       success: false,
       results: [],
       status: "CANCELLED",
       message: "Cancelled",
-      timer,
+      timer: timer.stop(),
     }
   }
 
@@ -155,11 +154,9 @@ export const executeDeployContext = async (
       : stack.dependencies.map((d) => Promise.resolve(executions.get(d)!))
 
     if (state.cancelled) {
-      const t = createTimer("deploy")
-      t.stop()
       executions.set(stack.path, {
         status: "CANCELLED",
-        timer: t,
+        timer: timer.startChild("deploy").stop(),
         stack,
         success: false,
         events: [],
@@ -216,12 +213,10 @@ export const executeDeployContext = async (
 
   const results = Array.from(executions.values())
 
-  timer.stop()
-
   return {
     ...resolveCommandOutputBase(results),
     outputFormat: input.outputFormat,
     results,
-    timer,
+    timer: timer.stop(),
   }
 }

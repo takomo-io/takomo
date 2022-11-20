@@ -8,7 +8,8 @@ import {
   MetadataBearer,
   Pluggable,
 } from "@aws-sdk/types"
-import { TkmLogger, toCompactJson } from "../../takomo-util"
+import { toCompactJson } from "../../utils/json"
+import { TkmLogger } from "../../utils/logging"
 import { ClientListener } from "./client"
 
 const apiRequestListenerMiddleware =

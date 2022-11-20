@@ -5,7 +5,8 @@ import {
   deploymentTargetsRunCommand,
   DeploymentTargetsRunOutput,
 } from "../../../../src/takomo-deployment-targets-commands"
-import { createConsoleLogger, createTimer } from "../../../../src/takomo-util"
+import { createConsoleLogger } from "../../../../src/utils/logging"
+import { Timer } from "../../../../src/utils/timer"
 import { createTestRunTargetsIO } from "../../io"
 import { ExecuteCommandProps } from "../common"
 import { createCtxAndConfigRepository } from "./common"
@@ -97,7 +98,7 @@ export const executeRunTargetsCommand = (
       ...ctxAndConfig,
       io: createTestRunTargetsIO(logger),
       input: {
-        timer: createTimer("total"),
+        timer: new Timer("total"),
         groups: props.groups ?? [],
         targets: props.targets ?? [],
         excludeTargets: props.excludeTargets ?? [],

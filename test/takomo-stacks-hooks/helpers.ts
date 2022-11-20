@@ -1,9 +1,10 @@
+import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { CredentialManager } from "../../src/takomo-aws-clients"
+import { InternalCredentialManager } from "../../src/takomo-aws-clients"
 import { StackName } from "../../src/takomo-aws-model"
 import { InternalStack, StackPath } from "../../src/takomo-stacks-model"
-import { createConsoleLogger } from "../../src/takomo-util"
+import { createConsoleLogger } from "../../src/utils/logging"
 
 export interface TestStackProps {
   path: StackPath
@@ -39,8 +40,9 @@ export const createStack = (props: TestStackProps): InternalStack => {
     stackGroupPath: "/",
     getCloudFormationClient: jest.fn(),
     toProps: jest.fn(),
-    credentialManager: mock<CredentialManager>(),
+    credentialManager: mock<InternalCredentialManager>(),
     getCurrentCloudFormationStack: jest.fn(),
-    credentials: mock<Credentials>(),
+    getCredentials: async () => mock<Credentials>(),
+    getClient: async () => mock<CloudFormation>(),
   }
 }
