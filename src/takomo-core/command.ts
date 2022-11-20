@@ -1,7 +1,5 @@
 import { Credentials } from "@aws-sdk/types"
 import {
-  AwsClientProvider,
-  CredentialManager,
   InternalAwsClientProvider,
   InternalCredentialManager,
 } from "../takomo-aws-clients"
@@ -12,16 +10,10 @@ import { Variables } from "./variables"
 
 export type Project = string
 
-/**
- * @hidden
- */
 export interface OperationState {
   failed: boolean
 }
 
-/**
- * @hidden
- */
 export enum ConfirmResult {
   YES,
   NO,
@@ -33,80 +25,44 @@ export interface CommandRole {
 
 export type OutputFormat = "text" | "json" | "yaml"
 
-/**
- * @hidden
- */
 export type CommandStatus = "SUCCESS" | "FAILED" | "CANCELLED" | "SKIPPED"
 
-/**
- * @hidden
- */
 export const SUCCESS: CommandStatus = "SUCCESS"
 
-/**
- * @hidden
- */
 export const FAILED: CommandStatus = "FAILED"
 
-/**
- * @hidden
- */
 export const CANCELLED: CommandStatus = "CANCELLED"
 
-/**
- * @hidden
- */
 export const SKIPPED: CommandStatus = "SKIPPED"
 
-/**
- * @hidden
- */
 export interface SuccessHolder {
   readonly success: boolean
 }
 
-/**
- * @hidden
- */
 export interface CommandOutputBase extends SuccessHolder {
   readonly message: string
   readonly status: CommandStatus
   readonly error?: Error
 }
 
-/**
- * @hidden
- */
 export interface CommandOutput extends CommandOutputBase {
   readonly timer: Timer
   readonly outputFormat: OutputFormat
 }
 
-/**
- * @hidden
- */
 export interface ResultsOutput<T> extends CommandOutput {
   readonly results: ReadonlyArray<T>
 }
 
-/**
- * @hidden
- */
 export interface CommandInput {
   readonly timer: Timer
   readonly outputFormat: OutputFormat
 }
 
-/**
- * @hidden
- */
 export interface IO<O extends CommandOutput> extends TkmLogger {
   readonly printOutput: (output: O) => O
 }
 
-/**
- * @hidden
- */
 export const resolveCommandOutputBase = (
   items: ReadonlyArray<CommandOutputBase>,
 ): CommandOutputBase => {
@@ -215,25 +171,16 @@ export interface CommandContext {
   readonly iamGeneratePoliciesInstructionsEnabled: boolean
 }
 
-/**
- * @hidden
- */
 export interface TakomoBuildInfo {
   readonly version: string
 }
 
-/**
- * @hidden
- */
 export interface InternalCommandContext extends CommandContext {
   readonly buildInfo: TakomoBuildInfo
   readonly projectConfig: InternalTakomoProjectConfig
   readonly awsClientProvider: InternalAwsClientProvider
 }
 
-/**
- * @hidden
- */
 export interface CommandHandlerArgs<
   C,
   I extends IO<OUT>,
@@ -247,9 +194,6 @@ export interface CommandHandlerArgs<
   readonly credentialManager: InternalCredentialManager
 }
 
-/**
- * @hidden
- */
 export type CommandHandler<
   C,
   I extends IO<OUT>,

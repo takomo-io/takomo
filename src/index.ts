@@ -1,5 +1,4 @@
 import "source-map-support/register"
-export {} from ""
 export { CredentialManager } from "./takomo-aws-clients"
 export {
   CallerIdentity,
