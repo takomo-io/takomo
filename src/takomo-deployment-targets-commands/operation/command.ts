@@ -12,7 +12,7 @@ import {
 } from "../../takomo-deployment-targets-context"
 import { createDeploymentTargetsSchemas } from "../../takomo-deployment-targets-schema"
 import { createStacksSchemas } from "../../takomo-stacks-schema"
-import { validateInput } from "../../takomo-util"
+import { validateInput } from "../../utils/validation"
 import {
   DeploymentTargetsOperationInput,
   DeploymentTargetsOperationIO,

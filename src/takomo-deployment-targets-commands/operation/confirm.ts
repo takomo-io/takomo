@@ -13,14 +13,13 @@ export const confirmOperation = async (
   const answer = await io.confirmOperation(plan)
   switch (answer) {
     case "CANCEL":
-      timer.stop()
       return {
         results: [],
         outputFormat: input.outputFormat,
         message: "Cancelled",
         status: "CANCELLED",
         success: false,
-        timer,
+        timer: timer.stop(),
       }
     case "CONTINUE_AND_REVIEW":
       return executeOperation({

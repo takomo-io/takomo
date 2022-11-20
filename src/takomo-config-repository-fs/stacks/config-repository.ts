@@ -13,16 +13,16 @@ import {
   SchemaRegistry,
 } from "../../takomo-stacks-model"
 import { ResolverRegistry } from "../../takomo-stacks-resolvers"
+
+import { TakomoError } from "../../utils/errors"
 import {
-  createTemplateEngine,
   dirExists,
   fileExists,
   FilePath,
   readFileContents,
-  renderTemplate,
-  TakomoError,
-  TkmLogger,
-} from "../../takomo-util"
+} from "../../utils/files"
+import { TkmLogger } from "../../utils/logging"
+import { createTemplateEngine, renderTemplate } from "../../utils/templating"
 import { loadTemplateHelpers, loadTemplatePartials } from "../template-engine"
 import { buildStackGroupConfigNode } from "./config-tree"
 import {

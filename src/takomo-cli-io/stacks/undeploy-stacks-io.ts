@@ -8,7 +8,7 @@ import {
   UndeployStacksIO,
 } from "../../takomo-stacks-commands"
 import { StackGroup, StackPath } from "../../takomo-stacks-model"
-import { grey, red } from "../../takomo-util"
+import { grey, red } from "../../utils/colors"
 import { createBaseIO } from "../cli-io"
 import { formatStackEvent, formatStackStatus } from "../formatters"
 import {

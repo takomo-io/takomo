@@ -12,7 +12,7 @@ import {
   Label,
 } from "../../takomo-deployment-targets-model"
 import { CommandPath, DeploymentOperation } from "../../takomo-stacks-model"
-import { FilePath } from "../../takomo-util"
+import { FilePath } from "../../utils/files"
 import { commonEpilog, handle, RunProps } from "../common"
 import {
   COMMAND_PATH_OPT,

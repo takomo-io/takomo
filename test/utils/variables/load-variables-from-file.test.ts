@@ -1,13 +1,7 @@
 import { join } from "path"
-import { loadVariablesFromFile } from "../../../src/takomo-util"
+import { loadVariablesFromFile } from "../../../src/utils/variables"
 
-const projectDir = join(
-  process.cwd(),
-  "test",
-  "takomo-util",
-  "variables",
-  "files",
-)
+const projectDir = join(process.cwd(), "test", "utils", "variables", "files")
 
 describe("#loadVariablesFromFile", () => {
   test("simple text file", async () => {

@@ -1,6 +1,7 @@
 import R from "ramda"
 import { Schemas } from "../../../../takomo-stacks-model"
-import { arrayToObject, TakomoError } from "../../../../takomo-util"
+import { arrayToObject } from "../../../../utils/collections"
+import { TakomoError } from "../../../../utils/errors"
 import { StackOperationStep } from "../../common/steps"
 import { resolveResultMessage } from "../common"
 import { StackParameterInfo } from "../model"

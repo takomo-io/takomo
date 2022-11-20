@@ -3,7 +3,7 @@ import { CommandContext } from "../../takomo-core"
 import { ParameterConfig, ParameterConfigs } from "../../takomo-stacks-config"
 import { SchemaRegistry, StackPath } from "../../takomo-stacks-model"
 import { ResolverRegistry } from "../../takomo-stacks-resolvers"
-import { TakomoError } from "../../takomo-util"
+import { TakomoError } from "../../utils/errors"
 import {
   ListResolverExecutor,
   ResolverExecutor,

@@ -1,9 +1,9 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { CredentialManager } from "../../../../src/takomo-aws-clients"
+import { InternalCredentialManager } from "../../../../src/takomo-aws-clients"
 import { createVariablesForStackTemplate } from "../../../../src/takomo-stacks-commands/stacks/deploy/steps/prepare-template"
 import { InternalStack } from "../../../../src/takomo-stacks-model"
-import { createConsoleLogger } from "../../../../src/takomo-util"
+import { createConsoleLogger } from "../../../../src/utils/logging"
 
 const logger = createConsoleLogger({
   logLevel: "info",
@@ -30,7 +30,7 @@ describe("#createVariablesForStackTemplate", () => {
       commandRole: {
         iamRoleArn: "arn:aws:iam::888888888888:role/admin",
       },
-      credentialManager: mock<CredentialManager>(),
+      credentialManager: mock<InternalCredentialManager>(),
       data: {
         age: 1,
         name: "James",
@@ -64,9 +64,10 @@ describe("#createVariablesForStackTemplate", () => {
       },
       stackGroupPath: "/",
       logger,
-      credentials: mock<Credentials>(),
+      getCredentials: async () => mock<Credentials>(),
       getCurrentCloudFormationStack: jest.fn(),
       getCloudFormationClient: jest.fn(),
+      getClient: jest.fn(),
       toProps: jest.fn(),
     }
 
@@ -177,7 +178,7 @@ describe("#createVariablesForStackTemplate", () => {
     const stack: InternalStack = {
       accountIds: [],
       capabilities: [],
-      credentialManager: mock<CredentialManager>(),
+      credentialManager: mock<InternalCredentialManager>(),
       data: {
         arrayData: [1, 2, 3],
       },
@@ -199,9 +200,10 @@ describe("#createVariablesForStackTemplate", () => {
       },
       stackGroupPath: "/dev/apps/prod",
       logger,
-      credentials: mock<Credentials>(),
+      getCredentials: async () => mock<Credentials>(),
       getCurrentCloudFormationStack: jest.fn(),
       getCloudFormationClient: jest.fn(),
+      getClient: jest.fn(),
       toProps: jest.fn(),
     }
 

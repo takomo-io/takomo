@@ -1,10 +1,11 @@
-import R from "ramda"
 import {
   CloudFormationStackSummary,
   StackName,
 } from "../../../takomo-aws-model"
 import { getStackNames, InternalStack } from "../../../takomo-stacks-model"
-import { arrayToMap, checksum, TkmLogger } from "../../../takomo-util"
+import { arrayToMap } from "../../../utils/collections"
+import { TkmLogger } from "../../../utils/logging"
+import { checksum } from "../../../utils/strings"
 
 const makeCredentialsRegionHash = async (
   stack: InternalStack,

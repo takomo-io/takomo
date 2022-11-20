@@ -1,4 +1,4 @@
-import { expandFilePath } from "../../../src/takomo-util"
+import { expandFilePath } from "../../../src/utils/files"
 
 const homeDir = "/home"
 

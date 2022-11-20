@@ -1,6 +1,5 @@
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { AwsClientProvider } from "../../src/takomo-aws-clients"
 import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
 import { defaultSchema } from "../../src/takomo-stacks-resolvers/resolver-registry"
 import { createStackOutputResolverProvider } from "../../src/takomo-stacks-resolvers/stack-output-resolver"
@@ -28,7 +27,6 @@ const ctx: CommandContext = {
   iamGeneratePoliciesInstructionsEnabled: false,
   credentials: undefined,
   projectConfig: mock<TakomoProjectConfig>(),
-  awsClientProvider: mock<AwsClientProvider>(),
 }
 
 const schema = provider.schema!({

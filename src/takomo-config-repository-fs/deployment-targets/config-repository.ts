@@ -22,13 +22,11 @@ import {
 import { StacksConfigRepository } from "../../takomo-stacks-context"
 import { createHookRegistry } from "../../takomo-stacks-hooks"
 import { ResolverRegistry } from "../../takomo-stacks-resolvers"
-import {
-  dirExists,
-  FilePath,
-  TakomoError,
-  TemplateEngine,
-  TkmLogger,
-} from "../../takomo-util"
+
+import { TakomoError } from "../../utils/errors"
+import { dirExists, FilePath } from "../../utils/files"
+import { TkmLogger } from "../../utils/logging"
+import { TemplateEngine } from "../../utils/templating"
 import { createFileSystemCache } from "../cache"
 import { loadConfigSetsFromConfigSetsDir } from "../config-sets/config-sets-loader"
 import {
@@ -248,7 +246,9 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
         return result.value
       }
 
-      const details = result.error.messages.map((m) => `  - ${m}`).join("\n")
+      const details = result.error.messages
+        .map((m: unknown) => `  - ${m}`)
+        .join("\n")
       throw new TakomoError(
         `Validation errors in deployment targets configuration file ${configFile}:\n\n${details}`,
       )

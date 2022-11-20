@@ -4,7 +4,10 @@ import {
   StackPolicyBody,
 } from "../../../takomo-aws-model"
 import { InternalStack } from "../../../takomo-stacks-model"
-import { bold, diffStrings, green, prettyPrintJson } from "../../../takomo-util"
+
+import { bold, green } from "../../../utils/colors"
+import { prettyPrintJson } from "../../../utils/json"
+import { diffStrings } from "../../../utils/strings"
 import { BaseIO } from "../../cli-io"
 
 const ensureContentsEndsWithLineFeed = (content: string): string =>

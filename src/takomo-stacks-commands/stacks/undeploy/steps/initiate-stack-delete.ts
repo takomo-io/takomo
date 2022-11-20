@@ -1,4 +1,4 @@
-import { uuid } from "../../../../takomo-util"
+import { uuid } from "../../../../utils/strings"
 import { StackOperationStep } from "../../common/steps"
 import { CurrentStackHolder } from "../states"
 

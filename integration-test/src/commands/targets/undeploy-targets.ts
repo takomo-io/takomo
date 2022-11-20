@@ -1,6 +1,7 @@
 import { basename } from "path"
 import { deploymentTargetsOperationCommand } from "../../../../src/takomo-deployment-targets-commands"
-import { createConsoleLogger, createTimer } from "../../../../src/takomo-util"
+import { createConsoleLogger } from "../../../../src/utils/logging"
+import { Timer } from "../../../../src/utils/timer"
 import { createTestUndeployTargetsIO } from "../../io"
 import { createCtxAndConfigRepository } from "./common"
 import {
@@ -36,7 +37,7 @@ export const executeUndeployTargetsCommand = (
       ...ctxAndConfig,
       io: createTestUndeployTargetsIO(logger),
       input: {
-        timer: createTimer("total"),
+        timer: new Timer("total"),
         configSetType: "standard",
         operation: "undeploy",
         groups: props.groups ?? [],

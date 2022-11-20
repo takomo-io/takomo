@@ -5,7 +5,8 @@ import {
   OperationState,
   resolveCommandOutputBase,
 } from "../../../takomo-core"
-import { Timer, TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
+import { Timer } from "../../../utils/timer"
 import {
   ConfigSetExecutionStage,
   ConfigSetGroupExecutionResult,
@@ -73,12 +74,10 @@ export const executeStage = async <R extends CommandOutput, C>({
     results.push(result)
   }
 
-  timer.stop()
-
   return {
     ...resolveCommandOutputBase(results),
     results,
-    timer,
+    timer: timer.stop(),
     stageName,
   }
 }

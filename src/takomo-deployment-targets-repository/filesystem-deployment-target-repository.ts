@@ -4,17 +4,17 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "../takomo-deployment-targets-model"
+
+import { TakomoError } from "../utils/errors"
 import {
   dirExists,
   expandFilePath,
   FilePath,
-  parseYaml,
   readFileContents,
-  renderTemplate,
-  TakomoError,
-  TemplateEngine,
-  TkmLogger,
-} from "../takomo-util"
+} from "../utils/files"
+import { TkmLogger } from "../utils/logging"
+import { renderTemplate, TemplateEngine } from "../utils/templating"
+import { parseYaml } from "../utils/yaml"
 import {
   DeploymentTargetConfigItem,
   DeploymentTargetConfigItemWrapper,

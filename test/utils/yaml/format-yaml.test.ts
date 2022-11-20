@@ -1,4 +1,4 @@
-import { formatYaml } from "../../../src/takomo-util"
+import { formatYaml } from "../../../src/utils/yaml"
 
 describe("#formatYaml", () => {
   test("Simple", () => {

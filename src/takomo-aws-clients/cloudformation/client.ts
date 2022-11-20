@@ -32,7 +32,10 @@ import {
 } from "../../takomo-aws-model"
 
 import { StackEvent } from "../../takomo-aws-model/cloudformation"
-import { arrayToMap, Scheduler, sleep, uuid } from "../../takomo-util"
+import { arrayToMap } from "../../utils/collections"
+import { Scheduler } from "../../utils/scheduler"
+import { uuid } from "../../utils/strings"
+import { sleep } from "../../utils/system"
 import {
   InternalAwsClientProps,
   pagedOperationBulkhead,

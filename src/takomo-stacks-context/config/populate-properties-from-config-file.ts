@@ -4,7 +4,9 @@ import {
   SchemaRegistry,
   StackGroup,
 } from "../../takomo-stacks-model"
-import { merge, mergeArrays, TkmLogger } from "../../takomo-util"
+import { mergeArrays } from "../../utils/collections"
+import { TkmLogger } from "../../utils/logging"
+import { merge } from "../../utils/objects"
 import { StackGroupConfigNode } from "./config-tree"
 import { mergeStackGroupSchemas } from "./merge-stack-group-schemas"
 

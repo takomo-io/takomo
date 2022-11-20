@@ -1,4 +1,6 @@
-import { bold, indentLines, LogWriter } from "../takomo-util"
+import { bold } from "../utils/colors"
+import { LogWriter } from "../utils/logging"
+import { indentLines } from "../utils/strings"
 import { createInquirerUserActions, UserActions } from "./user-actions"
 
 export interface Choice<T> {

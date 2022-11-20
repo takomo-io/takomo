@@ -1,5 +1,6 @@
 import { dirname, join } from "path"
 import { Cache } from "../takomo-core"
+import { TakomoError } from "../utils/errors"
 import {
   createDir,
   createFile,
@@ -8,9 +9,8 @@ import {
   FilePath,
   readFileContents,
   removeDir,
-  TakomoError,
-  TkmLogger,
-} from "../takomo-util"
+} from "../utils/files"
+import { TkmLogger } from "../utils/logging"
 
 const toFilePath = (cacheDir: FilePath, key: string): FilePath =>
   join(cacheDir, key)

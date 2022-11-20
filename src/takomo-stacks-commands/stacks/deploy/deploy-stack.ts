@@ -6,7 +6,8 @@ import {
   StackOperationType,
   StackResult,
 } from "../../../takomo-stacks-model"
-import { Timer, TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
+import { Timer } from "../../../utils/timer"
 import { StacksOperationListener } from "../common/model"
 import { executeSteps } from "../common/steps"
 import { DeployStacksIO, DeployState } from "./model"

@@ -1,7 +1,4 @@
-import {
-  CredentialManager,
-  InternalCredentialManager,
-} from "../takomo-aws-clients"
+import { InternalCredentialManager } from "../takomo-aws-clients"
 import {
   ConfigSet,
   ConfigSetContext,
@@ -16,7 +13,8 @@ import {
 } from "../takomo-deployment-targets-config"
 import { DeploymentGroupPath } from "../takomo-deployment-targets-model"
 import { StacksConfigRepository } from "../takomo-stacks-context"
-import { collectFromHierarchy, TkmLogger } from "../takomo-util"
+import { collectFromHierarchy } from "../utils/collections"
+import { TkmLogger } from "../utils/logging"
 
 export interface DeploymentTargetsConfigRepository
   extends StacksConfigRepository {

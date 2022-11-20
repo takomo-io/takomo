@@ -6,7 +6,8 @@ import {
   OperationState,
   resolveCommandOutputBase,
 } from "../../../takomo-core"
-import { Timer, TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
+import { Timer } from "../../../utils/timer"
 import {
   ConfigSetExecutionGroup,
   ConfigSetExecutionTarget,
@@ -112,11 +113,10 @@ export const executeGroup = async <R extends CommandOutput, C>({
 
   await targetListener.onGroupComplete(group)
 
-  timer.stop()
   return {
     ...resolveCommandOutputBase(results),
     groupId: group.id,
     results,
-    timer,
+    timer: timer.stop(),
   }
 }

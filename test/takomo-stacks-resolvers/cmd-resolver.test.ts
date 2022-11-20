@@ -8,7 +8,7 @@ import {
   StacksContext,
 } from "../../src/takomo-stacks-model"
 import { createCmdResolverProvider } from "../../src/takomo-stacks-resolvers/cmd-resolver"
-import { createConsoleLogger } from "../../src/takomo-util"
+import { createConsoleLogger } from "../../src/utils/logging"
 
 const provider = createCmdResolverProvider()
 

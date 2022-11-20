@@ -2,7 +2,7 @@ import {
   InternalStacksContext,
   isNotObsolete,
 } from "../../../takomo-stacks-model"
-import { TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
 import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
 import { ListStacksInput, ListStacksOutput } from "./model"
 
@@ -27,14 +27,12 @@ export const listStacks = async (
     updatedTime: current?.lastUpdatedTime,
   }))
 
-  timer.stop()
-
   return {
     success: true,
     status: "SUCCESS",
     message: "Success",
     outputFormat,
-    timer,
+    timer: timer.stop(),
     results,
   }
 }

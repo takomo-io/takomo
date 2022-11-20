@@ -16,7 +16,7 @@ import {
   DeploymentGroupPath,
   Label,
 } from "../../takomo-deployment-targets-model"
-import { merge } from "../../takomo-util"
+import { merge } from "../../utils/objects"
 import { DeploymentGroupConfig } from "../model"
 import { fillMissingDeploymentGroups } from "../util"
 import { parseDeploymentStatus } from "./parse-deployment-status"

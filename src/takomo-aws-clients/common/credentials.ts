@@ -11,7 +11,7 @@ import {
   CredentialsError,
   IamRoleArn,
 } from "../../takomo-aws-model"
-import { TkmLogger } from "../../takomo-util"
+import { TkmLogger } from "../../utils/logging"
 import { AwsClientProvider } from "../aws-client-provider"
 import { customRetryStrategy } from "./retry"
 

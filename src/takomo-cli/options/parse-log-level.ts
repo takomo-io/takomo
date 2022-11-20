@@ -1,4 +1,4 @@
-import { LogLevel } from "../../takomo-util"
+import { LogLevel } from "../../utils/logging"
 
 export const parseLogLevel = (log: string, quiet: boolean): LogLevel => {
   if (quiet) {

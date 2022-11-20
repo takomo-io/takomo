@@ -15,7 +15,9 @@ import {
   StackPath,
 } from "../takomo-stacks-model"
 import { ResolverRegistry } from "../takomo-stacks-resolvers"
-import { TakomoError, TemplateEngine, Timer } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
+import { TemplateEngine } from "../utils/templating"
+import { Timer } from "../utils/timer"
 import { ConfigTree } from "./config/config-tree"
 
 export class CommandPathMatchesNoStacksError extends TakomoError {

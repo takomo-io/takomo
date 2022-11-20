@@ -9,7 +9,8 @@ import {
 } from "../takomo-aws-model"
 import { createAwsSchemas } from "../takomo-aws-schema"
 import { CommandContext, CommandHandler } from "../takomo-core"
-import { TkmLogger, validateInput } from "../takomo-util"
+import { TkmLogger } from "../utils/logging"
+import { validateInput } from "../utils/validation"
 import {
   GenerateIamPoliciesInput,
   GenerateIamPoliciesIO,
@@ -177,15 +178,13 @@ const generateIamPolicies = async (
     }))
     .filter(({ identity }) => identities.includes(identity))
 
-  timer.stop()
-
   return {
     policies,
     message: "Success",
     status: "SUCCESS",
     success: true,
     outputFormat: input.outputFormat,
-    timer,
+    timer: timer.stop(),
   }
 }
 

@@ -1,4 +1,4 @@
-import { uuid } from "../../src/takomo-util"
+import { uuid } from "../../src/utils/strings"
 import { aws } from "../src/aws-api"
 import { executeDeployStacksCommand } from "../src/commands/stacks"
 import { withSingleAccountReservation } from "../src/reservations"

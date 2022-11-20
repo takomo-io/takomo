@@ -10,7 +10,7 @@ import {
   Stack,
   StackOperationVariables,
 } from "../../src/takomo-stacks-model"
-import { createConsoleLogger } from "../../src/takomo-util"
+import { createConsoleLogger } from "../../src/utils/logging"
 
 class ThrowingHook implements Hook {
   private readonly error: Error

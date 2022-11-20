@@ -6,7 +6,8 @@ import {
   SchemaName,
   SchemaRegistry,
 } from "../takomo-stacks-model"
-import { TakomoError, TkmLogger } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
+import { TkmLogger } from "../utils/logging"
 
 export type DeploymentGroupName = string
 export type DeploymentTargetName = string

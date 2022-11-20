@@ -6,7 +6,7 @@ import {
   DeploymentTargetsConfigRepository,
 } from "../../takomo-deployment-targets-context"
 import { createDeploymentTargetsSchemas } from "../../takomo-deployment-targets-schema"
-import { validateInput } from "../../takomo-util"
+import { validateInput } from "../../utils/validation"
 import {
   DeploymentTargetsRunInput,
   DeploymentTargetsRunIO,

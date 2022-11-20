@@ -1,4 +1,4 @@
-import { buildErrorMessage } from "../../../src/takomo-util/templating"
+import { buildErrorMessage } from "../../../src/utils/templating"
 
 const error = (
   message: string,

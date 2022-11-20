@@ -1,5 +1,5 @@
 import { StackResult } from "../../../takomo-stacks-model"
-import { TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
 import { InitialStackOperationState } from "./states"
 
 type StackOperationCompletedProps = Omit<StackResult, "timer">
@@ -86,11 +86,9 @@ export const executeSteps = async (
     )
   }
 
-  totalTimer.stop()
-
   await stacksOperationListener.onStackOperationComplete(stack, {
     ...result.props,
-    timer: totalTimer,
+    timer: totalTimer.stop(),
   })
 
   return { ...result.props, timer: totalTimer }

@@ -1,5 +1,5 @@
 import path from "path"
-import { createFile, FilePath } from "../../takomo-util"
+import { createFile, FilePath } from "../../utils/files"
 
 const vpcStackConfig = `# Takomo sample VPC stack configuration.
 # The corresponding CloudFormation template can be found from templates/vpc.yml

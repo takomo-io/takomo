@@ -13,12 +13,9 @@ import {
 } from "../../../src/takomo-stacks-commands"
 import { StacksConfigRepository } from "../../../src/takomo-stacks-context"
 import { ROOT_STACK_GROUP_PATH } from "../../../src/takomo-stacks-model"
-import {
-  createConsoleLogger,
-  createTimer,
-  FilePath,
-  LogLevel,
-} from "../../../src/takomo-util"
+import { FilePath } from "../../../src/utils/files"
+import { createConsoleLogger, LogLevel } from "../../../src/utils/logging"
+import { Timer } from "../../../src/utils/timer"
 import {
   createDetectDriftOutputMatcher,
   createListStacksOutputMatcher,
@@ -129,7 +126,7 @@ export const executeDeployStacksCommand = (
         ignoreDependencies,
         expectNoChanges: props.expectNoChanges ?? false,
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
-        timer: createTimer("total"),
+        timer: new Timer("total"),
         interactive: props.interactive ?? false,
         outputFormat: "text",
       },
@@ -174,7 +171,7 @@ export const executeUndeployStacksCommand = (
       ),
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
-        timer: createTimer("total"),
+        timer: new Timer("total"),
         ignoreDependencies: props.ignoreDependencies ?? false,
         interactive: props.interactive ?? false,
         prune: props.prune ?? false,
@@ -217,7 +214,7 @@ export const executeListStacksCommand = (
       io: createTestListStacksIO(logger),
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
-        timer: createTimer("total"),
+        timer: new Timer("total"),
         outputFormat: "text",
       },
     })
@@ -257,7 +254,7 @@ export const executeDetectDriftCommand = (
       io: createTestDetectDriftIO(logger),
       input: {
         commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
-        timer: createTimer("total"),
+        timer: new Timer("total"),
         outputFormat: "text",
       },
     })

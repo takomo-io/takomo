@@ -1,4 +1,6 @@
-import { indentLines, LogLevel, TakomoError } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
+import { LogLevel } from "../utils/logging"
+import { indentLines } from "../utils/strings"
 import { BaseIO } from "./cli-io"
 
 export const printError = (

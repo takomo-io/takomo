@@ -20,14 +20,11 @@ import {
   DeploymentTargetConfig,
 } from "../../takomo-deployment-targets-config"
 import { DeploymentTargetsContext } from "../../takomo-deployment-targets-context"
-import {
-  expandFilePath,
-  FilePath,
-  parseYaml,
-  readFileContents,
-  Timer,
-  TkmLogger,
-} from "../../takomo-util"
+
+import { expandFilePath, FilePath, readFileContents } from "../../utils/files"
+import { TkmLogger } from "../../utils/logging"
+import { Timer } from "../../utils/timer"
+import { parseYaml } from "../../utils/yaml"
 import { DeploymentTargetsListener } from "../operation/model"
 import {
   DeploymentGroupRunResult,
@@ -296,13 +293,12 @@ export const processDeploymentTarget = async (
   const { mapCommand } = input
 
   if (state.failed) {
-    timer.stop()
     return {
       message: "Cancelled",
       status: "CANCELLED",
       success: false,
       name: target.name,
-      timer,
+      timer: timer.stop(),
     }
   }
 
@@ -321,25 +317,24 @@ export const processDeploymentTarget = async (
       input,
       mapArgs,
     })
-    timer.stop()
+
     return {
       status: "SUCCESS" as CommandStatus,
       name: target.name,
       success: true,
       message: "Success",
+      timer: timer.stop(),
       value,
-      timer,
     }
   } catch (error: any) {
-    timer.stop()
     logger.error(`Map command failed for target '${target.name}'`, error)
     return {
       status: "FAILED" as CommandStatus,
       name: target.name,
       success: false,
       message: "Error",
+      timer: timer.stop(),
       error,
-      timer,
     }
   }
 }
@@ -406,13 +401,11 @@ export const processDeploymentGroup = async (
 
   await Promise.all(operations.map((o) => o()))
 
-  timer.stop()
-
   return {
     ...resolveCommandOutputBase(results),
     results,
     path: group.path,
-    timer,
+    timer: timer.stop(),
   }
 }
 
@@ -482,11 +475,10 @@ export const run = async (
     .map((r) => r.value)
 
   if (!outputBase.success || !input.reduceCommand) {
-    childTimer.stop()
     return {
       ...outputBase,
       result: targetResults,
-      timer: childTimer,
+      timer: childTimer.stop(),
       outputFormat: input.outputFormat,
     }
   }
@@ -503,15 +495,14 @@ export const run = async (
       credentials: reduceCredentials,
       reduceCommand: input.reduceCommand,
     })
-    childTimer.stop()
+
     return {
       ...outputBase,
       result,
-      timer: childTimer,
+      timer: childTimer.stop(),
       outputFormat: input.outputFormat,
     }
   } catch (error: any) {
-    childTimer.stop()
     io.error(`Reduce command failed`, error)
     return {
       error,
@@ -519,7 +510,7 @@ export const run = async (
       message: "Reduce command failed",
       success: false,
       status: "FAILED",
-      timer: childTimer,
+      timer: childTimer.stop(),
       outputFormat: input.outputFormat,
     }
   }

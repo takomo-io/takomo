@@ -1,4 +1,4 @@
-import { VarFileOption } from "../../takomo-util"
+import { VarFileOption } from "../../utils/variables"
 
 export const parseVarFileOptions = (
   varFileArgs: any,

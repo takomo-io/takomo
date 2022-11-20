@@ -13,7 +13,8 @@ import {
   StackOperationType,
   StackPath,
 } from "../../../takomo-stacks-model"
-import { arrayToMap, TkmLogger } from "../../../takomo-util"
+import { arrayToMap } from "../../../utils/collections"
+import { TkmLogger } from "../../../utils/logging"
 import {
   loadCurrentCfStacks,
   StackPair,

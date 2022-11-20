@@ -6,13 +6,9 @@ import {
 } from "../../../../src/takomo-aws-model"
 import { createDetectDriftIO } from "../../../../src/takomo-cli-io"
 import { StackDriftInfo } from "../../../../src/takomo-stacks-commands"
-import {
-  createConsoleLogger,
-  green,
-  LogWriter,
-  red,
-  Timer,
-} from "../../../../src/takomo-util"
+import { green, red } from "../../../../src/utils/colors"
+import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
+import { Timer } from "../../../../src/utils/timer"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 import { mockInternalStack } from "../../mocks"
 

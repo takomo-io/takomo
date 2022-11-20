@@ -15,7 +15,8 @@ import {
   Label,
 } from "../../../takomo-deployment-targets-model"
 import { CommandPath } from "../../../takomo-stacks-model"
-import { collectFromHierarchy, TakomoError } from "../../../takomo-util"
+import { collectFromHierarchy } from "../../../utils/collections"
+import { TakomoError } from "../../../utils/errors"
 import { createDeploymentTargetNamePatternMatcher } from "./create-deployment-target-name-pattern-matcher"
 
 export interface SelectDeploymentGroupsProps {

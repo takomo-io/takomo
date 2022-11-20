@@ -1,4 +1,4 @@
-import { createTemplateEngine } from "../../../src/takomo-util"
+import { createTemplateEngine } from "../../../src/utils/templating"
 
 describe("#registerPartial", () => {
   test("ok", () => {

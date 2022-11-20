@@ -5,7 +5,7 @@ import {
   StacksConfigRepository,
 } from "../../../takomo-stacks-context"
 import { createStacksSchemas } from "../../../takomo-stacks-schema"
-import { validateInput } from "../../../takomo-util"
+import { validateInput } from "../../../utils/validation"
 import { detectDrift } from "./detect-drift"
 import { DetectDriftInput, DetectDriftIO, DetectDriftOutput } from "./model"
 

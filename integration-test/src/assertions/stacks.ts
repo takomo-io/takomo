@@ -5,7 +5,6 @@ import {
   Region,
   StackDriftDetectionStatus,
   StackDriftDetectionStatusReason,
-  StackDriftStatus,
   StackName,
   StackOutputKey,
   StackOutputValue,
@@ -14,6 +13,7 @@ import {
   TagKey,
   TagValue,
 } from "../../../src/takomo-aws-model"
+import { StackDriftStatus } from "../../../src/takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../../src/takomo-core"
 import {
   DetectDriftOutput,
@@ -23,7 +23,7 @@ import {
   StacksOperationOutput,
 } from "../../../src/takomo-stacks-commands"
 import { StackPath, StackResult } from "../../../src/takomo-stacks-model"
-import { prettyPrintJson, toPrettyJson } from "../../../src/takomo-util"
+import { prettyPrintJson, toPrettyJson } from "../../../src/utils/json"
 import { aws } from "../aws-api"
 
 export interface ExpectStackResultProps {

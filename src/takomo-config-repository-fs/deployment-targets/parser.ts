@@ -1,12 +1,8 @@
 import { CommandContext } from "../../takomo-core"
-import {
-  FilePath,
-  parseYaml,
-  readFileContents,
-  renderTemplate,
-  TemplateEngine,
-  TkmLogger,
-} from "../../takomo-util"
+import { FilePath, readFileContents } from "../../utils/files"
+import { TkmLogger } from "../../utils/logging"
+import { renderTemplate, TemplateEngine } from "../../utils/templating"
+import { parseYaml } from "../../utils/yaml"
 
 export const parseConfigFile = async (
   ctx: CommandContext,

@@ -1,4 +1,4 @@
-import { mapToObject } from "../../../src/takomo-util"
+import { mapToObject } from "../../../src/utils/collections"
 
 describe("#mapToObject", () => {
   describe("returns correct value when", () => {

@@ -6,7 +6,7 @@ import {
   TagKey,
   TagValue,
 } from "../../../takomo-aws-model"
-import { bold, green, red, yellow } from "../../../takomo-util"
+import { bold, green, red, yellow } from "../../../utils/colors"
 import { BaseIO } from "../../cli-io"
 import { printValue } from "./common"
 

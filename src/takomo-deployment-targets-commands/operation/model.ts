@@ -18,7 +18,8 @@ import {
   UndeployStacksIO,
 } from "../../takomo-stacks-commands"
 import { CommandPath, DeploymentOperation } from "../../takomo-stacks-model"
-import { Timer, TkmLogger } from "../../takomo-util"
+import { TkmLogger } from "../../utils/logging"
+import { Timer } from "../../utils/timer"
 import { PlannedDeploymentTarget } from "../common/plan/model"
 
 export type ConfirmOperationAnswer =

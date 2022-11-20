@@ -1,4 +1,4 @@
-import { splitTextInLines } from "../../../src/takomo-util"
+import { splitTextInLines } from "../../../src/utils/strings"
 
 describe("#splitTextInLines", () => {
   test("empty string", () => {

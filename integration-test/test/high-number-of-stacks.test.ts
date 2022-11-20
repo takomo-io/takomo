@@ -1,5 +1,5 @@
 import R from "ramda"
-import { sleep } from "../../src/takomo-util"
+import { sleep } from "../../src/utils/system"
 import { executeDeployStacksCommand } from "../src/commands/stacks"
 
 const projectDir = `${process.cwd()}/integration-test/configs/high-number-of-stacks`

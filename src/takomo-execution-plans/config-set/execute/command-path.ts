@@ -2,7 +2,8 @@ import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { ConfigSet } from "../../../takomo-config-sets"
 import { CommandOutput, OperationState } from "../../../takomo-core"
 import { CommandPath } from "../../../takomo-stacks-model"
-import { Timer, TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
+import { Timer } from "../../../utils/timer"
 import {
   CommandPathExecutionResult,
   ConfigSetExecutionTarget,
@@ -41,11 +42,10 @@ export const executeCommandPath = async <R extends CommandOutput, C>({
     timer,
   })
 
-  timer.stop()
   return {
     result,
     commandPath,
-    timer,
+    timer: timer.stop(),
     status: result.status,
     success: result.success,
     message: result.message,
