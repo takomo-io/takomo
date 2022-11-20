@@ -1,3 +1,7 @@
+import {
+  GetSecretValueCommand,
+  SecretsManagerClient,
+} from "@aws-sdk/client-secrets-manager"
 import jmespath from "jmespath"
 import { ObjectSchema } from "joi"
 import { IamRoleArn } from "../takomo-aws-model"
@@ -9,10 +13,6 @@ import {
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
 import { TkmLogger } from "../takomo-util"
-import {
-  GetSecretValueCommand,
-  SecretsManagerClient,
-} from "@aws-sdk/client-secrets-manager"
 
 const parseSecret = (logger: TkmLogger, secretValue: string): unknown => {
   try {

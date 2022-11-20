@@ -14,9 +14,6 @@ import { InternalStack, RawTagValue } from "./stack"
 export type StackGroupPath = string
 export type StackGroupName = string
 
-/**
- * @hidden
- */
 export interface StackGroupProps {
   name: StackGroupName
   project?: Project
@@ -41,9 +38,6 @@ export interface StackGroupProps {
   schemas?: Schemas
 }
 
-/**
- * @hidden
- */
 export interface StackGroup {
   readonly name: string
   readonly project?: Project
@@ -70,9 +64,6 @@ export interface StackGroup {
   readonly schemas?: Schemas
 }
 
-/**
- * @hidden
- */
 export const createStackGroup = (props: StackGroupProps): StackGroup => {
   const {
     accountIds,

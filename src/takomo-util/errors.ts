@@ -1,15 +1,9 @@
-/**
- * @hidden
- */
 export interface TakomoErrorProps {
   readonly info?: string
   readonly instructions?: string[]
 }
 
 // See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html#example
-/**
- * @hidden
- */
 export class TakomoError extends Error {
   readonly isTakomoError = true
   readonly info?: string
@@ -23,9 +17,6 @@ export class TakomoError extends Error {
   }
 }
 
-/**
- * @hidden
- */
 export class ValidationError extends TakomoError {
   readonly messages: ReadonlyArray<string>
   constructor(

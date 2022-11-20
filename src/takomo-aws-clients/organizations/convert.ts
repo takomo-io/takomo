@@ -1,9 +1,6 @@
 import * as CF from "@aws-sdk/client-organizations"
 import { Account, AccountStatus, OU, OUPath } from "../../takomo-aws-model"
 
-/**
- * @hidden
- */
 export const convertOU = (
   ou: CF.OrganizationalUnit,
   parentPath: OUPath,
@@ -14,9 +11,6 @@ export const convertOU = (
   name: ou.Name!,
 })
 
-/**
- * @hidden
- */
 export const convertRoot = (ou: CF.Root): OU => ({
   path: "ROOT",
   id: ou.Id!,
@@ -24,9 +18,6 @@ export const convertRoot = (ou: CF.Root): OU => ({
   name: ou.Name!,
 })
 
-/**
- * @hidden
- */
 export const convertAccount = (account: CF.Account): Account => ({
   arn: account.Arn!,
   id: account.Id!,

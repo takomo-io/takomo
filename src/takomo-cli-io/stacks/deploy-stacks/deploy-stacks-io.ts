@@ -2,10 +2,10 @@ import R from "ramda"
 import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
-  StackEvent,
   TemplateBody,
   TemplateSummary,
 } from "../../../takomo-aws-model"
+import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,

@@ -1,3 +1,4 @@
+import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm"
 import { ObjectSchema } from "joi"
 import { IamRoleArn } from "../takomo-aws-model"
 import { createAwsSchemas } from "../takomo-aws-schema"
@@ -7,7 +8,6 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
-import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm"
 
 const init = async (props: any): Promise<Resolver> => ({
   iamRoleArns: (): IamRoleArn[] =>

@@ -2,7 +2,6 @@ import { AnySchema } from "joi"
 import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
-  StackEvent,
   StackParameterKey,
   StackParameterValue,
   TagKey,
@@ -10,6 +9,7 @@ import {
   TemplateBody,
   TemplateSummary,
 } from "../../../takomo-aws-model"
+import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import { IO } from "../../../takomo-core"
 import {
   CommandPath,

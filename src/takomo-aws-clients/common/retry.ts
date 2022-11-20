@@ -11,9 +11,6 @@ const ADDITIONAL_RETRYABLE_ERROR_CODES = [
   "TimeoutError",
 ]
 
-/**
- * @hidden
- */
 export const customRetryStrategy = (): RetryStrategy => {
   return new StandardRetryStrategy(async () => 30, {
     retryDecider: (error) => {

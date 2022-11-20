@@ -1,6 +1,5 @@
 import * as CF from "@aws-sdk/client-cloudformation"
 import {
-  CausingEntity,
   ChangeSet,
   ChangeSetId,
   ChangeSetName,
@@ -31,8 +30,6 @@ import {
   StackDriftDetectionStatus,
   StackDriftDetectionStatusOutput,
   StackDriftDetectionStatusReason,
-  StackDriftStatus,
-  StackEvent,
   StackId,
   StackName,
   StackOutputDescription,
@@ -49,6 +46,11 @@ import {
   TemplateDescription,
   TemplateSummary,
 } from "../../takomo-aws-model"
+import {
+  CausingEntity,
+  StackDriftStatus,
+  StackEvent,
+} from "../../takomo-aws-model/cloudformation"
 
 const convertStackInternal = (s: CF.Stack): CloudFormationStack => ({
   id: s.StackId as StackId,
@@ -80,9 +82,6 @@ const convertStackInternal = (s: CF.Stack): CloudFormationStack => ({
   deletionTime: s.DeletionTime,
 })
 
-/**
- * @hidden
- */
 export const convertStack = ({
   Stacks,
 }: CF.DescribeStacksOutput): CloudFormationStack => {
@@ -112,9 +111,6 @@ const convertResourceChangeTarget = (
   }
 }
 
-/**
- * @hidden
- */
 export const convertChangeSet = (o: CF.DescribeChangeSetOutput): ChangeSet => ({
   id: o.ChangeSetId as ChangeSetId,
   name: o.ChangeSetName as ChangeSetName,
@@ -151,9 +147,6 @@ export const convertChangeSet = (o: CF.DescribeChangeSetOutput): ChangeSet => ({
   })),
 })
 
-/**
- * @hidden
- */
 export const convertTemplateSummary = ({
   Parameters,
 }: CF.GetTemplateSummaryOutput): TemplateSummary => ({
@@ -165,9 +158,6 @@ export const convertTemplateSummary = ({
   })),
 })
 
-/**
- * @hidden
- */
 export const convertStackEvents = ({
   StackEvents,
 }: CF.DescribeStackEventsOutput): StackEvent[] =>
@@ -185,9 +175,6 @@ export const convertStackEvents = ({
     timestamp: e.Timestamp as Date,
   }))
 
-/**
- * @hidden
- */
 export const convertStackDriftDetectionStatus = (
   d: CF.DescribeStackDriftDetectionStatusOutput,
 ): StackDriftDetectionStatusOutput => ({

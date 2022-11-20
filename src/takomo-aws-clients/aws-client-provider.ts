@@ -38,9 +38,6 @@ export interface AwsClientProvider {
   ) => Promise<OrganizationsClient>
 }
 
-/**
- * @hidden
- */
 export interface InternalAwsClientProvider extends AwsClientProvider {
   readonly getApiCalls: () => ReadonlyArray<ApiCallProps>
   readonly getRegions: () => ReadonlyArray<Region>
@@ -77,9 +74,6 @@ interface ConcurrencyControls {
   readonly validateTemplateBulkhead: IPolicy
 }
 
-/**
- * @hidden
- */
 export const createAwsClientProvider = ({
   logger,
 }: AwsClientProviderProps): InternalAwsClientProvider => {

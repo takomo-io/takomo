@@ -136,9 +136,6 @@ const copyEnv = (
   props: PrepareEnvVariablesProps,
 ): PrepareEnvVariablesProps => ({ ...props, env: deepCopy(props.env) })
 
-/**
- * @hidden
- */
 export const prepareAwsEnvVariables = (
   props: PrepareEnvVariablesProps,
 ): any => {
