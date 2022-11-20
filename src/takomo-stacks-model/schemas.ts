@@ -108,17 +108,11 @@ export interface SchemaRegistry {
   readonly getProvider: (name: SchemaName) => SchemaProvider | undefined
 }
 
-/**
- * @hidden
- */
 export const defaultSchema = (schemaName: SchemaName): Joi.ObjectSchema =>
   Joi.object({
     name: Joi.string().valid(schemaName),
   })
 
-/**
- * @hidden
- */
 export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
   const schemas = new Map<SchemaName, SchemaProvider>()
 
@@ -619,9 +613,6 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
   }
 }
 
-/**
- * @hidden
- */
 export interface Schemas {
   readonly data: ReadonlyArray<AnySchema>
   readonly tags: ReadonlyArray<AnySchema>

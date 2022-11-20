@@ -197,9 +197,6 @@ const formatLogLevel = (logLevel: LogLevel): string => {
   }
 }
 
-/**
- * @hidden
- */
 export type LogWriter = (
   message?: unknown,
   ...optionalParams: unknown[]
@@ -211,9 +208,6 @@ interface TkmLoggerProps {
   readonly name?: string
 }
 
-/**
- * @hidden
- */
 export const createLogger = (props: TkmLoggerProps): TkmLogger => {
   const { name, writer, logLevel } = props
 
@@ -341,9 +335,6 @@ export const createLogger = (props: TkmLoggerProps): TkmLogger => {
 
 type ConsoleLoggerProps = Omit<TkmLoggerProps, "writer">
 
-/**
- * @hidden
- */
 export const createConsoleLogger = (props: ConsoleLoggerProps): TkmLogger =>
   createLogger({
     ...props,

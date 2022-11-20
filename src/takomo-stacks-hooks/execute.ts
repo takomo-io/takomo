@@ -21,9 +21,6 @@ interface ExecuteHooksProps {
   readonly status?: HookStatus
 }
 
-/**
- * @hidden
- */
 export const executeHooks = async ({
   ctx,
   stack,

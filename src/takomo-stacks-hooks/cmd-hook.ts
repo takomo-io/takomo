@@ -18,9 +18,6 @@ const captureValue = (capture: Capture, output: string): string => {
   }
 }
 
-/**
- * @hidden
- */
 export class CmdHook implements Hook {
   readonly command: string
   readonly cwd?: string

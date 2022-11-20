@@ -9,14 +9,8 @@ import { StackGroupPath } from "./stack-group"
  */
 export type CommandPath = StackGroupPath | StackPath
 
-/**
- * @hidden
- */
 export type DeploymentOperation = "deploy" | "undeploy"
 
-/**
- * @hidden
- */
 export const defaultCapabilities = [
   "CAPABILITY_IAM",
   "CAPABILITY_NAMED_IAM",
@@ -37,9 +31,6 @@ export interface StackOperationVariables extends Variables {
   readonly hooks: HookOutputValues
 }
 
-/**
- * @hidden
- */
 export interface StackResult {
   readonly stack: InternalStack
   readonly message: string
@@ -52,7 +43,4 @@ export interface StackResult {
   readonly error?: Error
 }
 
-/**
- * @hidden
- */
 export type StackOperationType = "CREATE" | "RECREATE" | "UPDATE" | "DELETE"
