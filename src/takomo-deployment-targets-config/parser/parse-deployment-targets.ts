@@ -13,7 +13,7 @@ import {
   Vars,
 } from "../../takomo-core"
 import { Label } from "../../takomo-deployment-targets-model"
-import { merge } from "../../takomo-util"
+import { merge } from "../../utils/objects"
 import { DeploymentTargetConfig } from "../model"
 import { parseDeploymentStatus } from "./parse-deployment-status"
 

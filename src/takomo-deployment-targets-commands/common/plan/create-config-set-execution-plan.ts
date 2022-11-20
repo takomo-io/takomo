@@ -16,7 +16,7 @@ import {
   ConfigSetExecutionStage,
 } from "../../../takomo-execution-plans"
 import { CommandPath } from "../../../takomo-stacks-model"
-import { TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
 import { PlannedDeploymentTarget } from "./model"
 import { selectDeploymentGroups } from "./select-deployment-groups"
 

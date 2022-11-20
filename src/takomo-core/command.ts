@@ -4,7 +4,9 @@ import {
   InternalCredentialManager,
 } from "../takomo-aws-clients"
 import { IamRoleArn, Region } from "../takomo-aws-model"
-import { FilePath, LogLevel, Timer, TkmLogger } from "../takomo-util"
+import { FilePath } from "../utils/files"
+import { LogLevel, TkmLogger } from "../utils/logging"
+import { Timer } from "../utils/timer"
 import { InternalTakomoProjectConfig, TakomoProjectConfig } from "./config"
 import { Variables } from "./variables"
 

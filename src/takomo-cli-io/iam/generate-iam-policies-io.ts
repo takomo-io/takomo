@@ -3,7 +3,7 @@ import {
   GenerateIamPoliciesIO,
   GenerateIamPoliciesOutput,
 } from "../../takomo-iam-commands"
-import { formatYaml } from "../../takomo-util"
+import { formatYaml } from "../../utils/yaml"
 import { createBaseIO } from "../cli-io"
 import { IOProps } from "../stacks/common"
 

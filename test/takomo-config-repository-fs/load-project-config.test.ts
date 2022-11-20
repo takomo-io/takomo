@@ -5,7 +5,7 @@ import {
   DEFAULT_REGIONS,
   InternalTakomoProjectConfig,
 } from "../../src/takomo-core"
-import { FilePath } from "../../src/takomo-util"
+import { FilePath } from "../../src/utils/files"
 
 const doLoadProjectConfig = (
   projectDir: FilePath,

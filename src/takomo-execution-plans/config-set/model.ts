@@ -1,7 +1,4 @@
-import {
-  CredentialManager,
-  InternalCredentialManager,
-} from "../../takomo-aws-clients"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
 import {
   ConfigSet,
   ConfigSetName,
@@ -14,7 +11,8 @@ import {
   OperationState,
 } from "../../takomo-core"
 import { CommandPath } from "../../takomo-stacks-model"
-import { Timer, TkmLogger } from "../../takomo-util"
+import { TkmLogger } from "../../utils/logging"
+import { Timer } from "../../utils/timer"
 import { ExecutionGroupId, ExecutionTargetId } from "../model"
 
 export interface CommandPathExecutionResult<R extends CommandOutput>

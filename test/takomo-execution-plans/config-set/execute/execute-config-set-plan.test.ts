@@ -1,5 +1,5 @@
 import { mock } from "jest-mock-extended"
-import { CredentialManager } from "../../../../src/takomo-aws-clients"
+import { InternalCredentialManager } from "../../../../src/takomo-aws-clients"
 import {
   ConfigSetContext,
   ConfigSetName,
@@ -18,7 +18,8 @@ import {
   ConfigSetTargetListenerProvider,
 } from "../../../../src/takomo-execution-plans/config-set/model"
 import { ExecutionTargetId } from "../../../../src/takomo-execution-plans/model"
-import { createConsoleLogger, createTimer } from "../../../../src/takomo-util"
+import { createConsoleLogger } from "../../../../src/utils/logging"
+import { Timer } from "../../../../src/utils/timer"
 
 const logger = createConsoleLogger({
   logLevel: "info",
@@ -51,7 +52,7 @@ const targetListenerProvider: ConfigSetTargetListenerProvider =
       logger.info("group complete")
     },
   })
-const defaultCredentialManager = mock<CredentialManager>()
+const defaultCredentialManager = mock<InternalCredentialManager>()
 
 const createExecutor =
   (): ConfigSetTargetExecutor<CommandOutput, string> =>
@@ -209,7 +210,7 @@ describe("Execute config set plan", () => {
       ctx,
       targetListenerProvider,
       defaultCredentialManager,
-      timer: createTimer("total"),
+      timer: new Timer("total"),
       plan: {
         configSetType: "standard",
         stages: [],
@@ -229,7 +230,7 @@ describe("Execute config set plan", () => {
       ctx,
       targetListenerProvider,
       defaultCredentialManager,
-      timer: createTimer("total"),
+      timer: new Timer("total"),
       plan: plan1,
       executor: createExecutor(),
       concurrentTargets: 1,
@@ -245,7 +246,7 @@ describe("Execute config set plan", () => {
       ctx,
       targetListenerProvider,
       defaultCredentialManager,
-      timer: createTimer("total"),
+      timer: new Timer("total"),
       plan: plan1,
       executor: createExecutor(),
       concurrentTargets: 10,

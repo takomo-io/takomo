@@ -4,7 +4,7 @@ import { CommandContext } from "../../src/takomo-core"
 import { ResolverInput } from "../../src/takomo-stacks-model"
 import { ResolverRegistry } from "../../src/takomo-stacks-resolvers"
 import { createStaticResolverProvider } from "../../src/takomo-stacks-resolvers/static-resolver"
-import { createConsoleLogger } from "../../src/takomo-util"
+import { createConsoleLogger } from "../../src/utils/logging"
 
 const logger = createConsoleLogger({
   logLevel: "info",

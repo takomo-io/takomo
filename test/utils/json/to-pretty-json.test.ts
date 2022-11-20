@@ -1,4 +1,4 @@
-import { toPrettyJson } from "../../../src/takomo-util"
+import { toPrettyJson } from "../../../src/utils/json"
 
 describe("#toPrettyJson", () => {
   test("Simple object", () => {

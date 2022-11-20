@@ -1,12 +1,8 @@
 import readdirp from "readdirp"
-import {
-  dirExists,
-  FilePath,
-  readFileContents,
-  TakomoError,
-  TemplateEngine,
-  TkmLogger,
-} from "../takomo-util"
+import { TakomoError } from "../utils/errors"
+import { dirExists, FilePath, readFileContents } from "../utils/files"
+import { TkmLogger } from "../utils/logging"
+import { TemplateEngine } from "../utils/templating"
 
 export const loadTemplateHelpers = async (
   helpersDirs: ReadonlyArray<FilePath>,

@@ -12,7 +12,6 @@ import {
 } from "../../takomo-aws-model"
 import { createAwsSchemas } from "../../takomo-aws-schema"
 import {
-  CommandContext,
   CommandRole,
   InternalCommandContext,
   Project,
@@ -38,15 +37,12 @@ import {
   TimeoutConfig,
 } from "../../takomo-stacks-model"
 import { ResolverRegistry } from "../../takomo-stacks-resolvers"
-import {
-  mapToObject,
-  merge,
-  mergeArrays,
-  mergeMaps,
-  TakomoError,
-  TkmLogger,
-  validate,
-} from "../../takomo-util"
+
+import { mapToObject, mergeArrays, mergeMaps } from "../../utils/collections"
+import { TakomoError } from "../../utils/errors"
+import { TkmLogger } from "../../utils/logging"
+import { merge } from "../../utils/objects"
+import { validate } from "../../utils/validation"
 import { StacksConfigRepository } from "../model"
 import { StackConfigNode } from "./config-tree"
 import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file"

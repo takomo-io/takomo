@@ -5,7 +5,8 @@ import {
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
 } from "../../takomo-deployment-targets-commands"
-import { formatYaml, splitTextInLines } from "../../takomo-util"
+import { splitTextInLines } from "../../utils/strings"
+import { formatYaml } from "../../utils/yaml"
 import { createBaseIO } from "../cli-io"
 import { IOProps } from "../stacks/common"
 

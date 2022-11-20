@@ -3,7 +3,7 @@ import { mock } from "jest-mock-extended"
 import { CredentialManager } from "../../src/takomo-aws-clients"
 import { ChecksumHook } from "../../src/takomo-stacks-hooks"
 import { HookInput, Stack, StacksContext } from "../../src/takomo-stacks-model"
-import { createConsoleLogger } from "../../src/takomo-util"
+import { createConsoleLogger } from "../../src/utils/logging"
 
 const credentialManager = mock<CredentialManager>()
 credentialManager.getCredentials.mockReturnValue(

@@ -8,7 +8,8 @@ import {
   ResolverProvider,
   StackPath,
 } from "../takomo-stacks-model"
-import { TakomoError, TakomoErrorProps, TkmLogger } from "../takomo-util"
+import { TakomoError, TakomoErrorProps } from "../utils/errors"
+import { TkmLogger } from "../utils/logging"
 
 class InvalidResolverProviderConfigurationError extends TakomoError {
   constructor(

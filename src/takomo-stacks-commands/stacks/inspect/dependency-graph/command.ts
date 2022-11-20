@@ -6,7 +6,7 @@ import {
 } from "../../../../takomo-stacks-context"
 import { isNotObsolete } from "../../../../takomo-stacks-model"
 import { createStacksSchemas } from "../../../../takomo-stacks-schema"
-import { validateInput } from "../../../../takomo-util"
+import { validateInput } from "../../../../utils/validation"
 import {
   DependencyGraphInput,
   DependencyGraphIO,
@@ -44,12 +44,11 @@ export const dependencyGraphCommand: CommandHandler<
     )
     .then((ctx) => {
       const { timer } = input
-      timer.stop()
       const output: DependencyGraphOutput = {
         success: true,
         status: "SUCCESS",
         message: "Success",
-        timer,
+        timer: timer.stop(),
         stacks: ctx.stacks.filter(isNotObsolete),
         outputFormat: input.outputFormat,
       }

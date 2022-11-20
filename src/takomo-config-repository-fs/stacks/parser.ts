@@ -5,15 +5,11 @@ import {
   StackConfig,
   StackGroupConfig,
 } from "../../takomo-stacks-config"
-import {
-  FilePath,
-  parseYaml,
-  readFileContents,
-  renderTemplate,
-  TakomoError,
-  TemplateEngine,
-  TkmLogger,
-} from "../../takomo-util"
+import { TakomoError } from "../../utils/errors"
+import { FilePath, readFileContents } from "../../utils/files"
+import { TkmLogger } from "../../utils/logging"
+import { renderTemplate, TemplateEngine } from "../../utils/templating"
+import { parseYaml } from "../../utils/yaml"
 
 export const parseBlueprintConfigFile = async (
   ctx: CommandContext,
@@ -91,7 +87,7 @@ const parseStackConfigFileInternal = async (
     return result.value
   }
 
-  const details = result.error.messages.map((m) => `- ${m}`).join("\n")
+  const details = result.error.messages.map((m: unknown) => `- ${m}`).join("\n")
   throw new TakomoError(
     `Validation errors in ${configType} file ${pathToFile}:\n${details}`,
   )
@@ -138,7 +134,7 @@ export const parseStackGroupConfigFile = async (
     return result.value
   }
 
-  const details = result.error.messages.map((m) => `- ${m}`).join("\n")
+  const details = result.error.messages.map((m: unknown) => `- ${m}`).join("\n")
   throw new TakomoError(
     `Validation errors in stack group configuration file ${pathToFile}:\n${details}`,
   )

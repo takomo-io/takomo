@@ -16,7 +16,8 @@ import {
   StackPath,
 } from "../../takomo-stacks-model"
 import { ResolverRegistry } from "../../takomo-stacks-resolvers"
-import { arrayToMap, TkmLogger } from "../../takomo-util"
+import { arrayToMap } from "../../utils/collections"
+import { TkmLogger } from "../../utils/logging"
 import {
   checkCyclicDependencies,
   checkObsoleteDependencies,

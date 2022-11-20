@@ -3,7 +3,7 @@ import {
   ConfigSetTargetListener,
   CreateConfigSetTargetListenerProps,
 } from "../../takomo-execution-plans"
-import { TkmLogger } from "../../takomo-util"
+import { TkmLogger } from "../../utils/logging"
 
 export const createTargetListenerInternal = (
   groupsName: string,

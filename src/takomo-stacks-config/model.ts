@@ -17,7 +17,7 @@ import {
   TemplateBucketConfig,
   TimeoutConfig,
 } from "../takomo-stacks-model"
-import { FilePath } from "../takomo-util"
+import { FilePath } from "../utils/files"
 
 export interface SchemaConfig {
   readonly name: string

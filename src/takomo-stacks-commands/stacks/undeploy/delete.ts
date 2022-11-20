@@ -2,7 +2,7 @@ import {
   InternalStacksContext,
   StackResult,
 } from "../../../takomo-stacks-model"
-import { Timer } from "../../../takomo-util"
+import { Timer } from "../../../utils/timer"
 import { StacksOperationListener } from "../common/model"
 import { executeSteps } from "../common/steps"
 import { UndeployStacksIO } from "./model"

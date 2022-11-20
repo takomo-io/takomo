@@ -8,7 +8,7 @@ import {
   Stack,
   StackOperationVariables,
 } from "../takomo-stacks-model"
-import { TkmLogger } from "../takomo-util"
+import { TkmLogger } from "../utils/logging"
 
 interface ExecuteHooksProps {
   readonly ctx: InternalStacksContext

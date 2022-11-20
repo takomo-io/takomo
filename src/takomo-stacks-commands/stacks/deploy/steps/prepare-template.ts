@@ -3,7 +3,7 @@ import {
   InternalStack,
   StackOperationVariables,
 } from "../../../../takomo-stacks-model"
-import { arrayToObject } from "../../../../takomo-util"
+import { arrayToObject } from "../../../../utils/collections"
 import { StackOperationStep } from "../../common/steps"
 import { StackParameterInfo } from "../model"
 import { TagsHolder } from "../states"

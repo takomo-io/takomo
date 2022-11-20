@@ -16,7 +16,7 @@ import {
   StackOperationVariables,
   StackResult,
 } from "../../../takomo-stacks-model"
-import { TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
 import { InitialStackOperationState } from "../common/states"
 import {
   DeployStacksIO,

@@ -8,7 +8,7 @@ import {
   DeploymentTargetName,
   Label,
 } from "../../takomo-deployment-targets-model"
-import { FilePath } from "../../takomo-util"
+import { FilePath } from "../../utils/files"
 import { commonEpilog, handle, RunProps } from "../common"
 import {
   CONCURRENT_TARGETS_OPT,

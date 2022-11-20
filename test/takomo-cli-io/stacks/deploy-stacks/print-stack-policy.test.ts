@@ -3,7 +3,7 @@ import { DetailedCloudFormationStack } from "../../../../src/takomo-aws-model"
 import { createBaseIO } from "../../../../src/takomo-cli-io/cli-io"
 import { printStackPolicy } from "../../../../src/takomo-cli-io/stacks/deploy-stacks/stack-policy"
 import { InternalStack } from "../../../../src/takomo-stacks-model"
-import { bold, green } from "../../../../src/takomo-util"
+import { bold, green } from "../../../../src/utils/colors"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 
 const doPrintStackPolicy = (

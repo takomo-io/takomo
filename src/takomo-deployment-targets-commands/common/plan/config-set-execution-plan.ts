@@ -13,7 +13,7 @@ import {
   ConfigSetExecutionPlan,
   ConfigSetExecutionTarget,
 } from "../../../takomo-execution-plans"
-import { TkmLogger } from "../../../takomo-util"
+import { TkmLogger } from "../../../utils/logging"
 import {
   createConfigSetExecutionPlan,
   TargetsSelectionCriteria,

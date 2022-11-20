@@ -3,7 +3,8 @@ import {
   ShowConfigurationOutput,
 } from "../../../takomo-stacks-commands"
 import { StackGroup } from "../../../takomo-stacks-model"
-import { formatYaml, toPrettyJson } from "../../../takomo-util"
+import { toPrettyJson } from "../../../utils/json"
+import { formatYaml } from "../../../utils/yaml"
 import { createBaseIO } from "../../cli-io"
 import { chooseCommandPathInternal, IOProps } from "../common"
 

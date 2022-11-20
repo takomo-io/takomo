@@ -1,4 +1,4 @@
-import { mergeArrays } from "../../../src/takomo-util"
+import { mergeArrays } from "../../../src/utils/collections"
 
 describe("#mergeArrays", () => {
   test("two empty arrays", () => {

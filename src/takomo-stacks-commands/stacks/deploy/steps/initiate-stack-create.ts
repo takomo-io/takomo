@@ -1,5 +1,5 @@
 import { defaultCapabilities } from "../../../../takomo-stacks-model"
-import { uuid } from "../../../../takomo-util"
+import { uuid } from "../../../../utils/strings"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateSummaryHolder } from "../states"
 

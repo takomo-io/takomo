@@ -24,18 +24,13 @@ import {
   parseBoolean,
   parseStringArray,
 } from "../takomo-core"
-import {
-  collectFromHierarchy,
-  createLogger,
-  createTimer,
-  expandFilePath,
-  FilePath,
-  formatElapsedMillis,
-  indentLines,
-  printTimer,
-  red,
-  TkmLogger,
-} from "../takomo-util"
+
+import { collectFromHierarchy } from "../utils/collections"
+import { red } from "../utils/colors"
+import { expandFilePath, FilePath } from "../utils/files"
+import { createLogger, TkmLogger } from "../utils/logging"
+import { indentLines } from "../utils/strings"
+import { formatElapsedMillis, printTimer, Timer } from "../utils/timer"
 import { RESET_CACHE_OPT } from "./constants"
 import { parseFeaturesFromArgs } from "./options/parse-features-from-args"
 import { parseLogLevel } from "./options/parse-log-level"
@@ -406,7 +401,7 @@ export const handle = async <
     })
 
     const baseInput = {
-      timer: createTimer("total"),
+      timer: new Timer("total"),
       outputFormat: ctx.outputFormat,
     }
 

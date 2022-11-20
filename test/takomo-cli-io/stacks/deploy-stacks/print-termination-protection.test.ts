@@ -1,7 +1,7 @@
 import dedent from "ts-dedent"
 import { createBaseIO } from "../../../../src/takomo-cli-io/cli-io"
 import { printTerminationProtection } from "../../../../src/takomo-cli-io/stacks/deploy-stacks/termination-protection"
-import { bold, green, grey, red } from "../../../../src/takomo-util"
+import { bold, green, grey, red } from "../../../../src/utils/colors"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 import { mockDetailedCloudFormationStack, mockInternalStack } from "../../mocks"
 

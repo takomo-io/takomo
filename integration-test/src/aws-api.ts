@@ -14,7 +14,7 @@ import {
   Region,
   StackPolicyBody,
 } from "../../src/takomo-aws-model"
-import { TkmLogger } from "../../src/takomo-util"
+import { TkmLogger } from "../../src/utils/logging"
 
 const ssmClient = (region: Region, credentials: CredentialProvider): SSM =>
   new SSM({ region, credentials })

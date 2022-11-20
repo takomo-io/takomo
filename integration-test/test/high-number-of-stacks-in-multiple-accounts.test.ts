@@ -2,7 +2,7 @@
  * @testenv-recycler-count 3
  */
 import R from "ramda"
-import { sleep } from "../../src/takomo-util"
+import { sleep } from "../../src/utils/system"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,

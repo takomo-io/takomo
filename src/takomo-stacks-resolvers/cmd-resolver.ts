@@ -7,7 +7,8 @@ import {
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "../takomo-stacks-model"
-import { executeShellCommand, expandFilePath } from "../takomo-util"
+import { executeShellCommand } from "../utils/exec"
+import { expandFilePath } from "../utils/files"
 
 type Capture = "last-line" | "all"
 

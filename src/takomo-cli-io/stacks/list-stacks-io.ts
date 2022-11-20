@@ -1,6 +1,7 @@
 import Table from "easy-table"
 import { ListStacksIO, ListStacksOutput } from "../../takomo-stacks-commands"
-import { formatYaml, toPrettyJson } from "../../takomo-util"
+import { toPrettyJson } from "../../utils/json"
+import { formatYaml } from "../../utils/yaml"
 import { createBaseIO } from "../cli-io"
 import { formatStackStatus } from "../formatters"
 import { formatDate, IOProps } from "./common"

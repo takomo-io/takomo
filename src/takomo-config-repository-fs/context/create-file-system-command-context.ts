@@ -6,7 +6,9 @@ import {
   OutputFormat,
   TakomoBuildInfo,
 } from "../../takomo-core"
-import { FilePath, LogLevel, TkmLogger, VarFileOption } from "../../takomo-util"
+import { FilePath } from "../../utils/files"
+import { LogLevel, TkmLogger } from "../../utils/logging"
+import { VarFileOption } from "../../utils/variables"
 import { createProjectFilePaths, ProjectFilePaths } from "../constants"
 import { loadProjectConfig } from "../project/config"
 import { buildVariables } from "./build-variables"

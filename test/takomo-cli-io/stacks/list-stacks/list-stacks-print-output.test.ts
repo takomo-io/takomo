@@ -1,12 +1,9 @@
 import dedent from "ts-dedent"
 import { createListStacksIO } from "../../../../src/takomo-cli-io"
 import { formatDate } from "../../../../src/takomo-cli-io/stacks/common"
-import {
-  createConsoleLogger,
-  createTimer,
-  green,
-  LogWriter,
-} from "../../../../src/takomo-util"
+import { green } from "../../../../src/utils/colors"
+import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
+import { Timer } from "../../../../src/utils/timer"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 
 const createIO = (writer: LogWriter) =>
@@ -32,7 +29,7 @@ describe("ListStacksIO#printOutput", () => {
       ],
       message: "Success",
       status: "SUCCESS",
-      timer: createTimer("total"),
+      timer: new Timer("total"),
       success: true,
       outputFormat: "text",
     })

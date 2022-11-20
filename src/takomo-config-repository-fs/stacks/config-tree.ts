@@ -1,5 +1,6 @@
 import path from "path"
 import readdirp from "readdirp"
+import { FilePath } from "../../../src/utils/files"
 import { CommandContext } from "../../takomo-core"
 import { StackGroupConfigNode } from "../../takomo-stacks-context"
 import {
@@ -7,12 +8,9 @@ import {
   StackGroupPath,
 } from "../../takomo-stacks-model"
 import { createStacksSchemas } from "../../takomo-stacks-schema"
-import {
-  FilePath,
-  TemplateEngine,
-  TkmLogger,
-  validate,
-} from "../../takomo-util"
+import { TkmLogger } from "../../utils/logging"
+import { TemplateEngine } from "../../utils/templating"
+import { validate } from "../../utils/validation"
 import { parseStackConfigFile, parseStackGroupConfigFile } from "./parser"
 
 export const buildStackGroupConfigNode = async (

@@ -11,15 +11,8 @@ import {
   StackUndeployOperation,
   StackUndeployOperationType,
 } from "../../../../src/takomo-stacks-commands"
-import {
-  bold,
-  createConsoleLogger,
-  cyan,
-  green,
-  grey,
-  LogWriter,
-  red,
-} from "../../../../src/takomo-util"
+import { bold, cyan, green, grey, red } from "../../../../src/utils/colors"
+import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 import { mockInternalStack, MockInternalStackProps } from "../../mocks"
 

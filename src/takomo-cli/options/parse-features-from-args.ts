@@ -1,5 +1,5 @@
 import { Features } from "../../takomo-core"
-import { TakomoError } from "../../takomo-util"
+import { TakomoError } from "../../utils/errors"
 
 export const parseFeaturesFromArgs = (args: any): Partial<Features> => {
   const varsArray = args ? (Array.isArray(args) ? args : [args]) : []

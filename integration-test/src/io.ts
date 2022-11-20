@@ -30,7 +30,7 @@ import {
   CommandPath,
   ROOT_STACK_GROUP_PATH,
 } from "../../src/takomo-stacks-model"
-import { TkmLogger } from "../../src/takomo-util"
+import { TkmLogger } from "../../src/utils/logging"
 
 export interface TestDeployStacksIOAnswers {
   confirmDeploy: ConfirmDeployAnswer

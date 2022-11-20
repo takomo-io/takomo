@@ -16,7 +16,7 @@ import {
   StackOperationType,
   StackPath,
 } from "../../../../src/takomo-stacks-model"
-import { createConsoleLogger } from "../../../../src/takomo-util"
+import { createConsoleLogger } from "../../../../src/utils/logging"
 
 interface CreateStackProps {
   readonly name: StackName

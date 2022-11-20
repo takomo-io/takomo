@@ -10,7 +10,7 @@ import {
   isWithinCommandPath,
   StackPath,
 } from "../../../takomo-stacks-model"
-import { arrayToMap } from "../../../takomo-util"
+import { arrayToMap } from "../../../utils/collections"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 

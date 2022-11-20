@@ -1,5 +1,5 @@
 import { StackPath } from "../takomo-stacks-model"
-import { TakomoError } from "../takomo-util"
+import { TakomoError } from "../utils/errors"
 
 interface Reference {
   readonly from: StackPath

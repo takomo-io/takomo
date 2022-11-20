@@ -9,7 +9,8 @@ import {
   TargetsExecutionPlan,
 } from "../../takomo-deployment-targets-commands"
 import { DeployStacksIO, UndeployStacksIO } from "../../takomo-stacks-commands"
-import { splitTextInLines, TkmLogger } from "../../takomo-util"
+import { TkmLogger } from "../../utils/logging"
+import { splitTextInLines } from "../../utils/strings"
 import { createBaseIO } from "../cli-io"
 import { createTargetListenerInternal } from "../config-set/target-listener"
 import { formatCommandStatus } from "../formatters"

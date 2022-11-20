@@ -5,7 +5,7 @@ import {
   StacksConfigRepository,
 } from "../../../takomo-stacks-context"
 import { createStacksSchemas } from "../../../takomo-stacks-schema"
-import { validateInput } from "../../../takomo-util"
+import { validateInput } from "../../../utils/validation"
 import { listStacks } from "./list-stacks"
 import { ListStacksInput, ListStacksIO, ListStacksOutput } from "./model"
 

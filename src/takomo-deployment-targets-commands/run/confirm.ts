@@ -24,9 +24,8 @@ export const confirmRun = async ({
   listener,
 }: ConfirmRunProps): Promise<DeploymentTargetsRunOutput> => {
   if (!ctx.autoConfirmEnabled && !(await io.confirmRun(plan))) {
-    input.timer.stop()
     return {
-      timer: input.timer,
+      timer: input.timer.stop(),
       success: true,
       status: "CANCELLED",
       message: "Cancelled",

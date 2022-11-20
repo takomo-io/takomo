@@ -1,7 +1,8 @@
 import R from "ramda"
 import { prepareAwsEnvVariables } from "../takomo-aws-clients"
 import { Hook, HookInput, HookOutput } from "../takomo-stacks-model"
-import { executeShellCommand, expandFilePath } from "../takomo-util"
+import { executeShellCommand } from "../utils/exec"
+import { expandFilePath } from "../utils/files"
 
 const safeEnvVariablePattern = /^[a-zA-Z_]+[a-zA-Z0-9_]*$/
 

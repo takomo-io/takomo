@@ -14,14 +14,10 @@ import {
   parseStringArray,
   TakomoProjectDeploymentTargetsConfig,
 } from "../../takomo-core"
-import {
-  expandFilePath,
-  fileExists,
-  FilePath,
-  mergeArrays,
-  parseYamlFile,
-  TakomoError,
-} from "../../takomo-util"
+import { mergeArrays } from "../../utils/collections"
+import { TakomoError } from "../../utils/errors"
+import { expandFilePath, fileExists, FilePath } from "../../utils/files"
+import { parseYamlFile } from "../../utils/yaml"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../../../package.json")

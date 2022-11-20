@@ -16,7 +16,8 @@ import {
 } from "../../takomo-stacks-commands"
 import { StacksConfigRepository } from "../../takomo-stacks-context"
 import { DeploymentOperation } from "../../takomo-stacks-model"
-import { TakomoError, TkmLogger } from "../../takomo-util"
+import { TakomoError } from "../../utils/errors"
+import { TkmLogger } from "../../utils/logging"
 import { PlannedDeploymentTarget } from "../common/plan/model"
 import { createDeploymentTargetVariables } from "./create-deployment-target-variables"
 import {
@@ -95,11 +96,10 @@ const createExecutor = ({
   }: ConfigSetTargetExecutorProps<PlannedDeploymentTarget>): Promise<StacksOperationOutput> => {
     if (state.failed) {
       logger.debug("Cancel operation")
-      timer.stop()
 
       return {
         outputFormat,
-        timer,
+        timer: timer.stop(),
         status: "CANCELLED",
         message: "Cancelled",
         success: false,

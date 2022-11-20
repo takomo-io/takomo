@@ -5,14 +5,10 @@ import {
   ProjectConfigRepository,
   ProjectInformation,
 } from "../../takomo-init-command"
-import {
-  createDir,
-  createFile,
-  dirExists,
-  FilePath,
-  TakomoError,
-  TkmLogger,
-} from "../../takomo-util"
+
+import { TakomoError } from "../../utils/errors"
+import { createDir, createFile, dirExists, FilePath } from "../../utils/files"
+import { TkmLogger } from "../../utils/logging"
 import { createSampleFiles } from "./samples"
 
 interface FileSystemProjectConfigRepositoryProps {

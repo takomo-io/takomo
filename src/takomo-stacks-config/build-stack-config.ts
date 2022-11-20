@@ -7,7 +7,7 @@ import {
   parseOptionalStringArray,
   parseStringArray,
 } from "../takomo-core"
-import { ValidationError } from "../takomo-util"
+import { ValidationError } from "../utils/errors"
 import { StackConfig } from "./model"
 import { parseAccountIds } from "./parse-account-ids"
 import { parseData } from "./parse-data"
