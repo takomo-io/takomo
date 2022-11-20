@@ -23,9 +23,8 @@ export const waitStackCreateOrUpdateToComplete: StackOperationStep<
   }
 
   const client = await stack.getCloudFormationClient()
-  const { stackStatus, events } = await client.waitStackDeployToComplete(
-    waitProps,
-  )
+  const { stackStatus, events, stackAfterOperation } =
+    await client.waitStackDeployToComplete(waitProps)
 
   const success =
     stackStatus === "UPDATE_COMPLETE" || stackStatus === "CREATE_COMPLETE"
@@ -34,6 +33,7 @@ export const waitStackCreateOrUpdateToComplete: StackOperationStep<
 
   return transitions.executeAfterDeployHooks({
     ...state,
+    stackAfterOperation,
     message,
     status,
     events,

@@ -1,4 +1,7 @@
-import { StackEvent } from "../takomo-aws-model/cloudformation"
+import {
+  CloudFormationStack,
+  StackEvent,
+} from "../takomo-aws-model/cloudformation"
 import { CommandStatus, Variables } from "../takomo-core"
 import { Timer } from "../utils/timer"
 import { InternalStack, StackPath } from "./stack"
@@ -40,6 +43,7 @@ export interface StackResult {
   readonly timer: Timer
   readonly operationType: StackOperationType
   readonly stackExistedBeforeOperation: boolean
+  readonly stackAfterOperation?: CloudFormationStack
   readonly error?: Error
 }
 

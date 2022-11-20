@@ -507,7 +507,9 @@ export const createCloudFormationClient = (
     const terminalEvent = findTerminalEvent(stackId, updatedEvents)
 
     if (terminalEvent) {
+      const stackAfterOperation = await describeStack(stackId)
       return {
+        stackAfterOperation,
         timeoutConfig,
         events: updatedEvents,
         stackStatus: terminalEvent.resourceStatus,
@@ -688,6 +690,7 @@ export interface TimeoutConfig {
 
 export interface WaitStackDeployToCompleteResponse {
   readonly events: ReadonlyArray<StackEvent>
+  readonly stackAfterOperation?: CloudFormationStack
   readonly stackStatus: ResourceStatus
   readonly timeoutConfig: TimeoutConfig
 }

@@ -1,5 +1,6 @@
 import {
   ClientRequestToken,
+  CloudFormationStack,
   CloudFormationStackSummary,
   DetailedChangeSet,
   DetailedCloudFormationStack,
@@ -103,5 +104,6 @@ export interface StackOperationResultHolder extends InitialDeployStackState {
   readonly success: boolean
   readonly status: CommandStatus
   readonly events: ReadonlyArray<StackEvent>
+  readonly stackAfterOperation?: CloudFormationStack
   readonly error?: Error
 }
