@@ -203,11 +203,21 @@ export const createStacksOperationListenerInternal = (
       stack.logger.info(`Begin stack ${operation}`)
       stacksInProgress++
     },
-    onStackOperationComplete: async (stack, { timer, success }) => {
+    onStackOperationComplete: async (
+      stack,
+      { timer, success, stackAfterOperation },
+    ) => {
       if (success) {
         stack.logger.info(
           `Stack ${operation} succeeded in ${timer.getFormattedTimeElapsed()}`,
         )
+        if (stackAfterOperation && stackAfterOperation.outputs.length > 0) {
+          const outputsTable = new Table()
+          stackAfterOperation.outputs.forEach(({ key, value }) => {
+            outputsTable.cell("key", `  ${key}:`).cell("value", value).newRow()
+          })
+          stack.logger.debug(`Stack outputs:\n\n${outputsTable.print()}`)
+        }
       } else {
         stack.logger.info(
           `Stack ${operation} failed in ${timer.getFormattedTimeElapsed()}`,
