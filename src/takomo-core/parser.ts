@@ -11,8 +11,6 @@ const parse = <T>(
 
 /**
  * Accepts a string or an array of strings and returns an array.
- *
- * @hidden
  */
 export const parseStringArray = <T extends string>(
   value: unknown,
@@ -35,8 +33,6 @@ export const parseStringArray = <T extends string>(
 
 /**
  * Accepts a string or an array of strings and returns an array.
- *
- * @hidden
  */
 export const parseOptionalStringArray = <T extends string>(
   value: unknown,
@@ -59,8 +55,6 @@ export const parseOptionalStringArray = <T extends string>(
 
 /**
  * Accepts a string or an array of strings and returns a typed array.
- *
- * @hidden
  */
 export const parseTypedArrayFromString = <T>(
   value: unknown,
@@ -81,9 +75,6 @@ export const parseTypedArrayFromString = <T>(
     },
   )
 
-/**
- * @hidden
- */
 export const parseOptionalString = (value: unknown): string | undefined =>
   parse(
     value,
@@ -97,9 +88,6 @@ export const parseOptionalString = (value: unknown): string | undefined =>
     },
   )
 
-/**
- * @hidden
- */
 export const parseString = (value: unknown, defaultValue: string): string =>
   parse(
     value,
@@ -113,9 +101,6 @@ export const parseString = (value: unknown, defaultValue: string): string =>
     },
   )
 
-/**
- * @hidden
- */
 export const parseRegex = (
   path: string,
   pattern?: string,
@@ -129,14 +114,8 @@ export const parseRegex = (
   }
 }
 
-/**
- * @hidden
- */
 export const parseVars = (value: any): Vars => value ?? {}
 
-/**
- * @hidden
- */
 export const parseCommandRole = (value: any): CommandRole | undefined =>
   parse(
     value,
@@ -146,9 +125,6 @@ export const parseCommandRole = (value: any): CommandRole | undefined =>
     }),
   )
 
-/**
- * @hidden
- */
 export const parseOptionalBoolean = (value: unknown): boolean | undefined =>
   parse(
     value,
@@ -156,9 +132,6 @@ export const parseOptionalBoolean = (value: unknown): boolean | undefined =>
     (value) => value === true,
   )
 
-/**
- * @hidden
- */
 export const parseBoolean = (value: unknown, defaultValue: boolean): boolean =>
   parse(
     value,

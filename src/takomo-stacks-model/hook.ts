@@ -22,14 +22,8 @@ export type HookStatus = "success" | "failed" | "skipped" | "cancelled"
 
 export type HookOutput = HookOutputObject | Error | boolean
 
-/**
- * @hidden
- */
 export type HookExecutionResult = "continue" | "abort" | "skip"
 
-/**
- * @hidden
- */
 export interface HooksExecutionOutput {
   /**
    * Message describing the outcome of the action.
@@ -106,9 +100,6 @@ export interface Hook {
   execute: (input: HookInput) => Promise<HookOutput>
 }
 
-/**
- * @hidden
- */
 export class HookExecutor implements Hook {
   readonly config: HookConfig
   private readonly hook: Hook
@@ -172,9 +163,6 @@ export class HookExecutor implements Hook {
   }
 }
 
-/**
- * @hidden
- */
 export interface HookConfig {
   readonly name: string
   readonly type: string

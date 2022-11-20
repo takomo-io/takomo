@@ -6,9 +6,6 @@ interface Reference {
   readonly to: ReadonlyArray<StackPath>
 }
 
-/**
- * @hidden
- */
 export class ObsoleteDependenciesError extends TakomoError {
   constructor(references: ReadonlyArray<Reference>) {
     const message =

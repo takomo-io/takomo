@@ -25,9 +25,6 @@ export interface Features {
   readonly deploymentTargetsTearDown: boolean
 }
 
-/**
- * @hidden
- */
 export const defaultFeatures = (): Features => ({
   deploymentTargetsUndeploy: true,
   deploymentTargetsTearDown: true,
@@ -42,25 +39,16 @@ export interface TakomoProjectConfig {
   readonly regions: ReadonlyArray<Region>
 }
 
-/**
- * @hidden
- */
 export interface ExternalResolverConfig {
   readonly name?: string
   readonly package: string
 }
 
-/**
- * @hidden
- */
 export interface ExternalHandlebarsHelperConfig {
   readonly name?: string
   readonly package: string
 }
 
-/**
- * @hidden
- */
 export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly resolvers: ReadonlyArray<ExternalResolverConfig>
   readonly helpers: ReadonlyArray<ExternalHandlebarsHelperConfig>
@@ -71,9 +59,6 @@ export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly schemasDir: ReadonlyArray<FilePath>
 }
 
-/**
- * @hidden
- */
 export class FeatureDisabledError extends TakomoError {
   constructor(featureName: keyof Features) {
     super(

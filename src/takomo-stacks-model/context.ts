@@ -39,9 +39,6 @@ export interface StacksContext extends CommandContext {
   ) => ReadonlyArray<Stack>
 }
 
-/**
- * @hidden
- */
 export interface InternalStacksContext extends InternalCommandContext {
   readonly concurrentStacks: number
   readonly credentialManager: CredentialManager

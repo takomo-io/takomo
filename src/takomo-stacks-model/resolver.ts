@@ -129,9 +129,6 @@ export interface ResolverProvider {
   readonly schema?: (props: ResolverProviderSchemaProps) => Joi.ObjectSchema
 }
 
-/**
- * @hidden
- */
 export interface ResolverExecutor {
   readonly resolve: (input: ResolverInput) => Promise<any>
   readonly isConfidential: () => boolean
