@@ -1,4 +1,5 @@
 import { err, ok, Result } from "neverthrow"
+import { createStackConfigSchema } from "../schema/stack-config-schema"
 import {
   CommandContext,
   parseCommandRole,
@@ -19,7 +20,6 @@ import { parseTags } from "./parse-tags"
 import { parseTemplate } from "./parse-template"
 import { parseTemplateBucket } from "./parse-template-bucket"
 import { parseTimeout } from "./parse-timeout"
-import { createStackConfigSchema } from "./schema"
 
 export const buildStackConfig = (
   ctx: CommandContext,

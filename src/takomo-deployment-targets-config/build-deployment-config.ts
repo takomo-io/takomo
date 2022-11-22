@@ -17,6 +17,7 @@ import {
   DeploymentTargetsSchemaRegistry,
 } from "../takomo-deployment-targets-model"
 
+import { createDeploymentTargetsConfigSchema } from "../schema/deployment-targets-config-schema"
 import { collectFromHierarchy } from "../utils/collections"
 import { ValidationError } from "../utils/errors"
 import { TkmLogger } from "../utils/logging"
@@ -24,7 +25,6 @@ import { merge } from "../utils/objects"
 import { DeploymentConfig, DeploymentGroupConfig, SchemaConfig } from "./model"
 import { parseDeploymentGroups } from "./parser/parse-deployment-groups"
 import { parseTargetSchemas } from "./parser/parse-target-schemas"
-import { createDeploymentTargetsConfigSchema } from "./schema"
 
 export const buildDeploymentConfig = async (
   ctx: CommandContext,

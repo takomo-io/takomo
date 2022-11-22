@@ -3,8 +3,8 @@ import {
   DescribeStacksCommand,
 } from "@aws-sdk/client-cloudformation"
 import { ObjectSchema } from "joi"
+import { createAwsSchemas } from "../schema/aws-schema"
 import { IamRoleArn } from "../takomo-aws-model"
-import { createAwsSchemas } from "../takomo-aws-schema"
 import {
   Resolver,
   ResolverInput,

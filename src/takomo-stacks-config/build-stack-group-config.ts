@@ -1,4 +1,5 @@
 import { err, ok, Result } from "neverthrow"
+import { createStackGroupConfigSchema } from "../schema/stack-group-config-schema"
 import {
   CommandContext,
   parseBoolean,
@@ -19,7 +20,6 @@ import { parseStackPolicy } from "./parse-stack-policy"
 import { parseTags } from "./parse-tags"
 import { parseTemplateBucket } from "./parse-template-bucket"
 import { parseTimeout } from "./parse-timeout"
-import { createStackGroupConfigSchema } from "./schema"
 
 export const buildStackGroupConfig = (
   ctx: CommandContext,

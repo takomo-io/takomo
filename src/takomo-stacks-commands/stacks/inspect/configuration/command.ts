@@ -1,5 +1,6 @@
 import Joi, { AnySchema } from "joi"
 import R from "ramda"
+import { createStacksSchemas } from "../../../../schema/stacks-schema"
 import { CommandContext, CommandHandler } from "../../../../takomo-core"
 import {
   buildStacksContext,
@@ -14,7 +15,6 @@ import {
   isWithinCommandPath,
   StackPath,
 } from "../../../../takomo-stacks-model"
-import { createStacksSchemas } from "../../../../takomo-stacks-schema"
 import { arrayToMap } from "../../../../utils/collections"
 import { validateInput } from "../../../../utils/validation"
 import { collectStackDependencies } from "../../deploy/plan"

@@ -1,5 +1,6 @@
 import { AnySchema } from "joi"
 import R from "ramda"
+import { createAwsSchemas } from "../../schema/aws-schema"
 import { InternalCredentialManager } from "../../takomo-aws-clients"
 import {
   AccountId,
@@ -10,7 +11,6 @@ import {
   StackPolicyBody,
   TagKey,
 } from "../../takomo-aws-model"
-import { createAwsSchemas } from "../../takomo-aws-schema"
 import {
   CommandRole,
   InternalCommandContext,
