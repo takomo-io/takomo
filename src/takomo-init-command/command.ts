@@ -1,5 +1,5 @@
 import Joi, { AnySchema } from "joi"
-import { createAwsSchemas } from "../takomo-aws-schema"
+import { createAwsSchemas } from "../schema/aws-schema"
 import {
   CommandContext,
   CommandHandler,

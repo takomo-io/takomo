@@ -5,5 +5,4 @@ export {
   parseConfigSetInstructions,
   parseConfigSets,
 } from "./parser"
-export { createConfigSetsSchemas } from "./schema"
 export { getConfigSetsByType } from "./util"

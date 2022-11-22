@@ -1,5 +1,4 @@
 import { mock } from "jest-mock-extended"
-import { AwsClientProvider } from "../../src/takomo-aws-clients"
 import { TagKey } from "../../src/takomo-aws-model"
 import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
 import { buildStackGroupConfig } from "../../src/takomo-stacks-config"
@@ -43,7 +42,6 @@ const ctx: CommandContext = {
   iamGeneratePoliciesInstructionsEnabled: false,
   credentials: undefined,
   projectConfig: mock<TakomoProjectConfig>(),
-  awsClientProvider: mock<AwsClientProvider>(),
   quiet: false,
   outputFormat: "text",
 }

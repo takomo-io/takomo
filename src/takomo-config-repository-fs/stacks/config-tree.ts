@@ -1,13 +1,13 @@
 import path from "path"
 import readdirp from "readdirp"
 import { FilePath } from "../../../src/utils/files"
+import { createStacksSchemas } from "../../schema/stacks-schema"
 import { CommandContext } from "../../takomo-core"
 import { StackGroupConfigNode } from "../../takomo-stacks-context"
 import {
   ROOT_STACK_GROUP_PATH,
   StackGroupPath,
 } from "../../takomo-stacks-model"
-import { createStacksSchemas } from "../../takomo-stacks-schema"
 import { TkmLogger } from "../../utils/logging"
 import { TemplateEngine } from "../../utils/templating"
 import { validate } from "../../utils/validation"

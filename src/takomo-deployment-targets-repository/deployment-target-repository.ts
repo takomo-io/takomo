@@ -1,4 +1,5 @@
 import Joi from "joi"
+import { createDeploymentTargetsSchemas } from "../schema/deployment-targets-schema"
 import { CredentialManager } from "../takomo-aws-clients"
 import { Region } from "../takomo-aws-model"
 import {
@@ -11,7 +12,6 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "../takomo-deployment-targets-model"
-import { createDeploymentTargetsSchemas } from "../takomo-deployment-targets-schema"
 import { TkmLogger } from "../utils/logging"
 import { TemplateEngine } from "../utils/templating"
 
