@@ -46,7 +46,8 @@
     "test": "jest --selectProjects test --maxWorkers=10 --ci --verbose",
     "integration-test": "jest --selectProjects integration-test --maxWorkers=10 --ci --verbose",
     "clean": "rm -f package-lock.json && rm -rf node_modules && rm -rf dist",
-    "clean-build": "npm run clean && npm install && npm run build"
+    "clean-build": "npm run clean && npm install && npm run build",
+    "depcheck": "depcheck"
   },
   "commitlint": {
     "extends": [
@@ -71,7 +72,7 @@
     }
   },
   "devDependencies": {
-    "@aws-sdk/client-ec2": "3.186.0",
+    "@aws-sdk/client-ec2": "3.215.0",
     "@babel/core": "7.16.12",
     "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "7.16.7",
@@ -120,18 +121,18 @@
     "npm-check-updates": "16.3.14"
   },
   "dependencies": {
-    "@aws-sdk/client-cloudformation": "3.186.0",
-    "@aws-sdk/client-cloudtrail": "3.187.0",
-    "@aws-sdk/client-organizations": "3.186.0",
-    "@aws-sdk/client-s3": "3.186.0",
-    "@aws-sdk/client-secrets-manager": "3.186.0",
-    "@aws-sdk/client-ssm": "3.186.0",
-    "@aws-sdk/client-sts": "3.186.0",
-    "@aws-sdk/credential-provider-node": "3.186.0",
-    "@aws-sdk/credential-providers": "3.186.0",
-    "@aws-sdk/middleware-retry": "3.186.0",
-    "@aws-sdk/node-http-handler": "3.186.0",
-    "@aws-sdk/types": "3.186.0",
+    "@aws-sdk/client-cloudformation": "3.215.0",
+    "@aws-sdk/client-cloudtrail": "3.215.0",
+    "@aws-sdk/client-organizations": "3.215.0",
+    "@aws-sdk/client-s3": "3.215.0",
+    "@aws-sdk/client-secrets-manager": "3.215.0",
+    "@aws-sdk/client-ssm": "3.215.0",
+    "@aws-sdk/client-sts": "3.215.0",
+    "@aws-sdk/credential-provider-node": "3.215.0",
+    "@aws-sdk/credential-providers": "3.215.0",
+    "@aws-sdk/middleware-retry": "3.215.0",
+    "@aws-sdk/node-http-handler": "3.215.0",
+    "@aws-sdk/types": "3.215.0",
     "chalk": "4.1.2",
     "cockatiel": "2.0.1",
     "date-and-time": "2.1.0",
