@@ -1,16 +1,16 @@
 import Joi, { AnySchema } from "joi"
 import R from "ramda"
-import { createAwsSchemas } from "../schema/aws-schema"
-import { AwsClientProvider, CredentialManager } from "../takomo-aws-clients"
+import { createAwsSchemas } from "../../schema/aws-schema"
+import { AwsClientProvider, CredentialManager } from "../../takomo-aws-clients"
 import {
   AccountId,
   CloudTrailEvent,
   IamRoleName,
   Region,
-} from "../takomo-aws-model"
-import { CommandContext, CommandHandler } from "../takomo-core"
-import { TkmLogger } from "../utils/logging"
-import { validateInput } from "../utils/validation"
+} from "../../takomo-aws-model"
+import { CommandContext, CommandHandler } from "../../takomo-core"
+import { TkmLogger } from "../../utils/logging"
+import { validateInput } from "../../utils/validation"
 import {
   GenerateIamPoliciesInput,
   GenerateIamPoliciesIO,
