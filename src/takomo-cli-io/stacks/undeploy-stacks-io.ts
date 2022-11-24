@@ -14,6 +14,7 @@ import { formatStackEvent, formatStackStatus } from "../formatters"
 import {
   chooseCommandPathInternal,
   createStacksOperationListenerInternal,
+  formatLastModify,
   IOProps,
   printStacksOperationOutput,
 } from "./common"
@@ -104,6 +105,7 @@ export const createUndeployStacksIO = (
           `      status:                    ${formatStackStatus(
             currentStack?.status,
           )}`,
+          `      last change:               ${formatLastModify(currentStack)}`,
           `      account id:                ${stackIdentity.accountId}`,
           `      region:                    ${stack.region}`,
           "      credentials:",
