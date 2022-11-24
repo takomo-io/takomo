@@ -21,7 +21,7 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
             success: output.success,
             message: output.message,
             error: output.error,
-            time: output.timer.getSecondsElapsed(),
+            time: output.timer.getTimeElapsed(),
           }),
         })
         break
@@ -33,7 +33,7 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
             success: output.success,
             message: output.message,
             error: output.error,
-            time: output.timer.getSecondsElapsed(),
+            time: output.timer.getTimeElapsed(),
           }),
         })
         break

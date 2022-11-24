@@ -30,7 +30,7 @@ export class Timer {
     return this
   }
 
-  getSecondsElapsed(): number {
+  getTimeElapsed(): number {
     return this.#stopTime
       ? this.#stopTime - this.#startTime
       : Date.now() - this.#startTime
@@ -41,14 +41,14 @@ export class Timer {
   }
 
   getFormattedTimeElapsed(): string {
-    return prettyMs(this.getSecondsElapsed())
+    return prettyMs(this.getTimeElapsed())
   }
 }
 
 const collectTimerItems = (timer: Timer, table: Table, depth: number): void => {
   const padding = " ".repeat(depth * 2)
   table.cell("Name", `${padding}${timer.name}`)
-  table.cell("Time", prettyMs(timer.getSecondsElapsed()))
+  table.cell("Time", prettyMs(timer.getTimeElapsed()))
   table.newRow()
   timer.withChildren((child) => {
     collectTimerItems(child, table, depth + 1)
