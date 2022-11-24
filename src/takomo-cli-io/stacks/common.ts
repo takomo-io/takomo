@@ -1,5 +1,6 @@
 import Table from "easy-table"
-import { StackName } from "../../takomo-aws-model"
+import prettyMs from "pretty-ms"
+import { CloudFormationStackSummary, StackName } from "../../takomo-aws-model"
 import { StackEvent } from "../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../takomo-core"
 import {
@@ -21,6 +22,23 @@ import { formatYaml } from "../../utils/yaml"
 import { BaseIO, BaseIOProps } from "../cli-io"
 import { printError } from "../common"
 import { formatCommandStatus, formatStackEvent } from "../formatters"
+
+export const formatLastModify = (
+  stack: CloudFormationStackSummary | undefined,
+): string => {
+  if (!stack) {
+    return "-"
+  }
+
+  const lastUpdateTime = stack.lastUpdatedTime ?? stack.creationTime
+
+  return (
+    formatTimestamp(lastUpdateTime) +
+    "      (" +
+    prettyMs(Date.now() - lastUpdateTime.getTime(), { unitCount: 2 }) +
+    " ago)"
+  )
+}
 
 export const chooseCommandPathInternal = async (
   io: BaseIO,

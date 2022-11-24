@@ -12,6 +12,7 @@ import {
   StackUndeployOperationType,
 } from "../../../../src/takomo-stacks-commands"
 import { bold, cyan, green, grey, red } from "../../../../src/utils/colors"
+import { formatTimestamp } from "../../../../src/utils/date"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 import { mockInternalStack, MockInternalStackProps } from "../../mocks"
@@ -77,6 +78,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         ${red("- /example.yml/eu-west-1:      (stack will be removed)")}
             name:                      example
             status:                    ${cyan("PENDING")}
+            last change:               -
             account id:                123456789012
             region:                    eu-west-1
             credentials:
@@ -90,12 +92,17 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
   })
 
   test("a single skip operation", async () => {
+    const now = new Date()
+    const creationTime = new Date(now.getTime() - 1000 * 60 * 60 * 24)
+
     const operation = mockOperation("SKIP", {
       name: "hello",
       path: "/hello.yml/eu-north-1",
       region: "eu-north-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_COMPLETE",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
     })
 
@@ -115,6 +122,9 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         )}
             name:                      hello
             status:                    ${green("CREATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (1d ago)
             account id:                123456789012
             region:                    eu-north-1
             credentials:
@@ -128,12 +138,18 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
   })
 
   test("skip and delete operations", async () => {
+    const now = new Date()
+    const creationTime = new Date(now.getTime() - 1000 * 60 * 60 * 24)
+    const creationTime2 = new Date(now.getTime() - 1000 * 60 * 60 * 36)
+
     const operation1 = mockOperation("SKIP", {
       name: "hello",
       path: "/hello.yml/eu-north-1",
       region: "eu-north-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_COMPLETE",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
     })
 
@@ -143,6 +159,8 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       region: "eu-west-1",
       currentStack: mock<CloudFormationStack>({
         status: "UPDATE_COMPLETE",
+        creationTime: creationTime,
+        lastUpdatedTime: creationTime2,
       }),
     })
 
@@ -162,6 +180,9 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         )}
             name:                      hello
             status:                    ${green("CREATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (1d ago)
             account id:                123456789012
             region:                    eu-north-1
             credentials:
@@ -173,6 +194,9 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         ${red("- /kitty.yml/eu-west-1:        (stack will be removed)")}
             name:                      kitty
             status:                    ${green("UPDATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime2,
+            )}      (1d 12h ago)
             account id:                123456789012
             region:                    eu-west-1
             credentials:
@@ -233,6 +257,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         ${red("- /sample3.yml/eu-central-1:   (stack will be removed)")}
             name:                      sample3
             status:                    ${cyan("PENDING")}
+            last change:               -
             account id:                123456789012
             region:                    eu-central-1
             credentials:
@@ -244,6 +269,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         ${red("- /sample2.yml/eu-central-1:   (stack will be removed)")}
             name:                      sample2
             status:                    ${cyan("PENDING")}
+            last change:               -
             account id:                123456789012
             region:                    eu-central-1
             credentials:
@@ -256,6 +282,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         ${red("- /sample.yml/eu-central-1:    (stack will be removed)")}
             name:                      sample
             status:                    ${cyan("PENDING")}
+            last change:               -
             account id:                123456789012
             region:                    eu-central-1
             credentials:
@@ -267,6 +294,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
         ${red("- /example1.yml/eu-north-1:    (stack will be removed)")}
             name:                      example1
             status:                    ${cyan("PENDING")}
+            last change:               -
             account id:                123456789012
             region:                    eu-north-1
             credentials:

@@ -18,6 +18,7 @@ import {
   red,
   yellow,
 } from "../../../../src/utils/colors"
+import { formatTimestamp } from "../../../../src/utils/date"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 import { mockInternalStack, MockInternalStackProps } from "../../mocks"
@@ -85,6 +86,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
         ${green("+ /example.yml/eu-west-1:      (stack will be created)")}
             name:                      example
             status:                    ${cyan("PENDING")}
+            last change:               -
             account id:                123456789012
             region:                    eu-west-1
             credentials:
@@ -98,12 +100,17 @@ describe("DeployStacksIO#confirmDeploy", () => {
   })
 
   test("a single update operation", async () => {
+    const now = new Date()
+    const creationTime = new Date(now.getTime() - 1000 * 60 * 60 * 12)
+
     const operation = mockOperation("UPDATE", {
       name: "hello",
       path: "/hello.yml/eu-north-1",
       region: "eu-north-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_COMPLETE",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
     })
 
@@ -120,6 +127,9 @@ describe("DeployStacksIO#confirmDeploy", () => {
         ${yellow("~ /hello.yml/eu-north-1:       (stack will be updated)")}
             name:                      hello
             status:                    ${green("CREATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (12h ago)
             account id:                123456789012
             region:                    eu-north-1
             credentials:
@@ -133,12 +143,17 @@ describe("DeployStacksIO#confirmDeploy", () => {
   })
 
   test("a single recreate operation", async () => {
+    const now = new Date()
+    const creationTime = new Date(now.getTime() - 1000 * 60 * 60 * 3)
+
     const operation = mockOperation("RECREATE", {
       name: "rds",
       path: "/rds.yml/eu-west-1",
       region: "eu-west-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_FAILED",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
     })
 
@@ -155,6 +170,9 @@ describe("DeployStacksIO#confirmDeploy", () => {
         ${orange("± /rds.yml/eu-west-1:          (stack will be replaced)")}
             name:                      rds
             status:                    ${red("CREATE_FAILED")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (3h ago)
             account id:                123456789012
             region:                    eu-west-1
             credentials:
@@ -168,12 +186,17 @@ describe("DeployStacksIO#confirmDeploy", () => {
   })
 
   test("dependencies are shown correctly", async () => {
+    const now = new Date()
+    const creationTime = new Date(now.getTime() - 1000 * 60 * 60 * 3)
+
     const operation1 = mockOperation("UPDATE", {
       name: "hello",
       path: "/hello.yml/eu-north-1",
       region: "eu-north-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_COMPLETE",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
     })
 
@@ -183,6 +206,8 @@ describe("DeployStacksIO#confirmDeploy", () => {
       region: "eu-central-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_COMPLETE",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
       dependencies: ["/hello.yml/eu-north-1"],
     })
@@ -193,6 +218,8 @@ describe("DeployStacksIO#confirmDeploy", () => {
       region: "eu-central-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_COMPLETE",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
     })
 
@@ -202,6 +229,8 @@ describe("DeployStacksIO#confirmDeploy", () => {
       region: "eu-central-1",
       currentStack: mock<CloudFormationStack>({
         status: "CREATE_COMPLETE",
+        creationTime,
+        lastUpdatedTime: creationTime,
       }),
       dependencies: ["/hello3.yml/eu-central-1", "/hello2.yml/eu-central-1"],
     })
@@ -212,6 +241,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
       operation2,
       operation4,
     )
+
     const expected = dedent`
       
       ${bold("Review stacks deployment plan:")}
@@ -224,6 +254,9 @@ describe("DeployStacksIO#confirmDeploy", () => {
         ${yellow("~ /hello.yml/eu-north-1:       (stack will be updated)")}
             name:                      hello
             status:                    ${green("CREATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (3h ago)
             account id:                123456789012
             region:                    eu-north-1
             credentials:
@@ -235,6 +268,9 @@ describe("DeployStacksIO#confirmDeploy", () => {
         ${yellow("~ /hello3.yml/eu-central-1:    (stack will be updated)")}
             name:                      hello3
             status:                    ${green("CREATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (3h ago)
             account id:                123456789012
             region:                    eu-central-1
             credentials:
@@ -246,6 +282,9 @@ describe("DeployStacksIO#confirmDeploy", () => {
         ${yellow("~ /hello2.yml/eu-central-1:    (stack will be updated)")}
             name:                      hello2
             status:                    ${green("CREATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (3h ago)
             account id:                123456789012
             region:                    eu-central-1
             credentials:
@@ -258,6 +297,9 @@ describe("DeployStacksIO#confirmDeploy", () => {
         ${yellow("~ /hello4.yml/eu-central-1:    (stack will be updated)")}
             name:                      hello4
             status:                    ${green("CREATE_COMPLETE")}
+            last change:               ${formatTimestamp(
+              creationTime,
+            )}      (3h ago)
             account id:                123456789012
             region:                    eu-central-1
             credentials:
