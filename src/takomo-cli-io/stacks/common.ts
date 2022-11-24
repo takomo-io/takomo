@@ -94,7 +94,7 @@ const toOutputStackResult = (
   path: result.stack.path,
   name: result.stack.name,
   status: result.status,
-  time: result.timer.getSecondsElapsed(),
+  time: result.timer.getTimeElapsed(),
   message: result.message,
   target,
 })
@@ -123,7 +123,7 @@ export const printStacksOperationOutput = ({
         success: output.success,
         message: output.message,
         error: output.error,
-        time: output.timer.getSecondsElapsed(),
+        time: output.timer.getTimeElapsed(),
       }),
     })
     return output
@@ -137,7 +137,7 @@ export const printStacksOperationOutput = ({
         success: output.success,
         message: output.message,
         error: output.error,
-        time: output.timer.getSecondsElapsed(),
+        time: output.timer.getTimeElapsed(),
       }),
     })
     return output
