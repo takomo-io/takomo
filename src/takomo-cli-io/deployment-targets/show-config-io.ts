@@ -1,7 +1,7 @@
 import {
   ShowDeploymentTargetsConfigurationIO,
   ShowDeploymentTargetsConfigurationOutput,
-} from "../../takomo-deployment-targets-commands/show-config/model"
+} from "../../command/targets/show-config/model"
 import { toPrettyJson } from "../../utils/json"
 import { formatYaml } from "../../utils/yaml"
 import { createBaseIO } from "../cli-io"

@@ -1,5 +1,5 @@
+import { resolveOperationType } from "../../src/command/stacks/deploy/plan"
 import { StackStatus } from "../../src/takomo-aws-model"
-import { resolveOperationType } from "../../src/takomo-stacks-commands/stacks/deploy/plan"
 
 const notSupported: Array<StackStatus> = [
   "CREATE_IN_PROGRESS",

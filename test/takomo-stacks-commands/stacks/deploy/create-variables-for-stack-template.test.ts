@@ -1,7 +1,7 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
+import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/steps/prepare-template"
 import { InternalCredentialManager } from "../../../../src/takomo-aws-clients"
-import { createVariablesForStackTemplate } from "../../../../src/takomo-stacks-commands/stacks/deploy/steps/prepare-template"
 import { InternalStack } from "../../../../src/takomo-stacks-model"
 import { createConsoleLogger } from "../../../../src/utils/logging"
 

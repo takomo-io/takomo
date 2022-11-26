@@ -1,4 +1,4 @@
-import { InitProjectOutput } from "../../../src/takomo-init-command"
+import { InitProjectOutput } from "../../../src/command/init/model"
 
 export interface InitProjectOutputMatcher {
   expectOutputToBeSuccessful: () => InitProjectOutputMatcher

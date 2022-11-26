@@ -1,4 +1,19 @@
 import { anyArray, anyBoolean, mock } from "jest-mock-extended"
+
+import { InitProjectIO } from "../../src/command/init/model"
+import {
+  ConfirmDeployAnswer,
+  ConfirmStackDeployAnswer,
+  DeployStacksIO,
+} from "../../src/command/stacks/deploy/model"
+import { DetectDriftIO } from "../../src/command/stacks/drift/model"
+import { ListStacksIO } from "../../src/command/stacks/list/model"
+import {
+  ConfirmUndeployAnswer,
+  UndeployStacksIO,
+} from "../../src/command/stacks/undeploy/model"
+import { DeploymentTargetsOperationIO } from "../../src/command/targets/operation/model"
+import { DeploymentTargetsRunIO } from "../../src/command/targets/run/model"
 import {
   createBootstrapTargetsIO,
   createDeployStacksIO,
@@ -12,20 +27,6 @@ import {
   createUndeployTargetsIO,
   UserActions,
 } from "../../src/takomo-cli-io"
-import {
-  DeploymentTargetsOperationIO,
-  DeploymentTargetsRunIO,
-} from "../../src/takomo-deployment-targets-commands"
-import { InitProjectIO } from "../../src/takomo-init-command"
-import {
-  ConfirmDeployAnswer,
-  ConfirmStackDeployAnswer,
-  ConfirmUndeployAnswer,
-  DeployStacksIO,
-  DetectDriftIO,
-  ListStacksIO,
-  UndeployStacksIO,
-} from "../../src/takomo-stacks-commands"
 import {
   CommandPath,
   ROOT_STACK_GROUP_PATH,

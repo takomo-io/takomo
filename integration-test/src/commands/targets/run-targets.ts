@@ -1,10 +1,8 @@
 import { basename } from "path"
+import { deploymentTargetsRunCommand } from "../../../../src/command/targets/run/command"
+import { DeploymentTargetsRunOutput } from "../../../../src/command/targets/run/model"
 import { IamRoleArn, IamRoleName } from "../../../../src/takomo-aws-model"
 import { OutputFormat } from "../../../../src/takomo-core"
-import {
-  deploymentTargetsRunCommand,
-  DeploymentTargetsRunOutput,
-} from "../../../../src/takomo-deployment-targets-commands"
 import { createConsoleLogger } from "../../../../src/utils/logging"
 import { Timer } from "../../../../src/utils/timer"
 import { createTestRunTargetsIO } from "../../io"

@@ -1,4 +1,10 @@
 import "source-map-support/register"
+export {
+  MapFunction,
+  MapFunctionProps,
+  ReduceFunction,
+  ReduceFunctionProps,
+} from "./command/targets/run/model"
 export { CredentialManager } from "./takomo-aws-clients"
 export {
   CallerIdentity,
@@ -33,12 +39,6 @@ export {
   Variables,
   Vars,
 } from "./takomo-core"
-export {
-  MapFunction,
-  MapFunctionProps,
-  ReduceFunction,
-  ReduceFunctionProps,
-} from "./takomo-deployment-targets-commands"
 export { DeploymentTargetConfig } from "./takomo-deployment-targets-config"
 export { DeploymentStatus, Label } from "./takomo-deployment-targets-model"
 export {

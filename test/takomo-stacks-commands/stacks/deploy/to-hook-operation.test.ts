@@ -1,4 +1,4 @@
-import { toHookOperation } from "../../../../src/takomo-stacks-commands/stacks/common/hooks"
+import { toHookOperation } from "../../../../src/command/stacks/common/hooks"
 import {
   HookOperation,
   StackOperationType,

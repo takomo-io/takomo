@@ -1,10 +1,10 @@
 import Table from "easy-table"
 import { basename, join } from "path"
-import { CommandContext } from "../../takomo-core"
 import {
   ProjectConfigRepository,
   ProjectInformation,
-} from "../../takomo-init-command"
+} from "../../command/init/model"
+import { CommandContext } from "../../takomo-core"
 
 import { TakomoError } from "../../utils/errors"
 import { createDir, createFile, dirExists, FilePath } from "../../utils/files"

@@ -1,7 +1,7 @@
 import { Arguments, Argv, CommandModule } from "yargs"
+import { validateDeploymentTargetsConfigurationCommand } from "../../command/targets/validate-config/command"
 import { createValidateDeploymentTargetsConfigurationIO } from "../../takomo-cli-io/deployment-targets/validate-config-io"
 import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs"
-import { validateDeploymentTargetsConfigurationCommand } from "../../takomo-deployment-targets-commands/validate-config/command"
 import { FilePath } from "../../utils/files"
 import { commonEpilog, handle, RunProps } from "../common"
 import { CONFIG_FILE_OPT } from "../constants"

@@ -1,12 +1,16 @@
 import R from "ramda"
+
 import { StackEvent } from "../../takomo-aws-model/cloudformation"
+
+import { StacksOperationOutput } from "../../command/stacks/model"
 import {
   ConfirmUndeployAnswer,
-  StacksOperationOutput,
+  UndeployStacksIO,
+} from "../../command/stacks/undeploy/model"
+import {
   StacksUndeployPlan,
   StackUndeployOperationType,
-  UndeployStacksIO,
-} from "../../takomo-stacks-commands"
+} from "../../command/stacks/undeploy/plan"
 import { StackGroup, StackPath } from "../../takomo-stacks-model"
 import { grey, red } from "../../utils/colors"
 import { createBaseIO } from "../cli-io"

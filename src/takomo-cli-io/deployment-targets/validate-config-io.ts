@@ -1,7 +1,7 @@
 import {
   ValidateDeploymentTargetsConfigurationIO,
   ValidateDeploymentTargetsConfigurationOutput,
-} from "../../takomo-deployment-targets-commands/validate-config/model"
+} from "../../command/targets/validate-config/model"
 import { createBaseIO } from "../cli-io"
 import { IOProps } from "../stacks/common"
 

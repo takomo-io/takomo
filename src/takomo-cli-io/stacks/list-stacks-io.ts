@@ -1,5 +1,5 @@
 import Table from "easy-table"
-import { ListStacksIO, ListStacksOutput } from "../../takomo-stacks-commands"
+import { ListStacksIO, ListStacksOutput } from "../../command/stacks/list/model"
 import { toPrettyJson } from "../../utils/json"
 import { formatYaml } from "../../utils/yaml"
 import { createBaseIO } from "../cli-io"

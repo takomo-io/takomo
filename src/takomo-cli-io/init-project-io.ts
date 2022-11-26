@@ -1,12 +1,12 @@
 import Joi from "joi"
-import { Region } from "../takomo-aws-model"
-import { CommandContext, createCommonSchema, Project } from "../takomo-core"
 import {
   InitProjectInput,
   InitProjectIO,
   InitProjectOutput,
   ProjectInformation,
-} from "../takomo-init-command"
+} from "../command/init/model"
+import { Region } from "../takomo-aws-model"
+import { CommandContext, createCommonSchema, Project } from "../takomo-core"
 import { createBaseIO } from "./cli-io"
 import { IOProps } from "./stacks/common"
 

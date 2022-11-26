@@ -1,7 +1,7 @@
 import {
   ShowConfigurationIO,
   ShowConfigurationOutput,
-} from "../../../takomo-stacks-commands"
+} from "../../../command/stacks/inspect/configuration/model"
 import { StackGroup } from "../../../takomo-stacks-model"
 import { toPrettyJson } from "../../../utils/json"
 import { formatYaml } from "../../../utils/yaml"

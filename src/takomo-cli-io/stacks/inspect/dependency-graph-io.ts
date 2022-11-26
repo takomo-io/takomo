@@ -1,7 +1,7 @@
 import {
   DependencyGraphIO,
   DependencyGraphOutput,
-} from "../../../takomo-stacks-commands"
+} from "../../../command/stacks/inspect/dependency-graph/model"
 import { createBaseIO } from "../../cli-io"
 import { IOProps } from "../common"
 

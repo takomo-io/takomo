@@ -1,5 +1,8 @@
 import Table from "easy-table"
-import { DetectDriftIO, DetectDriftOutput } from "../../takomo-stacks-commands"
+import {
+  DetectDriftIO,
+  DetectDriftOutput,
+} from "../../command/stacks/drift/model"
 import { createBaseIO } from "../cli-io"
 import { formatDriftStatus, formatStackStatus } from "../formatters"
 import { IOProps } from "./common"
