@@ -1,5 +1,5 @@
+import { isStackReadyForDeploy } from "../../../../src/command/stacks/deploy/validate"
 import { StackStatus } from "../../../../src/takomo-aws-model"
-import { isStackReadyForDeploy } from "../../../../src/takomo-stacks-commands/stacks/deploy/validate"
 
 const data: Array<[StackStatus, boolean]> = [
   ["CREATE_IN_PROGRESS", false],

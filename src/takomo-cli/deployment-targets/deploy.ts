@@ -1,5 +1,5 @@
+import { deployTargetsOperationCommandIamPolicy } from "../../command/targets/operation/iam-policy"
 import { createDeployTargetsIO } from "../../takomo-cli-io"
-import { deployTargetsOperationCommandIamPolicy } from "../../takomo-deployment-targets-commands"
 import { GROUPS_OPT } from "./common"
 import { targetsDeployCommand } from "./common-deploy"
 

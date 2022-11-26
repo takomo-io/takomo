@@ -1,4 +1,6 @@
 import { mock } from "jest-mock-extended"
+import { PlannedDeploymentTarget } from "../../../src/command/targets/common/plan/model"
+import { createDeploymentTargetVariables } from "../../../src/command/targets/operation/create-deployment-target-variables"
 import {
   InternalAwsClientProvider,
   InternalCredentialManager,
@@ -8,8 +10,6 @@ import {
   InternalTakomoProjectConfig,
   TakomoBuildInfo,
 } from "../../../src/takomo-core"
-import { PlannedDeploymentTarget } from "../../../src/takomo-deployment-targets-commands"
-import { createDeploymentTargetVariables } from "../../../src/takomo-deployment-targets-commands/operation/create-deployment-target-variables"
 import { DeploymentConfig } from "../../../src/takomo-deployment-targets-config"
 import {
   DeploymentTargetsConfigRepository,

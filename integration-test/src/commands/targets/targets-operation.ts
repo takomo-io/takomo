@@ -1,3 +1,5 @@
+import { StacksOperationOutput } from "../../../../src/command/stacks/model"
+import { DeploymentTargetsOperationOutput } from "../../../../src/command/targets/operation/model"
 import {
   StackName,
   StackOutput,
@@ -9,13 +11,11 @@ import {
 } from "../../../../src/takomo-aws-model"
 import { ConfigSetName } from "../../../../src/takomo-config-sets"
 import { CommandStatus } from "../../../../src/takomo-core"
-import { DeploymentTargetsOperationOutput } from "../../../../src/takomo-deployment-targets-commands"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "../../../../src/takomo-deployment-targets-model"
 import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans"
-import { StacksOperationOutput } from "../../../../src/takomo-stacks-commands"
 import { CommandPath, StackPath } from "../../../../src/takomo-stacks-model"
 import { ExecuteCommandProps } from "../common"
 

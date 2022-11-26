@@ -1,4 +1,5 @@
 import R from "ramda"
+
 import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
@@ -6,13 +7,14 @@ import {
   TemplateSummary,
 } from "../../../takomo-aws-model"
 import { StackEvent } from "../../../takomo-aws-model/cloudformation"
+
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
-  StacksDeployPlan,
-  StacksOperationOutput,
-} from "../../../takomo-stacks-commands"
+} from "../../../command/stacks/deploy/model"
+import { StacksDeployPlan } from "../../../command/stacks/deploy/plan"
+import { StacksOperationOutput } from "../../../command/stacks/model"
 import {
   InternalStack,
   StackGroup,

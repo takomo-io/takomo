@@ -3,10 +3,9 @@ import prettyMs from "pretty-ms"
 import { CloudFormationStackSummary, StackName } from "../../takomo-aws-model"
 import { StackEvent } from "../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../takomo-core"
-import {
-  StacksOperationListener,
-  StacksOperationOutput,
-} from "../../takomo-stacks-commands"
+
+import { StacksOperationListener } from "../../command/stacks/common/model"
+import { StacksOperationOutput } from "../../command/stacks/model"
 import {
   CommandPath,
   getStackPath,

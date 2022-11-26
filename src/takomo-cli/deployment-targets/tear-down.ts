@@ -1,5 +1,5 @@
+import { undeployTargetsOperationCommandIamPolicy } from "../../command/targets/operation/iam-policy"
 import { createTearDownTargetsIO } from "../../takomo-cli-io"
-import { undeployTargetsOperationCommandIamPolicy } from "../../takomo-deployment-targets-commands"
 import { GROUPS_OPT, targetsOperationCommand } from "./common"
 
 const command = `tear-down [${GROUPS_OPT}..]`

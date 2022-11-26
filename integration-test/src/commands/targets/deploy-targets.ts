@@ -1,5 +1,5 @@
 import { basename } from "path"
-import { deploymentTargetsOperationCommand } from "../../../../src/takomo-deployment-targets-commands"
+import { deploymentTargetsOperationCommand } from "../../../../src/command/targets/operation/command"
 import { createConsoleLogger } from "../../../../src/utils/logging"
 import { Timer } from "../../../../src/utils/timer"
 import { createTestDeployTargetsIO } from "../../io"

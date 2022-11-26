@@ -1,10 +1,11 @@
 import R from "ramda"
+
+import { DeploymentTargetsListener } from "../../command/targets/operation/model"
 import {
-  DeploymentTargetsListener,
   DeploymentTargetsRunIO,
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
-} from "../../takomo-deployment-targets-commands"
+} from "../../command/targets/run/model"
 import { splitTextInLines } from "../../utils/strings"
 import { formatYaml } from "../../utils/yaml"
 import { createBaseIO } from "../cli-io"

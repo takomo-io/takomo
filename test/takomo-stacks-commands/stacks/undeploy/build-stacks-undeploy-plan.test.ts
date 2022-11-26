@@ -5,11 +5,12 @@ import {
   StackName,
   StackStatus,
 } from "../../../../src/takomo-aws-model"
+
 import {
+  buildStacksUndeployPlan,
   StacksUndeployPlan,
   StackUndeployOperationType,
-} from "../../../../src/takomo-stacks-commands"
-import { buildStacksUndeployPlan } from "../../../../src/takomo-stacks-commands/stacks/undeploy/plan"
+} from "../../../../src/command/stacks/undeploy/plan"
 import {
   InternalStack,
   ROOT_STACK_GROUP_PATH,

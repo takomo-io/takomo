@@ -6,10 +6,11 @@ import {
   StackName,
   StackStatus,
 } from "../../../../src/takomo-aws-model"
+
 import {
   buildStacksDeployPlan,
   StacksDeployPlan,
-} from "../../../../src/takomo-stacks-commands/stacks/deploy/plan"
+} from "../../../../src/command/stacks/deploy/plan"
 import {
   InternalStack,
   ROOT_STACK_GROUP_PATH,

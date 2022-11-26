@@ -1,4 +1,4 @@
-import { toHookStatus } from "../../../../src/takomo-stacks-commands/stacks/common/hooks"
+import { toHookStatus } from "../../../../src/command/stacks/common/hooks"
 
 describe("#toHookStatus", () => {
   describe("returns correct value", () => {

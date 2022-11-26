@@ -1,4 +1,4 @@
-import { DeploymentTargetsOperationIO } from "../../takomo-deployment-targets-commands"
+import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
 import { IOProps } from "../stacks/common"
 import { createDeploymentTargetsOperationIO } from "./deployment-operation-io"
 

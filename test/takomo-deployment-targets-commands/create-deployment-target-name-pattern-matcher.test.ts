@@ -1,5 +1,5 @@
 import { mock } from "jest-mock-extended"
-import { createDeploymentTargetNamePatternMatcher } from "../../src/takomo-deployment-targets-commands/common/plan/create-deployment-target-name-pattern-matcher"
+import { createDeploymentTargetNamePatternMatcher } from "../../src/command/targets/common/plan/create-deployment-target-name-pattern-matcher"
 import { DeploymentTargetConfig } from "../../src/takomo-deployment-targets-config"
 import { DeploymentTargetName } from "../../src/takomo-deployment-targets-model"
 
