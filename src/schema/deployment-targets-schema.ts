@@ -1,7 +1,7 @@
 import Joi, { ObjectSchema, StringSchema } from "joi"
 import { Region } from "../takomo-aws-model"
-import { createCommonSchema } from "../takomo-core"
 import { createAwsSchemas } from "./aws-schema"
+import { createCommonSchema } from "./common-schema"
 import { createConfigSetsSchemas } from "./config-sets-schema"
 
 export interface DeploymentTargetsSchemas {

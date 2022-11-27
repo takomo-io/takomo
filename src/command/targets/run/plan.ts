@@ -1,9 +1,10 @@
 import R from "ramda"
+
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../takomo-deployment-targets-config"
-import { DeploymentTargetsContext } from "../../../takomo-deployment-targets-context"
+} from "../../../config/targets-config"
+import { DeploymentTargetsContext } from "../../../context/targets-context"
 import { collectFromHierarchy } from "../../../utils/collections"
 import { TakomoError } from "../../../utils/errors"
 import { createDeploymentTargetNamePatternMatcher } from "../common/plan/create-deployment-target-name-pattern-matcher"

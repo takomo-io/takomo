@@ -1,7 +1,7 @@
 import {
   CommandOutputBase,
   resolveCommandOutputBase,
-} from "../../src/takomo-core"
+} from "../../src/takomo-core/command"
 
 const successful: CommandOutputBase = {
   success: true,

@@ -1,20 +1,17 @@
-import { InternalCredentialManager } from "../../takomo-aws-clients"
-import { IamRoleArn } from "../../takomo-aws-model"
-import { InternalCommandContext } from "../../takomo-core"
-import { createHookRegistry } from "../../takomo-stacks-hooks"
-import {
-  CommandPath,
-  createSchemaRegistry,
-  InternalStacksContext,
-  normalizeStackPath,
-  ROOT_STACK_GROUP_PATH,
-  StackGroupPath,
-  StackPath,
-} from "../../takomo-stacks-model"
+import { CommandPath } from "../../command/command-model"
+import { InternalCommandContext } from "../../context/command-context"
+import { InternalStacksContext } from "../../context/stacks-context"
+import { createHookRegistry } from "../../hooks/hook-registry"
 import {
   coreResolverProviders,
   ResolverRegistry,
-} from "../../takomo-stacks-resolvers"
+} from "../../resolvers/resolver-registry"
+import { normalizeStackPath, StackPath } from "../../stacks/stack"
+import { StackGroupPath } from "../../stacks/stack-group"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
+import { IamRoleArn } from "../../takomo-aws-model"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
+import { createSchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { arrayToMap, collectFromHierarchy } from "../../utils/collections"
 import { TkmLogger } from "../../utils/logging"
 import { isStackGroupPath } from "../common"

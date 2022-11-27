@@ -2,17 +2,14 @@ import Table from "easy-table"
 import prettyMs from "pretty-ms"
 import { CloudFormationStackSummary, StackName } from "../../takomo-aws-model"
 import { StackEvent } from "../../takomo-aws-model/cloudformation"
-import { CommandStatus } from "../../takomo-core"
+import { CommandStatus } from "../../takomo-core/command"
 
+import { CommandPath, StackResult } from "../../command/command-model"
 import { StacksOperationListener } from "../../command/stacks/common/model"
 import { StacksOperationOutput } from "../../command/stacks/model"
-import {
-  CommandPath,
-  getStackPath,
-  StackGroup,
-  StackPath,
-  StackResult,
-} from "../../takomo-stacks-model"
+import { StackPath } from "../../stacks/stack"
+import { StackGroup } from "../../stacks/stack-group"
+import { getStackPath } from "../../takomo-stacks-model/util"
 import { collectFromHierarchy } from "../../utils/collections"
 import { formatTimestamp } from "../../utils/date"
 import { toPrettyJson } from "../../utils/json"

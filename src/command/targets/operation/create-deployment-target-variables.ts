@@ -1,4 +1,4 @@
-import { DeploymentTargetsContext } from "../../../takomo-deployment-targets-context"
+import { DeploymentTargetsContext } from "../../../context/targets-context"
 import { ConfigSetExecutionTarget } from "../../../takomo-execution-plans"
 import { deepCopy } from "../../../utils/objects"
 import { PlannedDeploymentTarget } from "../common/plan/model"

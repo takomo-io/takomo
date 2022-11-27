@@ -1,5 +1,5 @@
 import { anyArray, anyBoolean, mock } from "jest-mock-extended"
-
+import { CommandPath } from "../../src/command/command-model"
 import { InitProjectIO } from "../../src/command/init/model"
 import {
   ConfirmDeployAnswer,
@@ -27,10 +27,7 @@ import {
   createUndeployTargetsIO,
   UserActions,
 } from "../../src/takomo-cli-io"
-import {
-  CommandPath,
-  ROOT_STACK_GROUP_PATH,
-} from "../../src/takomo-stacks-model"
+import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants"
 import { TkmLogger } from "../../src/utils/logging"
 
 export interface TestDeployStacksIOAnswers {

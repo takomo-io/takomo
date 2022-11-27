@@ -1,4 +1,4 @@
-import { DeploymentTargetsContext } from "../../../takomo-deployment-targets-context"
+import { DeploymentTargetsContext } from "../../../context/targets-context"
 import { DeploymentTargetsListener } from "../operation/model"
 import {
   DeploymentTargetsRunInput,

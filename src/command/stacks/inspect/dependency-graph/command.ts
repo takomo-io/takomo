@@ -1,11 +1,12 @@
 import Joi, { AnySchema } from "joi"
+import { CommandContext } from "../../../../context/command-context"
 import { createStacksSchemas } from "../../../../schema/stacks-schema"
-import { CommandContext, CommandHandler } from "../../../../takomo-core"
+import { CommandHandler } from "../../../../takomo-core/command"
 import {
   buildStacksContext,
   StacksConfigRepository,
 } from "../../../../takomo-stacks-context"
-import { isNotObsolete } from "../../../../takomo-stacks-model"
+import { isNotObsolete } from "../../../../takomo-stacks-model/util"
 import { validateInput } from "../../../../utils/validation"
 import {
   DependencyGraphInput,

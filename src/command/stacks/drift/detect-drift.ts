@@ -1,7 +1,5 @@
-import {
-  InternalStacksContext,
-  isNotObsolete,
-} from "../../../takomo-stacks-model"
+import { InternalStacksContext } from "../../../context/stacks-context"
+import { isNotObsolete } from "../../../takomo-stacks-model/util"
 import { TkmLogger } from "../../../utils/logging"
 import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
 import { DetectDriftInput, DetectDriftOutput } from "./model"

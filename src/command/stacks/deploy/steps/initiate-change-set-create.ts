@@ -1,9 +1,6 @@
 import { ChangeSetType } from "../../../../takomo-aws-model"
-import {
-  defaultCapabilities,
-  StackOperationType,
-} from "../../../../takomo-stacks-model"
 import { uuid } from "../../../../utils/strings"
+import { defaultCapabilities, StackOperationType } from "../../../command-model"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateSummaryHolder } from "../states"
 

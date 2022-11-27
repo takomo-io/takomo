@@ -1,10 +1,8 @@
+import { StackPath } from "../../../stacks/stack"
+import { StackGroup } from "../../../stacks/stack-group"
 import { StackEvent } from "../../../takomo-aws-model/cloudformation"
-import { IO } from "../../../takomo-core"
-import {
-  CommandPath,
-  StackGroup,
-  StackPath,
-} from "../../../takomo-stacks-model"
+import { IO } from "../../../takomo-core/command"
+import { CommandPath } from "../../command-model"
 import { StacksOperationListener } from "../common/model"
 import { StacksOperationOutput } from "../model"
 import { StacksUndeployPlan } from "./plan"

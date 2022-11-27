@@ -1,5 +1,5 @@
-import { Variables } from "../../takomo-core"
-import { StackGroup } from "../../takomo-stacks-model"
+import { Variables } from "../../common/model"
+import { StackGroup } from "../../stacks/stack-group"
 import { getVariablesForStackGroup } from "./get-variables-for-stack-group"
 
 export const createVariablesForStackGroupConfigFile = (

@@ -1,16 +1,16 @@
-import { InternalCredentialManager } from "../../takomo-aws-clients"
+import { CommandPath } from "../../command/command-model"
 import {
   ConfigSet,
   ConfigSetName,
   ConfigSetType,
   StageName,
-} from "../../takomo-config-sets"
+} from "../../config-sets/config-set-model"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
 import {
   CommandOutput,
   CommandOutputBase,
   OperationState,
-} from "../../takomo-core"
-import { CommandPath } from "../../takomo-stacks-model"
+} from "../../takomo-core/command"
 import { TkmLogger } from "../../utils/logging"
 import { Timer } from "../../utils/timer"
 import { ExecutionGroupId, ExecutionTargetId } from "../model"

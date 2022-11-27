@@ -1,7 +1,7 @@
+import { CommandPath } from "../../../command/command-model"
+import { ConfigSet } from "../../../config-sets/config-set-model"
 import { InternalCredentialManager } from "../../../takomo-aws-clients"
-import { ConfigSet } from "../../../takomo-config-sets"
-import { CommandOutput, OperationState } from "../../../takomo-core"
-import { CommandPath } from "../../../takomo-stacks-model"
+import { CommandOutput, OperationState } from "../../../takomo-core/command"
 import { TkmLogger } from "../../../utils/logging"
 import { Timer } from "../../../utils/timer"
 import {

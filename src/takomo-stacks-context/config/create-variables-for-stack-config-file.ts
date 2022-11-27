@@ -1,6 +1,7 @@
 import path from "path"
-import { Variables } from "../../takomo-core"
-import { StackGroup, StackPath } from "../../takomo-stacks-model"
+import { Variables } from "../../common/model"
+import { StackPath } from "../../stacks/stack"
+import { StackGroup } from "../../stacks/stack-group"
 import { getVariablesForStackGroup } from "./get-variables-for-stack-group"
 
 export const createVariablesForStackConfigFile = (

@@ -1,8 +1,9 @@
 import { mock } from "jest-mock-extended"
+import { TakomoProjectConfig } from "../../src/config/project-config"
+import { CommandContext } from "../../src/context/command-context"
+import { buildStackGroupConfig } from "../../src/parser/stacks/build-stack-group-config"
+import { RawTagValue } from "../../src/stacks/stack"
 import { TagKey } from "../../src/takomo-aws-model"
-import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
-import { buildStackGroupConfig } from "../../src/takomo-stacks-config"
-import { RawTagValue } from "../../src/takomo-stacks-model"
 
 const emptyStackGroupConfig = {
   commandRole: undefined,

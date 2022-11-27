@@ -1,5 +1,5 @@
-import { StackResult } from "../../../takomo-stacks-model"
 import { TkmLogger } from "../../../utils/logging"
+import { StackResult } from "../../command-model"
 import { InitialStackOperationState } from "./states"
 
 type StackOperationCompletedProps = Omit<StackResult, "timer">

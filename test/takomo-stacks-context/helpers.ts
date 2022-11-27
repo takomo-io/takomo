@@ -1,6 +1,14 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
+
+import { HookConfig } from "../../src/hooks/hook"
+import { InternalStack, RawTagValue, StackPath } from "../../src/stacks/stack"
+import {
+  StackGroup,
+  StackGroupName,
+  StackGroupPath,
+} from "../../src/stacks/stack-group"
 import {
   CloudFormationClient,
   InternalCredentialManager,
@@ -13,18 +21,9 @@ import {
   StackPolicyBody,
   TagKey,
 } from "../../src/takomo-aws-model"
-import { CommandRole, Project } from "../../src/takomo-core"
+import { CommandRole, Project } from "../../src/takomo-core/command"
 import { StackConfig, TemplateConfig } from "../../src/takomo-stacks-config"
-import {
-  HookConfig,
-  InternalStack,
-  RawTagValue,
-  ROOT_STACK_GROUP_PATH,
-  StackGroup,
-  StackGroupName,
-  StackGroupPath,
-  StackPath,
-} from "../../src/takomo-stacks-model"
+import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants"
 import { createConsoleLogger } from "../../src/utils/logging"
 
 export interface CreateStackGroupProps {

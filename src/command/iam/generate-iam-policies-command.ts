@@ -1,5 +1,6 @@
 import Joi, { AnySchema } from "joi"
 import R from "ramda"
+import { CommandContext } from "../../context/command-context"
 import { createAwsSchemas } from "../../schema/aws-schema"
 import { AwsClientProvider, CredentialManager } from "../../takomo-aws-clients"
 import {
@@ -8,7 +9,7 @@ import {
   IamRoleName,
   Region,
 } from "../../takomo-aws-model"
-import { CommandContext, CommandHandler } from "../../takomo-core"
+import { CommandHandler } from "../../takomo-core/command"
 import { TkmLogger } from "../../utils/logging"
 import { validateInput } from "../../utils/validation"
 import {

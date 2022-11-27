@@ -1,13 +1,10 @@
+import { InternalStacksContext } from "../../../context/stacks-context"
+import { InternalStack } from "../../../stacks/stack"
 import { CloudFormationStackSummary } from "../../../takomo-aws-model"
 import { StacksConfigRepository } from "../../../takomo-stacks-context"
-import {
-  InternalStack,
-  InternalStacksContext,
-  StackOperationType,
-  StackResult,
-} from "../../../takomo-stacks-model"
 import { TkmLogger } from "../../../utils/logging"
 import { Timer } from "../../../utils/timer"
+import { StackOperationType, StackResult } from "../../command-model"
 import { StacksOperationListener } from "../common/model"
 import { executeSteps } from "../common/steps"
 import { DeployStacksIO, DeployState } from "./model"

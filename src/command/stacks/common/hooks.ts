@@ -1,9 +1,6 @@
-import { CommandStatus } from "../../../takomo-core"
-import {
-  HookOperation,
-  HookStatus,
-  StackOperationType,
-} from "../../../takomo-stacks-model"
+import { HookOperation, HookStatus } from "../../../hooks/hook"
+import { CommandStatus } from "../../../takomo-core/command"
+import { StackOperationType } from "../../command-model"
 
 export const toHookOperation = (
   operationType: StackOperationType,

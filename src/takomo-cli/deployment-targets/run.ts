@@ -2,12 +2,12 @@ import { Arguments, Argv, CommandModule } from "yargs"
 import { deploymentTargetsRunCommand } from "../../command/targets/run/command"
 import { createRunTargetsIO } from "../../takomo-cli-io"
 import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs"
-import { OutputFormat } from "../../takomo-core"
+import { OutputFormat } from "../../takomo-core/command"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   Label,
-} from "../../takomo-deployment-targets-model"
+} from "../../targets/targets-model"
 import { FilePath } from "../../utils/files"
 import { commonEpilog, handle, RunProps } from "../common"
 import {

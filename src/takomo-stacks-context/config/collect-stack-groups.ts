@@ -1,4 +1,4 @@
-import { StackGroup, StackGroupPath } from "../../takomo-stacks-model"
+import { StackGroup, StackGroupPath } from "../../stacks/stack-group"
 
 export const collectStackGroups = (
   stackGroup: StackGroup,

@@ -1,7 +1,7 @@
 import readdirp from "readdirp"
-import { HookRegistry } from "../../takomo-stacks-hooks"
-import { SchemaRegistry } from "../../takomo-stacks-model"
-import { ResolverRegistry } from "../../takomo-stacks-resolvers"
+import { HookRegistry } from "../../hooks/hook-registry"
+import { ResolverRegistry } from "../../resolvers/resolver-registry"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { dirExists, FilePath } from "../../utils/files"
 import { TkmLogger } from "../../utils/logging"
 

@@ -1,9 +1,9 @@
-import { ChecksumHook, CmdHook, HookRegistry } from "../../takomo-stacks-hooks"
-import {
-  HookConfig,
-  HookExecutor,
-  HookProvider,
-} from "../../takomo-stacks-model"
+import { ChecksumHook } from "../../hooks/checksum-hook"
+import { CmdHook } from "../../hooks/cmd-hook"
+import { HookConfig } from "../../hooks/hook"
+import { HookExecutor } from "../../hooks/hook-executor"
+import { HookProvider } from "../../hooks/hook-provider"
+import { HookRegistry } from "../../hooks/hook-registry"
 
 export const coreHookProviders = (): ReadonlyArray<HookProvider> => [
   {

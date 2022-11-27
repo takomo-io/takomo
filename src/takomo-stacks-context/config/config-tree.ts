@@ -1,9 +1,7 @@
-import { StackConfig, StackGroupConfig } from "../../takomo-stacks-config"
-import {
-  StackGroupName,
-  StackGroupPath,
-  StackPath,
-} from "../../takomo-stacks-model"
+import { StackConfig } from "../../config/stack-config"
+import { StackGroupConfig } from "../../config/stack-group-config"
+import { StackPath } from "../../stacks/stack"
+import { StackGroupName, StackGroupPath } from "../../stacks/stack-group"
 
 export interface StackConfigNode {
   readonly path: StackPath

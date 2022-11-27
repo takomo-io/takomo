@@ -1,16 +1,16 @@
 import R from "ramda"
+import { InternalStack, StackPath } from "../../../stacks/stack"
 import { CloudFormationStack } from "../../../takomo-aws-model"
 import { sortStacksForUndeploy } from "../../../takomo-stacks-context"
+
 import {
-  CommandPath,
   getStackPath,
-  InternalStack,
   isNotObsolete,
   isObsolete,
   isWithinCommandPath,
-  StackPath,
-} from "../../../takomo-stacks-model"
+} from "../../../takomo-stacks-model/util"
 import { arrayToMap } from "../../../utils/collections"
+import { CommandPath } from "../../command-model"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 

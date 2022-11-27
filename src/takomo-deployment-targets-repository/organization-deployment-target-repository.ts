@@ -3,7 +3,7 @@ import { Account, OUPath } from "../takomo-aws-model"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../takomo-deployment-targets-model"
+} from "../targets/targets-model"
 import { TakomoError } from "../utils/errors"
 import {
   DeploymentTargetConfigItemWrapper,

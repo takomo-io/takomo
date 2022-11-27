@@ -4,7 +4,7 @@ import {
   ProjectConfigRepository,
   ProjectInformation,
 } from "../../command/init/model"
-import { CommandContext } from "../../takomo-core"
+import { CommandContext } from "../../context/command-context"
 
 import { TakomoError } from "../../utils/errors"
 import { createDir, createFile, dirExists, FilePath } from "../../utils/files"

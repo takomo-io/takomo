@@ -1,10 +1,10 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createUndeployStacksIO } from "../../takomo-cli-io"
-import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs"
-
+import { CommandPath } from "../../command/command-model"
 import { undeployStacksCommand } from "../../command/stacks/undeploy/command"
 import { undeployStacksCommandIamPolicy } from "../../command/stacks/undeploy/iam-policy"
-import { CommandPath, ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model"
+import { createUndeployStacksIO } from "../../takomo-cli-io"
+import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { commonEpilog, handle, RunProps } from "../common"
 import {
   COMMAND_PATH_OPT,

@@ -1,6 +1,24 @@
 import { AnySchema } from "joi"
 import R from "ramda"
+import { CommandPath } from "../../command/command-model"
+import { TemplateBucketConfig, TimeoutConfig, Vars } from "../../common/model"
+import { TemplateConfig } from "../../config/common-config"
+import { StackConfig } from "../../config/stack-config"
+import { InternalCommandContext } from "../../context/command-context"
+import { HookConfig } from "../../hooks/hook"
+import { HookRegistry } from "../../hooks/hook-registry"
+import { ResolverRegistry } from "../../resolvers/resolver-registry"
 import { createAwsSchemas } from "../../schema/aws-schema"
+import {
+  createStack,
+  InternalStack,
+  normalizeStackPath,
+  RawTagValue,
+  StackPath,
+  StackProps,
+  Template,
+} from "../../stacks/stack"
+import { StackGroup } from "../../stacks/stack-group"
 import { InternalCredentialManager } from "../../takomo-aws-clients"
 import {
   AccountId,
@@ -11,33 +29,10 @@ import {
   StackPolicyBody,
   TagKey,
 } from "../../takomo-aws-model"
-import {
-  CommandRole,
-  InternalCommandContext,
-  Project,
-  Vars,
-} from "../../takomo-core"
-import { StackConfig, TemplateConfig } from "../../takomo-stacks-config"
-import { HookRegistry } from "../../takomo-stacks-hooks"
-import {
-  CommandPath,
-  createStack,
-  HookConfig,
-  InternalStack,
-  isWithinCommandPath,
-  normalizeStackPath,
-  RawTagValue,
-  SchemaRegistry,
-  StackGroup,
-  StackPath,
-  StackPropertyDefaults,
-  StackProps,
-  Template,
-  TemplateBucketConfig,
-  TimeoutConfig,
-} from "../../takomo-stacks-model"
-import { ResolverRegistry } from "../../takomo-stacks-resolvers"
-
+import { CommandRole, Project } from "../../takomo-core/command"
+import { StackPropertyDefaults } from "../../takomo-stacks-model/constants"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
+import { isWithinCommandPath } from "../../takomo-stacks-model/util"
 import { mapToObject, mergeArrays, mergeMaps } from "../../utils/collections"
 import { TakomoError } from "../../utils/errors"
 import { TkmLogger } from "../../utils/logging"

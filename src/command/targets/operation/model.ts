@@ -1,24 +1,26 @@
-import { ConfigSetName, ConfigSetType } from "../../../takomo-config-sets"
-import { CommandInput, IO, OutputFormat } from "../../../takomo-core"
-import { DeploymentTargetsContext } from "../../../takomo-deployment-targets-context"
 import {
-  DeploymentGroupPath,
-  DeploymentTargetNamePattern,
-  Label,
-} from "../../../takomo-deployment-targets-model"
+  ConfigSetName,
+  ConfigSetType,
+} from "../../../config-sets/config-set-model"
+import { DeploymentTargetsContext } from "../../../context/targets-context"
+import { CommandInput, IO, OutputFormat } from "../../../takomo-core/command"
 import {
   ConfigSetExecutionPlan,
   ConfigSetPlanExecutionResult,
   ConfigSetTargetListener,
   CreateConfigSetTargetListenerProps,
 } from "../../../takomo-execution-plans"
-
-import { DeployStacksIO } from "../../../command/stacks/deploy/model"
-import { StacksOperationOutput } from "../../../command/stacks/model"
-import { UndeployStacksIO } from "../../../command/stacks/undeploy/model"
-import { CommandPath, DeploymentOperation } from "../../../takomo-stacks-model"
+import {
+  DeploymentGroupPath,
+  DeploymentTargetNamePattern,
+  Label,
+} from "../../../targets/targets-model"
 import { TkmLogger } from "../../../utils/logging"
 import { Timer } from "../../../utils/timer"
+import { CommandPath, DeploymentOperation } from "../../command-model"
+import { DeployStacksIO } from "../../stacks/deploy/model"
+import { StacksOperationOutput } from "../../stacks/model"
+import { UndeployStacksIO } from "../../stacks/undeploy/model"
 import { PlannedDeploymentTarget } from "../common/plan/model"
 
 export type ConfirmOperationAnswer =

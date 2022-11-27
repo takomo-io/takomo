@@ -1,10 +1,10 @@
+import { ConfigSetType } from "../../../../config-sets/config-set-model"
+import { DeploymentTargetConfig } from "../../../../config/targets-config"
 import {
   CallerIdentity,
   IamRoleArn,
   makeIamRoleArn,
 } from "../../../../takomo-aws-model"
-import { ConfigSetType } from "../../../../takomo-config-sets"
-import { DeploymentTargetConfig } from "../../../../takomo-deployment-targets-config"
 
 export const getExecutionRoleArn = (
   configSetType: ConfigSetType,

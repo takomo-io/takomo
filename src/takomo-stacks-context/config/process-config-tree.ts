@@ -1,21 +1,23 @@
 import R from "ramda"
-import { InternalCredentialManager } from "../../takomo-aws-clients"
-import { IamRoleArn } from "../../takomo-aws-model"
-import { InternalCommandContext } from "../../takomo-core"
-import { HookRegistry } from "../../takomo-stacks-hooks"
+import { CommandPath } from "../../command/command-model"
+import { InternalCommandContext } from "../../context/command-context"
+import { HookRegistry } from "../../hooks/hook-registry"
+import { ResolverRegistry } from "../../resolvers/resolver-registry"
 import {
-  CommandPath,
-  createStackGroup,
   InternalStack,
-  isWithinCommandPath,
   normalizeStackPath,
-  ROOT_STACK_GROUP_PATH,
-  SchemaRegistry,
+  StackPath,
+} from "../../stacks/stack"
+import {
+  createStackGroup,
   StackGroup,
   StackGroupPath,
-  StackPath,
-} from "../../takomo-stacks-model"
-import { ResolverRegistry } from "../../takomo-stacks-resolvers"
+} from "../../stacks/stack-group"
+import { InternalCredentialManager } from "../../takomo-aws-clients"
+import { IamRoleArn } from "../../takomo-aws-model"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
+import { isWithinCommandPath } from "../../takomo-stacks-model/util"
 import { arrayToMap } from "../../utils/collections"
 import { TkmLogger } from "../../utils/logging"
 import {

@@ -5,8 +5,8 @@ import {
   DetailedCloudFormationStack,
   TemplateSummary,
 } from "../../../../takomo-aws-model"
-import { InternalStack } from "../../../../takomo-stacks-model"
 
+import { InternalStack } from "../../../../stacks/stack"
 import { arrayToMap } from "../../../../utils/collections"
 import { TakomoError } from "../../../../utils/errors"
 import { prettyPrintJson } from "../../../../utils/json"

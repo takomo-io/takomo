@@ -2,7 +2,7 @@ import {
   ShowConfigurationIO,
   ShowConfigurationOutput,
 } from "../../../command/stacks/inspect/configuration/model"
-import { StackGroup } from "../../../takomo-stacks-model"
+import { StackGroup } from "../../../stacks/stack-group"
 import { toPrettyJson } from "../../../utils/json"
 import { formatYaml } from "../../../utils/yaml"
 import { createBaseIO } from "../../cli-io"

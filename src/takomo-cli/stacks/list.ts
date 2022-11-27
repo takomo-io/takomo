@@ -1,9 +1,10 @@
 import { Arguments, Argv, CommandModule } from "yargs"
+import { CommandPath } from "../../command/command-model"
 import { listStacksCommand } from "../../command/stacks/list/command"
 import { listStacksCommandIamPolicy } from "../../command/stacks/list/iam-policy"
 import { createListStacksIO } from "../../takomo-cli-io"
 import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs"
-import { CommandPath, ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { commonEpilog, handle, RunProps } from "../common"
 import { COMMAND_PATH_OPT, outputFormatOptions } from "../constants"
 

@@ -1,10 +1,8 @@
 import { Policy } from "cockatiel"
-import { resolveCommandOutputBase } from "../../../takomo-core"
-import {
-  InternalStacksContext,
-  StackPath,
-  StackResult,
-} from "../../../takomo-stacks-model"
+import { InternalStacksContext } from "../../../context/stacks-context"
+import { StackPath } from "../../../stacks/stack"
+import { resolveCommandOutputBase } from "../../../takomo-core/command"
+import { StackResult } from "../../command-model"
 import { StacksOperationInput, StacksOperationOutput } from "../model"
 import { deleteStack } from "./delete"
 import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors"

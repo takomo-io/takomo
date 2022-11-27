@@ -1,10 +1,10 @@
+import { ConfigSetContext } from "../../../config-sets/config-set-model"
 import { InternalCredentialManager } from "../../../takomo-aws-clients"
-import { ConfigSetContext } from "../../../takomo-config-sets"
 import {
   CommandOutput,
   OperationState,
   resolveCommandOutputBase,
-} from "../../../takomo-core"
+} from "../../../takomo-core/command"
 import { TkmLogger } from "../../../utils/logging"
 import { Timer } from "../../../utils/timer"
 import {

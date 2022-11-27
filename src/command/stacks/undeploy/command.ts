@@ -1,11 +1,12 @@
 import Joi, { AnySchema } from "joi"
+import { CommandContext } from "../../../context/command-context"
+import { InternalStacksContext } from "../../../context/stacks-context"
 import { createStacksSchemas } from "../../../schema/stacks-schema"
-import { CommandContext, CommandHandler } from "../../../takomo-core"
+import { CommandHandler } from "../../../takomo-core/command"
 import {
   buildStacksContext,
   StacksConfigRepository,
 } from "../../../takomo-stacks-context"
-import { InternalStacksContext } from "../../../takomo-stacks-model"
 import { validateInput } from "../../../utils/validation"
 import { StacksOperationOutput, StacksUndeployOperationInput } from "../model"
 import { executeUndeployContext } from "./execute-undeploy-context"

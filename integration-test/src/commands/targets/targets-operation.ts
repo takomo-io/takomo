@@ -1,5 +1,8 @@
+import { CommandPath } from "../../../../src/command/command-model"
 import { StacksOperationOutput } from "../../../../src/command/stacks/model"
 import { DeploymentTargetsOperationOutput } from "../../../../src/command/targets/operation/model"
+import { ConfigSetName } from "../../../../src/config-sets/config-set-model"
+import { StackPath } from "../../../../src/stacks/stack"
 import {
   StackName,
   StackOutput,
@@ -9,14 +12,12 @@ import {
   TagKey,
   TagValue,
 } from "../../../../src/takomo-aws-model"
-import { ConfigSetName } from "../../../../src/takomo-config-sets"
-import { CommandStatus } from "../../../../src/takomo-core"
+import { CommandStatus } from "../../../../src/takomo-core/command"
+import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../../../../src/takomo-deployment-targets-model"
-import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans"
-import { CommandPath, StackPath } from "../../../../src/takomo-stacks-model"
+} from "../../../../src/targets/targets-model"
 import { ExecuteCommandProps } from "../common"
 
 export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {

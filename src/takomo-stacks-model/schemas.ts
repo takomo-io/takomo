@@ -1,11 +1,12 @@
 import Joi, { AnySchema } from "joi"
+import { CommandContext } from "../context/command-context"
+
+import { StackPath } from "../stacks/stack"
+import { StackGroupPath } from "../stacks/stack-group"
 import { StackParameterKey } from "../takomo-aws-model"
-import { CommandContext } from "../takomo-core"
 import { TakomoError } from "../utils/errors"
 import { FilePath } from "../utils/files"
 import { TkmLogger } from "../utils/logging"
-import { StackPath } from "./stack"
-import { StackGroupPath } from "./stack-group"
 
 export type SchemaName = string
 

@@ -1,16 +1,18 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { IOProps } from "../../takomo-cli-io"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs"
-import { ConfigSetName, ConfigSetType } from "../../takomo-config-sets"
-
+import { CommandPath, DeploymentOperation } from "../../command/command-model"
 import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command"
 import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
+import {
+  ConfigSetName,
+  ConfigSetType,
+} from "../../config-sets/config-set-model"
+import { IOProps } from "../../takomo-cli-io"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   Label,
-} from "../../takomo-deployment-targets-model"
-import { CommandPath, DeploymentOperation } from "../../takomo-stacks-model"
+} from "../../targets/targets-model"
 import { FilePath } from "../../utils/files"
 import { commonEpilog, handle, RunProps } from "../common"
 import {

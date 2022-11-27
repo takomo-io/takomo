@@ -1,24 +1,21 @@
-import { InternalCredentialManager } from "../../../takomo-aws-clients"
-import { InternalCommandContext, OutputFormat } from "../../../takomo-core"
+import { InternalCommandContext } from "../../../context/command-context"
 import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
-} from "../../../takomo-deployment-targets-context"
+} from "../../../context/targets-context"
+import { InternalCredentialManager } from "../../../takomo-aws-clients"
+import { OutputFormat } from "../../../takomo-core/command"
 import {
   ConfigSetTargetExecutorProps,
   executeConfigSetPlan,
 } from "../../../takomo-execution-plans"
-
-import { deployStacksCommand } from "../../../command/stacks/deploy/command"
-import {
-  StacksOperationInput,
-  StacksOperationOutput,
-} from "../../../command/stacks/model"
-import { undeployStacksCommand } from "../../../command/stacks/undeploy/command"
 import { StacksConfigRepository } from "../../../takomo-stacks-context"
-import { DeploymentOperation } from "../../../takomo-stacks-model"
 import { TakomoError } from "../../../utils/errors"
 import { TkmLogger } from "../../../utils/logging"
+import { DeploymentOperation } from "../../command-model"
+import { deployStacksCommand } from "../../stacks/deploy/command"
+import { StacksOperationInput, StacksOperationOutput } from "../../stacks/model"
+import { undeployStacksCommand } from "../../stacks/undeploy/command"
 import { PlannedDeploymentTarget } from "../common/plan/model"
 import { createDeploymentTargetVariables } from "./create-deployment-target-variables"
 import {

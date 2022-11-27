@@ -1,8 +1,5 @@
-import {
-  InternalStack,
-  StackGroup,
-  StackGroupPath,
-} from "../../takomo-stacks-model"
+import { InternalStack } from "../../stacks/stack"
+import { StackGroup, StackGroupPath } from "../../stacks/stack-group"
 
 export const collectStacks = (
   stackGroups: Map<StackGroupPath, StackGroup>,

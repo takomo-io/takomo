@@ -10,14 +10,11 @@ import {
   TemplateSummary,
 } from "../../../takomo-aws-model"
 import { StackEvent } from "../../../takomo-aws-model/cloudformation"
-import { IO } from "../../../takomo-core"
-import {
-  CommandPath,
-  InternalStack,
-  StackGroup,
-  StackOperationType,
-  StackPath,
-} from "../../../takomo-stacks-model"
+import { IO } from "../../../takomo-core/command"
+
+import { InternalStack, StackPath } from "../../../stacks/stack"
+import { StackGroup } from "../../../stacks/stack-group"
+import { CommandPath, StackOperationType } from "../../command-model"
 import { StacksOperationListener } from "../common/model"
 import { StacksOperationOutput } from "../model"
 import { StacksDeployPlan } from "./plan"

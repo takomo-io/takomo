@@ -1,5 +1,5 @@
 import { join } from "path"
-import { collectProjectConfigFileHierarchy } from "../../src/takomo-config-repository-fs/project/config"
+import { collectProjectConfigFileHierarchy } from "../../src/parser/project-config-parser"
 
 const projectDir = join(
   process.cwd(),

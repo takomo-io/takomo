@@ -1,6 +1,7 @@
 import Joi, { AnySchema } from "joi"
+import { CommandContext } from "../../../context/command-context"
 import { createStacksSchemas } from "../../../schema/stacks-schema"
-import { CommandContext, CommandHandler } from "../../../takomo-core"
+import { CommandHandler } from "../../../takomo-core/command"
 import {
   buildStacksContext,
   StacksConfigRepository,

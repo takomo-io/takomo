@@ -1,4 +1,4 @@
-import { StackGroup } from "../../takomo-stacks-model"
+import { StackGroup } from "../../stacks/stack-group"
 import { deepCopy } from "../../utils/objects"
 
 export const getVariablesForStackGroup = (stackGroup: StackGroup): any =>

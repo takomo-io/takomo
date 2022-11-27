@@ -1,9 +1,6 @@
-import { CommandContext } from "../../takomo-core"
-import {
-  createStackGroup,
-  SchemaRegistry,
-  StackGroup,
-} from "../../takomo-stacks-model"
+import { CommandContext } from "../../context/command-context"
+import { createStackGroup, StackGroup } from "../../stacks/stack-group"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { mergeArrays } from "../../utils/collections"
 import { TkmLogger } from "../../utils/logging"
 import { merge } from "../../utils/objects"

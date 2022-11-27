@@ -5,8 +5,10 @@ import {
   InitProjectOutput,
   ProjectInformation,
 } from "../command/init/model"
+import { CommandContext } from "../context/command-context"
+import { createCommonSchema } from "../schema/common-schema"
 import { Region } from "../takomo-aws-model"
-import { CommandContext, createCommonSchema, Project } from "../takomo-core"
+import { Project } from "../takomo-core/command"
 import { createBaseIO } from "./cli-io"
 import { IOProps } from "./stacks/common"
 

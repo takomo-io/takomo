@@ -1,9 +1,6 @@
-import {
-  createStackGroup,
-  InternalStack,
-  ROOT_STACK_GROUP_PATH,
-  StackGroup,
-} from "../../takomo-stacks-model"
+import { InternalStack } from "../../stacks/stack"
+import { createStackGroup, StackGroup } from "../../stacks/stack-group"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 
 export const createRootStackGroup = (): StackGroup =>
   createStackGroup({

@@ -1,4 +1,5 @@
-import { Stack, StackResult } from "../../../takomo-stacks-model"
+import { Stack } from "../../../stacks/stack"
+import { StackResult } from "../../command-model"
 
 export interface StacksOperationListener {
   readonly onStackOperationBegin: (stack: Stack) => Promise<void>

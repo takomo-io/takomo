@@ -1,4 +1,4 @@
-import { CommandInput, CommandOutput, IO } from "../../../takomo-core"
+import { CommandInput, CommandOutput, IO } from "../../../takomo-core/command"
 
 export type ValidateDeploymentTargetsConfigurationInput = CommandInput
 

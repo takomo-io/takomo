@@ -1,4 +1,4 @@
-import { executeHooks } from "../../../../takomo-stacks-hooks"
+import { executeHooks } from "../../../../hooks/execute"
 import { StackOperationStep } from "../../common/steps"
 import { CurrentStackHolder } from "../states"
 

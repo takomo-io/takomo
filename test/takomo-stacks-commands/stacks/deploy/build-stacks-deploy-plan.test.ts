@@ -7,16 +7,13 @@ import {
   StackStatus,
 } from "../../../../src/takomo-aws-model"
 
+import { StackOperationType } from "../../../../src/command/command-model"
 import {
   buildStacksDeployPlan,
   StacksDeployPlan,
 } from "../../../../src/command/stacks/deploy/plan"
-import {
-  InternalStack,
-  ROOT_STACK_GROUP_PATH,
-  StackOperationType,
-  StackPath,
-} from "../../../../src/takomo-stacks-model"
+import { InternalStack, StackPath } from "../../../../src/stacks/stack"
+import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants"
 import { createConsoleLogger } from "../../../../src/utils/logging"
 
 interface CreateStackProps {

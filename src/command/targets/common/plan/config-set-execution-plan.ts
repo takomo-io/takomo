@@ -1,13 +1,13 @@
 import {
   ConfigSetType,
-  getConfigSetsByType,
   StageName,
-} from "../../../../takomo-config-sets"
+} from "../../../../config-sets/config-set-model"
+import { getConfigSetsByType } from "../../../../config-sets/util"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../../takomo-deployment-targets-config"
-import { DeploymentTargetsContext } from "../../../../takomo-deployment-targets-context"
+} from "../../../../config/targets-config"
+import { DeploymentTargetsContext } from "../../../../context/targets-context"
 import {
   ConfigSetExecutionGroup,
   ConfigSetExecutionPlan,

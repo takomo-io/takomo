@@ -3,7 +3,7 @@ import { initProjectCommand } from "../command/init/command"
 import { Region } from "../takomo-aws-model"
 import { createInitProjectIO } from "../takomo-cli-io"
 import { createFileSystemProjectConfigRepository } from "../takomo-config-repository-fs"
-import { Project } from "../takomo-core"
+import { Project } from "../takomo-core/command"
 import { handle } from "./common"
 
 const CREATE_SAMPLES_OPT = "create-samples"

@@ -2,8 +2,6 @@ import Table from "easy-table"
 import R from "ramda"
 import { DeployStacksIO } from "../../command/stacks/deploy/model"
 import { UndeployStacksIO } from "../../command/stacks/undeploy/model"
-import { ConfigSetType } from "../../takomo-config-sets"
-
 import { PlannedDeploymentTarget } from "../../command/targets/common/plan/model"
 import {
   ConfirmOperationAnswer,
@@ -11,6 +9,7 @@ import {
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "../../command/targets/operation/model"
+import { ConfigSetType } from "../../config-sets/config-set-model"
 import { TkmLogger } from "../../utils/logging"
 import { splitTextInLines } from "../../utils/strings"
 import { createBaseIO } from "../cli-io"

@@ -1,4 +1,5 @@
-import { CommandPath, InternalStack } from "../takomo-stacks-model"
+import { CommandPath } from "../command/command-model"
+import { InternalStack } from "../stacks/stack"
 import { TakomoError } from "../utils/errors"
 
 export const isStackGroupPath = (commandPath: CommandPath): boolean =>

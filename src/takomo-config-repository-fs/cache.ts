@@ -1,5 +1,5 @@
 import { dirname, join } from "path"
-import { Cache } from "../takomo-core"
+import { Cache } from "../caches/cache"
 import { TakomoError } from "../utils/errors"
 import {
   createDir,

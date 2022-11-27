@@ -1,17 +1,8 @@
 import { basename, join } from "path"
 import R from "ramda"
+import { createHookRegistry } from "../../hooks/hook-registry"
+import { ResolverRegistry } from "../../resolvers/resolver-registry"
 import { CredentialManager } from "../../takomo-aws-clients"
-import { ConfigSetName } from "../../takomo-config-sets"
-import { Cache, InternalCommandContext } from "../../takomo-core"
-import {
-  buildDeploymentConfig,
-  DeploymentConfig,
-} from "../../takomo-deployment-targets-config"
-import { DeploymentTargetsConfigRepository } from "../../takomo-deployment-targets-context"
-import {
-  createDeploymentTargetsSchemaRegistry,
-  DeploymentGroupPath,
-} from "../../takomo-deployment-targets-model"
 import {
   createDeploymentTargetConfigItemSchema,
   createDeploymentTargetRepositoryRegistry,
@@ -20,9 +11,17 @@ import {
   DeploymentTargetRepository,
 } from "../../takomo-deployment-targets-repository"
 import { StacksConfigRepository } from "../../takomo-stacks-context"
-import { createHookRegistry } from "../../takomo-stacks-hooks"
-import { ResolverRegistry } from "../../takomo-stacks-resolvers"
 
+import { Cache } from "../../caches/cache"
+import { ConfigSetName } from "../../config-sets/config-set-model"
+import { DeploymentConfig } from "../../config/targets-config"
+import { InternalCommandContext } from "../../context/command-context"
+import { DeploymentTargetsConfigRepository } from "../../context/targets-context"
+import { buildDeploymentConfig } from "../../parser/targets/build-deployment-config"
+import {
+  createDeploymentTargetsSchemaRegistry,
+  DeploymentGroupPath,
+} from "../../targets/targets-model"
 import { TakomoError } from "../../utils/errors"
 import { dirExists, FilePath } from "../../utils/files"
 import { TkmLogger } from "../../utils/logging"

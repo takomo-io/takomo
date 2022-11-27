@@ -1,4 +1,4 @@
-import { Features } from "../../takomo-core"
+import { Features } from "../../config/project-config"
 import { TakomoError } from "../../utils/errors"
 
 export const parseFeaturesFromArgs = (args: any): Partial<Features> => {

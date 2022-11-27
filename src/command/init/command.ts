@@ -1,10 +1,8 @@
 import Joi, { AnySchema } from "joi"
+import { CommandContext } from "../../context/command-context"
 import { createAwsSchemas } from "../../schema/aws-schema"
-import {
-  CommandContext,
-  CommandHandler,
-  createCommonSchema,
-} from "../../takomo-core"
+import { createCommonSchema } from "../../schema/common-schema"
+import { CommandHandler } from "../../takomo-core/command"
 import { validateInput } from "../../utils/validation"
 import {
   InitProjectInput,

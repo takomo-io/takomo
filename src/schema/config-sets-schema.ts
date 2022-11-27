@@ -1,6 +1,6 @@
 import Joi, { ObjectSchema, StringSchema } from "joi"
 import { Region } from "../takomo-aws-model"
-import { createCommonSchema } from "../takomo-core"
+import { createCommonSchema } from "./common-schema"
 import { createStacksSchemas } from "./stacks-schema"
 
 interface CreateConfigSetsSchemasProps {

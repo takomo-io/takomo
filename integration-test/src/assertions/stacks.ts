@@ -1,5 +1,6 @@
 import { Stack } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
+import { StackResult } from "../../../src/command/command-model"
 import {
   DetectDriftOutput,
   StackDriftInfo,
@@ -9,6 +10,7 @@ import {
   StackInfo,
 } from "../../../src/command/stacks/list/model"
 import { StacksOperationOutput } from "../../../src/command/stacks/model"
+import { StackPath } from "../../../src/stacks/stack"
 import {
   AccountId,
   Region,
@@ -23,8 +25,7 @@ import {
   TagValue,
 } from "../../../src/takomo-aws-model"
 import { StackDriftStatus } from "../../../src/takomo-aws-model/cloudformation"
-import { CommandStatus } from "../../../src/takomo-core"
-import { StackPath, StackResult } from "../../../src/takomo-stacks-model"
+import { CommandStatus } from "../../../src/takomo-core/command"
 import { prettyPrintJson, toPrettyJson } from "../../../src/utils/json"
 import { aws } from "../aws-api"
 

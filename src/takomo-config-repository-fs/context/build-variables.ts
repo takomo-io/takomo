@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 import dotenvExpand from "dotenv-expand"
-import { ContextVars, Variables } from "../../takomo-core"
+import { ContextVars, Variables } from "../../common/model"
 import { TakomoError } from "../../utils/errors"
 import {
   expandFilePath,
