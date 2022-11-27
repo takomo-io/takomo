@@ -1,10 +1,11 @@
 import { basename } from "path"
 import { initProjectCommand } from "../../../src/command/init/command"
 import { ProjectConfigRepository } from "../../../src/command/init/model"
+import { InternalCommandContext } from "../../../src/context/command-context"
 import { initDefaultCredentialManager } from "../../../src/takomo-aws-clients"
 import { Region } from "../../../src/takomo-aws-model"
 import { createFileSystemProjectConfigRepository } from "../../../src/takomo-config-repository-fs"
-import { InternalCommandContext, Project } from "../../../src/takomo-core"
+import { Project } from "../../../src/takomo-core/command"
 import { createConsoleLogger } from "../../../src/utils/logging"
 import { Timer } from "../../../src/utils/timer"
 import {

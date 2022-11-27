@@ -1,11 +1,11 @@
+import { CommandContext } from "../../context/command-context"
 import { Region } from "../../takomo-aws-model"
 import {
-  CommandContext,
   CommandInput,
   CommandOutput,
   IO,
   Project,
-} from "../../takomo-core"
+} from "../../takomo-core/command"
 
 export interface ProjectInformation {
   readonly project?: Project

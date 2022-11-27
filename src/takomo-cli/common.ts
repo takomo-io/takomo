@@ -19,12 +19,11 @@ import {
   CommandHandler,
   CommandInput,
   CommandOutput,
-  InternalCommandContext,
   IO,
-  parseBoolean,
-  parseStringArray,
-} from "../takomo-core"
+} from "../takomo-core/command"
 
+import { InternalCommandContext } from "../context/command-context"
+import { parseBoolean, parseStringArray } from "../parser/common-parser"
 import { collectFromHierarchy } from "../utils/collections"
 import { red } from "../utils/colors"
 import { expandFilePath, FilePath } from "../utils/files"

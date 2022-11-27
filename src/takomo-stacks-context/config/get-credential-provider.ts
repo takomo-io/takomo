@@ -1,6 +1,6 @@
 import { InternalCredentialManager } from "../../takomo-aws-clients"
 import { IamRoleArn } from "../../takomo-aws-model"
-import { CommandRole } from "../../takomo-core"
+import { CommandRole } from "../../takomo-core/command"
 
 export const getCredentialManager = async (
   commandRole: CommandRole | undefined,

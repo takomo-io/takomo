@@ -1,5 +1,6 @@
+import { InternalStack } from "../../../src/stacks/stack"
 import { sortStacksForDeploy } from "../../../src/takomo-stacks-context"
-import { getStackPaths, InternalStack } from "../../../src/takomo-stacks-model"
+import { getStackPaths } from "../../../src/takomo-stacks-model/util"
 import { createStack } from "../helpers"
 
 describe("#sortStacksForDeploy", () => {

@@ -11,7 +11,8 @@ import {
   StacksUndeployPlan,
   StackUndeployOperationType,
 } from "../../command/stacks/undeploy/plan"
-import { StackGroup, StackPath } from "../../takomo-stacks-model"
+import { StackPath } from "../../stacks/stack"
+import { StackGroup } from "../../stacks/stack-group"
 import { grey, red } from "../../utils/colors"
 import { createBaseIO } from "../cli-io"
 import { formatStackEvent, formatStackStatus } from "../formatters"

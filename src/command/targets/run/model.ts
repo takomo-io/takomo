@@ -1,21 +1,23 @@
 import { Credentials } from "@aws-sdk/types"
+
 import { IamRoleArn, IamRoleName } from "../../../takomo-aws-model"
 import {
   CommandInput,
   CommandOutput,
   CommandOutputBase,
   IO,
-} from "../../../takomo-core"
+} from "../../../takomo-core/command"
+
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../takomo-deployment-targets-config"
+} from "../../../config/targets-config"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   DeploymentTargetNamePattern,
   Label,
-} from "../../../takomo-deployment-targets-model"
+} from "../../../targets/targets-model"
 import { Timer } from "../../../utils/timer"
 import { DeploymentTargetsListener } from "../operation/model"
 

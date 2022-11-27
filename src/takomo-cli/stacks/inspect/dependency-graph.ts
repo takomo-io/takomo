@@ -1,11 +1,9 @@
 import { Arguments, Argv, CommandModule } from "yargs"
+import { CommandPath } from "../../../command/command-model"
 import { dependencyGraphCommand } from "../../../command/stacks/inspect/dependency-graph/command"
 import { createDependencyGraphIO } from "../../../takomo-cli-io"
 import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs"
-import {
-  CommandPath,
-  ROOT_STACK_GROUP_PATH,
-} from "../../../takomo-stacks-model"
+import { ROOT_STACK_GROUP_PATH } from "../../../takomo-stacks-model/constants"
 import { handle, RunProps } from "../../common"
 import { COMMAND_PATH_OPT } from "../../constants"
 

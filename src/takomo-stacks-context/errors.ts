@@ -1,4 +1,4 @@
-import { StackPath } from "../takomo-stacks-model"
+import { StackPath } from "../stacks/stack"
 import { TakomoError } from "../utils/errors"
 
 interface Reference {

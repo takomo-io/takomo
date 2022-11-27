@@ -1,10 +1,10 @@
 import { basename, dirname, relative } from "path"
 import readdirp from "readdirp"
+
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../takomo-deployment-targets-model"
-
+} from "../targets/targets-model"
 import { TakomoError } from "../utils/errors"
 import {
   dirExists,

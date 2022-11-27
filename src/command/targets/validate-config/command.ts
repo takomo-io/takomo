@@ -1,8 +1,9 @@
-import { CommandHandler } from "../../../takomo-core"
+import { CommandHandler } from "../../../takomo-core/command"
+
 import {
   createDeploymentTargetsContext,
   DeploymentTargetsConfigRepository,
-} from "../../../takomo-deployment-targets-context"
+} from "../../../context/targets-context"
 import {
   ValidateDeploymentTargetsConfigurationInput,
   ValidateDeploymentTargetsConfigurationIO,

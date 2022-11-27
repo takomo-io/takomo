@@ -2,7 +2,7 @@
  * Test feature flags.
  */
 
-import { FeatureDisabledError } from "../../../dist/takomo-core"
+import { FeatureDisabledError } from "../../../src/config/project-config"
 import { executeTeardownTargetsCommand } from "../../src/commands/targets/tear-down-targets"
 import { executeUndeployTargetsCommand } from "../../src/commands/targets/undeploy-targets"
 

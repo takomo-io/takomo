@@ -1,19 +1,16 @@
 import path from "path"
-import { InternalCommandContext } from "../../takomo-core"
-import { StackConfig } from "../../takomo-stacks-config"
+import { StackConfig } from "../../config/stack-config"
+import { InternalCommandContext } from "../../context/command-context"
+import { HookRegistry } from "../../hooks/hook-registry"
+import { ResolverRegistry } from "../../resolvers/resolver-registry"
+import { BlueprintPath } from "../../stacks/stack"
 import {
   ConfigTree,
   StacksConfigRepository,
   StacksConfigRepositoryProps,
 } from "../../takomo-stacks-context"
-import { HookRegistry } from "../../takomo-stacks-hooks"
-import {
-  BlueprintPath,
-  ROOT_STACK_GROUP_PATH,
-  SchemaRegistry,
-} from "../../takomo-stacks-model"
-import { ResolverRegistry } from "../../takomo-stacks-resolvers"
-
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { TakomoError } from "../../utils/errors"
 import {
   dirExists,

@@ -1,7 +1,10 @@
 import Joi, { AnySchema } from "joi"
 import R from "ramda"
+import { CommandContext } from "../../../../context/command-context"
+import { InternalStacksContext } from "../../../../context/stacks-context"
 import { createStacksSchemas } from "../../../../schema/stacks-schema"
-import { CommandContext, CommandHandler } from "../../../../takomo-core"
+import { InternalStack, StackPath } from "../../../../stacks/stack"
+import { CommandHandler } from "../../../../takomo-core/command"
 import {
   buildStacksContext,
   sortStacksForDeploy,
@@ -9,12 +12,9 @@ import {
 } from "../../../../takomo-stacks-context"
 import {
   getStackPath,
-  InternalStack,
-  InternalStacksContext,
   isNotObsolete,
   isWithinCommandPath,
-  StackPath,
-} from "../../../../takomo-stacks-model"
+} from "../../../../takomo-stacks-model/util"
 import { arrayToMap } from "../../../../utils/collections"
 import { validateInput } from "../../../../utils/validation"
 import { collectStackDependencies } from "../../deploy/plan"

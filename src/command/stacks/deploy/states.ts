@@ -1,3 +1,4 @@
+import { InternalStacksContext } from "../../../context/stacks-context"
 import {
   ClientRequestToken,
   CloudFormationStack,
@@ -9,15 +10,14 @@ import {
   TemplateSummary,
 } from "../../../takomo-aws-model"
 import { StackEvent } from "../../../takomo-aws-model/cloudformation"
-import { CommandStatus } from "../../../takomo-core"
+import { CommandStatus } from "../../../takomo-core/command"
 import { StacksConfigRepository } from "../../../takomo-stacks-context"
+import { TkmLogger } from "../../../utils/logging"
 import {
-  InternalStacksContext,
   StackOperationType,
   StackOperationVariables,
   StackResult,
-} from "../../../takomo-stacks-model"
-import { TkmLogger } from "../../../utils/logging"
+} from "../../command-model"
 import { InitialStackOperationState } from "../common/states"
 import {
   DeployStacksIO,

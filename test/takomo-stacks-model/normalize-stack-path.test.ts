@@ -1,4 +1,4 @@
-import { normalizeStackPath } from "../../src/takomo-stacks-model"
+import { normalizeStackPath } from "../../src/stacks/stack"
 
 const cases = [
   ["/", "/stack.yml", "/stack.yml"],

@@ -1,4 +1,4 @@
-import { OutputFormat } from "../../../takomo-core"
+import { OutputFormat } from "../../../takomo-core/command"
 import { Timer } from "../../../utils/timer"
 import { createExecutionPlan } from "../common/plan/config-set-execution-plan"
 import { confirmOperation } from "./confirm"

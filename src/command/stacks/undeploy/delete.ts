@@ -1,8 +1,6 @@
-import {
-  InternalStacksContext,
-  StackResult,
-} from "../../../takomo-stacks-model"
+import { InternalStacksContext } from "../../../context/stacks-context"
 import { Timer } from "../../../utils/timer"
+import { StackResult } from "../../command-model"
 import { StacksOperationListener } from "../common/model"
 import { executeSteps } from "../common/steps"
 import { UndeployStacksIO } from "./model"

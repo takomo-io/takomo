@@ -1,10 +1,11 @@
 import { join } from "path"
-import { loadProjectConfig } from "../../src/takomo-config-repository-fs/project/config"
+
 import {
   defaultFeatures,
-  DEFAULT_REGIONS,
   InternalTakomoProjectConfig,
-} from "../../src/takomo-core"
+} from "../../src/config/project-config"
+import { DEFAULT_REGIONS } from "../../src/constants/regions-constants"
+import { loadProjectConfig } from "../../src/parser/project-config-parser"
 import { FilePath } from "../../src/utils/files"
 
 const doLoadProjectConfig = (

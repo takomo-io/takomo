@@ -1,4 +1,4 @@
-import { InternalStack } from "../../../takomo-stacks-model"
+import { InternalStack } from "../../../stacks/stack"
 import { TakomoError } from "../../../utils/errors"
 
 export class IncompatibleIgnoreDependenciesOptionOnDeleteError extends TakomoError {

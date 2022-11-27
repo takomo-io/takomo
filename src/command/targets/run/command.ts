@@ -1,11 +1,12 @@
 import Joi from "joi"
 import { createDeploymentTargetsSchemas } from "../../../schema/deployment-targets-schema"
 import { Region } from "../../../takomo-aws-model"
-import { CommandHandler } from "../../../takomo-core"
+import { CommandHandler } from "../../../takomo-core/command"
+
 import {
   createDeploymentTargetsContext,
   DeploymentTargetsConfigRepository,
-} from "../../../takomo-deployment-targets-context"
+} from "../../../context/targets-context"
 import { validateInput } from "../../../utils/validation"
 import {
   DeploymentTargetsRunInput,

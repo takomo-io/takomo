@@ -1,8 +1,9 @@
+import { ParameterConfig, ParameterConfigs } from "../../config/common-config"
+import { CommandContext } from "../../context/command-context"
+import { ResolverRegistry } from "../../resolvers/resolver-registry"
+import { StackPath } from "../../stacks/stack"
 import { StackParameterKey } from "../../takomo-aws-model"
-import { CommandContext } from "../../takomo-core"
-import { ParameterConfig, ParameterConfigs } from "../../takomo-stacks-config"
-import { SchemaRegistry, StackPath } from "../../takomo-stacks-model"
-import { ResolverRegistry } from "../../takomo-stacks-resolvers"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { TakomoError } from "../../utils/errors"
 import {
   ListResolverExecutor,

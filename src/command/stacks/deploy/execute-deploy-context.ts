@@ -1,12 +1,13 @@
 import { Policy } from "cockatiel"
-import { OutputFormat, resolveCommandOutputBase } from "../../../takomo-core"
-import { StacksConfigRepository } from "../../../takomo-stacks-context"
+import { InternalStacksContext } from "../../../context/stacks-context"
+import { StackPath } from "../../../stacks/stack"
 import {
-  InternalStacksContext,
-  StackPath,
-  StackResult,
-} from "../../../takomo-stacks-model"
+  OutputFormat,
+  resolveCommandOutputBase,
+} from "../../../takomo-core/command"
+import { StacksConfigRepository } from "../../../takomo-stacks-context"
 import { Timer } from "../../../utils/timer"
+import { StackResult } from "../../command-model"
 import { StacksOperationListener } from "../common/model"
 import { StacksDeployOperationInput, StacksOperationOutput } from "../model"
 import { deployStack } from "./deploy-stack"

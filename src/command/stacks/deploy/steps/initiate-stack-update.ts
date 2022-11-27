@@ -1,6 +1,6 @@
 import { ALLOW_ALL_STACK_POLICY } from "../../../../takomo-aws-model"
-import { defaultCapabilities } from "../../../../takomo-stacks-model"
 import { uuid } from "../../../../utils/strings"
+import { defaultCapabilities } from "../../../command-model"
 import { StackOperationStep } from "../../common/steps"
 import { UpdateStackHolder } from "../states"
 

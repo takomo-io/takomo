@@ -1,4 +1,4 @@
-import { StackOperationType } from "../../../takomo-stacks-model"
+import { StackOperationType } from "../../command-model"
 
 export const resolveResultMessage = (
   operationType: StackOperationType,

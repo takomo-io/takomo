@@ -1,4 +1,4 @@
-import { parseTemplate } from "../../src/takomo-stacks-config/parse-template"
+import { parseTemplate } from "../../src/parser/stacks/parse-template"
 
 describe("#parseTemplate", () => {
   test("simple file name", () => {

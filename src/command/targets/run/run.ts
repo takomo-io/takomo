@@ -4,6 +4,7 @@ import { IPolicy, Policy } from "cockatiel"
 import { extname } from "path"
 import R from "ramda"
 import { promisify } from "util"
+
 import {
   CredentialManager,
   prepareAwsEnvVariables,
@@ -18,13 +19,13 @@ import {
   CommandStatus,
   OperationState,
   resolveCommandOutputBase,
-} from "../../../takomo-core"
+} from "../../../takomo-core/command"
+
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../takomo-deployment-targets-config"
-import { DeploymentTargetsContext } from "../../../takomo-deployment-targets-context"
-
+} from "../../../config/targets-config"
+import { DeploymentTargetsContext } from "../../../context/targets-context"
 import {
   expandFilePath,
   FilePath,

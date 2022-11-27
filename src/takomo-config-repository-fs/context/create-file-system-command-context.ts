@@ -1,16 +1,16 @@
 import { Credentials } from "@aws-sdk/types"
-import { InternalAwsClientProvider } from "../../takomo-aws-clients"
+import { Features } from "../../config/project-config"
 import {
-  Features,
   InternalCommandContext,
-  OutputFormat,
   TakomoBuildInfo,
-} from "../../takomo-core"
+} from "../../context/command-context"
+import { loadProjectConfig } from "../../parser/project-config-parser"
+import { InternalAwsClientProvider } from "../../takomo-aws-clients"
+import { OutputFormat } from "../../takomo-core/command"
 import { FilePath } from "../../utils/files"
 import { LogLevel, TkmLogger } from "../../utils/logging"
 import { VarFileOption } from "../../utils/variables"
 import { createProjectFilePaths, ProjectFilePaths } from "../constants"
-import { loadProjectConfig } from "../project/config"
 import { buildVariables } from "./build-variables"
 
 export interface FileSystemCommandContext extends InternalCommandContext {

@@ -1,5 +1,5 @@
-import { parseFeatures } from "../../src/takomo-config-repository-fs/project/config"
-import { Features } from "../../src/takomo-core"
+import { Features } from "../../src/config/project-config"
+import { parseFeatures } from "../../src/parser/project-config-parser"
 
 const cases: Array<[any, Features]> = [
   [

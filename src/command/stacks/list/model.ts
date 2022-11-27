@@ -1,6 +1,7 @@
+import { StackPath } from "../../../stacks/stack"
 import { StackName, StackStatus } from "../../../takomo-aws-model"
-import { CommandInput, IO, ResultsOutput } from "../../../takomo-core"
-import { CommandPath, StackPath } from "../../../takomo-stacks-model"
+import { CommandInput, IO, ResultsOutput } from "../../../takomo-core/command"
+import { CommandPath } from "../../command-model"
 
 export interface StackInfo {
   readonly path: StackPath

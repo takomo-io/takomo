@@ -1,12 +1,11 @@
 import { readFileSync } from "fs"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
-import {
-  buildDeploymentConfig,
-  DeploymentConfig,
-} from "../../src/takomo-deployment-targets-config"
-import { DeploymentTargetsSchemaRegistry } from "../../src/takomo-deployment-targets-model"
+import { TakomoProjectConfig } from "../../src/config/project-config"
+import { DeploymentConfig } from "../../src/config/targets-config"
+import { CommandContext } from "../../src/context/command-context"
+import { DeploymentTargetsSchemaRegistry } from "../../src/model/targets-model"
+import { buildDeploymentConfig } from "../../src/parser/targets/build-deployment-config"
 import { TkmLogger } from "../../src/utils/logging"
 import { parseYaml } from "../../src/utils/yaml"
 

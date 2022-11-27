@@ -11,11 +11,8 @@ import {
   StacksUndeployPlan,
   StackUndeployOperationType,
 } from "../../../../src/command/stacks/undeploy/plan"
-import {
-  InternalStack,
-  ROOT_STACK_GROUP_PATH,
-  StackPath,
-} from "../../../../src/takomo-stacks-model"
+import { InternalStack, StackPath } from "../../../../src/stacks/stack"
+import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants"
 
 interface CreateStackProps {
   readonly name: StackName

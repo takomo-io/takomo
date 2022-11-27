@@ -1,8 +1,9 @@
+import { InternalStack } from "../../../stacks/stack"
 import {
   CloudFormationStackSummary,
   StackName,
 } from "../../../takomo-aws-model"
-import { getStackNames, InternalStack } from "../../../takomo-stacks-model"
+import { getStackNames } from "../../../takomo-stacks-model/util"
 import { arrayToMap } from "../../../utils/collections"
 import { TkmLogger } from "../../../utils/logging"
 import { checksum } from "../../../utils/strings"

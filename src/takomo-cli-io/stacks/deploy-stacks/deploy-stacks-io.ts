@@ -8,6 +8,7 @@ import {
 } from "../../../takomo-aws-model"
 import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 
+import { StackOperationType } from "../../../command/command-model"
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
@@ -15,12 +16,8 @@ import {
 } from "../../../command/stacks/deploy/model"
 import { StacksDeployPlan } from "../../../command/stacks/deploy/plan"
 import { StacksOperationOutput } from "../../../command/stacks/model"
-import {
-  InternalStack,
-  StackGroup,
-  StackOperationType,
-  StackPath,
-} from "../../../takomo-stacks-model"
+import { InternalStack, StackPath } from "../../../stacks/stack"
+import { StackGroup } from "../../../stacks/stack-group"
 import { bold, green, orange, yellow } from "../../../utils/colors"
 import { diffStrings } from "../../../utils/strings"
 import { createBaseIO } from "../../cli-io"

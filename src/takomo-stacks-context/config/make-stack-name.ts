@@ -1,6 +1,6 @@
+import { StackPath } from "../../stacks/stack"
 import { StackName } from "../../takomo-aws-model"
-import { Project } from "../../takomo-core"
-import { StackPath } from "../../takomo-stacks-model"
+import { Project } from "../../takomo-core/command"
 
 export const makeStackName = (
   stackPath: StackPath,

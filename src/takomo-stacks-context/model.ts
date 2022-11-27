@@ -1,20 +1,16 @@
 import { AnySchema } from "joi"
+import { CommandPath } from "../command/command-model"
+import { EnvVars, Variables } from "../common/model"
+import { ParameterConfig } from "../config/common-config"
+import { StackConfig } from "../config/stack-config"
+import { HookRegistry } from "../hooks/hook-registry"
+import { Resolver, ResolverInput, ResolverName } from "../resolvers/resolver"
+import { ResolverRegistry } from "../resolvers/resolver-registry"
+import { BlueprintPath, InternalStack, StackPath } from "../stacks/stack"
 import { IamRoleArn } from "../takomo-aws-model"
 import { StackEvent } from "../takomo-aws-model/cloudformation"
-import { CommandStatus, EnvVars, Variables } from "../takomo-core"
-import { ParameterConfig, StackConfig } from "../takomo-stacks-config"
-import { HookRegistry } from "../takomo-stacks-hooks"
-import {
-  BlueprintPath,
-  CommandPath,
-  InternalStack,
-  Resolver,
-  ResolverInput,
-  ResolverName,
-  SchemaRegistry,
-  StackPath,
-} from "../takomo-stacks-model"
-import { ResolverRegistry } from "../takomo-stacks-resolvers"
+import { CommandStatus } from "../takomo-core/command"
+import { SchemaRegistry } from "../takomo-stacks-model/schemas"
 import { TakomoError } from "../utils/errors"
 import { TemplateEngine } from "../utils/templating"
 import { Timer } from "../utils/timer"

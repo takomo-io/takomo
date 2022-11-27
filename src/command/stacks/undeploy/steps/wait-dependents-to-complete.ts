@@ -1,4 +1,4 @@
-import { StackResult } from "../../../../takomo-stacks-model"
+import { StackResult } from "../../../command-model"
 import { StackOperationStep } from "../../common/steps"
 import { InitialUndeployStackState } from "../states"
 

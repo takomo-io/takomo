@@ -1,5 +1,6 @@
-import { CommandContext } from "../../takomo-core"
-import { SchemaRegistry, StackGroup } from "../../takomo-stacks-model"
+import { CommandContext } from "../../context/command-context"
+import { StackGroup } from "../../stacks/stack-group"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { TkmLogger } from "../../utils/logging"
 import { StackGroupConfigNode } from "./config-tree"
 import { createRootStackGroup } from "./create-root-stack-group"

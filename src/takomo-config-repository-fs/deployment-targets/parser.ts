@@ -1,4 +1,4 @@
-import { CommandContext } from "../../takomo-core"
+import { CommandContext } from "../../context/command-context"
 import { FilePath, readFileContents } from "../../utils/files"
 import { TkmLogger } from "../../utils/logging"
 import { renderTemplate, TemplateEngine } from "../../utils/templating"

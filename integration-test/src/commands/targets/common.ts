@@ -1,3 +1,5 @@
+import { InternalCommandContext } from "../../../../src/context/command-context"
+import { DeploymentTargetsConfigRepository } from "../../../../src/context/targets-context"
 import {
   initDefaultCredentialManager,
   InternalCredentialManager,
@@ -6,8 +8,6 @@ import {
   createFileSystemDeploymentTargetsConfigRepository,
   FileSystemCommandContext,
 } from "../../../../src/takomo-config-repository-fs"
-import { InternalCommandContext } from "../../../../src/takomo-core"
-import { DeploymentTargetsConfigRepository } from "../../../../src/takomo-deployment-targets-context"
 import { createConsoleLogger, TkmLogger } from "../../../../src/utils/logging"
 import { createTestCommandContext } from "../common"
 import { CreateCtxAndConfigRepositoryProps } from "../stacks"

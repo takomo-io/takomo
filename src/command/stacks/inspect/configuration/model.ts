@@ -1,10 +1,12 @@
+import { StackPath } from "../../../../stacks/stack"
+import { StackGroup } from "../../../../stacks/stack-group"
 import { Region, StackName } from "../../../../takomo-aws-model"
-import { CommandInput, CommandOutput, IO } from "../../../../takomo-core"
 import {
-  CommandPath,
-  StackGroup,
-  StackPath,
-} from "../../../../takomo-stacks-model"
+  CommandInput,
+  CommandOutput,
+  IO,
+} from "../../../../takomo-core/command"
+import { CommandPath } from "../../../command-model"
 
 export interface ShowConfigurationInput extends CommandInput {
   readonly commandPath: CommandPath

@@ -1,20 +1,18 @@
 import R from "ramda"
+import { InternalStack, StackPath } from "../../../stacks/stack"
 import {
   CloudFormationStackSummary,
   StackStatus,
 } from "../../../takomo-aws-model"
 import { sortStacksForDeploy } from "../../../takomo-stacks-context"
 import {
-  CommandPath,
   getStackPath,
-  InternalStack,
   isNotObsolete,
   isWithinCommandPath,
-  StackOperationType,
-  StackPath,
-} from "../../../takomo-stacks-model"
+} from "../../../takomo-stacks-model/util"
 import { arrayToMap } from "../../../utils/collections"
 import { TkmLogger } from "../../../utils/logging"
+import { CommandPath, StackOperationType } from "../../command-model"
 import {
   loadCurrentCfStacks,
   StackPair,

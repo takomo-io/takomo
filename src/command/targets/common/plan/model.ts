@@ -1,9 +1,10 @@
+import { DeploymentTargetConfig } from "../../../../config/targets-config"
+
 import { AccountId, IamRoleArn } from "../../../../takomo-aws-model"
-import { DeploymentTargetConfig } from "../../../../takomo-deployment-targets-config"
 import {
   DeploymentGroupName,
   DeploymentGroupPath,
-} from "../../../../takomo-deployment-targets-model"
+} from "../../../../targets/targets-model"
 
 interface PlannedDeploymentGroup {
   readonly name: DeploymentGroupName

@@ -1,9 +1,7 @@
 import path from "path"
-import {
-  InternalStack,
-  StackOperationVariables,
-} from "../../../../takomo-stacks-model"
+import { InternalStack } from "../../../../stacks/stack"
 import { arrayToObject } from "../../../../utils/collections"
+import { StackOperationVariables } from "../../../command-model"
 import { StackOperationStep } from "../../common/steps"
 import { StackParameterInfo } from "../model"
 import { TagsHolder } from "../states"

@@ -1,9 +1,10 @@
 import { Arguments, Argv, CommandModule } from "yargs"
+import { CommandPath } from "../../command/command-model"
 import { detectDriftCommand } from "../../command/stacks/drift/command"
 import { detectDriftCommandIamPolicy } from "../../command/stacks/drift/iam-policy"
 import { createDetectDriftIO } from "../../takomo-cli-io"
 import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs"
-import { CommandPath, ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { commonEpilog, handle, RunProps } from "../common"
 import { COMMAND_PATH_OPT } from "../constants"
 

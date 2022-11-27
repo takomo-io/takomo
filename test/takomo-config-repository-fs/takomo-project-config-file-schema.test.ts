@@ -1,4 +1,4 @@
-import { takomoProjectConfigFileSchema } from "../../src/takomo-config-repository-fs/project/config"
+import { takomoProjectConfigFileSchema } from "../../src/parser/project-config-parser"
 import { expectNoValidationError } from "../assertions"
 
 const valid = [

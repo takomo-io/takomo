@@ -3,7 +3,7 @@ import {
   StackDriftStatus,
   StackEvent,
 } from "../takomo-aws-model/cloudformation"
-import { CommandStatus } from "../takomo-core"
+import { CommandStatus } from "../takomo-core/command"
 import { cyan, green, grey, red, yellow } from "../utils/colors"
 
 export const formatCommandStatus = (status: CommandStatus): string => {

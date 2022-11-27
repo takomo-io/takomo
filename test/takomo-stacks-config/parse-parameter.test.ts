@@ -1,8 +1,8 @@
 import {
   ParameterConfig,
   SingleParameterConfig,
-} from "../../src/takomo-stacks-config"
-import { parseParameter } from "../../src/takomo-stacks-config/parse-parameter"
+} from "../../src/config/common-config"
+import { parseParameter } from "../../src/parser/stacks/parse-parameter"
 
 const singleParameterCases: Array<[unknown, ParameterConfig]> = [
   [

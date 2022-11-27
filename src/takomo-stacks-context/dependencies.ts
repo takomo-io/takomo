@@ -5,7 +5,7 @@ import {
   normalizeStackPath,
   StackPath,
   StackProps,
-} from "../takomo-stacks-model"
+} from "../stacks/stack"
 import { TakomoError } from "../utils/errors"
 import { ObsoleteDependenciesError } from "./errors"
 

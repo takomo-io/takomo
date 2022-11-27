@@ -1,4 +1,4 @@
-import { createStackGroup, StackGroup } from "../../takomo-stacks-model"
+import { createStackGroup, StackGroup } from "../../stacks/stack-group"
 import { deepCopy } from "../../utils/objects"
 import { StackGroupConfigNode } from "./config-tree"
 

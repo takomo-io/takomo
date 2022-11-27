@@ -1,10 +1,8 @@
-import { CommandContext } from "../../takomo-core"
-import {
-  buildStackConfig,
-  buildStackGroupConfig,
-  StackConfig,
-  StackGroupConfig,
-} from "../../takomo-stacks-config"
+import { StackConfig } from "../../config/stack-config"
+import { StackGroupConfig } from "../../config/stack-group-config"
+import { CommandContext } from "../../context/command-context"
+import { buildStackConfig } from "../../parser/stacks/build-stack-config"
+import { buildStackGroupConfig } from "../../parser/stacks/build-stack-group-config"
 import { TakomoError } from "../../utils/errors"
 import { FilePath, readFileContents } from "../../utils/files"
 import { TkmLogger } from "../../utils/logging"

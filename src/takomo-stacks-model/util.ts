@@ -1,7 +1,7 @@
 import R from "ramda"
+import { CommandPath } from "../command/command-model"
+import { InternalStack, Stack, StackPath } from "../stacks/stack"
 import { StackName } from "../takomo-aws-model"
-import { CommandPath } from "./command"
-import { InternalStack, Stack, StackPath } from "./stack"
 
 export const getStackPath = ({ path }: Stack): StackPath => path
 

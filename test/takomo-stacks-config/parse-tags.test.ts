@@ -1,4 +1,4 @@
-import { parseTags } from "../../src/takomo-stacks-config/parse-tags"
+import { parseTags } from "../../src/parser/stacks/parse-tags"
 
 describe("#parseTags", () => {
   test("when undefined is given", () => {

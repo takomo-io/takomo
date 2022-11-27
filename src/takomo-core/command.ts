@@ -1,14 +1,8 @@
-import { Credentials } from "@aws-sdk/types"
-import {
-  InternalAwsClientProvider,
-  InternalCredentialManager,
-} from "../takomo-aws-clients"
-import { IamRoleArn, Region } from "../takomo-aws-model"
-import { FilePath } from "../utils/files"
-import { LogLevel, TkmLogger } from "../utils/logging"
+import { InternalCommandContext } from "../context/command-context"
+import { InternalCredentialManager } from "../takomo-aws-clients"
+import { IamRoleArn } from "../takomo-aws-model"
+import { TkmLogger } from "../utils/logging"
 import { Timer } from "../utils/timer"
-import { InternalTakomoProjectConfig, TakomoProjectConfig } from "./config"
-import { Variables } from "./variables"
 
 export type Project = string
 
@@ -101,86 +95,6 @@ export const resolveCommandOutputBase = (
     message,
     success,
   }
-}
-
-/**
- * Provides access to the current project configuration.
- */
-export interface CommandContext {
-  /**
-   * Reset cache before executing operation.
-   */
-  readonly resetCache: boolean
-
-  /**
-   * No confirmation to operations is asked if auto-confirm is enabled.
-   */
-  readonly autoConfirmEnabled: boolean
-
-  /**
-   * Show statistics collected during operations.
-   */
-  readonly statisticsEnabled: boolean
-
-  /**
-   * Log confidential information during operations.
-   */
-  readonly confidentialValuesLoggingEnabled: boolean
-
-  /**
-   * Variables available in operations.
-   */
-  readonly variables: Variables
-
-  /**
-   * Supported AWS regions.
-   */
-  readonly regions: ReadonlyArray<Region>
-
-  /**
-   * Credentials used to invoke the current operation.
-   */
-  readonly credentials?: Credentials
-
-  /**
-   * Current project directory containing configuration files.
-   */
-  readonly projectDir: FilePath
-
-  /**
-   * Logging level.
-   */
-  readonly logLevel: LogLevel
-
-  /**
-   * Suppress all logging but the actual command results.
-   */
-  readonly quiet: boolean
-
-  /**
-   * Output format.
-   */
-  readonly outputFormat: OutputFormat
-
-  /**
-   * Project configuration.
-   */
-  readonly projectConfig: TakomoProjectConfig
-
-  /**
-   * Show command to generate IAM policies.
-   */
-  readonly iamGeneratePoliciesInstructionsEnabled: boolean
-}
-
-export interface TakomoBuildInfo {
-  readonly version: string
-}
-
-export interface InternalCommandContext extends CommandContext {
-  readonly buildInfo: TakomoBuildInfo
-  readonly projectConfig: InternalTakomoProjectConfig
-  readonly awsClientProvider: InternalAwsClientProvider
 }
 
 export interface CommandHandlerArgs<

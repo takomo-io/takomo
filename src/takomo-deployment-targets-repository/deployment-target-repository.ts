@@ -1,17 +1,15 @@
 import Joi from "joi"
+import { Cache } from "../caches/cache"
+import { DeploymentTargetRepositoryConfig } from "../config/project-config"
+import { DeploymentTargetConfig } from "../config/targets-config"
+import { InternalCommandContext } from "../context/command-context"
 import { createDeploymentTargetsSchemas } from "../schema/deployment-targets-schema"
 import { CredentialManager } from "../takomo-aws-clients"
 import { Region } from "../takomo-aws-model"
 import {
-  Cache,
-  DeploymentTargetRepositoryConfig,
-  InternalCommandContext,
-} from "../takomo-core"
-import { DeploymentTargetConfig } from "../takomo-deployment-targets-config"
-import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../takomo-deployment-targets-model"
+} from "../targets/targets-model"
 import { TkmLogger } from "../utils/logging"
 import { TemplateEngine } from "../utils/templating"
 
