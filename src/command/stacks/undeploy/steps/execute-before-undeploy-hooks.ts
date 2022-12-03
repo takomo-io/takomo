@@ -5,7 +5,7 @@ import { CurrentStackHolder } from "../states"
 export const executeBeforeUndeployHooks: StackOperationStep<
   CurrentStackHolder
 > = async (state) => {
-  const { stack, ctx, variables, logger, transitions } = state
+  const { stack, ctx, variables, logger, transitions, currentStack } = state
 
   const { result, message, error } = await executeHooks({
     ctx,
@@ -15,6 +15,7 @@ export const executeBeforeUndeployHooks: StackOperationStep<
     operation: "delete",
     stage: "before",
     logger,
+    currentStack,
   })
 
   if (result === "abort") {

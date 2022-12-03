@@ -6,8 +6,16 @@ import { StackOperationResultHolder } from "../states"
 export const executeAfterDeployHooks: StackOperationStep<
   StackOperationResultHolder
 > = async (state) => {
-  const { stack, operationType, status, ctx, variables, logger, transitions } =
-    state
+  const {
+    stack,
+    operationType,
+    status,
+    ctx,
+    variables,
+    logger,
+    transitions,
+    stackAfterOperation,
+  } = state
 
   const { result, message, error } = await executeHooks({
     ctx,
@@ -18,6 +26,7 @@ export const executeAfterDeployHooks: StackOperationStep<
     operation: toHookOperation(operationType),
     stage: "after",
     status: toHookStatus(status),
+    currentStack: stackAfterOperation,
   })
 
   if (result === "abort") {

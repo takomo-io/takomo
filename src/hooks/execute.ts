@@ -1,6 +1,7 @@
 import { StackOperationVariables } from "../command/command-model"
 import { InternalStacksContext } from "../context/stacks-context"
 import { Stack } from "../stacks/stack"
+import { CloudFormationStack } from "../takomo-aws-model"
 import { TkmLogger } from "../utils/logging"
 import {
   HookOperation,
@@ -19,6 +20,7 @@ interface ExecuteHooksProps {
   readonly stage: HookStage
   readonly logger: TkmLogger
   readonly status?: HookStatus
+  readonly currentStack?: CloudFormationStack
 }
 
 export const executeHooks = async ({
@@ -30,6 +32,7 @@ export const executeHooks = async ({
   stage,
   logger,
   status,
+  currentStack,
 }: ExecuteHooksProps): Promise<HooksExecutionOutput> => {
   logger.debug(
     `About to execute hooks (operation: ${operation}, stage: ${stage}, status: ${status})`,
@@ -43,6 +46,7 @@ export const executeHooks = async ({
     operation,
     status,
     logger,
+    currentStack,
   }
 
   const hooksToExecute = hooks.filter((h) => h.match(input))
