@@ -1,6 +1,7 @@
+import { join } from "path"
 import { Region } from "../takomo-aws-model"
 import { TakomoError } from "../utils/errors"
-import { FilePath } from "../utils/files"
+import { expandFilePath, FilePath } from "../utils/files"
 
 export type DeploymentTargetRepositoryType = string
 export interface DeploymentTargetRepositoryConfig {
@@ -31,6 +32,12 @@ export const defaultFeatures = (): Features => ({
   deploymentTargetsTearDown: true,
 })
 
+export const defaultEsbuild = (projectDir: FilePath): EsbuildConfig => ({
+  enabled: true,
+  entryPoint: expandFilePath(projectDir, "takomo.ts"),
+  outFile: expandFilePath(projectDir, join(".takomo", "out", "takomo.js")),
+})
+
 /**
  * Takomo project configuration.
  */
@@ -50,6 +57,12 @@ export interface ExternalHandlebarsHelperConfig {
   readonly package: string
 }
 
+export interface EsbuildConfig {
+  readonly enabled: boolean
+  readonly outFile: FilePath
+  readonly entryPoint: FilePath
+}
+
 export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly resolvers: ReadonlyArray<ExternalResolverConfig>
   readonly helpers: ReadonlyArray<ExternalHandlebarsHelperConfig>
@@ -58,6 +71,7 @@ export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly helpersDir: ReadonlyArray<FilePath>
   readonly partialsDir: ReadonlyArray<FilePath>
   readonly schemasDir: ReadonlyArray<FilePath>
+  readonly esbuild: EsbuildConfig
 }
 
 export class FeatureDisabledError extends TakomoError {

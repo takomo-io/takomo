@@ -1,4 +1,5 @@
 import { Credentials } from "@aws-sdk/types"
+import { build } from "esbuild"
 import { Features } from "../../config/project-config"
 import {
   InternalCommandContext,
@@ -7,7 +8,7 @@ import {
 import { loadProjectConfig } from "../../parser/project-config-parser"
 import { InternalAwsClientProvider } from "../../takomo-aws-clients"
 import { OutputFormat } from "../../takomo-core/command"
-import { FilePath } from "../../utils/files"
+import { fileExists, FilePath } from "../../utils/files"
 import { LogLevel, TkmLogger } from "../../utils/logging"
 import { VarFileOption } from "../../utils/variables"
 import { createProjectFilePaths, ProjectFilePaths } from "../constants"
@@ -57,6 +58,7 @@ export const createFileSystemCommandContext = async (
     varFilePaths,
     envFilePaths,
     resetCache,
+    logger,
   } = props
 
   const filePaths = createProjectFilePaths(projectDir)
@@ -66,6 +68,31 @@ export const createFileSystemCommandContext = async (
     filePaths.projectConfigFile,
     overrideFeatures,
   )
+
+  logger.debugObject("Project config:", projectConfig)
+
+  if (projectConfig.esbuild && projectConfig.esbuild.enabled) {
+    if (await fileExists(projectConfig.esbuild.entryPoint)) {
+      logger.debug(
+        `Compile typescript project config file: ${projectConfig.esbuild.entryPoint}`,
+      )
+
+      await build({
+        write: true,
+        bundle: true,
+        sourcemap: true,
+        platform: "node",
+        logLevel: "error",
+        target: "node16.17.0",
+        outfile: projectConfig.esbuild.outFile,
+        entryPoints: [projectConfig.esbuild.entryPoint],
+      })
+    } else {
+      logger.debug(
+        `Takomo typescript project config file not found: ${projectConfig.esbuild.entryPoint}`,
+      )
+    }
+  }
 
   const regions = projectConfig.regions.slice()
 

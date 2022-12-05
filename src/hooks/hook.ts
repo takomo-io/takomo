@@ -5,6 +5,7 @@ import { StackOperationVariables } from "../takomo-stacks-context/model"
 import { TkmLogger } from "../utils/logging"
 
 export type HookType = string
+export type HookName = string
 
 /**
  * Specifies during which stack operation the hook should be executed.
@@ -103,9 +104,10 @@ export interface Hook {
 }
 
 export interface HookConfig {
-  readonly name: string
-  readonly type: string
+  readonly name: HookName
+  readonly type: HookType
   readonly stage?: ReadonlyArray<HookStage>
   readonly operation?: ReadonlyArray<HookOperation>
   readonly status?: ReadonlyArray<HookStatus>
+  [property: string]: unknown
 }

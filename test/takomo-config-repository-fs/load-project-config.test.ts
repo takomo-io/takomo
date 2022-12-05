@@ -1,6 +1,7 @@
 import { join } from "path"
 
 import {
+  defaultEsbuild,
   defaultFeatures,
   InternalTakomoProjectConfig,
 } from "../../src/config/project-config"
@@ -16,8 +17,9 @@ const doLoadProjectConfig = (
 
 describe("#loadProjectConfig", () => {
   test("with empty file", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-01.yml`,
     )
 
@@ -32,14 +34,16 @@ describe("#loadProjectConfig", () => {
       schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with a single region", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-02.yml`,
     )
 
@@ -54,14 +58,16 @@ describe("#loadProjectConfig", () => {
       schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with multiple regions", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-03.yml`,
     )
 
@@ -76,14 +82,16 @@ describe("#loadProjectConfig", () => {
       schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with resolvers", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-04.yml`,
     )
 
@@ -110,14 +118,16 @@ describe("#loadProjectConfig", () => {
           name: "a-better-name",
         },
       ],
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with helpers", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-05.yml`,
     )
 
@@ -144,14 +154,16 @@ describe("#loadProjectConfig", () => {
       helpersDir: [],
       partialsDir: [],
       schemasDir: [],
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with var files", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-06.yml`,
     )
 
@@ -169,14 +181,16 @@ describe("#loadProjectConfig", () => {
         join(`${process.cwd()}/test/takomo-config-repository-fs`, "file2.yml"),
       ],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with helper dirs and partials", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-07.yml`,
     )
 
@@ -194,14 +208,16 @@ describe("#loadProjectConfig", () => {
       schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with extends", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-08.yml`,
     )
 
@@ -218,14 +234,16 @@ describe("#loadProjectConfig", () => {
       schemasDir: [],
       varFiles: [],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("extends with complex file hierarchies", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs/config-file-hierarchy/aaa`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs/config-file-hierarchy/aaa`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/config-file-hierarchy/aaa/one.yml`,
     )
 
@@ -245,14 +263,16 @@ describe("#loadProjectConfig", () => {
         `${process.cwd()}/test/takomo-config-repository-fs/other.yml`,
       ],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
   })
 
   test("with schemas dir", async () => {
+    const projectDir = `${process.cwd()}/test/takomo-config-repository-fs`
     const config = await doLoadProjectConfig(
-      `${process.cwd()}/test/takomo-config-repository-fs`,
+      projectDir,
       `${process.cwd()}/test/takomo-config-repository-fs/project-config-09.yml`,
     )
 
@@ -267,6 +287,7 @@ describe("#loadProjectConfig", () => {
       schemasDir: ["/tmp"],
       varFiles: [],
       features: defaultFeatures(),
+      esbuild: defaultEsbuild(projectDir),
     }
 
     expect(config).toStrictEqual(expected)
