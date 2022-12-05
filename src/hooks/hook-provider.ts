@@ -1,4 +1,4 @@
-import { Hook, HookType } from "./hook"
+import { Hook, HookConfig, HookType } from "./hook"
 
 /**
  * An interface to be implemented by objects that initialize {@linkcode Hook}
@@ -13,5 +13,5 @@ export interface HookProvider {
   /**
    * Initialize a hook.
    */
-  readonly init: (props: any) => Promise<Hook>
+  readonly init: (props: HookConfig) => Promise<Hook>
 }

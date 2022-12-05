@@ -7,7 +7,9 @@ import { createCommonSchema } from "../schema/common-schema"
 import { Region } from "../takomo-aws-model"
 
 import {
+  defaultEsbuild,
   defaultFeatures,
+  EsbuildConfig,
   ExternalHandlebarsHelperConfig,
   ExternalResolverConfig,
   Features,
@@ -19,7 +21,11 @@ import { mergeArrays } from "../utils/collections"
 import { TakomoError } from "../utils/errors"
 import { expandFilePath, fileExists, FilePath } from "../utils/files"
 import { parseYamlFile } from "../utils/yaml"
-import { parseStringArray } from "./common-parser"
+import {
+  parseOptionalBoolean,
+  parseString,
+  parseStringArray,
+} from "./common-parser"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../../package.json")
@@ -137,6 +143,29 @@ export const parseDeploymentTargetsConfig = (
   }
 }
 
+const parseEsbuildConfig = (
+  projectDir: FilePath,
+  value: any,
+): EsbuildConfig | undefined => {
+  if (value === null || value === undefined) {
+    return undefined
+  }
+
+  const defaultValue = defaultEsbuild(projectDir)
+
+  return {
+    enabled: parseOptionalBoolean(value.enabled) ?? true,
+    outFile: expandFilePath(
+      projectDir,
+      parseString(value.outDir, defaultValue.outFile),
+    ),
+    entryPoint: expandFilePath(
+      projectDir,
+      parseString(value.entryPoint, defaultValue.entryPoint),
+    ),
+  }
+}
+
 interface ConfigFileItem {
   readonly absolutePath: FilePath
   readonly contents: any
@@ -172,6 +201,8 @@ export const parseProjectConfigItem = (
     contents.deploymentTargets,
   )
 
+  const esbuild = parseEsbuildConfig(dirPath, contents.esbuild)
+
   return {
     regions: mergeArrays({ first: parentConfig.regions, second: regions }),
     resolvers: mergeArrays({
@@ -200,6 +231,7 @@ export const parseProjectConfigItem = (
     varFiles: mergeArrays({ first: parentConfig.varFiles, second: varFiles }),
     requiredVersion: contents.requiredVersion ?? parentConfig.requiredVersion,
     deploymentTargets: deploymentTargets ?? parentConfig.deploymentTargets,
+    esbuild: esbuild ?? parentConfig.esbuild,
   }
 }
 
@@ -278,6 +310,12 @@ const features = Joi.object({
 
 const varFiles = [Joi.string(), Joi.array().items(Joi.string())]
 
+const esbuild = Joi.object({
+  enabled: Joi.boolean(),
+  outDir: Joi.string(),
+  entryPoint: Joi.string(),
+})
+
 export const takomoProjectConfigFileSchema = Joi.object({
   extends: Joi.string(),
   requiredVersion: Joi.string(),
@@ -295,10 +333,12 @@ export const takomoProjectConfigFileSchema = Joi.object({
   schemasDir: [Joi.string(), Joi.array().items(Joi.string())],
   varFiles,
   features,
+  esbuild,
 })
 
 const createDefaultProjectConfig = (
   regions: ReadonlyArray<Region>,
+  projectDir: FilePath,
 ): InternalTakomoProjectConfig => ({
   regions,
   resolvers: [],
@@ -308,6 +348,7 @@ const createDefaultProjectConfig = (
   schemasDir: [],
   varFiles: [],
   features: defaultFeatures(),
+  esbuild: defaultEsbuild(projectDir),
 })
 
 const parseProjectConfigFiles = async (
@@ -334,7 +375,7 @@ export const loadProjectConfig = async (
   overrideFeatures: Partial<Features>,
 ): Promise<InternalTakomoProjectConfig> => {
   if (!(await fileExists(pathConfigFile))) {
-    return createDefaultProjectConfig(DEFAULT_REGIONS.slice())
+    return createDefaultProjectConfig(DEFAULT_REGIONS.slice(), projectDir)
   }
 
   const projectConfigItems = await collectProjectConfigFileHierarchy(
@@ -345,7 +386,7 @@ export const loadProjectConfig = async (
   const projectConfig = await parseProjectConfigFiles(
     projectDir,
     projectConfigItems.slice().reverse(),
-    createDefaultProjectConfig([]),
+    createDefaultProjectConfig([], projectDir),
   )
 
   validateRequiredVersion(pathConfigFile, projectConfig.requiredVersion)

@@ -186,6 +186,21 @@ export const createFileSystemStacksConfigRepository = async ({
         loadCustomHooks(hooksDir, logger, hookRegistry),
         loadCustomSchemas({ schemasDirs, logger, registry: schemaRegistry }),
       ])
+
+      if (
+        ctx.projectConfig.esbuild.enabled &&
+        (await fileExists(ctx.projectConfig.esbuild.outFile))
+      ) {
+        logger.debug(
+          `Load project config from compiled typescript config: ${ctx.projectConfig.esbuild.outFile}`,
+        )
+        const configProvider = await import(ctx.projectConfig.esbuild.outFile)
+        const takomoConfig = await configProvider.default({})
+
+        for (const provider of takomoConfig.hookProviders) {
+          await hookRegistry.registerProviderFromSource(provider)
+        }
+      }
     },
 
     getStackTemplateContents: async ({

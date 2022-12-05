@@ -25,13 +25,21 @@ export { DeploymentTargetConfig } from "./config/targets-config"
 export { CommandContext } from "./context/command-context"
 export { StacksContext } from "./context/stacks-context"
 export {
+  TakomoConfig,
+  TakomoConfigProps,
+  TakomoConfigProvider,
+} from "./extensions/config-customizer"
+export {
   Hook,
+  HookConfig,
   HookInput,
+  HookName,
   HookOperation,
   HookOutput,
   HookOutputObject,
   HookStage,
   HookStatus,
+  HookType,
 } from "./hooks/hook"
 export { HookProvider } from "./hooks/hook-provider"
 export { Resolver, ResolverInput } from "./resolvers/resolver"
@@ -58,5 +66,6 @@ export {
 export { run } from "./takomo-cli"
 export { CommandRole, OutputFormat } from "./takomo-core/command"
 export { DeploymentStatus, Label } from "./targets/targets-model"
+export { FilePath } from "./utils/files"
 export { LogLevel, TkmLogger } from "./utils/logging"
 export { TemplateEngine } from "./utils/templating"
