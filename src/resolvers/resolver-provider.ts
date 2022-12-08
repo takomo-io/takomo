@@ -1,4 +1,5 @@
 import Joi from "joi"
+import { ParameterConfig } from "../config/common-config"
 import { CommandContext } from "../context/command-context"
 import { Resolver, ResolverName } from "./resolver"
 
@@ -38,7 +39,7 @@ export interface ResolverProvider {
   /**
    * Initialize a resolver.
    */
-  readonly init: (props: any) => Promise<Resolver>
+  readonly init: (config: ParameterConfig) => Promise<Resolver>
 
   /**
    * Create a schema used to validate properties used to initialize a new resolver.

@@ -1,0 +1,3 @@
+parameters:
+  Param1:
+    resolver: my-resolver
