@@ -1,20 +1,18 @@
 import { mock } from "jest-mock-extended"
+import { InternalAwsClientProvider } from "../../../src/aws/aws-client-provider"
+import { InternalCredentialManager } from "../../../src/aws/common/credentials"
 import { PlannedDeploymentTarget } from "../../../src/command/targets/common/plan/model"
 import { createDeploymentTargetVariables } from "../../../src/command/targets/operation/create-deployment-target-variables"
-import {
-  InternalAwsClientProvider,
-  InternalCredentialManager,
-} from "../../../src/takomo-aws-clients"
+import { InternalTakomoProjectConfig } from "../../../src/config/project-config"
+import { DeploymentConfig } from "../../../src/config/targets-config"
 import {
   InternalCommandContext,
-  InternalTakomoProjectConfig,
   TakomoBuildInfo,
-} from "../../../src/takomo-core"
-import { DeploymentConfig } from "../../../src/takomo-deployment-targets-config"
+} from "../../../src/context/command-context"
 import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
-} from "../../../src/takomo-deployment-targets-context"
+} from "../../../src/context/targets-context"
 import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans"
 import { createConsoleLogger } from "../../../src/utils/logging"
 

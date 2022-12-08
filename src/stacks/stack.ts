@@ -1,23 +1,22 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
-import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
-import { HookExecutor } from "../hooks/hook-executor"
-import { ResolverExecutor } from "../resolvers/resolver-executor"
 import {
-  CloudFormationClient,
-  CredentialManager,
-  InternalCredentialManager,
-} from "../takomo-aws-clients"
-import {
-  AccountId,
   CloudFormationStack,
-  Region,
   StackCapability,
   StackName,
   StackParameterKey,
   StackPolicyBody,
-  TagKey,
-} from "../takomo-aws-model"
+} from "../aws/cloudformation/model"
+
+import { CloudFormationClient } from "../aws/cloudformation/client"
+import {
+  CredentialManager,
+  InternalCredentialManager,
+} from "../aws/common/credentials"
+import { AccountId, Region, TagKey } from "../aws/common/model"
+import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
+import { HookExecutor } from "../hooks/hook-executor"
+import { ResolverExecutor } from "../resolvers/resolver-executor"
 import { CommandRole, Project } from "../takomo-core/command"
 import { ROOT_STACK_GROUP_PATH } from "../takomo-stacks-model/constants"
 import { Schemas } from "../takomo-stacks-model/schemas"

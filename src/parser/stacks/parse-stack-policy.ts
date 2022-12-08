@@ -1,4 +1,4 @@
-import { StackPolicyBody } from "../../takomo-aws-model"
+import { StackPolicyBody } from "../../aws/cloudformation/model"
 import { prettyPrintJson, toPrettyJson } from "../../utils/json"
 
 export const parseStackPolicy = (value: any): StackPolicyBody | undefined => {

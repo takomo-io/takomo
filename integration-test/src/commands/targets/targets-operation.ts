@@ -1,17 +1,15 @@
-import { CommandPath } from "../../../../src/command/command-model"
-import { StacksOperationOutput } from "../../../../src/command/stacks/model"
-import { DeploymentTargetsOperationOutput } from "../../../../src/command/targets/operation/model"
-import { ConfigSetName } from "../../../../src/config-sets/config-set-model"
-import { StackPath } from "../../../../src/stacks/stack"
 import {
   StackName,
   StackOutput,
   StackOutputKey,
   StackOutputValue,
-  Tag,
-  TagKey,
-  TagValue,
-} from "../../../../src/takomo-aws-model"
+} from "../../../../src/aws/cloudformation/model"
+import { Tag, TagKey, TagValue } from "../../../../src/aws/common/model"
+import { CommandPath } from "../../../../src/command/command-model"
+import { StacksOperationOutput } from "../../../../src/command/stacks/model"
+import { DeploymentTargetsOperationOutput } from "../../../../src/command/targets/operation/model"
+import { ConfigSetName } from "../../../../src/config-sets/config-set-model"
+import { StackPath } from "../../../../src/stacks/stack"
 import { CommandStatus } from "../../../../src/takomo-core/command"
 import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans"
 import {

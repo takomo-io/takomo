@@ -1,5 +1,7 @@
 import * as CF from "@aws-sdk/client-cloudformation"
+import { ClientRequestToken, TagKey, TagValue } from "../common/model"
 import {
+  CausingEntity,
   ChangeSet,
   ChangeSetId,
   ChangeSetName,
@@ -7,7 +9,6 @@ import {
   ChangeSetStatusReason,
   ChangeSource,
   ChangeType,
-  ClientRequestToken,
   CloudFormationStack,
   DetailedCloudFormationStackSummary,
   EnableTerminationProtection,
@@ -30,6 +31,8 @@ import {
   StackDriftDetectionStatus,
   StackDriftDetectionStatusOutput,
   StackDriftDetectionStatusReason,
+  StackDriftStatus,
+  StackEvent,
   StackId,
   StackName,
   StackOutputDescription,
@@ -41,16 +44,9 @@ import {
   StackParameterValue,
   StackStatus,
   StackStatusReason,
-  TagKey,
-  TagValue,
   TemplateDescription,
   TemplateSummary,
-} from "../../takomo-aws-model"
-import {
-  CausingEntity,
-  StackDriftStatus,
-  StackEvent,
-} from "../../takomo-aws-model/cloudformation"
+} from "./model"
 
 const convertStackInternal = (s: CF.Stack): CloudFormationStack => ({
   id: s.StackId as StackId,

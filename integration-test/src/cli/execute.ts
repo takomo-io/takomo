@@ -1,5 +1,5 @@
 import { exec } from "child_process"
-import { prepareAwsEnvVariables } from "../../../src/takomo-aws-clients"
+import { prepareAwsEnvVariables } from "../../../src/aws/util"
 import { parseYamlString } from "../../../src/utils/yaml"
 import { assertRecursively } from "../assertions"
 import { CustomNodeJsGlobal } from "../global"

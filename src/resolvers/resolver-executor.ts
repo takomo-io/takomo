@@ -1,6 +1,6 @@
 import { AnySchema } from "joi"
+import { IamRoleArn } from "../aws/common/model"
 import { StackPath } from "../stacks/stack"
-import { IamRoleArn } from "../takomo-aws-model"
 import { ResolverInput, ResolverName } from "./resolver"
 
 export interface ResolverExecutor {

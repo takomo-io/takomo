@@ -1,5 +1,5 @@
+import { StackName, StackStatus } from "../../../aws/cloudformation/model"
 import { StackPath } from "../../../stacks/stack"
-import { StackName, StackStatus } from "../../../takomo-aws-model"
 import { CommandInput, IO, ResultsOutput } from "../../../takomo-core/command"
 import { CommandPath } from "../../command-model"
 

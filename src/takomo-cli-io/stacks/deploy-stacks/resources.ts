@@ -4,7 +4,7 @@ import {
   LogicalResourceId,
   ResourceChangeAction,
   ResourceChangeReplacement,
-} from "../../../takomo-aws-model"
+} from "../../../aws/cloudformation/model"
 import { bold, green, orange, red, yellow } from "../../../utils/colors"
 import { BaseIO } from "../../cli-io"
 

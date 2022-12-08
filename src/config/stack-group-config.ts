@@ -1,13 +1,8 @@
+import { StackCapability, StackPolicyBody } from "../aws/cloudformation/model"
+import { AccountId, Region, TagKey } from "../aws/common/model"
 import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
 import { HookConfig } from "../hooks/hook"
 import { RawTagValue } from "../stacks/stack"
-import {
-  AccountId,
-  Region,
-  StackCapability,
-  StackPolicyBody,
-  TagKey,
-} from "../takomo-aws-model"
 import { CommandRole, Project } from "../takomo-core/command"
 import { SchemasConfig } from "./common-config"
 

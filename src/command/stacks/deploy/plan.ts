@@ -1,9 +1,9 @@
 import R from "ramda"
-import { InternalStack, StackPath } from "../../../stacks/stack"
 import {
   CloudFormationStackSummary,
   StackStatus,
-} from "../../../takomo-aws-model"
+} from "../../../aws/cloudformation/model"
+import { InternalStack, StackPath } from "../../../stacks/stack"
 import { sortStacksForDeploy } from "../../../takomo-stacks-context"
 import {
   getStackPath,

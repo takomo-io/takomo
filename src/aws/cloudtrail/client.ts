@@ -1,9 +1,9 @@
 import { CloudTrail } from "@aws-sdk/client-cloudtrail"
-import { CloudTrailEvent } from "../../takomo-aws-model"
 import { InternalAwsClientProps, pagedOperation } from "../common/client"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import { convertCloudTrailEvents } from "./convert"
+import { CloudTrailEvent } from "./model"
 
 export interface CloudTrailClient {
   readonly lookupEvents: (

@@ -1,18 +1,18 @@
 import { mock } from "jest-mock-extended"
-import { StackParameterKey } from "../../../../../src/takomo-aws-model"
-import { CommandContext } from "../../../../../src/takomo-core"
+import { CommandContext } from "../../../../../src"
+import { StackParameterKey } from "../../../../../src/aws/cloudformation/model"
 import {
   ListParameterConfig,
   ParameterConfigs,
   SingleParameterConfig,
-} from "../../../../../src/takomo-stacks-config"
-import { buildParameters } from "../../../../../src/takomo-stacks-context/config/parameters"
-import { SchemaRegistry } from "../../../../../src/takomo-stacks-model"
+} from "../../../../../src/config/common-config"
 import {
   coreResolverProviders,
   ResolverRegistry,
-} from "../../../../../src/takomo-stacks-resolvers"
-import { createConsoleLogger } from "../../../../../src/takomo-util"
+} from "../../../../../src/resolvers/resolver-registry"
+import { buildParameters } from "../../../../../src/takomo-stacks-context/config/parameters"
+import { SchemaRegistry } from "../../../../../src/takomo-stacks-model/schemas"
+import { createConsoleLogger } from "../../../../../src/utils/logging"
 
 const logger = createConsoleLogger({
   logLevel: "info",

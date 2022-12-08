@@ -1,5 +1,5 @@
 import R from "ramda"
-import { StackStatus } from "../../../takomo-aws-model"
+import { StackStatus } from "../../../aws/cloudformation/model"
 import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context"
 import { TakomoError } from "../../../utils/errors"
 import { StackDeployOperation, StacksDeployPlan } from "./plan"

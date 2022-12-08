@@ -1,5 +1,4 @@
 import { IPolicy, Policy } from "cockatiel"
-import { CallerIdentity, Region } from "../takomo-aws-model"
 import { TkmLogger } from "../utils/logging"
 import { createScheduler, Scheduler } from "../utils/scheduler"
 import { checksum } from "../utils/strings"
@@ -13,6 +12,7 @@ import {
   AwsClientProps,
   CloudFormationClientProps,
 } from "./common/client"
+import { CallerIdentity, Region } from "./common/model"
 import { createApiRequestListenerPlugin } from "./common/request-listener"
 import {
   createOrganizationsClient,

@@ -1,11 +1,11 @@
 import Joi from "joi"
+import { CredentialManager } from "../aws/common/credentials"
+import { Region } from "../aws/common/model"
 import { Cache } from "../caches/cache"
 import { DeploymentTargetRepositoryConfig } from "../config/project-config"
 import { DeploymentTargetConfig } from "../config/targets-config"
 import { InternalCommandContext } from "../context/command-context"
 import { createDeploymentTargetsSchemas } from "../schema/deployment-targets-schema"
-import { CredentialManager } from "../takomo-aws-clients"
-import { Region } from "../takomo-aws-model"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,

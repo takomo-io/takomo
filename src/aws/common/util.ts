@@ -1,4 +1,4 @@
-import { AccountId, IamRoleArn, IamRoleName } from "./common"
+import { AccountId, IamRoleArn, IamRoleName } from "./model"
 
 export const makeIamRoleArn = (
   accountId: AccountId,

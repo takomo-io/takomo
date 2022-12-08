@@ -1,5 +1,5 @@
 import Joi, { ObjectSchema, StringSchema } from "joi"
-import { Region } from "../takomo-aws-model"
+import { Region } from "../aws/common/model"
 import { createCommonSchema } from "./common-schema"
 import { createStacksSchemas } from "./stacks-schema"
 

@@ -1,10 +1,10 @@
 import { basename } from "path"
+import { initDefaultCredentialManager } from "../../../src/aws/common/credentials"
 import { deployStacksCommand } from "../../../src/command/stacks/deploy/command"
 import { detectDriftCommand } from "../../../src/command/stacks/drift/command"
 import { listStacksCommand } from "../../../src/command/stacks/list/command"
 import { undeployStacksCommand } from "../../../src/command/stacks/undeploy/command"
 import { InternalCommandContext } from "../../../src/context/command-context"
-import { initDefaultCredentialManager } from "../../../src/takomo-aws-clients"
 import {
   createFileSystemStacksConfigRepository,
   FileSystemCommandContext,

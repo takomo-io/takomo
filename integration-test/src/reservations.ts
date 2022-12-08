@@ -1,5 +1,5 @@
 import { Credentials } from "@aws-sdk/types"
-import { AccountId } from "../../src/takomo-aws-model"
+import { AccountId } from "../../src/aws/common/model"
 import { CustomNodeJsGlobal } from "./global"
 
 // Make references to global namespace work

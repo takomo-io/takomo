@@ -1,5 +1,5 @@
+import { InternalCredentialManager } from "../../../aws/common/credentials"
 import { ConfigSetContext } from "../../../config-sets/config-set-model"
-import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import {
   CommandOutput,
   OperationState,

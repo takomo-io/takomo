@@ -1,5 +1,5 @@
 import { join } from "path"
-import { Region } from "../takomo-aws-model"
+import { Region } from "../aws/common/model"
 import { TakomoError } from "../utils/errors"
 import { expandFilePath, FilePath } from "../utils/files"
 

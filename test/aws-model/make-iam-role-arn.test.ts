@@ -1,4 +1,4 @@
-import { makeIamRoleArn } from "../../src/takomo-aws-model"
+import { makeIamRoleArn } from "../../src/aws/common/util"
 
 describe("#makeIamRoleArn", () => {
   test("makes correct iam role arn", () => {

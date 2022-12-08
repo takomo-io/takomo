@@ -1,6 +1,6 @@
+import { CloudFormationStackSummary } from "../../../aws/cloudformation/model"
 import { InternalStacksContext } from "../../../context/stacks-context"
 import { InternalStack } from "../../../stacks/stack"
-import { CloudFormationStackSummary } from "../../../takomo-aws-model"
 import { StacksConfigRepository } from "../../../takomo-stacks-context"
 import { TkmLogger } from "../../../utils/logging"
 import { Timer } from "../../../utils/timer"

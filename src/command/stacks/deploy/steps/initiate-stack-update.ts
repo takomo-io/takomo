@@ -1,4 +1,4 @@
-import { ALLOW_ALL_STACK_POLICY } from "../../../../takomo-aws-model"
+import { ALLOW_ALL_STACK_POLICY } from "../../../../aws/cloudformation/model"
 import { uuid } from "../../../../utils/strings"
 import { defaultCapabilities } from "../../../command-model"
 import { StackOperationStep } from "../../common/steps"

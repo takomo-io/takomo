@@ -1,4 +1,4 @@
-import { Region } from "../takomo-aws-model"
+import { Region } from "../aws/common/model"
 
 export const DEFAULT_REGIONS: ReadonlyArray<Region> = [
   "af-south-1",

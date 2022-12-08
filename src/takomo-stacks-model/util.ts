@@ -1,7 +1,7 @@
 import R from "ramda"
+import { StackName } from "../aws/cloudformation/model"
 import { CommandPath } from "../command/command-model"
 import { InternalStack, Stack, StackPath } from "../stacks/stack"
-import { StackName } from "../takomo-aws-model"
 
 export const getStackPath = ({ path }: Stack): StackPath => path
 

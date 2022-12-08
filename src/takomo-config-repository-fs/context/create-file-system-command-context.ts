@@ -1,12 +1,12 @@
 import { Credentials } from "@aws-sdk/types"
 import { build } from "esbuild"
+import { InternalAwsClientProvider } from "../../aws/aws-client-provider"
 import { Features } from "../../config/project-config"
 import {
   InternalCommandContext,
   TakomoBuildInfo,
 } from "../../context/command-context"
 import { loadProjectConfig } from "../../parser/project-config-parser"
-import { InternalAwsClientProvider } from "../../takomo-aws-clients"
 import { OutputFormat } from "../../takomo-core/command"
 import { fileExists, FilePath } from "../../utils/files"
 import { LogLevel, TkmLogger } from "../../utils/logging"

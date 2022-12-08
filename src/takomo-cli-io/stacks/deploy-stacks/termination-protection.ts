@@ -1,5 +1,5 @@
+import { DetailedCloudFormationStack } from "../../../aws/cloudformation/model"
 import { InternalStack } from "../../../stacks/stack"
-import { DetailedCloudFormationStack } from "../../../takomo-aws-model"
 import { bold, green, grey, red } from "../../../utils/colors"
 import { BaseIO } from "../../cli-io"
 

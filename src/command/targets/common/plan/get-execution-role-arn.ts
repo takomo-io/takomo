@@ -1,10 +1,7 @@
+import { CallerIdentity, IamRoleArn } from "../../../../aws/common/model"
+import { makeIamRoleArn } from "../../../../aws/common/util"
 import { ConfigSetType } from "../../../../config-sets/config-set-model"
 import { DeploymentTargetConfig } from "../../../../config/targets-config"
-import {
-  CallerIdentity,
-  IamRoleArn,
-  makeIamRoleArn,
-} from "../../../../takomo-aws-model"
 
 export const getExecutionRoleArn = (
   configSetType: ConfigSetType,

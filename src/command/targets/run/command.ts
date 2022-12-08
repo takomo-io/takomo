@@ -1,6 +1,6 @@
 import Joi from "joi"
+import { Region } from "../../../aws/common/model"
 import { createDeploymentTargetsSchemas } from "../../../schema/deployment-targets-schema"
-import { Region } from "../../../takomo-aws-model"
 import { CommandHandler } from "../../../takomo-core/command"
 
 import {

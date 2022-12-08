@@ -3,9 +3,9 @@ import dedent from "ts-dedent"
 import {
   CloudFormationStackSummary,
   StackDriftDetectionStatusOutput,
-} from "../../../../src/takomo-aws-model"
+} from "../../../../src/aws/cloudformation/model"
+import { StackDriftInfo } from "../../../../src/command/stacks/drift/model"
 import { createDetectDriftIO } from "../../../../src/takomo-cli-io"
-import { StackDriftInfo } from "../../../../src/takomo-stacks-commands"
 import { green, red } from "../../../../src/utils/colors"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { Timer } from "../../../../src/utils/timer"

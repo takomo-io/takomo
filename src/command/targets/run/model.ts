@@ -1,6 +1,6 @@
 import { Credentials } from "@aws-sdk/types"
 
-import { IamRoleArn, IamRoleName } from "../../../takomo-aws-model"
+import { IamRoleArn, IamRoleName } from "../../../aws/common/model"
 import {
   CommandInput,
   CommandOutput,

@@ -1,5 +1,5 @@
+import { Region } from "../../../src/aws/common/model"
 import { createStacksSchemas } from "../../../src/schema/stacks-schema"
-import { Region } from "../../../src/takomo-aws-model"
 import {
   expectNoValidationError,
   expectValidationErrors,

@@ -1,10 +1,10 @@
+import { AccountId, IamRoleName } from "../aws/common/model"
 import { Vars } from "../common/model"
 import {
   ConfigSet,
   ConfigSetInstruction,
   ConfigSetInstructionsHolder,
 } from "../config-sets/config-set-model"
-import { AccountId, IamRoleName } from "../takomo-aws-model"
 import { CommandRole } from "../takomo-core/command"
 import {
   DeploymentGroupName,

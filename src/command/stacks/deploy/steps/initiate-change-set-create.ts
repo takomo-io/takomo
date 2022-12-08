@@ -1,4 +1,4 @@
-import { ChangeSetType } from "../../../../takomo-aws-model"
+import { ChangeSetType } from "../../../../aws/cloudformation/model"
 import { uuid } from "../../../../utils/strings"
 import { defaultCapabilities, StackOperationType } from "../../../command-model"
 import { StackOperationStep } from "../../common/steps"

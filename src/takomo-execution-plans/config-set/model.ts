@@ -1,3 +1,4 @@
+import { InternalCredentialManager } from "../../aws/common/credentials"
 import { CommandPath } from "../../command/command-model"
 import {
   ConfigSet,
@@ -5,7 +6,6 @@ import {
   ConfigSetType,
   StageName,
 } from "../../config-sets/config-set-model"
-import { InternalCredentialManager } from "../../takomo-aws-clients"
 import {
   CommandOutput,
   CommandOutputBase,

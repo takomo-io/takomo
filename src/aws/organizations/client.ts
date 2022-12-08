@@ -5,11 +5,12 @@ import {
   paginateListAccounts,
   paginateListAccountsForParent,
 } from "@aws-sdk/client-organizations"
-import { Account, AccountStatus, OU, OUId } from "../../takomo-aws-model"
 import { InternalAwsClientProps } from "../common/client"
+import { AccountStatus } from "../common/model"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import { convertAccount, convertOU, convertRoot } from "./convert"
+import { Account, OU, OUId } from "./model"
 
 export interface OrganizationsClient {
   readonly listAccounts: () => Promise<ReadonlyArray<Account>>

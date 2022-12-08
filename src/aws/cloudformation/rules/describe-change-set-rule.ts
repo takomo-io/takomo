@@ -1,5 +1,5 @@
-import { ChangeSet } from "../../../takomo-aws-model"
 import { evaluateRules, Rule } from "../../../utils/rules"
+import { ChangeSet } from "../model"
 
 export type DescribeChangeSetResult =
   | "PENDING"

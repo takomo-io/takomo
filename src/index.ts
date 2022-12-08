@@ -1,5 +1,17 @@
 import "source-map-support/register"
 export {
+  BaseCloudFormationStack,
+  CloudFormationStack,
+  StackCapability,
+  StackDriftInformation,
+  StackDriftStatus,
+  StackOutput,
+  StackParameter,
+  StackStatus,
+} from "./aws/cloudformation/model"
+export { CredentialManager } from "./aws/common/credentials"
+export { CallerIdentity, Tag } from "./aws/common/model"
+export {
   HookOutputValues,
   StackOperationVariables,
 } from "./command/command-model"
@@ -45,25 +57,11 @@ export {
 export { HookProvider } from "./hooks/hook-provider"
 export { Resolver, ResolverInput } from "./resolvers/resolver"
 export {
+  ResolverConfig,
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "./resolvers/resolver-provider"
 export { Stack } from "./stacks/stack"
-export { CredentialManager } from "./takomo-aws-clients"
-export {
-  CallerIdentity,
-  CloudFormationStack,
-  StackCapability,
-  StackOutput,
-  StackParameter,
-  StackStatus,
-  Tag,
-} from "./takomo-aws-model"
-export {
-  BaseCloudFormationStack,
-  StackDriftInformation,
-  StackDriftStatus,
-} from "./takomo-aws-model/cloudformation"
 export { run } from "./takomo-cli"
 export { CommandRole, OutputFormat } from "./takomo-core/command"
 export { InitSchemaProps, SchemaProvider } from "./takomo-stacks-model/schemas"

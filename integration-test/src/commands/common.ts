@@ -1,6 +1,6 @@
+import { StackName } from "../../../src/aws/cloudformation/model"
 import { CommandPath } from "../../../src/command/command-model"
 import { StackPath } from "../../../src/stacks/stack"
-import { StackName } from "../../../src/takomo-aws-model"
 import { initCommandContext } from "../../../src/takomo-cli"
 import { FileSystemCommandContext } from "../../../src/takomo-config-repository-fs"
 import { CommandStatus } from "../../../src/takomo-core/command"

@@ -1,5 +1,5 @@
+import { StackName } from "../../aws/cloudformation/model"
 import { StackPath } from "../../stacks/stack"
-import { StackName } from "../../takomo-aws-model"
 import { Project } from "../../takomo-core/command"
 
 export const makeStackName = (

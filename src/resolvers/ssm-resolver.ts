@@ -1,7 +1,7 @@
 import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm"
 import { ObjectSchema } from "joi"
+import { IamRoleArn } from "../aws/common/model"
 import { createAwsSchemas } from "../schema/aws-schema"
-import { IamRoleArn } from "../takomo-aws-model"
 import { Resolver, ResolverInput } from "./resolver"
 import {
   ResolverProvider,

@@ -1,8 +1,8 @@
+import { StackParameterKey } from "../../aws/cloudformation/model"
 import { ParameterConfig, ParameterConfigs } from "../../config/common-config"
 import { CommandContext } from "../../context/command-context"
 import { ResolverRegistry } from "../../resolvers/resolver-registry"
 import { StackPath } from "../../stacks/stack"
-import { StackParameterKey } from "../../takomo-aws-model"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { TakomoError } from "../../utils/errors"
 import {

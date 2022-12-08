@@ -1,7 +1,8 @@
+import { StackParameterKey } from "../aws/cloudformation/model"
+import { IamRoleArn } from "../aws/common/model"
 import { StackOperationVariables } from "../command/command-model"
 import { StacksContext } from "../context/stacks-context"
 import { Stack, StackPath } from "../stacks/stack"
-import { IamRoleArn, StackParameterKey } from "../takomo-aws-model"
 import { TkmLogger } from "../utils/logging"
 
 /**

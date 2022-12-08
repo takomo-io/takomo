@@ -36,3 +36,23 @@ export type AccountName = string
 export type ServicePrincipal = string
 export type Arn = string
 export type AccountStatus = "ACTIVE" | "PENDING_CLOSURE" | "SUSPENDED"
+
+/**
+ * An interface representing caller identity that is bound to AWS credentials.
+ */
+export interface CallerIdentity {
+  /**
+   * Identity ARN.
+   */
+  readonly arn: string
+
+  /**
+   * User id.
+   */
+  readonly userId: UserId
+
+  /**
+   * Account id.
+   */
+  readonly accountId: AccountId
+}

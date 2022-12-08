@@ -1,7 +1,7 @@
+import { CloudFormationStack } from "../aws/cloudformation/model"
 import { StackOperationVariables } from "../command/command-model"
 import { InternalStacksContext } from "../context/stacks-context"
 import { Stack } from "../stacks/stack"
-import { CloudFormationStack } from "../takomo-aws-model"
 import { TkmLogger } from "../utils/logging"
 import {
   HookOperation,

@@ -1,10 +1,11 @@
 import { mock } from "jest-mock-extended"
-import { InternalCredentialManager } from "../../../../src/takomo-aws-clients"
+import { ConfigSetName } from "../../../../src"
+import { InternalCredentialManager } from "../../../../src/aws/common/credentials"
+import { ConfigSetContext } from "../../../../src/config-sets/config-set-model"
 import {
-  ConfigSetContext,
-  ConfigSetName,
-} from "../../../../src/takomo-config-sets"
-import { CommandOutput, CommandOutputBase } from "../../../../src/takomo-core"
+  CommandOutput,
+  CommandOutputBase,
+} from "../../../../src/takomo-core/command"
 import {
   ConfigSetPlanExecutionResult,
   ConfigSetTargetExecutionResult,

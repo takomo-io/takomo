@@ -1,7 +1,7 @@
 import Joi from "joi"
 import { Arguments, Argv, CommandModule } from "yargs"
+import { IamRoleName, Region } from "../../aws/common/model"
 import { generateIamPoliciesCommand } from "../../command/iam/generate-iam-policies-command"
-import { IamRoleName, Region } from "../../takomo-aws-model"
 import { createGenerateIamPoliciesIO } from "../../takomo-cli-io"
 import { handle, RunProps } from "../common"
 import { ROLE_NAME_OPT } from "../constants"

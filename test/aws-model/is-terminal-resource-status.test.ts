@@ -1,7 +1,7 @@
 import {
   isTerminalResourceStatus,
   ResourceStatus,
-} from "../../src/takomo-aws-model"
+} from "../../src/aws/cloudformation/model"
 
 const cases: Array<[ResourceStatus, boolean]> = [
   ["CREATE_IN_PROGRESS", false],

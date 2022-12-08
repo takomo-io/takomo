@@ -1,14 +1,12 @@
 import Joi, { AnySchema } from "joi"
 import R from "ramda"
+
+import { AwsClientProvider } from "../../aws/aws-client-provider"
+import { CloudTrailEvent } from "../../aws/cloudtrail/model"
+import { CredentialManager } from "../../aws/common/credentials"
+import { AccountId, IamRoleName, Region } from "../../aws/common/model"
 import { CommandContext } from "../../context/command-context"
 import { createAwsSchemas } from "../../schema/aws-schema"
-import { AwsClientProvider, CredentialManager } from "../../takomo-aws-clients"
-import {
-  AccountId,
-  CloudTrailEvent,
-  IamRoleName,
-  Region,
-} from "../../takomo-aws-model"
 import { CommandHandler } from "../../takomo-core/command"
 import { TkmLogger } from "../../utils/logging"
 import { validateInput } from "../../utils/validation"

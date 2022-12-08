@@ -1,4 +1,4 @@
-import { TakomoError } from "../utils/errors"
+import { TakomoError } from "../../utils/errors"
 
 export class CredentialsError extends TakomoError {
   constructor(e: Error) {
