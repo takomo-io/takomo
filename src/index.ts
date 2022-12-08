@@ -66,6 +66,7 @@ export {
 } from "./takomo-aws-model/cloudformation"
 export { run } from "./takomo-cli"
 export { CommandRole, OutputFormat } from "./takomo-core/command"
+export { InitSchemaProps, SchemaProvider } from "./takomo-stacks-model/schemas"
 export { DeploymentStatus, Label } from "./targets/targets-model"
 export { FilePath } from "./utils/files"
 export { LogLevel, TkmLogger } from "./utils/logging"

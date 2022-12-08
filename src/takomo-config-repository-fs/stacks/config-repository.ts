@@ -197,12 +197,31 @@ export const createFileSystemStacksConfigRepository = async ({
         const configProvider = await import(ctx.projectConfig.esbuild.outFile)
         const takomoConfig = await configProvider.default({})
 
-        for (const provider of takomoConfig.hookProviders ?? []) {
-          await hookRegistry.registerProviderFromSource(provider)
+        for (const [i, provider] of (
+          takomoConfig.hookProviders ?? []
+        ).entries()) {
+          await hookRegistry.registerProviderFromSource(
+            provider,
+            `${ctx.projectConfig.esbuild}#hookProviders[${i}]`,
+          )
         }
 
-        for (const provider of takomoConfig.resolverProviders ?? []) {
-          await resolverRegistry.registerBuiltInProvider(provider)
+        for (const [i, provider] of (
+          takomoConfig.resolverProviders ?? []
+        ).entries()) {
+          await resolverRegistry.registerProviderFromSource(
+            provider,
+            `${ctx.projectConfig.esbuild}#resolverProviders[${i}]`,
+          )
+        }
+
+        for (const [i, provider] of (
+          takomoConfig.schemaProviders ?? []
+        ).entries()) {
+          await schemaRegistry.registerFromSource(
+            provider,
+            `${ctx.projectConfig.esbuild}#schemaProviders[${i}]`,
+          )
         }
       }
     },

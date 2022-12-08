@@ -21,7 +21,10 @@ export interface HookRegistry {
   readonly initHook: (props: HookConfig) => Promise<Hook>
   readonly hasProvider: (type: HookType) => boolean
   readonly registerBuiltInProvider: (provider: HookProvider) => Promise<void>
-  readonly registerProviderFromSource: (provider: HookProvider) => Promise<void>
+  readonly registerProviderFromSource: (
+    provider: HookProvider,
+    source: string,
+  ) => Promise<void>
   readonly registerProviderFromFile: (
     pathToResolverFile: FilePath,
   ) => Promise<void>
@@ -113,8 +116,10 @@ export const createHookRegistry = ({
   const registerBuiltInProvider = (provider: HookProvider): Promise<void> =>
     registerProvider(provider, "built-in providers")
 
-  const registerProviderFromSource = (provider: HookProvider): Promise<void> =>
-    registerProvider(provider, "source providers")
+  const registerProviderFromSource = (
+    provider: HookProvider,
+    source: string,
+  ): Promise<void> => registerProvider(provider, source)
 
   const registerProviderFromFile = async (
     pathToFile: FilePath,
