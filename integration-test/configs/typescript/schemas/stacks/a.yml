@@ -1,0 +1,3 @@
+schemas:
+  name: my-schema
+name: {{ var.name }}

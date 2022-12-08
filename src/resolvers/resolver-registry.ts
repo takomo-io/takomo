@@ -115,8 +115,9 @@ export class ResolverRegistry {
 
   registerProviderFromSource = async (
     provider: ResolverProvider,
+    source: string,
   ): Promise<void> => {
-    return this.registerProvider(provider, "source providers")
+    return this.registerProvider(provider, source)
   }
 
   registerProviderFromNpmPackage = (config: ExternalResolverConfig): void => {

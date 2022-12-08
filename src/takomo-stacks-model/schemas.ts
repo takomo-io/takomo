@@ -11,8 +11,8 @@ import { TkmLogger } from "../utils/logging"
 export type SchemaName = string
 
 class CustomSchemaError extends TakomoError {
-  constructor(pathToSchemaFile: FilePath, details: string) {
-    super(`Invalid schema definition in file: ${pathToSchemaFile} - ${details}`)
+  constructor(source: string, details: string) {
+    super(`Invalid schema definition in ${source} - ${details}`)
   }
 }
 
@@ -107,6 +107,10 @@ export interface SchemaRegistry {
   readonly registerProviderFromFile: (
     pathToResolverFile: FilePath,
   ) => Promise<void>
+  readonly registerFromSource: (
+    provider: SchemaProvider,
+    source: string,
+  ) => Promise<void>
   readonly hasProvider: (name: SchemaName) => boolean
   readonly getProvider: (name: SchemaName) => SchemaProvider | undefined
 }
@@ -122,6 +126,55 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
   const getProvider = (name: SchemaName): SchemaProvider | undefined =>
     schemas.get(name)
 
+  const registerProvider = async (
+    provider: SchemaProvider,
+    source: string,
+  ): Promise<void> => {
+    if (!provider.name) {
+      throw new CustomSchemaError(
+        source,
+        "Expected 'name' property to be defined",
+      )
+    }
+    const nameType = typeof provider.name
+    if (nameType !== "string" && nameType !== "function") {
+      throw new CustomSchemaError(
+        source,
+        "Expected 'name' property to be of type 'string' or 'function'",
+      )
+    }
+
+    const name =
+      typeof provider.name === "function" ? provider.name() : provider.name
+
+    if (schemas.has(name)) {
+      throw new CustomSchemaError(
+        source,
+        `Schema '${name}' is already registered`,
+      )
+    }
+    if (!provider.init) {
+      throw new CustomSchemaError(
+        source,
+        "Expected 'init' property to be defined",
+      )
+    }
+    if (typeof provider.init !== "function") {
+      throw new CustomSchemaError(
+        source,
+        "Expected 'init' property to be of type 'function'",
+      )
+    }
+    if (provider.schema && typeof provider.schema !== "function") {
+      throw new CustomSchemaError(
+        source,
+        "Expected 'schema' property to be of type 'function'",
+      )
+    }
+
+    schemas.set(name, provider)
+  }
+
   return {
     registerProviderFromFile: async (
       pathToProviderFile: FilePath,
@@ -129,49 +182,14 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
       logger.debug(`Register schema provider from file: ${pathToProviderFile}`)
       // eslint-disable-next-line
       const provider = require(pathToProviderFile)
-      if (!provider.name) {
-        throw new CustomSchemaError(
-          pathToProviderFile,
-          "Expected 'name' property to be defined",
-        )
-      }
-      const nameType = typeof provider.name
-      if (nameType !== "string" && nameType !== "function") {
-        throw new CustomSchemaError(
-          pathToProviderFile,
-          "Expected 'name' property to be of type 'string' or 'function'",
-        )
-      }
+      await registerProvider(provider, `file: ${pathToProviderFile}`)
+    },
 
-      const name =
-        typeof provider.name === "function" ? provider.name() : provider.name
-
-      if (schemas.has(name)) {
-        throw new CustomSchemaError(
-          pathToProviderFile,
-          `Schema '${name}' is already registered`,
-        )
-      }
-      if (!provider.init) {
-        throw new CustomSchemaError(
-          pathToProviderFile,
-          "Expected 'init' property to be defined",
-        )
-      }
-      if (typeof provider.init !== "function") {
-        throw new CustomSchemaError(
-          pathToProviderFile,
-          "Expected 'init' property to be of type 'function'",
-        )
-      }
-      if (provider.schema && typeof provider.schema !== "function") {
-        throw new CustomSchemaError(
-          pathToProviderFile,
-          "Expected 'schema' property to be of type 'function'",
-        )
-      }
-
-      schemas.set(name, provider)
+    registerFromSource: async (
+      provider: SchemaProvider,
+      source: string,
+    ): Promise<void> => {
+      await registerProvider(provider, source)
     },
 
     getProvider,
