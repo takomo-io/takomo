@@ -1,6 +1,6 @@
+import { StackEvent } from "../../../aws/cloudformation/model"
 import { StackPath } from "../../../stacks/stack"
 import { StackGroup } from "../../../stacks/stack-group"
-import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import { IO } from "../../../takomo-core/command"
 import { CommandPath } from "../../command-model"
 import { StacksOperationListener } from "../common/model"

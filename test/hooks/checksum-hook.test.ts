@@ -1,10 +1,10 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
+import { CredentialManager } from "../../src"
 import { StacksContext } from "../../src/context/stacks-context"
 import { ChecksumHook } from "../../src/hooks/checksum-hook"
 import { HookInput } from "../../src/hooks/hook"
 import { Stack } from "../../src/stacks/stack"
-import { CredentialManager } from "../../src/takomo-aws-clients"
 import { createConsoleLogger } from "../../src/utils/logging"
 
 const credentialManager = mock<CredentialManager>()

@@ -1,4 +1,6 @@
 import R from "ramda"
+import { InternalCredentialManager } from "../../aws/common/credentials"
+import { IamRoleArn } from "../../aws/common/model"
 import { CommandPath } from "../../command/command-model"
 import { InternalCommandContext } from "../../context/command-context"
 import { HookRegistry } from "../../hooks/hook-registry"
@@ -13,8 +15,6 @@ import {
   StackGroup,
   StackGroupPath,
 } from "../../stacks/stack-group"
-import { InternalCredentialManager } from "../../takomo-aws-clients"
-import { IamRoleArn } from "../../takomo-aws-model"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { isWithinCommandPath } from "../../takomo-stacks-model/util"

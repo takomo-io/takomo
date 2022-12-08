@@ -1,5 +1,12 @@
 import { AnySchema } from "joi"
 import R from "ramda"
+import {
+  StackCapability,
+  StackName,
+  StackPolicyBody,
+} from "../../aws/cloudformation/model"
+import { InternalCredentialManager } from "../../aws/common/credentials"
+import { AccountId, IamRoleArn, Region, TagKey } from "../../aws/common/model"
 import { CommandPath } from "../../command/command-model"
 import { TemplateBucketConfig, TimeoutConfig, Vars } from "../../common/model"
 import { TemplateConfig } from "../../config/common-config"
@@ -19,16 +26,6 @@ import {
   Template,
 } from "../../stacks/stack"
 import { StackGroup } from "../../stacks/stack-group"
-import { InternalCredentialManager } from "../../takomo-aws-clients"
-import {
-  AccountId,
-  IamRoleArn,
-  Region,
-  StackCapability,
-  StackName,
-  StackPolicyBody,
-  TagKey,
-} from "../../takomo-aws-model"
 import { CommandRole, Project } from "../../takomo-core/command"
 import { StackPropertyDefaults } from "../../takomo-stacks-model/constants"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas"

@@ -1,12 +1,11 @@
 import { mock } from "jest-mock-extended"
-import { CloudFormationClient } from "../../../../src/takomo-aws-clients"
+import { CloudFormationClient } from "../../../../src/aws/cloudformation/client"
 import {
   DetailedCloudFormationStackSummary,
-  Region,
   StackName,
   StackStatus,
-} from "../../../../src/takomo-aws-model"
-
+} from "../../../../src/aws/cloudformation/model"
+import { Region } from "../../../../src/aws/common/model"
 import { StackOperationType } from "../../../../src/command/command-model"
 import {
   buildStacksDeployPlan,

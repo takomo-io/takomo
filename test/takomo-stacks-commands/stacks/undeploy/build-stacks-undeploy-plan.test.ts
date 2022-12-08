@@ -1,11 +1,10 @@
 import { mock } from "jest-mock-extended"
 import {
   CloudFormationStack,
-  Region,
   StackName,
   StackStatus,
-} from "../../../../src/takomo-aws-model"
-
+} from "../../../../src/aws/cloudformation/model"
+import { Region } from "../../../../src/aws/common/model"
 import {
   buildStacksUndeployPlan,
   StacksUndeployPlan,

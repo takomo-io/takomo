@@ -1,7 +1,7 @@
 import { basename } from "path"
+import { IamRoleArn, IamRoleName } from "../../../../src/aws/common/model"
 import { deploymentTargetsRunCommand } from "../../../../src/command/targets/run/command"
 import { DeploymentTargetsRunOutput } from "../../../../src/command/targets/run/model"
-import { IamRoleArn, IamRoleName } from "../../../../src/takomo-aws-model"
 import { OutputFormat } from "../../../../src/takomo-core/command"
 import { createConsoleLogger } from "../../../../src/utils/logging"
 import { Timer } from "../../../../src/utils/timer"

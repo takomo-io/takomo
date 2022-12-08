@@ -14,7 +14,6 @@ import {
   ACTIVE_STACK_STATUSES,
   ChangeSet,
   ChangeSetId,
-  ClientRequestToken,
   CloudFormationStack,
   CloudFormationStackSummary,
   DetailedCloudFormationStack,
@@ -24,14 +23,14 @@ import {
   ResourceStatus,
   StackDriftDetectionId,
   StackDriftDetectionStatusOutput,
+  StackEvent,
   StackId,
   StackName,
   StackPolicyBody,
   StackStatus,
   TemplateSummary,
-} from "../../takomo-aws-model"
+} from "./model"
 
-import { StackEvent } from "../../takomo-aws-model/cloudformation"
 import { arrayToMap } from "../../utils/collections"
 import { Scheduler } from "../../utils/scheduler"
 import { uuid } from "../../utils/strings"
@@ -43,6 +42,7 @@ import {
   withClientBulkhead,
   withClientScheduler,
 } from "../common/client"
+import { ClientRequestToken } from "../common/model"
 import { customRequestHandler } from "../common/request-handler"
 import { customRetryStrategy } from "../common/retry"
 import {

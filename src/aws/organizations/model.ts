@@ -4,7 +4,7 @@ import {
   AccountId,
   AccountName,
   AccountStatus,
-} from "./common"
+} from "../common/model"
 
 export interface Account {
   readonly id: AccountId

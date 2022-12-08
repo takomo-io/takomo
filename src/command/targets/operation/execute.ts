@@ -1,9 +1,9 @@
+import { InternalCredentialManager } from "../../../aws/common/credentials"
 import { InternalCommandContext } from "../../../context/command-context"
 import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
 } from "../../../context/targets-context"
-import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { OutputFormat } from "../../../takomo-core/command"
 import {
   ConfigSetTargetExecutorProps,

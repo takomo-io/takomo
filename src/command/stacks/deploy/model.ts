@@ -2,16 +2,15 @@ import { AnySchema } from "joi"
 import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
+  StackEvent,
   StackParameterKey,
   StackParameterValue,
-  TagKey,
-  TagValue,
   TemplateBody,
   TemplateSummary,
-} from "../../../takomo-aws-model"
-import { StackEvent } from "../../../takomo-aws-model/cloudformation"
+} from "../../../aws/cloudformation/model"
 import { IO } from "../../../takomo-core/command"
 
+import { TagKey, TagValue } from "../../../aws/common/model"
 import { InternalStack, StackPath } from "../../../stacks/stack"
 import { StackGroup } from "../../../stacks/stack-group"
 import { CommandPath, StackOperationType } from "../../command-model"

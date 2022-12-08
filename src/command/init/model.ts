@@ -1,5 +1,5 @@
+import { Region } from "../../aws/common/model"
 import { CommandContext } from "../../context/command-context"
-import { Region } from "../../takomo-aws-model"
 import {
   CommandInput,
   CommandOutput,

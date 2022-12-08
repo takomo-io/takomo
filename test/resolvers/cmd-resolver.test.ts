@@ -1,13 +1,9 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
+import { CredentialManager, ResolverInput, StacksContext } from "../../src"
 import { createCmdResolverProvider } from "../../src/resolvers/cmd-resolver"
-import { CredentialManager } from "../../src/takomo-aws-clients"
-import {
-  ResolverInput,
-  Stack,
-  StacksContext,
-} from "../../src/takomo-stacks-model"
+import { Stack } from "../../src/stacks/stack"
 import { createConsoleLogger } from "../../src/utils/logging"
 
 const provider = createCmdResolverProvider()

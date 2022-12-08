@@ -1,6 +1,6 @@
+import { InternalCredentialManager } from "../aws/common/credentials"
+import { IamRoleArn } from "../aws/common/model"
 import { InternalCommandContext } from "../context/command-context"
-import { InternalCredentialManager } from "../takomo-aws-clients"
-import { IamRoleArn } from "../takomo-aws-model"
 import { TkmLogger } from "../utils/logging"
 import { Timer } from "../utils/timer"
 

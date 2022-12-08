@@ -1,4 +1,5 @@
 import Joi from "joi"
+import { Region } from "../../../aws/common/model"
 import { FeatureDisabledError } from "../../../config/project-config"
 import { InternalCommandContext } from "../../../context/command-context"
 import {
@@ -8,7 +9,6 @@ import {
 import { createConfigSetsSchemas } from "../../../schema/config-sets-schema"
 import { createDeploymentTargetsSchemas } from "../../../schema/deployment-targets-schema"
 import { createStacksSchemas } from "../../../schema/stacks-schema"
-import { Region } from "../../../takomo-aws-model"
 import { CommandHandler } from "../../../takomo-core/command"
 import { validateInput } from "../../../utils/validation"
 import {

@@ -1,4 +1,4 @@
-import { IamRoleName, Region } from "../../takomo-aws-model"
+import { IamRoleName, Region } from "../../aws/common/model"
 import { CommandInput, CommandOutput, IO } from "../../takomo-core/command"
 
 export interface GenerateIamPoliciesInput extends CommandInput {

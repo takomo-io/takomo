@@ -1,4 +1,4 @@
-import { ALLOW_ALL_STACK_POLICY } from "../../src/takomo-aws-model"
+import { ALLOW_ALL_STACK_POLICY } from "../../src/aws/cloudformation/model"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,

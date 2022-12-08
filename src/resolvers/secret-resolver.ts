@@ -4,8 +4,8 @@ import {
 } from "@aws-sdk/client-secrets-manager"
 import jmespath from "jmespath"
 import { ObjectSchema } from "joi"
+import { IamRoleArn } from "../aws/common/model"
 import { createAwsSchemas } from "../schema/aws-schema"
-import { IamRoleArn } from "../takomo-aws-model"
 import { TkmLogger } from "../utils/logging"
 import { Resolver, ResolverInput } from "./resolver"
 import {

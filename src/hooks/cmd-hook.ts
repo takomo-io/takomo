@@ -1,5 +1,5 @@
 import R from "ramda"
-import { prepareAwsEnvVariables } from "../takomo-aws-clients"
+import { prepareAwsEnvVariables } from "../aws/util"
 import { executeShellCommand } from "../utils/exec"
 import { expandFilePath } from "../utils/files"
 import { Hook, HookInput, HookOutput } from "./hook"

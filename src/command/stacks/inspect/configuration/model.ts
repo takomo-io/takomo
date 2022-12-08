@@ -1,6 +1,7 @@
+import { StackName } from "../../../../aws/cloudformation/model"
+import { Region } from "../../../../aws/common/model"
 import { StackPath } from "../../../../stacks/stack"
 import { StackGroup } from "../../../../stacks/stack-group"
-import { Region, StackName } from "../../../../takomo-aws-model"
 import {
   CommandInput,
   CommandOutput,

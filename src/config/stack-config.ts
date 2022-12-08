@@ -1,15 +1,13 @@
-import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
-import { HookConfig } from "../hooks/hook"
-import { BlueprintPath, RawTagValue, StackPath } from "../stacks/stack"
 import {
-  AccountId,
-  Region,
   StackCapability,
   StackName,
   StackParameterKey,
   StackPolicyBody,
-  TagKey,
-} from "../takomo-aws-model"
+} from "../aws/cloudformation/model"
+import { AccountId, Region, TagKey } from "../aws/common/model"
+import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
+import { HookConfig } from "../hooks/hook"
+import { BlueprintPath, RawTagValue, StackPath } from "../stacks/stack"
 import { CommandRole, Project } from "../takomo-core/command"
 import {
   ParameterConfigs,

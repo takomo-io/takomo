@@ -1,10 +1,7 @@
+import { CloudFormationStack, StackEvent } from "../aws/cloudformation/model"
 import { Variables } from "../common/model"
 import { InternalStack, StackPath } from "../stacks/stack"
 import { StackGroupPath } from "../stacks/stack-group"
-import {
-  CloudFormationStack,
-  StackEvent,
-} from "../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../takomo-core/command"
 import { Timer } from "../utils/timer"
 

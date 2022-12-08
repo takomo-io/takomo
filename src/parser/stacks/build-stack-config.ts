@@ -1,15 +1,15 @@
 import { err, ok, Result } from "neverthrow"
 import { StackConfig } from "../../config/stack-config"
 import { CommandContext } from "../../context/command-context"
+import { createStackConfigSchema } from "../../schema/stack-config-schema"
+import { ValidationError } from "../../utils/errors"
 import {
   parseCommandRole,
   parseOptionalBoolean,
   parseOptionalString,
   parseOptionalStringArray,
   parseStringArray,
-} from "../../parser/common-parser"
-import { createStackConfigSchema } from "../../schema/stack-config-schema"
-import { ValidationError } from "../../utils/errors"
+} from "../common-parser"
 import { parseAccountIds } from "./parse-account-ids"
 import { parseData } from "./parse-data"
 import { parseHooks } from "./parse-hooks"

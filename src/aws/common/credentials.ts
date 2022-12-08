@@ -6,13 +6,10 @@ import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { fromTemporaryCredentials } from "@aws-sdk/credential-providers"
 import { CredentialProvider, Credentials } from "@aws-sdk/types"
 import R from "ramda"
-import {
-  CallerIdentity,
-  CredentialsError,
-  IamRoleArn,
-} from "../../takomo-aws-model"
 import { TkmLogger } from "../../utils/logging"
 import { AwsClientProvider } from "../aws-client-provider"
+import { CredentialsError } from "./error"
+import { CallerIdentity, IamRoleArn } from "./model"
 import { customRetryStrategy } from "./retry"
 
 /**

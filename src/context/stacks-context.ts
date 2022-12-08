@@ -1,6 +1,6 @@
+import { CredentialManager } from "../aws/common/credentials"
 import { InternalStack, Stack, StackPath } from "../stacks/stack"
 import { StackGroup, StackGroupPath } from "../stacks/stack-group"
-import { CredentialManager } from "../takomo-aws-clients"
 import { TemplateEngine } from "../utils/templating"
 import { CommandContext, InternalCommandContext } from "./command-context"
 

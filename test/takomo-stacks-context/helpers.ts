@@ -1,7 +1,16 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-
+import { CloudFormationClient } from "../../src/aws/cloudformation/client"
+import {
+  StackCapability,
+  StackName,
+  StackPolicyBody,
+} from "../../src/aws/cloudformation/model"
+import { InternalCredentialManager } from "../../src/aws/common/credentials"
+import { AccountId, Region, TagKey } from "../../src/aws/common/model"
+import { TemplateConfig } from "../../src/config/common-config"
+import { StackConfig } from "../../src/config/stack-config"
 import { HookConfig } from "../../src/hooks/hook"
 import { InternalStack, RawTagValue, StackPath } from "../../src/stacks/stack"
 import {
@@ -9,20 +18,7 @@ import {
   StackGroupName,
   StackGroupPath,
 } from "../../src/stacks/stack-group"
-import {
-  CloudFormationClient,
-  InternalCredentialManager,
-} from "../../src/takomo-aws-clients"
-import {
-  AccountId,
-  Region,
-  StackCapability,
-  StackName,
-  StackPolicyBody,
-  TagKey,
-} from "../../src/takomo-aws-model"
 import { CommandRole, Project } from "../../src/takomo-core/command"
-import { StackConfig, TemplateConfig } from "../../src/takomo-stacks-config"
 import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants"
 import { createConsoleLogger } from "../../src/utils/logging"
 

@@ -1,7 +1,7 @@
 import { mock } from "jest-mock-extended"
-import { InternalCredentialManager } from "../../../src/takomo-aws-clients"
-import { StackName } from "../../../src/takomo-aws-model"
-import { InternalStack, StackPath } from "../../../src/takomo-stacks-model"
+import { StackName } from "../../../src/aws/cloudformation/model"
+import { InternalCredentialManager } from "../../../src/aws/common/credentials"
+import { InternalStack, StackPath } from "../../../src/stacks/stack"
 import { createConsoleLogger } from "../../../src/utils/logging"
 
 export interface TestStackProps {

@@ -1,3 +1,4 @@
+import { InternalCredentialManager } from "../aws/common/credentials"
 import {
   ConfigSet,
   ConfigSetContext,
@@ -9,7 +10,6 @@ import {
   DeploymentConfig,
   DeploymentGroupConfig,
 } from "../config/targets-config"
-import { InternalCredentialManager } from "../takomo-aws-clients"
 import { StacksConfigRepository } from "../takomo-stacks-context"
 import { DeploymentGroupPath } from "../targets/targets-model"
 import { collectFromHierarchy } from "../utils/collections"

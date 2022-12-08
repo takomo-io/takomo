@@ -1,9 +1,8 @@
 import Joi, { AnySchema } from "joi"
+import { StackParameterKey } from "../aws/cloudformation/model"
 import { CommandContext } from "../context/command-context"
-
 import { StackPath } from "../stacks/stack"
 import { StackGroupPath } from "../stacks/stack-group"
-import { StackParameterKey } from "../takomo-aws-model"
 import { TakomoError } from "../utils/errors"
 import { FilePath } from "../utils/files"
 import { TkmLogger } from "../utils/logging"

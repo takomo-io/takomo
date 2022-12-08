@@ -1,6 +1,9 @@
 import { err, ok, Result } from "neverthrow"
 import { StackGroupConfig } from "../../config/stack-group-config"
 import { CommandContext } from "../../context/command-context"
+import { createStackGroupConfigSchema } from "../../schema/stack-group-config-schema"
+import { StackPropertyDefaults } from "../../takomo-stacks-model/constants"
+import { ValidationError } from "../../utils/errors"
 import {
   parseBoolean,
   parseCommandRole,
@@ -8,10 +11,7 @@ import {
   parseOptionalString,
   parseOptionalStringArray,
   parseStringArray,
-} from "../../parser/common-parser"
-import { createStackGroupConfigSchema } from "../../schema/stack-group-config-schema"
-import { StackPropertyDefaults } from "../../takomo-stacks-model/constants"
-import { ValidationError } from "../../utils/errors"
+} from "../common-parser"
 import { parseAccountIds } from "./parse-account-ids"
 import { parseData } from "./parse-data"
 import { parseHooks } from "./parse-hooks"

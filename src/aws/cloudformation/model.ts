@@ -1,8 +1,8 @@
-import { ClientRequestToken, Tag } from "./common"
-
 /**
  * CloudFormation stack id.
  */
+import { ClientRequestToken, Tag } from "../common/model"
+
 export type StackId = string
 
 /**

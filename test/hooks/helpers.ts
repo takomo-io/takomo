@@ -1,9 +1,9 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
+import { StackName } from "../../src/aws/cloudformation/model"
+import { InternalCredentialManager } from "../../src/aws/common/credentials"
 import { InternalStack, StackPath } from "../../src/stacks/stack"
-import { InternalCredentialManager } from "../../src/takomo-aws-clients"
-import { StackName } from "../../src/takomo-aws-model"
 import { createConsoleLogger } from "../../src/utils/logging"
 
 export interface TestStackProps {

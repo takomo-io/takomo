@@ -6,7 +6,7 @@ import {
   StackParameterKey,
   StackParameterNoEcho,
   StackParameterValue,
-} from "../../../takomo-aws-model"
+} from "../../../aws/cloudformation/model"
 import { bold, green, red, yellow } from "../../../utils/colors"
 import { BaseIO } from "../../cli-io"
 import { printValue } from "./common"

@@ -1,4 +1,5 @@
 import Joi from "joi"
+import { Region } from "../aws/common/model"
 import {
   InitProjectInput,
   InitProjectIO,
@@ -7,7 +8,6 @@ import {
 } from "../command/init/model"
 import { CommandContext } from "../context/command-context"
 import { createCommonSchema } from "../schema/common-schema"
-import { Region } from "../takomo-aws-model"
 import { Project } from "../takomo-core/command"
 import { createBaseIO } from "./cli-io"
 import { IOProps } from "./stacks/common"

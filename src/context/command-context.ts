@@ -1,11 +1,11 @@
 import { Credentials } from "@aws-sdk/types"
+import { InternalAwsClientProvider } from "../aws/aws-client-provider"
+import { Region } from "../aws/common/model"
 import { Variables } from "../common/model"
 import {
   InternalTakomoProjectConfig,
   TakomoProjectConfig,
 } from "../config/project-config"
-import { InternalAwsClientProvider } from "../takomo-aws-clients"
-import { Region } from "../takomo-aws-model"
 import { OutputFormat } from "../takomo-core/command"
 import { FilePath } from "../utils/files"
 import { LogLevel } from "../utils/logging"

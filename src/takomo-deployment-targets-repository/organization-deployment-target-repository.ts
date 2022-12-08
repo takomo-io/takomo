@@ -1,5 +1,5 @@
-import { OrganizationsClient } from "../takomo-aws-clients"
-import { Account, OUPath } from "../takomo-aws-model"
+import { OrganizationsClient } from "../aws/organizations/client"
+import { Account, OUPath } from "../aws/organizations/model"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,

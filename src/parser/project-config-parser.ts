@@ -2,10 +2,7 @@ import Joi from "joi"
 import { dirname } from "path"
 import R from "ramda"
 import semver from "semver"
-
-import { createCommonSchema } from "../schema/common-schema"
-import { Region } from "../takomo-aws-model"
-
+import { Region } from "../aws/common/model"
 import {
   defaultEsbuild,
   defaultFeatures,
@@ -17,6 +14,7 @@ import {
   TakomoProjectDeploymentTargetsConfig,
 } from "../config/project-config"
 import { DEFAULT_REGIONS } from "../constants/regions-constants"
+import { createCommonSchema } from "../schema/common-schema"
 import { mergeArrays } from "../utils/collections"
 import { TakomoError } from "../utils/errors"
 import { expandFilePath, fileExists, FilePath } from "../utils/files"

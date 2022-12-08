@@ -1,5 +1,6 @@
 import * as CF from "@aws-sdk/client-organizations"
-import { Account, AccountStatus, OU, OUPath } from "../../takomo-aws-model"
+import { AccountStatus } from "../common/model"
+import { Account, OU, OUPath } from "./model"
 
 export const convertOU = (
   ou: CF.OrganizationalUnit,

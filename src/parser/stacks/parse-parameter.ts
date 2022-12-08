@@ -4,7 +4,7 @@ import {
   ParameterConfigs,
   SingleParameterConfig,
 } from "../../config/common-config"
-import { parseOptionalBoolean } from "../../parser/common-parser"
+import { parseOptionalBoolean } from "../common-parser"
 import { parseSchema } from "./parse-schema"
 
 const parseImmutable = (value: unknown): boolean => {

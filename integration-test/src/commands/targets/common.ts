@@ -1,9 +1,9 @@
-import { InternalCommandContext } from "../../../../src/context/command-context"
-import { DeploymentTargetsConfigRepository } from "../../../../src/context/targets-context"
 import {
   initDefaultCredentialManager,
   InternalCredentialManager,
-} from "../../../../src/takomo-aws-clients"
+} from "../../../../src/aws/common/credentials"
+import { InternalCommandContext } from "../../../../src/context/command-context"
+import { DeploymentTargetsConfigRepository } from "../../../../src/context/targets-context"
 import {
   createFileSystemDeploymentTargetsConfigRepository,
   FileSystemCommandContext,

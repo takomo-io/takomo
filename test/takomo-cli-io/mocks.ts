@@ -2,10 +2,10 @@ import { mockDeep } from "jest-mock-extended"
 import {
   CloudFormationStack,
   DetailedCloudFormationStack,
-  Region,
   StackName,
-} from "../../src/takomo-aws-model"
-import { InternalStack, StackPath } from "../../src/takomo-stacks-model"
+} from "../../src/aws/cloudformation/model"
+import { Region } from "../../src/aws/common/model"
+import { InternalStack, StackPath } from "../../src/stacks/stack"
 
 export interface MockDetailedCloudFormationStackProps {
   readonly enableTerminationProtection?: boolean

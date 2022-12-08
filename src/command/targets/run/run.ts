@@ -4,16 +4,11 @@ import { IPolicy, Policy } from "cockatiel"
 import { extname } from "path"
 import R from "ramda"
 import { promisify } from "util"
-
-import {
-  CredentialManager,
-  prepareAwsEnvVariables,
-} from "../../../takomo-aws-clients"
 import {
   CallerIdentity,
   IamRoleArn,
   IamRoleName,
-} from "../../../takomo-aws-model"
+} from "../../../aws/common/model"
 import {
   CommandRole,
   CommandStatus,
@@ -21,6 +16,8 @@ import {
   resolveCommandOutputBase,
 } from "../../../takomo-core/command"
 
+import { CredentialManager } from "../../../aws/common/credentials"
+import { prepareAwsEnvVariables } from "../../../aws/util"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,

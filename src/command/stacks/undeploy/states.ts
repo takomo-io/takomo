@@ -1,6 +1,8 @@
+import {
+  CloudFormationStack,
+  StackEvent,
+} from "../../../aws/cloudformation/model"
 import { InternalStacksContext } from "../../../context/stacks-context"
-import { CloudFormationStack } from "../../../takomo-aws-model"
-import { StackEvent } from "../../../takomo-aws-model/cloudformation"
 import { CommandStatus } from "../../../takomo-core/command"
 import { TkmLogger } from "../../../utils/logging"
 import { StackOperationVariables, StackResult } from "../../command-model"

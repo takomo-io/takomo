@@ -1,5 +1,5 @@
+import { CloudFormationStack } from "../../../../aws/cloudformation/model"
 import { InternalStack } from "../../../../stacks/stack"
-import { CloudFormationStack } from "../../../../takomo-aws-model"
 import { StackOperationStep } from "../../common/steps"
 import { TemplateSummaryHolder } from "../states"
 

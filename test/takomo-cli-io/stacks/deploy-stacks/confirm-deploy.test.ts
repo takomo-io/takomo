@@ -1,6 +1,8 @@
 import { mock } from "jest-mock-extended"
 import dedent from "ts-dedent"
-import { CloudFormationStack } from "../../../../src/takomo-aws-model"
+import { CloudFormationStack } from "../../../../src/aws/cloudformation/model"
+import { StackOperationType } from "../../../../src/command/command-model"
+import { StackDeployOperation } from "../../../../src/command/stacks/deploy/plan"
 import {
   CONFIRM_DEPLOY_ANSWER_CANCEL,
   CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW,
@@ -8,8 +10,6 @@ import {
   createDeployStacksIO,
   UserActions,
 } from "../../../../src/takomo-cli-io"
-import { StackDeployOperation } from "../../../../src/takomo-stacks-commands"
-import { StackOperationType } from "../../../../src/takomo-stacks-model"
 import {
   bold,
   cyan,

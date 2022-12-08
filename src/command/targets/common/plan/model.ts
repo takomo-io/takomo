@@ -1,6 +1,5 @@
+import { AccountId, IamRoleArn } from "../../../../aws/common/model"
 import { DeploymentTargetConfig } from "../../../../config/targets-config"
-
-import { AccountId, IamRoleArn } from "../../../../takomo-aws-model"
 import {
   DeploymentGroupName,
   DeploymentGroupPath,

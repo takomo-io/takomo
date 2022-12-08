@@ -4,7 +4,7 @@ import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
   TemplateSummary,
-} from "../../../../takomo-aws-model"
+} from "../../../../aws/cloudformation/model"
 
 import { InternalStack } from "../../../../stacks/stack"
 import { arrayToMap } from "../../../../utils/collections"

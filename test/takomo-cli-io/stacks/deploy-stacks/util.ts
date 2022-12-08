@@ -3,10 +3,8 @@ import {
   StackParameterKey,
   StackParameterNoEcho,
   StackParameterValue,
-  Tag,
-  TagKey,
-  TagValue,
-} from "../../../../src/takomo-aws-model"
+} from "../../../../src/aws/cloudformation/model"
+import { Tag, TagKey, TagValue } from "../../../../src/aws/common/model"
 import {
   ParameterOperation,
   ParameterSpec,

@@ -1,10 +1,9 @@
-import { InternalStack } from "../../../stacks/stack"
 import {
   ALLOW_ALL_STACK_POLICY,
   DetailedCloudFormationStack,
   StackPolicyBody,
-} from "../../../takomo-aws-model"
-
+} from "../../../aws/cloudformation/model"
+import { InternalStack } from "../../../stacks/stack"
 import { bold, green } from "../../../utils/colors"
 import { prettyPrintJson } from "../../../utils/json"
 import { diffStrings } from "../../../utils/strings"

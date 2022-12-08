@@ -1,6 +1,6 @@
+import { InternalCredentialManager } from "../../../aws/common/credentials"
 import { CommandPath } from "../../../command/command-model"
 import { ConfigSet } from "../../../config-sets/config-set-model"
-import { InternalCredentialManager } from "../../../takomo-aws-clients"
 import { CommandOutput, OperationState } from "../../../takomo-core/command"
 import { TkmLogger } from "../../../utils/logging"
 import { Timer } from "../../../utils/timer"

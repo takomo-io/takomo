@@ -2,10 +2,8 @@ import R from "ramda"
 import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
-  Tag,
-  TagKey,
-  TagValue,
-} from "../../../takomo-aws-model"
+} from "../../../aws/cloudformation/model"
+import { Tag, TagKey, TagValue } from "../../../aws/common/model"
 import { bold, green, red, yellow } from "../../../utils/colors"
 import { BaseIO } from "../../cli-io"
 import { printValue } from "./common"

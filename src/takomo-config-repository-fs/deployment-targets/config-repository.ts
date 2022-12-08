@@ -2,7 +2,6 @@ import { basename, join } from "path"
 import R from "ramda"
 import { createHookRegistry } from "../../hooks/hook-registry"
 import { ResolverRegistry } from "../../resolvers/resolver-registry"
-import { CredentialManager } from "../../takomo-aws-clients"
 import {
   createDeploymentTargetConfigItemSchema,
   createDeploymentTargetRepositoryRegistry,
@@ -12,6 +11,7 @@ import {
 } from "../../takomo-deployment-targets-repository"
 import { StacksConfigRepository } from "../../takomo-stacks-context"
 
+import { CredentialManager } from "../../aws/common/credentials"
 import { Cache } from "../../caches/cache"
 import { ConfigSetName } from "../../config-sets/config-set-model"
 import { DeploymentConfig } from "../../config/targets-config"

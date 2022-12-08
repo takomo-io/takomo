@@ -4,12 +4,6 @@ import inquirer from "inquirer"
 import os from "os"
 import R from "ramda"
 import { Arguments } from "yargs"
-import {
-  createAwsClientProvider,
-  CredentialManager,
-  initDefaultCredentialManager,
-  InternalCredentialManager,
-} from "../takomo-aws-clients"
 import { formatCommandStatus } from "../takomo-cli-io"
 import {
   createFileSystemCommandContext,
@@ -22,6 +16,12 @@ import {
   IO,
 } from "../takomo-core/command"
 
+import { createAwsClientProvider } from "../aws/aws-client-provider"
+import {
+  CredentialManager,
+  initDefaultCredentialManager,
+  InternalCredentialManager,
+} from "../aws/common/credentials"
 import { InternalCommandContext } from "../context/command-context"
 import { parseBoolean, parseStringArray } from "../parser/common-parser"
 import { collectFromHierarchy } from "../utils/collections"

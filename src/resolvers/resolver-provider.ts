@@ -26,6 +26,8 @@ export interface ResolverProviderSchemaProps {
   readonly base: Joi.ObjectSchema
 }
 
+export type ResolverConfig = ParameterConfig
+
 /**
  * An interface to be implemented by objects that initialize {@linkcode Resolver}
  * objects.
@@ -39,7 +41,7 @@ export interface ResolverProvider {
   /**
    * Initialize a resolver.
    */
-  readonly init: (config: ParameterConfig) => Promise<Resolver>
+  readonly init: (config: ResolverConfig) => Promise<Resolver>
 
   /**
    * Create a schema used to validate properties used to initialize a new resolver.

@@ -1,5 +1,5 @@
+import { StackParameterKey } from "../../aws/cloudformation/model"
 import { ParameterConfigs } from "../../config/common-config"
-import { StackParameterKey } from "../../takomo-aws-model"
 import { parseParameter } from "./parse-parameter"
 
 export const parseParameters = (
