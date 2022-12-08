@@ -113,6 +113,12 @@ export class ResolverRegistry {
     return this.registerProvider(provider, "built-in providers")
   }
 
+  registerProviderFromSource = async (
+    provider: ResolverProvider,
+  ): Promise<void> => {
+    return this.registerProvider(provider, "source providers")
+  }
+
   registerProviderFromNpmPackage = (config: ExternalResolverConfig): void => {
     // eslint-disable-next-line
     const provider = require(config.package)

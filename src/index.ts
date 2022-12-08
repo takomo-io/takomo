@@ -16,6 +16,7 @@ export {
   ConfigSetName,
   StageName,
 } from "./config-sets/config-set-model"
+export { ParameterConfig } from "./config/common-config"
 export {
   DeploymentTargetRepositoryConfig,
   TakomoProjectConfig,
