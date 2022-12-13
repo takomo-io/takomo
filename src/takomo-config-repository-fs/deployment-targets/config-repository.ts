@@ -22,10 +22,10 @@ import {
   createDeploymentTargetsSchemaRegistry,
   DeploymentGroupPath,
 } from "../../targets/targets-model"
+import { TemplateEngine } from "../../templating/template-engine"
 import { TakomoError } from "../../utils/errors"
 import { dirExists, FilePath } from "../../utils/files"
 import { TkmLogger } from "../../utils/logging"
-import { TemplateEngine } from "../../utils/templating"
 import { createFileSystemCache } from "../cache"
 import { loadConfigSetsFromConfigSetsDir } from "../config-sets/config-sets-loader"
 import {

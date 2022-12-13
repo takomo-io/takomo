@@ -1,0 +1,7 @@
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+Outputs:
+  accountId:
+    Value: @var.ACCOUNT_1_ID@
+    Description: My output

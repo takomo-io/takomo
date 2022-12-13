@@ -1,6 +1,7 @@
 import path from "path"
 import { StackConfig } from "../../config/stack-config"
 import { InternalCommandContext } from "../../context/command-context"
+import { TakomoConfig } from "../../extensions/config-customizer"
 import { HookRegistry } from "../../hooks/hook-registry"
 import { ResolverRegistry } from "../../resolvers/resolver-registry"
 import { BlueprintPath } from "../../stacks/stack"
@@ -11,7 +12,7 @@ import {
 } from "../../takomo-stacks-context"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { TakomoError } from "../../utils/errors"
+import { HandlebarsTemplateEngineProvider } from "../../templating/handlebars/handlebars-template-engine-provider"
 import {
   dirExists,
   fileExists,
@@ -19,8 +20,6 @@ import {
   readFileContents,
 } from "../../utils/files"
 import { TkmLogger } from "../../utils/logging"
-import { createTemplateEngine, renderTemplate } from "../../utils/templating"
-import { loadTemplateHelpers, loadTemplatePartials } from "../template-engine"
 import { buildStackGroupConfigNode } from "./config-tree"
 import {
   loadCustomHooks,
@@ -46,6 +45,26 @@ export interface FileSystemStacksConfigRepositoryProps {
   readonly stackGroupConfigFileName: string
 }
 
+const loadProjectConfig = async (
+  ctx: InternalCommandContext,
+  projectDir: FilePath,
+  logger: TkmLogger,
+): Promise<TakomoConfig> => {
+  if (
+    ctx.projectConfig.esbuild.enabled &&
+    (await fileExists(ctx.projectConfig.esbuild.outFile))
+  ) {
+    logger.debug(
+      `Load project config from compiled typescript file: ${ctx.projectConfig.esbuild.outFile}`,
+    )
+
+    const configProvider = await import(ctx.projectConfig.esbuild.outFile)
+    return configProvider.default({ projectDir })
+  } else {
+    return {}
+  }
+}
+
 export const createFileSystemStacksConfigRepository = async ({
   ctx,
   logger,
@@ -59,48 +78,23 @@ export const createFileSystemStacksConfigRepository = async ({
   templatesDir,
   schemasDir,
   blueprintsDir,
+  projectDir,
 }: FileSystemStacksConfigRepositoryProps): Promise<StacksConfigRepository> => {
-  const templateEngine = createTemplateEngine()
+  const takomoConfig = await loadProjectConfig(ctx, projectDir, logger)
 
-  ctx.projectConfig.helpers.forEach((config) => {
-    logger.debug(
-      `Register Handlebars helper from NPM package: ${config.package}`,
-    )
-    // eslint-disable-next-line
-    const helper = require(config.package)
-    const helperWithName = config.name
-      ? { ...helper, name: config.name }
-      : helper
+  const templateEngineProvider =
+    takomoConfig.templateEngineProvider ??
+    new HandlebarsTemplateEngineProvider({
+      logger,
+      partialsDir,
+      helpersDir,
+      projectConfig: ctx.projectConfig,
+    })
 
-    if (typeof helperWithName.fn !== "function") {
-      throw new TakomoError(
-        `Handlebars helper loaded from an NPM package ${config.package} does not export property 'fn' of type function`,
-      )
-    }
-
-    if (typeof helperWithName.name !== "string") {
-      throw new TakomoError(
-        `Handlebars helper loaded from an NPM package ${config.package} does not export property 'name' of type string`,
-      )
-    }
-
-    templateEngine.registerHelper(helperWithName.name, helperWithName.fn)
+  const templateEngine = await templateEngineProvider.init({
+    projectDir,
+    logger,
   })
-
-  const defaultHelpersDirExists = await dirExists(helpersDir)
-  const additionalHelpersDirs = ctx.projectConfig.helpersDir
-
-  const helpersDirs = defaultHelpersDirExists
-    ? [helpersDir, ...additionalHelpersDirs]
-    : additionalHelpersDirs
-
-  const defaultPartialsDirExists = await dirExists(partialsDir)
-  const additionalPartialsDirs = ctx.projectConfig.partialsDir
-
-  const partialsDirs = defaultPartialsDirExists
-    ? [partialsDir, ...additionalPartialsDirs]
-    : additionalPartialsDirs
-
   const defaultSchemasDirExists = await dirExists(schemasDir)
   const additionalSchemasDirs = ctx.projectConfig.schemasDir
 
@@ -108,35 +102,21 @@ export const createFileSystemStacksConfigRepository = async ({
     ? [schemasDir, ...additionalSchemasDirs]
     : additionalSchemasDirs
 
-  await Promise.all([
-    loadTemplateHelpers(helpersDirs, logger, templateEngine),
-    loadTemplatePartials(partialsDirs, logger, templateEngine),
-  ])
-
   const getStackTemplateContentsFromFile = async (
     variables: any,
     filename: string,
     dynamic: boolean,
   ): Promise<string> => {
-    const pathToTemplate = path.join(templatesDir, filename)
-    const content = await readFileContents(pathToTemplate)
+    const pathToFile = path.join(templatesDir, filename)
 
     if (!dynamic) {
-      return content
+      return readFileContents(pathToFile)
     }
 
-    logger.traceText("Raw template body:", () => content)
-    logger.traceObject("Render template using variables:", () => variables)
-
-    const renderedContent = await renderTemplate(
-      templateEngine,
-      pathToTemplate,
-      content,
+    return templateEngine.renderTemplateFile({
+      pathToFile,
       variables,
-    )
-
-    logger.traceText("Final rendered template:", () => renderedContent)
-    return renderedContent
+    })
   }
 
   const getStackTemplateContentsFromInline = async (
@@ -148,18 +128,10 @@ export const createFileSystemStacksConfigRepository = async ({
       return content
     }
 
-    logger.traceText("Raw template body:", () => content)
-    logger.traceObject("Render template using variables:", () => variables)
-
-    const renderedContent = await renderTemplate(
-      templateEngine,
-      "inlined template",
-      content,
+    return templateEngine.renderTemplate({
+      templateString: content,
       variables,
-    )
-
-    logger.traceText("Final rendered template:", () => renderedContent)
-    return renderedContent
+    })
   }
 
   return {
@@ -187,42 +159,31 @@ export const createFileSystemStacksConfigRepository = async ({
         loadCustomSchemas({ schemasDirs, logger, registry: schemaRegistry }),
       ])
 
-      if (
-        ctx.projectConfig.esbuild.enabled &&
-        (await fileExists(ctx.projectConfig.esbuild.outFile))
-      ) {
-        logger.debug(
-          `Load project config from compiled typescript config: ${ctx.projectConfig.esbuild.outFile}`,
+      for (const [i, provider] of (
+        takomoConfig.hookProviders ?? []
+      ).entries()) {
+        await hookRegistry.registerProviderFromSource(
+          provider,
+          `${ctx.projectConfig.esbuild.entryPoint}#hookProviders[${i}]`,
         )
-        const configProvider = await import(ctx.projectConfig.esbuild.outFile)
-        const takomoConfig = await configProvider.default({})
+      }
 
-        for (const [i, provider] of (
-          takomoConfig.hookProviders ?? []
-        ).entries()) {
-          await hookRegistry.registerProviderFromSource(
-            provider,
-            `${ctx.projectConfig.esbuild}#hookProviders[${i}]`,
-          )
-        }
+      for (const [i, provider] of (
+        takomoConfig.resolverProviders ?? []
+      ).entries()) {
+        await resolverRegistry.registerProviderFromSource(
+          provider,
+          `${ctx.projectConfig.esbuild.entryPoint}#resolverProviders[${i}]`,
+        )
+      }
 
-        for (const [i, provider] of (
-          takomoConfig.resolverProviders ?? []
-        ).entries()) {
-          await resolverRegistry.registerProviderFromSource(
-            provider,
-            `${ctx.projectConfig.esbuild}#resolverProviders[${i}]`,
-          )
-        }
-
-        for (const [i, provider] of (
-          takomoConfig.schemaProviders ?? []
-        ).entries()) {
-          await schemaRegistry.registerFromSource(
-            provider,
-            `${ctx.projectConfig.esbuild}#schemaProviders[${i}]`,
-          )
-        }
+      for (const [i, provider] of (
+        takomoConfig.schemaProviders ?? []
+      ).entries()) {
+        await schemaRegistry.registerFromSource(
+          provider,
+          `${ctx.projectConfig.esbuild.entryPoint}#schemaProviders[${i}]`,
+        )
       }
     },
 

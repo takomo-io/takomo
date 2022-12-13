@@ -5,15 +5,10 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "../targets/targets-model"
+import { TemplateEngine } from "../templating/template-engine"
 import { TakomoError } from "../utils/errors"
-import {
-  dirExists,
-  expandFilePath,
-  FilePath,
-  readFileContents,
-} from "../utils/files"
+import { dirExists, expandFilePath, FilePath } from "../utils/files"
 import { TkmLogger } from "../utils/logging"
-import { renderTemplate, TemplateEngine } from "../utils/templating"
 import { parseYaml } from "../utils/yaml"
 import {
   DeploymentTargetConfigItem,
@@ -77,13 +72,10 @@ const loadDeploymentTargetFile = async (
 ): Promise<DeploymentTargetConfigItemWrapper> => {
   const { templateEngine, variables, pathToFile } = props
 
-  const contents = await readFileContents(pathToFile)
-  const rendered = await renderTemplate(
-    templateEngine,
+  const rendered = await templateEngine.renderTemplateFile({
     pathToFile,
-    contents,
     variables,
-  )
+  })
 
   const item = (await parseYaml(
     pathToFile,

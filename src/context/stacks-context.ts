@@ -1,7 +1,7 @@
 import { CredentialManager } from "../aws/common/credentials"
 import { InternalStack, Stack, StackPath } from "../stacks/stack"
 import { StackGroup, StackGroupPath } from "../stacks/stack-group"
-import { TemplateEngine } from "../utils/templating"
+import { TemplateEngine } from "../templating/template-engine"
 import { CommandContext, InternalCommandContext } from "./command-context"
 
 /**
