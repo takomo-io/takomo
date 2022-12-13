@@ -1,7 +1,6 @@
 # Takomo
 
 ![GitHub](https://img.shields.io/github/license/takomo-io/takomo)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/takomo-io/takomo/Default)
 ![npm](https://img.shields.io/npm/v/takomo)
 ![node-current](https://img.shields.io/node/v/takomo)
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/takomo-io/community)

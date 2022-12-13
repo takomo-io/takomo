@@ -1,6 +1,7 @@
 import { HookProvider } from "../hooks/hook-provider"
 import { ResolverProvider } from "../resolvers/resolver-provider"
 import { SchemaProvider } from "../takomo-stacks-model/schemas"
+import { TemplateEngineProvider } from "../templating/template-engine-provider"
 import { FilePath } from "../utils/files"
 
 /**
@@ -21,6 +22,11 @@ export interface TakomoConfig {
    * List of schema providers.
    */
   readonly schemaProviders?: Array<SchemaProvider>
+
+  /**
+   * Template engine provider.
+   */
+  readonly templateEngineProvider?: TemplateEngineProvider
 }
 
 /**

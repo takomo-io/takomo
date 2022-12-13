@@ -10,8 +10,8 @@ import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "../targets/targets-model"
+import { TemplateEngine } from "../templating/template-engine"
 import { TkmLogger } from "../utils/logging"
-import { TemplateEngine } from "../utils/templating"
 
 export interface DeploymentTargetConfigItem
   extends Partial<DeploymentTargetConfig> {
