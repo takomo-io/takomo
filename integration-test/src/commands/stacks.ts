@@ -5,10 +5,8 @@ import { detectDriftCommand } from "../../../src/command/stacks/drift/command"
 import { listStacksCommand } from "../../../src/command/stacks/list/command"
 import { undeployStacksCommand } from "../../../src/command/stacks/undeploy/command"
 import { InternalCommandContext } from "../../../src/context/command-context"
-import {
-  createFileSystemStacksConfigRepository,
-  FileSystemCommandContext,
-} from "../../../src/takomo-config-repository-fs"
+import { FileSystemCommandContext } from "../../../src/takomo-config-repository-fs/context/create-file-system-command-context"
+import { createFileSystemStacksConfigRepository } from "../../../src/takomo-config-repository-fs/stacks/config-repository"
 import { StacksConfigRepository } from "../../../src/takomo-stacks-context"
 import { ROOT_STACK_GROUP_PATH } from "../../../src/takomo-stacks-model/constants"
 import { FilePath } from "../../../src/utils/files"

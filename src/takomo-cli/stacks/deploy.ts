@@ -3,7 +3,7 @@ import { CommandPath } from "../../command/command-model"
 import { deployStacksCommand } from "../../command/stacks/deploy/command"
 import { deployStacksCommandIamPolicy } from "../../command/stacks/deploy/iam-policy"
 import { createDeployStacksIO } from "../../takomo-cli-io"
-import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs"
+import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { commonEpilog, handle, RunProps } from "../common"
 import {

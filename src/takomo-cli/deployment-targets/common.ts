@@ -7,7 +7,7 @@ import {
   ConfigSetType,
 } from "../../config-sets/config-set-model"
 import { IOProps } from "../../takomo-cli-io"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
