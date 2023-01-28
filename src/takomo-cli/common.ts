@@ -6,10 +6,6 @@ import R from "ramda"
 import { Arguments } from "yargs"
 import { formatCommandStatus } from "../takomo-cli-io"
 import {
-  createFileSystemCommandContext,
-  FileSystemCommandContext,
-} from "../takomo-config-repository-fs"
-import {
   CommandHandler,
   CommandInput,
   CommandOutput,
@@ -24,6 +20,10 @@ import {
 } from "../aws/common/credentials"
 import { InternalCommandContext } from "../context/command-context"
 import { parseBoolean, parseStringArray } from "../parser/common-parser"
+import {
+  createFileSystemCommandContext,
+  FileSystemCommandContext,
+} from "../takomo-config-repository-fs/context/create-file-system-command-context"
 import { collectFromHierarchy } from "../utils/collections"
 import { red } from "../utils/colors"
 import { expandFilePath, FilePath } from "../utils/files"

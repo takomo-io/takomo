@@ -1,7 +1,7 @@
 import { Arguments, Argv, CommandModule } from "yargs"
 import { deploymentTargetsRunCommand } from "../../command/targets/run/command"
 import { createRunTargetsIO } from "../../takomo-cli-io"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
 import { OutputFormat } from "../../takomo-core/command"
 import {
   DeploymentGroupPath,

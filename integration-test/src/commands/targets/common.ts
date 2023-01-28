@@ -4,10 +4,8 @@ import {
 } from "../../../../src/aws/common/credentials"
 import { InternalCommandContext } from "../../../../src/context/command-context"
 import { DeploymentTargetsConfigRepository } from "../../../../src/context/targets-context"
-import {
-  createFileSystemDeploymentTargetsConfigRepository,
-  FileSystemCommandContext,
-} from "../../../../src/takomo-config-repository-fs"
+import { FileSystemCommandContext } from "../../../../src/takomo-config-repository-fs/context/create-file-system-command-context"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../../../src/takomo-config-repository-fs/deployment-targets/config-repository"
 import { createConsoleLogger, TkmLogger } from "../../../../src/utils/logging"
 import { createTestCommandContext } from "../common"
 import { CreateCtxAndConfigRepositoryProps } from "../stacks"

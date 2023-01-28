@@ -2,7 +2,7 @@ import { Arguments, Argv, CommandModule } from "yargs"
 import { CommandPath } from "../../../command/command-model"
 import { showConfigurationCommand } from "../../../command/stacks/inspect/configuration/command"
 import { createShowConfigurationIO } from "../../../takomo-cli-io"
-import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs"
+import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository"
 import { ROOT_STACK_GROUP_PATH } from "../../../takomo-stacks-model/constants"
 import { handle, RunProps } from "../../common"
 import {

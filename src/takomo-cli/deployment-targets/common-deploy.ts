@@ -1,11 +1,10 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { IOProps } from "../../takomo-cli-io"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs"
-
 import { DeploymentOperation } from "../../command/command-model"
 import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command"
 import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
 import { ConfigSetType } from "../../config-sets/config-set-model"
+import { IOProps } from "../../takomo-cli-io"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
 import { commonEpilog, handle, RunProps } from "../common"
 import {
   COMMAND_PATH_OPT,

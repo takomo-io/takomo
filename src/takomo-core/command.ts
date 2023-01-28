@@ -10,11 +10,6 @@ export interface OperationState {
   failed: boolean
 }
 
-export enum ConfirmResult {
-  YES,
-  NO,
-}
-
 export interface CommandRole {
   readonly iamRoleArn: IamRoleArn
 }
