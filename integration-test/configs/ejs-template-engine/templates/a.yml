@@ -1,0 +1,10 @@
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+Outputs:
+  First:
+    Value: <%= it.var.message %>
+    Description: first
+  Second:
+    Value: <%= it.stack.data.second %>
+    Description: second

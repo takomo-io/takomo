@@ -63,6 +63,8 @@ export interface EsbuildConfig {
   readonly entryPoint: FilePath
 }
 
+export type TemplateEngineType = "handlebars" | "ejs"
+
 export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly resolvers: ReadonlyArray<ExternalResolverConfig>
   readonly helpers: ReadonlyArray<ExternalHandlebarsHelperConfig>
@@ -72,6 +74,7 @@ export interface InternalTakomoProjectConfig extends TakomoProjectConfig {
   readonly partialsDir: ReadonlyArray<FilePath>
   readonly schemasDir: ReadonlyArray<FilePath>
   readonly esbuild: EsbuildConfig
+  readonly templateEngine: TemplateEngineType
 }
 
 export class FeatureDisabledError extends TakomoError {

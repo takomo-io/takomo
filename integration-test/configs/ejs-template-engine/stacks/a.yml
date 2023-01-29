@@ -1,0 +1,4 @@
+commandRole: arn:aws:iam::<%= it.var.ACCOUNT_1_ID %>:role/OrganizationAccountAccessRole
+regions: eu-north-1
+data:
+  second: using Ejs

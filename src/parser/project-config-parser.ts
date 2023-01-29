@@ -230,6 +230,7 @@ export const parseProjectConfigItem = (
     requiredVersion: contents.requiredVersion ?? parentConfig.requiredVersion,
     deploymentTargets: deploymentTargets ?? parentConfig.deploymentTargets,
     esbuild: esbuild ?? parentConfig.esbuild,
+    templateEngine: contents.templateEngine ?? parentConfig.templateEngine,
   }
 }
 
@@ -316,6 +317,7 @@ const esbuild = Joi.object({
 
 export const takomoProjectConfigFileSchema = Joi.object({
   extends: Joi.string(),
+  templateEngine: Joi.string().valid("handlebars", "ejs"),
   requiredVersion: Joi.string(),
   deploymentTargets: Joi.object({
     repository: [
@@ -347,6 +349,7 @@ const createDefaultProjectConfig = (
   varFiles: [],
   features: defaultFeatures(),
   esbuild: defaultEsbuild(projectDir),
+  templateEngine: "handlebars",
 })
 
 const parseProjectConfigFiles = async (

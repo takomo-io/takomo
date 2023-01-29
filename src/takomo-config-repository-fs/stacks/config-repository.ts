@@ -12,6 +12,7 @@ import {
 } from "../../takomo-stacks-context"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
+import { EjsTemplateEngineProvider } from "../../templating/ejs/ejs-template-engine-provider"
 import { HandlebarsTemplateEngineProvider } from "../../templating/handlebars/handlebars-template-engine-provider"
 import {
   dirExists,
@@ -84,12 +85,14 @@ export const createFileSystemStacksConfigRepository = async ({
 
   const templateEngineProvider =
     takomoConfig.templateEngineProvider ??
-    new HandlebarsTemplateEngineProvider({
-      logger,
-      partialsDir,
-      helpersDir,
-      projectConfig: ctx.projectConfig,
-    })
+    ctx.projectConfig.templateEngine === "ejs"
+      ? new EjsTemplateEngineProvider({ logger })
+      : new HandlebarsTemplateEngineProvider({
+          logger,
+          partialsDir,
+          helpersDir,
+          projectConfig: ctx.projectConfig,
+        })
 
   const templateEngine = await templateEngineProvider.init({
     projectDir,
