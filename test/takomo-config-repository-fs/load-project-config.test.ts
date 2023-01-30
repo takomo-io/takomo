@@ -35,6 +35,7 @@ describe("#loadProjectConfig", () => {
       varFiles: [],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -59,6 +60,7 @@ describe("#loadProjectConfig", () => {
       varFiles: [],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -83,6 +85,7 @@ describe("#loadProjectConfig", () => {
       varFiles: [],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -119,6 +122,7 @@ describe("#loadProjectConfig", () => {
         },
       ],
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -155,6 +159,7 @@ describe("#loadProjectConfig", () => {
       partialsDir: [],
       schemasDir: [],
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -182,6 +187,7 @@ describe("#loadProjectConfig", () => {
       ],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -209,6 +215,7 @@ describe("#loadProjectConfig", () => {
       varFiles: [],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -235,6 +242,7 @@ describe("#loadProjectConfig", () => {
       varFiles: [],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -264,6 +272,7 @@ describe("#loadProjectConfig", () => {
       ],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)
@@ -288,6 +297,7 @@ describe("#loadProjectConfig", () => {
       varFiles: [],
       features: defaultFeatures(),
       esbuild: defaultEsbuild(projectDir),
+      templateEngine: "handlebars",
     }
 
     expect(config).toStrictEqual(expected)

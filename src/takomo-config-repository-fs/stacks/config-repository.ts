@@ -1,4 +1,5 @@
 import path from "path"
+import { InternalTakomoProjectConfig } from "../../config/project-config"
 import { StackConfig } from "../../config/stack-config"
 import { InternalCommandContext } from "../../context/command-context"
 import { TakomoConfig } from "../../extensions/config-customizer"
@@ -14,6 +15,7 @@ import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
 import { EjsTemplateEngineProvider } from "../../templating/ejs/ejs-template-engine-provider"
 import { HandlebarsTemplateEngineProvider } from "../../templating/handlebars/handlebars-template-engine-provider"
+import { TemplateEngineProvider } from "../../templating/template-engine-provider"
 import {
   dirExists,
   fileExists,
@@ -66,6 +68,27 @@ const loadProjectConfig = async (
   }
 }
 
+const getTemplateEngineProvider = (
+  takomoConfig: TakomoConfig,
+  projectConfig: InternalTakomoProjectConfig,
+  logger: TkmLogger,
+  partialsDir: FilePath,
+  helpersDir: FilePath,
+): TemplateEngineProvider => {
+  if (takomoConfig.templateEngineProvider) {
+    return takomoConfig.templateEngineProvider
+  }
+
+  return projectConfig.templateEngine === "ejs"
+    ? new EjsTemplateEngineProvider({ logger })
+    : new HandlebarsTemplateEngineProvider({
+        logger,
+        partialsDir,
+        helpersDir,
+        projectConfig,
+      })
+}
+
 export const createFileSystemStacksConfigRepository = async ({
   ctx,
   logger,
@@ -83,16 +106,13 @@ export const createFileSystemStacksConfigRepository = async ({
 }: FileSystemStacksConfigRepositoryProps): Promise<StacksConfigRepository> => {
   const takomoConfig = await loadProjectConfig(ctx, projectDir, logger)
 
-  const templateEngineProvider =
-    takomoConfig.templateEngineProvider ??
-    ctx.projectConfig.templateEngine === "ejs"
-      ? new EjsTemplateEngineProvider({ logger })
-      : new HandlebarsTemplateEngineProvider({
-          logger,
-          partialsDir,
-          helpersDir,
-          projectConfig: ctx.projectConfig,
-        })
+  const templateEngineProvider = getTemplateEngineProvider(
+    takomoConfig,
+    ctx.projectConfig,
+    logger,
+    partialsDir,
+    helpersDir,
+  )
 
   const templateEngine = await templateEngineProvider.init({
     projectDir,
