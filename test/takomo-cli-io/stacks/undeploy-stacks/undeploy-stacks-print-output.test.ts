@@ -1,6 +1,6 @@
 import { mock } from "jest-mock-extended"
 import dedent from "ts-dedent"
-import { createUndeployStacksIO } from "../../../../src/takomo-cli-io"
+import { createUndeployStacksIO } from "../../../../src/cli-io"
 import { InternalStack, StackResult } from "../../../../src/takomo-stacks-model"
 import { green } from "../../../../src/utils/colors"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"

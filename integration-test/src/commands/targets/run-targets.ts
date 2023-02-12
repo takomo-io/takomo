@@ -73,7 +73,7 @@ export const executeRunTargetsCommand = (
   props: ExecuteRunTargetsCommandProps,
 ): TargetsRunOutputMatcher =>
   createTargetsRunOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "info"
+    const logLevel = props.logLevel ?? "error"
 
     const logger = createConsoleLogger({
       logLevel,

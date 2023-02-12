@@ -1,11 +1,8 @@
 import { mock } from "jest-mock-extended"
 import dedent from "ts-dedent"
+import { createDeployTargetsIO, UserActions } from "../../../../src/cli-io"
 import { PlannedDeploymentTarget } from "../../../../src/command/targets/common/plan/model"
 import { TargetsExecutionPlan } from "../../../../src/command/targets/operation/model"
-import {
-  createDeployTargetsIO,
-  UserActions,
-} from "../../../../src/takomo-cli-io"
 import { bold } from "../../../../src/utils/colors"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"

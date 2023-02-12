@@ -1,33 +1,44 @@
 import { Arguments, Argv, CommandModule } from "yargs"
+import { createShowConfigurationIO } from "../../../cli-io"
 import { CommandPath } from "../../../command/command-model"
-import { dependencyGraphCommand } from "../../../command/stacks/inspect/dependency-graph/command"
-import { createDependencyGraphIO } from "../../../takomo-cli-io"
+import { showConfigurationCommand } from "../../../command/stacks/inspect/configuration/command"
 import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository"
 import { ROOT_STACK_GROUP_PATH } from "../../../takomo-stacks-model/constants"
 import { handle, RunProps } from "../../common"
-import { COMMAND_PATH_OPT } from "../../constants"
+import {
+  COMMAND_PATH_OPT,
+  INTERACTIVE_OPT,
+  outputFormatOptions,
+} from "../../constants"
+import { interactiveCommandPathSelectionOptions } from "../common"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath
+  readonly [INTERACTIVE_OPT]: boolean
 }
 
-const command = `dependency-graph [${COMMAND_PATH_OPT}]`
-const describe = "Show dependency graph of stacks within the given command path"
+const command = `configuration [${COMMAND_PATH_OPT}]`
+const describe = "Show configuration of stacks within the given command path"
 
 const builder = (yargs: Argv<CommandArgs>) =>
-  yargs.positional(COMMAND_PATH_OPT, {
-    describe: "Show dependency graph within this path",
-    string: true,
-    default: ROOT_STACK_GROUP_PATH,
-  })
+  yargs
+    .positional(COMMAND_PATH_OPT, {
+      describe: "Show configuration within this path",
+      default: ROOT_STACK_GROUP_PATH,
+    })
+    .options({
+      ...interactiveCommandPathSelectionOptions,
+      ...outputFormatOptions,
+    })
 
 const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
-    io: (ctx, logger) => createDependencyGraphIO({ logger }),
+    io: (ctx, logger) => createShowConfigurationIO({ logger }),
     input: async (ctx, input) => ({
       ...input,
       commandPath: argv[COMMAND_PATH_OPT],
+      interactive: argv.interactive,
     }),
     configRepository: (ctx, logger) =>
       createFileSystemStacksConfigRepository({
@@ -35,10 +46,10 @@ const handler = (argv: Arguments<CommandArgs>) =>
         logger,
         ...ctx.filePaths,
       }),
-    executor: dependencyGraphCommand,
+    executor: showConfigurationCommand,
   })
 
-export const dependencyGraphCmd = ({
+export const configurationCmd = ({
   overridingHandler,
 }: RunProps): CommandModule<CommandArgs, CommandArgs> => ({
   command,

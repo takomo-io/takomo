@@ -1,15 +1,15 @@
+import { createTearDownTargetsIO } from "../../cli-io"
 import { undeployTargetsOperationCommandIamPolicy } from "../../command/targets/operation/iam-policy"
-import { createUndeployTargetsIO } from "../../takomo-cli-io"
 import { GROUPS_OPT, targetsOperationCommand } from "./common"
 
-const command = `undeploy [${GROUPS_OPT}..]`
-const describe = "Undeploy deployment targets"
+const command = `tear-down [${GROUPS_OPT}..]`
+const describe = "Tear down deployment targets"
 
-export const undeployTargetsCmd = targetsOperationCommand({
+export const tearDownTargetsCmd = targetsOperationCommand({
   command,
   describe,
-  configSetType: "standard",
+  configSetType: "bootstrap",
   operation: "undeploy",
   iamPolicyProvider: undeployTargetsOperationCommandIamPolicy,
-  io: createUndeployTargetsIO,
+  io: createTearDownTargetsIO,
 })

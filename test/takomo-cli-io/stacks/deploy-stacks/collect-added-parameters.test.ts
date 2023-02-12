@@ -1,4 +1,4 @@
-import { collectAddedParameters } from "../../../../src/takomo-cli-io/stacks/deploy-stacks/parameters"
+import { collectAddedParameters } from "../../../../src/cli-io/stacks/deploy-stacks/parameters"
 import { param, paramSpec } from "./util"
 
 describe("#collectAddedParameters", () => {

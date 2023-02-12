@@ -1,4 +1,4 @@
-import { collectRemovedParameters } from "../../../../src/takomo-cli-io/stacks/deploy-stacks/parameters"
+import { collectRemovedParameters } from "../../../../src/cli-io/stacks/deploy-stacks/parameters"
 import { param, paramSpec } from "./util"
 
 describe("#collectRemovedParameters", () => {

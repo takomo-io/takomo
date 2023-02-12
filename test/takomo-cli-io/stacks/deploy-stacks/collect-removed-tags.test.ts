@@ -1,4 +1,4 @@
-import { collectRemovedTags } from "../../../../src/takomo-cli-io/stacks/deploy-stacks/tags"
+import { collectRemovedTags } from "../../../../src/cli-io/stacks/deploy-stacks/tags"
 import { tag, tagSpec } from "./util"
 
 describe("#collectRemovedTags", () => {

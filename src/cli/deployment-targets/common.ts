@@ -1,10 +1,19 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { DeploymentOperation } from "../../command/command-model"
+import { IOProps } from "../../cli-io"
+import { CommandPath, DeploymentOperation } from "../../command/command-model"
 import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command"
 import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
-import { ConfigSetType } from "../../config-sets/config-set-model"
-import { IOProps } from "../../takomo-cli-io"
+import {
+  ConfigSetName,
+  ConfigSetType,
+} from "../../config-sets/config-set-model"
 import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
+import {
+  DeploymentGroupPath,
+  DeploymentTargetName,
+  Label,
+} from "../../targets/targets-model"
+import { FilePath } from "../../utils/files"
 import { commonEpilog, handle, RunProps } from "../common"
 import {
   COMMAND_PATH_OPT,
@@ -13,28 +22,28 @@ import {
   CONFIG_SET_OPT,
   EXCLUDE_LABEL_OPT,
   EXCLUDE_TARGET_OPT,
-  EXPECT_NO_CHANGES_OPT,
   LABEL_OPT,
   RESET_CACHE_OPT,
   TARGET_OPT,
 } from "../constants"
-import { DeploymentTargetsOperationCommandArgs, GROUPS_OPT } from "./common"
 
-export interface DeploymentTargetsDeployCommandArgs
-  extends DeploymentTargetsOperationCommandArgs {
-  readonly [EXPECT_NO_CHANGES_OPT]: boolean
+export const GROUPS_OPT = "groups"
+
+export interface DeploymentTargetsOperationCommandArgs {
+  readonly [GROUPS_OPT]: ReadonlyArray<DeploymentGroupPath>
+  readonly [TARGET_OPT]: ReadonlyArray<DeploymentTargetName>
+  readonly [EXCLUDE_TARGET_OPT]: ReadonlyArray<DeploymentTargetName>
+  readonly [LABEL_OPT]: ReadonlyArray<Label>
+  readonly [EXCLUDE_LABEL_OPT]: ReadonlyArray<Label>
+  readonly [CONCURRENT_TARGETS_OPT]: number
+  readonly [COMMAND_PATH_OPT]: CommandPath | undefined
+  readonly [CONFIG_SET_OPT]: ConfigSetName | undefined
+  readonly [CONFIG_FILE_OPT]: FilePath | undefined
+  readonly [RESET_CACHE_OPT]: boolean
 }
 
-interface DeploymentTargetsDeployCommandProps {
-  readonly command: string
-  readonly describe: string
-  readonly configSetType: ConfigSetType
-  readonly iamPolicyProvider: () => string
-  readonly io: (props: IOProps) => DeploymentTargetsOperationIO
-}
-
-const deploymentTargetsDeployBuilder = (
-  yargs: Argv<DeploymentTargetsDeployCommandArgs>,
+export const deploymentTargetsOperationBuilder = (
+  yargs: Argv<DeploymentTargetsOperationCommandArgs>,
 ) =>
   yargs
     .options({
@@ -95,13 +104,6 @@ const deploymentTargetsDeployBuilder = (
         global: false,
         demandOption: false,
       },
-      [EXPECT_NO_CHANGES_OPT]: {
-        description: "Expect no changes to stacks",
-        boolean: true,
-        global: false,
-        default: false,
-        demandOption: false,
-      },
       [RESET_CACHE_OPT]: {
         description: "Reset cache before executing the operation",
         boolean: true,
@@ -117,20 +119,20 @@ const deploymentTargetsDeployBuilder = (
       default: [],
     })
 
-const createTargetsDeployBuilder =
+const createTargetsOperationBuilder =
   (iamPolicyProvider: () => string) =>
-  (yargs: Argv<DeploymentTargetsDeployCommandArgs>) =>
-    deploymentTargetsDeployBuilder(yargs).epilog(
+  (yargs: Argv<DeploymentTargetsOperationCommandArgs>) =>
+    deploymentTargetsOperationBuilder(yargs).epilog(
       commonEpilog(iamPolicyProvider),
     )
 
-const createTargetsDeployHandler =
+const createTargetsOperationHandler =
   (
     configSetType: ConfigSetType,
     operation: DeploymentOperation,
     io: (props: IOProps) => DeploymentTargetsOperationIO,
   ) =>
-  (argv: Arguments<DeploymentTargetsDeployCommandArgs>) =>
+  (argv: Arguments<DeploymentTargetsOperationCommandArgs>) =>
     handle({
       argv,
       input: async (ctx, input) => ({
@@ -146,8 +148,8 @@ const createTargetsDeployHandler =
         excludeLabels: argv[EXCLUDE_LABEL_OPT],
         commandPath: argv[COMMAND_PATH_OPT],
         configSetName: argv[CONFIG_SET_OPT],
-        expectNoChanges: argv[EXPECT_NO_CHANGES_OPT],
         resetCache: argv[RESET_CACHE_OPT],
+        expectNoChanges: false,
         prune: false,
       }),
       io: (ctx, logger) => io({ logger }),
@@ -162,24 +164,34 @@ const createTargetsDeployHandler =
       executor: deploymentTargetsOperationCommand,
     })
 
+interface DeploymentTargetsOperationCommandProps {
+  readonly command: string
+  readonly describe: string
+  readonly operation: DeploymentOperation
+  readonly configSetType: ConfigSetType
+  readonly iamPolicyProvider: () => string
+  readonly io: (props: IOProps) => DeploymentTargetsOperationIO
+}
+
 type DeploymentTargetsCommandModule = CommandModule<
-  DeploymentTargetsDeployCommandArgs,
-  DeploymentTargetsDeployCommandArgs
+  DeploymentTargetsOperationCommandArgs,
+  DeploymentTargetsOperationCommandArgs
 >
 
-export const targetsDeployCommand =
+export const targetsOperationCommand =
   ({
     command,
     describe,
+    operation,
     configSetType,
     io,
     iamPolicyProvider,
-  }: DeploymentTargetsDeployCommandProps) =>
+  }: DeploymentTargetsOperationCommandProps) =>
   ({ overridingHandler }: RunProps): DeploymentTargetsCommandModule => ({
     command,
     describe,
-    builder: createTargetsDeployBuilder(iamPolicyProvider),
+    builder: createTargetsOperationBuilder(iamPolicyProvider),
     handler:
       overridingHandler ??
-      createTargetsDeployHandler(configSetType, "deploy", io),
+      createTargetsOperationHandler(configSetType, operation, io),
   })
