@@ -1,4 +1,17 @@
 import { anyArray, anyBoolean, mock } from "jest-mock-extended"
+import {
+  createBootstrapTargetsIO,
+  createDeployStacksIO,
+  createDeployTargetsIO,
+  createDetectDriftIO,
+  createInitProjectIO,
+  createListStacksIO,
+  createRunTargetsIO,
+  createTearDownTargetsIO,
+  createUndeployStacksIO,
+  createUndeployTargetsIO,
+  UserActions,
+} from "../../src/cli-io"
 import { CommandPath } from "../../src/command/command-model"
 import { InitProjectIO } from "../../src/command/init/model"
 import {
@@ -14,19 +27,6 @@ import {
 } from "../../src/command/stacks/undeploy/model"
 import { DeploymentTargetsOperationIO } from "../../src/command/targets/operation/model"
 import { DeploymentTargetsRunIO } from "../../src/command/targets/run/model"
-import {
-  createBootstrapTargetsIO,
-  createDeployStacksIO,
-  createDeployTargetsIO,
-  createDetectDriftIO,
-  createInitProjectIO,
-  createListStacksIO,
-  createRunTargetsIO,
-  createTearDownTargetsIO,
-  createUndeployStacksIO,
-  createUndeployTargetsIO,
-  UserActions,
-} from "../../src/takomo-cli-io"
 import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants"
 import { TkmLogger } from "../../src/utils/logging"
 

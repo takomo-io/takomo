@@ -11,6 +11,7 @@ export {
 } from "./aws/cloudformation/model"
 export { CredentialManager } from "./aws/common/credentials"
 export { CallerIdentity, Tag } from "./aws/common/model"
+export { run } from "./cli"
 export {
   HookOutputValues,
   StackOperationVariables,
@@ -62,7 +63,6 @@ export {
   ResolverProviderSchemaProps,
 } from "./resolvers/resolver-provider"
 export { Stack } from "./stacks/stack"
-export { run } from "./takomo-cli"
 export { CommandRole, OutputFormat } from "./takomo-core/command"
 export { InitSchemaProps, SchemaProvider } from "./takomo-stacks-model/schemas"
 export { DeploymentStatus, Label } from "./targets/targets-model"

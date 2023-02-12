@@ -1,6 +1,6 @@
 import dedent from "ts-dedent"
-import { createListStacksIO } from "../../../../src/takomo-cli-io"
-import { formatDate } from "../../../../src/takomo-cli-io/stacks/common"
+import { createListStacksIO } from "../../../../src/cli-io"
+import { formatDate } from "../../../../src/cli-io/stacks/common"
 import { green } from "../../../../src/utils/colors"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { Timer } from "../../../../src/utils/timer"

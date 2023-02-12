@@ -1,4 +1,4 @@
-import { parseVarFileOptions } from "../../../src/takomo-cli/options/parse-var-file-options"
+import { parseVarFileOptions } from "../../../src/cli/options/parse-var-file-options"
 
 const cases: Array<any[]> = [
   [undefined, []],

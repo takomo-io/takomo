@@ -4,8 +4,8 @@ import {
   CloudFormationStackSummary,
   StackDriftDetectionStatusOutput,
 } from "../../../../src/aws/cloudformation/model"
+import { createDetectDriftIO } from "../../../../src/cli-io"
 import { StackDriftInfo } from "../../../../src/command/stacks/drift/model"
-import { createDetectDriftIO } from "../../../../src/takomo-cli-io"
 import { green, red } from "../../../../src/utils/colors"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
 import { Timer } from "../../../../src/utils/timer"

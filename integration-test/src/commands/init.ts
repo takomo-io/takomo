@@ -57,7 +57,7 @@ export const executeInitProjectCommand = (
   props: ExecuteInitProjectProps,
 ): InitProjectOutputMatcher =>
   createInitProjectOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "info"
+    const logLevel = props.logLevel ?? "error"
 
     const ctxAndConfig = await createCtxAndConfigRepository({
       projectDir: props.projectDir,

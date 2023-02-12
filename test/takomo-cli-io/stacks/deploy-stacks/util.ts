@@ -8,11 +8,11 @@ import { Tag, TagKey, TagValue } from "../../../../src/aws/common/model"
 import {
   ParameterOperation,
   ParameterSpec,
-} from "../../../../src/takomo-cli-io/stacks/deploy-stacks/parameters"
+} from "../../../../src/cli-io/stacks/deploy-stacks/parameters"
 import {
   TagOperation,
   TagSpec,
-} from "../../../../src/takomo-cli-io/stacks/deploy-stacks/tags"
+} from "../../../../src/cli-io/stacks/deploy-stacks/tags"
 
 export const param = (
   key: string,

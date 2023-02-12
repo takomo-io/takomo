@@ -1,8 +1,8 @@
 import { mock } from "jest-mock-extended"
 import { DetailedCloudFormationStack } from "../../../../src/aws/cloudformation/model"
+import { createBaseIO } from "../../../../src/cli-io/cli-io"
+import { printStackPolicy } from "../../../../src/cli-io/stacks/deploy-stacks/stack-policy"
 import { InternalStack } from "../../../../src/stacks/stack"
-import { createBaseIO } from "../../../../src/takomo-cli-io/cli-io"
-import { printStackPolicy } from "../../../../src/takomo-cli-io/stacks/deploy-stacks/stack-policy"
 import { bold, green } from "../../../../src/utils/colors"
 import { createCapturingLogWriter } from "../../../capturing-log-writer"
 

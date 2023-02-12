@@ -1,4 +1,4 @@
-import { parseFeaturesFromArgs } from "../../src/takomo-cli/options/parse-features-from-args"
+import { parseFeaturesFromArgs } from "../../src/cli/options/parse-features-from-args"
 import { Features } from "../../src/takomo-core"
 
 const cases: Array<[any, Partial<Features>]> = [

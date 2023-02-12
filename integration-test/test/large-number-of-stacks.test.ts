@@ -21,13 +21,19 @@ const stacks = createStacks(120)
 
 describe("Large number of stacks", () => {
   test("First deploy", () =>
-    executeDeployStacksCommand({ projectDir, var: ["template=first.yml"] })
+    executeDeployStacksCommand({
+      projectDir,
+      var: ["template=first.yml"],
+    })
       .expectCommandToSucceed()
       .expectStackCreateSuccess(...stacks)
       .assert())
 
   test("Second deploy without changes", () =>
-    executeDeployStacksCommand({ projectDir, var: ["template=first.yml"] })
+    executeDeployStacksCommand({
+      projectDir,
+      var: ["template=first.yml"],
+    })
       .expectCommandToSucceed()
       .expectStackUpdateSuccessWithNoChanges(...stacks)
       .assert())
@@ -46,7 +52,10 @@ describe("Large number of stacks", () => {
       .assert())
 
   test("Third deploy with changes", () =>
-    executeDeployStacksCommand({ projectDir, var: ["template=second.yml"] })
+    executeDeployStacksCommand({
+      projectDir,
+      var: ["template=second.yml"],
+    })
       .expectCommandToSucceed()
       .expectStackUpdateSuccess(...stacks)
       .assert())

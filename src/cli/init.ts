@@ -1,7 +1,7 @@
 import { Arguments, Argv, CommandModule } from "yargs"
 import { Region } from "../aws/common/model"
+import { createInitProjectIO } from "../cli-io"
 import { initProjectCommand } from "../command/init/command"
-import { createInitProjectIO } from "../takomo-cli-io"
 import { createFileSystemProjectConfigRepository } from "../takomo-config-repository-fs/init/config-repository"
 import { Project } from "../takomo-core/command"
 import { handle } from "./common"

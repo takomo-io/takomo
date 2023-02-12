@@ -14,7 +14,7 @@ export const executeTeardownTargetsCommand = (
   props: ExecuteDeployTargetsCommandProps,
 ): TargetsOperationOutputMatcher =>
   createTargetsOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "info"
+    const logLevel = props.logLevel ?? "error"
 
     const logger = createConsoleLogger({
       logLevel,

@@ -1,16 +1,16 @@
 import { mock } from "jest-mock-extended"
 import dedent from "ts-dedent"
 import { CloudFormationStack } from "../../../../src/aws/cloudformation/model"
+import { UserActions } from "../../../../src/cli-io"
+import { createUndeployStacksIO } from "../../../../src/cli-io/"
+import {
+  CONFIRM_UNDEPLOY_ANSWER_CANCEL,
+  CONFIRM_UNDEPLOY_ANSWER_CONTINUE,
+} from "../../../../src/cli-io/stacks/undeploy-stacks-io"
 import {
   StackUndeployOperation,
   StackUndeployOperationType,
 } from "../../../../src/command/stacks/undeploy/plan"
-import { UserActions } from "../../../../src/takomo-cli-io"
-import { createUndeployStacksIO } from "../../../../src/takomo-cli-io/"
-import {
-  CONFIRM_UNDEPLOY_ANSWER_CANCEL,
-  CONFIRM_UNDEPLOY_ANSWER_CONTINUE,
-} from "../../../../src/takomo-cli-io/stacks/undeploy-stacks-io"
 import { bold, cyan, green, grey, red } from "../../../../src/utils/colors"
 import { formatTimestamp } from "../../../../src/utils/date"
 import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"

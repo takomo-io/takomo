@@ -1,15 +1,15 @@
+import { createBootstrapTargetsIO } from "../../cli-io"
 import { deployTargetsOperationCommandIamPolicy } from "../../command/targets/operation/iam-policy"
-import { createDeployTargetsIO } from "../../takomo-cli-io"
 import { GROUPS_OPT } from "./common"
 import { targetsDeployCommand } from "./common-deploy"
 
-const command = `deploy [${GROUPS_OPT}..]`
-const describe = "Deploy deployment targets"
+const command = `bootstrap [${GROUPS_OPT}..]`
+const describe = "Bootstrap deployment targets"
 
-export const deployTargetsCmd = targetsDeployCommand({
+export const bootstrapTargetsCmd = targetsDeployCommand({
   command,
   describe,
-  configSetType: "standard",
+  configSetType: "bootstrap",
   iamPolicyProvider: deployTargetsOperationCommandIamPolicy,
-  io: createDeployTargetsIO,
+  io: createBootstrapTargetsIO,
 })

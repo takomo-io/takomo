@@ -4,7 +4,7 @@ import inquirer from "inquirer"
 import os from "os"
 import R from "ramda"
 import { Arguments } from "yargs"
-import { formatCommandStatus } from "../takomo-cli-io"
+import { formatCommandStatus } from "../cli-io"
 import {
   CommandHandler,
   CommandInput,
