@@ -1,9 +1,5 @@
 import R from "ramda"
-import {
-  ConfigSetName,
-  ConfigSetType,
-} from "../../../../config-sets/config-set-model"
-import { getConfigSetsByType } from "../../../../config-sets/util"
+import { ConfigSetName } from "../../../../config-sets/config-set-model"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
@@ -25,7 +21,6 @@ export interface SelectDeploymentGroupsProps {
   readonly excludeTargets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly labels: ReadonlyArray<Label>
   readonly excludeLabels: ReadonlyArray<Label>
-  readonly configSetType?: ConfigSetType
   readonly configSetName?: ConfigSetName
   readonly commandPath?: CommandPath
 }
@@ -45,7 +40,6 @@ export const selectDeploymentGroups = (
   const {
     configSetName,
     commandPath,
-    configSetType,
     groups,
     targets,
     excludeTargets,
@@ -95,17 +89,17 @@ export const selectDeploymentGroups = (
   )
 
   const configSetsMatch = (a: DeploymentTargetConfig): boolean => {
-    if (!configSetType) {
-      return true
-    }
-
-    const configSets = getConfigSetsByType(configSetType, a)
-    if (configSets.length === 0) {
-      return false
-    }
+    // if (!configSetType) {
+    //   return true
+    // }
+    //
+    // const configSets = getConfigSetsByType(configSetType, a)
+    // if (configSets.length === 0) {
+    //   return false
+    // }
 
     if (configSetName) {
-      if (!configSets.some(({ name }) => name === configSetName)) {
+      if (!a.configSets.some(({ name }) => name === configSetName)) {
         return false
       }
     }

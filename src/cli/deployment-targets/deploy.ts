@@ -9,7 +9,6 @@ const describe = "Deploy deployment targets"
 export const deployTargetsCmd = targetsDeployCommand({
   command,
   describe,
-  configSetType: "standard",
   iamPolicyProvider: deployTargetsOperationCommandIamPolicy,
   io: createDeployTargetsIO,
 })

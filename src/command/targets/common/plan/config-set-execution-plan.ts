@@ -1,8 +1,4 @@
-import {
-  ConfigSetType,
-  StageName,
-} from "../../../../config-sets/config-set-model"
-import { getConfigSetsByType } from "../../../../config-sets/util"
+import { StageName } from "../../../../config-sets/config-set-model"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
@@ -21,10 +17,8 @@ import {
 import { getExecutionRoleArn } from "./get-execution-role-arn"
 import { PlannedDeploymentTarget } from "./model"
 
-export interface ConfigSetExecutionPlanTargetsSelectionProps
-  extends TargetsSelectionCriteria {
-  readonly configSetType: ConfigSetType
-}
+export type ConfigSetExecutionPlanTargetsSelectionProps =
+  TargetsSelectionCriteria
 
 export interface CreateConfigSetExecutionPlanProps {
   readonly ctx: DeploymentTargetsContext
@@ -37,7 +31,7 @@ export const createExecutionPlan = async (
 ): Promise<ConfigSetExecutionPlan<PlannedDeploymentTarget>> => {
   const {
     ctx,
-    targetsSelectionCriteria: { configSetType, configSetName, commandPath },
+    targetsSelectionCriteria: { configSetName, commandPath },
   } = props
 
   const callerIdentity = await ctx.credentialManager.getCallerIdentity()
@@ -45,10 +39,7 @@ export const createExecutionPlan = async (
   const getConfigSetsWithStage = (
     target: DeploymentTargetConfig,
     stageName: StageName,
-  ) =>
-    getConfigSetsByType(configSetType, target).filter(
-      (cs) => cs.stage === stageName,
-    )
+  ) => target.configSets.filter((cs) => cs.stage === stageName)
 
   const hasConfigSetsWithStage = (
     target: DeploymentTargetConfig,
@@ -76,11 +67,7 @@ export const createExecutionPlan = async (
         name: group.name,
         path: group.path,
       },
-      executionRoleArn: getExecutionRoleArn(
-        configSetType,
-        callerIdentity,
-        target,
-      ),
+      executionRoleArn: getExecutionRoleArn(callerIdentity, target),
     },
   })
 

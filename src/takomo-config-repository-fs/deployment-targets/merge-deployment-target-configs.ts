@@ -25,16 +25,10 @@ const mergeDeploymentTargetConfigsInternal = ([
       first: first.labels ?? [],
       second: second.labels ?? [],
     }),
-    bootstrapConfigSets: mergeArrays({
-      first: first.bootstrapConfigSets ?? [],
-      second: second.bootstrapConfigSets ?? [],
-    }),
     status: second.status ?? first.status,
     deploymentRoleName: second.deploymentRoleName ?? first.deploymentRoleName,
     deploymentRole: second.deploymentRole ?? first.deploymentRole,
     description: second.description ?? first.description,
-    bootstrapRoleName: second.bootstrapRoleName ?? first.bootstrapRoleName,
-    bootstrapRole: second.bootstrapRole ?? first.bootstrapRole,
   }
 
   return mergeDeploymentTargetConfigsInternal([merged, ...rest])

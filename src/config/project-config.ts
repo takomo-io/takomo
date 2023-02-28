@@ -21,15 +21,10 @@ export interface Features {
    * Enable deployment targets undeploy command
    */
   readonly deploymentTargetsUndeploy: boolean
-  /**
-   * Enable deployment targets tear down command
-   */
-  readonly deploymentTargetsTearDown: boolean
 }
 
 export const defaultFeatures = (): Features => ({
   deploymentTargetsUndeploy: true,
-  deploymentTargetsTearDown: true,
 })
 
 export const defaultEsbuild = (projectDir: FilePath): EsbuildConfig => ({

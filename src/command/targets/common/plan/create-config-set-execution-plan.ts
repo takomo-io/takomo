@@ -1,6 +1,5 @@
 import {
   ConfigSetName,
-  ConfigSetType,
   StageName,
 } from "../../../../config-sets/config-set-model"
 import { DeploymentGroupConfig } from "../../../../config/targets-config"
@@ -31,7 +30,6 @@ export interface TargetsSelectionCriteria {
   readonly excludeTargets: ReadonlyArray<DeploymentTargetNamePattern>
   readonly labels: ReadonlyArray<Label>
   readonly excludeLabels: ReadonlyArray<Label>
-  readonly configSetType: ConfigSetType
   readonly configSetName?: ConfigSetName
   readonly commandPath?: CommandPath
 }
@@ -48,7 +46,6 @@ export const createConfigSetExecutionPlan = ({
   targetsSelectionCriteria,
   executionGroupConverter,
 }: CreateExecutionPlanProps): ConfigSetExecutionPlan<PlannedDeploymentTarget> => {
-  const { configSetType } = targetsSelectionCriteria
   const selectedGroups = selectDeploymentGroups(ctx, targetsSelectionCriteria)
 
   const createStage = (
@@ -67,6 +64,5 @@ export const createConfigSetExecutionPlan = ({
 
   return {
     stages,
-    configSetType,
   }
 }

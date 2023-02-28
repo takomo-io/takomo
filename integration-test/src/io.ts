@@ -1,12 +1,10 @@
 import { anyArray, anyBoolean, mock } from "jest-mock-extended"
 import {
-  createBootstrapTargetsIO,
   createDeployStacksIO,
   createDeployTargetsIO,
   createDetectDriftIO,
   createListStacksIO,
   createRunTargetsIO,
-  createTearDownTargetsIO,
   createUndeployStacksIO,
   createUndeployTargetsIO,
   UserActions,
@@ -98,14 +96,6 @@ export const createTestDeployTargetsIO = (
 export const createTestUndeployTargetsIO = (
   logger: TkmLogger,
 ): DeploymentTargetsOperationIO => createUndeployTargetsIO({ logger })
-
-export const createTestTeardownTargetsIO = (
-  logger: TkmLogger,
-): DeploymentTargetsOperationIO => createTearDownTargetsIO({ logger })
-
-export const createTestBootstrapTargetsIO = (
-  logger: TkmLogger,
-): DeploymentTargetsOperationIO => createBootstrapTargetsIO({ logger })
 
 export const createTestRunTargetsIO = (
   logger: TkmLogger,

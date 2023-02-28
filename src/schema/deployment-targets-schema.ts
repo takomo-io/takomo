@@ -83,16 +83,10 @@ export const createDeploymentTargetsSchemas = (
     name: deploymentTargetName.required(),
     deploymentRole: iamRoleArn,
     deploymentRoleName: iamRoleName,
-    bootstrapRole: iamRoleArn,
-    bootstrapRoleName: iamRoleName,
     description: Joi.string(),
     status: Joi.string().valid("active", "disabled"),
     configSets: [Joi.array().items(configSetName).unique(), configSetName],
     labels: [Joi.array().items(label).unique(), label],
-    bootstrapConfigSets: [
-      Joi.array().items(configSetName).unique(),
-      configSetName,
-    ],
   })
 
   return {

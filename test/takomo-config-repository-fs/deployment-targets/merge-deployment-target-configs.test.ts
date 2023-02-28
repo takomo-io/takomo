@@ -37,9 +37,6 @@ describe("#mergeDeploymentTargetConfigs", () => {
     }
     const expected: DeploymentTargetConfigItem = {
       accountId: undefined,
-      bootstrapConfigSets: [],
-      bootstrapRole: undefined,
-      bootstrapRoleName: undefined,
       configSets: [],
       deploymentGroupPath: "another",
       deploymentRole: undefined,
@@ -59,7 +56,6 @@ describe("#mergeDeploymentTargetConfigs", () => {
       name: "c",
       deploymentGroupPath: "hello",
       labels: ["yyy"],
-      bootstrapConfigSets: [{ name: "b1", stage: "default" }],
       deploymentRoleName: "roleA",
       vars: {
         environment: {
@@ -80,8 +76,6 @@ describe("#mergeDeploymentTargetConfigs", () => {
       name: "c",
       deploymentGroupPath: "last",
       labels: [],
-      bootstrapConfigSets: [{ name: "b2", stage: "default" }],
-      bootstrapRoleName: "strapper",
       status: "active",
       vars: {
         hello: "world",
@@ -92,12 +86,6 @@ describe("#mergeDeploymentTargetConfigs", () => {
     }
     const expected: DeploymentTargetConfigItem = {
       accountId: undefined,
-      bootstrapConfigSets: [
-        { name: "b1", stage: "default" },
-        { name: "b2", stage: "default" },
-      ],
-      bootstrapRole: undefined,
-      bootstrapRoleName: "strapper",
       configSets: [],
       deploymentGroupPath: "last",
       deploymentRole: undefined,
@@ -138,9 +126,6 @@ describe("#mergeDeploymentTargetConfigs", () => {
     }
     const expected1: DeploymentTargetConfigItem = {
       accountId: undefined,
-      bootstrapConfigSets: [],
-      bootstrapRole: undefined,
-      bootstrapRoleName: undefined,
       configSets: [],
       deploymentGroupPath: "hello",
       deploymentRole: undefined,
@@ -153,9 +138,6 @@ describe("#mergeDeploymentTargetConfigs", () => {
     }
     const expected2: DeploymentTargetConfigItem = {
       accountId: undefined,
-      bootstrapConfigSets: [],
-      bootstrapRole: undefined,
-      bootstrapRoleName: undefined,
       configSets: [],
       deploymentGroupPath: "hello",
       deploymentRole: undefined,
