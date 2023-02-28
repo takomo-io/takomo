@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var semver = require("semver")
-var requiredVersion = "16.17.0"
+var requiredVersion = "18.14.2"
 if (!semver.satisfies(process.version, ">=" + requiredVersion)) {
     console.log("ERROR")
     console.log("-----")
