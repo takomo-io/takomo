@@ -8,7 +8,6 @@ const describe = "Undeploy deployment targets"
 export const undeployTargetsCmd = targetsOperationCommand({
   command,
   describe,
-  configSetType: "standard",
   operation: "undeploy",
   iamPolicyProvider: undeployTargetsOperationCommandIamPolicy,
   io: createUndeployTargetsIO,

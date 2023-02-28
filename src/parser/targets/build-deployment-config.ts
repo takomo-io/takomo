@@ -78,8 +78,6 @@ export const buildDeploymentConfig = async (
 
   const deploymentRole = parseCommandRole(record.deploymentRole)
   const deploymentRoleName = parseOptionalString(record.deploymentRoleName)
-  const bootstrapRole = parseCommandRole(record.bootstrapRole)
-  const bootstrapRoleName = parseOptionalString(record.bootstrapRoleName)
 
   const deploymentGroups = parseDeploymentGroups(
     externalDeploymentTargets,
@@ -87,8 +85,6 @@ export const buildDeploymentConfig = async (
     vars,
     deploymentRole,
     deploymentRoleName,
-    bootstrapRole,
-    bootstrapRoleName,
   )
 
   const configuredStackGroups = deploymentGroups
@@ -154,8 +150,6 @@ export const buildDeploymentConfig = async (
     targetsSchema,
     deploymentRole,
     deploymentRoleName,
-    bootstrapRole,
-    bootstrapRoleName,
   })
 }
 

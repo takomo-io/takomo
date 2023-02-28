@@ -27,8 +27,6 @@ export interface DeploymentTargetConfig extends ConfigSetInstructionsHolder {
   readonly labels: ReadonlyArray<Label>
   readonly deploymentRole?: CommandRole
   readonly deploymentRoleName?: IamRoleName
-  readonly bootstrapRole?: CommandRole
-  readonly bootstrapRoleName?: IamRoleName
   readonly accountId?: AccountId
 }
 
@@ -42,13 +40,10 @@ export interface DeploymentGroupConfig {
   readonly vars: Vars
   readonly targetsSchema: ReadonlyArray<SchemaConfig>
   readonly configSets: ReadonlyArray<ConfigSetInstruction>
-  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
   readonly labels: ReadonlyArray<Label>
   readonly children: ReadonlyArray<DeploymentGroupConfig>
   readonly deploymentRole?: CommandRole
   readonly deploymentRoleName?: IamRoleName
-  readonly bootstrapRole?: CommandRole
-  readonly bootstrapRoleName?: IamRoleName
 }
 
 export interface DeploymentConfig {
@@ -58,6 +53,4 @@ export interface DeploymentConfig {
   readonly deploymentGroups: ReadonlyArray<DeploymentGroupConfig>
   readonly deploymentRole?: CommandRole
   readonly deploymentRoleName?: IamRoleName
-  readonly bootstrapRole?: CommandRole
-  readonly bootstrapRoleName?: IamRoleName
 }

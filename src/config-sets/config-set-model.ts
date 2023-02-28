@@ -19,8 +19,6 @@ export interface ConfigSet {
   readonly legacy: boolean
 }
 
-export type ConfigSetType = "standard" | "bootstrap"
-
 export interface ConfigSetContext {
   readonly getConfigSet: (name: ConfigSetName) => ConfigSet
   readonly hasConfigSet: (name: ConfigSetName) => boolean
@@ -29,5 +27,4 @@ export interface ConfigSetContext {
 
 export interface ConfigSetInstructionsHolder {
   readonly configSets: ReadonlyArray<ConfigSetInstruction>
-  readonly bootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>
 }

@@ -10,7 +10,6 @@ describe("multiple deployment target repositories", () => {
       const expected = [
         {
           deploymentGroupPath: "sandbox",
-          bootstrapConfigSets: [],
           configSets: [],
           labels: [],
           name: "a",
@@ -21,7 +20,6 @@ describe("multiple deployment target repositories", () => {
         },
         {
           deploymentGroupPath: "sandbox",
-          bootstrapConfigSets: [],
           configSets: [],
           labels: [],
           name: "b",
@@ -32,7 +30,6 @@ describe("multiple deployment target repositories", () => {
         },
         {
           deploymentGroupPath: "workload/development",
-          bootstrapConfigSets: [],
           configSets: [],
           labels: [],
           name: "d",
@@ -43,7 +40,6 @@ describe("multiple deployment target repositories", () => {
         },
         {
           deploymentGroupPath: "workload/production",
-          bootstrapConfigSets: [],
           configSets: [],
           labels: ["foobar", "fuzz"],
           name: "c",

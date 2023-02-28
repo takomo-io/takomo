@@ -9,7 +9,6 @@ import {
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
 } from "../../command/targets/operation/model"
-import { ConfigSetType } from "../../config-sets/config-set-model"
 import { TkmLogger } from "../../utils/logging"
 import { splitTextInLines } from "../../utils/strings"
 import { createBaseIO } from "../cli-io"
@@ -56,17 +55,6 @@ const makeChoices = ({
 
 interface DeploymentOperationIOProps extends IOProps {
   readonly messages: Messages
-}
-
-const getConfigSetsName = (configSetType: ConfigSetType): string => {
-  switch (configSetType) {
-    case "standard":
-      return "config sets"
-    case "bootstrap":
-      return "bootstrap config sets"
-    default:
-      throw new Error(`Unsupported config set type: ${configSetType}`)
-  }
 }
 
 export const createDeploymentTargetsOperationIO = (
@@ -185,7 +173,7 @@ export const createDeploymentTargetsOperationIO = (
           }
 
           io.message({
-            text: `${getConfigSetsName(plan.configSetType)}:`,
+            text: "config sets:",
             indent: 8,
           })
 

@@ -38,7 +38,6 @@ export const executeDeployTargetsCommand = (
       io: createTestDeployTargetsIO(logger),
       input: {
         timer: new Timer("total"),
-        configSetType: "standard",
         operation: "deploy",
         groups: props.groups ?? [],
         targets: props.targets ?? [],

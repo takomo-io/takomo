@@ -39,18 +39,9 @@ const validateFeatureFlags = (
 ): void => {
   if (
     input.operation === "undeploy" &&
-    input.configSetType === "standard" &&
     !ctx.projectConfig.features.deploymentTargetsUndeploy
   ) {
     throw new FeatureDisabledError("deploymentTargetsUndeploy")
-  }
-
-  if (
-    input.operation === "undeploy" &&
-    input.configSetType === "bootstrap" &&
-    !ctx.projectConfig.features.deploymentTargetsTearDown
-  ) {
-    throw new FeatureDisabledError("deploymentTargetsTearDown")
   }
 }
 

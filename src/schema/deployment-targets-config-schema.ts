@@ -33,16 +33,10 @@ export const createDeploymentTargetsConfigSchema = (
     description: Joi.string(),
     deploymentRole: iamRoleArn,
     deploymentRoleName: iamRoleName,
-    bootstrapRole: iamRoleArn,
-    bootstrapRoleName: iamRoleName,
     status: Joi.string().valid("active", "disabled"),
     priority: Joi.number().integer().min(0),
     configSets: [Joi.array().items(configSetName).unique(), configSetName],
     labels: [Joi.array().items(label).unique(), label],
-    bootstrapConfigSets: [
-      Joi.array().items(configSetName).unique(),
-      configSetName,
-    ],
   })
 
   const deploymentGroups = Joi.object()
@@ -56,7 +50,5 @@ export const createDeploymentTargetsConfigSchema = (
     configSets,
     deploymentRole: iamRoleArn,
     deploymentRoleName: iamRoleName,
-    bootstrapRole: iamRoleArn,
-    bootstrapRoleName: iamRoleName,
   })
 }

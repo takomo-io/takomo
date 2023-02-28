@@ -3,7 +3,6 @@ import { IOProps } from "../../cli-io"
 import { DeploymentOperation } from "../../command/command-model"
 import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command"
 import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
-import { ConfigSetType } from "../../config-sets/config-set-model"
 import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
 import { commonEpilog, handle, RunProps } from "../common"
 import {
@@ -28,7 +27,6 @@ export interface DeploymentTargetsDeployCommandArgs
 interface DeploymentTargetsDeployCommandProps {
   readonly command: string
   readonly describe: string
-  readonly configSetType: ConfigSetType
   readonly iamPolicyProvider: () => string
   readonly io: (props: IOProps) => DeploymentTargetsOperationIO
 }
@@ -126,7 +124,6 @@ const createTargetsDeployBuilder =
 
 const createTargetsDeployHandler =
   (
-    configSetType: ConfigSetType,
     operation: DeploymentOperation,
     io: (props: IOProps) => DeploymentTargetsOperationIO,
   ) =>
@@ -136,7 +133,6 @@ const createTargetsDeployHandler =
       input: async (ctx, input) => ({
         ...input,
         operation,
-        configSetType,
         targets: argv.target,
         excludeTargets: argv[EXCLUDE_TARGET_OPT],
         groups: argv.groups,
@@ -171,7 +167,6 @@ export const targetsDeployCommand =
   ({
     command,
     describe,
-    configSetType,
     io,
     iamPolicyProvider,
   }: DeploymentTargetsDeployCommandProps) =>
@@ -179,7 +174,5 @@ export const targetsDeployCommand =
     command,
     describe,
     builder: createTargetsDeployBuilder(iamPolicyProvider),
-    handler:
-      overridingHandler ??
-      createTargetsDeployHandler(configSetType, "deploy", io),
+    handler: overridingHandler ?? createTargetsDeployHandler("deploy", io),
   })

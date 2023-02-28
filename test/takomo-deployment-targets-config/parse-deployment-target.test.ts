@@ -1,42 +1,33 @@
+import { ConfigSetInstruction } from "../../src"
 import { DeploymentTargetConfig } from "../../src/config/targets-config"
-import { ConfigSetInstruction } from "../../src/model/config-set-model"
-import { Label } from "../../src/model/targets-model"
 import { parseDeploymentTarget } from "../../src/parser/targets/parse-deployment-targets"
+import { Label } from "../../src/targets/targets-model"
 
 describe("#parseDeploymentTarget", () => {
   test("simple", () => {
     const value = { name: "hello" }
     const inheritedVars = {}
     const inheritedConfigSets = new Array<ConfigSetInstruction>()
-    const inheritedBootstrapConfigSets = new Array<ConfigSetInstruction>()
     const inheritedLabels = new Array<Label>()
     const inheritedDeploymentRole = undefined
     const inheritedDeploymentRoleName = undefined
-    const inheritedBootstrapRole = undefined
-    const inheritedBootstrapRoleName = undefined
 
     const actual = parseDeploymentTarget(
       value,
       inheritedVars,
       inheritedConfigSets,
-      inheritedBootstrapConfigSets,
       inheritedLabels,
       inheritedDeploymentRole,
       inheritedDeploymentRoleName,
-      inheritedBootstrapRole,
-      inheritedBootstrapRoleName,
     )
 
     const expected: DeploymentTargetConfig = {
       accountId: undefined,
       vars: {},
       configSets: [],
-      bootstrapConfigSets: [],
       labels: [],
       deploymentRole: undefined,
       deploymentRoleName: undefined,
-      bootstrapRole: undefined,
-      bootstrapRoleName: undefined,
       status: "active",
       name: "hello",
       description: undefined,
@@ -64,23 +55,17 @@ describe("#parseDeploymentTarget", () => {
       },
     }
     const inheritedConfigSets = new Array<ConfigSetInstruction>()
-    const inheritedBootstrapConfigSets = new Array<ConfigSetInstruction>()
     const inheritedLabels = new Array<Label>()
     const inheritedDeploymentRole = undefined
     const inheritedDeploymentRoleName = undefined
-    const inheritedBootstrapRole = undefined
-    const inheritedBootstrapRoleName = undefined
 
     const actual = parseDeploymentTarget(
       value,
       inheritedVars,
       inheritedConfigSets,
-      inheritedBootstrapConfigSets,
       inheritedLabels,
       inheritedDeploymentRole,
       inheritedDeploymentRoleName,
-      inheritedBootstrapRole,
-      inheritedBootstrapRoleName,
     )
 
     const expected: DeploymentTargetConfig = {
@@ -93,12 +78,9 @@ describe("#parseDeploymentTarget", () => {
         },
       },
       configSets: [],
-      bootstrapConfigSets: [],
       labels: [],
       deploymentRole: undefined,
       deploymentRoleName: undefined,
-      bootstrapRole: undefined,
-      bootstrapRoleName: undefined,
       status: "active",
       name: "hello2",
       description: "this is how you do it",

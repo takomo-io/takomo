@@ -1,7 +1,4 @@
-import {
-  ConfigSetName,
-  ConfigSetType,
-} from "../../../config-sets/config-set-model"
+import { ConfigSetName } from "../../../config-sets/config-set-model"
 import { DeploymentTargetsContext } from "../../../context/targets-context"
 import { CommandInput, IO, OutputFormat } from "../../../takomo-core/command"
 import {
@@ -38,7 +35,6 @@ export interface DeploymentTargetsOperationInput extends CommandInput {
   readonly labels: ReadonlyArray<Label>
   readonly excludeLabels: ReadonlyArray<Label>
   readonly operation: DeploymentOperation
-  readonly configSetType: ConfigSetType
   readonly concurrentTargets: number
   readonly configSetName?: ConfigSetName
   readonly expectNoChanges: boolean

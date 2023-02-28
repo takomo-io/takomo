@@ -6,7 +6,6 @@ export const parseFeaturesFromArgs = (args: any): Partial<Features> => {
 
   const featureNames: ReadonlyArray<keyof Features> = [
     "deploymentTargetsUndeploy",
-    "deploymentTargetsTearDown",
   ]
 
   return varsArray.reduce((collected, arg) => {

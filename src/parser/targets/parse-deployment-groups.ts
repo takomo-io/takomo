@@ -22,12 +22,9 @@ const parseDeploymentGroup = (
   config: any,
   inheritedVars: Vars,
   inheritedConfigSets: ReadonlyArray<ConfigSetInstruction>,
-  inheritedBootstrapConfigSets: ReadonlyArray<ConfigSetInstruction>,
   inheritedLabels: ReadonlyArray<Label>,
   inheritedDeploymentRole: CommandRole | undefined,
   inheritedDeploymentRoleName: IamRoleName | undefined,
-  inheritedBootstrapRole: CommandRole | undefined,
-  inheritedBootstrapRoleName: IamRoleName | undefined,
 ): DeploymentGroupConfig => {
   const group = config[groupPath]
   const groupPathDepth = groupPath.split("/").length
@@ -46,14 +43,6 @@ const parseDeploymentGroup = (
     inheritedConfigSets,
   )
 
-  const configuredBootstrapConfigSets = parseConfigSetInstructions(
-    group.bootstrapConfigSets,
-  )
-  const bootstrapConfigSets = mergeConfigSetInstructions(
-    configuredBootstrapConfigSets,
-    inheritedBootstrapConfigSets,
-  )
-
   const configuredLabels = parseStringArray(group?.labels)
   const labels = R.uniq([...inheritedLabels, ...configuredLabels])
 
@@ -64,10 +53,6 @@ const parseDeploymentGroup = (
     parseCommandRole(group?.deploymentRole) ?? inheritedDeploymentRole
   const deploymentRoleName =
     group?.deploymentRoleName ?? inheritedDeploymentRoleName
-  const bootstrapRole =
-    parseCommandRole(group?.bootstrapRole) ?? inheritedBootstrapRole
-  const bootstrapRoleName =
-    group?.bootstrapRoleName ?? inheritedBootstrapRoleName
 
   const children = directChildPaths.map((childPath) =>
     parseDeploymentGroup(
@@ -76,12 +61,9 @@ const parseDeploymentGroup = (
       config,
       vars,
       configSets,
-      bootstrapConfigSets,
       labels,
       deploymentRole,
       deploymentRoleName,
-      bootstrapRole,
-      bootstrapRoleName,
     ),
   )
 
@@ -92,12 +74,9 @@ const parseDeploymentGroup = (
     allTargets,
     vars,
     configSets,
-    bootstrapConfigSets,
     labels,
     deploymentRole,
     deploymentRoleName,
-    bootstrapRole,
-    bootstrapRoleName,
   )
   const name = groupPath.split("/").reverse()[0]
 
@@ -106,14 +85,11 @@ const parseDeploymentGroup = (
     children,
     targets,
     configSets,
-    bootstrapConfigSets,
     labels,
     targetsSchema,
     vars,
     deploymentRole,
-    bootstrapRole,
     deploymentRoleName,
-    bootstrapRoleName,
     path: groupPath,
     description: group?.description,
     priority: group?.priority ?? 0,
@@ -127,8 +103,6 @@ export const parseDeploymentGroups = (
   inheritedVars: Vars,
   inheritedDeploymentRole: CommandRole | undefined,
   inheritedDeploymentRoleName: IamRoleName | undefined,
-  inheritedBootstrapRole: CommandRole | undefined,
-  inheritedBootstrapRoleName: IamRoleName | undefined,
 ): DeploymentGroupConfig[] => {
   if (value === null || value === undefined) {
     return []
@@ -147,11 +121,8 @@ export const parseDeploymentGroups = (
       inheritedVars,
       [],
       [],
-      [],
       inheritedDeploymentRole,
       inheritedDeploymentRoleName,
-      inheritedBootstrapRole,
-      inheritedBootstrapRoleName,
     ),
   )
 }

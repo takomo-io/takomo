@@ -3,7 +3,6 @@ import { CommandPath } from "../../command/command-model"
 import {
   ConfigSet,
   ConfigSetName,
-  ConfigSetType,
   StageName,
 } from "../../config-sets/config-set-model"
 import {
@@ -93,7 +92,6 @@ export interface ConfigSetExecutionStage<C> {
 
 export interface ConfigSetExecutionPlan<C> {
   readonly stages: ReadonlyArray<ConfigSetExecutionStage<C>>
-  readonly configSetType: ConfigSetType
 }
 
 export interface CreateConfigSetTargetListenerProps {

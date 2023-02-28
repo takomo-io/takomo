@@ -38,7 +38,6 @@ export const executeUndeployTargetsCommand = (
       io: createTestUndeployTargetsIO(logger),
       input: {
         timer: new Timer("total"),
-        configSetType: "standard",
         operation: "undeploy",
         groups: props.groups ?? [],
         targets: props.targets ?? [],

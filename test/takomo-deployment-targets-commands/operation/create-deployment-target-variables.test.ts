@@ -61,7 +61,6 @@ const target: ConfigSetExecutionTarget<PlannedDeploymentTarget> = {
     vars: {},
     labels: [],
     configSets: [],
-    bootstrapConfigSets: [],
     deploymentGroup: {
       name: "my-group",
       path: "path/to/my-group",
