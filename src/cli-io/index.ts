@@ -5,7 +5,6 @@ export { createTearDownTargetsIO } from "./deployment-targets/tear-down-targets-
 export { createUndeployTargetsIO } from "./deployment-targets/undeploy-targets-io"
 export { formatCommandStatus } from "./formatters"
 export { createGenerateIamPoliciesIO } from "./iam/generate-iam-policies-io"
-export { createInitProjectIO } from "./init-project-io"
 export { IOProps } from "./stacks/common"
 export {
   CONFIRM_DEPLOY_ANSWER_CANCEL,

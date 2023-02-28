@@ -4,7 +4,6 @@ import {
   createDeployStacksIO,
   createDeployTargetsIO,
   createDetectDriftIO,
-  createInitProjectIO,
   createListStacksIO,
   createRunTargetsIO,
   createTearDownTargetsIO,
@@ -13,7 +12,6 @@ import {
   UserActions,
 } from "../../src/cli-io"
 import { CommandPath } from "../../src/command/command-model"
-import { InitProjectIO } from "../../src/command/init/model"
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
@@ -112,6 +110,3 @@ export const createTestBootstrapTargetsIO = (
 export const createTestRunTargetsIO = (
   logger: TkmLogger,
 ): DeploymentTargetsRunIO => createRunTargetsIO({ logger })
-
-export const createTestInitProjectIO = (logger: TkmLogger): InitProjectIO =>
-  createInitProjectIO({ logger })

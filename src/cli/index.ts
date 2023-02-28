@@ -2,7 +2,6 @@ import yargs from "yargs"
 import { RunProps } from "./common"
 import { deploymentTargetsCmd } from "./deployment-targets"
 import { iamCmd } from "./iam"
-import { initProjectCmd } from "./init"
 import { stacksCmd } from "./stacks"
 
 export { initCommandContext } from "./common"
@@ -14,7 +13,6 @@ export const run = (props: RunProps = { showHelpOnFail: true }): void => {
   yargs
     .command(stacksCmd(props))
     .command(deploymentTargetsCmd(props))
-    .command(initProjectCmd)
     .command(iamCmd(props))
     .option("profile", {
       alias: "p",
