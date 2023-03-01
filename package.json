@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "author": "henri@takomo.io",
-  "type": "commonjs",
+  "type": "module",
   "main": "dist/index",
   "types": "dist/index",
   "bin": {
