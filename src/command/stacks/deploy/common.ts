@@ -1,4 +1,4 @@
-import { StackOperationType } from "../../command-model"
+import { StackOperationType } from "../../command-model.js"
 
 export const resolveResultMessage = (
   operationType: StackOperationType,

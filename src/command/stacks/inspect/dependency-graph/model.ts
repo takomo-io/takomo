@@ -1,10 +1,10 @@
-import { InternalStack } from "../../../../stacks/stack"
+import { InternalStack } from "../../../../stacks/stack.js"
 import {
   CommandInput,
   CommandOutput,
   IO,
-} from "../../../../takomo-core/command"
-import { CommandPath } from "../../../command-model"
+} from "../../../../takomo-core/command.js"
+import { CommandPath } from "../../../command-model.js"
 
 export interface DependencyGraphInput extends CommandInput {
   readonly commandPath: CommandPath

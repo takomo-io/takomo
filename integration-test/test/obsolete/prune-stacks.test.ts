@@ -1,8 +1,8 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../../src/commands/stacks"
-import { pathToConfigs } from "../../src/util"
+} from "../../src/commands/stacks.js"
+import { pathToConfigs } from "../../src/util.js"
 
 const projectDir = pathToConfigs("obsolete", "prune-stacks")
 

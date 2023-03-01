@@ -1,8 +1,8 @@
-import { OutputFormat } from "../../../takomo-core/command"
-import { Timer } from "../../../utils/timer"
-import { createExecutionPlan } from "../common/plan/config-set-execution-plan"
-import { confirmOperation } from "./confirm"
-import { DeploymentTargetsOperationOutput, InitialHolder } from "./model"
+import { OutputFormat } from "../../../takomo-core/command.js"
+import { Timer } from "../../../utils/timer.js"
+import { createExecutionPlan } from "../common/plan/config-set-execution-plan.js"
+import { confirmOperation } from "./confirm.js"
+import { DeploymentTargetsOperationOutput, InitialHolder } from "./model.js"
 
 const skippedResult = (
   timer: Timer,

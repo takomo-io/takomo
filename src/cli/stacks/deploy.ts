@@ -1,18 +1,18 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createDeployStacksIO } from "../../cli-io"
-import { CommandPath } from "../../command/command-model"
-import { deployStacksCommand } from "../../command/stacks/deploy/command"
-import { deployStacksCommandIamPolicy } from "../../command/stacks/deploy/iam-policy"
-import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository"
-import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
-import { commonEpilog, handle, RunProps } from "../common"
+import { createDeployStacksIO } from "../../cli-io/index.js"
+import { CommandPath } from "../../command/command-model.js"
+import { deployStacksCommand } from "../../command/stacks/deploy/command.js"
+import { deployStacksCommandIamPolicy } from "../../command/stacks/deploy/iam-policy.js"
+import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository.js"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
 import {
   COMMAND_PATH_OPT,
   EXPECT_NO_CHANGES_OPT,
   IGNORE_DEPENDENCIES_OPT,
   INTERACTIVE_OPT,
-} from "../constants"
-import { stackDeployOperationOptions } from "./common"
+} from "../constants.js"
+import { stackDeployOperationOptions } from "./common.js"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath

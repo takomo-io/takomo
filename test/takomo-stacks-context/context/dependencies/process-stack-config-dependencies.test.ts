@@ -1,5 +1,5 @@
-import { processStackDependencies } from "../../../../src/takomo-stacks-context/dependencies"
-import { createStack } from "../../helpers"
+import { processStackDependencies } from "../../../../src/takomo-stacks-context/dependencies.js"
+import { createStack } from "../../helpers.js"
 
 describe("process stack config dependencies", () => {
   describe("when a single stack config with no dependencies is given", () => {

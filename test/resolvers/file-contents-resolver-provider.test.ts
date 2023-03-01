@@ -1,9 +1,12 @@
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { createFileContentsResolverProvider } from "../../src/resolvers/file-contents-resolver"
-import { defaultSchema } from "../../src/resolvers/resolver-registry"
-import { CommandContext } from "../../src/takomo-core"
-import { expectNoValidationError, expectValidationErrors } from "../assertions"
+import { CommandContext } from "../../src/index.js"
+import { createFileContentsResolverProvider } from "../../src/resolvers/file-contents-resolver.js"
+import { defaultSchema } from "../../src/resolvers/resolver-registry.js"
+import {
+  expectNoValidationError,
+  expectValidationErrors,
+} from "../assertions.js"
 
 const provider = createFileContentsResolverProvider()
 

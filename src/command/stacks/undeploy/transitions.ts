@@ -1,20 +1,20 @@
-import { StackOperationStep } from "../common/steps"
+import { StackOperationStep } from "../common/steps.js"
 import {
   defaultStackOperationTransitions,
   inProgress,
   StackOperationTransitions,
-} from "../common/transitions"
+} from "../common/transitions.js"
 import {
   ClientTokenHolder,
   CurrentStackHolder,
   InitialUndeployStackState,
   StackOperationResultHolder,
-} from "./states"
-import { executeAfterUndeployHooks } from "./steps/execute-after-undeploy-hooks"
-import { executeBeforeUndeployHooks } from "./steps/execute-before-undeploy-hooks"
-import { initiateStackDeletion } from "./steps/initiate-stack-delete"
-import { waitDependentsToComplete } from "./steps/wait-dependents-to-complete"
-import { waitStackDeleteToComplete } from "./steps/wait-stack-delete-to-complete"
+} from "./states.js"
+import { executeAfterUndeployHooks } from "./steps/execute-after-undeploy-hooks.js"
+import { executeBeforeUndeployHooks } from "./steps/execute-before-undeploy-hooks.js"
+import { initiateStackDeletion } from "./steps/initiate-stack-delete.js"
+import { waitDependentsToComplete } from "./steps/wait-dependents-to-complete.js"
+import { waitStackDeleteToComplete } from "./steps/wait-stack-delete-to-complete.js"
 
 export interface UndeployStackTransitions extends StackOperationTransitions {
   executeBeforeUndeployHooks: StackOperationStep<CurrentStackHolder>

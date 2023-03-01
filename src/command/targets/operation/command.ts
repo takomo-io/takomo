@@ -1,22 +1,22 @@
 import Joi from "joi"
-import { Region } from "../../../aws/common/model"
-import { FeatureDisabledError } from "../../../config/project-config"
-import { InternalCommandContext } from "../../../context/command-context"
+import { Region } from "../../../aws/common/model.js"
+import { FeatureDisabledError } from "../../../config/project-config.js"
+import { InternalCommandContext } from "../../../context/command-context.js"
 import {
   createDeploymentTargetsContext,
   DeploymentTargetsConfigRepository,
-} from "../../../context/targets-context"
-import { createConfigSetsSchemas } from "../../../schema/config-sets-schema"
-import { createDeploymentTargetsSchemas } from "../../../schema/deployment-targets-schema"
-import { createStacksSchemas } from "../../../schema/stacks-schema"
-import { CommandHandler } from "../../../takomo-core/command"
-import { validateInput } from "../../../utils/validation"
+} from "../../../context/targets-context.js"
+import { createConfigSetsSchemas } from "../../../schema/config-sets-schema.js"
+import { createDeploymentTargetsSchemas } from "../../../schema/deployment-targets-schema.js"
+import { createStacksSchemas } from "../../../schema/stacks-schema.js"
+import { CommandHandler } from "../../../takomo-core/command.js"
+import { validateInput } from "../../../utils/validation.js"
 import {
   DeploymentTargetsOperationInput,
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
-} from "./model"
-import { planDeployment } from "./plan"
+} from "./model.js"
+import { planDeployment } from "./plan.js"
 
 const inputSchema = (regions: ReadonlyArray<Region>) => {
   const { commandPath } = createStacksSchemas({ regions })

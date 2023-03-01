@@ -1,12 +1,12 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { CredentialManager } from "../../src"
-import { StacksContext } from "../../src/context/stacks-context"
-import { CmdHook } from "../../src/hooks/cmd-hook"
-import { HookInput } from "../../src/hooks/hook"
-import { Stack } from "../../src/stacks/stack"
-import { createConsoleLogger } from "../../src/utils/logging"
+import { StacksContext } from "../../src/context/stacks-context.js"
+import { CmdHook } from "../../src/hooks/cmd-hook.js"
+import { HookInput } from "../../src/hooks/hook.js"
+import { CredentialManager } from "../../src/index.js"
+import { Stack } from "../../src/stacks/stack.js"
+import { createConsoleLogger } from "../../src/utils/logging.js"
 
 const credentialManager = mock<CredentialManager>()
 credentialManager.getCredentials.mockReturnValue(

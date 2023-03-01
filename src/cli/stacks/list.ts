@@ -1,12 +1,12 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createListStacksIO } from "../../cli-io"
-import { CommandPath } from "../../command/command-model"
-import { listStacksCommand } from "../../command/stacks/list/command"
-import { listStacksCommandIamPolicy } from "../../command/stacks/list/iam-policy"
-import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository"
-import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
-import { commonEpilog, handle, RunProps } from "../common"
-import { COMMAND_PATH_OPT, outputFormatOptions } from "../constants"
+import { createListStacksIO } from "../../cli-io/index.js"
+import { CommandPath } from "../../command/command-model.js"
+import { listStacksCommand } from "../../command/stacks/list/command.js"
+import { listStacksCommandIamPolicy } from "../../command/stacks/list/iam-policy.js"
+import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository.js"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
+import { COMMAND_PATH_OPT, outputFormatOptions } from "../constants.js"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath

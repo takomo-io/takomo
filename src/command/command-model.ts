@@ -1,9 +1,9 @@
-import { CloudFormationStack, StackEvent } from "../aws/cloudformation/model"
-import { Variables } from "../common/model"
-import { InternalStack, StackPath } from "../stacks/stack"
-import { StackGroupPath } from "../stacks/stack-group"
-import { CommandStatus } from "../takomo-core/command"
-import { Timer } from "../utils/timer"
+import { CloudFormationStack, StackEvent } from "../aws/cloudformation/model.js"
+import { Variables } from "../common/model.js"
+import { StackGroupPath } from "../stacks/stack-group.js"
+import { InternalStack, StackPath } from "../stacks/stack.js"
+import { CommandStatus } from "../takomo-core/command.js"
+import { Timer } from "../utils/timer.js"
 
 /**
  * Command path.

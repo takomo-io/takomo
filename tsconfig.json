@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
+    "target": "es2022",
+    "module": "nodenext",
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "lib": ["ES2020", "dom"],
-    "moduleResolution": "node",
+    "lib": ["ES2021", "dom"],
+    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "outDir": "./dist"

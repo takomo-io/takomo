@@ -4,15 +4,15 @@ import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
   TemplateSummary,
-} from "../../../../aws/cloudformation/model"
+} from "../../../../aws/cloudformation/model.js"
 
-import { InternalStack } from "../../../../stacks/stack"
-import { arrayToMap } from "../../../../utils/collections"
-import { TakomoError } from "../../../../utils/errors"
-import { prettyPrintJson } from "../../../../utils/json"
-import { indentLines } from "../../../../utils/strings"
-import { StackOperationStep } from "../../common/steps"
-import { ChangeSetNameHolder } from "../states"
+import { InternalStack } from "../../../../stacks/stack.js"
+import { arrayToMap } from "../../../../utils/collections.js"
+import { TakomoError } from "../../../../utils/errors.js"
+import { prettyPrintJson } from "../../../../utils/json.js"
+import { indentLines } from "../../../../utils/strings.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { ChangeSetNameHolder } from "../states.js"
 
 class UnexpectedChangesInStackError extends TakomoError {
   constructor(

@@ -1,4 +1,4 @@
-import { parseStackPolicy } from "../../src/parser/stacks/parse-stack-policy"
+import { parseStackPolicy } from "../../src/parser/stacks/parse-stack-policy.js"
 
 describe("#parseTemplate", () => {
   test("when a string is given", () => {

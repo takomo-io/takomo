@@ -2,36 +2,36 @@ import { Credentials } from "@aws-sdk/types"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
 import { extname } from "path"
-import R from "ramda"
+import * as R from "ramda"
 import { promisify } from "util"
 import {
   CallerIdentity,
   IamRoleArn,
   IamRoleName,
-} from "../../../aws/common/model"
+} from "../../../aws/common/model.js"
 import {
   CommandRole,
   CommandStatus,
   OperationState,
   resolveCommandOutputBase,
-} from "../../../takomo-core/command"
+} from "../../../takomo-core/command.js"
 
-import { CredentialManager } from "../../../aws/common/credentials"
-import { prepareAwsEnvVariables } from "../../../aws/util"
+import { CredentialManager } from "../../../aws/common/credentials.js"
+import { prepareAwsEnvVariables } from "../../../aws/util.js"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../config/targets-config"
-import { DeploymentTargetsContext } from "../../../context/targets-context"
+} from "../../../config/targets-config.js"
+import { DeploymentTargetsContext } from "../../../context/targets-context.js"
 import {
   expandFilePath,
   FilePath,
   readFileContents,
-} from "../../../utils/files"
-import { TkmLogger } from "../../../utils/logging"
-import { Timer } from "../../../utils/timer"
-import { parseYaml } from "../../../utils/yaml"
-import { DeploymentTargetsListener } from "../operation/model"
+} from "../../../utils/files.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { Timer } from "../../../utils/timer.js"
+import { parseYaml } from "../../../utils/yaml.js"
+import { DeploymentTargetsListener } from "../operation/model.js"
 import {
   DeploymentGroupRunResult,
   DeploymentTargetRunResult,
@@ -41,7 +41,7 @@ import {
   MapFunction,
   ReduceFunction,
   TargetsRunPlan,
-} from "./model"
+} from "./model.js"
 
 const execP = promisify(exec)
 
@@ -133,8 +133,15 @@ const runJsMapFunction = async ({
   const mapFunctionFullPath = expandFilePath(ctx.projectDir, mapCommand)
   logger.debug(`Run map function from file: ${mapFunctionFullPath}`)
 
-  // eslint-disable-next-line
-  const mapperFn: MapFunction<unknown> = require(mapFunctionFullPath)
+  const mapperFile = await import(mapFunctionFullPath)
+
+  if (!mapperFile.default) {
+    throw new Error(`File ${mapFunctionFullPath} doesn't have default export`)
+  }
+
+  const mapperFn: MapFunction<unknown> = mapperFile.default
+
+  console.log(mapperFn)
 
   return mapperFn({
     credentials,
@@ -219,7 +226,7 @@ const runReduceProcessCommand = async ({
   return stdout
 }
 
-const runJsReduceFunction = ({
+const runJsReduceFunction = async ({
   credentials,
   ctx,
   reduceCommand,
@@ -227,8 +234,14 @@ const runJsReduceFunction = ({
 }: RunReduceCommandProps): Promise<unknown> => {
   const fullReduceFunctionPath = expandFilePath(ctx.projectDir, reduceCommand)
 
-  // eslint-disable-next-line
-  const reduceFn: ReduceFunction<unknown> = require(fullReduceFunctionPath)
+  const reduceFile = await import(fullReduceFunctionPath)
+  if (!reduceFile.default) {
+    throw new Error(
+      `File ${fullReduceFunctionPath} doesn't have default export`,
+    )
+  }
+
+  const reduceFn: ReduceFunction<unknown> = reduceFile.default
 
   return reduceFn({
     credentials,

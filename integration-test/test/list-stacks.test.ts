@@ -1,9 +1,9 @@
-import { isDefined, isNumber } from "../src/assertions"
-import { executeWithCli } from "../src/cli/execute"
+import { isDefined, isNumber } from "../src/assertions.js"
+import { executeWithCli } from "../src/cli/execute.js"
 import {
   executeDeployStacksCommand,
   executeListStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/list-stacks`
 
@@ -42,13 +42,13 @@ describe("List stacks", () => {
     }
 
     await executeWithCli(
-      `./bin/tkm stacks list --output json --quiet -d ${projectDir}`,
+      `node bin/tkm.mjs stacks list --output json --quiet -d ${projectDir}`,
     )
       .expectJson(expected)
       .assert()
 
     await executeWithCli(
-      `./bin/tkm stacks list --output yaml --quiet -d ${projectDir}`,
+      `node bin/tkm.mjs stacks list --output yaml --quiet -d ${projectDir}`,
     )
       .expectYaml(expected)
       .assert()
@@ -105,13 +105,13 @@ describe("List stacks", () => {
     }
 
     await executeWithCli(
-      `./bin/tkm stacks list --output json --quiet -d ${projectDir}`,
+      `node bin/tkm.mjs stacks list --output json --quiet -d ${projectDir}`,
     )
       .expectJson(expected)
       .assert()
 
     await executeWithCli(
-      `./bin/tkm stacks list --output yaml --quiet -d ${projectDir}`,
+      `node bin/tkm.mjs stacks list --output yaml --quiet -d ${projectDir}`,
     )
       .expectYaml(expected)
       .assert()
@@ -147,13 +147,13 @@ describe("List stacks", () => {
     }
 
     await executeWithCli(
-      `./bin/tkm stacks list /security-groups1.yml --output json --quiet -d ${projectDir}`,
+      `node bin/tkm.mjs stacks list /security-groups1.yml --output json --quiet -d ${projectDir}`,
     )
       .expectJson(expected)
       .assert()
 
     await executeWithCli(
-      `./bin/tkm stacks list /security-groups1.yml --output yaml --quiet -d ${projectDir}`,
+      `node bin/tkm.mjs stacks list /security-groups1.yml --output yaml --quiet -d ${projectDir}`,
     )
       .expectYaml(expected)
       .assert()

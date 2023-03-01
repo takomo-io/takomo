@@ -3,9 +3,9 @@ import {
   ParameterConfig,
   ParameterConfigs,
   SingleParameterConfig,
-} from "../../config/common-config"
-import { parseOptionalBoolean } from "../common-parser"
-import { parseSchema } from "./parse-schema"
+} from "../../config/common-config.js"
+import { parseOptionalBoolean } from "../common-parser.js"
+import { parseSchema } from "./parse-schema.js"
 
 const parseImmutable = (value: unknown): boolean => {
   if (value === null || value === undefined) {

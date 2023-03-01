@@ -1,4 +1,4 @@
-import { TemplateBucketConfig } from "../../common/model"
+import { TemplateBucketConfig } from "../../common/model.js"
 
 export const parseTemplateBucket = (
   value: any,

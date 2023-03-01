@@ -1,29 +1,29 @@
 import { err, ok, Result } from "neverthrow"
-import R from "ramda"
-import { ConfigSet, ConfigSetName } from "../../config-sets/config-set-model"
+import * as R from "ramda"
+import { ConfigSet, ConfigSetName } from "../../config-sets/config-set-model.js"
 import {
   DeploymentConfig,
   DeploymentGroupConfig,
   SchemaConfig,
-} from "../../config/targets-config"
-import { CommandContext } from "../../context/command-context"
-import { createDeploymentTargetsConfigSchema } from "../../schema/deployment-targets-config-schema"
+} from "../../config/targets-config.js"
+import { CommandContext } from "../../context/command-context.js"
+import { createDeploymentTargetsConfigSchema } from "../../schema/deployment-targets-config-schema.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetsSchemaRegistry,
-} from "../../targets/targets-model"
-import { collectFromHierarchy } from "../../utils/collections"
-import { ValidationError } from "../../utils/errors"
-import { TkmLogger } from "../../utils/logging"
-import { merge } from "../../utils/objects"
+} from "../../targets/targets-model.js"
+import { collectFromHierarchy } from "../../utils/collections.js"
+import { ValidationError } from "../../utils/errors.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { merge } from "../../utils/objects.js"
 import {
   parseCommandRole,
   parseOptionalString,
   parseVars,
-} from "../common-parser"
-import { mergeConfigSets, parseConfigSets } from "../config-set-parser"
-import { parseDeploymentGroups } from "./parse-deployment-groups"
-import { parseTargetSchemas } from "./parse-target-schemas"
+} from "../common-parser.js"
+import { mergeConfigSets, parseConfigSets } from "../config-set-parser.js"
+import { parseDeploymentGroups } from "./parse-deployment-groups.js"
+import { parseTargetSchemas } from "./parse-target-schemas.js"
 
 export const buildDeploymentConfig = async (
   ctx: CommandContext,

@@ -1,8 +1,8 @@
-import { createStacksSchemas } from "../../../src/schema/stacks-schema"
+import { createStacksSchemas } from "../../../src/schema/stacks-schema.js"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "../../assertions"
+} from "../../assertions.js"
 
 const { hookStage } = createStacksSchemas({
   regions: [],

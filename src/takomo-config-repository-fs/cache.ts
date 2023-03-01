@@ -1,6 +1,6 @@
 import { dirname, join } from "path"
-import { Cache } from "../caches/cache"
-import { TakomoError } from "../utils/errors"
+import { Cache } from "../caches/cache.js"
+import { TakomoError } from "../utils/errors.js"
 import {
   createDir,
   createFile,
@@ -9,8 +9,8 @@ import {
   FilePath,
   readFileContents,
   removeDir,
-} from "../utils/files"
-import { TkmLogger } from "../utils/logging"
+} from "../utils/files.js"
+import { TkmLogger } from "../utils/logging.js"
 
 const toFilePath = (cacheDir: FilePath, key: string): FilePath =>
   join(cacheDir, key)

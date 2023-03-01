@@ -1,4 +1,4 @@
-import { Hook, HookConfig, HookInput, HookOutputObject } from "./hook"
+import { Hook, HookConfig, HookInput, HookOutputObject } from "./hook.js"
 
 export class HookExecutor implements Hook {
   readonly config: HookConfig

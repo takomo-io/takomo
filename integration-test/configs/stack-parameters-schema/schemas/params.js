@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "MyParams",
   init: ({ joi }) =>
     joi.object({

@@ -1,15 +1,15 @@
 import { mock } from "jest-mock-extended"
-import dedent from "ts-dedent"
-import { CloudFormationStack } from "../../../../src/aws/cloudformation/model"
+import { dedent } from "ts-dedent"
+import { CloudFormationStack } from "../../../../src/aws/cloudformation/model.js"
 import {
   CONFIRM_DEPLOY_ANSWER_CANCEL,
   CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW,
   CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW,
   createDeployStacksIO,
   UserActions,
-} from "../../../../src/cli-io"
-import { StackOperationType } from "../../../../src/command/command-model"
-import { StackDeployOperation } from "../../../../src/command/stacks/deploy/plan"
+} from "../../../../src/cli-io/index.js"
+import { StackOperationType } from "../../../../src/command/command-model.js"
+import { StackDeployOperation } from "../../../../src/command/stacks/deploy/plan.js"
 import {
   bold,
   cyan,
@@ -17,11 +17,14 @@ import {
   orange,
   red,
   yellow,
-} from "../../../../src/utils/colors"
-import { formatTimestamp } from "../../../../src/utils/date"
-import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
-import { createCapturingLogWriter } from "../../../capturing-log-writer"
-import { mockInternalStack, MockInternalStackProps } from "../../mocks"
+} from "../../../../src/utils/colors.js"
+import { formatTimestamp } from "../../../../src/utils/date.js"
+import {
+  createConsoleLogger,
+  LogWriter,
+} from "../../../../src/utils/logging.js"
+import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
+import { mockInternalStack, MockInternalStackProps } from "../../mocks.js"
 
 const actions = mock<UserActions>()
 

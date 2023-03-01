@@ -1,16 +1,16 @@
 import yargs from "yargs"
-import { RunProps } from "./common"
-import { deploymentTargetsCmd } from "./deployment-targets"
-import { iamCmd } from "./iam"
-import { stacksCmd } from "./stacks"
-
-export { initCommandContext } from "./common"
+import { hideBin } from "yargs/helpers"
+import { RunProps } from "./common.js"
+import { deploymentTargetsCmd } from "./deployment-targets/index.js"
+import { iamCmd } from "./iam/index.js"
+import { stacksCmd } from "./stacks/index.js"
+export { initCommandContext } from "./common.js"
 
 /**
  * @hidden
  */
 export const run = (props: RunProps = { showHelpOnFail: true }): void => {
-  yargs
+  yargs(hideBin(process.argv))
     .command(stacksCmd(props))
     .command(deploymentTargetsCmd(props))
     .command(iamCmd(props))

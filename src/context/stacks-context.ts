@@ -1,8 +1,8 @@
-import { CredentialManager } from "../aws/common/credentials"
-import { InternalStack, Stack, StackPath } from "../stacks/stack"
-import { StackGroup, StackGroupPath } from "../stacks/stack-group"
-import { TemplateEngine } from "../templating/template-engine"
-import { CommandContext, InternalCommandContext } from "./command-context"
+import { CredentialManager } from "../aws/common/credentials.js"
+import { StackGroup, StackGroupPath } from "../stacks/stack-group.js"
+import { InternalStack, Stack, StackPath } from "../stacks/stack.js"
+import { TemplateEngine } from "../templating/template-engine.js"
+import { CommandContext, InternalCommandContext } from "./command-context.js"
 
 /**
  * Provides access to the current stack context and

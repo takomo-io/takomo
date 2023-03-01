@@ -1,20 +1,20 @@
 import Joi, { AnySchema } from "joi"
-import R from "ramda"
+import * as R from "ramda"
 
-import { AwsClientProvider } from "../../aws/aws-client-provider"
-import { CloudTrailEvent } from "../../aws/cloudtrail/model"
-import { CredentialManager } from "../../aws/common/credentials"
-import { AccountId, IamRoleName, Region } from "../../aws/common/model"
-import { CommandContext } from "../../context/command-context"
-import { createAwsSchemas } from "../../schema/aws-schema"
-import { CommandHandler } from "../../takomo-core/command"
-import { TkmLogger } from "../../utils/logging"
-import { validateInput } from "../../utils/validation"
+import { AwsClientProvider } from "../../aws/aws-client-provider.js"
+import { CloudTrailEvent } from "../../aws/cloudtrail/model.js"
+import { CredentialManager } from "../../aws/common/credentials.js"
+import { AccountId, IamRoleName, Region } from "../../aws/common/model.js"
+import { CommandContext } from "../../context/command-context.js"
+import { createAwsSchemas } from "../../schema/aws-schema.js"
+import { CommandHandler } from "../../takomo-core/command.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { validateInput } from "../../utils/validation.js"
 import {
   GenerateIamPoliciesInput,
   GenerateIamPoliciesIO,
   GenerateIamPoliciesOutput,
-} from "./model"
+} from "./model.js"
 
 const getEventsFromRegion = async (
   awsClientProvider: AwsClientProvider,

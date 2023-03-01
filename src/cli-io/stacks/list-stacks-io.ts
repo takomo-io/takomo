@@ -1,10 +1,13 @@
 import Table from "easy-table"
-import { ListStacksIO, ListStacksOutput } from "../../command/stacks/list/model"
-import { toPrettyJson } from "../../utils/json"
-import { formatYaml } from "../../utils/yaml"
-import { createBaseIO } from "../cli-io"
-import { formatStackStatus } from "../formatters"
-import { formatDate, IOProps } from "./common"
+import {
+  ListStacksIO,
+  ListStacksOutput,
+} from "../../command/stacks/list/model.js"
+import { toPrettyJson } from "../../utils/json.js"
+import { formatYaml } from "../../utils/yaml.js"
+import { createBaseIO } from "../cli-io.js"
+import { formatStackStatus } from "../formatters.js"
+import { formatDate, IOProps } from "./common.js"
 
 export const createListStacksIO = (props: IOProps): ListStacksIO => {
   const { logger } = props

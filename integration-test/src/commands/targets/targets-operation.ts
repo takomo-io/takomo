@@ -3,20 +3,20 @@ import {
   StackOutput,
   StackOutputKey,
   StackOutputValue,
-} from "../../../../src/aws/cloudformation/model"
-import { Tag, TagKey, TagValue } from "../../../../src/aws/common/model"
-import { CommandPath } from "../../../../src/command/command-model"
-import { StacksOperationOutput } from "../../../../src/command/stacks/model"
-import { DeploymentTargetsOperationOutput } from "../../../../src/command/targets/operation/model"
-import { ConfigSetName } from "../../../../src/config-sets/config-set-model"
-import { StackPath } from "../../../../src/stacks/stack"
-import { CommandStatus } from "../../../../src/takomo-core/command"
-import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans"
+} from "../../../../src/aws/cloudformation/model.js"
+import { Tag, TagKey, TagValue } from "../../../../src/aws/common/model.js"
+import { CommandPath } from "../../../../src/command/command-model.js"
+import { StacksOperationOutput } from "../../../../src/command/stacks/model.js"
+import { DeploymentTargetsOperationOutput } from "../../../../src/command/targets/operation/model.js"
+import { ConfigSetName } from "../../../../src/config-sets/config-set-model.js"
+import { StackPath } from "../../../../src/stacks/stack.js"
+import { CommandStatus } from "../../../../src/takomo-core/command.js"
+import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans/index.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../../../../src/targets/targets-model"
-import { ExecuteCommandProps } from "../common"
+} from "../../../../src/targets/targets-model.js"
+import { ExecuteCommandProps } from "../common.js"
 
 export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
   readonly groups?: ReadonlyArray<string>

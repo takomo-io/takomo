@@ -1,5 +1,5 @@
-import { takomoProjectConfigFileSchema } from "../../src/parser/project-config-parser"
-import { expectNoValidationError } from "../assertions"
+import { takomoProjectConfigFileSchema } from "../../src/parser/project-config-parser.js"
+import { expectNoValidationError } from "../assertions.js"
 
 const valid = [
   {},

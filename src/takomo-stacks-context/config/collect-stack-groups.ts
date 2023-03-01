@@ -1,4 +1,4 @@
-import { StackGroup, StackGroupPath } from "../../stacks/stack-group"
+import { StackGroup, StackGroupPath } from "../../stacks/stack-group.js"
 
 export const collectStackGroups = (
   stackGroup: StackGroup,

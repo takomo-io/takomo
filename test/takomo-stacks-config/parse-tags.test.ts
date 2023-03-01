@@ -1,4 +1,4 @@
-import { parseTags } from "../../src/parser/stacks/parse-tags"
+import { parseTags } from "../../src/parser/stacks/parse-tags.js"
 
 describe("#parseTags", () => {
   test("when undefined is given", () => {

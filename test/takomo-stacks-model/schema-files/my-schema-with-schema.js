@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "my-schema-with-schema",
   init: ({ joi }) => {
     return joi.string()

@@ -1,5 +1,5 @@
-import { StackOperationStep } from "../../common/steps"
-import { ParametersHolder } from "../states"
+import { StackOperationStep } from "../../common/steps.js"
+import { ParametersHolder } from "../states.js"
 
 export const prepareTags: StackOperationStep<ParametersHolder> = (
   state: ParametersHolder,

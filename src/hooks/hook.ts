@@ -1,8 +1,8 @@
-import { CloudFormationStack } from "../aws/cloudformation/model"
-import { StacksContext } from "../context/stacks-context"
-import { Stack } from "../stacks/stack"
-import { StackOperationVariables } from "../takomo-stacks-context/model"
-import { TkmLogger } from "../utils/logging"
+import { CloudFormationStack } from "../aws/cloudformation/model.js"
+import { StacksContext } from "../context/stacks-context.js"
+import { Stack } from "../stacks/stack.js"
+import { StackOperationVariables } from "../takomo-stacks-context/model.js"
+import { TkmLogger } from "../utils/logging.js"
 
 export type HookType = string
 export type HookName = string

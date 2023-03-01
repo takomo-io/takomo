@@ -1,5 +1,5 @@
-import { uuid } from "../../src/utils/strings"
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { uuid } from "../../src/utils/strings.js"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/template-bucket`
 

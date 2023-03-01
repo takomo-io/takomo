@@ -1,4 +1,4 @@
-import { VarFileOption } from "../../utils/variables"
+import { VarFileOption } from "../../utils/variables.js"
 
 export const parseVarFileOptions = (
   varFileArgs: any,

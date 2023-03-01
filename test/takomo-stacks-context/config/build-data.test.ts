@@ -1,5 +1,5 @@
-import { buildData } from "../../../src/takomo-stacks-context/config/build-stack"
-import { createStackConfig, createStackGroup } from "../helpers"
+import { buildData } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildData", () => {
   test("no data", () => {

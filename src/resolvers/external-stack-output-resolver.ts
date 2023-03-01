@@ -3,13 +3,13 @@ import {
   DescribeStacksCommand,
 } from "@aws-sdk/client-cloudformation"
 import { ObjectSchema } from "joi"
-import { IamRoleArn } from "../aws/common/model"
-import { createAwsSchemas } from "../schema/aws-schema"
-import { Resolver, ResolverInput } from "./resolver"
+import { IamRoleArn } from "../aws/common/model.js"
+import { createAwsSchemas } from "../schema/aws-schema.js"
 import {
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "./resolver-provider"
+} from "./resolver-provider.js"
+import { Resolver, ResolverInput } from "./resolver.js"
 
 const init = async (props: any): Promise<Resolver> => {
   return {

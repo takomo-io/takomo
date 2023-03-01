@@ -3,17 +3,17 @@ import {
   StackName,
   StackParameterKey,
   StackPolicyBody,
-} from "../aws/cloudformation/model"
-import { AccountId, Region, TagKey } from "../aws/common/model"
-import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
-import { HookConfig } from "../hooks/hook"
-import { BlueprintPath, RawTagValue, StackPath } from "../stacks/stack"
-import { CommandRole, Project } from "../takomo-core/command"
+} from "../aws/cloudformation/model.js"
+import { AccountId, Region, TagKey } from "../aws/common/model.js"
+import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
+import { HookConfig } from "../hooks/hook.js"
+import { BlueprintPath, RawTagValue, StackPath } from "../stacks/stack.js"
+import { CommandRole, Project } from "../takomo-core/command.js"
 import {
   ParameterConfigs,
   SchemasConfig,
   TemplateConfig,
-} from "./common-config"
+} from "./common-config.js"
 
 export interface StackConfig {
   readonly project?: Project

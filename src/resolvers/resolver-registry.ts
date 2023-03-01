@@ -1,21 +1,21 @@
 import Joi from "joi"
-import { StackParameterKey } from "../aws/cloudformation/model"
-import { ParameterConfig } from "../config/common-config"
-import { ExternalResolverConfig } from "../config/project-config"
-import { CommandContext } from "../context/command-context"
-import { StackPath } from "../stacks/stack"
-import { TakomoError, TakomoErrorProps } from "../utils/errors"
-import { TkmLogger } from "../utils/logging"
-import { createCmdResolverProvider } from "./cmd-resolver"
-import { createExternalStackOutputResolverProvider } from "./external-stack-output-resolver"
-import { createFileContentsResolverProvider } from "./file-contents-resolver"
-import { createHookOutputResolverProvider } from "./hook-output-resolver"
-import { Resolver, ResolverName } from "./resolver"
-import { ResolverProvider } from "./resolver-provider"
-import { createSecretResolverProvider } from "./secret-resolver"
-import { createSsmResolverProvider } from "./ssm-resolver"
-import { createStackOutputResolverProvider } from "./stack-output-resolver"
-import { createStaticResolverProvider } from "./static-resolver"
+import { StackParameterKey } from "../aws/cloudformation/model.js"
+import { ParameterConfig } from "../config/common-config.js"
+import { ExternalResolverConfig } from "../config/project-config.js"
+import { CommandContext } from "../context/command-context.js"
+import { StackPath } from "../stacks/stack.js"
+import { TakomoError, TakomoErrorProps } from "../utils/errors.js"
+import { TkmLogger } from "../utils/logging.js"
+import { createCmdResolverProvider } from "./cmd-resolver.js"
+import { createExternalStackOutputResolverProvider } from "./external-stack-output-resolver.js"
+import { createFileContentsResolverProvider } from "./file-contents-resolver.js"
+import { createHookOutputResolverProvider } from "./hook-output-resolver.js"
+import { ResolverProvider } from "./resolver-provider.js"
+import { Resolver, ResolverName } from "./resolver.js"
+import { createSecretResolverProvider } from "./secret-resolver.js"
+import { createSsmResolverProvider } from "./ssm-resolver.js"
+import { createStackOutputResolverProvider } from "./stack-output-resolver.js"
+import { createStaticResolverProvider } from "./static-resolver.js"
 
 class InvalidResolverProviderConfigurationError extends TakomoError {
   constructor(
@@ -102,9 +102,16 @@ export class ResolverRegistry {
   registerProviderFromFile = async (
     pathToResolverFile: string,
   ): Promise<void> => {
-    // eslint-disable-next-line
-    const provider = require(pathToResolverFile)
-    return this.registerProvider(provider, `file: ${pathToResolverFile}`)
+    const providerFile = await import(pathToResolverFile)
+
+    if (!providerFile.default) {
+      throw new Error(`File ${pathToResolverFile} doesn't have default export`)
+    }
+
+    return this.registerProvider(
+      providerFile.default,
+      `file: ${pathToResolverFile}`,
+    )
   }
 
   registerBuiltInProvider = async (
@@ -120,12 +127,14 @@ export class ResolverRegistry {
     return this.registerProvider(provider, source)
   }
 
-  registerProviderFromNpmPackage = (config: ExternalResolverConfig): void => {
+  registerProviderFromNpmPackage = async (
+    config: ExternalResolverConfig,
+  ): Promise<void> => {
     // eslint-disable-next-line
-    const provider = require(config.package)
+    const provider = await import(config.package)
     const providerWithName = config.name
-      ? { ...provider, name: config.name }
-      : provider
+      ? { ...provider.default, name: config.name }
+      : provider.default
 
     this.registerProvider(providerWithName, `npm package: ${config.package}`)
   }

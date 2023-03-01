@@ -1,6 +1,6 @@
 import * as CF from "@aws-sdk/client-organizations"
-import { AccountStatus } from "../common/model"
-import { Account, OU, OUPath } from "./model"
+import { AccountStatus } from "../common/model.js"
+import { Account, OU, OUPath } from "./model.js"
 
 export const convertOU = (
   ou: CF.OrganizationalUnit,

@@ -1,10 +1,10 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { StackName } from "../../src/aws/cloudformation/model"
-import { InternalCredentialManager } from "../../src/aws/common/credentials"
-import { InternalStack, StackPath } from "../../src/stacks/stack"
-import { createConsoleLogger } from "../../src/utils/logging"
+import { StackName } from "../../src/aws/cloudformation/model.js"
+import { InternalCredentialManager } from "../../src/aws/common/credentials.js"
+import { InternalStack, StackPath } from "../../src/stacks/stack.js"
+import { createConsoleLogger } from "../../src/utils/logging.js"
 
 export interface TestStackProps {
   path: StackPath
@@ -38,10 +38,10 @@ export const createStack = (props: TestStackProps): InternalStack => {
       logLevel: "info",
     }),
     stackGroupPath: "/",
-    getCloudFormationClient: jest.fn(),
-    toProps: jest.fn(),
+    getCloudFormationClient: () => mock(),
+    toProps: () => mock(),
     credentialManager: mock<InternalCredentialManager>(),
-    getCurrentCloudFormationStack: jest.fn(),
+    getCurrentCloudFormationStack: () => mock(),
     getCredentials: async () => mock<Credentials>(),
     getClient: async () => mock<CloudFormation>(),
   }

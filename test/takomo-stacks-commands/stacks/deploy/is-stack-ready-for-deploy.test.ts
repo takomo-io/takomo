@@ -1,5 +1,5 @@
-import { StackStatus } from "../../../../src/aws/cloudformation/model"
-import { isStackReadyForDeploy } from "../../../../src/command/stacks/deploy/validate"
+import { StackStatus } from "../../../../src/aws/cloudformation/model.js"
+import { isStackReadyForDeploy } from "../../../../src/command/stacks/deploy/validate.js"
 
 const data: Array<[StackStatus, boolean]> = [
   ["CREATE_IN_PROGRESS", false],

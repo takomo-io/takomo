@@ -1,12 +1,12 @@
-import R from "ramda"
+import * as R from "ramda"
 import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
-} from "../../../aws/cloudformation/model"
-import { Tag, TagKey, TagValue } from "../../../aws/common/model"
-import { bold, green, red, yellow } from "../../../utils/colors"
-import { BaseIO } from "../../cli-io"
-import { printValue } from "./common"
+} from "../../../aws/cloudformation/model.js"
+import { Tag, TagKey, TagValue } from "../../../aws/common/model.js"
+import { bold, green, red, yellow } from "../../../utils/colors.js"
+import { BaseIO } from "../../cli-io.js"
+import { printValue } from "./common.js"
 
 export type TagOperation = "update" | "create" | "delete"
 

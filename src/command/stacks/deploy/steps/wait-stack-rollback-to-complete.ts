@@ -1,6 +1,6 @@
-import R from "ramda"
-import { StackOperationStep } from "../../common/steps"
-import { ContinueStackRollbackClientTokenHolder } from "../states"
+import * as R from "ramda"
+import { StackOperationStep } from "../../common/steps.js"
+import { ContinueStackRollbackClientTokenHolder } from "../states.js"
 
 export const waitStackRollbackToComplete: StackOperationStep<
   ContinueStackRollbackClientTokenHolder

@@ -4,19 +4,19 @@ import readdirp from "readdirp"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../targets/targets-model"
-import { TemplateEngine } from "../templating/template-engine"
-import { TakomoError } from "../utils/errors"
-import { dirExists, expandFilePath, FilePath } from "../utils/files"
-import { TkmLogger } from "../utils/logging"
-import { parseYaml } from "../utils/yaml"
+} from "../targets/targets-model.js"
+import { TemplateEngine } from "../templating/template-engine.js"
+import { TakomoError } from "../utils/errors.js"
+import { dirExists, expandFilePath, FilePath } from "../utils/files.js"
+import { TkmLogger } from "../utils/logging.js"
+import { parseYaml } from "../utils/yaml.js"
 import {
   DeploymentTargetConfigItem,
   DeploymentTargetConfigItemWrapper,
   DeploymentTargetRepository,
   DeploymentTargetRepositoryProvider,
-} from "./deployment-target-repository"
-import { InvalidDeploymentTargetFileLocationError } from "./errors"
+} from "./deployment-target-repository.js"
+import { InvalidDeploymentTargetFileLocationError } from "./errors.js"
 
 interface LoadDeploymentTargetFileProps {
   readonly templateEngine: TemplateEngine

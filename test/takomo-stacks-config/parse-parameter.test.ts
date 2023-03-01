@@ -1,8 +1,8 @@
 import {
   ParameterConfig,
   SingleParameterConfig,
-} from "../../src/config/common-config"
-import { parseParameter } from "../../src/parser/stacks/parse-parameter"
+} from "../../src/config/common-config.js"
+import { parseParameter } from "../../src/parser/stacks/parse-parameter.js"
 
 const singleParameterCases: Array<[unknown, ParameterConfig]> = [
   [

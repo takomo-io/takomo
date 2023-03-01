@@ -1,7 +1,7 @@
-import { ConfigSetInstruction } from "../../src"
-import { DeploymentTargetConfig } from "../../src/config/targets-config"
-import { parseDeploymentTarget } from "../../src/parser/targets/parse-deployment-targets"
-import { Label } from "../../src/targets/targets-model"
+import { DeploymentTargetConfig } from "../../src/config/targets-config.js"
+import { ConfigSetInstruction } from "../../src/index.js"
+import { parseDeploymentTarget } from "../../src/parser/targets/parse-deployment-targets.js"
+import { Label } from "../../src/targets/targets-model.js"
 
 describe("#parseDeploymentTarget", () => {
   test("simple", () => {

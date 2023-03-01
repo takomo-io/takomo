@@ -1,5 +1,5 @@
-import { buildRegions } from "../../../src/takomo-stacks-context/config/build-stack"
-import { createStackConfig, createStackGroup } from "../helpers"
+import { buildRegions } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildRegions", () => {
   test("regions defined in stack config", () => {

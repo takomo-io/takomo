@@ -1,4 +1,4 @@
-import { HookConfig } from "../../hooks/hook"
+import { HookConfig } from "../../hooks/hook.js"
 
 export const parseHooks = (value: unknown): ReadonlyArray<HookConfig> => {
   if (!value) {

@@ -1,5 +1,5 @@
 import * as CF from "@aws-sdk/client-cloudformation"
-import { ClientRequestToken, TagKey, TagValue } from "../common/model"
+import { ClientRequestToken, TagKey, TagValue } from "../common/model.js"
 import {
   CausingEntity,
   ChangeSet,
@@ -46,7 +46,7 @@ import {
   StackStatusReason,
   TemplateDescription,
   TemplateSummary,
-} from "./model"
+} from "./model.js"
 
 const convertStackInternal = (s: CF.Stack): CloudFormationStack => ({
   id: s.StackId as StackId,

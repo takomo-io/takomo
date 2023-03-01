@@ -6,23 +6,23 @@ import {
   StackName,
   StackParameterKey,
   StackPolicyBody,
-} from "../aws/cloudformation/model"
+} from "../aws/cloudformation/model.js"
 
-import { CloudFormationClient } from "../aws/cloudformation/client"
+import { CloudFormationClient } from "../aws/cloudformation/client.js"
 import {
   CredentialManager,
   InternalCredentialManager,
-} from "../aws/common/credentials"
-import { AccountId, Region, TagKey } from "../aws/common/model"
-import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
-import { HookExecutor } from "../hooks/hook-executor"
-import { ResolverExecutor } from "../resolvers/resolver-executor"
-import { CommandRole, Project } from "../takomo-core/command"
-import { ROOT_STACK_GROUP_PATH } from "../takomo-stacks-model/constants"
-import { Schemas } from "../takomo-stacks-model/schemas"
-import { FilePath } from "../utils/files"
-import { TkmLogger } from "../utils/logging"
-import { StackGroupName, StackGroupPath } from "./stack-group"
+} from "../aws/common/credentials.js"
+import { AccountId, Region, TagKey } from "../aws/common/model.js"
+import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
+import { HookExecutor } from "../hooks/hook-executor.js"
+import { ResolverExecutor } from "../resolvers/resolver-executor.js"
+import { CommandRole, Project } from "../takomo-core/command.js"
+import { ROOT_STACK_GROUP_PATH } from "../takomo-stacks-model/constants.js"
+import { Schemas } from "../takomo-stacks-model/schemas.js"
+import { FilePath } from "../utils/files.js"
+import { TkmLogger } from "../utils/logging.js"
+import { StackGroupName, StackGroupPath } from "./stack-group.js"
 
 export type RawTagValue = string | number | boolean
 

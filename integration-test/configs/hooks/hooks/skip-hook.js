@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   type: "skip",
   init: (props) => {
     console.log("Initialize skip-hook")

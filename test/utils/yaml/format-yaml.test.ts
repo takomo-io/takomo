@@ -1,4 +1,4 @@
-import { formatYaml } from "../../../src/utils/yaml"
+import { formatYaml } from "../../../src/utils/yaml.js"
 
 describe("#formatYaml", () => {
   test("Simple", () => {

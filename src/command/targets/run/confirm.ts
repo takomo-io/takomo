@@ -1,12 +1,12 @@
-import { DeploymentTargetsContext } from "../../../context/targets-context"
-import { DeploymentTargetsListener } from "../operation/model"
+import { DeploymentTargetsContext } from "../../../context/targets-context.js"
+import { DeploymentTargetsListener } from "../operation/model.js"
 import {
   DeploymentTargetsRunInput,
   DeploymentTargetsRunIO,
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
-} from "./model"
-import { run } from "./run"
+} from "./model.js"
+import { run } from "./run.js"
 
 interface ConfirmRunProps {
   readonly ctx: DeploymentTargetsContext

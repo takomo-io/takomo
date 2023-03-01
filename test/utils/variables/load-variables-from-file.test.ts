@@ -1,5 +1,5 @@
 import { join } from "path"
-import { loadVariablesFromFile } from "../../../src/utils/variables"
+import { loadVariablesFromFile } from "../../../src/utils/variables.js"
 
 const projectDir = join(process.cwd(), "test", "utils", "variables", "files")
 

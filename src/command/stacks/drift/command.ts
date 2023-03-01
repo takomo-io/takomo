@@ -1,14 +1,14 @@
 import Joi, { AnySchema } from "joi"
-import { CommandContext } from "../../../context/command-context"
-import { createStacksSchemas } from "../../../schema/stacks-schema"
-import { CommandHandler } from "../../../takomo-core/command"
+import { CommandContext } from "../../../context/command-context.js"
+import { createStacksSchemas } from "../../../schema/stacks-schema.js"
+import { CommandHandler } from "../../../takomo-core/command.js"
 import {
   buildStacksContext,
   StacksConfigRepository,
-} from "../../../takomo-stacks-context"
-import { validateInput } from "../../../utils/validation"
-import { detectDrift } from "./detect-drift"
-import { DetectDriftInput, DetectDriftIO, DetectDriftOutput } from "./model"
+} from "../../../takomo-stacks-context/index.js"
+import { validateInput } from "../../../utils/validation.js"
+import { detectDrift } from "./detect-drift.js"
+import { DetectDriftInput, DetectDriftIO, DetectDriftOutput } from "./model.js"
 
 const inputSchema = (ctx: CommandContext): AnySchema => {
   const { commandPath } = createStacksSchemas({ regions: ctx.regions })

@@ -1,10 +1,10 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createShowDeploymentTargetsConfigurationIO } from "../../cli-io/deployment-targets/show-config-io"
-import { showDeploymentTargetsConfigurationCommand } from "../../command/targets/show-config/command"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
-import { FilePath } from "../../utils/files"
-import { commonEpilog, handle, RunProps } from "../common"
-import { CONFIG_FILE_OPT, outputFormatOptions } from "../constants"
+import { createShowDeploymentTargetsConfigurationIO } from "../../cli-io/deployment-targets/show-config-io.js"
+import { showDeploymentTargetsConfigurationCommand } from "../../command/targets/show-config/command.js"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository.js"
+import { FilePath } from "../../utils/files.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
+import { CONFIG_FILE_OPT, outputFormatOptions } from "../constants.js"
 
 type CommandArgs = {
   readonly [CONFIG_FILE_OPT]: FilePath | undefined

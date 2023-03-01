@@ -1,5 +1,5 @@
-import { Features } from "../../src/config/project-config"
-import { parseFeatures } from "../../src/parser/project-config-parser"
+import { Features } from "../../src/config/project-config.js"
+import { parseFeatures } from "../../src/parser/project-config-parser.js"
 
 const cases: Array<[any, Features]> = [
   [

@@ -1,14 +1,17 @@
 import {
   initDefaultCredentialManager,
   InternalCredentialManager,
-} from "../../../../src/aws/common/credentials"
-import { InternalCommandContext } from "../../../../src/context/command-context"
-import { DeploymentTargetsConfigRepository } from "../../../../src/context/targets-context"
-import { FileSystemCommandContext } from "../../../../src/takomo-config-repository-fs/context/create-file-system-command-context"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../../../src/takomo-config-repository-fs/deployment-targets/config-repository"
-import { createConsoleLogger, TkmLogger } from "../../../../src/utils/logging"
-import { createTestCommandContext } from "../common"
-import { CreateCtxAndConfigRepositoryProps } from "../stacks"
+} from "../../../../src/aws/common/credentials.js"
+import { InternalCommandContext } from "../../../../src/context/command-context.js"
+import { DeploymentTargetsConfigRepository } from "../../../../src/context/targets-context.js"
+import { FileSystemCommandContext } from "../../../../src/takomo-config-repository-fs/context/create-file-system-command-context.js"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../../../src/takomo-config-repository-fs/deployment-targets/config-repository.js"
+import {
+  createConsoleLogger,
+  TkmLogger,
+} from "../../../../src/utils/logging.js"
+import { createTestCommandContext } from "../common.js"
+import { CreateCtxAndConfigRepositoryProps } from "../stacks.js"
 
 interface CtxAndConfigRepository {
   readonly ctx: InternalCommandContext

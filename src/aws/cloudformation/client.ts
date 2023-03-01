@@ -9,7 +9,7 @@ import {
 } from "@aws-sdk/client-cloudformation"
 import { IPolicy } from "cockatiel"
 import takeRightWhile from "lodash.takerightwhile"
-import R from "ramda"
+import * as R from "ramda"
 import {
   ACTIVE_STACK_STATUSES,
   ChangeSet,
@@ -29,22 +29,22 @@ import {
   StackPolicyBody,
   StackStatus,
   TemplateSummary,
-} from "./model"
+} from "./model.js"
 
-import { arrayToMap } from "../../utils/collections"
-import { Scheduler } from "../../utils/scheduler"
-import { uuid } from "../../utils/strings"
-import { sleep } from "../../utils/system"
+import { arrayToMap } from "../../utils/collections.js"
+import { Scheduler } from "../../utils/scheduler.js"
+import { uuid } from "../../utils/strings.js"
+import { sleep } from "../../utils/system.js"
 import {
   InternalAwsClientProps,
   pagedOperationBulkhead,
   pagedOperationV2,
   withClientBulkhead,
   withClientScheduler,
-} from "../common/client"
-import { ClientRequestToken } from "../common/model"
-import { customRequestHandler } from "../common/request-handler"
-import { customRetryStrategy } from "../common/retry"
+} from "../common/client.js"
+import { ClientRequestToken } from "../common/model.js"
+import { customRequestHandler } from "../common/request-handler.js"
+import { customRetryStrategy } from "../common/retry.js"
 import {
   convertChangeSet,
   convertStack,
@@ -52,8 +52,8 @@ import {
   convertStackEvents,
   convertStackSummaries,
   convertTemplateSummary,
-} from "./convert"
-import { evaluateDescribeChangeSet } from "./rules/describe-change-set-rule"
+} from "./convert.js"
+import { evaluateDescribeChangeSet } from "./rules/describe-change-set-rule.js"
 
 export interface CloudFormationClient {
   readonly validateTemplate: (input: ValidateTemplateInput) => Promise<boolean>

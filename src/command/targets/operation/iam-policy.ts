@@ -1,5 +1,5 @@
-import { deployStacksCommandIamPolicy } from "../../stacks/deploy/iam-policy"
-import { undeployStacksCommandIamPolicy } from "../../stacks/undeploy/iam-policy"
+import { deployStacksCommandIamPolicy } from "../../stacks/deploy/iam-policy.js"
+import { undeployStacksCommandIamPolicy } from "../../stacks/undeploy/iam-policy.js"
 
 export const deployTargetsOperationCommandIamPolicy = (): string =>
   deployStacksCommandIamPolicy()

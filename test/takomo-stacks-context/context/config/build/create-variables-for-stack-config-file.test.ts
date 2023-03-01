@@ -1,5 +1,6 @@
-import { StackGroup } from "../../../../../src/stacks/stack-group"
-import { createVariablesForStackConfigFile } from "../../../../../src/takomo-stacks-context/config/create-variables-for-stack-config-file"
+import { mock } from "jest-mock-extended"
+import { StackGroup } from "../../../../../src/stacks/stack-group.js"
+import { createVariablesForStackConfigFile } from "../../../../../src/takomo-stacks-context/config/create-variables-for-stack-config-file.js"
 
 describe("#createVariablesForStackConfigFile", () => {
   test("returns correct variables", () => {
@@ -52,7 +53,7 @@ describe("#createVariablesForStackConfigFile", () => {
         create: 10,
         update: 20,
       },
-      toProps: jest.fn(),
+      toProps: mock(),
     }
 
     const stackVariables = createVariablesForStackConfigFile(

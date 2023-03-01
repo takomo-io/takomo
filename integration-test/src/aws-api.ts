@@ -5,11 +5,11 @@ import { SSM } from "@aws-sdk/client-ssm"
 import { STS } from "@aws-sdk/client-sts"
 import { CredentialProvider, Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { AwsClientProvider } from "../../src/aws/aws-client-provider"
-import { StackPolicyBody } from "../../src/aws/cloudformation/model"
-import { initDefaultCredentialManager } from "../../src/aws/common/credentials"
-import { CallerIdentity, Region } from "../../src/aws/common/model"
-import { TkmLogger } from "../../src/utils/logging"
+import { AwsClientProvider } from "../../src/aws/aws-client-provider.js"
+import { StackPolicyBody } from "../../src/aws/cloudformation/model.js"
+import { initDefaultCredentialManager } from "../../src/aws/common/credentials.js"
+import { CallerIdentity, Region } from "../../src/aws/common/model.js"
+import { TkmLogger } from "../../src/utils/logging.js"
 
 const ssmClient = (region: Region, credentials: CredentialProvider): SSM =>
   new SSM({ region, credentials })

@@ -1,6 +1,6 @@
-import { StackResult } from "../../../command-model"
-import { StackOperationStep } from "../../common/steps"
-import { InitialDeployStackState } from "../states"
+import { StackResult } from "../../../command-model.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { InitialDeployStackState } from "../states.js"
 
 const hasSomeDependencyFailed = (
   dependencyResults: ReadonlyArray<StackResult>,

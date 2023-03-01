@@ -1,12 +1,12 @@
-import { CommandContext } from "../../context/command-context"
-import { StackGroup } from "../../stacks/stack-group"
-import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { TkmLogger } from "../../utils/logging"
-import { StackGroupConfigNode } from "./config-tree"
-import { createRootStackGroup } from "./create-root-stack-group"
-import { createStackGroupFromParent } from "./create-stack-group-from-parent"
-import { createVariablesForStackGroupConfigFile } from "./create-variables-for-stack-group-config-file"
-import { populatePropertiesFromConfigFile } from "./populate-properties-from-config-file"
+import { CommandContext } from "../../context/command-context.js"
+import { StackGroup } from "../../stacks/stack-group.js"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { StackGroupConfigNode } from "./config-tree.js"
+import { createRootStackGroup } from "./create-root-stack-group.js"
+import { createStackGroupFromParent } from "./create-stack-group-from-parent.js"
+import { createVariablesForStackGroupConfigFile } from "./create-variables-for-stack-group-config-file.js"
+import { populatePropertiesFromConfigFile } from "./populate-properties-from-config-file.js"
 
 export const doCreateStackGroup = async (
   ctx: CommandContext,

@@ -1,9 +1,9 @@
-import { TakomoError } from "../../src/utils/errors"
+import { TakomoError } from "../../src/utils/errors.js"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
-import { withSingleAccountReservation } from "../src/reservations"
+} from "../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/account-ids`
 

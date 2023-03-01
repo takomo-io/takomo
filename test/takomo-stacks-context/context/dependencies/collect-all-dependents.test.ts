@@ -1,5 +1,5 @@
-import { collectAllDependents } from "../../../../src/takomo-stacks-context/dependencies"
-import { createStack } from "../../helpers"
+import { collectAllDependents } from "../../../../src/takomo-stacks-context/dependencies.js"
+import { createStack } from "../../helpers.js"
 
 describe("collect all dependents", () => {
   test("when stack has no dependents", () => {

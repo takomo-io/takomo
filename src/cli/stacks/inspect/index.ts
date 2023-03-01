@@ -1,6 +1,6 @@
-import { RunProps } from "../../common"
-import { configurationCmd } from "./configuration"
-import { dependencyGraphCmd } from "./dependency-graph"
+import { RunProps } from "../../common.js"
+import { configurationCmd } from "./configuration.js"
+import { dependencyGraphCmd } from "./dependency-graph.js"
 
 export const inspectCmd = (props: RunProps) => ({
   command: "inspect <command>",

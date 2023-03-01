@@ -1,4 +1,4 @@
-import { makeIamRoleArn } from "../../src/aws/common/util"
+import { makeIamRoleArn } from "../../src/aws/common/util.js"
 
 describe("#makeIamRoleArn", () => {
   test("makes correct iam role arn", () => {

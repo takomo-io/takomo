@@ -1,4 +1,4 @@
-import { toHookStatus } from "../../../../src/command/stacks/common/hooks"
+import { toHookStatus } from "../../../../src/command/stacks/common/hooks.js"
 
 describe("#toHookStatus", () => {
   describe("returns correct value", () => {

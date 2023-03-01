@@ -1,4 +1,4 @@
-import { mergeMaps } from "../../../src/utils/collections"
+import { mergeMaps } from "../../../src/utils/collections.js"
 
 describe("#mergeMaps", () => {
   test("single empty maps", () => {

@@ -4,7 +4,7 @@
 import {
   executeDeployStacksCommand,
   executeListStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/list-stacks-multi-account`
 

@@ -4,14 +4,14 @@ import {
 } from "@aws-sdk/client-secrets-manager"
 import jmespath from "jmespath"
 import { ObjectSchema } from "joi"
-import { IamRoleArn } from "../aws/common/model"
-import { createAwsSchemas } from "../schema/aws-schema"
-import { TkmLogger } from "../utils/logging"
-import { Resolver, ResolverInput } from "./resolver"
+import { IamRoleArn } from "../aws/common/model.js"
+import { createAwsSchemas } from "../schema/aws-schema.js"
+import { TkmLogger } from "../utils/logging.js"
 import {
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "./resolver-provider"
+} from "./resolver-provider.js"
+import { Resolver, ResolverInput } from "./resolver.js"
 
 const parseSecret = (logger: TkmLogger, secretValue: string): unknown => {
   try {

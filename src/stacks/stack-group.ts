@@ -1,10 +1,13 @@
-import { StackCapability, StackPolicyBody } from "../aws/cloudformation/model"
-import { AccountId, Region, TagKey } from "../aws/common/model"
-import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model"
-import { HookConfig } from "../hooks/hook"
-import { CommandRole, Project } from "../takomo-core/command"
-import { Schemas } from "../takomo-stacks-model/schemas"
-import { InternalStack, RawTagValue } from "./stack"
+import {
+  StackCapability,
+  StackPolicyBody,
+} from "../aws/cloudformation/model.js"
+import { AccountId, Region, TagKey } from "../aws/common/model.js"
+import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
+import { HookConfig } from "../hooks/hook.js"
+import { CommandRole, Project } from "../takomo-core/command.js"
+import { Schemas } from "../takomo-stacks-model/schemas.js"
+import { InternalStack, RawTagValue } from "./stack.js"
 
 export type StackGroupPath = string
 export type StackGroupName = string

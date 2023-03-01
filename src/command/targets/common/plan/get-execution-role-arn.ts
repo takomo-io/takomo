@@ -1,6 +1,6 @@
-import { CallerIdentity, IamRoleArn } from "../../../../aws/common/model"
-import { makeIamRoleArn } from "../../../../aws/common/util"
-import { DeploymentTargetConfig } from "../../../../config/targets-config"
+import { CallerIdentity, IamRoleArn } from "../../../../aws/common/model.js"
+import { makeIamRoleArn } from "../../../../aws/common/util.js"
+import { DeploymentTargetConfig } from "../../../../config/targets-config.js"
 
 export const getExecutionRoleArn = (
   callerIdentity: CallerIdentity,

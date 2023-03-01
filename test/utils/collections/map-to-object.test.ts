@@ -1,4 +1,4 @@
-import { mapToObject } from "../../../src/utils/collections"
+import { mapToObject } from "../../../src/utils/collections.js"
 
 describe("#mapToObject", () => {
   describe("returns correct value when", () => {

@@ -1,2 +1,2 @@
 helpersDir: my-helpers
-requiredVersion: ">1.0.0 || >=5.0.0-alpha.0"
+requiredVersion: ">1.0.0 || >=6.0.0-alpha.0"

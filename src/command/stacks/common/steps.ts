@@ -1,6 +1,6 @@
-import { TkmLogger } from "../../../utils/logging"
-import { StackResult } from "../../command-model"
-import { InitialStackOperationState } from "./states"
+import { TkmLogger } from "../../../utils/logging.js"
+import { StackResult } from "../../command-model.js"
+import { InitialStackOperationState } from "./states.js"
 
 type StackOperationCompletedProps = Omit<StackResult, "timer">
 

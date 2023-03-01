@@ -1,11 +1,17 @@
 import { mock } from "jest-mock-extended"
-import dedent from "ts-dedent"
-import { createDeployTargetsIO, UserActions } from "../../../../src/cli-io"
-import { PlannedDeploymentTarget } from "../../../../src/command/targets/common/plan/model"
-import { TargetsExecutionPlan } from "../../../../src/command/targets/operation/model"
-import { bold } from "../../../../src/utils/colors"
-import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
-import { createCapturingLogWriter } from "../../../capturing-log-writer"
+import { dedent } from "ts-dedent"
+import {
+  createDeployTargetsIO,
+  UserActions,
+} from "../../../../src/cli-io/index.js"
+import { PlannedDeploymentTarget } from "../../../../src/command/targets/common/plan/model.js"
+import { TargetsExecutionPlan } from "../../../../src/command/targets/operation/model.js"
+import { bold } from "../../../../src/utils/colors.js"
+import {
+  createConsoleLogger,
+  LogWriter,
+} from "../../../../src/utils/logging.js"
+import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
 
 const actions = mock<UserActions>()
 
@@ -67,7 +73,6 @@ const target = ({ id, configSets, accountId, description }: TargetProps) => {
 describe("Confirm deploy", () => {
   test("a single target", async () => {
     const output = await confirmDeploy({
-      configSetType: "standard",
       stages: [
         {
           stageName: "default",
@@ -103,7 +108,6 @@ describe("Confirm deploy", () => {
 
   test("a single target with account id", async () => {
     const output = await confirmDeploy({
-      configSetType: "standard",
       stages: [
         {
           stageName: "super",
@@ -146,7 +150,6 @@ describe("Confirm deploy", () => {
 
   test("a single target with account id and description", async () => {
     const output = await confirmDeploy({
-      configSetType: "standard",
       stages: [
         {
           stageName: "super",

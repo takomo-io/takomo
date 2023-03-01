@@ -1,29 +1,29 @@
-import { InternalCredentialManager } from "../../aws/common/credentials"
-import { IamRoleArn } from "../../aws/common/model"
-import { CommandPath } from "../../command/command-model"
-import { InternalCommandContext } from "../../context/command-context"
-import { InternalStacksContext } from "../../context/stacks-context"
-import { createHookRegistry } from "../../hooks/hook-registry"
+import { InternalCredentialManager } from "../../aws/common/credentials.js"
+import { IamRoleArn } from "../../aws/common/model.js"
+import { CommandPath } from "../../command/command-model.js"
+import { InternalCommandContext } from "../../context/command-context.js"
+import { InternalStacksContext } from "../../context/stacks-context.js"
+import { createHookRegistry } from "../../hooks/hook-registry.js"
 import {
   coreResolverProviders,
   ResolverRegistry,
-} from "../../resolvers/resolver-registry"
-import { normalizeStackPath, StackPath } from "../../stacks/stack"
-import { StackGroupPath } from "../../stacks/stack-group"
-import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
-import { createSchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { arrayToMap, collectFromHierarchy } from "../../utils/collections"
-import { TkmLogger } from "../../utils/logging"
-import { isStackGroupPath } from "../common"
+} from "../../resolvers/resolver-registry.js"
+import { StackGroupPath } from "../../stacks/stack-group.js"
+import { normalizeStackPath, StackPath } from "../../stacks/stack.js"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
+import { createSchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { arrayToMap, collectFromHierarchy } from "../../utils/collections.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { isStackGroupPath } from "../common.js"
 import {
   CommandPathMatchesNoStacksError,
   StacksConfigRepository,
-} from "../model"
-import { collectStackGroups } from "./collect-stack-groups"
-import { collectStacks } from "./collect-stacks"
-import { ConfigTree } from "./config-tree"
-import { coreHookProviders } from "./hooks"
-import { processConfigTree } from "./process-config-tree"
+} from "../model.js"
+import { collectStackGroups } from "./collect-stack-groups.js"
+import { collectStacks } from "./collect-stacks.js"
+import { ConfigTree } from "./config-tree.js"
+import { coreHookProviders } from "./hooks.js"
+import { processConfigTree } from "./process-config-tree.js"
 
 export interface BuildConfigContextInput {
   readonly configRepository: StacksConfigRepository
@@ -89,9 +89,9 @@ export const buildStacksContext = async ({
     resolverRegistry.registerBuiltInProvider(p),
   )
 
-  ctx.projectConfig.resolvers.forEach((config) => {
-    resolverRegistry.registerProviderFromNpmPackage(config)
-  })
+  for (const config of ctx.projectConfig.resolvers) {
+    await resolverRegistry.registerProviderFromNpmPackage(config)
+  }
 
   const schemaRegistry = createSchemaRegistry(logger)
 

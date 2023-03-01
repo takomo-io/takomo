@@ -1,9 +1,9 @@
-import { isNumber } from "../src/assertions"
-import { executeWithCli } from "../src/cli/execute"
+import { isNumber } from "../src/assertions.js"
+import { executeWithCli } from "../src/cli/execute.js"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const stackPath = "/vpc.yml/eu-central-1",
   stackName = "simple-vpc",
@@ -39,7 +39,7 @@ describe("Simple", () => {
 
   test("Deploy with cli", () =>
     executeWithCli(
-      `./bin/tkm stacks deploy --quiet --output json -y -d ${projectDir}`,
+      `node bin/tkm.mjs stacks deploy --quiet --output json -y -d ${projectDir}`,
     )
       .expectJson({
         status: "SUCCESS",
@@ -60,7 +60,7 @@ describe("Simple", () => {
 
   test("Undeploy with cli", () =>
     executeWithCli(
-      `./bin/tkm stacks undeploy --quiet --output json -y -d ${projectDir}`,
+      `node bin/tkm.mjs stacks undeploy --quiet --output json -y -d ${projectDir}`,
     )
       .expectJson({
         status: "SUCCESS",

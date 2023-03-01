@@ -1,4 +1,4 @@
-import { executeDeployStacksCommand } from "../../../src/commands/stacks"
+import { executeDeployStacksCommand } from "../../../src/commands/stacks.js"
 
 describe("Before hook that fails", () => {
   test("Deploy", () =>

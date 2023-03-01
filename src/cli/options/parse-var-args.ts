@@ -1,5 +1,5 @@
-import { TakomoError } from "../../utils/errors"
-import { merge } from "../../utils/objects"
+import { TakomoError } from "../../utils/errors.js"
+import { merge } from "../../utils/objects.js"
 
 export const parseVarArgs = (varArgs: any): any => {
   const varsArray = varArgs

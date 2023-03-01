@@ -1,10 +1,8 @@
 import PQueue from "p-queue"
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const PQueue = require("p-queue")
-import { TkmLogger } from "./logging"
-import { randomInt } from "./random"
-import { sleep } from "./system"
-import { formatElapsedMillis } from "./timer"
+import { TkmLogger } from "./logging.js"
+import { randomInt } from "./random.js"
+import { sleep } from "./system.js"
+import { formatElapsedMillis } from "./timer.js"
 
 interface ExecuteProps<T> {
   readonly fn: () => Promise<T>
@@ -46,7 +44,7 @@ export const createScheduler = ({
   const execute = <T>({ fn, taskId }: ExecuteProps<T>): Promise<T> => {
     logger.debug(`Put task ${taskId} in queue`)
     const startTime = Date.now()
-    const wrapped = async () => {
+    const wrapped = async (): Promise<T> => {
       logger.debug(
         `Execute task ${taskId} after wait of ${formatElapsedMillis(
           Date.now() - startTime,
@@ -56,7 +54,7 @@ export const createScheduler = ({
       return fn()
     }
 
-    return queue.add(wrapped)
+    return queue.add(wrapped) as Promise<T>
   }
 
   return {

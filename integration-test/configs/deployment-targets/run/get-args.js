@@ -1,1 +1,1 @@
-module.exports = async ({ args }) => args
+export default async ({ args }) => args

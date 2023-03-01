@@ -1,5 +1,5 @@
-import R from "ramda"
-import { arrayToObject } from "../../../src/utils/collections"
+import * as R from "ramda"
+import { arrayToObject } from "../../../src/utils/collections.js"
 
 describe("#mapToObject", () => {
   describe("returns correct value when", () => {

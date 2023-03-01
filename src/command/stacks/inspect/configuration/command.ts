@@ -1,28 +1,28 @@
 import Joi, { AnySchema } from "joi"
-import R from "ramda"
-import { CommandContext } from "../../../../context/command-context"
-import { InternalStacksContext } from "../../../../context/stacks-context"
-import { createStacksSchemas } from "../../../../schema/stacks-schema"
-import { InternalStack, StackPath } from "../../../../stacks/stack"
-import { CommandHandler } from "../../../../takomo-core/command"
+import * as R from "ramda"
+import { CommandContext } from "../../../../context/command-context.js"
+import { InternalStacksContext } from "../../../../context/stacks-context.js"
+import { createStacksSchemas } from "../../../../schema/stacks-schema.js"
+import { InternalStack, StackPath } from "../../../../stacks/stack.js"
+import { CommandHandler } from "../../../../takomo-core/command.js"
 import {
   buildStacksContext,
   sortStacksForDeploy,
   StacksConfigRepository,
-} from "../../../../takomo-stacks-context"
+} from "../../../../takomo-stacks-context/index.js"
 import {
   getStackPath,
   isNotObsolete,
   isWithinCommandPath,
-} from "../../../../takomo-stacks-model/util"
-import { arrayToMap } from "../../../../utils/collections"
-import { validateInput } from "../../../../utils/validation"
-import { collectStackDependencies } from "../../deploy/plan"
+} from "../../../../takomo-stacks-model/util.js"
+import { arrayToMap } from "../../../../utils/collections.js"
+import { validateInput } from "../../../../utils/validation.js"
+import { collectStackDependencies } from "../../deploy/plan.js"
 import {
   ShowConfigurationInput,
   ShowConfigurationIO,
   ShowConfigurationOutput,
-} from "./model"
+} from "./model.js"
 
 const modifyStacks = async (
   input: ShowConfigurationInput,

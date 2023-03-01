@@ -1,4 +1,4 @@
-import { findNonUniques } from "../../../src/utils/collections"
+import { findNonUniques } from "../../../src/utils/collections.js"
 
 const cases: unknown[][][] = [
   [[], []],

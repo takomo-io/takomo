@@ -1,5 +1,5 @@
-import { StackOperationStep } from "../../common/steps"
-import { DetailedCurrentStackHolder } from "../states"
+import { StackOperationStep } from "../../common/steps.js"
+import { DetailedCurrentStackHolder } from "../states.js"
 
 const getValueForLog = (
   value: unknown,

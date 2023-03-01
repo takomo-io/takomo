@@ -1,4 +1,4 @@
-import { createStacksSchemas } from "../../../src/schema/stacks-schema"
+import { createStacksSchemas } from "../../../src/schema/stacks-schema.js"
 
 const { hooks } = createStacksSchemas({
   regions: [],

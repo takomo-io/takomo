@@ -2,8 +2,8 @@
  * Test reviewing of stacks.
  */
 
-import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants"
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants.js"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/review-stacks`
 

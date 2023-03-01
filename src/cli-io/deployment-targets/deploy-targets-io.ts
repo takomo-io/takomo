@@ -1,6 +1,6 @@
-import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
-import { IOProps } from "../stacks/common"
-import { createDeploymentTargetsOperationIO } from "./deployment-operation-io"
+import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model.js"
+import { IOProps } from "../stacks/common.js"
+import { createDeploymentTargetsOperationIO } from "./deployment-operation-io.js"
 
 export const createDeployTargetsIO = (
   props: IOProps,

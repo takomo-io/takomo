@@ -1,12 +1,13 @@
-import { createRootStackGroup } from "../../../../../src/takomo-stacks-context/config/create-root-stack-group"
-import { createStackGroupFromParent } from "../../../../../src/takomo-stacks-context/config/create-stack-group-from-parent"
+import { mock } from "jest-mock-extended"
+import { createRootStackGroup } from "../../../../../src/takomo-stacks-context/config/create-root-stack-group.js"
+import { createStackGroupFromParent } from "../../../../../src/takomo-stacks-context/config/create-stack-group-from-parent.js"
 
 describe("create stack group config from parent", () => {
   test("using root as parent", () => {
     const root = createRootStackGroup()
     const group = createStackGroupFromParent(
       {
-        getConfig: jest.fn(),
+        getConfig: () => mock(),
         name: "dev",
         path: "/dev",
         parentPath: "/",
@@ -33,7 +34,7 @@ describe("create stack group config from parent", () => {
     const root = createRootStackGroup()
     const parent = createStackGroupFromParent(
       {
-        getConfig: jest.fn(),
+        getConfig: () => mock(),
         name: "prod",
         path: "/prod",
         parentPath: "/",
@@ -44,7 +45,7 @@ describe("create stack group config from parent", () => {
     )
     const group = createStackGroupFromParent(
       {
-        getConfig: jest.fn(),
+        getConfig: () => mock(),
         name: "eu-central-1",
         path: "/prod/eu-central-1",
         parentPath: "/prod",

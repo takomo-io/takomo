@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "my-timestamper",
   init: (props) => {
     return {

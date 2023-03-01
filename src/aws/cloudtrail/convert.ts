@@ -1,5 +1,5 @@
 import { LookupEventsResponse } from "@aws-sdk/client-cloudtrail"
-import { CloudTrailEvent } from "./model"
+import { CloudTrailEvent } from "./model.js"
 
 export const convertCloudTrailEvents = ({
   Events,

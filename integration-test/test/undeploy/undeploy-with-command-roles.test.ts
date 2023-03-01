@@ -1,6 +1,6 @@
-import { executeUndeployStacksCommand } from "../../src/commands/stacks"
-import { withSingleAccountReservation } from "../../src/reservations"
-import { pathToConfigs } from "../../src/util"
+import { executeUndeployStacksCommand } from "../../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../../src/reservations.js"
+import { pathToConfigs } from "../../src/util.js"
 
 const projectDir = pathToConfigs("undeploy", "command-roles")
 

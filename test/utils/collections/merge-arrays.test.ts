@@ -1,4 +1,4 @@
-import { mergeArrays } from "../../../src/utils/collections"
+import { mergeArrays } from "../../../src/utils/collections.js"
 
 describe("#mergeArrays", () => {
   test("two empty arrays", () => {

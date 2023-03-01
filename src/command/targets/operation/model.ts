@@ -1,24 +1,24 @@
-import { ConfigSetName } from "../../../config-sets/config-set-model"
-import { DeploymentTargetsContext } from "../../../context/targets-context"
-import { CommandInput, IO, OutputFormat } from "../../../takomo-core/command"
+import { ConfigSetName } from "../../../config-sets/config-set-model.js"
+import { DeploymentTargetsContext } from "../../../context/targets-context.js"
+import { CommandInput, IO, OutputFormat } from "../../../takomo-core/command.js"
 import {
   ConfigSetExecutionPlan,
   ConfigSetPlanExecutionResult,
   ConfigSetTargetListener,
   CreateConfigSetTargetListenerProps,
-} from "../../../takomo-execution-plans"
+} from "../../../takomo-execution-plans/index.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetNamePattern,
   Label,
-} from "../../../targets/targets-model"
-import { TkmLogger } from "../../../utils/logging"
-import { Timer } from "../../../utils/timer"
-import { CommandPath, DeploymentOperation } from "../../command-model"
-import { DeployStacksIO } from "../../stacks/deploy/model"
-import { StacksOperationOutput } from "../../stacks/model"
-import { UndeployStacksIO } from "../../stacks/undeploy/model"
-import { PlannedDeploymentTarget } from "../common/plan/model"
+} from "../../../targets/targets-model.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { Timer } from "../../../utils/timer.js"
+import { CommandPath, DeploymentOperation } from "../../command-model.js"
+import { DeployStacksIO } from "../../stacks/deploy/model.js"
+import { StacksOperationOutput } from "../../stacks/model.js"
+import { UndeployStacksIO } from "../../stacks/undeploy/model.js"
+import { PlannedDeploymentTarget } from "../common/plan/model.js"
 
 export type ConfirmOperationAnswer =
   | "CANCEL"

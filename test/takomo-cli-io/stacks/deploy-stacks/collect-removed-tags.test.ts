@@ -1,5 +1,5 @@
-import { collectRemovedTags } from "../../../../src/cli-io/stacks/deploy-stacks/tags"
-import { tag, tagSpec } from "./util"
+import { collectRemovedTags } from "../../../../src/cli-io/stacks/deploy-stacks/tags.js"
+import { tag, tagSpec } from "./util.js"
 
 describe("#collectRemovedTags", () => {
   describe("should return correct tags", () => {

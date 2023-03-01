@@ -1,4 +1,4 @@
-import { Region } from "../aws/common/model"
+import { Region } from "../aws/common/model.js"
 
 export const DEFAULT_REGIONS: ReadonlyArray<Region> = [
   "af-south-1",

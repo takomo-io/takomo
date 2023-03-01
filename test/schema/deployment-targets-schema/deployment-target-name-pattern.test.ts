@@ -1,8 +1,8 @@
-import { createDeploymentTargetsSchemas } from "../../../src/schema/deployment-targets-schema"
+import { createDeploymentTargetsSchemas } from "../../../src/schema/deployment-targets-schema.js"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "../../assertions"
+} from "../../assertions.js"
 const { deploymentTargetNamePattern } = createDeploymentTargetsSchemas({
   regions: ["eu-west-1"],
 })

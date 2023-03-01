@@ -1,5 +1,5 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
-import { withSingleAccountReservation } from "../src/reservations"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../src/reservations.js"
 
 const stackPath = "/a.yml/eu-north-1",
   stackName = "a",
@@ -11,6 +11,7 @@ describe("Custom template engine", () => {
     withSingleAccountReservation(({ accountId }) =>
       executeDeployStacksCommand({
         projectDir,
+        logLevel: "debug",
       })
         .expectCommandToSucceed()
         .expectStackCreateSuccess({

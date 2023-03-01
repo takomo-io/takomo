@@ -1,17 +1,18 @@
+import { expect } from "@jest/globals"
 import { basename } from "path"
-import { initDefaultCredentialManager } from "../../../src/aws/common/credentials"
-import { deployStacksCommand } from "../../../src/command/stacks/deploy/command"
-import { detectDriftCommand } from "../../../src/command/stacks/drift/command"
-import { listStacksCommand } from "../../../src/command/stacks/list/command"
-import { undeployStacksCommand } from "../../../src/command/stacks/undeploy/command"
-import { InternalCommandContext } from "../../../src/context/command-context"
-import { FileSystemCommandContext } from "../../../src/takomo-config-repository-fs/context/create-file-system-command-context"
-import { createFileSystemStacksConfigRepository } from "../../../src/takomo-config-repository-fs/stacks/config-repository"
-import { StacksConfigRepository } from "../../../src/takomo-stacks-context"
-import { ROOT_STACK_GROUP_PATH } from "../../../src/takomo-stacks-model/constants"
-import { FilePath } from "../../../src/utils/files"
-import { createConsoleLogger, LogLevel } from "../../../src/utils/logging"
-import { Timer } from "../../../src/utils/timer"
+import { initDefaultCredentialManager } from "../../../src/aws/common/credentials.js"
+import { deployStacksCommand } from "../../../src/command/stacks/deploy/command.js"
+import { detectDriftCommand } from "../../../src/command/stacks/drift/command.js"
+import { listStacksCommand } from "../../../src/command/stacks/list/command.js"
+import { undeployStacksCommand } from "../../../src/command/stacks/undeploy/command.js"
+import { InternalCommandContext } from "../../../src/context/command-context.js"
+import { FileSystemCommandContext } from "../../../src/takomo-config-repository-fs/context/create-file-system-command-context.js"
+import { createFileSystemStacksConfigRepository } from "../../../src/takomo-config-repository-fs/stacks/config-repository.js"
+import { StacksConfigRepository } from "../../../src/takomo-stacks-context/index.js"
+import { ROOT_STACK_GROUP_PATH } from "../../../src/takomo-stacks-model/constants.js"
+import { FilePath } from "../../../src/utils/files.js"
+import { createConsoleLogger, LogLevel } from "../../../src/utils/logging.js"
+import { Timer } from "../../../src/utils/timer.js"
 import {
   createDetectDriftOutputMatcher,
   createListStacksOutputMatcher,
@@ -19,7 +20,7 @@ import {
   DetectDriftOutputMatcher,
   ListStacksOutputMatcher,
   StacksOperationOutputMatcher,
-} from "../assertions/stacks"
+} from "../assertions/stacks.js"
 import {
   createTestDeployStacksIO,
   createTestDetectDriftIO,
@@ -27,8 +28,8 @@ import {
   createTestUndeployStacksIO,
   TestDeployStacksIOAnswers,
   TestUndeployStacksIOAnswers,
-} from "../io"
-import { createTestCommandContext, ExecuteCommandProps } from "./common"
+} from "../io.js"
+import { createTestCommandContext, ExecuteCommandProps } from "./common.js"
 
 export interface CreateCtxAndConfigRepositoryProps {
   readonly projectDir: FilePath
@@ -52,7 +53,7 @@ export const createTestStacksConfigRepository = async ({
     ctx,
     logger: createConsoleLogger({
       logLevel: ctx.logLevel,
-      name: basename(expect.getState().testPath),
+      name: basename(expect.getState().testPath!),
     }),
   })
 
@@ -104,7 +105,7 @@ export const executeDeployStacksCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
-      name: basename(expect.getState().testPath),
+      name: basename(expect.getState().testPath!),
     })
 
     const credentialManager = await initDefaultCredentialManager(
@@ -147,7 +148,7 @@ export const executeUndeployStacksCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
-      name: basename(expect.getState().testPath),
+      name: basename(expect.getState().testPath!),
     })
 
     const credentialManager = await initDefaultCredentialManager(
@@ -194,7 +195,7 @@ export const executeListStacksCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
-      name: basename(expect.getState().testPath),
+      name: basename(expect.getState().testPath!),
     })
 
     const credentialManager = await initDefaultCredentialManager(
@@ -234,7 +235,7 @@ export const executeDetectDriftCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
-      name: basename(expect.getState().testPath),
+      name: basename(expect.getState().testPath!),
     })
 
     const credentialManager = await initDefaultCredentialManager(

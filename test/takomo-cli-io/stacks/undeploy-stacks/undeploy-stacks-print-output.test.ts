@@ -1,12 +1,16 @@
 import { mock } from "jest-mock-extended"
-import dedent from "ts-dedent"
-import { createUndeployStacksIO } from "../../../../src/cli-io"
-import { InternalStack, StackResult } from "../../../../src/takomo-stacks-model"
-import { green } from "../../../../src/utils/colors"
-import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
-import { Timer } from "../../../../src/utils/timer"
-import { createCapturingLogWriter } from "../../../capturing-log-writer"
-import { mockInternalStack } from "../../mocks"
+import { dedent } from "ts-dedent"
+import { createUndeployStacksIO } from "../../../../src/cli-io/index.js"
+import { StackResult } from "../../../../src/command/command-model.js"
+import { InternalStack } from "../../../../src/stacks/stack.js"
+import { green } from "../../../../src/utils/colors.js"
+import {
+  createConsoleLogger,
+  LogWriter,
+} from "../../../../src/utils/logging.js"
+import { Timer } from "../../../../src/utils/timer.js"
+import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
+import { mockInternalStack } from "../../mocks.js"
 
 const createIO = (writer: LogWriter) =>
   createUndeployStacksIO({

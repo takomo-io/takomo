@@ -4,8 +4,8 @@
  * @testenv-recycler-count 4
  */
 
-import { stackCreateSucceeded } from "../../src/commands/common"
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
+import { stackCreateSucceeded } from "../../src/commands/common.js"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/config-sets`
 

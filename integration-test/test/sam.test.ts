@@ -5,11 +5,11 @@
  * SAM related documentation: https://docs.aws.amazon.com/serverless-application-model/index.html
  */
 
-import { StacksOperationOutputMatcher } from "../src/assertions/stacks"
+import { StacksOperationOutputMatcher } from "../src/assertions/stacks.js"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const deploy = (
   timeout: number,

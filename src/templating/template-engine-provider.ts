@@ -1,6 +1,6 @@
-import { FilePath } from "../utils/files"
-import { TkmLogger } from "../utils/logging"
-import { TemplateEngine } from "./template-engine"
+import { FilePath } from "../utils/files.js"
+import { TkmLogger } from "../utils/logging.js"
+import { TemplateEngine } from "./template-engine.js"
 
 export interface TemplateEngineProps {
   readonly projectDir: FilePath

@@ -1,5 +1,5 @@
 import { AnySchema } from "joi"
-import { toPrettyJson } from "../src/utils/json"
+import { toPrettyJson } from "../src/utils/json.js"
 
 type ExpectedValidationErrorAssertion = (
   value: unknown,

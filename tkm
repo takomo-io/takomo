@@ -7,7 +7,7 @@
 #
 # To build the project, go to the project root dir and run:
 #
-#   yarn build
+#   npm run build
 #
 
-./bin/tkm "$@"
+node bin/tkm.mjs "$@"

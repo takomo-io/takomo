@@ -1,19 +1,19 @@
 import { Policy } from "cockatiel"
-import { InternalStacksContext } from "../../../context/stacks-context"
-import { StackPath } from "../../../stacks/stack"
+import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { StackPath } from "../../../stacks/stack.js"
 import {
   OutputFormat,
   resolveCommandOutputBase,
-} from "../../../takomo-core/command"
-import { StacksConfigRepository } from "../../../takomo-stacks-context"
-import { Timer } from "../../../utils/timer"
-import { StackResult } from "../../command-model"
-import { StacksOperationListener } from "../common/model"
-import { StacksDeployOperationInput, StacksOperationOutput } from "../model"
-import { deployStack } from "./deploy-stack"
-import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors"
-import { ConfirmDeployAnswer, DeployStacksIO, DeployState } from "./model"
-import { StackDeployOperation, StacksDeployPlan } from "./plan"
+} from "../../../takomo-core/command.js"
+import { StacksConfigRepository } from "../../../takomo-stacks-context/index.js"
+import { Timer } from "../../../utils/timer.js"
+import { StackResult } from "../../command-model.js"
+import { StacksOperationListener } from "../common/model.js"
+import { StacksDeployOperationInput, StacksOperationOutput } from "../model.js"
+import { deployStack } from "./deploy-stack.js"
+import { IncompatibleIgnoreDependenciesOptionOnLaunchError } from "./errors.js"
+import { ConfirmDeployAnswer, DeployStacksIO, DeployState } from "./model.js"
+import { StackDeployOperation, StacksDeployPlan } from "./plan.js"
 
 const confirmDeploy = async (
   autoConfirm: boolean,

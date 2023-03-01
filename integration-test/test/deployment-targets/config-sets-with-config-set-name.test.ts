@@ -2,7 +2,7 @@
  * Test deploying config sets with config set name and command path options.
  */
 
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/config-sets-with-config-set-name`
 

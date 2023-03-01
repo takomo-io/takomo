@@ -1,8 +1,8 @@
 import path from "path"
-import { Variables } from "../../common/model"
-import { StackPath } from "../../stacks/stack"
-import { StackGroup } from "../../stacks/stack-group"
-import { getVariablesForStackGroup } from "./get-variables-for-stack-group"
+import { Variables } from "../../common/model.js"
+import { StackGroup } from "../../stacks/stack-group.js"
+import { StackPath } from "../../stacks/stack.js"
+import { getVariablesForStackGroup } from "./get-variables-for-stack-group.js"
 
 export const createVariablesForStackConfigFile = (
   variables: Variables,

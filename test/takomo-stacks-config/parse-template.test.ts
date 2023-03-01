@@ -1,4 +1,4 @@
-import { parseTemplate } from "../../src/parser/stacks/parse-template"
+import { parseTemplate } from "../../src/parser/stacks/parse-template.js"
 
 describe("#parseTemplate", () => {
   test("simple file name", () => {

@@ -1,1 +1,1 @@
-module.exports = ({ targets }) => targets
+export default ({ targets }) => targets

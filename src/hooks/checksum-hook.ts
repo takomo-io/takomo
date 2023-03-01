@@ -1,6 +1,6 @@
 import { hashElement } from "folder-hash"
-import { expandFilePath, FilePath } from "../utils/files"
-import { Hook, HookInput, HookOutput } from "./hook"
+import { expandFilePath, FilePath } from "../utils/files.js"
+import { Hook, HookInput, HookOutput } from "./hook.js"
 
 export class ChecksumHook implements Hook {
   readonly algo = "sha1"

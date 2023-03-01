@@ -4,7 +4,7 @@ import {
   SchemaProvider,
   TakomoConfig,
   TakomoConfigProvider,
-} from "../../../../dist"
+} from "../../../../dist/index.js"
 
 const exampleSchemaProvider: SchemaProvider = {
   init: async ({ joi }: InitSchemaProps): Promise<AnySchema> => {

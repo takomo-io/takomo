@@ -2,8 +2,8 @@ import {
   ConfigSetExecutionGroup,
   ConfigSetTargetListener,
   CreateConfigSetTargetListenerProps,
-} from "../../takomo-execution-plans"
-import { TkmLogger } from "../../utils/logging"
+} from "../../takomo-execution-plans/index.js"
+import { TkmLogger } from "../../utils/logging.js"
 
 export const createTargetListenerInternal = (
   groupsName: string,

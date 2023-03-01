@@ -1,8 +1,8 @@
-import { InternalCredentialManager } from "../aws/common/credentials"
-import { IamRoleArn } from "../aws/common/model"
-import { InternalCommandContext } from "../context/command-context"
-import { TkmLogger } from "../utils/logging"
-import { Timer } from "../utils/timer"
+import { InternalCredentialManager } from "../aws/common/credentials.js"
+import { IamRoleArn } from "../aws/common/model.js"
+import { InternalCommandContext } from "../context/command-context.js"
+import { TkmLogger } from "../utils/logging.js"
+import { Timer } from "../utils/timer.js"
 
 export type Project = string
 

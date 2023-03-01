@@ -1,5 +1,5 @@
 import { join } from "path"
-import { executeShellCommand } from "../../../src/utils/exec"
+import { executeShellCommand } from "../../../src/utils/exec.js"
 
 const cwd = process.cwd()
 const env = process.env

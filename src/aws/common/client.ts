@@ -1,8 +1,8 @@
 import { CredentialProvider, Pluggable } from "@aws-sdk/types"
 import { IPolicy } from "cockatiel"
-import { TkmLogger } from "../../utils/logging"
-import { Scheduler } from "../../utils/scheduler"
-import { CallerIdentity, Region } from "./model"
+import { TkmLogger } from "../../utils/logging.js"
+import { Scheduler } from "../../utils/scheduler.js"
+import { CallerIdentity, Region } from "./model.js"
 
 interface PagedResponse {
   readonly NextToken?: string

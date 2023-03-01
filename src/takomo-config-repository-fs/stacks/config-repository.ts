@@ -1,35 +1,35 @@
 import path from "path"
-import { InternalTakomoProjectConfig } from "../../config/project-config"
-import { StackConfig } from "../../config/stack-config"
-import { InternalCommandContext } from "../../context/command-context"
-import { TakomoConfig } from "../../extensions/config-customizer"
-import { HookRegistry } from "../../hooks/hook-registry"
-import { ResolverRegistry } from "../../resolvers/resolver-registry"
-import { BlueprintPath } from "../../stacks/stack"
+import { InternalTakomoProjectConfig } from "../../config/project-config.js"
+import { StackConfig } from "../../config/stack-config.js"
+import { InternalCommandContext } from "../../context/command-context.js"
+import { TakomoConfig } from "../../extensions/config-customizer.js"
+import { HookRegistry } from "../../hooks/hook-registry.js"
+import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
+import { BlueprintPath } from "../../stacks/stack.js"
 import {
   ConfigTree,
   StacksConfigRepository,
   StacksConfigRepositoryProps,
-} from "../../takomo-stacks-context"
-import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
-import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { EjsTemplateEngineProvider } from "../../templating/ejs/ejs-template-engine-provider"
-import { HandlebarsTemplateEngineProvider } from "../../templating/handlebars/handlebars-template-engine-provider"
-import { TemplateEngineProvider } from "../../templating/template-engine-provider"
+} from "../../takomo-stacks-context/index.js"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { EjsTemplateEngineProvider } from "../../templating/ejs/ejs-template-engine-provider.js"
+import { HandlebarsTemplateEngineProvider } from "../../templating/handlebars/handlebars-template-engine-provider.js"
+import { TemplateEngineProvider } from "../../templating/template-engine-provider.js"
 import {
   dirExists,
   fileExists,
   FilePath,
   readFileContents,
-} from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
-import { buildStackGroupConfigNode } from "./config-tree"
+} from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { buildStackGroupConfigNode } from "./config-tree.js"
 import {
   loadCustomHooks,
   loadCustomResolvers,
   loadCustomSchemas,
-} from "./extensions"
-import { parseBlueprintConfigFile } from "./parser"
+} from "./extensions.js"
+import { parseBlueprintConfigFile } from "./parser.js"
 
 export interface FileSystemStacksConfigRepositoryProps {
   readonly ctx: InternalCommandContext
@@ -61,8 +61,15 @@ const loadProjectConfig = async (
       `Load project config from compiled typescript file: ${ctx.projectConfig.esbuild.outFile}`,
     )
 
-    const configProvider = await import(ctx.projectConfig.esbuild.outFile)
-    return configProvider.default({ projectDir })
+    const configProviderFile = await import(ctx.projectConfig.esbuild.outFile)
+
+    if (!configProviderFile.default) {
+      throw new Error(
+        `File ${ctx.projectConfig.esbuild.outFile} doesn't have default export`,
+      )
+    }
+
+    return configProviderFile.default({ projectDir })
   } else {
     return {}
   }

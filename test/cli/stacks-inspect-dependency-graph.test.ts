@@ -1,4 +1,4 @@
-import { basicCommandPaths, executors } from "./helpers"
+import { basicCommandPaths, executors } from "./helpers.js"
 
 const { expectSuccess } = executors("stacks inspect dependency-graph")
 

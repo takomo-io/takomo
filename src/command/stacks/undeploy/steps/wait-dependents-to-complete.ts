@@ -1,6 +1,6 @@
-import { StackResult } from "../../../command-model"
-import { StackOperationStep } from "../../common/steps"
-import { InitialUndeployStackState } from "../states"
+import { StackResult } from "../../../command-model.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { InitialUndeployStackState } from "../states.js"
 
 const hasSomeDependentFailed = (results: ReadonlyArray<StackResult>): boolean =>
   results.some((r) => !r.success)

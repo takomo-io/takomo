@@ -1,4 +1,4 @@
-import { DeploymentStatus } from "../../targets/targets-model"
+import { DeploymentStatus } from "../../targets/targets-model.js"
 
 export const parseDeploymentStatus = (value: any): DeploymentStatus => {
   if (!value) {

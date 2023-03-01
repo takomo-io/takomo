@@ -1,8 +1,8 @@
 import yaml from "js-yaml"
 import stringify from "json-stable-stringify"
-import { TakomoError } from "./errors"
-import { FilePath, readFileContents } from "./files"
-import { buildErrorMessage } from "./templating"
+import { TakomoError } from "./errors.js"
+import { FilePath, readFileContents } from "./files.js"
+import { buildErrorMessage } from "./templating.js"
 
 export type YamlFormattedString = string
 

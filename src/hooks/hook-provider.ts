@@ -1,4 +1,4 @@
-import { Hook, HookConfig, HookType } from "./hook"
+import { Hook, HookConfig, HookType } from "./hook.js"
 
 /**
  * An interface to be implemented by objects that initialize {@linkcode Hook}
