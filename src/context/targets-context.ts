@@ -1,20 +1,20 @@
-import { InternalCredentialManager } from "../aws/common/credentials"
+import { InternalCredentialManager } from "../aws/common/credentials.js"
 import {
   ConfigSet,
   ConfigSetContext,
   ConfigSetName,
   DEFAULT_STAGE_NAME,
   StageName,
-} from "../config-sets/config-set-model"
+} from "../config-sets/config-set-model.js"
 import {
   DeploymentConfig,
   DeploymentGroupConfig,
-} from "../config/targets-config"
-import { StacksConfigRepository } from "../takomo-stacks-context"
-import { DeploymentGroupPath } from "../targets/targets-model"
-import { collectFromHierarchy } from "../utils/collections"
-import { TkmLogger } from "../utils/logging"
-import { InternalCommandContext } from "./command-context"
+} from "../config/targets-config.js"
+import { StacksConfigRepository } from "../takomo-stacks-context/index.js"
+import { DeploymentGroupPath } from "../targets/targets-model.js"
+import { collectFromHierarchy } from "../utils/collections.js"
+import { TkmLogger } from "../utils/logging.js"
+import { InternalCommandContext } from "./command-context.js"
 
 export interface DeploymentTargetsConfigRepository
   extends StacksConfigRepository {

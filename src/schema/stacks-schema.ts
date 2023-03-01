@@ -5,8 +5,8 @@ import Joi, {
   ObjectSchema,
   StringSchema,
 } from "joi"
-import { Region } from "../aws/common/model"
-import { createAwsSchemas } from "./aws-schema"
+import { Region } from "../aws/common/model.js"
+import { createAwsSchemas } from "./aws-schema.js"
 
 interface CreateStacksSchemasProps {
   readonly regions: ReadonlyArray<Region>

@@ -1,10 +1,10 @@
-import { DeploymentTargetRepositoryType } from "../config/project-config"
-import { TakomoError } from "../utils/errors"
+import { DeploymentTargetRepositoryType } from "../config/project-config.js"
+import { TakomoError } from "../utils/errors.js"
 import {
   DeploymentTargetRepository,
   DeploymentTargetRepositoryProvider,
   InitDeploymentTargetRepositoryProps,
-} from "./deployment-target-repository"
+} from "./deployment-target-repository.js"
 
 export interface DeploymentTargetRepositoryRegistry {
   readonly initDeploymentTargetRepository: (

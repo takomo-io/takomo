@@ -1,6 +1,6 @@
-import { StackParameterKey } from "../../aws/cloudformation/model"
-import { ParameterConfigs } from "../../config/common-config"
-import { parseParameter } from "./parse-parameter"
+import { StackParameterKey } from "../../aws/cloudformation/model.js"
+import { ParameterConfigs } from "../../config/common-config.js"
+import { parseParameter } from "./parse-parameter.js"
 
 export const parseParameters = (
   value: unknown,

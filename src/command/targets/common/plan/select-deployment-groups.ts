@@ -1,19 +1,19 @@
 import R from "ramda"
-import { ConfigSetName } from "../../../../config-sets/config-set-model"
+import { ConfigSetName } from "../../../../config-sets/config-set-model.js"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../../config/targets-config"
-import { DeploymentTargetsContext } from "../../../../context/targets-context"
+} from "../../../../config/targets-config.js"
+import { DeploymentTargetsContext } from "../../../../context/targets-context.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetNamePattern,
   Label,
-} from "../../../../targets/targets-model"
-import { collectFromHierarchy } from "../../../../utils/collections"
-import { TakomoError } from "../../../../utils/errors"
-import { CommandPath } from "../../../command-model"
-import { createDeploymentTargetNamePatternMatcher } from "./create-deployment-target-name-pattern-matcher"
+} from "../../../../targets/targets-model.js"
+import { collectFromHierarchy } from "../../../../utils/collections.js"
+import { TakomoError } from "../../../../utils/errors.js"
+import { CommandPath } from "../../../command-model.js"
+import { createDeploymentTargetNamePatternMatcher } from "./create-deployment-target-name-pattern-matcher.js"
 
 export interface SelectDeploymentGroupsProps {
   readonly groups: ReadonlyArray<DeploymentGroupPath>

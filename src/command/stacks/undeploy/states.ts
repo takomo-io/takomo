@@ -1,14 +1,14 @@
 import {
   CloudFormationStack,
   StackEvent,
-} from "../../../aws/cloudformation/model"
-import { InternalStacksContext } from "../../../context/stacks-context"
-import { CommandStatus } from "../../../takomo-core/command"
-import { TkmLogger } from "../../../utils/logging"
-import { StackOperationVariables, StackResult } from "../../command-model"
-import { InitialStackOperationState } from "../common/states"
-import { UndeployStacksIO } from "./model"
-import { UndeployStackTransitions } from "./transitions"
+} from "../../../aws/cloudformation/model.js"
+import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { CommandStatus } from "../../../takomo-core/command.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { StackOperationVariables, StackResult } from "../../command-model.js"
+import { InitialStackOperationState } from "../common/states.js"
+import { UndeployStacksIO } from "./model.js"
+import { UndeployStackTransitions } from "./transitions.js"
 
 export interface InitialUndeployStackState extends InitialStackOperationState {
   readonly currentStack?: CloudFormationStack

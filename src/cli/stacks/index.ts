@@ -1,10 +1,10 @@
-import { RunProps } from "../common"
-import { deployStacksCmd } from "./deploy"
-import { detectDriftCmd } from "./detect-drift"
-import { inspectCmd } from "./inspect"
-import { listStacksCmd } from "./list"
-import { pruneStacksCmd } from "./prune"
-import { undeployStacksCmd } from "./undeploy"
+import { RunProps } from "../common.js"
+import { deployStacksCmd } from "./deploy.js"
+import { detectDriftCmd } from "./detect-drift.js"
+import { inspectCmd } from "./inspect/index.js"
+import { listStacksCmd } from "./list.js"
+import { pruneStacksCmd } from "./prune.js"
+import { undeployStacksCmd } from "./undeploy.js"
 
 export const stacksCmd = (props: RunProps) => ({
   command: "stacks <command>",

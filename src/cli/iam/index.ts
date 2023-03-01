@@ -1,6 +1,6 @@
 import { Argv } from "yargs"
-import { RunProps } from "../common"
-import { generateIamPoliciesCmd } from "./generate-policies"
+import { RunProps } from "../common.js"
+import { generateIamPoliciesCmd } from "./generate-policies.js"
 
 export const iamCmd = (props: RunProps) => ({
   command: "iam <command>",

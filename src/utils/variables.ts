@@ -1,7 +1,12 @@
-import { TakomoError } from "./errors"
-import { expandFilePath, fileExists, FilePath, readFileContents } from "./files"
-import { merge } from "./objects"
-import { parseYamlFile } from "./yaml"
+import { TakomoError } from "./errors.js"
+import {
+  expandFilePath,
+  fileExists,
+  FilePath,
+  readFileContents,
+} from "./files.js"
+import { merge } from "./objects.js"
+import { parseYamlFile } from "./yaml.js"
 
 export interface VarFileOption {
   readonly filePath: FilePath

@@ -1,15 +1,15 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createRunTargetsIO } from "../../cli-io"
-import { deploymentTargetsRunCommand } from "../../command/targets/run/command"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
-import { OutputFormat } from "../../takomo-core/command"
+import { createRunTargetsIO } from "../../cli-io/index.js"
+import { deploymentTargetsRunCommand } from "../../command/targets/run/command.js"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository.js"
+import { OutputFormat } from "../../takomo-core/command.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   Label,
-} from "../../targets/targets-model"
-import { FilePath } from "../../utils/files"
-import { commonEpilog, handle, RunProps } from "../common"
+} from "../../targets/targets-model.js"
+import { FilePath } from "../../utils/files.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
 import {
   CONCURRENT_TARGETS_OPT,
   CONFIG_FILE_OPT,
@@ -19,8 +19,8 @@ import {
   outputFormatOptions,
   RESET_CACHE_OPT,
   TARGET_OPT,
-} from "../constants"
-import { GROUPS_OPT } from "./common"
+} from "../constants.js"
+import { GROUPS_OPT } from "./common.js"
 
 const REDUCE_OPT = "reduce"
 const MAP_OPT = "map"

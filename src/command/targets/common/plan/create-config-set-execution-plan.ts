@@ -1,23 +1,23 @@
 import {
   ConfigSetName,
   StageName,
-} from "../../../../config-sets/config-set-model"
-import { DeploymentGroupConfig } from "../../../../config/targets-config"
-import { DeploymentTargetsContext } from "../../../../context/targets-context"
+} from "../../../../config-sets/config-set-model.js"
+import { DeploymentGroupConfig } from "../../../../config/targets-config.js"
+import { DeploymentTargetsContext } from "../../../../context/targets-context.js"
 import {
   ConfigSetExecutionGroup,
   ConfigSetExecutionPlan,
   ConfigSetExecutionStage,
-} from "../../../../takomo-execution-plans"
+} from "../../../../takomo-execution-plans/index.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetNamePattern,
   Label,
-} from "../../../../targets/targets-model"
-import { TkmLogger } from "../../../../utils/logging"
-import { CommandPath } from "../../../command-model"
-import { PlannedDeploymentTarget } from "./model"
-import { selectDeploymentGroups } from "./select-deployment-groups"
+} from "../../../../targets/targets-model.js"
+import { TkmLogger } from "../../../../utils/logging.js"
+import { CommandPath } from "../../../command-model.js"
+import { PlannedDeploymentTarget } from "./model.js"
+import { selectDeploymentGroups } from "./select-deployment-groups.js"
 
 export type ExecutionGroupConverter = (
   group: DeploymentGroupConfig,

@@ -1,9 +1,9 @@
 import {
   DependencyGraphIO,
   DependencyGraphOutput,
-} from "../../../command/stacks/inspect/dependency-graph/model"
-import { createBaseIO } from "../../cli-io"
-import { IOProps } from "../common"
+} from "../../../command/stacks/inspect/dependency-graph/model.js"
+import { createBaseIO } from "../../cli-io.js"
+import { IOProps } from "../common.js"
 
 export const createDependencyGraphIO = (props: IOProps): DependencyGraphIO => {
   const { logger } = props

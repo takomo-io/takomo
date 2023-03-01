@@ -5,34 +5,34 @@ import {
   StackEvent,
   TemplateBody,
   TemplateSummary,
-} from "../../../aws/cloudformation/model"
-import { StackOperationType } from "../../../command/command-model"
+} from "../../../aws/cloudformation/model.js"
+import { StackOperationType } from "../../../command/command-model.js"
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
-} from "../../../command/stacks/deploy/model"
-import { StacksDeployPlan } from "../../../command/stacks/deploy/plan"
-import { StacksOperationOutput } from "../../../command/stacks/model"
-import { InternalStack, StackPath } from "../../../stacks/stack"
-import { StackGroup } from "../../../stacks/stack-group"
-import { bold, green, orange, yellow } from "../../../utils/colors"
-import { diffStrings } from "../../../utils/strings"
-import { createBaseIO } from "../../cli-io"
-import { formatStackEvent, formatStackStatus } from "../../formatters"
+} from "../../../command/stacks/deploy/model.js"
+import { StacksDeployPlan } from "../../../command/stacks/deploy/plan.js"
+import { StacksOperationOutput } from "../../../command/stacks/model.js"
+import { StackGroup } from "../../../stacks/stack-group.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { bold, green, orange, yellow } from "../../../utils/colors.js"
+import { diffStrings } from "../../../utils/strings.js"
+import { createBaseIO } from "../../cli-io.js"
+import { formatStackEvent, formatStackStatus } from "../../formatters.js"
 import {
   chooseCommandPathInternal,
   createStacksOperationListenerInternal,
   formatLastModify,
   IOProps,
   printStacksOperationOutput,
-} from "../common"
-import { printOutputs } from "./outputs"
-import { printParameters } from "./parameters"
-import { printResources } from "./resources"
-import { printStackPolicy } from "./stack-policy"
-import { printTags } from "./tags"
-import { printTerminationProtection } from "./termination-protection"
+} from "../common.js"
+import { printOutputs } from "./outputs.js"
+import { printParameters } from "./parameters.js"
+import { printResources } from "./resources.js"
+import { printStackPolicy } from "./stack-policy.js"
+import { printTags } from "./tags.js"
+import { printTerminationProtection } from "./termination-protection.js"
 
 interface ConfirmStackDeployAnswerChoice {
   readonly name: string

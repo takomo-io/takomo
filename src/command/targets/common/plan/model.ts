@@ -1,9 +1,9 @@
-import { AccountId, IamRoleArn } from "../../../../aws/common/model"
-import { DeploymentTargetConfig } from "../../../../config/targets-config"
+import { AccountId, IamRoleArn } from "../../../../aws/common/model.js"
+import { DeploymentTargetConfig } from "../../../../config/targets-config.js"
 import {
   DeploymentGroupName,
   DeploymentGroupPath,
-} from "../../../../targets/targets-model"
+} from "../../../../targets/targets-model.js"
 
 interface PlannedDeploymentGroup {
   readonly name: DeploymentGroupName

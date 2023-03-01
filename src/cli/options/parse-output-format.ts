@@ -1,4 +1,4 @@
-import { OutputFormat } from "../../takomo-core/command"
+import { OutputFormat } from "../../takomo-core/command.js"
 
 export const parseOutputFormat = (format?: string): OutputFormat => {
   if (!format) {

@@ -4,13 +4,13 @@ import {
   StackOperationCompletedState,
   StackOperationFailedState,
   StackOperationSkippedState,
-} from "./states"
+} from "./states.js"
 import {
   StackOperationCompleted,
   StackOperationInProgress,
   StackOperationStep,
   StepResult,
-} from "./steps"
+} from "./steps.js"
 
 export interface StackOperationTransitions {
   start: StackOperationStep<any>

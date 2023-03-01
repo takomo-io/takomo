@@ -1,5 +1,5 @@
-import { TemplateBucketConfig, TimeoutConfig } from "../common/model"
-import { StackPath } from "../stacks/stack"
+import { TemplateBucketConfig, TimeoutConfig } from "../common/model.js"
+import { StackPath } from "../stacks/stack.js"
 
 export const ROOT_STACK_GROUP_PATH = "/"
 

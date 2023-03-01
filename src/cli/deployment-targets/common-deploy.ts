@@ -1,10 +1,10 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { IOProps } from "../../cli-io"
-import { DeploymentOperation } from "../../command/command-model"
-import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command"
-import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
-import { commonEpilog, handle, RunProps } from "../common"
+import { IOProps } from "../../cli-io/index.js"
+import { DeploymentOperation } from "../../command/command-model.js"
+import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command.js"
+import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model.js"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
 import {
   COMMAND_PATH_OPT,
   CONCURRENT_TARGETS_OPT,
@@ -16,8 +16,8 @@ import {
   LABEL_OPT,
   RESET_CACHE_OPT,
   TARGET_OPT,
-} from "../constants"
-import { DeploymentTargetsOperationCommandArgs, GROUPS_OPT } from "./common"
+} from "../constants.js"
+import { DeploymentTargetsOperationCommandArgs, GROUPS_OPT } from "./common.js"
 
 export interface DeploymentTargetsDeployCommandArgs
   extends DeploymentTargetsOperationCommandArgs {

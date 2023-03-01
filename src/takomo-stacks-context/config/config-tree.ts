@@ -1,7 +1,7 @@
-import { StackConfig } from "../../config/stack-config"
-import { StackGroupConfig } from "../../config/stack-group-config"
-import { StackPath } from "../../stacks/stack"
-import { StackGroupName, StackGroupPath } from "../../stacks/stack-group"
+import { StackConfig } from "../../config/stack-config.js"
+import { StackGroupConfig } from "../../config/stack-group-config.js"
+import { StackGroupName, StackGroupPath } from "../../stacks/stack-group.js"
+import { StackPath } from "../../stacks/stack.js"
 
 export interface StackConfigNode {
   readonly path: StackPath

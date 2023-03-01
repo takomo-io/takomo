@@ -1,7 +1,7 @@
-import { CloudFormationStack } from "../../../../aws/cloudformation/model"
-import { InternalStack } from "../../../../stacks/stack"
-import { StackOperationStep } from "../../common/steps"
-import { TemplateSummaryHolder } from "../states"
+import { CloudFormationStack } from "../../../../aws/cloudformation/model.js"
+import { InternalStack } from "../../../../stacks/stack.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { TemplateSummaryHolder } from "../states.js"
 
 const hasTerminationProtectionChanged = (
   stack: InternalStack,

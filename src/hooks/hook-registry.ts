@@ -1,8 +1,8 @@
-import { TakomoError, TakomoErrorProps } from "../utils/errors"
-import { FilePath } from "../utils/files"
-import { TkmLogger } from "../utils/logging"
-import { Hook, HookConfig, HookType } from "./hook"
-import { HookProvider } from "./hook-provider"
+import { TakomoError, TakomoErrorProps } from "../utils/errors.js"
+import { FilePath } from "../utils/files.js"
+import { TkmLogger } from "../utils/logging.js"
+import { HookProvider } from "./hook-provider.js"
+import { Hook, HookConfig, HookType } from "./hook.js"
 
 class InvalidHookProviderConfigurationError extends TakomoError {
   constructor(

@@ -1,25 +1,25 @@
 import { err, ok, Result } from "neverthrow"
-import { StackConfig } from "../../config/stack-config"
-import { CommandContext } from "../../context/command-context"
-import { createStackConfigSchema } from "../../schema/stack-config-schema"
-import { ValidationError } from "../../utils/errors"
+import { StackConfig } from "../../config/stack-config.js"
+import { CommandContext } from "../../context/command-context.js"
+import { createStackConfigSchema } from "../../schema/stack-config-schema.js"
+import { ValidationError } from "../../utils/errors.js"
 import {
   parseCommandRole,
   parseOptionalBoolean,
   parseOptionalString,
   parseOptionalStringArray,
   parseStringArray,
-} from "../common-parser"
-import { parseAccountIds } from "./parse-account-ids"
-import { parseData } from "./parse-data"
-import { parseHooks } from "./parse-hooks"
-import { parseParameters } from "./parse-parameters"
-import { parseSchemas } from "./parse-schemas"
-import { parseStackPolicy } from "./parse-stack-policy"
-import { parseTags } from "./parse-tags"
-import { parseTemplate } from "./parse-template"
-import { parseTemplateBucket } from "./parse-template-bucket"
-import { parseTimeout } from "./parse-timeout"
+} from "../common-parser.js"
+import { parseAccountIds } from "./parse-account-ids.js"
+import { parseData } from "./parse-data.js"
+import { parseHooks } from "./parse-hooks.js"
+import { parseParameters } from "./parse-parameters.js"
+import { parseSchemas } from "./parse-schemas.js"
+import { parseStackPolicy } from "./parse-stack-policy.js"
+import { parseTags } from "./parse-tags.js"
+import { parseTemplateBucket } from "./parse-template-bucket.js"
+import { parseTemplate } from "./parse-template.js"
+import { parseTimeout } from "./parse-timeout.js"
 
 export const buildStackConfig = (
   ctx: CommandContext,

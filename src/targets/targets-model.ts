@@ -1,13 +1,13 @@
 import Joi, { AnySchema } from "joi"
-import { CommandContext } from "../context/command-context"
+import { CommandContext } from "../context/command-context.js"
 import {
   createSchemaRegistry,
   defaultSchema,
   SchemaName,
   SchemaRegistry,
-} from "../takomo-stacks-model/schemas"
-import { TakomoError } from "../utils/errors"
-import { TkmLogger } from "../utils/logging"
+} from "../takomo-stacks-model/schemas.js"
+import { TakomoError } from "../utils/errors.js"
+import { TkmLogger } from "../utils/logging.js"
 
 export type DeploymentGroupName = string
 export type DeploymentTargetName = string

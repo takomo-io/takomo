@@ -1,17 +1,17 @@
 import Joi from "joi"
-import { CredentialManager } from "../aws/common/credentials"
-import { Region } from "../aws/common/model"
-import { Cache } from "../caches/cache"
-import { DeploymentTargetRepositoryConfig } from "../config/project-config"
-import { DeploymentTargetConfig } from "../config/targets-config"
-import { InternalCommandContext } from "../context/command-context"
-import { createDeploymentTargetsSchemas } from "../schema/deployment-targets-schema"
+import { CredentialManager } from "../aws/common/credentials.js"
+import { Region } from "../aws/common/model.js"
+import { Cache } from "../caches/cache.js"
+import { DeploymentTargetRepositoryConfig } from "../config/project-config.js"
+import { DeploymentTargetConfig } from "../config/targets-config.js"
+import { InternalCommandContext } from "../context/command-context.js"
+import { createDeploymentTargetsSchemas } from "../schema/deployment-targets-schema.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../targets/targets-model"
-import { TemplateEngine } from "../templating/template-engine"
-import { TkmLogger } from "../utils/logging"
+} from "../targets/targets-model.js"
+import { TemplateEngine } from "../templating/template-engine.js"
+import { TkmLogger } from "../utils/logging.js"
 
 export interface DeploymentTargetConfigItem
   extends Partial<DeploymentTargetConfig> {

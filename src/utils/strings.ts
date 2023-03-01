@@ -1,7 +1,7 @@
 import crypto from "crypto"
 import { diffLines } from "diff"
 import { v4 } from "uuid"
-import { green, red } from "./colors"
+import { green, red } from "./colors.js"
 
 export const indentLines = (string: string, indent = 2): string => {
   const padding = " ".repeat(indent)

@@ -1,11 +1,11 @@
 import Joi, { AnySchema } from "joi"
-import { StackParameterKey } from "../aws/cloudformation/model"
-import { CommandContext } from "../context/command-context"
-import { StackPath } from "../stacks/stack"
-import { StackGroupPath } from "../stacks/stack-group"
-import { TakomoError } from "../utils/errors"
-import { FilePath } from "../utils/files"
-import { TkmLogger } from "../utils/logging"
+import { StackParameterKey } from "../aws/cloudformation/model.js"
+import { CommandContext } from "../context/command-context.js"
+import { StackGroupPath } from "../stacks/stack-group.js"
+import { StackPath } from "../stacks/stack.js"
+import { TakomoError } from "../utils/errors.js"
+import { FilePath } from "../utils/files.js"
+import { TkmLogger } from "../utils/logging.js"
 
 export type SchemaName = string
 

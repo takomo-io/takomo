@@ -1,8 +1,8 @@
-import { HookProvider } from "../hooks/hook-provider"
-import { ResolverProvider } from "../resolvers/resolver-provider"
-import { SchemaProvider } from "../takomo-stacks-model/schemas"
-import { TemplateEngineProvider } from "../templating/template-engine-provider"
-import { FilePath } from "../utils/files"
+import { HookProvider } from "../hooks/hook-provider.js"
+import { ResolverProvider } from "../resolvers/resolver-provider.js"
+import { SchemaProvider } from "../takomo-stacks-model/schemas.js"
+import { TemplateEngineProvider } from "../templating/template-engine-provider.js"
+import { FilePath } from "../utils/files.js"
 
 /**
  * Takomo custom configuration.

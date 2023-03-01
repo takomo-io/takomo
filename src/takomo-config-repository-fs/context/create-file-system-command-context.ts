@@ -1,18 +1,18 @@
 import { Credentials } from "@aws-sdk/types"
 import { build } from "esbuild"
-import { InternalAwsClientProvider } from "../../aws/aws-client-provider"
-import { Features } from "../../config/project-config"
+import { InternalAwsClientProvider } from "../../aws/aws-client-provider.js"
+import { Features } from "../../config/project-config.js"
 import {
   InternalCommandContext,
   TakomoBuildInfo,
-} from "../../context/command-context"
-import { loadProjectConfig } from "../../parser/project-config-parser"
-import { OutputFormat } from "../../takomo-core/command"
-import { fileExists, FilePath } from "../../utils/files"
-import { LogLevel, TkmLogger } from "../../utils/logging"
-import { VarFileOption } from "../../utils/variables"
-import { createProjectFilePaths, ProjectFilePaths } from "../constants"
-import { buildVariables } from "./build-variables"
+} from "../../context/command-context.js"
+import { loadProjectConfig } from "../../parser/project-config-parser.js"
+import { OutputFormat } from "../../takomo-core/command.js"
+import { fileExists, FilePath } from "../../utils/files.js"
+import { LogLevel, TkmLogger } from "../../utils/logging.js"
+import { VarFileOption } from "../../utils/variables.js"
+import { createProjectFilePaths, ProjectFilePaths } from "../constants.js"
+import { buildVariables } from "./build-variables.js"
 
 export interface FileSystemCommandContext extends InternalCommandContext {
   readonly filePaths: ProjectFilePaths

@@ -1,9 +1,9 @@
-export { validateStackCredentialManagersWithAllowedAccountIds } from "./common"
-export { buildStacksContext } from "./config/build-stacks-context"
+export { validateStackCredentialManagersWithAllowedAccountIds } from "./common.js"
+export { buildStacksContext } from "./config/build-stacks-context.js"
 export {
   ConfigTree,
   StackConfigNode,
   StackGroupConfigNode,
-} from "./config/config-tree"
-export { sortStacksForDeploy, sortStacksForUndeploy } from "./dependencies"
-export { StacksConfigRepository, StacksConfigRepositoryProps } from "./model"
+} from "./config/config-tree.js"
+export { sortStacksForDeploy, sortStacksForUndeploy } from "./dependencies.js"
+export { StacksConfigRepository, StacksConfigRepositoryProps } from "./model.js"

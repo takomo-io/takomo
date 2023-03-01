@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "declaration": true,
     "lib": ["ES2021", "dom"],
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "outDir": "./dist"

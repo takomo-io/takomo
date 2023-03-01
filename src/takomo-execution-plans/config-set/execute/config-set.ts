@@ -1,20 +1,20 @@
-import { InternalCredentialManager } from "../../../aws/common/credentials"
-import { ConfigSetContext } from "../../../config-sets/config-set-model"
+import { InternalCredentialManager } from "../../../aws/common/credentials.js"
+import { ConfigSetContext } from "../../../config-sets/config-set-model.js"
 import {
   CommandOutput,
   OperationState,
   resolveCommandOutputBase,
-} from "../../../takomo-core/command"
-import { TkmLogger } from "../../../utils/logging"
-import { Timer } from "../../../utils/timer"
+} from "../../../takomo-core/command.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { Timer } from "../../../utils/timer.js"
 import {
   CommandPathExecutionResult,
   ConfigSetExecution,
   ConfigSetExecutionResult,
   ConfigSetExecutionTarget,
   ConfigSetTargetExecutor,
-} from "../model"
-import { executeCommandPath } from "./command-path"
+} from "../model.js"
+import { executeCommandPath } from "./command-path.js"
 
 export interface ExecuteConfigSetProps<R extends CommandOutput, C> {
   readonly executor: ConfigSetTargetExecutor<R, C>

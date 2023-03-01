@@ -4,9 +4,9 @@ import {
   LogicalResourceId,
   ResourceChangeAction,
   ResourceChangeReplacement,
-} from "../../../aws/cloudformation/model"
-import { bold, green, orange, red, yellow } from "../../../utils/colors"
-import { BaseIO } from "../../cli-io"
+} from "../../../aws/cloudformation/model.js"
+import { bold, green, orange, red, yellow } from "../../../utils/colors.js"
+import { BaseIO } from "../../cli-io.js"
 
 type ResourceOperation = "update" | "create" | "remove" | "replace"
 

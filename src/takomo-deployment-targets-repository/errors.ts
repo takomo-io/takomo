@@ -1,5 +1,5 @@
-import { TakomoError } from "../utils/errors"
-import { FilePath } from "../utils/files"
+import { TakomoError } from "../utils/errors.js"
+import { FilePath } from "../utils/files.js"
 
 export class InvalidDeploymentTargetFileLocationError extends TakomoError {
   constructor(pathToFile: FilePath, baseDir: FilePath) {

@@ -1,20 +1,24 @@
 import R from "ramda"
-import { IamRoleName } from "../../aws/common/model"
-import { Vars } from "../../common/model"
-import { ConfigSetInstruction } from "../../config-sets/config-set-model"
-import { DeploymentGroupConfig } from "../../config/targets-config"
-import { CommandRole } from "../../takomo-core/command"
-import { DeploymentGroupPath, Label } from "../../targets/targets-model"
-import { merge } from "../../utils/objects"
-import { parseCommandRole, parseStringArray, parseVars } from "../common-parser"
+import { IamRoleName } from "../../aws/common/model.js"
+import { Vars } from "../../common/model.js"
+import { ConfigSetInstruction } from "../../config-sets/config-set-model.js"
+import { DeploymentGroupConfig } from "../../config/targets-config.js"
+import { CommandRole } from "../../takomo-core/command.js"
+import { DeploymentGroupPath, Label } from "../../targets/targets-model.js"
+import { merge } from "../../utils/objects.js"
+import {
+  parseCommandRole,
+  parseStringArray,
+  parseVars,
+} from "../common-parser.js"
 import {
   mergeConfigSetInstructions,
   parseConfigSetInstructions,
-} from "../config-set-parser"
-import { parseDeploymentStatus } from "./parse-deployment-status"
-import { parseDeploymentTargets } from "./parse-deployment-targets"
-import { parseTargetSchemas } from "./parse-target-schemas"
-import { fillMissingDeploymentGroups } from "./util"
+} from "../config-set-parser.js"
+import { parseDeploymentStatus } from "./parse-deployment-status.js"
+import { parseDeploymentTargets } from "./parse-deployment-targets.js"
+import { parseTargetSchemas } from "./parse-target-schemas.js"
+import { fillMissingDeploymentGroups } from "./util.js"
 
 const parseDeploymentGroup = (
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,

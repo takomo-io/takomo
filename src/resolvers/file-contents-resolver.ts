@@ -1,10 +1,10 @@
 import { ObjectSchema } from "joi"
-import { expandFilePath, fileExists, readFileContents } from "../utils/files"
-import { Resolver, ResolverInput } from "./resolver"
+import { expandFilePath, fileExists, readFileContents } from "../utils/files.js"
 import {
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "./resolver-provider"
+} from "./resolver-provider.js"
+import { Resolver, ResolverInput } from "./resolver.js"
 
 const init = async ({ file }: any): Promise<Resolver> => {
   if (!file) {

@@ -1,16 +1,16 @@
 import R from "ramda"
-import { CloudFormationStack } from "../../../aws/cloudformation/model"
-import { InternalStack, StackPath } from "../../../stacks/stack"
-import { sortStacksForUndeploy } from "../../../takomo-stacks-context"
+import { CloudFormationStack } from "../../../aws/cloudformation/model.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { sortStacksForUndeploy } from "../../../takomo-stacks-context/index.js"
 
 import {
   getStackPath,
   isNotObsolete,
   isObsolete,
   isWithinCommandPath,
-} from "../../../takomo-stacks-model/util"
-import { arrayToMap } from "../../../utils/collections"
-import { CommandPath } from "../../command-model"
+} from "../../../takomo-stacks-model/util.js"
+import { arrayToMap } from "../../../utils/collections.js"
+import { CommandPath } from "../../command-model.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 

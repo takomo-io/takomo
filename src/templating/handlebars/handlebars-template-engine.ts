@@ -1,18 +1,18 @@
 import hb from "handlebars"
-import { TakomoError } from "../../utils/errors"
+import { TakomoError } from "../../utils/errors.js"
 import {
   expandFilePath,
   fileExists,
   FilePath,
   readFileContents,
-} from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
-import { buildErrorMessage } from "../../utils/templating"
+} from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { buildErrorMessage } from "../../utils/templating.js"
 import {
   RenderTemplateFileProps,
   RenderTemplateProps,
   TemplateEngine,
-} from "../template-engine"
+} from "../template-engine.js"
 
 export class PartialAlreadyRegisteredError extends TakomoError {
   constructor(

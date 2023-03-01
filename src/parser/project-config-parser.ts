@@ -2,7 +2,7 @@ import Joi from "joi"
 import { dirname } from "path"
 import R from "ramda"
 import semver from "semver"
-import { Region } from "../aws/common/model"
+import { Region } from "../aws/common/model.js"
 import {
   defaultEsbuild,
   defaultFeatures,
@@ -12,18 +12,18 @@ import {
   Features,
   InternalTakomoProjectConfig,
   TakomoProjectDeploymentTargetsConfig,
-} from "../config/project-config"
-import { DEFAULT_REGIONS } from "../constants/regions-constants"
-import { createCommonSchema } from "../schema/common-schema"
-import { mergeArrays } from "../utils/collections"
-import { TakomoError } from "../utils/errors"
-import { expandFilePath, fileExists, FilePath } from "../utils/files"
-import { parseYamlFile } from "../utils/yaml"
+} from "../config/project-config.js"
+import { DEFAULT_REGIONS } from "../constants/regions-constants.js"
+import { createCommonSchema } from "../schema/common-schema.js"
+import { mergeArrays } from "../utils/collections.js"
+import { TakomoError } from "../utils/errors.js"
+import { expandFilePath, fileExists, FilePath } from "../utils/files.js"
+import { parseYamlFile } from "../utils/yaml.js"
 import {
   parseOptionalBoolean,
   parseString,
   parseStringArray,
-} from "./common-parser"
+} from "./common-parser.js"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { version } = require("../../package.json")

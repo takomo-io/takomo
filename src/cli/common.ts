@@ -4,38 +4,38 @@ import inquirer from "inquirer"
 import os from "os"
 import R from "ramda"
 import { Arguments } from "yargs"
-import { formatCommandStatus } from "../cli-io"
+import { formatCommandStatus } from "../cli-io/index.js"
 import {
   CommandHandler,
   CommandInput,
   CommandOutput,
   IO,
-} from "../takomo-core/command"
+} from "../takomo-core/command.js"
 
-import { createAwsClientProvider } from "../aws/aws-client-provider"
+import { createAwsClientProvider } from "../aws/aws-client-provider.js"
 import {
   CredentialManager,
   initDefaultCredentialManager,
   InternalCredentialManager,
-} from "../aws/common/credentials"
-import { InternalCommandContext } from "../context/command-context"
-import { parseBoolean, parseStringArray } from "../parser/common-parser"
+} from "../aws/common/credentials.js"
+import { InternalCommandContext } from "../context/command-context.js"
+import { parseBoolean, parseStringArray } from "../parser/common-parser.js"
 import {
   createFileSystemCommandContext,
   FileSystemCommandContext,
-} from "../takomo-config-repository-fs/context/create-file-system-command-context"
-import { collectFromHierarchy } from "../utils/collections"
-import { red } from "../utils/colors"
-import { expandFilePath, FilePath } from "../utils/files"
-import { createLogger, TkmLogger } from "../utils/logging"
-import { indentLines } from "../utils/strings"
-import { formatElapsedMillis, printTimer, Timer } from "../utils/timer"
-import { RESET_CACHE_OPT } from "./constants"
-import { parseFeaturesFromArgs } from "./options/parse-features-from-args"
-import { parseLogLevel } from "./options/parse-log-level"
-import { parseOutputFormat } from "./options/parse-output-format"
-import { parseVarArgs } from "./options/parse-var-args"
-import { parseVarFileOptions } from "./options/parse-var-file-options"
+} from "../takomo-config-repository-fs/context/create-file-system-command-context.js"
+import { collectFromHierarchy } from "../utils/collections.js"
+import { red } from "../utils/colors.js"
+import { expandFilePath, FilePath } from "../utils/files.js"
+import { createLogger, TkmLogger } from "../utils/logging.js"
+import { indentLines } from "../utils/strings.js"
+import { formatElapsedMillis, printTimer, Timer } from "../utils/timer.js"
+import { RESET_CACHE_OPT } from "./constants.js"
+import { parseFeaturesFromArgs } from "./options/parse-features-from-args.js"
+import { parseLogLevel } from "./options/parse-log-level.js"
+import { parseOutputFormat } from "./options/parse-output-format.js"
+import { parseVarArgs } from "./options/parse-var-args.js"
+import { parseVarFileOptions } from "./options/parse-var-file-options.js"
 
 export interface RunProps {
   readonly overridingHandler?: (args: Arguments) => void

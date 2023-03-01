@@ -1,7 +1,7 @@
 import Joi from "joi"
-import { ParameterConfig } from "../config/common-config"
-import { CommandContext } from "../context/command-context"
-import { Resolver, ResolverName } from "./resolver"
+import { ParameterConfig } from "../config/common-config.js"
+import { CommandContext } from "../context/command-context.js"
+import { Resolver, ResolverName } from "./resolver.js"
 
 /**
  * An interface representing the input object passed to {@linkcode ResolverProvider.schema}

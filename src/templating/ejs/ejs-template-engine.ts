@@ -1,11 +1,11 @@
 import Ejs from "ejs"
-import { FilePath, readFileContents } from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
+import { FilePath, readFileContents } from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
 import {
   RenderTemplateFileProps,
   RenderTemplateProps,
   TemplateEngine,
-} from "../template-engine"
+} from "../template-engine.js"
 
 interface EjsTemplateEngineProps {
   readonly projectDir: FilePath
@@ -19,13 +19,6 @@ export class EjsTemplateEngine implements TemplateEngine {
   constructor({ projectDir, logger }: EjsTemplateEngineProps) {
     this.#logger = logger
     this.#projectDir = projectDir
-    // Ejs.configure({
-    //   autoEscape: false,
-    //   cache: false,
-    //   rmWhitespace: false,
-    //   views: projectDir,
-    //   autoTrim: false,
-    // })
   }
 
   async renderTemplate({

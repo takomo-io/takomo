@@ -1,7 +1,7 @@
 import { join } from "path"
-import { Region } from "../aws/common/model"
-import { TakomoError } from "../utils/errors"
-import { expandFilePath, FilePath } from "../utils/files"
+import { Region } from "../aws/common/model.js"
+import { TakomoError } from "../utils/errors.js"
+import { expandFilePath, FilePath } from "../utils/files.js"
 
 export type DeploymentTargetRepositoryType = string
 export interface DeploymentTargetRepositoryConfig {

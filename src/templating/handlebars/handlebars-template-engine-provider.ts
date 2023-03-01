@@ -1,15 +1,15 @@
-import { InternalTakomoProjectConfig } from "../../config/project-config"
-import { TakomoError } from "../../utils/errors"
-import { dirExists, FilePath } from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
-import { TemplateEngine } from "../template-engine"
+import { InternalTakomoProjectConfig } from "../../config/project-config.js"
+import { TakomoError } from "../../utils/errors.js"
+import { dirExists, FilePath } from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
 import {
   TemplateEngineProps,
   TemplateEngineProvider,
-} from "../template-engine-provider"
-import { HandlebarsTemplateEngine } from "./handlebars-template-engine"
-import { loadHandlebarsHelpers } from "./load-handlebars-helpers"
-import { loadHandlebarsPartials } from "./load-handlebars-partials"
+} from "../template-engine-provider.js"
+import { TemplateEngine } from "../template-engine.js"
+import { HandlebarsTemplateEngine } from "./handlebars-template-engine.js"
+import { loadHandlebarsHelpers } from "./load-handlebars-helpers.js"
+import { loadHandlebarsPartials } from "./load-handlebars-partials.js"
 
 interface HandlebarsTemplateEngineProviderProps {
   readonly partialsDir: FilePath

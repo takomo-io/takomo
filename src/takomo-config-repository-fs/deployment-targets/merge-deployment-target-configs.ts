@@ -1,7 +1,7 @@
 import R from "ramda"
-import { DeploymentTargetConfigItem } from "../../takomo-deployment-targets-repository"
-import { mergeArrays } from "../../utils/collections"
-import { merge } from "../../utils/objects"
+import { DeploymentTargetConfigItem } from "../../takomo-deployment-targets-repository/index.js"
+import { mergeArrays } from "../../utils/collections.js"
+import { merge } from "../../utils/objects.js"
 
 const mergeDeploymentTargetConfigsInternal = ([
   first,

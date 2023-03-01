@@ -1,8 +1,8 @@
 import R from "ramda"
-import { prepareAwsEnvVariables } from "../aws/util"
-import { executeShellCommand } from "../utils/exec"
-import { expandFilePath } from "../utils/files"
-import { Hook, HookInput, HookOutput } from "./hook"
+import { prepareAwsEnvVariables } from "../aws/util.js"
+import { executeShellCommand } from "../utils/exec.js"
+import { expandFilePath } from "../utils/files.js"
+import { Hook, HookInput, HookOutput } from "./hook.js"
 
 const safeEnvVariablePattern = /^[a-zA-Z_]+[a-zA-Z0-9_]*$/
 

@@ -1,15 +1,18 @@
-import { StackParameterKey } from "../../aws/cloudformation/model"
-import { ParameterConfig, ParameterConfigs } from "../../config/common-config"
-import { CommandContext } from "../../context/command-context"
-import { ResolverRegistry } from "../../resolvers/resolver-registry"
-import { StackPath } from "../../stacks/stack"
-import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { TakomoError } from "../../utils/errors"
+import { StackParameterKey } from "../../aws/cloudformation/model.js"
+import {
+  ParameterConfig,
+  ParameterConfigs,
+} from "../../config/common-config.js"
+import { CommandContext } from "../../context/command-context.js"
+import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
+import { StackPath } from "../../stacks/stack.js"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { TakomoError } from "../../utils/errors.js"
 import {
   ListResolverExecutor,
   ResolverExecutor,
   SingleResolverExecutor,
-} from "../model"
+} from "../model.js"
 
 const initializeResolver = async (
   ctx: CommandContext,

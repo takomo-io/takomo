@@ -1,5 +1,5 @@
-import { CommandPath } from "../command/command-model"
-import { Vars } from "../common/model"
+import { CommandPath } from "../command/command-model.js"
+import { Vars } from "../common/model.js"
 
 export type ConfigSetName = string
 export type StageName = string

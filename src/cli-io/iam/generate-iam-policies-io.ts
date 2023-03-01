@@ -3,10 +3,10 @@ import R from "ramda"
 import {
   GenerateIamPoliciesIO,
   GenerateIamPoliciesOutput,
-} from "../../command/iam/model"
-import { formatYaml } from "../../utils/yaml"
-import { createBaseIO } from "../cli-io"
-import { IOProps } from "../stacks/common"
+} from "../../command/iam/model.js"
+import { formatYaml } from "../../utils/yaml.js"
+import { createBaseIO } from "../cli-io.js"
+import { IOProps } from "../stacks/common.js"
 
 export const createGenerateIamPoliciesIO = (
   props: IOProps,

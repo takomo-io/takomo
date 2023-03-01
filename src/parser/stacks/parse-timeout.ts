@@ -1,4 +1,4 @@
-import { TimeoutConfig } from "../../common/model"
+import { TimeoutConfig } from "../../common/model.js"
 
 export const parseTimeout = (value: any): TimeoutConfig | undefined => {
   if (!value) {

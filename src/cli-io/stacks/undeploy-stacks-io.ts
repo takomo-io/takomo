@@ -1,26 +1,26 @@
 import R from "ramda"
-import { StackEvent } from "../../aws/cloudformation/model"
-import { StacksOperationOutput } from "../../command/stacks/model"
+import { StackEvent } from "../../aws/cloudformation/model.js"
+import { StacksOperationOutput } from "../../command/stacks/model.js"
 import {
   ConfirmUndeployAnswer,
   UndeployStacksIO,
-} from "../../command/stacks/undeploy/model"
+} from "../../command/stacks/undeploy/model.js"
 import {
   StacksUndeployPlan,
   StackUndeployOperationType,
-} from "../../command/stacks/undeploy/plan"
-import { StackPath } from "../../stacks/stack"
-import { StackGroup } from "../../stacks/stack-group"
-import { grey, red } from "../../utils/colors"
-import { createBaseIO } from "../cli-io"
-import { formatStackEvent, formatStackStatus } from "../formatters"
+} from "../../command/stacks/undeploy/plan.js"
+import { StackGroup } from "../../stacks/stack-group.js"
+import { StackPath } from "../../stacks/stack.js"
+import { grey, red } from "../../utils/colors.js"
+import { createBaseIO } from "../cli-io.js"
+import { formatStackEvent, formatStackStatus } from "../formatters.js"
 import {
   chooseCommandPathInternal,
   createStacksOperationListenerInternal,
   formatLastModify,
   IOProps,
   printStacksOperationOutput,
-} from "./common"
+} from "./common.js"
 
 interface ConfirmUndeployAnswerOption {
   readonly name: string

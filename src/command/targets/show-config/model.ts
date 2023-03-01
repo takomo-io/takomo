@@ -1,5 +1,9 @@
-import { DeploymentConfig } from "../../../config/targets-config"
-import { CommandInput, CommandOutput, IO } from "../../../takomo-core/command"
+import { DeploymentConfig } from "../../../config/targets-config.js"
+import {
+  CommandInput,
+  CommandOutput,
+  IO,
+} from "../../../takomo-core/command.js"
 
 export type ShowDeploymentTargetsConfigurationInput = CommandInput
 

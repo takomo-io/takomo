@@ -1,8 +1,8 @@
-import { ALLOW_ALL_STACK_POLICY } from "../../../../aws/cloudformation/model"
-import { uuid } from "../../../../utils/strings"
-import { defaultCapabilities } from "../../../command-model"
-import { StackOperationStep } from "../../common/steps"
-import { UpdateStackHolder } from "../states"
+import { ALLOW_ALL_STACK_POLICY } from "../../../../aws/cloudformation/model.js"
+import { uuid } from "../../../../utils/strings.js"
+import { defaultCapabilities } from "../../../command-model.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { UpdateStackHolder } from "../states.js"
 
 export const initiateStackUpdate: StackOperationStep<
   UpdateStackHolder

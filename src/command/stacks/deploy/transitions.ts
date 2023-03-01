@@ -1,10 +1,10 @@
-import { StackOperationStep } from "../common/steps"
+import { StackOperationStep } from "../common/steps.js"
 import {
   defaultStackOperationTransitions,
   inProgress,
   StackOperationTransitions,
-} from "../common/transitions"
-import { resolveResultMessage } from "./common"
+} from "../common/transitions.js"
+import { resolveResultMessage } from "./common.js"
 import {
   ChangeSetHolder,
   ChangeSetNameHolder,
@@ -21,30 +21,30 @@ import {
   TemplateLocationHolder,
   TemplateSummaryHolder,
   UpdateStackHolder,
-} from "./states"
-import { continueUpdateRollback } from "./steps/continue-update-rollback"
-import { enrichCurrentStack } from "./steps/enrich-current-stack"
-import { executeAfterDeployHooks } from "./steps/execute-after-deploy-hooks"
-import { executeBeforeDeployHooks } from "./steps/execute-before-deploy-hooks"
-import { initiateChangeSetCreate } from "./steps/initiate-change-set-create"
-import { initiateFailedStackDelete } from "./steps/initiate-failed-stack-delete"
-import { initiateStackCreate } from "./steps/initiate-stack-create"
-import { initiateStackCreateOrUpdate } from "./steps/initiate-stack-create-or-update"
-import { initiateStackUpdate } from "./steps/initiate-stack-update"
-import { prepareParameters } from "./steps/prepare-parameters"
-import { prepareTags } from "./steps/prepare-tags"
-import { prepareTemplate } from "./steps/prepare-template"
-import { reviewChangeSet } from "./steps/review-change-set"
-import { summarizeTemplate } from "./steps/summarize-template"
-import { updateTerminationProtection } from "./steps/update-termination-protection"
-import { uploadTemplate } from "./steps/upload-template"
-import { validateParameters } from "./steps/validate-parameters"
-import { validateTemplate } from "./steps/validate-template"
-import { waitChangeSetToBeReady } from "./steps/wait-change-set-to-be-ready"
-import { waitDependenciesToComplete } from "./steps/wait-dependencies-to-complete"
-import { waitFailedStackDeleteToComplete } from "./steps/wait-failed-stack-delete-to-complete"
-import { waitStackCreateOrUpdateToComplete } from "./steps/wait-stack-create-or-update-to-complete"
-import { waitStackRollbackToComplete } from "./steps/wait-stack-rollback-to-complete"
+} from "./states.js"
+import { continueUpdateRollback } from "./steps/continue-update-rollback.js"
+import { enrichCurrentStack } from "./steps/enrich-current-stack.js"
+import { executeAfterDeployHooks } from "./steps/execute-after-deploy-hooks.js"
+import { executeBeforeDeployHooks } from "./steps/execute-before-deploy-hooks.js"
+import { initiateChangeSetCreate } from "./steps/initiate-change-set-create.js"
+import { initiateFailedStackDelete } from "./steps/initiate-failed-stack-delete.js"
+import { initiateStackCreateOrUpdate } from "./steps/initiate-stack-create-or-update.js"
+import { initiateStackCreate } from "./steps/initiate-stack-create.js"
+import { initiateStackUpdate } from "./steps/initiate-stack-update.js"
+import { prepareParameters } from "./steps/prepare-parameters.js"
+import { prepareTags } from "./steps/prepare-tags.js"
+import { prepareTemplate } from "./steps/prepare-template.js"
+import { reviewChangeSet } from "./steps/review-change-set.js"
+import { summarizeTemplate } from "./steps/summarize-template.js"
+import { updateTerminationProtection } from "./steps/update-termination-protection.js"
+import { uploadTemplate } from "./steps/upload-template.js"
+import { validateParameters } from "./steps/validate-parameters.js"
+import { validateTemplate } from "./steps/validate-template.js"
+import { waitChangeSetToBeReady } from "./steps/wait-change-set-to-be-ready.js"
+import { waitDependenciesToComplete } from "./steps/wait-dependencies-to-complete.js"
+import { waitFailedStackDeleteToComplete } from "./steps/wait-failed-stack-delete-to-complete.js"
+import { waitStackCreateOrUpdateToComplete } from "./steps/wait-stack-create-or-update-to-complete.js"
+import { waitStackRollbackToComplete } from "./steps/wait-stack-rollback-to-complete.js"
 
 export interface DeployStackTransitions extends StackOperationTransitions {
   initiateFailedStackDelete: StackOperationStep<CurrentStackHolder>

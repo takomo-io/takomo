@@ -2,21 +2,21 @@ import R from "ramda"
 import {
   CloudFormationStackSummary,
   StackStatus,
-} from "../../../aws/cloudformation/model"
-import { InternalStack, StackPath } from "../../../stacks/stack"
-import { sortStacksForDeploy } from "../../../takomo-stacks-context"
+} from "../../../aws/cloudformation/model.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { sortStacksForDeploy } from "../../../takomo-stacks-context/index.js"
 import {
   getStackPath,
   isNotObsolete,
   isWithinCommandPath,
-} from "../../../takomo-stacks-model/util"
-import { arrayToMap } from "../../../utils/collections"
-import { TkmLogger } from "../../../utils/logging"
-import { CommandPath, StackOperationType } from "../../command-model"
+} from "../../../takomo-stacks-model/util.js"
+import { arrayToMap } from "../../../utils/collections.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { CommandPath, StackOperationType } from "../../command-model.js"
 import {
   loadCurrentCfStacks,
   StackPair,
-} from "../common/load-current-cf-stacks"
+} from "../common/load-current-cf-stacks.js"
 
 /**
  * TODO: Move somewhere else

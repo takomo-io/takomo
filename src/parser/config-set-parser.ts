@@ -4,7 +4,7 @@ import {
   ConfigSetInstruction,
   ConfigSetName,
   DEFAULT_STAGE_NAME,
-} from "../config-sets/config-set-model"
+} from "../config-sets/config-set-model.js"
 
 export const parseConfigSets = (value: any): ReadonlyArray<ConfigSet> => {
   if (value === null || value === undefined) {

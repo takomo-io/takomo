@@ -4,18 +4,28 @@ import {
   StackCapability,
   StackName,
   StackPolicyBody,
-} from "../../aws/cloudformation/model"
-import { InternalCredentialManager } from "../../aws/common/credentials"
-import { AccountId, IamRoleArn, Region, TagKey } from "../../aws/common/model"
-import { CommandPath } from "../../command/command-model"
-import { TemplateBucketConfig, TimeoutConfig, Vars } from "../../common/model"
-import { TemplateConfig } from "../../config/common-config"
-import { StackConfig } from "../../config/stack-config"
-import { InternalCommandContext } from "../../context/command-context"
-import { HookConfig } from "../../hooks/hook"
-import { HookRegistry } from "../../hooks/hook-registry"
-import { ResolverRegistry } from "../../resolvers/resolver-registry"
-import { createAwsSchemas } from "../../schema/aws-schema"
+} from "../../aws/cloudformation/model.js"
+import { InternalCredentialManager } from "../../aws/common/credentials.js"
+import {
+  AccountId,
+  IamRoleArn,
+  Region,
+  TagKey,
+} from "../../aws/common/model.js"
+import { CommandPath } from "../../command/command-model.js"
+import {
+  TemplateBucketConfig,
+  TimeoutConfig,
+  Vars,
+} from "../../common/model.js"
+import { TemplateConfig } from "../../config/common-config.js"
+import { StackConfig } from "../../config/stack-config.js"
+import { InternalCommandContext } from "../../context/command-context.js"
+import { HookRegistry } from "../../hooks/hook-registry.js"
+import { HookConfig } from "../../hooks/hook.js"
+import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
+import { createAwsSchemas } from "../../schema/aws-schema.js"
+import { StackGroup } from "../../stacks/stack-group.js"
 import {
   createStack,
   InternalStack,
@@ -24,26 +34,25 @@ import {
   StackPath,
   StackProps,
   Template,
-} from "../../stacks/stack"
-import { StackGroup } from "../../stacks/stack-group"
-import { CommandRole, Project } from "../../takomo-core/command"
-import { StackPropertyDefaults } from "../../takomo-stacks-model/constants"
-import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { isWithinCommandPath } from "../../takomo-stacks-model/util"
-import { mapToObject, mergeArrays, mergeMaps } from "../../utils/collections"
-import { TakomoError } from "../../utils/errors"
-import { TkmLogger } from "../../utils/logging"
-import { merge } from "../../utils/objects"
-import { validate } from "../../utils/validation"
-import { StacksConfigRepository } from "../model"
-import { StackConfigNode } from "./config-tree"
-import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file"
-import { getCredentialManager } from "./get-credential-provider"
-import { initializeHooks } from "./hooks"
-import { makeStackName } from "./make-stack-name"
-import { mergeStackSchemas } from "./merge-stack-schemas"
-import { buildParameters } from "./parameters"
-import { ProcessStatus } from "./process-config-tree"
+} from "../../stacks/stack.js"
+import { CommandRole, Project } from "../../takomo-core/command.js"
+import { StackPropertyDefaults } from "../../takomo-stacks-model/constants.js"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { isWithinCommandPath } from "../../takomo-stacks-model/util.js"
+import { mapToObject, mergeArrays, mergeMaps } from "../../utils/collections.js"
+import { TakomoError } from "../../utils/errors.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { merge } from "../../utils/objects.js"
+import { validate } from "../../utils/validation.js"
+import { StacksConfigRepository } from "../model.js"
+import { StackConfigNode } from "./config-tree.js"
+import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file.js"
+import { getCredentialManager } from "./get-credential-provider.js"
+import { initializeHooks } from "./hooks.js"
+import { makeStackName } from "./make-stack-name.js"
+import { mergeStackSchemas } from "./merge-stack-schemas.js"
+import { buildParameters } from "./parameters.js"
+import { ProcessStatus } from "./process-config-tree.js"
 
 export interface StackPropBuilderProps {
   readonly stackConfig: StackConfig

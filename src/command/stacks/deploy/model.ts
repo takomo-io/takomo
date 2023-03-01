@@ -7,16 +7,16 @@ import {
   StackParameterValue,
   TemplateBody,
   TemplateSummary,
-} from "../../../aws/cloudformation/model"
-import { IO } from "../../../takomo-core/command"
+} from "../../../aws/cloudformation/model.js"
+import { IO } from "../../../takomo-core/command.js"
 
-import { TagKey, TagValue } from "../../../aws/common/model"
-import { InternalStack, StackPath } from "../../../stacks/stack"
-import { StackGroup } from "../../../stacks/stack-group"
-import { CommandPath, StackOperationType } from "../../command-model"
-import { StacksOperationListener } from "../common/model"
-import { StacksOperationOutput } from "../model"
-import { StacksDeployPlan } from "./plan"
+import { TagKey, TagValue } from "../../../aws/common/model.js"
+import { StackGroup } from "../../../stacks/stack-group.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { CommandPath, StackOperationType } from "../../command-model.js"
+import { StacksOperationListener } from "../common/model.js"
+import { StacksOperationOutput } from "../model.js"
+import { StacksDeployPlan } from "./plan.js"
 
 export type ConfirmDeployAnswer =
   | "CANCEL"

@@ -1,11 +1,11 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createDependencyGraphIO } from "../../../cli-io"
-import { CommandPath } from "../../../command/command-model"
-import { dependencyGraphCommand } from "../../../command/stacks/inspect/dependency-graph/command"
-import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository"
-import { ROOT_STACK_GROUP_PATH } from "../../../takomo-stacks-model/constants"
-import { handle, RunProps } from "../../common"
-import { COMMAND_PATH_OPT } from "../../constants"
+import { createDependencyGraphIO } from "../../../cli-io/index.js"
+import { CommandPath } from "../../../command/command-model.js"
+import { dependencyGraphCommand } from "../../../command/stacks/inspect/dependency-graph/command.js"
+import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository.js"
+import { ROOT_STACK_GROUP_PATH } from "../../../takomo-stacks-model/constants.js"
+import { handle, RunProps } from "../../common.js"
+import { COMMAND_PATH_OPT } from "../../constants.js"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath

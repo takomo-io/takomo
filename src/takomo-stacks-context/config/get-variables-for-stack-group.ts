@@ -1,5 +1,5 @@
-import { StackGroup } from "../../stacks/stack-group"
-import { deepCopy } from "../../utils/objects"
+import { StackGroup } from "../../stacks/stack-group.js"
+import { deepCopy } from "../../utils/objects.js"
 
 export const getVariablesForStackGroup = (stackGroup: StackGroup): any =>
   deepCopy({

@@ -1,18 +1,18 @@
 import Joi, { AnySchema } from "joi"
-import { CommandContext } from "../../../../context/command-context"
-import { createStacksSchemas } from "../../../../schema/stacks-schema"
-import { CommandHandler } from "../../../../takomo-core/command"
+import { CommandContext } from "../../../../context/command-context.js"
+import { createStacksSchemas } from "../../../../schema/stacks-schema.js"
+import { CommandHandler } from "../../../../takomo-core/command.js"
 import {
   buildStacksContext,
   StacksConfigRepository,
-} from "../../../../takomo-stacks-context"
-import { isNotObsolete } from "../../../../takomo-stacks-model/util"
-import { validateInput } from "../../../../utils/validation"
+} from "../../../../takomo-stacks-context/index.js"
+import { isNotObsolete } from "../../../../takomo-stacks-model/util.js"
+import { validateInput } from "../../../../utils/validation.js"
 import {
   DependencyGraphInput,
   DependencyGraphIO,
   DependencyGraphOutput,
-} from "./model"
+} from "./model.js"
 
 const inputSchema = (ctx: CommandContext): AnySchema => {
   const { commandPath } = createStacksSchemas({ regions: ctx.regions })

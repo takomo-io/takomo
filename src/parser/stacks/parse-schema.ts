@@ -1,4 +1,4 @@
-import { SchemaConfig } from "../../config/common-config"
+import { SchemaConfig } from "../../config/common-config.js"
 
 export const parseSchema = (value: unknown): SchemaConfig | undefined => {
   if (value === undefined || value === null) {

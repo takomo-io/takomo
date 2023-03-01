@@ -1,9 +1,9 @@
-import { RunProps } from "../common"
-import { deployTargetsCmd } from "./deploy"
-import { runTargetsCmd } from "./run"
-import { showDeploymentTargetsConfigCmd } from "./show-config"
-import { undeployTargetsCmd } from "./undeploy"
-import { validateDeploymentTargetsCmd } from "./validate-config"
+import { RunProps } from "../common.js"
+import { deployTargetsCmd } from "./deploy.js"
+import { runTargetsCmd } from "./run.js"
+import { showDeploymentTargetsConfigCmd } from "./show-config.js"
+import { undeployTargetsCmd } from "./undeploy.js"
+import { validateDeploymentTargetsCmd } from "./validate-config.js"
 
 export const deploymentTargetsCmd = (props: RunProps) => ({
   command: "targets <command>",

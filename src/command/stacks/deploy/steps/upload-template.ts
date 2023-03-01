@@ -1,6 +1,6 @@
-import { uuid } from "../../../../utils/strings"
-import { StackOperationStep } from "../../common/steps"
-import { TemplateBodyHolder } from "../states"
+import { uuid } from "../../../../utils/strings.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { TemplateBodyHolder } from "../states.js"
 
 export const uploadTemplate: StackOperationStep<TemplateBodyHolder> = async (
   state,

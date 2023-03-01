@@ -1,13 +1,13 @@
-import { StackConfig } from "../../config/stack-config"
-import { StackGroupConfig } from "../../config/stack-group-config"
-import { CommandContext } from "../../context/command-context"
-import { buildStackConfig } from "../../parser/stacks/build-stack-config"
-import { buildStackGroupConfig } from "../../parser/stacks/build-stack-group-config"
-import { TemplateEngine } from "../../templating/template-engine"
-import { TakomoError } from "../../utils/errors"
-import { FilePath } from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
-import { parseYaml } from "../../utils/yaml"
+import { StackConfig } from "../../config/stack-config.js"
+import { StackGroupConfig } from "../../config/stack-group-config.js"
+import { CommandContext } from "../../context/command-context.js"
+import { buildStackConfig } from "../../parser/stacks/build-stack-config.js"
+import { buildStackGroupConfig } from "../../parser/stacks/build-stack-group-config.js"
+import { TemplateEngine } from "../../templating/template-engine.js"
+import { TakomoError } from "../../utils/errors.js"
+import { FilePath } from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { parseYaml } from "../../utils/yaml.js"
 
 export const parseBlueprintConfigFile = async (
   ctx: CommandContext,

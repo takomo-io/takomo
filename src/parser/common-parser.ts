@@ -1,7 +1,7 @@
-import { IamRoleArn } from "../aws/common/model"
-import { Vars } from "../common/model"
-import { CommandRole } from "../takomo-core/command"
-import { TakomoError } from "../utils/errors"
+import { IamRoleArn } from "../aws/common/model.js"
+import { Vars } from "../common/model.js"
+import { CommandRole } from "../takomo-core/command.js"
+import { TakomoError } from "../utils/errors.js"
 
 const parse = <T>(
   value: unknown,

@@ -1,39 +1,39 @@
 import { basename, join } from "path"
 import R from "ramda"
-import { createHookRegistry } from "../../hooks/hook-registry"
-import { ResolverRegistry } from "../../resolvers/resolver-registry"
+import { createHookRegistry } from "../../hooks/hook-registry.js"
+import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
 import {
   createDeploymentTargetConfigItemSchema,
   createDeploymentTargetRepositoryRegistry,
   createFileSystemDeploymentTargetRepositoryProvider,
   createOrganizationDeploymentTargetRepositoryProvider,
   DeploymentTargetRepository,
-} from "../../takomo-deployment-targets-repository"
-import { StacksConfigRepository } from "../../takomo-stacks-context"
+} from "../../takomo-deployment-targets-repository/index.js"
+import { StacksConfigRepository } from "../../takomo-stacks-context/index.js"
 
-import { CredentialManager } from "../../aws/common/credentials"
-import { Cache } from "../../caches/cache"
-import { ConfigSetName } from "../../config-sets/config-set-model"
-import { DeploymentConfig } from "../../config/targets-config"
-import { InternalCommandContext } from "../../context/command-context"
-import { DeploymentTargetsConfigRepository } from "../../context/targets-context"
-import { buildDeploymentConfig } from "../../parser/targets/build-deployment-config"
+import { CredentialManager } from "../../aws/common/credentials.js"
+import { Cache } from "../../caches/cache.js"
+import { ConfigSetName } from "../../config-sets/config-set-model.js"
+import { DeploymentConfig } from "../../config/targets-config.js"
+import { InternalCommandContext } from "../../context/command-context.js"
+import { DeploymentTargetsConfigRepository } from "../../context/targets-context.js"
+import { buildDeploymentConfig } from "../../parser/targets/build-deployment-config.js"
 import {
   createDeploymentTargetsSchemaRegistry,
   DeploymentGroupPath,
-} from "../../targets/targets-model"
-import { TemplateEngine } from "../../templating/template-engine"
-import { TakomoError } from "../../utils/errors"
-import { dirExists, FilePath } from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
-import { createFileSystemCache } from "../cache"
-import { loadConfigSetsFromConfigSetsDir } from "../config-sets/config-sets-loader"
+} from "../../targets/targets-model.js"
+import { TemplateEngine } from "../../templating/template-engine.js"
+import { TakomoError } from "../../utils/errors.js"
+import { dirExists, FilePath } from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { createFileSystemCache } from "../cache.js"
+import { loadConfigSetsFromConfigSetsDir } from "../config-sets/config-sets-loader.js"
 import {
   createFileSystemStacksConfigRepository,
   FileSystemStacksConfigRepositoryProps,
-} from "../stacks/config-repository"
-import { mergeDeploymentTargetConfigs } from "./merge-deployment-target-configs"
-import { parseConfigFile } from "./parser"
+} from "../stacks/config-repository.js"
+import { mergeDeploymentTargetConfigs } from "./merge-deployment-target-configs.js"
+import { parseConfigFile } from "./parser.js"
 
 interface FileSystemDeploymentTargetsConfigRepositoryProps
   extends FileSystemStacksConfigRepositoryProps {

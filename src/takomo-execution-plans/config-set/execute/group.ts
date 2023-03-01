@@ -1,13 +1,13 @@
 import { IPolicy, Policy } from "cockatiel"
-import { InternalCredentialManager } from "../../../aws/common/credentials"
-import { ConfigSetContext } from "../../../config-sets/config-set-model"
+import { InternalCredentialManager } from "../../../aws/common/credentials.js"
+import { ConfigSetContext } from "../../../config-sets/config-set-model.js"
 import {
   CommandOutput,
   OperationState,
   resolveCommandOutputBase,
-} from "../../../takomo-core/command"
-import { TkmLogger } from "../../../utils/logging"
-import { Timer } from "../../../utils/timer"
+} from "../../../takomo-core/command.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { Timer } from "../../../utils/timer.js"
 import {
   ConfigSetExecutionGroup,
   ConfigSetExecutionTarget,
@@ -15,8 +15,8 @@ import {
   ConfigSetTargetExecutionResult,
   ConfigSetTargetExecutor,
   ConfigSetTargetListener,
-} from "../model"
-import { executeTarget } from "./target"
+} from "../model.js"
+import { executeTarget } from "./target.js"
 
 type TargetExecution<R extends CommandOutput> = () => Promise<
   ConfigSetTargetExecutionResult<R>

@@ -1,13 +1,13 @@
 import { ObjectSchema } from "joi"
 import R from "ramda"
-import { prepareAwsEnvVariables } from "../aws/util"
-import { executeShellCommand } from "../utils/exec"
-import { expandFilePath } from "../utils/files"
-import { Resolver, ResolverInput } from "./resolver"
+import { prepareAwsEnvVariables } from "../aws/util.js"
+import { executeShellCommand } from "../utils/exec.js"
+import { expandFilePath } from "../utils/files.js"
 import {
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "./resolver-provider"
+} from "./resolver-provider.js"
+import { Resolver, ResolverInput } from "./resolver.js"
 
 type Capture = "last-line" | "all"
 

@@ -1,5 +1,5 @@
-import { SchemaConfig, SchemasConfig } from "../../config/common-config"
-import { parseSchema } from "./parse-schema"
+import { SchemaConfig, SchemasConfig } from "../../config/common-config.js"
+import { parseSchema } from "./parse-schema.js"
 
 const parseSchemaConfig = (value: unknown): ReadonlyArray<SchemaConfig> => {
   if (value === undefined || value === null) {

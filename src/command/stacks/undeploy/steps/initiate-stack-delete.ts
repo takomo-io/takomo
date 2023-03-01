@@ -1,6 +1,6 @@
-import { uuid } from "../../../../utils/strings"
-import { StackOperationStep } from "../../common/steps"
-import { CurrentStackHolder } from "../states"
+import { uuid } from "../../../../utils/strings.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { CurrentStackHolder } from "../states.js"
 
 export const initiateStackDeletion: StackOperationStep<
   CurrentStackHolder

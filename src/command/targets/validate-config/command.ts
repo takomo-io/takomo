@@ -1,14 +1,14 @@
-import { CommandHandler } from "../../../takomo-core/command"
+import { CommandHandler } from "../../../takomo-core/command.js"
 
 import {
   createDeploymentTargetsContext,
   DeploymentTargetsConfigRepository,
-} from "../../../context/targets-context"
+} from "../../../context/targets-context.js"
 import {
   ValidateDeploymentTargetsConfigurationInput,
   ValidateDeploymentTargetsConfigurationIO,
   ValidateDeploymentTargetsConfigurationOutput,
-} from "./model"
+} from "./model.js"
 
 export const validateDeploymentTargetsConfigurationCommand: CommandHandler<
   DeploymentTargetsConfigRepository,

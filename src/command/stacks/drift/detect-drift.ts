@@ -1,8 +1,8 @@
-import { InternalStacksContext } from "../../../context/stacks-context"
-import { isNotObsolete } from "../../../takomo-stacks-model/util"
-import { TkmLogger } from "../../../utils/logging"
-import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
-import { DetectDriftInput, DetectDriftOutput } from "./model"
+import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { loadCurrentCfStacks } from "../common/load-current-cf-stacks.js"
+import { DetectDriftInput, DetectDriftOutput } from "./model.js"
 
 export const detectDrift = async (
   ctx: InternalStacksContext,

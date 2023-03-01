@@ -1,6 +1,6 @@
-import { formatTimestamp } from "./date"
-import { indentLines } from "./strings"
-import { formatYaml } from "./yaml"
+import { formatTimestamp } from "./date.js"
+import { indentLines } from "./strings.js"
+import { formatYaml } from "./yaml.js"
 
 /**
  * Logging level.

@@ -1,17 +1,21 @@
 import R from "ramda"
-import { IamRoleName } from "../../aws/common/model"
-import { Vars } from "../../common/model"
-import { ConfigSetInstruction } from "../../config-sets/config-set-model"
-import { DeploymentTargetConfig } from "../../config/targets-config"
-import { CommandRole } from "../../takomo-core/command"
-import { Label } from "../../targets/targets-model"
-import { merge } from "../../utils/objects"
-import { parseCommandRole, parseStringArray, parseVars } from "../common-parser"
+import { IamRoleName } from "../../aws/common/model.js"
+import { Vars } from "../../common/model.js"
+import { ConfigSetInstruction } from "../../config-sets/config-set-model.js"
+import { DeploymentTargetConfig } from "../../config/targets-config.js"
+import { CommandRole } from "../../takomo-core/command.js"
+import { Label } from "../../targets/targets-model.js"
+import { merge } from "../../utils/objects.js"
+import {
+  parseCommandRole,
+  parseStringArray,
+  parseVars,
+} from "../common-parser.js"
 import {
   mergeConfigSetInstructions,
   parseConfigSetInstructions,
-} from "../config-set-parser"
-import { parseDeploymentStatus } from "./parse-deployment-status"
+} from "../config-set-parser.js"
+import { parseDeploymentStatus } from "./parse-deployment-status.js"
 
 export const parseDeploymentTarget = (
   value: any,

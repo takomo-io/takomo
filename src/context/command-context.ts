@@ -1,14 +1,14 @@
 import { Credentials } from "@aws-sdk/types"
-import { InternalAwsClientProvider } from "../aws/aws-client-provider"
-import { Region } from "../aws/common/model"
-import { Variables } from "../common/model"
+import { InternalAwsClientProvider } from "../aws/aws-client-provider.js"
+import { Region } from "../aws/common/model.js"
+import { Variables } from "../common/model.js"
 import {
   InternalTakomoProjectConfig,
   TakomoProjectConfig,
-} from "../config/project-config"
-import { OutputFormat } from "../takomo-core/command"
-import { FilePath } from "../utils/files"
-import { LogLevel } from "../utils/logging"
+} from "../config/project-config.js"
+import { OutputFormat } from "../takomo-core/command.js"
+import { FilePath } from "../utils/files.js"
+import { LogLevel } from "../utils/logging.js"
 
 /**
  * Provides access to the current project configuration.

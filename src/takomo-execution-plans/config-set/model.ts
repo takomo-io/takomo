@@ -1,18 +1,18 @@
-import { InternalCredentialManager } from "../../aws/common/credentials"
-import { CommandPath } from "../../command/command-model"
+import { InternalCredentialManager } from "../../aws/common/credentials.js"
+import { CommandPath } from "../../command/command-model.js"
 import {
   ConfigSet,
   ConfigSetName,
   StageName,
-} from "../../config-sets/config-set-model"
+} from "../../config-sets/config-set-model.js"
 import {
   CommandOutput,
   CommandOutputBase,
   OperationState,
-} from "../../takomo-core/command"
-import { TkmLogger } from "../../utils/logging"
-import { Timer } from "../../utils/timer"
-import { ExecutionGroupId, ExecutionTargetId } from "../model"
+} from "../../takomo-core/command.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { Timer } from "../../utils/timer.js"
+import { ExecutionGroupId, ExecutionTargetId } from "../model.js"
 
 export interface CommandPathExecutionResult<R extends CommandOutput>
   extends CommandOutputBase {

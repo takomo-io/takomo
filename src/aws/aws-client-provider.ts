@@ -1,25 +1,28 @@
 import { IPolicy, Policy } from "cockatiel"
-import { TkmLogger } from "../utils/logging"
-import { createScheduler, Scheduler } from "../utils/scheduler"
-import { checksum } from "../utils/strings"
+import { TkmLogger } from "../utils/logging.js"
+import { createScheduler, Scheduler } from "../utils/scheduler.js"
+import { checksum } from "../utils/strings.js"
 import {
   CloudFormationClient,
   createCloudFormationClient,
-} from "./cloudformation/client"
-import { CloudTrailClient, createCloudTrailClient } from "./cloudtrail/client"
+} from "./cloudformation/client.js"
+import {
+  CloudTrailClient,
+  createCloudTrailClient,
+} from "./cloudtrail/client.js"
 import {
   ApiCallProps,
   AwsClientProps,
   CloudFormationClientProps,
-} from "./common/client"
-import { CallerIdentity, Region } from "./common/model"
-import { createApiRequestListenerPlugin } from "./common/request-listener"
+} from "./common/client.js"
+import { CallerIdentity, Region } from "./common/model.js"
+import { createApiRequestListenerPlugin } from "./common/request-listener.js"
 import {
   createOrganizationsClient,
   OrganizationsClient,
-} from "./organizations/client"
-import { createS3Client, S3Client } from "./s3/client"
-import { createStsClient, StsClient } from "./sts/client"
+} from "./organizations/client.js"
+import { createS3Client, S3Client } from "./s3/client.js"
+import { createStsClient, StsClient } from "./sts/client.js"
 
 const makeIdentityRegionHash = (
   region: Region,

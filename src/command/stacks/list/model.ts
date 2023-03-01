@@ -1,7 +1,11 @@
-import { StackName, StackStatus } from "../../../aws/cloudformation/model"
-import { StackPath } from "../../../stacks/stack"
-import { CommandInput, IO, ResultsOutput } from "../../../takomo-core/command"
-import { CommandPath } from "../../command-model"
+import { StackName, StackStatus } from "../../../aws/cloudformation/model.js"
+import { StackPath } from "../../../stacks/stack.js"
+import {
+  CommandInput,
+  IO,
+  ResultsOutput,
+} from "../../../takomo-core/command.js"
+import { CommandPath } from "../../command-model.js"
 
 export interface StackInfo {
   readonly path: StackPath

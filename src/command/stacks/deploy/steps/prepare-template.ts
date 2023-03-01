@@ -1,10 +1,10 @@
 import path from "path"
-import { InternalStack } from "../../../../stacks/stack"
-import { arrayToObject } from "../../../../utils/collections"
-import { StackOperationVariables } from "../../../command-model"
-import { StackOperationStep } from "../../common/steps"
-import { StackParameterInfo } from "../model"
-import { TagsHolder } from "../states"
+import { InternalStack } from "../../../../stacks/stack.js"
+import { arrayToObject } from "../../../../utils/collections.js"
+import { StackOperationVariables } from "../../../command-model.js"
+import { StackOperationStep } from "../../common/steps.js"
+import { StackParameterInfo } from "../model.js"
+import { TagsHolder } from "../states.js"
 
 export const createVariablesForStackTemplate = (
   variables: StackOperationVariables,

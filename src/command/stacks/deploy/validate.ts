@@ -1,8 +1,8 @@
 import R from "ramda"
-import { StackStatus } from "../../../aws/cloudformation/model"
-import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context"
-import { TakomoError } from "../../../utils/errors"
-import { StackDeployOperation, StacksDeployPlan } from "./plan"
+import { StackStatus } from "../../../aws/cloudformation/model.js"
+import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context/index.js"
+import { TakomoError } from "../../../utils/errors.js"
+import { StackDeployOperation, StacksDeployPlan } from "./plan.js"
 
 export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
   [

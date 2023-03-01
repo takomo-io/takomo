@@ -1,10 +1,10 @@
-import { TkmLogger } from "../../utils/logging"
-import { TemplateEngine } from "../template-engine"
+import { TkmLogger } from "../../utils/logging.js"
 import {
   TemplateEngineProps,
   TemplateEngineProvider,
-} from "../template-engine-provider"
-import { EjsTemplateEngine } from "./ejs-template-engine"
+} from "../template-engine-provider.js"
+import { TemplateEngine } from "../template-engine.js"
+import { EjsTemplateEngine } from "./ejs-template-engine.js"
 
 interface EjsTemplateEngineProviderProps {
   readonly logger: TkmLogger

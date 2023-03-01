@@ -1,10 +1,10 @@
-import { StackEvent } from "../../../aws/cloudformation/model"
-import { InternalStack } from "../../../stacks/stack"
-import { CommandStatus } from "../../../takomo-core/command"
-import { Timer } from "../../../utils/timer"
-import { StackOperationType } from "../../command-model"
-import { StacksOperationListener } from "./model"
-import { StackOperationTransitions } from "./transitions"
+import { StackEvent } from "../../../aws/cloudformation/model.js"
+import { InternalStack } from "../../../stacks/stack.js"
+import { CommandStatus } from "../../../takomo-core/command.js"
+import { Timer } from "../../../utils/timer.js"
+import { StackOperationType } from "../../command-model.js"
+import { StacksOperationListener } from "./model.js"
+import { StackOperationTransitions } from "./transitions.js"
 
 export interface InitialStackOperationState {
   readonly stack: InternalStack

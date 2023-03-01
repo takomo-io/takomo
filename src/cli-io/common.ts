@@ -1,7 +1,7 @@
-import { TakomoError } from "../utils/errors"
-import { LogLevel } from "../utils/logging"
-import { indentLines } from "../utils/strings"
-import { BaseIO } from "./cli-io"
+import { TakomoError } from "../utils/errors.js"
+import { LogLevel } from "../utils/logging.js"
+import { indentLines } from "../utils/strings.js"
+import { BaseIO } from "./cli-io.js"
 
 export const printError = (
   io: BaseIO,

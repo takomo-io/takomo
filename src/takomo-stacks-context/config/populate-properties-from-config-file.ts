@@ -1,11 +1,11 @@
-import { CommandContext } from "../../context/command-context"
-import { createStackGroup, StackGroup } from "../../stacks/stack-group"
-import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { mergeArrays } from "../../utils/collections"
-import { TkmLogger } from "../../utils/logging"
-import { merge } from "../../utils/objects"
-import { StackGroupConfigNode } from "./config-tree"
-import { mergeStackGroupSchemas } from "./merge-stack-group-schemas"
+import { CommandContext } from "../../context/command-context.js"
+import { createStackGroup, StackGroup } from "../../stacks/stack-group.js"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { mergeArrays } from "../../utils/collections.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { merge } from "../../utils/objects.js"
+import { StackGroupConfigNode } from "./config-tree.js"
+import { mergeStackGroupSchemas } from "./merge-stack-group-schemas.js"
 
 export const populatePropertiesFromConfigFile = async (
   ctx: CommandContext,

@@ -1,28 +1,31 @@
-import { InternalCredentialManager } from "../../../aws/common/credentials"
-import { InternalCommandContext } from "../../../context/command-context"
+import { InternalCredentialManager } from "../../../aws/common/credentials.js"
+import { InternalCommandContext } from "../../../context/command-context.js"
 import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
-} from "../../../context/targets-context"
-import { OutputFormat } from "../../../takomo-core/command"
+} from "../../../context/targets-context.js"
+import { OutputFormat } from "../../../takomo-core/command.js"
 import {
   ConfigSetTargetExecutorProps,
   executeConfigSetPlan,
-} from "../../../takomo-execution-plans"
-import { StacksConfigRepository } from "../../../takomo-stacks-context"
-import { TakomoError } from "../../../utils/errors"
-import { TkmLogger } from "../../../utils/logging"
-import { DeploymentOperation } from "../../command-model"
-import { deployStacksCommand } from "../../stacks/deploy/command"
-import { StacksOperationInput, StacksOperationOutput } from "../../stacks/model"
-import { undeployStacksCommand } from "../../stacks/undeploy/command"
-import { PlannedDeploymentTarget } from "../common/plan/model"
-import { createDeploymentTargetVariables } from "./create-deployment-target-variables"
+} from "../../../takomo-execution-plans/index.js"
+import { StacksConfigRepository } from "../../../takomo-stacks-context/index.js"
+import { TakomoError } from "../../../utils/errors.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { DeploymentOperation } from "../../command-model.js"
+import { deployStacksCommand } from "../../stacks/deploy/command.js"
+import {
+  StacksOperationInput,
+  StacksOperationOutput,
+} from "../../stacks/model.js"
+import { undeployStacksCommand } from "../../stacks/undeploy/command.js"
+import { PlannedDeploymentTarget } from "../common/plan/model.js"
+import { createDeploymentTargetVariables } from "./create-deployment-target-variables.js"
 import {
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
   PlanHolder,
-} from "./model"
+} from "./model.js"
 
 interface CreateExecutorProps {
   readonly outputFormat: OutputFormat

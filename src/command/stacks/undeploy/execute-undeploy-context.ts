@@ -1,13 +1,13 @@
 import { Policy } from "cockatiel"
-import { InternalStacksContext } from "../../../context/stacks-context"
-import { StackPath } from "../../../stacks/stack"
-import { resolveCommandOutputBase } from "../../../takomo-core/command"
-import { StackResult } from "../../command-model"
-import { StacksOperationInput, StacksOperationOutput } from "../model"
-import { deleteStack } from "./delete"
-import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors"
-import { UndeployStacksIO } from "./model"
-import { StacksUndeployPlan } from "./plan"
+import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { StackPath } from "../../../stacks/stack.js"
+import { resolveCommandOutputBase } from "../../../takomo-core/command.js"
+import { StackResult } from "../../command-model.js"
+import { StacksOperationInput, StacksOperationOutput } from "../model.js"
+import { deleteStack } from "./delete.js"
+import { IncompatibleIgnoreDependenciesOptionOnDeleteError } from "./errors.js"
+import { UndeployStacksIO } from "./model.js"
+import { StacksUndeployPlan } from "./plan.js"
 
 export const executeUndeployContext = async (
   ctx: InternalStacksContext,

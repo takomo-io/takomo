@@ -1,7 +1,7 @@
 import R from "ramda"
-import { StackOperationStep } from "../../common/steps"
-import { resolveResultMessage } from "../common"
-import { StackOperationClientTokenHolder } from "../states"
+import { StackOperationStep } from "../../common/steps.js"
+import { resolveResultMessage } from "../common.js"
+import { StackOperationClientTokenHolder } from "../states.js"
 
 export const waitStackCreateOrUpdateToComplete: StackOperationStep<
   StackOperationClientTokenHolder

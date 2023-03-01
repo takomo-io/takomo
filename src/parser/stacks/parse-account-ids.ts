@@ -1,4 +1,4 @@
-import { AccountId } from "../../aws/common/model"
+import { AccountId } from "../../aws/common/model.js"
 
 export const parseAccountIds = (
   value: any,

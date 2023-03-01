@@ -1,9 +1,9 @@
 import readdirp from "readdirp"
-import { HookRegistry } from "../../hooks/hook-registry"
-import { ResolverRegistry } from "../../resolvers/resolver-registry"
-import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { dirExists, FilePath } from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
+import { HookRegistry } from "../../hooks/hook-registry.js"
+import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { dirExists, FilePath } from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
 
 export const loadCustomResolvers = async (
   resolversDir: FilePath,

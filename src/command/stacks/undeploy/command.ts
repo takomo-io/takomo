@@ -1,18 +1,21 @@
 import Joi, { AnySchema } from "joi"
-import { CommandContext } from "../../../context/command-context"
-import { InternalStacksContext } from "../../../context/stacks-context"
-import { createStacksSchemas } from "../../../schema/stacks-schema"
-import { CommandHandler } from "../../../takomo-core/command"
+import { CommandContext } from "../../../context/command-context.js"
+import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { createStacksSchemas } from "../../../schema/stacks-schema.js"
+import { CommandHandler } from "../../../takomo-core/command.js"
 import {
   buildStacksContext,
   StacksConfigRepository,
-} from "../../../takomo-stacks-context"
-import { validateInput } from "../../../utils/validation"
-import { StacksOperationOutput, StacksUndeployOperationInput } from "../model"
-import { executeUndeployContext } from "./execute-undeploy-context"
-import { UndeployStacksIO } from "./model"
-import { buildStacksUndeployPlan } from "./plan"
-import { validateStacksUndeployPlan } from "./validate"
+} from "../../../takomo-stacks-context/index.js"
+import { validateInput } from "../../../utils/validation.js"
+import {
+  StacksOperationOutput,
+  StacksUndeployOperationInput,
+} from "../model.js"
+import { executeUndeployContext } from "./execute-undeploy-context.js"
+import { UndeployStacksIO } from "./model.js"
+import { buildStacksUndeployPlan } from "./plan.js"
+import { validateStacksUndeployPlan } from "./validate.js"
 
 const modifyInput = async (
   input: StacksUndeployOperationInput,

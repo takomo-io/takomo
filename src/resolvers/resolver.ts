@@ -1,9 +1,9 @@
-import { StackParameterKey } from "../aws/cloudformation/model"
-import { IamRoleArn } from "../aws/common/model"
-import { StackOperationVariables } from "../command/command-model"
-import { StacksContext } from "../context/stacks-context"
-import { Stack, StackPath } from "../stacks/stack"
-import { TkmLogger } from "../utils/logging"
+import { StackParameterKey } from "../aws/cloudformation/model.js"
+import { IamRoleArn } from "../aws/common/model.js"
+import { StackOperationVariables } from "../command/command-model.js"
+import { StacksContext } from "../context/stacks-context.js"
+import { Stack, StackPath } from "../stacks/stack.js"
+import { TkmLogger } from "../utils/logging.js"
 
 /**
  * Resolver name

@@ -1,15 +1,15 @@
 import R from "ramda"
 
-import { DeploymentTargetsListener } from "../../command/targets/operation/model"
+import { DeploymentTargetsListener } from "../../command/targets/operation/model.js"
 import {
   DeploymentTargetsRunIO,
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
-} from "../../command/targets/run/model"
-import { splitTextInLines } from "../../utils/strings"
-import { formatYaml } from "../../utils/yaml"
-import { createBaseIO } from "../cli-io"
-import { IOProps } from "../stacks/common"
+} from "../../command/targets/run/model.js"
+import { splitTextInLines } from "../../utils/strings.js"
+import { formatYaml } from "../../utils/yaml.js"
+import { createBaseIO } from "../cli-io.js"
+import { IOProps } from "../stacks/common.js"
 
 const confirmDescription =
   "A targets run plan has been created and is shown below. " +

@@ -1,8 +1,8 @@
 import readdirp from "readdirp"
-import { TakomoError } from "../../utils/errors"
-import { dirExists, FilePath } from "../../utils/files"
-import { TkmLogger } from "../../utils/logging"
-import { HandlebarsTemplateEngine } from "./handlebars-template-engine"
+import { TakomoError } from "../../utils/errors.js"
+import { dirExists, FilePath } from "../../utils/files.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { HandlebarsTemplateEngine } from "./handlebars-template-engine.js"
 
 export const loadHandlebarsPartials = async (
   partialsDirs: ReadonlyArray<FilePath>,

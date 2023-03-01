@@ -1,5 +1,5 @@
 import inquirer from "inquirer"
-import { Choice } from "./cli-io"
+import { Choice } from "./cli-io.js"
 
 // eslint-disable-next-line
 inquirer.registerPrompt("autocomplete", require("inquirer-autocomplete-prompt"))

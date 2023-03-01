@@ -1,15 +1,15 @@
-import { OrganizationsClient } from "../aws/organizations/client"
-import { Account, OUPath } from "../aws/organizations/model"
+import { OrganizationsClient } from "../aws/organizations/client.js"
+import { Account, OUPath } from "../aws/organizations/model.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
-} from "../targets/targets-model"
-import { TakomoError } from "../utils/errors"
+} from "../targets/targets-model.js"
+import { TakomoError } from "../utils/errors.js"
 import {
   DeploymentTargetConfigItemWrapper,
   DeploymentTargetRepository,
   DeploymentTargetRepositoryProvider,
-} from "./deployment-target-repository"
+} from "./deployment-target-repository.js"
 
 export const buildDeploymentTargetName = ({ name, id }: Account) =>
   name

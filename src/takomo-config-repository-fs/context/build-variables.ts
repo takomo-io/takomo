@@ -1,15 +1,15 @@
-import dotenv from "dotenv"
-import dotenvExpand from "dotenv-expand"
-import { ContextVars, Variables } from "../../common/model"
-import { TakomoError } from "../../utils/errors"
+import * as dotenv from "dotenv"
+import * as dotenvExpand from "dotenv-expand"
+import { ContextVars, Variables } from "../../common/model.js"
+import { TakomoError } from "../../utils/errors.js"
 import {
   expandFilePath,
   fileExists,
   FilePath,
   readFileContents,
-} from "../../utils/files"
-import { merge } from "../../utils/objects"
-import { loadVariablesFromFiles, VarFileOption } from "../../utils/variables"
+} from "../../utils/files.js"
+import { merge } from "../../utils/objects.js"
+import { loadVariablesFromFiles, VarFileOption } from "../../utils/variables.js"
 
 const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
   projectDir: FilePath,
@@ -26,7 +26,7 @@ const overrideEnvironmentVariablesFromEnvironmentVariablesFiles = async (
 
     const contents = await readFileContents(pathToEnvVarsFile)
     const envConfig = dotenv.parse(contents)
-    dotenvExpand(envConfig)
+    dotenvExpand.expand(envConfig)
 
     for (const k in envConfig) {
       process.env[k] = envConfig[k]

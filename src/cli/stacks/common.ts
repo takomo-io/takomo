@@ -4,7 +4,7 @@ import {
   INTERACTIVE_ALIAS_OPT,
   INTERACTIVE_OPT,
   outputFormatOptions,
-} from "../constants"
+} from "../constants.js"
 
 export const interactiveCommandPathSelectionOptions = {
   [INTERACTIVE_OPT]: {

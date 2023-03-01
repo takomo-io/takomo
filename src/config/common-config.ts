@@ -1,5 +1,5 @@
-import { ResolverName } from "../resolvers/resolver"
-import { FilePath } from "../utils/files"
+import { ResolverName } from "../resolvers/resolver.js"
+import { FilePath } from "../utils/files.js"
 
 export interface SchemaConfig {
   readonly name: string

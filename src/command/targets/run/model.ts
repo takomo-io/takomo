@@ -1,25 +1,25 @@
 import { Credentials } from "@aws-sdk/types"
 
-import { IamRoleArn, IamRoleName } from "../../../aws/common/model"
+import { IamRoleArn, IamRoleName } from "../../../aws/common/model.js"
 import {
   CommandInput,
   CommandOutput,
   CommandOutputBase,
   IO,
-} from "../../../takomo-core/command"
+} from "../../../takomo-core/command.js"
 
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../config/targets-config"
+} from "../../../config/targets-config.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   DeploymentTargetNamePattern,
   Label,
-} from "../../../targets/targets-model"
-import { Timer } from "../../../utils/timer"
-import { DeploymentTargetsListener } from "../operation/model"
+} from "../../../targets/targets-model.js"
+import { Timer } from "../../../utils/timer.js"
+import { DeploymentTargetsListener } from "../operation/model.js"
 
 export interface DeploymentTargetsRunInput extends CommandInput {
   readonly groups: ReadonlyArray<DeploymentGroupPath>

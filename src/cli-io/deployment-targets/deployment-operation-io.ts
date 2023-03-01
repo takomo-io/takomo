@@ -1,22 +1,22 @@
 import Table from "easy-table"
 import R from "ramda"
-import { DeployStacksIO } from "../../command/stacks/deploy/model"
-import { UndeployStacksIO } from "../../command/stacks/undeploy/model"
-import { PlannedDeploymentTarget } from "../../command/targets/common/plan/model"
+import { DeployStacksIO } from "../../command/stacks/deploy/model.js"
+import { UndeployStacksIO } from "../../command/stacks/undeploy/model.js"
+import { PlannedDeploymentTarget } from "../../command/targets/common/plan/model.js"
 import {
   ConfirmOperationAnswer,
   DeploymentTargetsOperationIO,
   DeploymentTargetsOperationOutput,
   TargetsExecutionPlan,
-} from "../../command/targets/operation/model"
-import { TkmLogger } from "../../utils/logging"
-import { splitTextInLines } from "../../utils/strings"
-import { createBaseIO } from "../cli-io"
-import { createTargetListenerInternal } from "../config-set/target-listener"
-import { formatCommandStatus } from "../formatters"
-import { IOProps } from "../stacks/common"
-import { createDeployStacksIO } from "../stacks/deploy-stacks/deploy-stacks-io"
-import { createUndeployStacksIO } from "../stacks/undeploy-stacks-io"
+} from "../../command/targets/operation/model.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { splitTextInLines } from "../../utils/strings.js"
+import { createBaseIO } from "../cli-io.js"
+import { createTargetListenerInternal } from "../config-set/target-listener.js"
+import { formatCommandStatus } from "../formatters.js"
+import { IOProps } from "../stacks/common.js"
+import { createDeployStacksIO } from "../stacks/deploy-stacks/deploy-stacks-io.js"
+import { createUndeployStacksIO } from "../stacks/undeploy-stacks-io.js"
 
 export interface Messages {
   confirmHeader: string

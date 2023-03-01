@@ -1,7 +1,7 @@
-import { SchemasConfig } from "../../config/common-config"
-import { CommandContext } from "../../context/command-context"
-import { StackPath } from "../../stacks/stack"
-import { SchemaRegistry, Schemas } from "../../takomo-stacks-model/schemas"
+import { SchemasConfig } from "../../config/common-config.js"
+import { CommandContext } from "../../context/command-context.js"
+import { StackPath } from "../../stacks/stack.js"
+import { SchemaRegistry, Schemas } from "../../takomo-stacks-model/schemas.js"
 
 export const mergeStackSchemas = async (
   ctx: CommandContext,

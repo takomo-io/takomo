@@ -8,30 +8,30 @@ import {
   CallerIdentity,
   IamRoleArn,
   IamRoleName,
-} from "../../../aws/common/model"
+} from "../../../aws/common/model.js"
 import {
   CommandRole,
   CommandStatus,
   OperationState,
   resolveCommandOutputBase,
-} from "../../../takomo-core/command"
+} from "../../../takomo-core/command.js"
 
-import { CredentialManager } from "../../../aws/common/credentials"
-import { prepareAwsEnvVariables } from "../../../aws/util"
+import { CredentialManager } from "../../../aws/common/credentials.js"
+import { prepareAwsEnvVariables } from "../../../aws/util.js"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../config/targets-config"
-import { DeploymentTargetsContext } from "../../../context/targets-context"
+} from "../../../config/targets-config.js"
+import { DeploymentTargetsContext } from "../../../context/targets-context.js"
 import {
   expandFilePath,
   FilePath,
   readFileContents,
-} from "../../../utils/files"
-import { TkmLogger } from "../../../utils/logging"
-import { Timer } from "../../../utils/timer"
-import { parseYaml } from "../../../utils/yaml"
-import { DeploymentTargetsListener } from "../operation/model"
+} from "../../../utils/files.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { Timer } from "../../../utils/timer.js"
+import { parseYaml } from "../../../utils/yaml.js"
+import { DeploymentTargetsListener } from "../operation/model.js"
 import {
   DeploymentGroupRunResult,
   DeploymentTargetRunResult,
@@ -41,7 +41,7 @@ import {
   MapFunction,
   ReduceFunction,
   TargetsRunPlan,
-} from "./model"
+} from "./model.js"
 
 const execP = promisify(exec)
 

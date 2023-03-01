@@ -6,10 +6,10 @@ import {
   STS,
 } from "@aws-sdk/client-sts"
 import { Credentials } from "@aws-sdk/types"
-import { InternalAwsClientProps } from "../common/client"
-import { CallerIdentity } from "../common/model"
-import { customRequestHandler } from "../common/request-handler"
-import { customRetryStrategy } from "../common/retry"
+import { InternalAwsClientProps } from "../common/client.js"
+import { CallerIdentity } from "../common/model.js"
+import { customRequestHandler } from "../common/request-handler.js"
+import { customRetryStrategy } from "../common/retry.js"
 
 export interface StsClient {
   readonly getCallerIdentity: () => Promise<CallerIdentity>

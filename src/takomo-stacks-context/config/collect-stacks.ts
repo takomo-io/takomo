@@ -1,5 +1,5 @@
-import { InternalStack } from "../../stacks/stack"
-import { StackGroup, StackGroupPath } from "../../stacks/stack-group"
+import { StackGroup, StackGroupPath } from "../../stacks/stack-group.js"
+import { InternalStack } from "../../stacks/stack.js"
 
 export const collectStacks = (
   stackGroups: Map<StackGroupPath, StackGroup>,
