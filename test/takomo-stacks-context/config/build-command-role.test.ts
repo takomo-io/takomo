@@ -1,5 +1,5 @@
-import { buildCommandRole } from "../../../src/takomo-stacks-context/config/build-stack"
-import { createStackConfig, createStackGroup } from "../helpers"
+import { buildCommandRole } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildCommandRole", () => {
   test("no command role", () => {

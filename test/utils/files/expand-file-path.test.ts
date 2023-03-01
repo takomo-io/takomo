@@ -1,4 +1,4 @@
-import { expandFilePath } from "../../../src/utils/files"
+import { expandFilePath } from "../../../src/utils/files.js"
 
 const homeDir = "/home"
 

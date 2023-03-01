@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "greeting",
   init: ({ joi }) =>
     joi

@@ -1,9 +1,9 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { InternalCredentialManager } from "../../../../src/aws/common/credentials"
-import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/steps/prepare-template"
-import { InternalStack } from "../../../../src/stacks/stack"
-import { createConsoleLogger } from "../../../../src/utils/logging"
+import { InternalCredentialManager } from "../../../../src/aws/common/credentials.js"
+import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/steps/prepare-template.js"
+import { InternalStack } from "../../../../src/stacks/stack.js"
+import { createConsoleLogger } from "../../../../src/utils/logging.js"
 
 const logger = createConsoleLogger({
   logLevel: "info",
@@ -65,10 +65,10 @@ describe("#createVariablesForStackTemplate", () => {
       stackGroupPath: "/",
       logger,
       getCredentials: async () => mock<Credentials>(),
-      getCurrentCloudFormationStack: jest.fn(),
-      getCloudFormationClient: jest.fn(),
-      getClient: jest.fn(),
-      toProps: jest.fn(),
+      getCurrentCloudFormationStack: () => mock(),
+      getCloudFormationClient: () => mock(),
+      getClient: () => mock(),
+      toProps: () => mock(),
     }
 
     const parameters = [
@@ -201,10 +201,10 @@ describe("#createVariablesForStackTemplate", () => {
       stackGroupPath: "/dev/apps/prod",
       logger,
       getCredentials: async () => mock<Credentials>(),
-      getCurrentCloudFormationStack: jest.fn(),
-      getCloudFormationClient: jest.fn(),
-      getClient: jest.fn(),
-      toProps: jest.fn(),
+      getCurrentCloudFormationStack: () => mock(),
+      getCloudFormationClient: () => mock(),
+      getClient: () => mock(),
+      toProps: () => mock(),
     }
 
     const stackVariables = createVariablesForStackTemplate(variables, stack, [])

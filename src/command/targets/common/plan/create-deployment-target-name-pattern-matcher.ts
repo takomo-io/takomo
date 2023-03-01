@@ -1,5 +1,5 @@
-import { DeploymentTargetConfig } from "../../../../config/targets-config"
-import { DeploymentTargetNamePattern } from "../../../../targets/targets-model"
+import { DeploymentTargetConfig } from "../../../../config/targets-config.js"
+import { DeploymentTargetNamePattern } from "../../../../targets/targets-model.js"
 
 type Matcher = (target: DeploymentTargetConfig) => boolean
 

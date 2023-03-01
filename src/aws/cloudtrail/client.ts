@@ -1,9 +1,9 @@
 import { CloudTrail } from "@aws-sdk/client-cloudtrail"
-import { InternalAwsClientProps, pagedOperation } from "../common/client"
-import { customRequestHandler } from "../common/request-handler"
-import { customRetryStrategy } from "../common/retry"
-import { convertCloudTrailEvents } from "./convert"
-import { CloudTrailEvent } from "./model"
+import { InternalAwsClientProps, pagedOperation } from "../common/client.js"
+import { customRequestHandler } from "../common/request-handler.js"
+import { customRetryStrategy } from "../common/retry.js"
+import { convertCloudTrailEvents } from "./convert.js"
+import { CloudTrailEvent } from "./model.js"
 
 export interface CloudTrailClient {
   readonly lookupEvents: (

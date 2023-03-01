@@ -1,10 +1,14 @@
 import {
   CloudFormationStackSummary,
   StackDriftDetectionStatusOutput,
-} from "../../../aws/cloudformation/model"
-import { InternalStack } from "../../../stacks/stack"
-import { CommandInput, CommandOutput, IO } from "../../../takomo-core/command"
-import { CommandPath } from "../../command-model"
+} from "../../../aws/cloudformation/model.js"
+import { InternalStack } from "../../../stacks/stack.js"
+import {
+  CommandInput,
+  CommandOutput,
+  IO,
+} from "../../../takomo-core/command.js"
+import { CommandPath } from "../../command-model.js"
 
 export interface StackDriftInfo {
   readonly current?: CloudFormationStackSummary

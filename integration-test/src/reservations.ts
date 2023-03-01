@@ -1,9 +1,27 @@
 import { Credentials } from "@aws-sdk/types"
-import { AccountId } from "../../src/aws/common/model"
-import { CustomNodeJsGlobal } from "./global"
+import { AccountId } from "../../src/aws/common/model.js"
 
-// Make references to global namespace work
-declare const global: CustomNodeJsGlobal
+export interface AccountSlot {
+  id: string
+}
+
+export interface ReservationCredentials {
+  accessKeyId: string
+  secretAccessKey: string
+  sessionToken?: string
+}
+
+export interface Reservation {
+  id: string
+  accounts: AccountSlot[]
+  credentials: ReservationCredentials
+}
+
+export const getReservation = (): Reservation => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return global.reservation as Reservation
+}
 
 export interface TestReservation {
   readonly credentials: Credentials
@@ -18,16 +36,18 @@ export interface SingleAccountTestReservation {
 export const withReservation = (
   testFn: (reservation: TestReservation) => Promise<any>,
 ): (() => Promise<any>) => {
-  const credentials = global.reservation.credentials
-  const accountIds = global.reservation.accounts.map((a) => a.id)
+  const reservation = getReservation()
+  const credentials = reservation.credentials
+  const accountIds = reservation.accounts.map((a) => a.id)
   return () => testFn({ credentials, accountIds })
 }
 
 export const withSingleAccountReservation = (
   testFn: (reservation: SingleAccountTestReservation) => Promise<any>,
 ): (() => Promise<any>) => {
-  const credentials = global.reservation.credentials
-  const accountIds = global.reservation.accounts.map((a) => a.id)
+  const reservation = getReservation()
+  const credentials = reservation.credentials
+  const accountIds = reservation.accounts.map((a) => a.id)
   if (accountIds.length !== 1) {
     throw new Error(`Expected only one account but got ${accountIds.length}`)
   }

@@ -1,4 +1,4 @@
-import { TemplateConfig } from "../../config/common-config"
+import { TemplateConfig } from "../../config/common-config.js"
 
 export const parseTemplate = (value: any): TemplateConfig | undefined => {
   if (value === null || value === undefined) {

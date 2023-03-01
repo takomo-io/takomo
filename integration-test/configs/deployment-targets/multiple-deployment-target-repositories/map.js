@@ -1,4 +1,4 @@
-module.exports = ({ target, deploymentGroupPath }) => ({
+export default ({ target, deploymentGroupPath }) => ({
   ...target,
   deploymentGroupPath,
 })

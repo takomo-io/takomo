@@ -1,4 +1,4 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
 
 const stack = { stackPath: "/sample.yml/eu-west-1", stackName: "sample" }
 const projectDir = `${process.cwd()}/integration-test/configs/var-files-from-project-config-file`

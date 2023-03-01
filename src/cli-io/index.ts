@@ -1,9 +1,9 @@
-export { createDeployTargetsIO } from "./deployment-targets/deploy-targets-io"
-export { createRunTargetsIO } from "./deployment-targets/run-targets-io"
-export { createUndeployTargetsIO } from "./deployment-targets/undeploy-targets-io"
-export { formatCommandStatus } from "./formatters"
-export { createGenerateIamPoliciesIO } from "./iam/generate-iam-policies-io"
-export { IOProps } from "./stacks/common"
+export { createDeployTargetsIO } from "./deployment-targets/deploy-targets-io.js"
+export { createRunTargetsIO } from "./deployment-targets/run-targets-io.js"
+export { createUndeployTargetsIO } from "./deployment-targets/undeploy-targets-io.js"
+export { formatCommandStatus } from "./formatters.js"
+export { createGenerateIamPoliciesIO } from "./iam/generate-iam-policies-io.js"
+export { IOProps } from "./stacks/common.js"
 export {
   CONFIRM_DEPLOY_ANSWER_CANCEL,
   CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW,
@@ -13,10 +13,10 @@ export {
   CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS,
   CONFIRM_STACK_DEPLOY_ANSWER_REVIEW_TEMPLATE,
   createDeployStacksIO,
-} from "./stacks/deploy-stacks/deploy-stacks-io"
-export { createDetectDriftIO } from "./stacks/detect-drift-io"
-export { createDependencyGraphIO } from "./stacks/inspect/dependency-graph-io"
-export { createShowConfigurationIO } from "./stacks/inspect/show-configuration-io"
-export { createListStacksIO } from "./stacks/list-stacks-io"
-export { createUndeployStacksIO } from "./stacks/undeploy-stacks-io"
-export { UserActions } from "./user-actions"
+} from "./stacks/deploy-stacks/deploy-stacks-io.js"
+export { createDetectDriftIO } from "./stacks/detect-drift-io.js"
+export { createDependencyGraphIO } from "./stacks/inspect/dependency-graph-io.js"
+export { createShowConfigurationIO } from "./stacks/inspect/show-configuration-io.js"
+export { createListStacksIO } from "./stacks/list-stacks-io.js"
+export { createUndeployStacksIO } from "./stacks/undeploy-stacks-io.js"
+export { UserActions } from "./user-actions.js"

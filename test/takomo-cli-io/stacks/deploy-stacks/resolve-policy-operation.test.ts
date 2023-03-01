@@ -1,4 +1,4 @@
-import { resolvePolicyOperation } from "../../../../src/cli-io/stacks/deploy-stacks/stack-policy"
+import { resolvePolicyOperation } from "../../../../src/cli-io/stacks/deploy-stacks/stack-policy.js"
 
 const policy1 = `
  {

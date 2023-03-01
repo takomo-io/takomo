@@ -1,5 +1,5 @@
-import { InternalStack } from "../../../stacks/stack"
-import { TakomoError } from "../../../utils/errors"
+import { InternalStack } from "../../../stacks/stack.js"
+import { TakomoError } from "../../../utils/errors.js"
 
 export class IncompatibleIgnoreDependenciesOptionOnDeleteError extends TakomoError {
   constructor(stacks: ReadonlyArray<InternalStack>) {

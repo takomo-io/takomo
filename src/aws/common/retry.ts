@@ -3,7 +3,7 @@ import {
   StandardRetryStrategy,
 } from "@aws-sdk/middleware-retry"
 import { RetryStrategy } from "@aws-sdk/types"
-import { randomInt } from "../../utils/random"
+import { randomInt } from "../../utils/random.js"
 
 const ADDITIONAL_RETRYABLE_ERROR_CODES = [
   "UnknownEndpoint",

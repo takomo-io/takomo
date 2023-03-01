@@ -1,4 +1,4 @@
-import { inferDeploymentGroupPathFromFilePath } from "../../src/takomo-deployment-targets-repository/filesystem-deployment-target-repository"
+import { inferDeploymentGroupPathFromFilePath } from "../../src/takomo-deployment-targets-repository/filesystem-deployment-target-repository.js"
 
 const cases: string[][] = [
   ["/targets", "/targets/workloads/target.yml", "workloads"],

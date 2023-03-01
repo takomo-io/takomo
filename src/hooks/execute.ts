@@ -1,15 +1,15 @@
-import { CloudFormationStack } from "../aws/cloudformation/model"
-import { StackOperationVariables } from "../command/command-model"
-import { InternalStacksContext } from "../context/stacks-context"
-import { Stack } from "../stacks/stack"
-import { TkmLogger } from "../utils/logging"
+import { CloudFormationStack } from "../aws/cloudformation/model.js"
+import { StackOperationVariables } from "../command/command-model.js"
+import { InternalStacksContext } from "../context/stacks-context.js"
+import { Stack } from "../stacks/stack.js"
+import { TkmLogger } from "../utils/logging.js"
+import { HookExecutor } from "./hook-executor.js"
 import {
   HookOperation,
   HooksExecutionOutput,
   HookStage,
   HookStatus,
-} from "./hook"
-import { HookExecutor } from "./hook-executor"
+} from "./hook.js"
 
 interface ExecuteHooksProps {
   readonly ctx: InternalStacksContext

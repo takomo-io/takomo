@@ -1,5 +1,5 @@
-import { StackOperationStep } from "../../common/steps"
-import { UpdateStackHolder } from "../states"
+import { StackOperationStep } from "../../common/steps.js"
+import { UpdateStackHolder } from "../states.js"
 
 export const updateTerminationProtection: StackOperationStep<
   UpdateStackHolder

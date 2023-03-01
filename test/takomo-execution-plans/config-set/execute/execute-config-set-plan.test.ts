@@ -1,26 +1,26 @@
 import { mock } from "jest-mock-extended"
-import { ConfigSetName } from "../../../../src"
-import { InternalCredentialManager } from "../../../../src/aws/common/credentials"
-import { ConfigSetContext } from "../../../../src/config-sets/config-set-model"
+import { InternalCredentialManager } from "../../../../src/aws/common/credentials.js"
+import { ConfigSetContext } from "../../../../src/config-sets/config-set-model.js"
+import { ConfigSetName } from "../../../../src/index.js"
 import {
   CommandOutput,
   CommandOutputBase,
-} from "../../../../src/takomo-core/command"
-import {
-  ConfigSetPlanExecutionResult,
-  ConfigSetTargetExecutionResult,
-  ConfigSetTargetListener,
-  executeConfigSetPlan,
-} from "../../../../src/takomo-execution-plans"
+} from "../../../../src/takomo-core/command.js"
 import {
   ConfigSetExecutionPlan,
   ConfigSetTargetExecutor,
   ConfigSetTargetExecutorProps,
   ConfigSetTargetListenerProvider,
-} from "../../../../src/takomo-execution-plans/config-set/model"
-import { ExecutionTargetId } from "../../../../src/takomo-execution-plans/model"
-import { createConsoleLogger } from "../../../../src/utils/logging"
-import { Timer } from "../../../../src/utils/timer"
+} from "../../../../src/takomo-execution-plans/config-set/model.js"
+import {
+  ConfigSetPlanExecutionResult,
+  ConfigSetTargetExecutionResult,
+  ConfigSetTargetListener,
+  executeConfigSetPlan,
+} from "../../../../src/takomo-execution-plans/index.js"
+import { ExecutionTargetId } from "../../../../src/takomo-execution-plans/model.js"
+import { createConsoleLogger } from "../../../../src/utils/logging.js"
+import { Timer } from "../../../../src/utils/timer.js"
 
 const logger = createConsoleLogger({
   logLevel: "info",
@@ -70,7 +70,6 @@ const createExecutor =
   }
 
 const plan1: ConfigSetExecutionPlan<string> = {
-  configSetType: "standard",
   stages: [
     {
       stageName: "one",
@@ -213,7 +212,6 @@ describe("Execute config set plan", () => {
       defaultCredentialManager,
       timer: new Timer("total"),
       plan: {
-        configSetType: "standard",
         stages: [],
       },
       executor: createExecutor(),

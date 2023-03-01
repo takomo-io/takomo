@@ -10,7 +10,7 @@ const init = ({ joi }) => {
   })
 }
 
-module.exports = {
+export default {
   name: "common-tags",
   init,
 }

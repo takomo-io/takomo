@@ -1,12 +1,12 @@
 import {
   ShowConfigurationIO,
   ShowConfigurationOutput,
-} from "../../../command/stacks/inspect/configuration/model"
-import { StackGroup } from "../../../stacks/stack-group"
-import { toPrettyJson } from "../../../utils/json"
-import { formatYaml } from "../../../utils/yaml"
-import { createBaseIO } from "../../cli-io"
-import { chooseCommandPathInternal, IOProps } from "../common"
+} from "../../../command/stacks/inspect/configuration/model.js"
+import { StackGroup } from "../../../stacks/stack-group.js"
+import { toPrettyJson } from "../../../utils/json.js"
+import { formatYaml } from "../../../utils/yaml.js"
+import { createBaseIO } from "../../cli-io.js"
+import { chooseCommandPathInternal, IOProps } from "../common.js"
 
 export const createShowConfigurationIO = (
   props: IOProps,

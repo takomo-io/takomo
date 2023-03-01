@@ -1,21 +1,21 @@
-import { StageName } from "../../../../config-sets/config-set-model"
+import { StageName } from "../../../../config-sets/config-set-model.js"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../../config/targets-config"
-import { DeploymentTargetsContext } from "../../../../context/targets-context"
+} from "../../../../config/targets-config.js"
+import { DeploymentTargetsContext } from "../../../../context/targets-context.js"
 import {
   ConfigSetExecutionGroup,
   ConfigSetExecutionPlan,
   ConfigSetExecutionTarget,
-} from "../../../../takomo-execution-plans"
-import { TkmLogger } from "../../../../utils/logging"
+} from "../../../../takomo-execution-plans/index.js"
+import { TkmLogger } from "../../../../utils/logging.js"
 import {
   createConfigSetExecutionPlan,
   TargetsSelectionCriteria,
-} from "./create-config-set-execution-plan"
-import { getExecutionRoleArn } from "./get-execution-role-arn"
-import { PlannedDeploymentTarget } from "./model"
+} from "./create-config-set-execution-plan.js"
+import { getExecutionRoleArn } from "./get-execution-role-arn.js"
+import { PlannedDeploymentTarget } from "./model.js"
 
 export type ConfigSetExecutionPlanTargetsSelectionProps =
   TargetsSelectionCriteria

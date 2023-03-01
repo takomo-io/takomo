@@ -1,9 +1,9 @@
-import { ALLOW_ALL_STACK_POLICY } from "../../src/aws/cloudformation/model"
+import { ALLOW_ALL_STACK_POLICY } from "../../src/aws/cloudformation/model.js"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
-import { withSingleAccountReservation } from "../src/reservations"
+} from "../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../src/reservations.js"
 
 const stackPath = "/my-stack.yml/eu-central-1",
   stackName = "my-stack",

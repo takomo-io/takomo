@@ -1,5 +1,5 @@
-import { Features } from "../../config/project-config"
-import { TakomoError } from "../../utils/errors"
+import { Features } from "../../config/project-config.js"
+import { TakomoError } from "../../utils/errors.js"
 
 export const parseFeaturesFromArgs = (args: any): Partial<Features> => {
   const varsArray = args ? (Array.isArray(args) ? args : [args]) : []

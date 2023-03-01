@@ -1,5 +1,5 @@
-import { executeOperation } from "./execute"
-import { DeploymentTargetsOperationOutput, PlanHolder } from "./model"
+import { executeOperation } from "./execute.js"
+import { DeploymentTargetsOperationOutput, PlanHolder } from "./model.js"
 
 export const confirmOperation = async (
   holder: PlanHolder,

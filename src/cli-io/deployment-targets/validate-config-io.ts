@@ -1,9 +1,9 @@
 import {
   ValidateDeploymentTargetsConfigurationIO,
   ValidateDeploymentTargetsConfigurationOutput,
-} from "../../command/targets/validate-config/model"
-import { createBaseIO } from "../cli-io"
-import { IOProps } from "../stacks/common"
+} from "../../command/targets/validate-config/model.js"
+import { createBaseIO } from "../cli-io.js"
+import { IOProps } from "../stacks/common.js"
 
 export const createValidateDeploymentTargetsConfigurationIO = (
   props: IOProps,

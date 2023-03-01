@@ -1,14 +1,15 @@
+import { expect } from "@jest/globals"
 import { basename } from "path"
-import { deploymentTargetsOperationCommand } from "../../../../src/command/targets/operation/command"
-import { createConsoleLogger } from "../../../../src/utils/logging"
-import { Timer } from "../../../../src/utils/timer"
-import { createTestUndeployTargetsIO } from "../../io"
-import { createCtxAndConfigRepository } from "./common"
+import { deploymentTargetsOperationCommand } from "../../../../src/command/targets/operation/command.js"
+import { createConsoleLogger } from "../../../../src/utils/logging.js"
+import { Timer } from "../../../../src/utils/timer.js"
+import { createTestUndeployTargetsIO } from "../../io.js"
+import { createCtxAndConfigRepository } from "./common.js"
 import {
   createTargetsOperationOutputMatcher,
   ExecuteDeployTargetsCommandProps,
   TargetsOperationOutputMatcher,
-} from "./targets-operation"
+} from "./targets-operation.js"
 
 export const executeUndeployTargetsCommand = (
   props: ExecuteDeployTargetsCommandProps,
@@ -18,7 +19,7 @@ export const executeUndeployTargetsCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
-      name: basename(expect.getState().testPath),
+      name: basename(expect.getState().testPath!),
     })
 
     const ctxAndConfig = await createCtxAndConfigRepository({

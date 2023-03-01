@@ -1,4 +1,4 @@
-import { FilePath } from "../utils/files"
+import { FilePath } from "../utils/files.js"
 
 export interface RenderTemplateProps {
   /**

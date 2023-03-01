@@ -1,4 +1,4 @@
-import { toPrettyJson } from "../../../src/utils/json"
+import { toPrettyJson } from "../../../src/utils/json.js"
 
 describe("#toPrettyJson", () => {
   test("Simple object", () => {

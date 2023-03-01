@@ -1,8 +1,8 @@
-import { TakomoError } from "../../src/utils/errors"
+import { TakomoError } from "../../src/utils/errors.js"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const stackName = "termination-protection",
   stackPath = "/a.yml/eu-north-1",

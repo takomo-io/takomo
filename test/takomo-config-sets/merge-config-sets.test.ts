@@ -1,4 +1,4 @@
-import { mergeConfigSets } from "../../src/parser/config-set-parser"
+import { mergeConfigSets } from "../../src/parser/config-set-parser.js"
 
 describe("#mergeConfigSets", () => {
   test("Empty inputs", () => {

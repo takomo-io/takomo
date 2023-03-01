@@ -1,9 +1,9 @@
 import { err, ok, Result } from "neverthrow"
-import { StackGroupConfig } from "../../config/stack-group-config"
-import { CommandContext } from "../../context/command-context"
-import { createStackGroupConfigSchema } from "../../schema/stack-group-config-schema"
-import { StackPropertyDefaults } from "../../takomo-stacks-model/constants"
-import { ValidationError } from "../../utils/errors"
+import { StackGroupConfig } from "../../config/stack-group-config.js"
+import { CommandContext } from "../../context/command-context.js"
+import { createStackGroupConfigSchema } from "../../schema/stack-group-config-schema.js"
+import { StackPropertyDefaults } from "../../takomo-stacks-model/constants.js"
+import { ValidationError } from "../../utils/errors.js"
 import {
   parseBoolean,
   parseCommandRole,
@@ -11,15 +11,15 @@ import {
   parseOptionalString,
   parseOptionalStringArray,
   parseStringArray,
-} from "../common-parser"
-import { parseAccountIds } from "./parse-account-ids"
-import { parseData } from "./parse-data"
-import { parseHooks } from "./parse-hooks"
-import { parseSchemas } from "./parse-schemas"
-import { parseStackPolicy } from "./parse-stack-policy"
-import { parseTags } from "./parse-tags"
-import { parseTemplateBucket } from "./parse-template-bucket"
-import { parseTimeout } from "./parse-timeout"
+} from "../common-parser.js"
+import { parseAccountIds } from "./parse-account-ids.js"
+import { parseData } from "./parse-data.js"
+import { parseHooks } from "./parse-hooks.js"
+import { parseSchemas } from "./parse-schemas.js"
+import { parseStackPolicy } from "./parse-stack-policy.js"
+import { parseTags } from "./parse-tags.js"
+import { parseTemplateBucket } from "./parse-template-bucket.js"
+import { parseTimeout } from "./parse-timeout.js"
 
 export const buildStackGroupConfig = (
   ctx: CommandContext,

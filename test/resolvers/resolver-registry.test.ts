@@ -1,10 +1,9 @@
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { ResolverRegistry } from "../../src/resolvers/resolver-registry"
-import { createStaticResolverProvider } from "../../src/resolvers/static-resolver"
-import { CommandContext } from "../../src/takomo-core"
-import { ResolverInput } from "../../src/takomo-stacks-model"
-import { createConsoleLogger } from "../../src/utils/logging"
+import { CommandContext, ResolverInput } from "../../src/index.js"
+import { ResolverRegistry } from "../../src/resolvers/resolver-registry.js"
+import { createStaticResolverProvider } from "../../src/resolvers/static-resolver.js"
+import { createConsoleLogger } from "../../src/utils/logging.js"
 
 const logger = createConsoleLogger({
   logLevel: "info",

@@ -1,8 +1,8 @@
-import { createCommonSchema } from "../../../src/schema/common-schema"
+import { createCommonSchema } from "../../../src/schema/common-schema.js"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "../../assertions"
+} from "../../assertions.js"
 const { variableName } = createCommonSchema()
 
 const valid = ["basic", "Example", "my-group", "_with_underscores"]

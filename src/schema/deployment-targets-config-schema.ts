@@ -1,9 +1,9 @@
 import Joi, { ObjectSchema } from "joi"
-import { Region } from "../aws/common/model"
-import { createAwsSchemas } from "./aws-schema"
-import { createCommonSchema } from "./common-schema"
-import { createConfigSetsSchemas } from "./config-sets-schema"
-import { createDeploymentTargetsSchemas } from "./deployment-targets-schema"
+import { Region } from "../aws/common/model.js"
+import { createAwsSchemas } from "./aws-schema.js"
+import { createCommonSchema } from "./common-schema.js"
+import { createConfigSetsSchemas } from "./config-sets-schema.js"
+import { createDeploymentTargetsSchemas } from "./deployment-targets-schema.js"
 
 interface CreateDeploymentTargetsConfigSchemaProps {
   readonly regions: ReadonlyArray<Region>

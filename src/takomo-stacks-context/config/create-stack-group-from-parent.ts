@@ -1,6 +1,6 @@
-import { createStackGroup, StackGroup } from "../../stacks/stack-group"
-import { deepCopy } from "../../utils/objects"
-import { StackGroupConfigNode } from "./config-tree"
+import { createStackGroup, StackGroup } from "../../stacks/stack-group.js"
+import { deepCopy } from "../../utils/objects.js"
+import { StackGroupConfigNode } from "./config-tree.js"
 
 export const createStackGroupFromParent = (
   node: StackGroupConfigNode,

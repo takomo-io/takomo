@@ -1,5 +1,5 @@
-import { evaluateRules, Rule } from "../../../utils/rules"
-import { ChangeSet } from "../model"
+import { evaluateRules, Rule } from "../../../utils/rules.js"
+import { ChangeSet } from "../model.js"
 
 export type DescribeChangeSetResult =
   | "PENDING"

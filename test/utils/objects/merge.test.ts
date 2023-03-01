@@ -1,4 +1,4 @@
-import { merge } from "../../../src/utils/objects"
+import { merge } from "../../../src/utils/objects.js"
 
 describe("#merge", () => {
   test("a single empty object", () => {

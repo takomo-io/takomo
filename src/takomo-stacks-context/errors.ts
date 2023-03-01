@@ -1,5 +1,5 @@
-import { StackPath } from "../stacks/stack"
-import { TakomoError } from "../utils/errors"
+import { StackPath } from "../stacks/stack.js"
+import { TakomoError } from "../utils/errors.js"
 
 interface Reference {
   readonly from: StackPath

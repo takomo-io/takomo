@@ -1,5 +1,5 @@
-import { ExternalResolverConfig } from "../../src/config/project-config"
-import { parseExternalResolvers } from "../../src/parser/project-config-parser"
+import { ExternalResolverConfig } from "../../src/config/project-config.js"
+import { parseExternalResolvers } from "../../src/parser/project-config-parser.js"
 
 const cases: Array<[unknown, ReadonlyArray<ExternalResolverConfig>]> = [
   [undefined, []],

@@ -2,9 +2,9 @@
  * @testenv-recycler-count 5
  */
 
-import { aws } from "../../src/aws-api"
-import { executeRunTargetsCommand } from "../../src/commands/targets/run-targets"
-import { withReservation } from "../../src/reservations"
+import { aws } from "../../src/aws-api.js"
+import { executeRunTargetsCommand } from "../../src/commands/targets/run-targets.js"
+import { withReservation } from "../../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/run`
 

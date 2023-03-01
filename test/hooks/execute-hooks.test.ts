@@ -1,16 +1,16 @@
 import { mock } from "jest-mock-extended"
-import { StackOperationVariables } from "../../src/command/command-model"
-import { InternalStacksContext } from "../../src/context/stacks-context"
-import { executeHooks } from "../../src/hooks/execute"
+import { StackOperationVariables } from "../../src/command/command-model.js"
+import { InternalStacksContext } from "../../src/context/stacks-context.js"
+import { executeHooks } from "../../src/hooks/execute.js"
+import { HookExecutor } from "../../src/hooks/hook-executor.js"
 import {
   Hook,
   HookInput,
   HookOutput,
   HooksExecutionOutput,
-} from "../../src/hooks/hook"
-import { HookExecutor } from "../../src/hooks/hook-executor"
-import { Stack } from "../../src/stacks/stack"
-import { createConsoleLogger } from "../../src/utils/logging"
+} from "../../src/hooks/hook.js"
+import { Stack } from "../../src/stacks/stack.js"
+import { createConsoleLogger } from "../../src/utils/logging.js"
 
 class ThrowingHook implements Hook {
   private readonly error: Error

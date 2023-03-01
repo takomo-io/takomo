@@ -1,5 +1,5 @@
-import { green, red } from "../../../src/utils/colors"
-import { diffStrings } from "../../../src/utils/strings"
+import { green, red } from "../../../src/utils/colors.js"
+import { diffStrings } from "../../../src/utils/strings.js"
 
 // old, updated, expected
 const cases = [

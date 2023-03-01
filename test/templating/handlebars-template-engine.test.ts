@@ -1,6 +1,6 @@
 import { join } from "path"
-import { HandlebarsTemplateEngine } from "../../src/templating/handlebars/handlebars-template-engine"
-import { logger } from "../logger"
+import { HandlebarsTemplateEngine } from "../../src/templating/handlebars/handlebars-template-engine.js"
+import { logger } from "../logger.js"
 
 const pathToPartial = join(process.cwd(), "test", "templating", "partial.txt")
 

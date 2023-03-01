@@ -1,4 +1,4 @@
-import { splitTextInLines } from "../../../src/utils/strings"
+import { splitTextInLines } from "../../../src/utils/strings.js"
 
 describe("#splitTextInLines", () => {
   test("empty string", () => {

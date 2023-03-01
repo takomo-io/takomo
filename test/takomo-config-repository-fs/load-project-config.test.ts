@@ -4,10 +4,10 @@ import {
   defaultEsbuild,
   defaultFeatures,
   InternalTakomoProjectConfig,
-} from "../../src/config/project-config"
-import { DEFAULT_REGIONS } from "../../src/constants/regions-constants"
-import { loadProjectConfig } from "../../src/parser/project-config-parser"
-import { FilePath } from "../../src/utils/files"
+} from "../../src/config/project-config.js"
+import { DEFAULT_REGIONS } from "../../src/constants/regions-constants.js"
+import { loadProjectConfig } from "../../src/parser/project-config-parser.js"
+import { FilePath } from "../../src/utils/files.js"
 
 const doLoadProjectConfig = (
   projectDir: FilePath,
@@ -229,7 +229,7 @@ describe("#loadProjectConfig", () => {
     )
 
     const expected: InternalTakomoProjectConfig = {
-      requiredVersion: ">1.0.0 || >=5.0.0-alpha.0",
+      requiredVersion: ">1.0.0 || >=6.0.0-alpha.0",
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-west-1", "us-east-1"],
       resolvers: [],

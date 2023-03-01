@@ -1,4 +1,4 @@
-import { parseStringArray } from "../../../src/parser/common-parser"
+import { parseStringArray } from "../../../src/parser/common-parser.js"
 
 const cases: Array<[unknown, string[]]> = [
   [undefined, []],

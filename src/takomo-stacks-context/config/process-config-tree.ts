@@ -1,34 +1,34 @@
-import R from "ramda"
-import { InternalCredentialManager } from "../../aws/common/credentials"
-import { IamRoleArn } from "../../aws/common/model"
-import { CommandPath } from "../../command/command-model"
-import { InternalCommandContext } from "../../context/command-context"
-import { HookRegistry } from "../../hooks/hook-registry"
-import { ResolverRegistry } from "../../resolvers/resolver-registry"
-import {
-  InternalStack,
-  normalizeStackPath,
-  StackPath,
-} from "../../stacks/stack"
+import * as R from "ramda"
+import { InternalCredentialManager } from "../../aws/common/credentials.js"
+import { IamRoleArn } from "../../aws/common/model.js"
+import { CommandPath } from "../../command/command-model.js"
+import { InternalCommandContext } from "../../context/command-context.js"
+import { HookRegistry } from "../../hooks/hook-registry.js"
+import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
 import {
   createStackGroup,
   StackGroup,
   StackGroupPath,
-} from "../../stacks/stack-group"
-import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
-import { SchemaRegistry } from "../../takomo-stacks-model/schemas"
-import { isWithinCommandPath } from "../../takomo-stacks-model/util"
-import { arrayToMap } from "../../utils/collections"
-import { TkmLogger } from "../../utils/logging"
+} from "../../stacks/stack-group.js"
+import {
+  InternalStack,
+  normalizeStackPath,
+  StackPath,
+} from "../../stacks/stack.js"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
+import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { isWithinCommandPath } from "../../takomo-stacks-model/util.js"
+import { arrayToMap } from "../../utils/collections.js"
+import { TkmLogger } from "../../utils/logging.js"
 import {
   checkCyclicDependencies,
   checkObsoleteDependencies,
   processStackDependencies,
-} from "../dependencies"
-import { StacksConfigRepository } from "../model"
-import { buildStack } from "./build-stack"
-import { ConfigTree, StackGroupConfigNode } from "./config-tree"
-import { doCreateStackGroup } from "./create-stack-group"
+} from "../dependencies.js"
+import { StacksConfigRepository } from "../model.js"
+import { buildStack } from "./build-stack.js"
+import { ConfigTree, StackGroupConfigNode } from "./config-tree.js"
+import { doCreateStackGroup } from "./create-stack-group.js"
 
 export class ProcessStatus {
   readonly #stackGroups = new Map<StackGroupPath, StackGroup>()

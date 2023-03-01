@@ -1,13 +1,13 @@
-import R from "ramda"
+import * as R from "ramda"
 import {
   createStack,
   InternalStack,
   normalizeStackPath,
   StackPath,
   StackProps,
-} from "../stacks/stack"
-import { TakomoError } from "../utils/errors"
-import { ObsoleteDependenciesError } from "./errors"
+} from "../stacks/stack.js"
+import { TakomoError } from "../utils/errors.js"
+import { ObsoleteDependenciesError } from "./errors.js"
 
 export const checkCyclicDependenciesForStack = (
   stack: InternalStack,

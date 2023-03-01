@@ -1,8 +1,8 @@
-import { InternalStacksContext } from "../../../context/stacks-context"
-import { isNotObsolete } from "../../../takomo-stacks-model/util"
-import { TkmLogger } from "../../../utils/logging"
-import { loadCurrentCfStacks } from "../common/load-current-cf-stacks"
-import { ListStacksInput, ListStacksOutput } from "./model"
+import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { loadCurrentCfStacks } from "../common/load-current-cf-stacks.js"
+import { ListStacksInput, ListStacksOutput } from "./model.js"
 
 export const listStacks = async (
   ctx: InternalStacksContext,

@@ -3,15 +3,15 @@ import {
   CloudFormationStack,
   StackName,
   StackStatus,
-} from "../../../../src/aws/cloudformation/model"
-import { Region } from "../../../../src/aws/common/model"
+} from "../../../../src/aws/cloudformation/model.js"
+import { Region } from "../../../../src/aws/common/model.js"
 import {
   buildStacksUndeployPlan,
   StacksUndeployPlan,
   StackUndeployOperationType,
-} from "../../../../src/command/stacks/undeploy/plan"
-import { InternalStack, StackPath } from "../../../../src/stacks/stack"
-import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants"
+} from "../../../../src/command/stacks/undeploy/plan.js"
+import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
+import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
 
 interface CreateStackProps {
   readonly name: StackName

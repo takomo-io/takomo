@@ -1,10 +1,10 @@
 import { ObjectSchema } from "joi"
-import { createStacksSchemas } from "../schema/stacks-schema"
-import { Resolver, ResolverInput } from "./resolver"
+import { createStacksSchemas } from "../schema/stacks-schema.js"
 import {
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "./resolver-provider"
+} from "./resolver-provider.js"
+import { Resolver, ResolverInput } from "./resolver.js"
 
 const init = async ({ hook }: any): Promise<Resolver> => {
   if (!hook) {

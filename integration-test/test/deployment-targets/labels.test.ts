@@ -2,7 +2,7 @@
  * Test selecting deployment targets with labels
  */
 
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/labels`
 

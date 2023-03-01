@@ -1,4 +1,4 @@
-import { buildErrorMessage } from "../../../src/utils/templating"
+import { buildErrorMessage } from "../../../src/utils/templating.js"
 
 const error = (
   message: string,

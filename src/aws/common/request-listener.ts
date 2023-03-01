@@ -8,9 +8,9 @@ import {
   MetadataBearer,
   Pluggable,
 } from "@aws-sdk/types"
-import { toCompactJson } from "../../utils/json"
-import { TkmLogger } from "../../utils/logging"
-import { ClientListener } from "./client"
+import { toCompactJson } from "../../utils/json.js"
+import { TkmLogger } from "../../utils/logging.js"
+import { ClientListener } from "./client.js"
 
 const apiRequestListenerMiddleware =
   (logger: TkmLogger, clientId: string, listener: ClientListener) =>

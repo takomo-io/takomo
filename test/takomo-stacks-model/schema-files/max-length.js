@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "maxLength",
   init: ({ joi, props }) => {
     return joi.string().max(props.max)

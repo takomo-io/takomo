@@ -1,1 +1,1 @@
-module.exports = async ({ target }) => target.name
+export default async ({ target }) => target.name

@@ -1,6 +1,6 @@
-import { Variables } from "../../common/model"
-import { StackGroup } from "../../stacks/stack-group"
-import { getVariablesForStackGroup } from "./get-variables-for-stack-group"
+import { Variables } from "../../common/model.js"
+import { StackGroup } from "../../stacks/stack-group.js"
+import { getVariablesForStackGroup } from "./get-variables-for-stack-group.js"
 
 export const createVariablesForStackGroupConfigFile = (
   variables: Variables,

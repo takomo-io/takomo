@@ -2,12 +2,12 @@ import {
   ALLOW_ALL_STACK_POLICY,
   DetailedCloudFormationStack,
   StackPolicyBody,
-} from "../../../aws/cloudformation/model"
-import { InternalStack } from "../../../stacks/stack"
-import { bold, green } from "../../../utils/colors"
-import { prettyPrintJson } from "../../../utils/json"
-import { diffStrings } from "../../../utils/strings"
-import { BaseIO } from "../../cli-io"
+} from "../../../aws/cloudformation/model.js"
+import { InternalStack } from "../../../stacks/stack.js"
+import { bold, green } from "../../../utils/colors.js"
+import { prettyPrintJson } from "../../../utils/json.js"
+import { diffStrings } from "../../../utils/strings.js"
+import { BaseIO } from "../../cli-io.js"
 
 const ensureContentsEndsWithLineFeed = (content: string): string =>
   content.endsWith("\n") ? content : content + "\n"

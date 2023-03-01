@@ -1,9 +1,9 @@
 import { ObjectSchema } from "joi"
-import { Resolver, ResolverInput } from "./resolver"
 import {
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "./resolver-provider"
+} from "./resolver-provider.js"
+import { Resolver, ResolverInput } from "./resolver.js"
 
 const init = async (props: any): Promise<Resolver> => ({
   resolve: async (input: ResolverInput): Promise<any> => `${props.value}`,

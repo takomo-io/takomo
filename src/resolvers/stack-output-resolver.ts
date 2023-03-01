@@ -1,12 +1,12 @@
 import { ObjectSchema } from "joi"
-import { createAwsSchemas } from "../schema/aws-schema"
-import { createStacksSchemas } from "../schema/stacks-schema"
-import { StackPath } from "../stacks/stack"
-import { Resolver, ResolverInput } from "./resolver"
+import { createAwsSchemas } from "../schema/aws-schema.js"
+import { createStacksSchemas } from "../schema/stacks-schema.js"
+import { StackPath } from "../stacks/stack.js"
 import {
   ResolverProvider,
   ResolverProviderSchemaProps,
-} from "./resolver-provider"
+} from "./resolver-provider.js"
+import { Resolver, ResolverInput } from "./resolver.js"
 
 const init = async (props: any): Promise<Resolver> => ({
   dependencies: (): StackPath[] => [props.stack],

@@ -1,1 +1,1 @@
-module.exports = ({ targets }) => targets.sort().join(",")
+export default ({ targets }) => targets.sort().join(",")

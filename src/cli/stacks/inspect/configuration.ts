@@ -1,16 +1,16 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createShowConfigurationIO } from "../../../cli-io"
-import { CommandPath } from "../../../command/command-model"
-import { showConfigurationCommand } from "../../../command/stacks/inspect/configuration/command"
-import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository"
-import { ROOT_STACK_GROUP_PATH } from "../../../takomo-stacks-model/constants"
-import { handle, RunProps } from "../../common"
+import { createShowConfigurationIO } from "../../../cli-io/index.js"
+import { CommandPath } from "../../../command/command-model.js"
+import { showConfigurationCommand } from "../../../command/stacks/inspect/configuration/command.js"
+import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository.js"
+import { ROOT_STACK_GROUP_PATH } from "../../../takomo-stacks-model/constants.js"
+import { handle, RunProps } from "../../common.js"
 import {
   COMMAND_PATH_OPT,
   INTERACTIVE_OPT,
   outputFormatOptions,
-} from "../../constants"
-import { interactiveCommandPathSelectionOptions } from "../common"
+} from "../../constants.js"
+import { interactiveCommandPathSelectionOptions } from "../common.js"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath

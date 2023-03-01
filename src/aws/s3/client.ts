@@ -1,7 +1,7 @@
 import { S3 } from "@aws-sdk/client-s3"
-import { InternalAwsClientProps } from "../common/client"
-import { customRequestHandler } from "../common/request-handler"
-import { customRetryStrategy } from "../common/retry"
+import { InternalAwsClientProps } from "../common/client.js"
+import { customRequestHandler } from "../common/request-handler.js"
+import { customRetryStrategy } from "../common/retry.js"
 
 export interface S3Client {
   readonly putObject: (

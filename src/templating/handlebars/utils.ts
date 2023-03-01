@@ -1,7 +1,7 @@
-import { TakomoError } from "../../utils/errors"
-import { FilePath } from "../../utils/files"
-import { buildErrorMessage } from "../../utils/templating"
-import { TemplateEngine } from "../template-engine"
+import { TakomoError } from "../../utils/errors.js"
+import { FilePath } from "../../utils/files.js"
+import { buildErrorMessage } from "../../utils/templating.js"
+import { TemplateEngine } from "../template-engine.js"
 
 export const renderTemplate = async (
   te: TemplateEngine,

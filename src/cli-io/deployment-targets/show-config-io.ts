@@ -1,11 +1,11 @@
 import {
   ShowDeploymentTargetsConfigurationIO,
   ShowDeploymentTargetsConfigurationOutput,
-} from "../../command/targets/show-config/model"
-import { toPrettyJson } from "../../utils/json"
-import { formatYaml } from "../../utils/yaml"
-import { createBaseIO } from "../cli-io"
-import { IOProps } from "../stacks/common"
+} from "../../command/targets/show-config/model.js"
+import { toPrettyJson } from "../../utils/json.js"
+import { formatYaml } from "../../utils/yaml.js"
+import { createBaseIO } from "../cli-io.js"
+import { IOProps } from "../stacks/common.js"
 
 export const createShowDeploymentTargetsConfigurationIO = (
   props: IOProps,

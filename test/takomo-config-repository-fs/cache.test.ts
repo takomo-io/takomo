@@ -1,6 +1,6 @@
 import { join } from "path"
-import { createFileSystemCache } from "../../src/takomo-config-repository-fs/cache"
-import { createConsoleLogger } from "../../src/utils/logging"
+import { createFileSystemCache } from "../../src/takomo-config-repository-fs/cache.js"
+import { createConsoleLogger } from "../../src/utils/logging.js"
 
 const cacheDir = join(process.cwd(), "test", ".cache")
 

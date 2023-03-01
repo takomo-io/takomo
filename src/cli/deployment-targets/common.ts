@@ -1,17 +1,20 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { IOProps } from "../../cli-io"
-import { CommandPath, DeploymentOperation } from "../../command/command-model"
-import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command"
-import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model"
-import { ConfigSetName } from "../../config-sets/config-set-model"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
+import { IOProps } from "../../cli-io/index.js"
+import {
+  CommandPath,
+  DeploymentOperation,
+} from "../../command/command-model.js"
+import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command.js"
+import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model.js"
+import { ConfigSetName } from "../../config-sets/config-set-model.js"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   Label,
-} from "../../targets/targets-model"
-import { FilePath } from "../../utils/files"
-import { commonEpilog, handle, RunProps } from "../common"
+} from "../../targets/targets-model.js"
+import { FilePath } from "../../utils/files.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
 import {
   COMMAND_PATH_OPT,
   CONCURRENT_TARGETS_OPT,
@@ -22,7 +25,7 @@ import {
   LABEL_OPT,
   RESET_CACHE_OPT,
   TARGET_OPT,
-} from "../constants"
+} from "../constants.js"
 
 export const GROUPS_OPT = "groups"
 
@@ -112,7 +115,7 @@ export const deploymentTargetsOperationBuilder = (
     .positional(GROUPS_OPT, {
       description: "Deployment groups to include in the operation",
       array: true,
-      string: true,
+      type: "string",
       default: [],
     })
 

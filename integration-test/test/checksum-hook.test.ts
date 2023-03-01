@@ -1,4 +1,4 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/checksum-hook`,
   stackPath = "/stack.yml/eu-west-1",

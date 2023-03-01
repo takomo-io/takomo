@@ -1,12 +1,12 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createDetectDriftIO } from "../../cli-io"
-import { CommandPath } from "../../command/command-model"
-import { detectDriftCommand } from "../../command/stacks/drift/command"
-import { detectDriftCommandIamPolicy } from "../../command/stacks/drift/iam-policy"
-import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository"
-import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants"
-import { commonEpilog, handle, RunProps } from "../common"
-import { COMMAND_PATH_OPT } from "../constants"
+import { createDetectDriftIO } from "../../cli-io/index.js"
+import { CommandPath } from "../../command/command-model.js"
+import { detectDriftCommand } from "../../command/stacks/drift/command.js"
+import { detectDriftCommandIamPolicy } from "../../command/stacks/drift/iam-policy.js"
+import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository.js"
+import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
+import { COMMAND_PATH_OPT } from "../constants.js"
 
 type CommandArgs = {
   readonly [COMMAND_PATH_OPT]: CommandPath

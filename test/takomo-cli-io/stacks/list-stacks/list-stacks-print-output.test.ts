@@ -1,10 +1,13 @@
-import dedent from "ts-dedent"
-import { createListStacksIO } from "../../../../src/cli-io"
-import { formatDate } from "../../../../src/cli-io/stacks/common"
-import { green } from "../../../../src/utils/colors"
-import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
-import { Timer } from "../../../../src/utils/timer"
-import { createCapturingLogWriter } from "../../../capturing-log-writer"
+import { dedent } from "ts-dedent"
+import { createListStacksIO } from "../../../../src/cli-io/index.js"
+import { formatDate } from "../../../../src/cli-io/stacks/common.js"
+import { green } from "../../../../src/utils/colors.js"
+import {
+  createConsoleLogger,
+  LogWriter,
+} from "../../../../src/utils/logging.js"
+import { Timer } from "../../../../src/utils/timer.js"
+import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
 
 const createIO = (writer: LogWriter) =>
   createListStacksIO({

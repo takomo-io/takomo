@@ -1,49 +1,47 @@
 import { Credentials } from "@aws-sdk/types"
 import Table from "easy-table"
 import inquirer from "inquirer"
+import { createRequire } from "module"
 import os from "os"
-import R from "ramda"
+import * as R from "ramda"
 import { Arguments } from "yargs"
-import { formatCommandStatus } from "../cli-io"
+import { createAwsClientProvider } from "../aws/aws-client-provider.js"
+import { ApiCallProps } from "../aws/common/client.js"
+import {
+  CredentialManager,
+  initDefaultCredentialManager,
+  InternalCredentialManager,
+} from "../aws/common/credentials.js"
+import { formatCommandStatus } from "../cli-io/index.js"
+import { InternalCommandContext } from "../context/command-context.js"
+import { parseBoolean, parseStringArray } from "../parser/common-parser.js"
+import {
+  createFileSystemCommandContext,
+  FileSystemCommandContext,
+} from "../takomo-config-repository-fs/context/create-file-system-command-context.js"
 import {
   CommandHandler,
   CommandInput,
   CommandOutput,
   IO,
-} from "../takomo-core/command"
-
-import { createAwsClientProvider } from "../aws/aws-client-provider"
-import {
-  CredentialManager,
-  initDefaultCredentialManager,
-  InternalCredentialManager,
-} from "../aws/common/credentials"
-import { InternalCommandContext } from "../context/command-context"
-import { parseBoolean, parseStringArray } from "../parser/common-parser"
-import {
-  createFileSystemCommandContext,
-  FileSystemCommandContext,
-} from "../takomo-config-repository-fs/context/create-file-system-command-context"
-import { collectFromHierarchy } from "../utils/collections"
-import { red } from "../utils/colors"
-import { expandFilePath, FilePath } from "../utils/files"
-import { createLogger, TkmLogger } from "../utils/logging"
-import { indentLines } from "../utils/strings"
-import { formatElapsedMillis, printTimer, Timer } from "../utils/timer"
-import { RESET_CACHE_OPT } from "./constants"
-import { parseFeaturesFromArgs } from "./options/parse-features-from-args"
-import { parseLogLevel } from "./options/parse-log-level"
-import { parseOutputFormat } from "./options/parse-output-format"
-import { parseVarArgs } from "./options/parse-var-args"
-import { parseVarFileOptions } from "./options/parse-var-file-options"
+} from "../takomo-core/command.js"
+import { collectFromHierarchy } from "../utils/collections.js"
+import { red } from "../utils/colors.js"
+import { expandFilePath, FilePath } from "../utils/files.js"
+import { createLogger, TkmLogger } from "../utils/logging.js"
+import { indentLines } from "../utils/strings.js"
+import { formatElapsedMillis, printTimer, Timer } from "../utils/timer.js"
+import { RESET_CACHE_OPT } from "./constants.js"
+import { parseFeaturesFromArgs } from "./options/parse-features-from-args.js"
+import { parseLogLevel } from "./options/parse-log-level.js"
+import { parseOutputFormat } from "./options/parse-output-format.js"
+import { parseVarArgs } from "./options/parse-var-args.js"
+import { parseVarFileOptions } from "./options/parse-var-file-options.js"
 
 export interface RunProps {
   readonly overridingHandler?: (args: Arguments) => void
   readonly showHelpOnFail?: boolean
 }
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../../package.json")
 
 const resolveProjectDir = (projectDirArg: any): FilePath => {
   if (projectDirArg) {
@@ -62,8 +60,10 @@ export const initCommandContext = async (
     process.env.AWS_PROFILE = argv.profile
   }
 
+  const require = createRequire(import.meta.url)
+  const packageJson = require("../../package.json")
   const buildInfo = {
-    version,
+    version: packageJson.version,
   }
 
   const statisticsEnabled = parseBoolean(argv.stats, false)
@@ -91,7 +91,7 @@ export const initCommandContext = async (
     false,
   )
 
-  logger.debug(`Takomo v${version}`)
+  logger.debug(`Takomo v${packageJson.version}`)
 
   return createFileSystemCommandContext({
     quiet,
@@ -141,6 +141,9 @@ export const onError = (e: any): void => {
     console.log(red(e.stack))
   }
 
+  const require = createRequire(import.meta.url)
+  const packageJson = require("../../package.json")
+
   console.log()
   console.log()
   console.log(red("OTHER INFO"))
@@ -148,7 +151,7 @@ export const onError = (e: any): void => {
   console.log(red("Your environment:"))
   console.log(red(`  OS:              ${os.platform()}`))
   console.log(red(`  Node version:    ${process.version}`))
-  console.log(red(`  Takomo version:  ${version}`))
+  console.log(red(`  Takomo version:  ${packageJson.version}`))
   console.log()
   console.log(red("Get support:"))
   console.log(red(`  Docs:      https://takomo.io`))
@@ -221,7 +224,7 @@ export const onComplete = async ({
     clientIds.forEach((clientId) => {
       clientsTable.cell("Client id", clientId).newRow()
       const clientApiCalls = apiCallsByClient[clientId]
-      const clientApiCallsByAction = R.groupBy(
+      const clientApiCallsByAction: Record<string, ApiCallProps[]> = R.groupBy(
         (a) => `${a.api}:${a.action}`,
         clientApiCalls,
       )
@@ -249,7 +252,7 @@ export const onComplete = async ({
 
     clientsTable.newRow().cell("Client id", "Total").newRow()
 
-    const totalApiCallsByAction = R.groupBy(
+    const totalApiCallsByAction: Record<string, ApiCallProps[]> = R.groupBy(
       (a) => `${a.api}:${a.action}`,
       allApiCalls,
     )

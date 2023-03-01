@@ -1,4 +1,4 @@
-export { executeConfigSetPlan } from "./config-set/execute/plan"
+export { executeConfigSetPlan } from "./config-set/execute/plan.js"
 export {
   CommandPathExecutionResult,
   ConfigSetExecutionGroup,
@@ -13,4 +13,4 @@ export {
   ConfigSetTargetExecutorProps,
   ConfigSetTargetListener,
   CreateConfigSetTargetListenerProps,
-} from "./config-set/model"
+} from "./config-set/model.js"

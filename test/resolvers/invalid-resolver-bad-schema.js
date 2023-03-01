@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "invalid-resolver-bad-schema",
   init: (props) => {
     return {

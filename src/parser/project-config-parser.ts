@@ -1,8 +1,9 @@
 import Joi from "joi"
+import { createRequire } from "module"
 import { dirname } from "path"
-import R from "ramda"
+import * as R from "ramda"
 import semver from "semver"
-import { Region } from "../aws/common/model"
+import { Region } from "../aws/common/model.js"
 import {
   defaultEsbuild,
   defaultFeatures,
@@ -12,33 +13,33 @@ import {
   Features,
   InternalTakomoProjectConfig,
   TakomoProjectDeploymentTargetsConfig,
-} from "../config/project-config"
-import { DEFAULT_REGIONS } from "../constants/regions-constants"
-import { createCommonSchema } from "../schema/common-schema"
-import { mergeArrays } from "../utils/collections"
-import { TakomoError } from "../utils/errors"
-import { expandFilePath, fileExists, FilePath } from "../utils/files"
-import { parseYamlFile } from "../utils/yaml"
+} from "../config/project-config.js"
+import { DEFAULT_REGIONS } from "../constants/regions-constants.js"
+import { createCommonSchema } from "../schema/common-schema.js"
+import { mergeArrays } from "../utils/collections.js"
+import { TakomoError } from "../utils/errors.js"
+import { expandFilePath, fileExists, FilePath } from "../utils/files.js"
+import { parseYamlFile } from "../utils/yaml.js"
 import {
   parseOptionalBoolean,
   parseString,
   parseStringArray,
-} from "./common-parser"
+} from "./common-parser.js"
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../../package.json")
-
-const validateRequiredVersion = (
+const validateRequiredVersion = async (
   configFilePath: string,
   requiredVersion?: string,
-): void => {
+): Promise<void> => {
   if (!requiredVersion) {
     return
   }
 
-  if (!semver.satisfies(version, requiredVersion)) {
+  const require = createRequire(import.meta.url)
+  const packageJson = require("../../package.json")
+
+  if (!semver.satisfies(packageJson.version, requiredVersion)) {
     throw new TakomoError(
-      `Current Takomo version ${version} does not satisfy the required version range ` +
+      `Current Takomo version ${packageJson.version} does not satisfy the required version range ` +
         `${requiredVersion} specified in the project configuration file ${configFilePath}`,
       {
         instructions: ["Upgrade Takomo to satisfy the version requirement"],
@@ -390,7 +391,7 @@ export const loadProjectConfig = async (
     createDefaultProjectConfig([], projectDir),
   )
 
-  validateRequiredVersion(pathConfigFile, projectConfig.requiredVersion)
+  await validateRequiredVersion(pathConfigFile, projectConfig.requiredVersion)
 
   const setOverrideFeatures = (
     cfg: InternalTakomoProjectConfig,

@@ -1,12 +1,12 @@
 import {
   CloudFormationStackSummary,
   StackName,
-} from "../../../aws/cloudformation/model"
-import { InternalStack } from "../../../stacks/stack"
-import { getStackNames } from "../../../takomo-stacks-model/util"
-import { arrayToMap } from "../../../utils/collections"
-import { TkmLogger } from "../../../utils/logging"
-import { checksum } from "../../../utils/strings"
+} from "../../../aws/cloudformation/model.js"
+import { InternalStack } from "../../../stacks/stack.js"
+import { getStackNames } from "../../../takomo-stacks-model/util.js"
+import { arrayToMap } from "../../../utils/collections.js"
+import { TkmLogger } from "../../../utils/logging.js"
+import { checksum } from "../../../utils/strings.js"
 
 const makeCredentialsRegionHash = async (
   stack: InternalStack,

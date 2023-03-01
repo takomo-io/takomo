@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { CustomConsole } = require("@jest/console")
+import { CustomConsole } from "@jest/console"
+import { jest } from "@jest/globals"
 
 // Fix Jest's overly verbose logging
 function simpleFormatter(type, message) {

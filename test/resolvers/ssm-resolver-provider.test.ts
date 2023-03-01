@@ -1,9 +1,12 @@
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { defaultSchema } from "../../src/resolvers/resolver-registry"
-import { createSsmResolverProvider } from "../../src/resolvers/ssm-resolver"
-import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core"
-import { expectNoValidationError, expectValidationErrors } from "../assertions"
+import { CommandContext, TakomoProjectConfig } from "../../src/index.js"
+import { defaultSchema } from "../../src/resolvers/resolver-registry.js"
+import { createSsmResolverProvider } from "../../src/resolvers/ssm-resolver.js"
+import {
+  expectNoValidationError,
+  expectValidationErrors,
+} from "../assertions.js"
 
 const provider = createSsmResolverProvider()
 

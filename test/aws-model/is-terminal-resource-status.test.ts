@@ -1,7 +1,7 @@
 import {
   isTerminalResourceStatus,
   ResourceStatus,
-} from "../../src/aws/cloudformation/model"
+} from "../../src/aws/cloudformation/model.js"
 
 const cases: Array<[ResourceStatus, boolean]> = [
   ["CREATE_IN_PROGRESS", false],

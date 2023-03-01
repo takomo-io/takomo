@@ -1,20 +1,20 @@
 import { mock } from "jest-mock-extended"
-import { InternalAwsClientProvider } from "../../../src/aws/aws-client-provider"
-import { InternalCredentialManager } from "../../../src/aws/common/credentials"
-import { PlannedDeploymentTarget } from "../../../src/command/targets/common/plan/model"
-import { createDeploymentTargetVariables } from "../../../src/command/targets/operation/create-deployment-target-variables"
-import { InternalTakomoProjectConfig } from "../../../src/config/project-config"
-import { DeploymentConfig } from "../../../src/config/targets-config"
+import { InternalAwsClientProvider } from "../../../src/aws/aws-client-provider.js"
+import { InternalCredentialManager } from "../../../src/aws/common/credentials.js"
+import { PlannedDeploymentTarget } from "../../../src/command/targets/common/plan/model.js"
+import { createDeploymentTargetVariables } from "../../../src/command/targets/operation/create-deployment-target-variables.js"
+import { InternalTakomoProjectConfig } from "../../../src/config/project-config.js"
+import { DeploymentConfig } from "../../../src/config/targets-config.js"
 import {
   InternalCommandContext,
   TakomoBuildInfo,
-} from "../../../src/context/command-context"
+} from "../../../src/context/command-context.js"
 import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
-} from "../../../src/context/targets-context"
-import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans"
-import { createConsoleLogger } from "../../../src/utils/logging"
+} from "../../../src/context/targets-context.js"
+import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans/index.js"
+import { createConsoleLogger } from "../../../src/utils/logging.js"
 
 const ctx: DeploymentTargetsContext = {
   autoConfirmEnabled: false,
@@ -26,11 +26,11 @@ const ctx: DeploymentTargetsContext = {
   configRepository: mock<DeploymentTargetsConfigRepository>(),
   credentialManager: mock<InternalCredentialManager>(),
   deploymentConfig: mock<DeploymentConfig>(),
-  getConfigSet: jest.fn(),
-  getDeploymentGroup: jest.fn(),
-  getStages: jest.fn(),
-  hasConfigSet: jest.fn(),
-  hasDeploymentGroup: jest.fn(),
+  getConfigSet: () => mock(),
+  getDeploymentGroup: () => mock(),
+  getStages: () => mock(),
+  hasConfigSet: () => mock(),
+  hasDeploymentGroup: () => mock(),
   iamGeneratePoliciesInstructionsEnabled: false,
   logLevel: "info",
   logger: createConsoleLogger({ logLevel: "info" }),

@@ -1,13 +1,13 @@
-import { StackName } from "../../../../aws/cloudformation/model"
-import { Region } from "../../../../aws/common/model"
-import { StackPath } from "../../../../stacks/stack"
-import { StackGroup } from "../../../../stacks/stack-group"
+import { StackName } from "../../../../aws/cloudformation/model.js"
+import { Region } from "../../../../aws/common/model.js"
+import { StackGroup } from "../../../../stacks/stack-group.js"
+import { StackPath } from "../../../../stacks/stack.js"
 import {
   CommandInput,
   CommandOutput,
   IO,
-} from "../../../../takomo-core/command"
-import { CommandPath } from "../../../command-model"
+} from "../../../../takomo-core/command.js"
+import { CommandPath } from "../../../command-model.js"
 
 export interface ShowConfigurationInput extends CommandInput {
   readonly commandPath: CommandPath

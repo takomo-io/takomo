@@ -2,8 +2,8 @@
  * @testenv-recycler-count 3
  */
 
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
-import { withReservation } from "../../src/reservations"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
+import { withReservation } from "../../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/variables`
 

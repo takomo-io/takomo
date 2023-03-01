@@ -5,9 +5,9 @@
 import {
   stackCreateSucceeded,
   stackDeleteSucceeded,
-} from "../../src/commands/common"
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
-import { executeUndeployTargetsCommand } from "../../src/commands/targets/undeploy-targets"
+} from "../../src/commands/common.js"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
+import { executeUndeployTargetsCommand } from "../../src/commands/targets/undeploy-targets.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/simple`
 

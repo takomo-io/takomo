@@ -2,8 +2,8 @@
  * Test feature flags.
  */
 
-import { FeatureDisabledError } from "../../../src/config/project-config"
-import { executeUndeployTargetsCommand } from "../../src/commands/targets/undeploy-targets"
+import { FeatureDisabledError } from "../../../src/config/project-config.js"
+import { executeUndeployTargetsCommand } from "../../src/commands/targets/undeploy-targets.js"
 
 describe("Feature flags", () => {
   test("Undeploy fails when undeploy feature flag is set to false", async () => {

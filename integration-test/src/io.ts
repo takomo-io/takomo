@@ -8,23 +8,23 @@ import {
   createUndeployStacksIO,
   createUndeployTargetsIO,
   UserActions,
-} from "../../src/cli-io"
-import { CommandPath } from "../../src/command/command-model"
+} from "../../src/cli-io/index.js"
+import { CommandPath } from "../../src/command/command-model.js"
 import {
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
-} from "../../src/command/stacks/deploy/model"
-import { DetectDriftIO } from "../../src/command/stacks/drift/model"
-import { ListStacksIO } from "../../src/command/stacks/list/model"
+} from "../../src/command/stacks/deploy/model.js"
+import { DetectDriftIO } from "../../src/command/stacks/drift/model.js"
+import { ListStacksIO } from "../../src/command/stacks/list/model.js"
 import {
   ConfirmUndeployAnswer,
   UndeployStacksIO,
-} from "../../src/command/stacks/undeploy/model"
-import { DeploymentTargetsOperationIO } from "../../src/command/targets/operation/model"
-import { DeploymentTargetsRunIO } from "../../src/command/targets/run/model"
-import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants"
-import { TkmLogger } from "../../src/utils/logging"
+} from "../../src/command/stacks/undeploy/model.js"
+import { DeploymentTargetsOperationIO } from "../../src/command/targets/operation/model.js"
+import { DeploymentTargetsRunIO } from "../../src/command/targets/run/model.js"
+import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants.js"
+import { TkmLogger } from "../../src/utils/logging.js"
 
 export interface TestDeployStacksIOAnswers {
   confirmDeploy: ConfirmDeployAnswer

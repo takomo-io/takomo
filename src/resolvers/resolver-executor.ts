@@ -1,7 +1,7 @@
 import { AnySchema } from "joi"
-import { IamRoleArn } from "../aws/common/model"
-import { StackPath } from "../stacks/stack"
-import { ResolverInput, ResolverName } from "./resolver"
+import { IamRoleArn } from "../aws/common/model.js"
+import { StackPath } from "../stacks/stack.js"
+import { ResolverInput, ResolverName } from "./resolver.js"
 
 export interface ResolverExecutor {
   readonly resolve: (input: ResolverInput) => Promise<any>

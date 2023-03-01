@@ -1,5 +1,5 @@
 import { AnySchema } from "joi"
-import { TakomoError } from "./errors"
+import { TakomoError } from "./errors.js"
 
 export const validate = (
   schema: AnySchema,

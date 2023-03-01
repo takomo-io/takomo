@@ -1,6 +1,6 @@
 import Joi from "joi"
-import { createStacksSchemas } from "../../../src/schema/stacks-schema"
-import { expectNoValidationError } from "../../assertions"
+import { createStacksSchemas } from "../../../src/schema/stacks-schema.js"
+import { expectNoValidationError } from "../../assertions.js"
 
 const { template } = createStacksSchemas({
   regions: [],

@@ -1,7 +1,7 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const stackName = "users",
   stackPath = "/users.yml/eu-central-1",

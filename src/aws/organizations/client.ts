@@ -5,12 +5,12 @@ import {
   paginateListAccounts,
   paginateListAccountsForParent,
 } from "@aws-sdk/client-organizations"
-import { InternalAwsClientProps } from "../common/client"
-import { AccountStatus } from "../common/model"
-import { customRequestHandler } from "../common/request-handler"
-import { customRetryStrategy } from "../common/retry"
-import { convertAccount, convertOU, convertRoot } from "./convert"
-import { Account, OU, OUId } from "./model"
+import { InternalAwsClientProps } from "../common/client.js"
+import { AccountStatus } from "../common/model.js"
+import { customRequestHandler } from "../common/request-handler.js"
+import { customRetryStrategy } from "../common/retry.js"
+import { convertAccount, convertOU, convertRoot } from "./convert.js"
+import { Account, OU, OUId } from "./model.js"
 
 export interface OrganizationsClient {
   readonly listAccounts: () => Promise<ReadonlyArray<Account>>

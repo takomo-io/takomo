@@ -1,8 +1,8 @@
-import { createAwsSchemas } from "../../../src/schema/aws-schema"
+import { createAwsSchemas } from "../../../src/schema/aws-schema.js"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "../../assertions"
+} from "../../assertions.js"
 
 const { stackName } = createAwsSchemas({ regions: [] })
 

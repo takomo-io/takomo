@@ -5,7 +5,7 @@ import {
   HookProvider,
   TakomoConfig,
   TakomoConfigProvider,
-} from "../../../../dist"
+} from "../../../../dist/index.js"
 
 const exampleHookProvider: HookProvider = {
   init: async (props: HookConfig): Promise<Hook> => {

@@ -1,5 +1,5 @@
 import Joi, { AnySchema, ArraySchema, ObjectSchema, StringSchema } from "joi"
-import { Region } from "../aws/common/model"
+import { Region } from "../aws/common/model.js"
 
 export interface AwsSchemas {
   region: StringSchema

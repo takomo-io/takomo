@@ -1,9 +1,9 @@
-import { ChecksumHook } from "../../hooks/checksum-hook"
-import { CmdHook } from "../../hooks/cmd-hook"
-import { HookConfig } from "../../hooks/hook"
-import { HookExecutor } from "../../hooks/hook-executor"
-import { HookProvider } from "../../hooks/hook-provider"
-import { HookRegistry } from "../../hooks/hook-registry"
+import { ChecksumHook } from "../../hooks/checksum-hook.js"
+import { CmdHook } from "../../hooks/cmd-hook.js"
+import { HookExecutor } from "../../hooks/hook-executor.js"
+import { HookProvider } from "../../hooks/hook-provider.js"
+import { HookRegistry } from "../../hooks/hook-registry.js"
+import { HookConfig } from "../../hooks/hook.js"
 
 export const coreHookProviders = (): ReadonlyArray<HookProvider> => [
   {

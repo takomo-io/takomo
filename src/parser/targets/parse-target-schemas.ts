@@ -1,4 +1,4 @@
-import { SchemaConfig } from "../../config/targets-config"
+import { SchemaConfig } from "../../config/targets-config.js"
 
 export const parseTargetSchema = (value: unknown): SchemaConfig => {
   if (typeof value === "string") {

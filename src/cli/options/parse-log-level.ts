@@ -1,4 +1,4 @@
-import { LogLevel } from "../../utils/logging"
+import { LogLevel } from "../../utils/logging.js"
 
 export const parseLogLevel = (log: string, quiet: boolean): LogLevel => {
   if (quiet) {

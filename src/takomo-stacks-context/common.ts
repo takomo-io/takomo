@@ -1,6 +1,6 @@
-import { CommandPath } from "../command/command-model"
-import { InternalStack } from "../stacks/stack"
-import { TakomoError } from "../utils/errors"
+import { CommandPath } from "../command/command-model.js"
+import { InternalStack } from "../stacks/stack.js"
+import { TakomoError } from "../utils/errors.js"
 
 export const isStackGroupPath = (commandPath: CommandPath): boolean =>
   !commandPath.includes(".yml")

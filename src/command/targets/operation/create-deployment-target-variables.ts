@@ -1,7 +1,7 @@
-import { DeploymentTargetsContext } from "../../../context/targets-context"
-import { ConfigSetExecutionTarget } from "../../../takomo-execution-plans"
-import { deepCopy } from "../../../utils/objects"
-import { PlannedDeploymentTarget } from "../common/plan/model"
+import { DeploymentTargetsContext } from "../../../context/targets-context.js"
+import { ConfigSetExecutionTarget } from "../../../takomo-execution-plans/index.js"
+import { deepCopy } from "../../../utils/objects.js"
+import { PlannedDeploymentTarget } from "../common/plan/model.js"
 
 interface CreateDeploymentTargetVariablesProps {
   readonly ctx: DeploymentTargetsContext

@@ -1,19 +1,19 @@
 import { mock } from "jest-mock-extended"
-import { CloudFormationClient } from "../../../../src/aws/cloudformation/client"
+import { CloudFormationClient } from "../../../../src/aws/cloudformation/client.js"
 import {
   DetailedCloudFormationStackSummary,
   StackName,
   StackStatus,
-} from "../../../../src/aws/cloudformation/model"
-import { Region } from "../../../../src/aws/common/model"
-import { StackOperationType } from "../../../../src/command/command-model"
+} from "../../../../src/aws/cloudformation/model.js"
+import { Region } from "../../../../src/aws/common/model.js"
+import { StackOperationType } from "../../../../src/command/command-model.js"
 import {
   buildStacksDeployPlan,
   StacksDeployPlan,
-} from "../../../../src/command/stacks/deploy/plan"
-import { InternalStack, StackPath } from "../../../../src/stacks/stack"
-import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants"
-import { createConsoleLogger } from "../../../../src/utils/logging"
+} from "../../../../src/command/stacks/deploy/plan.js"
+import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
+import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
+import { createConsoleLogger } from "../../../../src/utils/logging.js"
 
 interface CreateStackProps {
   readonly name: StackName

@@ -5,7 +5,7 @@ import {
   ResolverProvider,
   TakomoConfig,
   TakomoConfigProvider,
-} from "../../../../dist"
+} from "../../../../dist/index.js"
 
 const exampleResolverProvider: ResolverProvider = {
   init: async (config: ParameterConfig): Promise<Resolver> => {

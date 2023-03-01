@@ -1,7 +1,7 @@
 import { Credentials } from "@aws-sdk/types"
-import R from "ramda"
-import { deepCopy } from "../utils/objects"
-import { Region } from "./common/model"
+import * as R from "ramda"
+import { deepCopy } from "../utils/objects.js"
+import { Region } from "./common/model.js"
 
 type AwsEnvVariableName =
   | "AWS_ACCESS_KEY_ID"

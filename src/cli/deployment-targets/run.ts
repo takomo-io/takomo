@@ -1,15 +1,16 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createRunTargetsIO } from "../../cli-io"
-import { deploymentTargetsRunCommand } from "../../command/targets/run/command"
-import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository"
-import { OutputFormat } from "../../takomo-core/command"
+import { createRunTargetsIO } from "../../cli-io/index.js"
+import { deploymentTargetsRunCommand } from "../../command/targets/run/command.js"
+import { DeploymentTargetsRunInput } from "../../command/targets/run/model.js"
+import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository.js"
+import { OutputFormat } from "../../takomo-core/command.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
   Label,
-} from "../../targets/targets-model"
-import { FilePath } from "../../utils/files"
-import { commonEpilog, handle, RunProps } from "../common"
+} from "../../targets/targets-model.js"
+import { FilePath } from "../../utils/files.js"
+import { commonEpilog, handle, RunProps } from "../common.js"
 import {
   CONCURRENT_TARGETS_OPT,
   CONFIG_FILE_OPT,
@@ -19,8 +20,8 @@ import {
   outputFormatOptions,
   RESET_CACHE_OPT,
   TARGET_OPT,
-} from "../constants"
-import { GROUPS_OPT } from "./common"
+} from "../constants.js"
+import { GROUPS_OPT } from "./common.js"
 
 const REDUCE_OPT = "reduce"
 const MAP_OPT = "map"
@@ -40,16 +41,16 @@ type CommandArgs = {
   readonly [LABEL_OPT]: ReadonlyArray<Label>
   readonly [EXCLUDE_LABEL_OPT]: ReadonlyArray<Label>
   readonly [CONCURRENT_TARGETS_OPT]: number
-  readonly [CONFIG_FILE_OPT]: FilePath | undefined
+  readonly [CONFIG_FILE_OPT]?: FilePath
   readonly [MAP_OPT]: string
-  readonly [REDUCE_OPT]: string | undefined
-  readonly [MAP_ARGS_OPT]: string | undefined
-  readonly [MAP_ROLE_NAME_OPT]: string | undefined
+  readonly [REDUCE_OPT]?: string
+  readonly [MAP_ARGS_OPT]?: string
+  readonly [MAP_ROLE_NAME_OPT]?: string
   readonly [DISABLE_MAP_ROLE_OPT]: boolean
-  readonly [REDUCE_ROLE_ARN_OPT]: string | undefined
+  readonly [REDUCE_ROLE_ARN_OPT]?: string
   readonly [OUTPUT_OPT]: string
-  readonly [CAPTURE_AFTER_OPT]: string | undefined
-  readonly [CAPTURE_BEFORE_OPT]: string | undefined
+  readonly [CAPTURE_AFTER_OPT]?: string
+  readonly [CAPTURE_BEFORE_OPT]?: string
   readonly [CAPTURE_LAST_LINE_OPT]: boolean
   readonly [RESET_CACHE_OPT]: boolean
 }
@@ -184,34 +185,38 @@ const builder = (yargs: Argv<CommandArgs>) =>
     .positional(GROUPS_OPT, {
       description: "Deployment groups to include in the operation",
       array: true,
-      string: true,
+      type: "string",
       default: [],
+      demandOption: false,
     })
 
 const handler = (argv: Arguments<CommandArgs>) =>
   handle({
     argv,
-    input: async (ctx, input) => ({
-      ...input,
-      targets: argv[TARGET_OPT],
-      excludeTargets: argv[EXCLUDE_TARGET_OPT],
-      groups: argv[GROUPS_OPT],
-      configFile: argv[CONFIG_FILE_OPT],
-      concurrentTargets: argv[CONCURRENT_TARGETS_OPT],
-      labels: argv[LABEL_OPT],
-      excludeLabels: argv[EXCLUDE_LABEL_OPT],
-      mapRoleName: argv[MAP_ROLE_NAME_OPT],
-      disableMapRole: argv[DISABLE_MAP_ROLE_OPT],
-      captureBeforeLine: argv[CAPTURE_BEFORE_OPT],
-      captureAfterLine: argv[CAPTURE_AFTER_OPT],
-      captureLastLine: argv[CAPTURE_LAST_LINE_OPT],
-      mapCommand: argv[MAP_OPT],
-      mapArgs: argv[MAP_ARGS_OPT],
-      reduceRoleArn: argv[REDUCE_ROLE_ARN_OPT],
-      reduceCommand: argv[REDUCE_OPT],
-      outputFormat: argv[OUTPUT_OPT] as OutputFormat,
-      resetCache: argv[RESET_CACHE_OPT],
-    }),
+    input: async (ctx, input) => {
+      const x: DeploymentTargetsRunInput = {
+        ...input,
+        targets: argv[TARGET_OPT],
+        excludeTargets: argv[EXCLUDE_TARGET_OPT],
+        groups: argv[GROUPS_OPT],
+        //configFile: argv[CONFIG_FILE_OPT],
+        concurrentTargets: argv[CONCURRENT_TARGETS_OPT],
+        labels: argv[LABEL_OPT],
+        excludeLabels: argv[EXCLUDE_LABEL_OPT],
+        mapRoleName: argv[MAP_ROLE_NAME_OPT],
+        disableMapRole: argv[DISABLE_MAP_ROLE_OPT],
+        captureBeforeLine: argv[CAPTURE_BEFORE_OPT],
+        captureAfterLine: argv[CAPTURE_AFTER_OPT],
+        captureLastLine: argv[CAPTURE_LAST_LINE_OPT],
+        mapCommand: argv[MAP_OPT],
+        mapArgs: argv[MAP_ARGS_OPT],
+        reduceRoleArn: argv[REDUCE_ROLE_ARN_OPT],
+        reduceCommand: argv[REDUCE_OPT],
+        outputFormat: argv[OUTPUT_OPT] as OutputFormat,
+        //resetCache: argv[RESET_CACHE_OPT],
+      }
+      return x
+    },
     io: (ctx, logger) => createRunTargetsIO({ logger, quiet: ctx.quiet }),
     configRepository: (ctx, logger, credentialManager) =>
       createFileSystemDeploymentTargetsConfigRepository({

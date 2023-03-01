@@ -1,5 +1,5 @@
-import { StackOperationStep } from "../../common/steps"
-import { CurrentStackHolder } from "../states"
+import { StackOperationStep } from "../../common/steps.js"
+import { CurrentStackHolder } from "../states.js"
 
 export const enrichCurrentStack: StackOperationStep<
   CurrentStackHolder

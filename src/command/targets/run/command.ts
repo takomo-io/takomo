@@ -1,19 +1,19 @@
 import Joi from "joi"
-import { Region } from "../../../aws/common/model"
-import { createDeploymentTargetsSchemas } from "../../../schema/deployment-targets-schema"
-import { CommandHandler } from "../../../takomo-core/command"
+import { Region } from "../../../aws/common/model.js"
+import { createDeploymentTargetsSchemas } from "../../../schema/deployment-targets-schema.js"
+import { CommandHandler } from "../../../takomo-core/command.js"
 
 import {
   createDeploymentTargetsContext,
   DeploymentTargetsConfigRepository,
-} from "../../../context/targets-context"
-import { validateInput } from "../../../utils/validation"
+} from "../../../context/targets-context.js"
+import { validateInput } from "../../../utils/validation.js"
 import {
   DeploymentTargetsRunInput,
   DeploymentTargetsRunIO,
   DeploymentTargetsRunOutput,
-} from "./model"
-import { planRun } from "./plan"
+} from "./model.js"
+import { planRun } from "./plan.js"
 const inputSchema = (regions: ReadonlyArray<Region>) => {
   const { deploymentGroupPath, deploymentTargetNamePattern, label } =
     createDeploymentTargetsSchemas({ regions })

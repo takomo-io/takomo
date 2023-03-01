@@ -1,7 +1,7 @@
-import { DetailedCloudFormationStack } from "../../../aws/cloudformation/model"
-import { InternalStack } from "../../../stacks/stack"
-import { bold, green, grey, red } from "../../../utils/colors"
-import { BaseIO } from "../../cli-io"
+import { DetailedCloudFormationStack } from "../../../aws/cloudformation/model.js"
+import { InternalStack } from "../../../stacks/stack.js"
+import { bold, green, grey, red } from "../../../utils/colors.js"
+import { BaseIO } from "../../cli-io.js"
 
 export const printTerminationProtection = (
   io: BaseIO,

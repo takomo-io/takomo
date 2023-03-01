@@ -1,5 +1,5 @@
 import { join } from "path"
-import { collectProjectConfigFileHierarchy } from "../../src/parser/project-config-parser"
+import { collectProjectConfigFileHierarchy } from "../../src/parser/project-config-parser.js"
 
 const projectDir = join(
   process.cwd(),

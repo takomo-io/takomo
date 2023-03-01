@@ -1,7 +1,7 @@
-import { bold } from "../utils/colors"
-import { LogWriter } from "../utils/logging"
-import { indentLines } from "../utils/strings"
-import { createInquirerUserActions, UserActions } from "./user-actions"
+import { bold } from "../utils/colors.js"
+import { LogWriter } from "../utils/logging.js"
+import { indentLines } from "../utils/strings.js"
+import { createInquirerUserActions, UserActions } from "./user-actions.js"
 
 export interface Choice<T> {
   readonly name: string

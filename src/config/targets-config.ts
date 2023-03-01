@@ -1,18 +1,18 @@
-import { AccountId, IamRoleName } from "../aws/common/model"
-import { Vars } from "../common/model"
+import { AccountId, IamRoleName } from "../aws/common/model.js"
+import { Vars } from "../common/model.js"
 import {
   ConfigSet,
   ConfigSetInstruction,
   ConfigSetInstructionsHolder,
-} from "../config-sets/config-set-model"
-import { CommandRole } from "../takomo-core/command"
+} from "../config-sets/config-set-model.js"
+import { CommandRole } from "../takomo-core/command.js"
 import {
   DeploymentGroupName,
   DeploymentGroupPath,
   DeploymentStatus,
   DeploymentTargetName,
   Label,
-} from "../targets/targets-model"
+} from "../targets/targets-model.js"
 
 export interface SchemaConfig {
   readonly name: string

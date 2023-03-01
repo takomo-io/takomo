@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "my-custom-resolver",
   init: (props) => ({
     resolve: () => {

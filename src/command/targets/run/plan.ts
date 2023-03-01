@@ -1,19 +1,19 @@
-import R from "ramda"
+import * as R from "ramda"
 
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
-} from "../../../config/targets-config"
-import { DeploymentTargetsContext } from "../../../context/targets-context"
-import { collectFromHierarchy } from "../../../utils/collections"
-import { TakomoError } from "../../../utils/errors"
-import { createDeploymentTargetNamePatternMatcher } from "../common/plan/create-deployment-target-name-pattern-matcher"
-import { confirmRun } from "./confirm"
+} from "../../../config/targets-config.js"
+import { DeploymentTargetsContext } from "../../../context/targets-context.js"
+import { collectFromHierarchy } from "../../../utils/collections.js"
+import { TakomoError } from "../../../utils/errors.js"
+import { createDeploymentTargetNamePatternMatcher } from "../common/plan/create-deployment-target-name-pattern-matcher.js"
+import { confirmRun } from "./confirm.js"
 import {
   DeploymentTargetsRunInput,
   DeploymentTargetsRunIO,
   DeploymentTargetsRunOutput,
-} from "./model"
+} from "./model.js"
 
 interface PlanRunProps {
   readonly ctx: DeploymentTargetsContext

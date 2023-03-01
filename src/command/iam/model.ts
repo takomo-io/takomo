@@ -1,5 +1,5 @@
-import { IamRoleName, Region } from "../../aws/common/model"
-import { CommandInput, CommandOutput, IO } from "../../takomo-core/command"
+import { IamRoleName, Region } from "../../aws/common/model.js"
+import { CommandInput, CommandOutput, IO } from "../../takomo-core/command.js"
 
 export interface GenerateIamPoliciesInput extends CommandInput {
   readonly startTime: Date

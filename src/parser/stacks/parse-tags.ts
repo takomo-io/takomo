@@ -1,5 +1,5 @@
-import { TagKey } from "../../aws/common/model"
-import { RawTagValue } from "../../stacks/stack"
+import { TagKey } from "../../aws/common/model.js"
+import { RawTagValue } from "../../stacks/stack.js"
 
 export const parseTags = (value: any): Map<TagKey, RawTagValue> => {
   if (value === null || value === undefined) {

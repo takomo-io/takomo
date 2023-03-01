@@ -1,7 +1,7 @@
 import { join } from "path"
-import { Region } from "../aws/common/model"
-import { TakomoError } from "../utils/errors"
-import { expandFilePath, FilePath } from "../utils/files"
+import { Region } from "../aws/common/model.js"
+import { TakomoError } from "../utils/errors.js"
+import { expandFilePath, FilePath } from "../utils/files.js"
 
 export type DeploymentTargetRepositoryType = string
 export interface DeploymentTargetRepositoryConfig {
@@ -30,7 +30,7 @@ export const defaultFeatures = (): Features => ({
 export const defaultEsbuild = (projectDir: FilePath): EsbuildConfig => ({
   enabled: true,
   entryPoint: expandFilePath(projectDir, "takomo.ts"),
-  outFile: expandFilePath(projectDir, join(".takomo", "out", "takomo.js")),
+  outFile: expandFilePath(projectDir, join(".takomo", "out", "takomo.mjs")),
 })
 
 /**

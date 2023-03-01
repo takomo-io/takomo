@@ -1,5 +1,5 @@
-import { CommandInput, ResultsOutput } from "../../takomo-core/command"
-import { CommandPath, StackResult } from "../command-model"
+import { CommandInput, ResultsOutput } from "../../takomo-core/command.js"
+import { CommandPath, StackResult } from "../command-model.js"
 
 export interface StacksOperationInput extends CommandInput {
   readonly commandPath: CommandPath
