@@ -1,4 +1,4 @@
-import { sortStacksForUndeploy } from "../../../src/takomo-stacks-context.js"
+import { sortStacksForUndeploy } from "../../../src/takomo-stacks-context/index.js"
 import { createStack } from "../helpers.js"
 
 describe("#sortStacksForUndeploy", () => {

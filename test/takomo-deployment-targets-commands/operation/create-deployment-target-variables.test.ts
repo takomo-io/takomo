@@ -13,7 +13,7 @@ import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
 } from "../../../src/context/targets-context.js"
-import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans.js"
+import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans/index.js"
 import { createConsoleLogger } from "../../../src/utils/logging.js"
 
 const ctx: DeploymentTargetsContext = {
@@ -26,11 +26,11 @@ const ctx: DeploymentTargetsContext = {
   configRepository: mock<DeploymentTargetsConfigRepository>(),
   credentialManager: mock<InternalCredentialManager>(),
   deploymentConfig: mock<DeploymentConfig>(),
-  getConfigSet: jest.fn(),
-  getDeploymentGroup: jest.fn(),
-  getStages: jest.fn(),
-  hasConfigSet: jest.fn(),
-  hasDeploymentGroup: jest.fn(),
+  getConfigSet: () => mock(),
+  getDeploymentGroup: () => mock(),
+  getStages: () => mock(),
+  hasConfigSet: () => mock(),
+  hasDeploymentGroup: () => mock(),
   iamGeneratePoliciesInstructionsEnabled: false,
   logLevel: "info",
   logger: createConsoleLogger({ logLevel: "info" }),

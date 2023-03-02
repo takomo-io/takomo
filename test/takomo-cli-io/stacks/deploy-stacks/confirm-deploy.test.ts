@@ -1,5 +1,5 @@
 import { mock } from "jest-mock-extended"
-import dedent from "ts-dedent"
+import { dedent } from "ts-dedent"
 import { CloudFormationStack } from "../../../../src/aws/cloudformation/model.js"
 import {
   CONFIRM_DEPLOY_ANSWER_CANCEL,
@@ -7,7 +7,7 @@ import {
   CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW,
   createDeployStacksIO,
   UserActions,
-} from "../../../../src/cli-io.js"
+} from "../../../../src/cli-io/index.js"
 import { StackOperationType } from "../../../../src/command/command-model.js"
 import { StackDeployOperation } from "../../../../src/command/stacks/deploy/plan.js"
 import {

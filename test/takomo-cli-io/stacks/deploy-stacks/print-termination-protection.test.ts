@@ -1,4 +1,4 @@
-import dedent from "ts-dedent"
+import { dedent } from "ts-dedent"
 import { createBaseIO } from "../../../../src/cli-io/cli-io.js"
 import { printTerminationProtection } from "../../../../src/cli-io/stacks/deploy-stacks/termination-protection.js"
 import { bold, green, grey, red } from "../../../../src/utils/colors.js"

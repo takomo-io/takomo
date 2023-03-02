@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { arrayToObject } from "../../../src/utils/collections.js"
 
 describe("#mapToObject", () => {

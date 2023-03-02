@@ -1,8 +1,10 @@
 import { mock } from "jest-mock-extended"
-import dedent from "ts-dedent"
+import { dedent } from "ts-dedent"
 import { CloudFormationStack } from "../../../../src/aws/cloudformation/model.js"
-import { UserActions } from "../../../../src/cli-io.js"
-import { createUndeployStacksIO } from "../../../../src/cli-io/.js"
+import {
+  createUndeployStacksIO,
+  UserActions,
+} from "../../../../src/cli-io/index.js"
 import {
   CONFIRM_UNDEPLOY_ANSWER_CANCEL,
   CONFIRM_UNDEPLOY_ANSWER_CONTINUE,

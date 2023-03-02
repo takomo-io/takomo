@@ -1,6 +1,6 @@
 import { mock } from "jest-mock-extended"
+import { InternalStack, StackPath } from "../../../src/stacks/stack.js"
 import { checkObsoleteDependencies } from "../../../src/takomo-stacks-context/dependencies.js"
-import { InternalStack, StackPath } from "../../../src/takomo-stacks-model.js"
 import { arrayToMap } from "../../../src/utils/collections.js"
 
 const stack = (

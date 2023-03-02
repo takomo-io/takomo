@@ -1,11 +1,11 @@
 import { mock } from "jest-mock-extended"
-import { CommandContext } from "../../../../../src.js"
 import { StackParameterKey } from "../../../../../src/aws/cloudformation/model.js"
 import {
   ListParameterConfig,
   ParameterConfigs,
   SingleParameterConfig,
 } from "../../../../../src/config/common-config.js"
+import { CommandContext } from "../../../../../src/index.js"
 import {
   coreResolverProviders,
   ResolverRegistry,

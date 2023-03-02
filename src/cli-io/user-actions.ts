@@ -1,8 +1,8 @@
 import inquirer from "inquirer"
+import inquirerPrompt from "inquirer-autocomplete-prompt"
 import { Choice } from "./cli-io.js"
 
-// eslint-disable-next-line
-inquirer.registerPrompt("autocomplete", require("inquirer-autocomplete-prompt"))
+inquirer.registerPrompt("autocomplete", inquirerPrompt)
 
 export interface QuestionOptions {
   validate?: (input: any) => string | boolean

@@ -1,7 +1,11 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { CredentialManager, ResolverInput, StacksContext } from "../../src.js"
+import {
+  CredentialManager,
+  ResolverInput,
+  StacksContext,
+} from "../../src/index.js"
 import { createCmdResolverProvider } from "../../src/resolvers/cmd-resolver.js"
 import { Stack } from "../../src/stacks/stack.js"
 import { createConsoleLogger } from "../../src/utils/logging.js"

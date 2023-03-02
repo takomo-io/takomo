@@ -25,8 +25,7 @@ import {
   parseStringArray,
 } from "./common-parser.js"
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../../package.json")
+import packageJson from "../../package.json" assert { type: "json" }
 
 const validateRequiredVersion = (
   configFilePath: string,
@@ -36,9 +35,14 @@ const validateRequiredVersion = (
     return
   }
 
-  if (!semver.satisfies(version, requiredVersion)) {
+  console.log("--------------")
+  console.log(JSON.stringify(packageJson))
+  console.log(packageJson)
+  console.log("--------------")
+
+  if (!semver.satisfies(packageJson.version, requiredVersion)) {
     throw new TakomoError(
-      `Current Takomo version ${version} does not satisfy the required version range ` +
+      `Current Takomo version ${packageJson.version} does not satisfy the required version range ` +
         `${requiredVersion} specified in the project configuration file ${configFilePath}`,
       {
         instructions: ["Upgrade Takomo to satisfy the version requirement"],

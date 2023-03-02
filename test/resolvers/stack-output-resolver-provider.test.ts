@@ -1,8 +1,8 @@
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
+import { CommandContext, TakomoProjectConfig } from "../../src/index.js"
 import { defaultSchema } from "../../src/resolvers/resolver-registry.js"
 import { createStackOutputResolverProvider } from "../../src/resolvers/stack-output-resolver.js"
-import { CommandContext, TakomoProjectConfig } from "../../src/takomo-core.js"
 import {
   expectNoValidationError,
   expectValidationErrors,

@@ -1,5 +1,6 @@
-import { ConfigTree } from "../../../src/takomo-stacks-context.js"
+import { mock } from "jest-mock-extended"
 import { validateCommandPath } from "../../../src/takomo-stacks-context/config/build-stacks-context.js"
+import { ConfigTree } from "../../../src/takomo-stacks-context/index.js"
 
 const tree: ConfigTree = {
   rootStackGroup: {
@@ -9,22 +10,22 @@ const tree: ConfigTree = {
       {
         path: "/dev",
         children: [],
-        getConfig: jest.fn(),
+        getConfig: () => mock(),
         name: "dev",
         parentPath: undefined,
         stacks: [
           {
             path: "/dev/stack-x.yml",
-            getConfig: jest.fn(),
+            getConfig: () => mock(),
           },
         ],
       },
     ],
-    getConfig: jest.fn(),
+    getConfig: () => mock(),
     stacks: [
       {
         path: "/stack-a.yml",
-        getConfig: jest.fn(),
+        getConfig: () => mock(),
       },
     ],
   },

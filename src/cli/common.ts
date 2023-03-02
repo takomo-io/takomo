@@ -43,8 +43,7 @@ export interface RunProps {
   readonly showHelpOnFail?: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../../package.json")
+import packageJson from "../../package.json" assert { type: "json" }
 
 const resolveProjectDir = (projectDirArg: any): FilePath => {
   if (projectDirArg) {
@@ -64,7 +63,7 @@ export const initCommandContext = async (
   }
 
   const buildInfo = {
-    version,
+    version: packageJson.version,
   }
 
   const statisticsEnabled = parseBoolean(argv.stats, false)
@@ -92,7 +91,7 @@ export const initCommandContext = async (
     false,
   )
 
-  logger.debug(`Takomo v${version}`)
+  logger.debug(`Takomo v${packageJson.version}`)
 
   return createFileSystemCommandContext({
     quiet,
@@ -149,7 +148,7 @@ export const onError = (e: any): void => {
   console.log(red("Your environment:"))
   console.log(red(`  OS:              ${os.platform()}`))
   console.log(red(`  Node version:    ${process.version}`))
-  console.log(red(`  Takomo version:  ${version}`))
+  console.log(red(`  Takomo version:  ${packageJson.version}`))
   console.log()
   console.log(red("Get support:"))
   console.log(red(`  Docs:      https://takomo.io`))
