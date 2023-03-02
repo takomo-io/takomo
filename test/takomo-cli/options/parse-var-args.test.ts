@@ -1,4 +1,4 @@
-import { parseVarArgs } from "../../../src/cli/options/parse-var-args"
+import { parseVarArgs } from "../../../src/cli/options/parse-var-args.js"
 
 describe("#parseVarArgs", () => {
   test("returns an empty object when null is given", () => {

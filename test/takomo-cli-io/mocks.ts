@@ -3,9 +3,9 @@ import {
   CloudFormationStack,
   DetailedCloudFormationStack,
   StackName,
-} from "../../src/aws/cloudformation/model"
-import { Region } from "../../src/aws/common/model"
-import { InternalStack, StackPath } from "../../src/stacks/stack"
+} from "../../src/aws/cloudformation/model.js"
+import { Region } from "../../src/aws/common/model.js"
+import { InternalStack, StackPath } from "../../src/stacks/stack.js"
 
 export interface MockDetailedCloudFormationStackProps {
   readonly enableTerminationProtection?: boolean

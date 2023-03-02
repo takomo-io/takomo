@@ -3,16 +3,16 @@ import {
   StackParameterKey,
   StackParameterNoEcho,
   StackParameterValue,
-} from "../../../../src/aws/cloudformation/model"
-import { Tag, TagKey, TagValue } from "../../../../src/aws/common/model"
+} from "../../../../src/aws/cloudformation/model.js"
+import { Tag, TagKey, TagValue } from "../../../../src/aws/common/model.js"
 import {
   ParameterOperation,
   ParameterSpec,
-} from "../../../../src/cli-io/stacks/deploy-stacks/parameters"
+} from "../../../../src/cli-io/stacks/deploy-stacks/parameters.js"
 import {
   TagOperation,
   TagSpec,
-} from "../../../../src/cli-io/stacks/deploy-stacks/tags"
+} from "../../../../src/cli-io/stacks/deploy-stacks/tags.js"
 
 export const param = (
   key: string,

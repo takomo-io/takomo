@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { StackName } from "../aws/cloudformation/model.js"
 import { CommandPath } from "../command/command-model.js"
 import { InternalStack, Stack, StackPath } from "../stacks/stack.js"

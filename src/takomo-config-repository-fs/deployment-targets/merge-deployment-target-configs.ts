@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { DeploymentTargetConfigItem } from "../../takomo-deployment-targets-repository/index.js"
 import { mergeArrays } from "../../utils/collections.js"
 import { merge } from "../../utils/objects.js"

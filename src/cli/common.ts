@@ -2,7 +2,7 @@ import { Credentials } from "@aws-sdk/types"
 import Table from "easy-table"
 import inquirer from "inquirer"
 import os from "os"
-import R from "ramda"
+import * as R from "ramda"
 import { Arguments } from "yargs"
 import { formatCommandStatus } from "../cli-io/index.js"
 import {
@@ -13,6 +13,7 @@ import {
 } from "../takomo-core/command.js"
 
 import { createAwsClientProvider } from "../aws/aws-client-provider.js"
+import { ApiCallProps } from "../aws/common/client.js"
 import {
   CredentialManager,
   initDefaultCredentialManager,
@@ -221,7 +222,7 @@ export const onComplete = async ({
     clientIds.forEach((clientId) => {
       clientsTable.cell("Client id", clientId).newRow()
       const clientApiCalls = apiCallsByClient[clientId]
-      const clientApiCallsByAction = R.groupBy(
+      const clientApiCallsByAction: Record<string, ApiCallProps[]> = R.groupBy(
         (a) => `${a.api}:${a.action}`,
         clientApiCalls,
       )
@@ -249,7 +250,7 @@ export const onComplete = async ({
 
     clientsTable.newRow().cell("Client id", "Total").newRow()
 
-    const totalApiCallsByAction = R.groupBy(
+    const totalApiCallsByAction: Record<string, ApiCallProps[]> = R.groupBy(
       (a) => `${a.api}:${a.action}`,
       allApiCalls,
     )

@@ -1,10 +1,10 @@
 import { mock } from "jest-mock-extended"
-import { DetailedCloudFormationStack } from "../../../../src/aws/cloudformation/model"
-import { createBaseIO } from "../../../../src/cli-io/cli-io"
-import { printStackPolicy } from "../../../../src/cli-io/stacks/deploy-stacks/stack-policy"
-import { InternalStack } from "../../../../src/stacks/stack"
-import { bold, green } from "../../../../src/utils/colors"
-import { createCapturingLogWriter } from "../../../capturing-log-writer"
+import { DetailedCloudFormationStack } from "../../../../src/aws/cloudformation/model.js"
+import { createBaseIO } from "../../../../src/cli-io/cli-io.js"
+import { printStackPolicy } from "../../../../src/cli-io/stacks/deploy-stacks/stack-policy.js"
+import { InternalStack } from "../../../../src/stacks/stack.js"
+import { bold, green } from "../../../../src/utils/colors.js"
+import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
 
 const doPrintStackPolicy = (
   updatedStack: InternalStack,

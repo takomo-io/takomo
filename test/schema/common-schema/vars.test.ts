@@ -1,5 +1,5 @@
-import { createCommonSchema } from "../../../src/schema/common-schema"
-import { expectValidationErrors } from "../../assertions"
+import { createCommonSchema } from "../../../src/schema/common-schema.js"
+import { expectValidationErrors } from "../../assertions.js"
 const { vars } = createCommonSchema()
 
 describe("vars validation succeeds", () => {

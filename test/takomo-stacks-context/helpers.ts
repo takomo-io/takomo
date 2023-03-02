@@ -1,26 +1,30 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { CloudFormationClient } from "../../src/aws/cloudformation/client"
+import { CloudFormationClient } from "../../src/aws/cloudformation/client.js"
 import {
   StackCapability,
   StackName,
   StackPolicyBody,
-} from "../../src/aws/cloudformation/model"
-import { InternalCredentialManager } from "../../src/aws/common/credentials"
-import { AccountId, Region, TagKey } from "../../src/aws/common/model"
-import { TemplateConfig } from "../../src/config/common-config"
-import { StackConfig } from "../../src/config/stack-config"
-import { HookConfig } from "../../src/hooks/hook"
-import { InternalStack, RawTagValue, StackPath } from "../../src/stacks/stack"
+} from "../../src/aws/cloudformation/model.js"
+import { InternalCredentialManager } from "../../src/aws/common/credentials.js"
+import { AccountId, Region, TagKey } from "../../src/aws/common/model.js"
+import { TemplateConfig } from "../../src/config/common-config.js"
+import { StackConfig } from "../../src/config/stack-config.js"
+import { HookConfig } from "../../src/hooks/hook.js"
 import {
   StackGroup,
   StackGroupName,
   StackGroupPath,
-} from "../../src/stacks/stack-group"
-import { CommandRole, Project } from "../../src/takomo-core/command"
-import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants"
-import { createConsoleLogger } from "../../src/utils/logging"
+} from "../../src/stacks/stack-group.js"
+import {
+  InternalStack,
+  RawTagValue,
+  StackPath,
+} from "../../src/stacks/stack.js"
+import { CommandRole, Project } from "../../src/takomo-core/command.js"
+import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants.js"
+import { createConsoleLogger } from "../../src/utils/logging.js"
 
 export interface CreateStackGroupProps {
   name?: StackGroupName
@@ -58,7 +62,7 @@ export const createStackGroup = (
   ignore: false,
   obsolete: false,
   terminationProtection: false,
-  toProps: jest.fn(),
+  toProps: () => mock(),
   ...props,
 })
 
@@ -97,7 +101,7 @@ export const createStack = (
       logLevel: "info",
     }),
     stackGroupPath: "/",
-    getCloudFormationClient: jest.fn(),
+    getCloudFormationClient: () => mock(),
     toProps: () => ({
       ignore: false,
       obsolete: false,
@@ -125,7 +129,7 @@ export const createStack = (
       getCloudFormationClient: async () => mock<CloudFormationClient>(),
     }),
     credentialManager: mock<InternalCredentialManager>(),
-    getCurrentCloudFormationStack: jest.fn(),
+    getCurrentCloudFormationStack: () => mock(),
     getCredentials: async () => mock<Credentials>(),
     getClient: async () => mock<CloudFormation>(),
   }

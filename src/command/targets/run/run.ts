@@ -2,7 +2,7 @@ import { Credentials } from "@aws-sdk/types"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
 import { extname } from "path"
-import R from "ramda"
+import * as R from "ramda"
 import { promisify } from "util"
 import {
   CallerIdentity,

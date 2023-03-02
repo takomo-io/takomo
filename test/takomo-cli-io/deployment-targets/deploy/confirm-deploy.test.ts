@@ -1,11 +1,14 @@
 import { mock } from "jest-mock-extended"
 import dedent from "ts-dedent"
-import { createDeployTargetsIO, UserActions } from "../../../../src/cli-io"
-import { PlannedDeploymentTarget } from "../../../../src/command/targets/common/plan/model"
-import { TargetsExecutionPlan } from "../../../../src/command/targets/operation/model"
-import { bold } from "../../../../src/utils/colors"
-import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
-import { createCapturingLogWriter } from "../../../capturing-log-writer"
+import { createDeployTargetsIO, UserActions } from "../../../../src/cli-io.js"
+import { PlannedDeploymentTarget } from "../../../../src/command/targets/common/plan/model.js"
+import { TargetsExecutionPlan } from "../../../../src/command/targets/operation/model.js"
+import { bold } from "../../../../src/utils/colors.js"
+import {
+  createConsoleLogger,
+  LogWriter,
+} from "../../../../src/utils/logging.js"
+import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
 
 const actions = mock<UserActions>()
 

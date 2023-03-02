@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { Schemas } from "../../../../takomo-stacks-model/schemas.js"
 import { arrayToObject } from "../../../../utils/collections.js"
 import { TakomoError } from "../../../../utils/errors.js"

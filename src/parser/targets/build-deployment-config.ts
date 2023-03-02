@@ -1,5 +1,5 @@
 import { err, ok, Result } from "neverthrow"
-import R from "ramda"
+import * as R from "ramda"
 import { ConfigSet, ConfigSetName } from "../../config-sets/config-set-model.js"
 import {
   DeploymentConfig,

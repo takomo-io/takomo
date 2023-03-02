@@ -1,4 +1,4 @@
-import { LogWriter } from "../src/utils/logging"
+import { LogWriter } from "../src/utils/logging.js"
 
 interface LogOutput {
   value: string

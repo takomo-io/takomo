@@ -1,4 +1,4 @@
-import { fillMissingDeploymentGroups } from "../../src/parser/targets/util"
+import { fillMissingDeploymentGroups } from "../../src/parser/targets/util.js"
 
 const cases: [any, any][] = [
   [{ root: {} }, { root: {} }],

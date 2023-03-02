@@ -1,9 +1,8 @@
 "use strict"
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const takomo_cli = require("../../dist/cli")
+import { run } from "../../dist/cli/index.js"
 
 const overridingHandler = (args) => {
   console.log(JSON.stringify(args, undefined, 2))
 }
 
-takomo_cli.run({ showHelpOnFail: false, overridingHandler })
+run({ showHelpOnFail: false, overridingHandler })

@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 
 import { DeploymentTargetsListener } from "../../command/targets/operation/model.js"
 import {

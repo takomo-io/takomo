@@ -1,4 +1,4 @@
-import { evaluateRules } from "../../src/utils/rules"
+import { evaluateRules } from "../../src/utils/rules.js"
 
 describe("#evaluateRules", () => {
   test.concurrent(

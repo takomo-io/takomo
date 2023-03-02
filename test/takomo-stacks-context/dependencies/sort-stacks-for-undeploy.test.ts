@@ -1,5 +1,5 @@
-import { sortStacksForUndeploy } from "../../../src/takomo-stacks-context"
-import { createStack } from "../helpers"
+import { sortStacksForUndeploy } from "../../../src/takomo-stacks-context.js"
+import { createStack } from "../helpers.js"
 
 describe("#sortStacksForUndeploy", () => {
   test("when no stacks are given", () => {

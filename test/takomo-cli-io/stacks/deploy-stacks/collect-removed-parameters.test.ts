@@ -1,5 +1,5 @@
-import { collectRemovedParameters } from "../../../../src/cli-io/stacks/deploy-stacks/parameters"
-import { param, paramSpec } from "./util"
+import { collectRemovedParameters } from "../../../../src/cli-io/stacks/deploy-stacks/parameters.js"
+import { param, paramSpec } from "./util.js"
 
 describe("#collectRemovedParameters", () => {
   describe("should return correct parameters", () => {

@@ -1,6 +1,6 @@
 import Joi from "joi"
 import { dirname } from "path"
-import R from "ramda"
+import * as R from "ramda"
 import semver from "semver"
 import { Region } from "../aws/common/model.js"
 import {

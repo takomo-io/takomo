@@ -1,5 +1,5 @@
-import { buildProject } from "../../../src/takomo-stacks-context/config/build-stack"
-import { createStackConfig, createStackGroup } from "../helpers"
+import { buildProject } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildProject", () => {
   test("no project", () => {

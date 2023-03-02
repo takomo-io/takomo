@@ -1,5 +1,5 @@
-import { buildStackPolicy } from "../../../src/takomo-stacks-context/config/build-stack"
-import { createStackConfig, createStackGroup } from "../helpers"
+import { buildStackPolicy } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildStackPolicy", () => {
   test("no stack policy", () => {

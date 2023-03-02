@@ -1,8 +1,8 @@
-import { toHookOperation } from "../../../../src/command/stacks/common/hooks"
+import { toHookOperation } from "../../../../src/command/stacks/common/hooks.js"
 import {
   HookOperation,
   StackOperationType,
-} from "../../../../src/takomo-stacks-model"
+} from "../../../../src/takomo-stacks-model.js"
 
 const cases: Array<[StackOperationType, HookOperation]> = [
   ["CREATE", "create"],

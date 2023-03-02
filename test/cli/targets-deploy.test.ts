@@ -1,4 +1,4 @@
-import { executors, targetOperations } from "./helpers"
+import { executors, targetOperations } from "./helpers.js"
 
 const { expectSuccess } = executors("targets deploy")
 

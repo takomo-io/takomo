@@ -1,5 +1,5 @@
-import { ConfigTree } from "../../../src/takomo-stacks-context"
-import { validateCommandPath } from "../../../src/takomo-stacks-context/config/build-stacks-context"
+import { ConfigTree } from "../../../src/takomo-stacks-context.js"
+import { validateCommandPath } from "../../../src/takomo-stacks-context/config/build-stacks-context.js"
 
 const tree: ConfigTree = {
   rootStackGroup: {

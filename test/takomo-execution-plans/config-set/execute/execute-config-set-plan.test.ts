@@ -1,26 +1,26 @@
 import { mock } from "jest-mock-extended"
-import { ConfigSetName } from "../../../../src"
-import { InternalCredentialManager } from "../../../../src/aws/common/credentials"
-import { ConfigSetContext } from "../../../../src/config-sets/config-set-model"
+import { ConfigSetName } from "../../../../src.js"
+import { InternalCredentialManager } from "../../../../src/aws/common/credentials.js"
+import { ConfigSetContext } from "../../../../src/config-sets/config-set-model.js"
 import {
   CommandOutput,
   CommandOutputBase,
-} from "../../../../src/takomo-core/command"
+} from "../../../../src/takomo-core/command.js"
 import {
   ConfigSetPlanExecutionResult,
   ConfigSetTargetExecutionResult,
   ConfigSetTargetListener,
   executeConfigSetPlan,
-} from "../../../../src/takomo-execution-plans"
+} from "../../../../src/takomo-execution-plans.js"
 import {
   ConfigSetExecutionPlan,
   ConfigSetTargetExecutor,
   ConfigSetTargetExecutorProps,
   ConfigSetTargetListenerProvider,
-} from "../../../../src/takomo-execution-plans/config-set/model"
-import { ExecutionTargetId } from "../../../../src/takomo-execution-plans/model"
-import { createConsoleLogger } from "../../../../src/utils/logging"
-import { Timer } from "../../../../src/utils/timer"
+} from "../../../../src/takomo-execution-plans/config-set/model.js"
+import { ExecutionTargetId } from "../../../../src/takomo-execution-plans/model.js"
+import { createConsoleLogger } from "../../../../src/utils/logging.js"
+import { Timer } from "../../../../src/utils/timer.js"
 
 const logger = createConsoleLogger({
   logLevel: "info",

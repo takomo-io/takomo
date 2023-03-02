@@ -1,5 +1,5 @@
 import { Credentials } from "@aws-sdk/types"
-import R from "ramda"
+import * as R from "ramda"
 import { deepCopy } from "../utils/objects.js"
 import { Region } from "./common/model.js"
 

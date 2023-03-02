@@ -1,4 +1,4 @@
-import { executors } from "./helpers"
+import { executors } from "./helpers.js"
 
 const { expectFailure, expectSuccess } = executors("iam generate-policies")
 

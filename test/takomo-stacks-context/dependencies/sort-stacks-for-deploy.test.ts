@@ -1,7 +1,7 @@
-import { InternalStack } from "../../../src/stacks/stack"
-import { sortStacksForDeploy } from "../../../src/takomo-stacks-context"
-import { getStackPaths } from "../../../src/takomo-stacks-model/util"
-import { createStack } from "../helpers"
+import { InternalStack } from "../../../src/stacks/stack.js"
+import { sortStacksForDeploy } from "../../../src/takomo-stacks-context.js"
+import { getStackPaths } from "../../../src/takomo-stacks-model/util.js"
+import { createStack } from "../helpers.js"
 
 describe("#sortStacksForDeploy", () => {
   test("when no stacks are given", () => {

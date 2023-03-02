@@ -1,4 +1,4 @@
-import { createStackConfigSchema } from "../../../src/schema/stack-config-schema"
+import { createStackConfigSchema } from "../../../src/schema/stack-config-schema.js"
 
 const schema = createStackConfigSchema({
   regions: ["eu-west-1"],

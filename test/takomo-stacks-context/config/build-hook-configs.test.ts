@@ -1,5 +1,5 @@
-import { buildHookConfigs } from "../../../src/takomo-stacks-context/config/build-stack"
-import { createStackConfig, createStackGroup } from "../helpers"
+import { buildHookConfigs } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildHookConfigs", () => {
   test("no hooks", () => {

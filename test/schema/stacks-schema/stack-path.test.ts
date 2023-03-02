@@ -1,9 +1,9 @@
-import { Region } from "../../../src/aws/common/model"
-import { createStacksSchemas } from "../../../src/schema/stacks-schema"
+import { Region } from "../../../src/aws/common/model.js"
+import { createStacksSchemas } from "../../../src/schema/stacks-schema.js"
 import {
   expectNoValidationError,
   expectValidationErrors,
-} from "../../assertions"
+} from "../../assertions.js"
 
 const regions: ReadonlyArray<Region> = ["eu-west-1", "us-east-1"]
 

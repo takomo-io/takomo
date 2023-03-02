@@ -1,5 +1,5 @@
-import { createConfigSetsSchemas } from "../../../src/schema/config-sets-schema"
-import { expectNoValidationError } from "../../assertions"
+import { createConfigSetsSchemas } from "../../../src/schema/config-sets-schema.js"
+import { expectNoValidationError } from "../../assertions.js"
 
 const { configSet } = createConfigSetsSchemas({ regions: [] })
 

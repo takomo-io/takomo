@@ -1,5 +1,5 @@
-import { StackStatus } from "../../src/aws/cloudformation/model"
-import { resolveOperationType } from "../../src/command/stacks/deploy/plan"
+import { StackStatus } from "../../src/aws/cloudformation/model.js"
+import { resolveOperationType } from "../../src/command/stacks/deploy/plan.js"
 
 const notSupported: Array<StackStatus> = [
   "CREATE_IN_PROGRESS",

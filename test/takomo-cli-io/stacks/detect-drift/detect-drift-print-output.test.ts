@@ -3,14 +3,17 @@ import dedent from "ts-dedent"
 import {
   CloudFormationStackSummary,
   StackDriftDetectionStatusOutput,
-} from "../../../../src/aws/cloudformation/model"
-import { createDetectDriftIO } from "../../../../src/cli-io"
-import { StackDriftInfo } from "../../../../src/command/stacks/drift/model"
-import { green, red } from "../../../../src/utils/colors"
-import { createConsoleLogger, LogWriter } from "../../../../src/utils/logging"
-import { Timer } from "../../../../src/utils/timer"
-import { createCapturingLogWriter } from "../../../capturing-log-writer"
-import { mockInternalStack } from "../../mocks"
+} from "../../../../src/aws/cloudformation/model.js"
+import { createDetectDriftIO } from "../../../../src/cli-io.js"
+import { StackDriftInfo } from "../../../../src/command/stacks/drift/model.js"
+import { green, red } from "../../../../src/utils/colors.js"
+import {
+  createConsoleLogger,
+  LogWriter,
+} from "../../../../src/utils/logging.js"
+import { Timer } from "../../../../src/utils/timer.js"
+import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
+import { mockInternalStack } from "../../mocks.js"
 
 const createIO = (writer: LogWriter) =>
   createDetectDriftIO({

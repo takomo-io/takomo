@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { CloudFormationStack } from "../../../aws/cloudformation/model.js"
 import { InternalStack, StackPath } from "../../../stacks/stack.js"
 import { sortStacksForUndeploy } from "../../../takomo-stacks-context/index.js"

@@ -1,5 +1,5 @@
-import { parseFeaturesFromArgs } from "../../src/cli/options/parse-features-from-args"
-import { Features } from "../../src/config/project-config"
+import { parseFeaturesFromArgs } from "../../src/cli/options/parse-features-from-args.js"
+import { Features } from "../../src/config/project-config.js"
 
 const cases: Array<[any, Partial<Features>]> = [
   [undefined, {}],

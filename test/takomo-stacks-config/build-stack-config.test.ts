@@ -1,7 +1,7 @@
 import { mock } from "jest-mock-extended"
-import { TakomoProjectConfig } from "../../src/config/project-config"
-import { CommandContext } from "../../src/context/command-context"
-import { buildStackConfig } from "../../src/parser/stacks/build-stack-config"
+import { TakomoProjectConfig } from "../../src/config/project-config.js"
+import { CommandContext } from "../../src/context/command-context.js"
+import { buildStackConfig } from "../../src/parser/stacks/build-stack-config.js"
 
 const emptyStackConfig = {
   accountIds: undefined,

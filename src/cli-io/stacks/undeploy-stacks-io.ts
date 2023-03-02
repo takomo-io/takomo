@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { StackEvent } from "../../aws/cloudformation/model.js"
 import { StacksOperationOutput } from "../../command/stacks/model.js"
 import {

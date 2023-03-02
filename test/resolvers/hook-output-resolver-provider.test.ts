@@ -1,9 +1,12 @@
 import { mock } from "jest-mock-extended"
 import Joi from "joi"
-import { createHookOutputResolverProvider } from "../../src/resolvers/hook-output-resolver"
-import { defaultSchema } from "../../src/resolvers/resolver-registry"
-import { CommandContext } from "../../src/takomo-core"
-import { expectNoValidationError, expectValidationErrors } from "../assertions"
+import { createHookOutputResolverProvider } from "../../src/resolvers/hook-output-resolver.js"
+import { defaultSchema } from "../../src/resolvers/resolver-registry.js"
+import { CommandContext } from "../../src/takomo-core.js"
+import {
+  expectNoValidationError,
+  expectValidationErrors,
+} from "../assertions.js"
 
 const provider = createHookOutputResolverProvider()
 

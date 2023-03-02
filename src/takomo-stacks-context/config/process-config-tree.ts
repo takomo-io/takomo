@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { InternalCredentialManager } from "../../aws/common/credentials.js"
 import { IamRoleArn } from "../../aws/common/model.js"
 import { CommandPath } from "../../command/command-model.js"

@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { ConfigSetName } from "../../../../config-sets/config-set-model.js"
 import {
   DeploymentGroupConfig,

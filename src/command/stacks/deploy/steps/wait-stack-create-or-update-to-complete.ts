@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { StackOperationStep } from "../../common/steps.js"
 import { resolveResultMessage } from "../common.js"
 import { StackOperationClientTokenHolder } from "../states.js"

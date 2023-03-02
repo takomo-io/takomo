@@ -1,5 +1,5 @@
 import { basename, join } from "path"
-import R from "ramda"
+import * as R from "ramda"
 import { createHookRegistry } from "../../hooks/hook-registry.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
 import {

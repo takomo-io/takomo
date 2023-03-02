@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { prepareAwsEnvVariables } from "../aws/util.js"
 import { executeShellCommand } from "../utils/exec.js"
 import { expandFilePath } from "../utils/files.js"

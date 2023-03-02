@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { IamRoleName } from "../../aws/common/model.js"
 import { Vars } from "../../common/model.js"
 import { ConfigSetInstruction } from "../../config-sets/config-set-model.js"

@@ -1,5 +1,5 @@
 import Table from "easy-table"
-import R from "ramda"
+import * as R from "ramda"
 import { DeployStacksIO } from "../../command/stacks/deploy/model.js"
 import { UndeployStacksIO } from "../../command/stacks/undeploy/model.js"
 import { PlannedDeploymentTarget } from "../../command/targets/common/plan/model.js"

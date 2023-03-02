@@ -1,13 +1,13 @@
 import { readFileSync } from "fs"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
-import { TakomoProjectConfig } from "../../src/config/project-config"
-import { DeploymentConfig } from "../../src/config/targets-config"
-import { CommandContext } from "../../src/context/command-context"
-import { buildDeploymentConfig } from "../../src/parser/targets/build-deployment-config"
-import { DeploymentTargetsSchemaRegistry } from "../../src/targets/targets-model"
-import { TkmLogger } from "../../src/utils/logging"
-import { parseYaml } from "../../src/utils/yaml"
+import { TakomoProjectConfig } from "../../src/config/project-config.js"
+import { DeploymentConfig } from "../../src/config/targets-config.js"
+import { CommandContext } from "../../src/context/command-context.js"
+import { buildDeploymentConfig } from "../../src/parser/targets/build-deployment-config.js"
+import { DeploymentTargetsSchemaRegistry } from "../../src/targets/targets-model.js"
+import { TkmLogger } from "../../src/utils/logging.js"
+import { parseYaml } from "../../src/utils/yaml.js"
 
 const ctx: CommandContext = {
   regions: ["eu-north-1"],

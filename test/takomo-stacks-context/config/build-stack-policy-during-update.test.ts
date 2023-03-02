@@ -1,5 +1,5 @@
-import { buildStackPolicyDuringUpdate } from "../../../src/takomo-stacks-context/config/build-stack"
-import { createStackConfig, createStackGroup } from "../helpers"
+import { buildStackPolicyDuringUpdate } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildStackPolicyDuringUpdate", () => {
   test("no stack policy during update", () => {

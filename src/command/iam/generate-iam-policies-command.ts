@@ -1,5 +1,5 @@
 import Joi, { AnySchema } from "joi"
-import R from "ramda"
+import * as R from "ramda"
 
 import { AwsClientProvider } from "../../aws/aws-client-provider.js"
 import { CloudTrailEvent } from "../../aws/cloudtrail/model.js"

@@ -9,7 +9,7 @@ import {
 } from "@aws-sdk/client-cloudformation"
 import { IPolicy } from "cockatiel"
 import takeRightWhile from "lodash.takerightwhile"
-import R from "ramda"
+import * as R from "ramda"
 import {
   ACTIVE_STACK_STATUSES,
   ChangeSet,

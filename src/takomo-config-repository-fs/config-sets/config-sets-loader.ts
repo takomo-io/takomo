@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import readdirp from "readdirp"
 import { ConfigSet, ConfigSetName } from "../../config-sets/config-set-model.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"

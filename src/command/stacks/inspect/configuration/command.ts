@@ -1,5 +1,5 @@
 import Joi, { AnySchema } from "joi"
-import R from "ramda"
+import * as R from "ramda"
 import { CommandContext } from "../../../../context/command-context.js"
 import { InternalStacksContext } from "../../../../context/stacks-context.js"
 import { createStacksSchemas } from "../../../../schema/stacks-schema.js"

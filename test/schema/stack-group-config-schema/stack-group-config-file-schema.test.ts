@@ -1,4 +1,4 @@
-import { createStackGroupConfigSchema } from "../../../src/schema/stack-group-config-schema"
+import { createStackGroupConfigSchema } from "../../../src/schema/stack-group-config-schema.js"
 
 const schema = createStackGroupConfigSchema({ regions: ["eu-central-1"] })
 

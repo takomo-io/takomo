@@ -1,9 +1,9 @@
 import { Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
-import { InternalCredentialManager } from "../../../../src/aws/common/credentials"
-import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/steps/prepare-template"
-import { InternalStack } from "../../../../src/stacks/stack"
-import { createConsoleLogger } from "../../../../src/utils/logging"
+import { InternalCredentialManager } from "../../../../src/aws/common/credentials.js"
+import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/steps/prepare-template.js"
+import { InternalStack } from "../../../../src/stacks/stack.js"
+import { createConsoleLogger } from "../../../../src/utils/logging.js"
 
 const logger = createConsoleLogger({
   logLevel: "info",

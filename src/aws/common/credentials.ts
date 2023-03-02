@@ -5,7 +5,7 @@ import {
 import { defaultProvider } from "@aws-sdk/credential-provider-node"
 import { fromTemporaryCredentials } from "@aws-sdk/credential-providers"
 import { CredentialProvider, Credentials } from "@aws-sdk/types"
-import R from "ramda"
+import * as R from "ramda"
 import { TkmLogger } from "../../utils/logging.js"
 import { AwsClientProvider } from "../aws-client-provider.js"
 import { CredentialsError } from "./error.js"
