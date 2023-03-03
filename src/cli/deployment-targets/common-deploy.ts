@@ -111,7 +111,7 @@ const deploymentTargetsDeployBuilder = (
     .positional(GROUPS_OPT, {
       description: "Deployment groups to include in the operation",
       array: true,
-      string: true,
+      type: "string",
       default: [],
     })
 

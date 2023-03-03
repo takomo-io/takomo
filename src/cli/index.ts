@@ -1,4 +1,4 @@
-import yargs from "yargs"
+import * as yargs from "yargs"
 import { RunProps } from "./common.js"
 import { deploymentTargetsCmd } from "./deployment-targets/index.js"
 import { iamCmd } from "./iam/index.js"
@@ -11,6 +11,7 @@ export { initCommandContext } from "./common.js"
  */
 export const run = (props: RunProps = { showHelpOnFail: true }): void => {
   yargs
+    .default()
     .command(stacksCmd(props))
     .command(deploymentTargetsCmd(props))
     .command(iamCmd(props))
