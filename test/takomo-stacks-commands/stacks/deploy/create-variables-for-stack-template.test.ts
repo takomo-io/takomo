@@ -65,10 +65,10 @@ describe("#createVariablesForStackTemplate", () => {
       stackGroupPath: "/",
       logger,
       getCredentials: async () => mock<Credentials>(),
-      getCurrentCloudFormationStack: jest.fn(),
-      getCloudFormationClient: jest.fn(),
-      getClient: jest.fn(),
-      toProps: jest.fn(),
+      getCurrentCloudFormationStack: () => mock(),
+      getCloudFormationClient: () => mock(),
+      getClient: () => mock(),
+      toProps: () => mock(),
     }
 
     const parameters = [
@@ -201,10 +201,10 @@ describe("#createVariablesForStackTemplate", () => {
       stackGroupPath: "/dev/apps/prod",
       logger,
       getCredentials: async () => mock<Credentials>(),
-      getCurrentCloudFormationStack: jest.fn(),
-      getCloudFormationClient: jest.fn(),
-      getClient: jest.fn(),
-      toProps: jest.fn(),
+      getCurrentCloudFormationStack: () => mock(),
+      getCloudFormationClient: () => mock(),
+      getClient: () => mock(),
+      toProps: () => mock(),
     }
 
     const stackVariables = createVariablesForStackTemplate(variables, stack, [])

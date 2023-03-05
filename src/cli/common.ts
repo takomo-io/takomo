@@ -27,7 +27,7 @@ import {
 } from "../takomo-config-repository-fs/context/create-file-system-command-context.js"
 import { collectFromHierarchy } from "../utils/collections.js"
 import { red } from "../utils/colors.js"
-import { expandFilePath, FilePath } from "../utils/files.js"
+import { expandFilePath, FilePath, readFileContents } from "../utils/files.js"
 import { createLogger, TkmLogger } from "../utils/logging.js"
 import { indentLines } from "../utils/strings.js"
 import { formatElapsedMillis, printTimer, Timer } from "../utils/timer.js"
@@ -42,8 +42,6 @@ export interface RunProps {
   readonly overridingHandler?: (args: Arguments) => void
   readonly showHelpOnFail?: boolean
 }
-
-import packageJson from "../../package.json" assert { type: "json" }
 
 const resolveProjectDir = (projectDirArg: any): FilePath => {
   if (projectDirArg) {
@@ -61,6 +59,8 @@ export const initCommandContext = async (
   if (argv.profile) {
     process.env.AWS_PROFILE = argv.profile
   }
+
+  const packageJson = JSON.parse(await readFileContents("../../package.json"))
 
   const buildInfo = {
     version: packageJson.version,
@@ -114,7 +114,7 @@ export const initCommandContext = async (
   })
 }
 
-export const onError = (e: any): void => {
+export const onError = (version: string, e: any): void => {
   console.log()
   console.log(red("ERROR"))
   console.log(red("-----"))
@@ -148,7 +148,7 @@ export const onError = (e: any): void => {
   console.log(red("Your environment:"))
   console.log(red(`  OS:              ${os.platform()}`))
   console.log(red(`  Node version:    ${process.version}`))
-  console.log(red(`  Takomo version:  ${packageJson.version}`))
+  console.log(red(`  Takomo version:  ${version}`))
   console.log()
   console.log(red("Get support:"))
   console.log(red(`  Docs:      https://takomo.io`))
@@ -392,6 +392,8 @@ export const handle = async <
 >(
   props: HandleProps<C, I, IN, OUT>,
 ): Promise<void> => {
+  const packageJson = JSON.parse(await readFileContents("../../package.json"))
+
   try {
     const ctx = await initCommandContext(props.argv)
     const logger = createLogger({
@@ -447,7 +449,7 @@ export const handle = async <
       endTime,
     })
   } catch (e) {
-    onError(e)
+    onError(packageJson.version, e)
   }
 }
 

@@ -17,7 +17,12 @@ import { DEFAULT_REGIONS } from "../constants/regions-constants.js"
 import { createCommonSchema } from "../schema/common-schema.js"
 import { mergeArrays } from "../utils/collections.js"
 import { TakomoError } from "../utils/errors.js"
-import { expandFilePath, fileExists, FilePath } from "../utils/files.js"
+import {
+  expandFilePath,
+  fileExists,
+  FilePath,
+  readFileContents,
+} from "../utils/files.js"
 import { parseYamlFile } from "../utils/yaml.js"
 import {
   parseOptionalBoolean,
@@ -25,20 +30,15 @@ import {
   parseStringArray,
 } from "./common-parser.js"
 
-import packageJson from "../../package.json" assert { type: "json" }
-
-const validateRequiredVersion = (
+const validateRequiredVersion = async (
   configFilePath: string,
   requiredVersion?: string,
-): void => {
+): Promise<void> => {
   if (!requiredVersion) {
     return
   }
 
-  console.log("--------------")
-  console.log(JSON.stringify(packageJson))
-  console.log(packageJson)
-  console.log("--------------")
+  const packageJson = JSON.parse(await readFileContents("../../package.json"))
 
   if (!semver.satisfies(packageJson.version, requiredVersion)) {
     throw new TakomoError(
@@ -394,7 +394,7 @@ export const loadProjectConfig = async (
     createDefaultProjectConfig([], projectDir),
   )
 
-  validateRequiredVersion(pathConfigFile, projectConfig.requiredVersion)
+  await validateRequiredVersion(pathConfigFile, projectConfig.requiredVersion)
 
   const setOverrideFeatures = (
     cfg: InternalTakomoProjectConfig,

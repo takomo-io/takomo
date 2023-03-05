@@ -1,5 +1,5 @@
 "use strict"
-import { run } from "../../dist/src/cli/index.js"
+import { run } from "../../dist/index.js"
 
 const overridingHandler = (args) => {
   console.log(JSON.stringify(args, undefined, 2))

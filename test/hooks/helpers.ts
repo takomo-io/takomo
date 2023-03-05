@@ -38,10 +38,10 @@ export const createStack = (props: TestStackProps): InternalStack => {
       logLevel: "info",
     }),
     stackGroupPath: "/",
-    getCloudFormationClient: jest.fn(),
-    toProps: jest.fn(),
+    getCloudFormationClient: () => mock(),
+    toProps: () => mock(),
     credentialManager: mock<InternalCredentialManager>(),
-    getCurrentCloudFormationStack: jest.fn(),
+    getCurrentCloudFormationStack: () => mock(),
     getCredentials: async () => mock<Credentials>(),
     getClient: async () => mock<CloudFormation>(),
   }

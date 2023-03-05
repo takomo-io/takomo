@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var semver = require("semver")
+import semver from "semver"
 var requiredVersion = "18.14.2"
 if (!semver.satisfies(process.version, ">=" + requiredVersion)) {
     console.log("ERROR")
@@ -17,5 +17,5 @@ if (!semver.satisfies(process.version, ">=" + requiredVersion)) {
     process.exit(1)
 }
 
-const { run } = require('../dist/index.js')
+import { run } from '../dist/index.js'
 run()
