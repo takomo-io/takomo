@@ -38,7 +38,9 @@ const validateRequiredVersion = async (
     return
   }
 
-  const packageJson = JSON.parse(await readFileContents("../../package.json"))
+  const packageJson = JSON.parse(
+    await readFileContents("../../../package.json"),
+  )
 
   if (!semver.satisfies(packageJson.version, requiredVersion)) {
     throw new TakomoError(

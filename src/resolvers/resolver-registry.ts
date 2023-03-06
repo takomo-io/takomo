@@ -102,9 +102,16 @@ export class ResolverRegistry {
   registerProviderFromFile = async (
     pathToResolverFile: string,
   ): Promise<void> => {
-    // eslint-disable-next-line
-    const provider = require(pathToResolverFile)
-    return this.registerProvider(provider, `file: ${pathToResolverFile}`)
+    const providerFile = await import(pathToResolverFile)
+
+    if (!providerFile.default) {
+      throw new Error(`File ${pathToResolverFile} doesn't have default export`)
+    }
+
+    return this.registerProvider(
+      providerFile.default,
+      `file: ${pathToResolverFile}`,
+    )
   }
 
   registerBuiltInProvider = async (
@@ -120,12 +127,14 @@ export class ResolverRegistry {
     return this.registerProvider(provider, source)
   }
 
-  registerProviderFromNpmPackage = (config: ExternalResolverConfig): void => {
+  registerProviderFromNpmPackage = async (
+    config: ExternalResolverConfig,
+  ): Promise<void> => {
     // eslint-disable-next-line
-    const provider = require(config.package)
+    const provider = await import(config.package)
     const providerWithName = config.name
-      ? { ...provider, name: config.name }
-      : provider
+      ? { ...provider.default, name: config.name }
+      : provider.default
 
     this.registerProvider(providerWithName, `npm package: ${config.package}`)
   }

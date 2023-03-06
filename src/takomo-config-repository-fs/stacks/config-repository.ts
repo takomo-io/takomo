@@ -61,8 +61,15 @@ const loadProjectConfig = async (
       `Load project config from compiled typescript file: ${ctx.projectConfig.esbuild.outFile}`,
     )
 
-    const configProvider = await import(ctx.projectConfig.esbuild.outFile)
-    return configProvider.default({ projectDir })
+    const configProviderFile = await import(ctx.projectConfig.esbuild.outFile)
+
+    if (!configProviderFile) {
+      throw new Error(
+        `File ${ctx.projectConfig.esbuild.outFile} doesn't have default export`,
+      )
+    }
+
+    return configProviderFile.default({ projectDir })
   } else {
     return {}
   }

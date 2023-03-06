@@ -25,9 +25,7 @@ describe("SchemaRegistry#registerProviderFromFile", () => {
     const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/empty.js`
     await expect(async () =>
       sr.registerProviderFromFile(pathToSchema),
-    ).rejects.toThrow(
-      `Invalid schema definition in file: ${pathToSchema} - Expected 'name' property to be defined`,
-    )
+    ).rejects.toThrow(`File ${pathToSchema} doesn't have default export`)
   })
   it("fails when schema file has name property of invalid type", async () => {
     const pathToSchema = `${process.cwd()}/test/takomo-stacks-model/schema-files/invalid-name-type.js`

@@ -22,8 +22,7 @@ export const loadHandlebarsHelpers = async (
     })
 
     for (const helperFile of helperFiles) {
-      // eslint-disable-next-line
-      const helper = require(helperFile.fullPath)
+      const helper = await import(helperFile.fullPath)
       if (!helper.name) {
         throw new TakomoError(
           `Helper name not defined in ${helperFile.fullPath}`,

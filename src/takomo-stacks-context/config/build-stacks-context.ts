@@ -89,9 +89,9 @@ export const buildStacksContext = async ({
     resolverRegistry.registerBuiltInProvider(p),
   )
 
-  ctx.projectConfig.resolvers.forEach((config) => {
-    resolverRegistry.registerProviderFromNpmPackage(config)
-  })
+  for (const config of ctx.projectConfig.resolvers) {
+    await resolverRegistry.registerProviderFromNpmPackage(config)
+  }
 
   const schemaRegistry = createSchemaRegistry(logger)
 

@@ -179,9 +179,18 @@ export const createSchemaRegistry = (logger: TkmLogger): SchemaRegistry => {
       pathToProviderFile: FilePath,
     ): Promise<void> => {
       logger.debug(`Register schema provider from file: ${pathToProviderFile}`)
-      // eslint-disable-next-line
-      const provider = require(pathToProviderFile)
-      await registerProvider(provider, `file: ${pathToProviderFile}`)
+      const providerFile = await import(pathToProviderFile)
+
+      if (!providerFile.default) {
+        throw new Error(
+          `File ${pathToProviderFile} doesn't have default export`,
+        )
+      }
+
+      await registerProvider(
+        providerFile.default,
+        `file: ${pathToProviderFile}`,
+      )
     },
 
     registerFromSource: async (

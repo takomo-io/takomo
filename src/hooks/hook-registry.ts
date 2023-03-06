@@ -124,9 +124,11 @@ export const createHookRegistry = ({
   const registerProviderFromFile = async (
     pathToFile: FilePath,
   ): Promise<void> => {
-    // eslint-disable-next-line
-    const provider = require(pathToFile)
-    return registerProvider(provider, `file: ${pathToFile}`)
+    const providerFile = await import(pathToFile)
+    if (!providerFile) {
+      throw new Error(`File ${pathToFile} doesn't have default export`)
+    }
+    return registerProvider(providerFile.default, `file: ${pathToFile}`)
   }
 
   return {

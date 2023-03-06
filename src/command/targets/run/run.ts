@@ -133,8 +133,13 @@ const runJsMapFunction = async ({
   const mapFunctionFullPath = expandFilePath(ctx.projectDir, mapCommand)
   logger.debug(`Run map function from file: ${mapFunctionFullPath}`)
 
-  // eslint-disable-next-line
-  const mapperFn: MapFunction<unknown> = require(mapFunctionFullPath)
+  const mapperFile = await import(mapFunctionFullPath)
+
+  if (!mapperFile.default) {
+    throw new Error(`File ${mapFunctionFullPath} doesn't have default export`)
+  }
+
+  const mapperFn: MapFunction<unknown> = mapperFile.default
 
   return mapperFn({
     credentials,

@@ -39,12 +39,11 @@ export class HandlebarsTemplateEngineProvider
   }: TemplateEngineProps): Promise<TemplateEngine> {
     const te = new HandlebarsTemplateEngine({ projectDir, logger })
 
-    this.#projectConfig.helpers.forEach((config) => {
+    for (const config of this.#projectConfig.helpers) {
       this.#logger.debug(
         `Register Handlebars helper from NPM package: ${config.package}`,
       )
-      // eslint-disable-next-line
-      const helper = require(config.package)
+      const helper = await import(config.package)
       const helperWithName = config.name
         ? { ...helper, name: config.name }
         : helper
@@ -62,7 +61,7 @@ export class HandlebarsTemplateEngineProvider
       }
 
       te.registerHelper(helperWithName.name, helperWithName.fn)
-    })
+    }
 
     const defaultHelpersDirExists = await dirExists(this.#helpersDir)
     const additionalHelpersDirs = this.#projectConfig.helpersDir
