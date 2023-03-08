@@ -1,17 +1,10 @@
 import { Credentials } from "@aws-sdk/types"
 import Table from "easy-table"
 import inquirer from "inquirer"
+import { createRequire } from "module"
 import os from "os"
 import * as R from "ramda"
 import { Arguments } from "yargs"
-import { formatCommandStatus } from "../cli-io/index.js"
-import {
-  CommandHandler,
-  CommandInput,
-  CommandOutput,
-  IO,
-} from "../takomo-core/command.js"
-
 import { createAwsClientProvider } from "../aws/aws-client-provider.js"
 import { ApiCallProps } from "../aws/common/client.js"
 import {
@@ -19,15 +12,22 @@ import {
   initDefaultCredentialManager,
   InternalCredentialManager,
 } from "../aws/common/credentials.js"
+import { formatCommandStatus } from "../cli-io/index.js"
 import { InternalCommandContext } from "../context/command-context.js"
 import { parseBoolean, parseStringArray } from "../parser/common-parser.js"
 import {
   createFileSystemCommandContext,
   FileSystemCommandContext,
 } from "../takomo-config-repository-fs/context/create-file-system-command-context.js"
+import {
+  CommandHandler,
+  CommandInput,
+  CommandOutput,
+  IO,
+} from "../takomo-core/command.js"
 import { collectFromHierarchy } from "../utils/collections.js"
 import { red } from "../utils/colors.js"
-import { expandFilePath, FilePath, readFileContents } from "../utils/files.js"
+import { expandFilePath, FilePath } from "../utils/files.js"
 import { createLogger, TkmLogger } from "../utils/logging.js"
 import { indentLines } from "../utils/strings.js"
 import { formatElapsedMillis, printTimer, Timer } from "../utils/timer.js"
@@ -60,8 +60,8 @@ export const initCommandContext = async (
     process.env.AWS_PROFILE = argv.profile
   }
 
-  const packageJson = JSON.parse(await readFileContents("../../package.json"))
-
+  const require = createRequire(import.meta.url)
+  const packageJson = require("../../package.json")
   const buildInfo = {
     version: packageJson.version,
   }
@@ -114,7 +114,7 @@ export const initCommandContext = async (
   })
 }
 
-export const onError = (version: string, e: any): void => {
+export const onError = (e: any): void => {
   console.log()
   console.log(red("ERROR"))
   console.log(red("-----"))
@@ -141,6 +141,9 @@ export const onError = (version: string, e: any): void => {
     console.log(red(e.stack))
   }
 
+  const require = createRequire(import.meta.url)
+  const packageJson = require("../../package.json")
+
   console.log()
   console.log()
   console.log(red("OTHER INFO"))
@@ -148,7 +151,7 @@ export const onError = (version: string, e: any): void => {
   console.log(red("Your environment:"))
   console.log(red(`  OS:              ${os.platform()}`))
   console.log(red(`  Node version:    ${process.version}`))
-  console.log(red(`  Takomo version:  ${version}`))
+  console.log(red(`  Takomo version:  ${packageJson.version}`))
   console.log()
   console.log(red("Get support:"))
   console.log(red(`  Docs:      https://takomo.io`))
@@ -392,8 +395,6 @@ export const handle = async <
 >(
   props: HandleProps<C, I, IN, OUT>,
 ): Promise<void> => {
-  const packageJson = JSON.parse(await readFileContents("../../package.json"))
-
   try {
     const ctx = await initCommandContext(props.argv)
     const logger = createLogger({
@@ -449,7 +450,7 @@ export const handle = async <
       endTime,
     })
   } catch (e) {
-    onError(packageJson.version, e)
+    onError(e)
   }
 }
 

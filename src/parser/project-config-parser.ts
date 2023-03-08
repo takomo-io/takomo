@@ -1,4 +1,5 @@
 import Joi from "joi"
+import { createRequire } from "module"
 import { dirname } from "path"
 import * as R from "ramda"
 import semver from "semver"
@@ -17,12 +18,7 @@ import { DEFAULT_REGIONS } from "../constants/regions-constants.js"
 import { createCommonSchema } from "../schema/common-schema.js"
 import { mergeArrays } from "../utils/collections.js"
 import { TakomoError } from "../utils/errors.js"
-import {
-  expandFilePath,
-  fileExists,
-  FilePath,
-  readFileContents,
-} from "../utils/files.js"
+import { expandFilePath, fileExists, FilePath } from "../utils/files.js"
 import { parseYamlFile } from "../utils/yaml.js"
 import {
   parseOptionalBoolean,
@@ -38,9 +34,8 @@ const validateRequiredVersion = async (
     return
   }
 
-  const packageJson = JSON.parse(
-    await readFileContents("../../../package.json"),
-  )
+  const require = createRequire(import.meta.url)
+  const packageJson = require("../../package.json")
 
   if (!semver.satisfies(packageJson.version, requiredVersion)) {
     throw new TakomoError(

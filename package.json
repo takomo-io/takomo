@@ -1,6 +1,6 @@
 {
   "name": "takomo",
-  "version": "5.0.0-alpha.0",
+  "version": "6.0.0-alpha.0",
   "description": "Organize, configure and deploy CloudFormation stacks.",
   "keywords": [
     "aws",
@@ -43,6 +43,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "tsc",
+    "postbuild": "npm pkg get version | tr -d '\"'",
     "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects test --maxWorkers=10 --ci --verbose",
     "integration-test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects integration-test --maxWorkers=10 --ci --verbose",
     "clean": "rm -f package-lock.json && rm -rf node_modules && rm -rf dist",
