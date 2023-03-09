@@ -1,6 +1,6 @@
-import { aws } from "../../src/aws-api"
-import { executeDeployStacksCommand } from "../../src/commands/stacks"
-import { withSingleAccountReservation } from "../../src/reservations"
+import { aws } from "../../src/aws-api.js"
+import { executeDeployStacksCommand } from "../../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/resolvers/ssm`
 const stack = {

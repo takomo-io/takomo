@@ -2,9 +2,9 @@
  * @testenv-recycler-count 2
  */
 
-import { aws } from "../../src/aws-api"
-import { executeDeployStacksCommand } from "../../src/commands/stacks"
-import { withReservation } from "../../src/reservations"
+import { aws } from "../../src/aws-api.js"
+import { executeDeployStacksCommand } from "../../src/commands/stacks.js"
+import { withReservation } from "../../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/resolvers/secret`
 const stack = {

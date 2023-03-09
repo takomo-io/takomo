@@ -2,7 +2,7 @@
  * @testenv-recycler-count 2
  */
 
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/repository-infer-deployment-target-name`
 

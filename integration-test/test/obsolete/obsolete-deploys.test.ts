@@ -1,5 +1,5 @@
-import { executeDeployStacksCommand } from "../../src/commands/stacks"
-import { pathToConfigs } from "../../src/util"
+import { executeDeployStacksCommand } from "../../src/commands/stacks.js"
+import { pathToConfigs } from "../../src/util.js"
 
 const projectDir = pathToConfigs("obsolete", "obsolete-deploys")
 

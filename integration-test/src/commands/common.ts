@@ -1,16 +1,13 @@
-import { StackName } from "../../../src/aws/cloudformation/model"
-import { initCommandContext } from "../../../src/cli"
-import { CommandPath } from "../../../src/command/command-model"
-import { StackPath } from "../../../src/stacks/stack"
-import { FileSystemCommandContext } from "../../../src/takomo-config-repository-fs/context/create-file-system-command-context"
-import { CommandStatus } from "../../../src/takomo-core/command"
-import { FilePath } from "../../../src/utils/files"
-import { LogLevel } from "../../../src/utils/logging"
-import { CustomNodeJsGlobal } from "../global"
-import { CreateCtxAndConfigRepositoryProps } from "./stacks"
-
-// Make references to global namespace work
-declare const global: CustomNodeJsGlobal
+import { StackName } from "../../../src/aws/cloudformation/model.js"
+import { initCommandContext } from "../../../src/cli/index.js"
+import { CommandPath } from "../../../src/command/command-model.js"
+import { StackPath } from "../../../src/stacks/stack.js"
+import { FileSystemCommandContext } from "../../../src/takomo-config-repository-fs/context/create-file-system-command-context.js"
+import { CommandStatus } from "../../../src/takomo-core/command.js"
+import { FilePath } from "../../../src/utils/files.js"
+import { LogLevel } from "../../../src/utils/logging.js"
+import { getReservation } from "../reservations.js"
+import { CreateCtxAndConfigRepositoryProps } from "./stacks.js"
 
 export interface ExecuteCommandProps {
   readonly projectDir: FilePath
@@ -26,12 +23,11 @@ export interface ExecuteCommandProps {
 export const createTestCommandContext = async (
   props: CreateCtxAndConfigRepositoryProps,
 ): Promise<FileSystemCommandContext> => {
-  const credentials = global.reservation
-    ? global.reservation.credentials
-    : undefined
+  const reservation = getReservation()
+  const credentials = reservation ? reservation.credentials : undefined
 
-  const vars = global.reservation
-    ? global.reservation.accounts.map(
+  const vars = reservation
+    ? reservation.accounts.map(
         (slot, index) => `ACCOUNT_${index + 1}_ID=${slot.id}`,
       )
     : []

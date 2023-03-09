@@ -9,27 +9,27 @@ import {
   StackOutputValue,
   StackPolicyBody,
   StackStatus,
-} from "../../../src/aws/cloudformation/model"
+} from "../../../src/aws/cloudformation/model.js"
 import {
   AccountId,
   Region,
   TagKey,
   TagValue,
-} from "../../../src/aws/common/model"
-import { StackResult } from "../../../src/command/command-model"
+} from "../../../src/aws/common/model.js"
+import { StackResult } from "../../../src/command/command-model.js"
 import {
   DetectDriftOutput,
   StackDriftInfo,
-} from "../../../src/command/stacks/drift/model"
+} from "../../../src/command/stacks/drift/model.js"
 import {
   ListStacksOutput,
   StackInfo,
-} from "../../../src/command/stacks/list/model"
-import { StacksOperationOutput } from "../../../src/command/stacks/model"
-import { StackPath } from "../../../src/stacks/stack"
-import { CommandStatus } from "../../../src/takomo-core/command"
-import { prettyPrintJson, toPrettyJson } from "../../../src/utils/json"
-import { aws } from "../aws-api"
+} from "../../../src/command/stacks/list/model.js"
+import { StacksOperationOutput } from "../../../src/command/stacks/model.js"
+import { StackPath } from "../../../src/stacks/stack.js"
+import { CommandStatus } from "../../../src/takomo-core/command.js"
+import { prettyPrintJson, toPrettyJson } from "../../../src/utils/json.js"
+import { aws } from "../aws-api.js"
 
 export interface ExpectStackResultProps {
   readonly stackPath: StackPath

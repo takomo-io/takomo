@@ -1,9 +1,9 @@
-import { aws } from "../src/aws-api"
+import { aws } from "../src/aws-api.js"
 import {
   executeDeployStacksCommand,
   executeDetectDriftCommand,
-} from "../src/commands/stacks"
-import { withSingleAccountReservation } from "../src/reservations"
+} from "../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../src/reservations.js"
 
 const stackPath = "/vpc.yml/eu-north-1",
   stackName = "simple-vpc",

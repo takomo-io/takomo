@@ -1,8 +1,8 @@
 import { exec } from "child_process"
-import { prepareAwsEnvVariables } from "../../../src/aws/util"
-import { parseYamlString } from "../../../src/utils/yaml"
-import { assertRecursively } from "../assertions"
-import { CustomNodeJsGlobal } from "../global"
+import { prepareAwsEnvVariables } from "../../../src/aws/util.js"
+import { parseYamlString } from "../../../src/utils/yaml.js"
+import { assertRecursively } from "../assertions.js"
+import { CustomNodeJsGlobal } from "../global.js"
 
 // Make references to global namespace work
 declare const global: CustomNodeJsGlobal

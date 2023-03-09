@@ -1,4 +1,4 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
 
 const stackName = "stack",
   stackPath = "/stack.yml/eu-north-1",

@@ -1,5 +1,5 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
-import { withSingleAccountReservation } from "../src/reservations"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/cmd-hook-expose-stack-credentials`
 const stack = {

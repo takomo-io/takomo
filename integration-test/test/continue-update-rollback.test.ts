@@ -1,7 +1,7 @@
-import { uuid } from "../../src/utils/strings"
-import { aws } from "../src/aws-api"
-import { executeDeployStacksCommand } from "../src/commands/stacks"
-import { withSingleAccountReservation } from "../src/reservations"
+import { uuid } from "../../src/utils/strings.js"
+import { aws } from "../src/aws-api.js"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
+import { withSingleAccountReservation } from "../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/continue-update-rollback`
 const stack = {

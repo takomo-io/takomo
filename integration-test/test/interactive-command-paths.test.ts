@@ -5,7 +5,7 @@
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/interactive-command-paths`,
   interactive = true

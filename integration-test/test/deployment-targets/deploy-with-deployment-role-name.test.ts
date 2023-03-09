@@ -2,8 +2,8 @@
  * @testenv-recycler-count 2
  */
 
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
-import { executeUndeployTargetsCommand } from "../../src/commands/targets/undeploy-targets"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
+import { executeUndeployTargetsCommand } from "../../src/commands/targets/undeploy-targets.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/simple`
 

@@ -1,4 +1,4 @@
-import { toPrettyJson } from "../../src/utils/json"
+import { toPrettyJson } from "../../src/utils/json.js"
 
 const assertRecursivelyInternal = (
   path: ReadonlyArray<string>,

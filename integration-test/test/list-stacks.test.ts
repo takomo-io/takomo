@@ -1,9 +1,9 @@
-import { isDefined, isNumber } from "../src/assertions"
-import { executeWithCli } from "../src/cli/execute"
+import { isDefined, isNumber } from "../src/assertions.js"
+import { executeWithCli } from "../src/cli/execute.js"
 import {
   executeDeployStacksCommand,
   executeListStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/list-stacks`
 

@@ -1,13 +1,14 @@
+import { expect } from "@jest/globals"
 import { basename } from "path"
-import { IamRoleArn, IamRoleName } from "../../../../src/aws/common/model"
-import { deploymentTargetsRunCommand } from "../../../../src/command/targets/run/command"
-import { DeploymentTargetsRunOutput } from "../../../../src/command/targets/run/model"
-import { OutputFormat } from "../../../../src/takomo-core/command"
-import { createConsoleLogger } from "../../../../src/utils/logging"
-import { Timer } from "../../../../src/utils/timer"
-import { createTestRunTargetsIO } from "../../io"
-import { ExecuteCommandProps } from "../common"
-import { createCtxAndConfigRepository } from "./common"
+import { IamRoleArn, IamRoleName } from "../../../../src/aws/common/model.js"
+import { deploymentTargetsRunCommand } from "../../../../src/command/targets/run/command.js"
+import { DeploymentTargetsRunOutput } from "../../../../src/command/targets/run/model.js"
+import { OutputFormat } from "../../../../src/takomo-core/command.js"
+import { createConsoleLogger } from "../../../../src/utils/logging.js"
+import { Timer } from "../../../../src/utils/timer.js"
+import { createTestRunTargetsIO } from "../../io.js"
+import { ExecuteCommandProps } from "../common.js"
+import { createCtxAndConfigRepository } from "./common.js"
 
 export interface TargetsRunOutputMatcher {
   readonly expectCommandToSucceed: (
@@ -77,7 +78,7 @@ export const executeRunTargetsCommand = (
 
     const logger = createConsoleLogger({
       logLevel,
-      name: basename(expect.getState().testPath),
+      name: basename(expect.getState().testPath!),
     })
 
     const ctxAndConfig = await createCtxAndConfigRepository({

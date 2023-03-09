@@ -2,7 +2,7 @@
  * Test selecting deployment targets with wildcards.
  */
 
-import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets"
+import { executeDeployTargetsCommand } from "../../src/commands/targets/deploy-targets.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/target-name-wildcards`
 

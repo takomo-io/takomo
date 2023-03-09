@@ -2,11 +2,11 @@
  * @testenv-recycler-count 3
  */
 import R from "ramda"
-import { sleep } from "../../src/utils/system"
+import { sleep } from "../../src/utils/system.js"
 import {
   executeDeployStacksCommand,
   executeUndeployStacksCommand,
-} from "../src/commands/stacks"
+} from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/high-number-of-stacks-in-multiple-accounts`
 

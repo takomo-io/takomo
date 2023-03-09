@@ -43,7 +43,6 @@
   "scripts": {
     "prepare": "husky install",
     "build": "tsc",
-    "postbuild": "npm pkg get version | tr -d '\"'",
     "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects test --maxWorkers=10 --ci --verbose",
     "integration-test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects integration-test --maxWorkers=10 --ci --verbose",
     "clean": "rm -f package-lock.json && rm -rf node_modules && rm -rf dist",
@@ -109,7 +108,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "husky": "8.0.3",
     "jest": "29.4.3",
-    "jest-environment-testenv-recycler": "0.0.19",
+    "jest-environment-testenv-recycler": "0.0.21",
     "jest-mock-extended": "3.0.3",
     "prettier": "2.8.4",
     "prettier-plugin-organize-imports": "3.2.2",

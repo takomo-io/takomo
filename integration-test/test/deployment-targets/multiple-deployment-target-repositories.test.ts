@@ -1,5 +1,5 @@
-import { executeWithCli } from "../../src/cli/execute"
-import { withSingleAccountReservation } from "../../src/reservations"
+import { executeWithCli } from "../../src/cli/execute.js"
+import { withSingleAccountReservation } from "../../src/reservations.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/deployment-targets/multiple-deployment-target-repositories`
 

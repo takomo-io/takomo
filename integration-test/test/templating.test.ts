@@ -1,4 +1,4 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks"
+import { executeDeployStacksCommand } from "../src/commands/stacks.js"
 
 const props = {
   projectDir: `${process.cwd()}/integration-test/configs/templating`,
