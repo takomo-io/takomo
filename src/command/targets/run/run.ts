@@ -141,6 +141,8 @@ const runJsMapFunction = async ({
 
   const mapperFn: MapFunction<unknown> = mapperFile.default
 
+  console.log(mapperFn)
+
   return mapperFn({
     credentials,
     target,
