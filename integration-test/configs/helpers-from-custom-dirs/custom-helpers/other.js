@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "other",
   fn: () => "OTHER",
 }

@@ -51,7 +51,7 @@ describe("multiple deployment target repositories", () => {
       ]
 
       await executeWithCli(
-        `./bin/tkm targets run \
+        `node bin/tkm.mjs targets run \
       --disable-map-role \
       --quiet \
       --yes \

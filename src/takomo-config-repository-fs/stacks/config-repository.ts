@@ -63,7 +63,7 @@ const loadProjectConfig = async (
 
     const configProviderFile = await import(ctx.projectConfig.esbuild.outFile)
 
-    if (!configProviderFile) {
+    if (!configProviderFile.default) {
       throw new Error(
         `File ${ctx.projectConfig.esbuild.outFile} doesn't have default export`,
       )

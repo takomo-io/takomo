@@ -70,6 +70,10 @@ export {
 } from "./takomo-stacks-model/schemas.js"
 export { DeploymentStatus, Label } from "./targets/targets-model.js"
 export { EjsTemplateEngineProvider } from "./templating/ejs/ejs-template-engine-provider.js"
-export { TemplateEngine } from "./templating/template-engine.js"
+export {
+  RenderTemplateFileProps,
+  RenderTemplateProps,
+  TemplateEngine,
+} from "./templating/template-engine.js"
 export { FilePath } from "./utils/files.js"
 export { LogLevel, TkmLogger } from "./utils/logging.js"

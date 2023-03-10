@@ -1,13 +1,11 @@
 import {
+  RenderTemplateFileProps,
+  RenderTemplateProps,
   TakomoConfig,
   TakomoConfigProvider,
   TemplateEngine,
-} from "../../../dist"
-import {
-  RenderTemplateFileProps,
-  RenderTemplateProps,
-} from "../../../dist/templating/template-engine"
-import { readFileContents } from "../../../src/utils/files"
+} from "../../../dist/index.js"
+import { readFileContents } from "../../../src/utils/files.js"
 
 const provider: TakomoConfigProvider = async (): Promise<TakomoConfig> => {
   return {

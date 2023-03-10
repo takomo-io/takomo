@@ -11,6 +11,7 @@ describe("Custom template engine", () => {
     withSingleAccountReservation(({ accountId }) =>
       executeDeployStacksCommand({
         projectDir,
+        logLevel: "debug",
       })
         .expectCommandToSucceed()
         .expectStackCreateSuccess({

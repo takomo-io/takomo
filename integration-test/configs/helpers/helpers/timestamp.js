@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "timestamp",
   fn: () => Date.now(),
 }

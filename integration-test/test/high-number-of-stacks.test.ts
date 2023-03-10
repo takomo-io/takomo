@@ -1,4 +1,4 @@
-import R from "ramda"
+import * as R from "ramda"
 import { sleep } from "../../src/utils/system.js"
 import { executeDeployStacksCommand } from "../src/commands/stacks.js"
 

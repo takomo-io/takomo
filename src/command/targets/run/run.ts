@@ -224,7 +224,7 @@ const runReduceProcessCommand = async ({
   return stdout
 }
 
-const runJsReduceFunction = ({
+const runJsReduceFunction = async ({
   credentials,
   ctx,
   reduceCommand,
@@ -232,8 +232,14 @@ const runJsReduceFunction = ({
 }: RunReduceCommandProps): Promise<unknown> => {
   const fullReduceFunctionPath = expandFilePath(ctx.projectDir, reduceCommand)
 
-  // eslint-disable-next-line
-  const reduceFn: ReduceFunction<unknown> = require(fullReduceFunctionPath)
+  const reduceFile = await import(fullReduceFunctionPath)
+  if (!reduceFile.default) {
+    throw new Error(
+      `File ${fullReduceFunctionPath} doesn't have default export`,
+    )
+  }
+
+  const reduceFn: ReduceFunction<unknown> = reduceFile.default
 
   return reduceFn({
     credentials,

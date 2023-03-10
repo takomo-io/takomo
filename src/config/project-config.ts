@@ -30,7 +30,7 @@ export const defaultFeatures = (): Features => ({
 export const defaultEsbuild = (projectDir: FilePath): EsbuildConfig => ({
   enabled: true,
   entryPoint: expandFilePath(projectDir, "takomo.ts"),
-  outFile: expandFilePath(projectDir, join(".takomo", "out", "takomo.js")),
+  outFile: expandFilePath(projectDir, join(".takomo", "out", "takomo.mjs")),
 })
 
 /**

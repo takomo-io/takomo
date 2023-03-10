@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   type: "my-hook",
   init: (props) => {
     console.log("Initialize my-hook")

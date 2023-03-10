@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   type: "failure",
   init: (props) => {
     console.log("Initialize failure-hook")

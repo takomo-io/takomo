@@ -84,6 +84,7 @@ export const createFileSystemCommandContext = async (
         platform: "node",
         logLevel: "error",
         target: "node18.14.2",
+        format: "esm",
         outfile: projectConfig.esbuild.outFile,
         entryPoints: [projectConfig.esbuild.entryPoint],
       })

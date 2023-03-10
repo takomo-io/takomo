@@ -23,17 +23,23 @@ export const loadHandlebarsHelpers = async (
 
     for (const helperFile of helperFiles) {
       const helper = await import(helperFile.fullPath)
-      if (!helper.name) {
+      if (!helper.default) {
+        throw new TakomoError(
+          `Default export not found in ${helperFile.fullPath}`,
+        )
+      }
+
+      if (!helper.default.name) {
         throw new TakomoError(
           `Helper name not defined in ${helperFile.fullPath}`,
         )
       }
-      if (!helper.fn) {
+      if (!helper.default.fn) {
         throw new TakomoError(`Helper fn not defined in ${helperFile.fullPath}`)
       }
 
-      logger.debug(`Register helper: ${helper.name}`)
-      te.registerHelper(helper.name, helper.fn)
+      logger.debug(`Register helper: ${helper.default.name}`)
+      te.registerHelper(helper.default.name, helper.default.fn)
     }
   }
 }

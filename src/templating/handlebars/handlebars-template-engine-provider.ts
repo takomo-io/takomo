@@ -43,7 +43,16 @@ export class HandlebarsTemplateEngineProvider
       this.#logger.debug(
         `Register Handlebars helper from NPM package: ${config.package}`,
       )
-      const helper = await import(config.package)
+      const helperPackage = await import(config.package)
+
+      if (!helperPackage.default) {
+        throw new TakomoError(
+          `Handlebars helper loaded from an NPM package ${config.package} does not have default export`,
+        )
+      }
+
+      const helper = helperPackage.default
+
       const helperWithName = config.name
         ? { ...helper, name: config.name }
         : helper

@@ -2,10 +2,7 @@ import { exec } from "child_process"
 import { prepareAwsEnvVariables } from "../../../src/aws/util.js"
 import { parseYamlString } from "../../../src/utils/yaml.js"
 import { assertRecursively } from "../assertions.js"
-import { CustomNodeJsGlobal } from "../global.js"
-
-// Make references to global namespace work
-declare const global: CustomNodeJsGlobal
+import { getReservation } from "../reservations.js"
 
 interface CliAssertions {
   readonly expectJson: (expected: unknown) => CliAssertions
@@ -62,10 +59,11 @@ const createCliAssertions = (
 }
 
 export const executeWithCli = (command: string): CliAssertions => {
-  const credentials = global.reservation.credentials
+  const reservation = getReservation()
+  const credentials = reservation.credentials
 
-  const vars = global.reservation
-    ? global.reservation.accounts
+  const vars = reservation
+    ? reservation.accounts
         .map((slot, index) => ` --var ACCOUNT_${index + 1}_ID=${slot.id}`)
         .join("")
     : ""
