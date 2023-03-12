@@ -10,17 +10,17 @@ export const createVariablesForStackConfigFile = (
   stackPath: StackPath,
 ): any => {
   const stackGroupVariables = getVariablesForStackGroup(stackGroup)
-  const filePath = stackPath.substr(1)
+  const filePath = stackPath.slice(1)
   return {
     ...variables,
     stack: {
       path: stackPath,
-      pathSegments: stackPath.substr(1).split("/"),
+      pathSegments: stackPath.slice(1).split("/"),
       configFile: {
         filePath,
         basename: path.basename(filePath),
         name: path.basename(filePath, ".yml"),
-        dirPath: stackGroup.path.substr(1),
+        dirPath: stackGroup.path.slice(1),
       },
     },
     stackGroup: stackGroupVariables,
