@@ -197,7 +197,7 @@ export const createStacksSchemas = (
         return value
       }
 
-      const region = regionPart.substr(1)
+      const region = regionPart.slice(1)
       if (!props.regions.includes(region)) {
         return helpers.error("invalidRegion", {
           region,
@@ -221,7 +221,7 @@ export const createStacksSchemas = (
         return value
       }
 
-      const region = regionPart.substr(1)
+      const region = regionPart.slice(1)
       if (!props.regions.includes(region)) {
         return helpers.error("invalidRegion", {
           region,

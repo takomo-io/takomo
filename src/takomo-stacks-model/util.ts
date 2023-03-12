@@ -23,4 +23,4 @@ export const isNotObsolete = (stack: InternalStack): boolean =>
 export const isWithinCommandPath = (
   commandPath: CommandPath,
   other: CommandPath,
-): boolean => commandPath.startsWith(other.substr(0, commandPath.length))
+): boolean => commandPath.startsWith(other.slice(0, commandPath.length))

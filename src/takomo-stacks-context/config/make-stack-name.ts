@@ -7,7 +7,7 @@ export const makeStackName = (
   project?: Project,
 ): StackName => {
   const prefix = project ? `${project}-` : ""
-  const cleanedStackPath = stackPath.substr(1)
+  const cleanedStackPath = stackPath.slice(1)
   return `${prefix}${cleanedStackPath}`
     .replace(/\//g, "-")
     .replace(/\.yml$/, "")
