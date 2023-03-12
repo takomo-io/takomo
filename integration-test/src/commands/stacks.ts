@@ -90,7 +90,7 @@ export const executeDeployStacksCommand = (
   props: ExecuteDeployStacksCommandProps,
 ): StacksOperationOutputMatcher =>
   createStacksOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "error"
+    const logLevel = props.logLevel ?? "info"
     const ignoreDependencies = props.ignoreDependencies ?? false
 
     const ctxAndConfig = await createCtxAndConfigRepository({
@@ -134,7 +134,7 @@ export const executeUndeployStacksCommand = (
   props: ExecuteUndeployStacksCommandProps,
 ): StacksOperationOutputMatcher =>
   createStacksOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "error"
+    const logLevel = props.logLevel ?? "info"
 
     const ctxAndConfig = await createCtxAndConfigRepository({
       projectDir: props.projectDir,
@@ -181,7 +181,7 @@ export const executeListStacksCommand = (
   props: ExecuteCommandProps,
 ): ListStacksOutputMatcher =>
   createListStacksOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "error"
+    const logLevel = props.logLevel ?? "info"
 
     const ctxAndConfig = await createCtxAndConfigRepository({
       projectDir: props.projectDir,
@@ -221,7 +221,7 @@ export const executeDetectDriftCommand = (
   props: ExecuteCommandProps,
 ): DetectDriftOutputMatcher =>
   createDetectDriftOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "error"
+    const logLevel = props.logLevel ?? "info"
 
     const ctxAndConfig = await createCtxAndConfigRepository({
       projectDir: props.projectDir,
