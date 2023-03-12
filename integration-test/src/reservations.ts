@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { AccountId } from "../../src/aws/common/model.js"
 
 export interface AccountSlot {
@@ -24,12 +24,12 @@ export const getReservation = (): Reservation => {
 }
 
 export interface TestReservation {
-  readonly credentials: Credentials
+  readonly credentials: AwsCredentialIdentity
   readonly accountIds: ReadonlyArray<AccountId>
 }
 
 export interface SingleAccountTestReservation {
-  readonly credentials: Credentials
+  readonly credentials: AwsCredentialIdentity
   readonly accountId: AccountId
 }
 

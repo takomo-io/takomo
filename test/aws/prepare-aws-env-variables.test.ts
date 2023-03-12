@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { prepareAwsEnvVariables } from "../../src/aws/util.js"
 
@@ -31,7 +31,7 @@ describe("#prepareAwsEnvVariables", () => {
   test("add credentials aws env variables", () => {
     const env = {}
 
-    const credentials = mock<Credentials>({
+    const credentials = mock<AwsCredentialIdentity>({
       accessKeyId: "a",
       secretAccessKey: "b",
       sessionToken: "c",
@@ -53,7 +53,7 @@ describe("#prepareAwsEnvVariables", () => {
       AWS_SESSION_TOKEN: "z",
     }
 
-    const credentials = mock<Credentials>({
+    const credentials = mock<AwsCredentialIdentity>({
       accessKeyId: "1",
       secretAccessKey: "2",
       sessionToken: "3",
@@ -109,7 +109,7 @@ describe("#prepareAwsEnvVariables", () => {
       A: "a",
       B: "b",
     }
-    const credentials = mock<Credentials>({
+    const credentials = mock<AwsCredentialIdentity>({
       accessKeyId: "1",
       secretAccessKey: "2",
       sessionToken: "3",

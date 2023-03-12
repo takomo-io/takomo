@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { InternalCredentialManager } from "../../../../src/aws/common/credentials.js"
 import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/steps/prepare-template.js"
@@ -64,7 +64,7 @@ describe("#createVariablesForStackTemplate", () => {
       },
       stackGroupPath: "/",
       logger,
-      getCredentials: async () => mock<Credentials>(),
+      getCredentials: async () => mock<AwsCredentialIdentity>(),
       getCurrentCloudFormationStack: () => mock(),
       getCloudFormationClient: () => mock(),
       getClient: () => mock(),
@@ -200,7 +200,7 @@ describe("#createVariablesForStackTemplate", () => {
       },
       stackGroupPath: "/dev/apps/prod",
       logger,
-      getCredentials: async () => mock<Credentials>(),
+      getCredentials: async () => mock<AwsCredentialIdentity>(),
       getCurrentCloudFormationStack: () => mock(),
       getCloudFormationClient: () => mock(),
       getClient: () => mock(),

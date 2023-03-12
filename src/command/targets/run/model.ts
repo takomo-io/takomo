@@ -1,17 +1,15 @@
-import { Credentials } from "@aws-sdk/types"
-
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { IamRoleArn, IamRoleName } from "../../../aws/common/model.js"
+import {
+  DeploymentGroupConfig,
+  DeploymentTargetConfig,
+} from "../../../config/targets-config.js"
 import {
   CommandInput,
   CommandOutput,
   CommandOutputBase,
   IO,
 } from "../../../takomo-core/command.js"
-
-import {
-  DeploymentGroupConfig,
-  DeploymentTargetConfig,
-} from "../../../config/targets-config.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
@@ -67,7 +65,7 @@ export interface DeploymentGroupRunResult extends CommandOutputBase {
 }
 
 export interface MapFunctionProps {
-  readonly credentials?: Credentials
+  readonly credentials?: AwsCredentialIdentity
   readonly target: DeploymentTargetConfig
   readonly deploymentGroupPath: DeploymentGroupPath
   readonly args: unknown
@@ -76,7 +74,7 @@ export interface MapFunctionProps {
 export type MapFunction<T> = (props: MapFunctionProps) => Promise<T>
 
 export interface ReduceFunctionProps<T> {
-  readonly credentials?: Credentials
+  readonly credentials?: AwsCredentialIdentity
   readonly targets: ReadonlyArray<T>
 }
 
