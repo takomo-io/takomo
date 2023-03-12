@@ -15,7 +15,7 @@ export const executeUndeployTargetsCommand = (
   props: ExecuteDeployTargetsCommandProps,
 ): TargetsOperationOutputMatcher =>
   createTargetsOperationOutputMatcher(async () => {
-    const logLevel = props.logLevel ?? "error"
+    const logLevel = props.logLevel ?? "info"
 
     const logger = createConsoleLogger({
       logLevel,
