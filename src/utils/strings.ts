@@ -42,15 +42,12 @@ export const uuid = v4
 const processChange = (
   content: string,
   handler: (line: string) => string,
-): string => {
-  return (
-    content
-      .substr(0, content.length - 1)
-      .split("\n")
-      .map(handler)
-      .join("\n") + "\n"
-  )
-}
+): string =>
+  content
+    .slice(0, content.length - 1)
+    .split("\n")
+    .map(handler)
+    .join("\n") + "\n"
 
 const addedLine = (line: string) => green(`+ ${line}`)
 const removedLine = (line: string) => red(`- ${line}`)

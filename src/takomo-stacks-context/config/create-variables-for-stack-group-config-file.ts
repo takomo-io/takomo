@@ -10,7 +10,7 @@ export const createVariablesForStackGroupConfigFile = (
   ...variables,
   stackGroup: {
     path: stackGroup.path,
-    pathSegments: stackGroup.path.substr(1).split("/"),
+    pathSegments: stackGroup.path.slice(1).split("/"),
     name: stackGroup.name,
   },
   parent: parent ? getVariablesForStackGroup(parent) : undefined,

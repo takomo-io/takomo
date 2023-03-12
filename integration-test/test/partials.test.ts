@@ -4,7 +4,6 @@ describe("Partials", () => {
   test("Deploy", () =>
     executeDeployStacksCommand({
       projectDir: `${process.cwd()}/integration-test/configs/partials`,
-      logLevel: "trace",
     })
       .expectCommandToSucceed()
       .expectStackCreateSuccess({

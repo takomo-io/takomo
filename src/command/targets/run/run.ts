@@ -189,7 +189,7 @@ const runMapProcessCommand = async ({
 
 const runMapCommand = (props: RunMapCommandProps): Promise<unknown> =>
   props.mapCommand.startsWith("js:")
-    ? runJsMapFunction({ ...props, mapCommand: props.mapCommand.substr(3) })
+    ? runJsMapFunction({ ...props, mapCommand: props.mapCommand.slice(3) })
     : runMapProcessCommand(props)
 
 interface RunReduceCommandProps {
@@ -252,7 +252,7 @@ const runReduceCommand = async (
   props.reduceCommand.startsWith("js:")
     ? runJsReduceFunction({
         ...props,
-        reduceCommand: props.reduceCommand.substr(3),
+        reduceCommand: props.reduceCommand.slice(3),
       })
     : runReduceProcessCommand(props)
 
@@ -442,7 +442,7 @@ const convertArgs = async (
   }
 
   if (args.startsWith("file:")) {
-    const filePath = args.substr(5)
+    const filePath = args.slice(5)
     const fullFilePath = expandFilePath(projectDir, filePath)
     const contents = await readFileContents(fullFilePath)
     switch (extname(filePath)) {

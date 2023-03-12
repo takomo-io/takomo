@@ -8,7 +8,7 @@ export const getVariablesForStackGroup = (stackGroup: StackGroup): any =>
     regions: stackGroup.regions,
     commandRole: stackGroup.commandRole,
     path: stackGroup.path,
-    pathSegments: stackGroup.path.substr(1).split("/"),
+    pathSegments: stackGroup.path.slice(1).split("/"),
     isRoot: stackGroup.root,
     templateBucket: stackGroup.templateBucket,
     timeout: stackGroup.timeout,
