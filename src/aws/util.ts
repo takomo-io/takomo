@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import * as R from "ramda"
 import { deepCopy } from "../utils/objects.js"
 import { Region } from "./common/model.js"
@@ -45,7 +45,7 @@ const awsEnvVariableNames: ReadonlyArray<AwsEnvVariableName | string> = [
 ]
 
 interface PrepareEnvVariablesProps {
-  readonly credentials?: Credentials
+  readonly credentials?: AwsCredentialIdentity
   readonly region?: Region
   readonly additionalVariables?: Record<string, string>
   readonly env: any

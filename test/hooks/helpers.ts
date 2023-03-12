@@ -1,5 +1,5 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { StackName } from "../../src/aws/cloudformation/model.js"
 import { InternalCredentialManager } from "../../src/aws/common/credentials.js"
@@ -42,7 +42,7 @@ export const createStack = (props: TestStackProps): InternalStack => {
     toProps: () => mock(),
     credentialManager: mock<InternalCredentialManager>(),
     getCurrentCloudFormationStack: () => mock(),
-    getCredentials: async () => mock<Credentials>(),
+    getCredentials: async () => mock<AwsCredentialIdentity>(),
     getClient: async () => mock<CloudFormation>(),
   }
 }

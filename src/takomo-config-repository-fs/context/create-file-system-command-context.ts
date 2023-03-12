@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { build } from "esbuild"
 import { InternalAwsClientProvider } from "../../aws/aws-client-provider.js"
 import { Features } from "../../config/project-config.js"
@@ -31,7 +31,7 @@ export interface CreateFileSystemCommandContextProps {
   readonly projectDir: FilePath
   readonly awsClientProvider: InternalAwsClientProvider
   readonly overrideFeatures: Partial<Features>
-  readonly credentials?: Credentials
+  readonly credentials?: AwsCredentialIdentity
   readonly vars: Record<string, any>
   readonly varFilePaths: ReadonlyArray<VarFileOption>
   readonly envFilePaths: ReadonlyArray<FilePath>

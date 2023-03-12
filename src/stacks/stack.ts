@@ -1,5 +1,5 @@
 import { CloudFormation } from "@aws-sdk/client-cloudformation"
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import {
   CloudFormationStack,
   StackCapability,
@@ -123,7 +123,7 @@ export interface Stack {
   /**
    * Credentials associated with the stack
    */
-  readonly getCredentials: () => Promise<Credentials>
+  readonly getCredentials: () => Promise<AwsCredentialIdentity>
 
   /**
    * Logger instance associated with the stack

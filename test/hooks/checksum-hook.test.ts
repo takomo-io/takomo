@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { StacksContext } from "../../src/context/stacks-context.js"
 import { ChecksumHook } from "../../src/hooks/checksum-hook.js"
@@ -10,7 +10,7 @@ import { createConsoleLogger } from "../../src/utils/logging.js"
 const credentialManager = mock<CredentialManager>()
 credentialManager.getCredentials.mockReturnValue(
   Promise.resolve(
-    mock<Credentials>({
+    mock<AwsCredentialIdentity>({
       accessKeyId: "xxxx",
       secretAccessKey: "yyyy",
       sessionToken: "zzzz",

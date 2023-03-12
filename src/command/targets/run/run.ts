@@ -1,28 +1,27 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { exec } from "child_process"
 import { IPolicy, Policy } from "cockatiel"
 import { extname } from "path"
 import * as R from "ramda"
 import { promisify } from "util"
+import { CredentialManager } from "../../../aws/common/credentials.js"
 import {
   CallerIdentity,
   IamRoleArn,
   IamRoleName,
 } from "../../../aws/common/model.js"
-import {
-  CommandRole,
-  CommandStatus,
-  OperationState,
-  resolveCommandOutputBase,
-} from "../../../takomo-core/command.js"
-
-import { CredentialManager } from "../../../aws/common/credentials.js"
 import { prepareAwsEnvVariables } from "../../../aws/util.js"
 import {
   DeploymentGroupConfig,
   DeploymentTargetConfig,
 } from "../../../config/targets-config.js"
 import { DeploymentTargetsContext } from "../../../context/targets-context.js"
+import {
+  CommandRole,
+  CommandStatus,
+  OperationState,
+  resolveCommandOutputBase,
+} from "../../../takomo-core/command.js"
 import {
   expandFilePath,
   FilePath,
@@ -115,7 +114,7 @@ interface RunMapCommandProps {
   readonly group: DeploymentGroupConfig
   readonly target: DeploymentTargetConfig
   readonly logger: TkmLogger
-  readonly credentials: Credentials
+  readonly credentials: AwsCredentialIdentity
   readonly mapCommand: string
   readonly input: DeploymentTargetsRunInput
   readonly mapArgs: unknown
@@ -140,8 +139,6 @@ const runJsMapFunction = async ({
   }
 
   const mapperFn: MapFunction<unknown> = mapperFile.default
-
-  console.log(mapperFn)
 
   return mapperFn({
     credentials,
@@ -198,7 +195,7 @@ const runMapCommand = (props: RunMapCommandProps): Promise<unknown> =>
 interface RunReduceCommandProps {
   readonly reduceCommand: string
   readonly ctx: DeploymentTargetsContext
-  readonly credentials: Credentials
+  readonly credentials: AwsCredentialIdentity
   readonly targetResults: ReadonlyArray<unknown>
 }
 
@@ -273,7 +270,7 @@ const getCredentialsForMapCommand = async (
   { ctx, input: { mapRoleName, disableMapRole } }: RunProps,
   group: DeploymentGroupConfig,
   target: DeploymentTargetConfig,
-): Promise<Credentials> =>
+): Promise<AwsCredentialIdentity> =>
   ctx.credentialManager
     .getCallerIdentity()
     .then((currentIdentity) =>
@@ -291,7 +288,7 @@ const getCredentialsForMapCommand = async (
 const getCredentialsForReduceCommand = async (
   ctx: DeploymentTargetsContext,
   reduceRoleArn?: IamRoleArn,
-): Promise<Credentials> => {
+): Promise<AwsCredentialIdentity> => {
   const credentialManager = reduceRoleArn
     ? await ctx.credentialManager.createCredentialManagerForRole(reduceRoleArn)
     : ctx.credentialManager
