@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import Table from "easy-table"
 import inquirer from "inquirer"
 import { createRequire } from "module"
@@ -54,7 +54,7 @@ const resolveProjectDir = (projectDirArg: any): FilePath => {
 
 export const initCommandContext = async (
   argv: any,
-  credentials?: Credentials,
+  credentials?: AwsCredentialIdentity,
 ): Promise<FileSystemCommandContext> => {
   if (argv.profile) {
     process.env.AWS_PROFILE = argv.profile

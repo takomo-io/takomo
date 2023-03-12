@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { join } from "path"
 import {
@@ -15,7 +15,7 @@ const provider = createCmdResolverProvider()
 const credentialManager = mock<CredentialManager>()
 credentialManager.getCredentials.mockReturnValue(
   Promise.resolve(
-    mock<Credentials>({
+    mock<AwsCredentialIdentity>({
       accessKeyId: "xxxx",
       secretAccessKey: "yyyy",
       sessionToken: "zzzz",

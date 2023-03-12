@@ -1,5 +1,5 @@
 import { Stack } from "@aws-sdk/client-cloudformation"
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import {
   StackDriftDetectionStatus,
   StackDriftDetectionStatusReason,
@@ -81,7 +81,7 @@ export interface ExpectDeployedCfStackProps {
   stackName: StackName
   region: Region
   accountId: AccountId
-  credentials: Credentials
+  credentials: AwsCredentialIdentity
   roleName: string
   expected?: Partial<Stack>
   expectedTags?: Record<TagKey, TagValue>

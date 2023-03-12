@@ -1,4 +1,4 @@
-import { CredentialProvider, Pluggable } from "@aws-sdk/types"
+import { AwsCredentialIdentityProvider, Pluggable } from "@aws-sdk/types"
 import { IPolicy } from "cockatiel"
 import { TkmLogger } from "../../utils/logging.js"
 import { Scheduler } from "../../utils/scheduler.js"
@@ -43,7 +43,7 @@ interface PagedOperationV2Props<T, P, R extends PagedResponse> {
 }
 
 export interface AwsClientProps {
-  readonly credentialProvider?: CredentialProvider
+  readonly credentialProvider?: AwsCredentialIdentityProvider
   readonly region: Region
   readonly logger: TkmLogger
   readonly id: string

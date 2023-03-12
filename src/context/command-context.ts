@@ -1,4 +1,4 @@
-import { Credentials } from "@aws-sdk/types"
+import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { InternalAwsClientProvider } from "../aws/aws-client-provider.js"
 import { Region } from "../aws/common/model.js"
 import { Variables } from "../common/model.js"
@@ -47,7 +47,7 @@ export interface CommandContext {
   /**
    * Credentials used to invoke the current operation.
    */
-  readonly credentials?: Credentials
+  readonly credentials?: AwsCredentialIdentity
 
   /**
    * Current project directory containing configuration files.

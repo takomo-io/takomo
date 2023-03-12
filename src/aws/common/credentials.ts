@@ -2,9 +2,14 @@ import {
   AssumeRoleCommandInput,
   AssumeRoleWithWebIdentityCommandInput,
 } from "@aws-sdk/client-sts"
-import { defaultProvider } from "@aws-sdk/credential-provider-node"
-import { fromTemporaryCredentials } from "@aws-sdk/credential-providers"
-import { CredentialProvider, Credentials } from "@aws-sdk/types"
+import {
+  fromNodeProviderChain,
+  fromTemporaryCredentials,
+} from "@aws-sdk/credential-providers"
+import {
+  AwsCredentialIdentity,
+  AwsCredentialIdentityProvider,
+} from "@aws-sdk/types"
 import * as R from "ramda"
 import { TkmLogger } from "../../utils/logging.js"
 import { AwsClientProvider } from "../aws-client-provider.js"
@@ -24,12 +29,12 @@ export interface CredentialManager {
   /**
    * @returns AWS credentials
    */
-  readonly getCredentials: () => Promise<Credentials>
+  readonly getCredentials: () => Promise<AwsCredentialIdentity>
 
   /**
    * @returns CredentialProvider
    */
-  readonly getCredentialProvider: () => CredentialProvider
+  readonly getCredentialProvider: () => AwsCredentialIdentityProvider
 
   /**
    * @returns Identity associated with the credentials
@@ -58,7 +63,7 @@ export interface InternalCredentialManager extends CredentialManager {
 interface CredentialManagerProps {
   readonly name: string
   readonly iamRoleArn?: IamRoleArn
-  readonly credentialProvider: CredentialProvider
+  readonly credentialProvider: AwsCredentialIdentityProvider
   readonly awsClientProvider: AwsClientProvider
   readonly logger: TkmLogger
 }
@@ -72,9 +77,11 @@ export const createCredentialManager = ({
 }: CredentialManagerProps): InternalCredentialManager => {
   const children = new Map<string, InternalCredentialManager>()
 
-  const getCredentials = async (): Promise<Credentials> => credentialProvider()
+  const getCredentials = async (): Promise<AwsCredentialIdentity> =>
+    credentialProvider()
 
-  const getCredentialProvider = (): CredentialProvider => credentialProvider
+  const getCredentialProvider = (): AwsCredentialIdentityProvider =>
+    credentialProvider
 
   const createCredentialManagerForRole = async (
     iamRoleArn: IamRoleArn,
@@ -136,13 +143,13 @@ const initDefaultCredentialProviderChain = async (
   logger: TkmLogger,
   awsClientProvider: AwsClientProvider,
   mfaCodeProvider: (mfaSerial: string) => Promise<string>,
-  credentials?: Credentials,
-): Promise<CredentialProvider> => {
+  credentials?: AwsCredentialIdentity,
+): Promise<AwsCredentialIdentityProvider> => {
   if (credentials) {
     return async () => credentials
   }
 
-  return defaultProvider({
+  return fromNodeProviderChain({
     mfaCodeProvider,
     roleAssumer: customDefaultRoleAssumer(logger, awsClientProvider),
     roleAssumerWithWebIdentity: customDefaultRoleAssumerWithWebIdentity(
@@ -156,7 +163,7 @@ export const initDefaultCredentialManager = async (
   mfaCodeProvider: (mfaSerial: string) => Promise<string>,
   logger: TkmLogger,
   awsClientProvider: AwsClientProvider,
-  credentials?: Credentials,
+  credentials?: AwsCredentialIdentity,
 ): Promise<InternalCredentialManager> =>
   initDefaultCredentialProviderChain(
     logger,
@@ -173,9 +180,9 @@ export const initDefaultCredentialManager = async (
   )
 
 type RoleAssumer = (
-  sourceCredentials: Credentials,
+  sourceCredentials: AwsCredentialIdentity,
   params: AssumeRoleCommandInput,
-) => Promise<Credentials>
+) => Promise<AwsCredentialIdentity>
 
 const customDefaultRoleAssumer =
   (logger: TkmLogger, awsClientProvider: AwsClientProvider): RoleAssumer =>
@@ -193,7 +200,7 @@ const customDefaultRoleAssumer =
 
 type RoleAssumerWithWebIdentity = (
   params: AssumeRoleWithWebIdentityCommandInput,
-) => Promise<Credentials>
+) => Promise<AwsCredentialIdentity>
 
 const customDefaultRoleAssumerWithWebIdentity =
   (
