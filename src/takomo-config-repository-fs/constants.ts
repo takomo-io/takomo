@@ -15,7 +15,8 @@ export const CONFIG_SETS_DIR = "config-sets"
 export const DEFAULT_DEPLOYMENT_CONFIG_FILE = "targets.yml"
 export const STACK_GROUP_CONFIG_FILE_NAME = "config.yml"
 export const TAKOMO_PROJECT_CONFIG_FILE_NAME = "takomo.yml"
-export const CACHE_DIR = ".takomo-cache"
+export const CACHE_DIR = "cache"
+export const TMP_DIR = ".takomo"
 
 export interface ProjectFilePaths {
   readonly projectDir: FilePath
@@ -56,5 +57,5 @@ export const createProjectFilePaths = (
   defaultDeploymentConfigFileName: DEFAULT_DEPLOYMENT_CONFIG_FILE,
   deploymentDir: path.join(projectDir, DEPLOYMENT_DIR),
   configSetsDir: path.join(projectDir, CONFIG_SETS_DIR),
-  cacheDir: path.join(projectDir, CACHE_DIR),
+  cacheDir: path.join(projectDir, TMP_DIR, CACHE_DIR),
 })
