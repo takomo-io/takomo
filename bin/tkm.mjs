@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import semver from "semver"
 import { run } from "../dist/index.js"
 
