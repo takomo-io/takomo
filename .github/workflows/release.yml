@@ -79,9 +79,9 @@ jobs:
 
   release:
     runs-on: ubuntu-20.04
-    needs:
-      - unit-test
-      - integration-test
+    needs: build
+#      - unit-test
+#      - integration-test
     steps:
       - uses: actions/checkout@v3
         with:

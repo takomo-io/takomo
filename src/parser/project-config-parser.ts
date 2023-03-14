@@ -35,7 +35,7 @@ const validateRequiredVersion = async (
   }
 
   const require = createRequire(import.meta.url)
-  const packageJson = require("../../package.json")
+  const packageJson = require("../package.json")
 
   if (!semver.satisfies(packageJson.version, requiredVersion)) {
     throw new TakomoError(
