@@ -8,7 +8,7 @@ import { stacksCmd } from "./stacks/index.js"
 export { initCommandContext } from "./common.js"
 
 const require = createRequire(import.meta.url)
-const packageJson = require("../package.json")
+const packageJson = require("../../package.json")
 
 /**
  * @hidden

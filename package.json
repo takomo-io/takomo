@@ -43,7 +43,6 @@
   "scripts": {
     "prepare": "husky install",
     "build": "tsc",
-    "postbuild": "cp package.json dist/",
     "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects test --maxWorkers=2 --ci --verbose",
     "integration-test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects integration-test --maxWorkers=5 --ci --verbose",
     "clean": "rm -f package-lock.json && rm -rf node_modules && rm -rf dist",

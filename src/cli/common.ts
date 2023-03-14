@@ -61,7 +61,7 @@ export const initCommandContext = async (
   }
 
   const require = createRequire(import.meta.url)
-  const packageJson = require("../package.json")
+  const packageJson = require("../../package.json")
   const buildInfo = {
     version: packageJson.version,
   }
@@ -142,7 +142,7 @@ export const onError = (e: any): void => {
   }
 
   const require = createRequire(import.meta.url)
-  const packageJson = require("../package.json")
+  const packageJson = require("../../package.json")
 
   console.log()
   console.log()
