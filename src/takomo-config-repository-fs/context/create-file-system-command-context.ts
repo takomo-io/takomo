@@ -87,6 +87,10 @@ export const createFileSystemCommandContext = async (
         format: "esm",
         outfile: projectConfig.esbuild.outFile,
         entryPoints: [projectConfig.esbuild.entryPoint],
+        // Fix for https://github.com/evanw/esbuild/pull/2067
+        banner: {
+          js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
+        },
       })
     } else {
       logger.debug(
