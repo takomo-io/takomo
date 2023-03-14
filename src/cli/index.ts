@@ -1,3 +1,4 @@
+import { createRequire } from "module"
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import { RunProps } from "./common.js"
@@ -5,6 +6,9 @@ import { deploymentTargetsCmd } from "./deployment-targets/index.js"
 import { iamCmd } from "./iam/index.js"
 import { stacksCmd } from "./stacks/index.js"
 export { initCommandContext } from "./common.js"
+
+const require = createRequire(import.meta.url)
+const packageJson = require("../../package.json")
 
 /**
  * @hidden
@@ -89,5 +93,6 @@ export const run = (props: RunProps = { showHelpOnFail: true }): void => {
     .recommendCommands()
     .strict(true)
     .showHelpOnFail(props?.showHelpOnFail === true)
+    .version(packageJson.version)
     .help().argv
 }
