@@ -305,7 +305,6 @@ const externalHandlebarsHelper = Joi.object({
 
 const features = Joi.object({
   deploymentTargetsUndeploy: Joi.boolean(),
-  deploymentTargetsTearDown: Joi.boolean(),
 })
 
 const varFiles = [Joi.string(), Joi.array().items(Joi.string())]
