@@ -38,50 +38,50 @@ jobs:
           path: |
             dist
           key: packages-${{ github.sha }}
-#
-#  unit-test:
-#    runs-on: ubuntu-20.04
-#    needs: build
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: 18.14.2
-#      - uses: actions/cache@v3
-#        with:
-#          path: node_modules
-#          key: npm-${{ hashFiles('package-lock.json') }}
-#      - uses: actions/cache@v3
-#        with:
-#          path: |
-#            dist
-#          key: packages-${{ github.sha }}
-#      - run: npm test
-#
-#  integration-test:
-#    runs-on: ubuntu-20.04
-#    needs: build
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: 18.14.2
-#      - uses: actions/cache@v3
-#        with:
-#          path: node_modules
-#          key: npm-${{ hashFiles('package-lock.json') }}
-#      - uses: actions/cache@v3
-#        with:
-#          path: |
-#            dist
-#          key: packages-${{ github.sha }}
-#      - run: npm run integration-test
+
+  unit-test:
+    runs-on: ubuntu-20.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.2
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            dist
+          key: packages-${{ github.sha }}
+      - run: npm test
+
+  integration-test:
+    runs-on: ubuntu-20.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.2
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            dist
+          key: packages-${{ github.sha }}
+      - run: npm run integration-test
 
   release:
     runs-on: ubuntu-20.04
-    needs: build
-#      - unit-test
-#      - integration-test
+    needs:
+      - unit-test
+      - integration-test
     steps:
       - uses: actions/checkout@v3
         with:
