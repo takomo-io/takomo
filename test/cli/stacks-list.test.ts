@@ -5,5 +5,5 @@ const { expectSuccess } = executors("stacks list")
 const successCases = [...basicCommandPaths]
 
 describe("tkm stacks list", () => {
-  test.each(successCases)("success %#", expectSuccess)
+  test.each(successCases)("success %#", async (cmd) => expectSuccess(cmd))
 })
