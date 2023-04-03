@@ -71,6 +71,10 @@ export {
 export { DeploymentStatus, Label } from "./targets/targets-model.js"
 export { EjsTemplateEngineProvider } from "./templating/ejs/ejs-template-engine-provider.js"
 export {
+  TemplateEngineProps,
+  TemplateEngineProvider,
+} from "./templating/template-engine-provider.js"
+export {
   RenderTemplateFileProps,
   RenderTemplateProps,
   TemplateEngine,
