@@ -3,7 +3,13 @@ import { TkmLogger } from "../utils/logging.js"
 import { TemplateEngine } from "./template-engine.js"
 
 export interface TemplateEngineProps {
+  /**
+   * Current project directory.
+   */
   readonly projectDir: FilePath
+  /**
+   * Logger instance.
+   */
   readonly logger: TkmLogger
 }
 
