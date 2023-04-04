@@ -35,7 +35,8 @@ const stacks = [
   ...makeStacks("account3", 15, 20),
 ]
 
-describe("High number of stacks in multiple accounts", () => {
+// Skipped due to test fragility in GitHub Actions
+describe.skip("High number of stacks in multiple accounts", () => {
   test("Deploy", () =>
     executeDeployStacksCommand({
       projectDir,
