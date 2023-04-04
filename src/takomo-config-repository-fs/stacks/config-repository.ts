@@ -14,7 +14,7 @@ import {
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
 import { EjsTemplateEngineProvider } from "../../templating/ejs/ejs-template-engine-provider.js"
-import { HandlebarsTemplateEngineProvider } from "../../templating/handlebars/handlebars-template-engine-provider.js"
+import { InternalHandlebarsTemplateEngineProvider } from "../../templating/handlebars/internal-handlebars-template-engine-provider.js"
 import { TemplateEngineProvider } from "../../templating/template-engine-provider.js"
 import {
   dirExists,
@@ -88,7 +88,7 @@ const getTemplateEngineProvider = (
 
   return projectConfig.templateEngine === "ejs"
     ? new EjsTemplateEngineProvider({ logger })
-    : new HandlebarsTemplateEngineProvider({
+    : new InternalHandlebarsTemplateEngineProvider({
         logger,
         partialsDir,
         helpersDir,
