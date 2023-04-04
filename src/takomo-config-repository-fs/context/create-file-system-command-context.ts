@@ -81,6 +81,7 @@ export const createFileSystemCommandContext = async (
         write: true,
         bundle: true,
         sourcemap: true,
+        packages: "external",
         platform: "node",
         logLevel: "error",
         target: "node18.14.2",
