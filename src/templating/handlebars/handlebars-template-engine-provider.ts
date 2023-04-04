@@ -1,36 +1,51 @@
-import { InternalTakomoProjectConfig } from "../../config/project-config.js"
-import { TakomoError } from "../../utils/errors.js"
-import { dirExists, FilePath } from "../../utils/files.js"
-import { TkmLogger } from "../../utils/logging.js"
+import { expandFilePath, FilePath } from "../../utils/files.js"
 import {
   TemplateEngineProps,
   TemplateEngineProvider,
 } from "../template-engine-provider.js"
 import { TemplateEngine } from "../template-engine.js"
+import { HandlebarsHelperProvider } from "./handlebars-helper-provider.js"
+import { HandlebarsHelper } from "./handlebars-helper.js"
 import { HandlebarsTemplateEngine } from "./handlebars-template-engine.js"
 import { loadHandlebarsHelpers } from "./load-handlebars-helpers.js"
 import { loadHandlebarsPartials } from "./load-handlebars-partials.js"
 
-interface HandlebarsTemplateEngineProviderProps {
-  readonly partialsDir: FilePath
-  readonly helpersDir: FilePath
-  readonly projectConfig: InternalTakomoProjectConfig
-  readonly logger: TkmLogger
+export interface HandlebarsTemplateEngineProviderProps {
+  /**
+   * List of directories from where to load Handlebars partial files.
+   */
+  readonly partialsDirs?: ReadonlyArray<FilePath>
+
+  /**
+   * List of directories from where to load Handlebars helpers implemented with plain JavaScript.
+   */
+  readonly helpersDirs?: ReadonlyArray<FilePath>
+  /**
+   * List of helpers.
+   */
+  readonly helpers?: ReadonlyArray<HandlebarsHelper>
+  /**
+   * List of helper providers.
+   */
+  readonly helperProviders?: ReadonlyArray<HandlebarsHelperProvider>
 }
 
+/**
+ * Handlebars template engine provider.
+ */
 export class HandlebarsTemplateEngineProvider
   implements TemplateEngineProvider
 {
-  readonly #partialsDir: FilePath
-  readonly #helpersDir: FilePath
-  readonly #projectConfig: InternalTakomoProjectConfig
-  readonly #logger: TkmLogger
+  readonly #partialsDirs: ReadonlyArray<FilePath>
+  readonly #helpersDirs: ReadonlyArray<FilePath>
+  readonly #helpers: ReadonlyArray<HandlebarsHelper>
+  readonly #helperProviders: ReadonlyArray<HandlebarsHelperProvider>
 
-  constructor(props: HandlebarsTemplateEngineProviderProps) {
-    this.#partialsDir = props.partialsDir
-    this.#helpersDir = props.helpersDir
-    this.#projectConfig = props.projectConfig
-    this.#logger = props.logger
+  constructor(props: HandlebarsTemplateEngineProviderProps = {}) {
+    this.#partialsDirs = props.partialsDirs ?? []
+    this.#helpersDirs = props.helpersDirs ?? []
+    this.#helpers = props.helpers ?? []
+    this.#helperProviders = props.helperProviders ?? []
   }
 
   async init({
@@ -39,57 +54,32 @@ export class HandlebarsTemplateEngineProvider
   }: TemplateEngineProps): Promise<TemplateEngine> {
     const te = new HandlebarsTemplateEngine({ projectDir, logger })
 
-    for (const config of this.#projectConfig.helpers) {
-      this.#logger.debug(
-        `Register Handlebars helper from NPM package: ${config.package}`,
-      )
-      const helperPackage = await import(config.package)
+    const helpersDirs = this.#helpersDirs.map((dir) =>
+      expandFilePath(projectDir, dir),
+    )
 
-      if (!helperPackage.default) {
-        throw new TakomoError(
-          `Handlebars helper loaded from an NPM package ${config.package} does not have default export`,
-        )
-      }
-
-      const helper = helperPackage.default
-
-      const helperWithName = config.name
-        ? { ...helper, name: config.name }
-        : helper
-
-      if (typeof helperWithName.fn !== "function") {
-        throw new TakomoError(
-          `Handlebars helper loaded from an NPM package ${config.package} does not export property 'fn' of type function`,
-        )
-      }
-
-      if (typeof helperWithName.name !== "string") {
-        throw new TakomoError(
-          `Handlebars helper loaded from an NPM package ${config.package} does not export property 'name' of type string`,
-        )
-      }
-
-      te.registerHelper(helperWithName.name, helperWithName.fn)
-    }
-
-    const defaultHelpersDirExists = await dirExists(this.#helpersDir)
-    const additionalHelpersDirs = this.#projectConfig.helpersDir
-
-    const helpersDirs = defaultHelpersDirExists
-      ? [this.#helpersDir, ...additionalHelpersDirs]
-      : additionalHelpersDirs
-
-    const defaultPartialsDirExists = await dirExists(this.#partialsDir)
-    const additionalPartialsDirs = this.#projectConfig.partialsDir
-
-    const partialsDirs = defaultPartialsDirExists
-      ? [this.#partialsDir, ...additionalPartialsDirs]
-      : additionalPartialsDirs
+    const partialsDirs = this.#partialsDirs.map((dir) =>
+      expandFilePath(projectDir, dir),
+    )
 
     await Promise.all([
-      loadHandlebarsHelpers(helpersDirs, this.#logger, te),
-      loadHandlebarsPartials(partialsDirs, this.#logger, te),
+      loadHandlebarsHelpers(helpersDirs, logger, te),
+      loadHandlebarsPartials(partialsDirs, logger, te),
     ])
+
+    this.#helpers.forEach((helper) => {
+      te.registerHelper(helper.name, helper.fn)
+    })
+
+    const helpers = await Promise.all(
+      this.#helperProviders.map((provider) =>
+        provider.init({ projectDir, logger }),
+      ),
+    )
+
+    helpers.forEach((helper) => {
+      te.registerHelper(helper.name, helper.fn)
+    })
 
     return te
   }

@@ -71,6 +71,15 @@ export {
 export { DeploymentStatus, Label } from "./targets/targets-model.js"
 export { EjsTemplateEngineProvider } from "./templating/ejs/ejs-template-engine-provider.js"
 export {
+  HandlebarsHelperProvider,
+  InitHandlebarsHelperProps,
+} from "./templating/handlebars/handlebars-helper-provider.js"
+export { HandlebarsHelper } from "./templating/handlebars/handlebars-helper.js"
+export {
+  HandlebarsTemplateEngineProvider,
+  HandlebarsTemplateEngineProviderProps,
+} from "./templating/handlebars/handlebars-template-engine-provider.js"
+export {
   TemplateEngineProps,
   TemplateEngineProvider,
 } from "./templating/template-engine-provider.js"
