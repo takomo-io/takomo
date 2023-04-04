@@ -21,8 +21,8 @@
   "license": "MIT",
   "author": "henri@takomo.io",
   "type": "module",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "takomo": "bin/tkm.mjs",
     "tkm": "bin/tkm.mjs"
