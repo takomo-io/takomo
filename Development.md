@@ -2,7 +2,7 @@
 
 ## Tools
 
-Use Nodejs v16.17.0.
+Use Nodejs v18.14.2.
 
 ## Developing
 
@@ -33,7 +33,7 @@ npm audit
 Upgrade dependencies with [npm-check-updates](https://www.npmjs.com/package/npm-check-updates):
 
 ```
-npx ncu  --interactive
+npx ncu --interactive
 ```
 
 Check for unused dependencies:
