@@ -1,5 +1,4 @@
 import { AwsCredentialIdentity } from "@aws-sdk/types"
-import { build } from "esbuild"
 import { InternalAwsClientProvider } from "../../aws/aws-client-provider.js"
 import { Features } from "../../config/project-config.js"
 import {
@@ -8,6 +7,7 @@ import {
 } from "../../context/command-context.js"
 import { loadProjectConfig } from "../../parser/project-config-parser.js"
 import { OutputFormat } from "../../takomo-core/command.js"
+import { compileTypescript } from "../../utils/esbuild.js"
 import { fileExists, FilePath } from "../../utils/files.js"
 import { LogLevel, TkmLogger } from "../../utils/logging.js"
 import { VarFileOption } from "../../utils/variables.js"
@@ -77,15 +77,7 @@ export const createFileSystemCommandContext = async (
         `Compile typescript project config file: ${projectConfig.esbuild.entryPoint}`,
       )
 
-      await build({
-        write: true,
-        bundle: true,
-        sourcemap: true,
-        packages: "external",
-        platform: "node",
-        logLevel: "error",
-        target: "node18.14.2",
-        format: "esm",
+      await compileTypescript({
         outfile: projectConfig.esbuild.outFile,
         entryPoints: [projectConfig.esbuild.entryPoint],
         // Fix for https://github.com/evanw/esbuild/pull/2067

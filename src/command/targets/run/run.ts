@@ -238,7 +238,7 @@ const runJsReduceFunction = async ({
     )
   }
 
-  const reduceFn: ReduceFunction<unknown> = reduceFile.default
+  const reduceFn: ReduceFunction<unknown, unknown> = reduceFile.default
 
   return reduceFn({
     credentials,
@@ -463,6 +463,7 @@ export const run = async (
   props: RunProps,
 ): Promise<DeploymentTargetsRunOutput> => {
   const { input, plan, listener, ctx, io } = props
+
   const childTimer = input.timer.startChild("run")
 
   const results = new Array<DeploymentGroupRunResult>()
