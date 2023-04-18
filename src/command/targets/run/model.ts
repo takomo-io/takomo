@@ -64,18 +64,55 @@ export interface DeploymentGroupRunResult extends CommandOutputBase {
   readonly results: ReadonlyArray<DeploymentTargetRunResult>
 }
 
+/**
+ * Properties used to invoke {MapFunction}.
+ */
 export interface MapFunctionProps {
+  /**
+   * AWS credentials for the target
+   */
   readonly credentials?: AwsCredentialIdentity
+
+  /**
+   * Target configuration
+   */
   readonly target: DeploymentTargetConfig
+
+  /**
+   * Path of deployment group where the target belongs to
+   */
   readonly deploymentGroupPath: DeploymentGroupPath
+
+  /**
+   * Map arguments from the command line
+   */
   readonly args: unknown
 }
 
+/**
+ * Map function of run command.
+ */
 export type MapFunction<T> = (props: MapFunctionProps) => Promise<T>
 
+/**
+ * Properties used to invoke {ReduceFunction}.
+ */
 export interface ReduceFunctionProps<T> {
+  /**
+   * AWS credentials for the reduce function
+   */
   readonly credentials?: AwsCredentialIdentity
+
+  /**
+   * Targets returned from map functions
+   */
   readonly targets: ReadonlyArray<T>
 }
 
-export type ReduceFunction<T> = (props: ReduceFunctionProps<T>) => Promise<T>
+/**
+ * Reduce function of run command.
+ *
+ * @typeParam T - Type of targets
+ * @typeParam O - Type of result the reduce function returns
+ */
+export type ReduceFunction<T, O> = (props: ReduceFunctionProps<T>) => Promise<O>

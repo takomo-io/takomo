@@ -6,7 +6,7 @@ import {
   DeploymentTargetsRunOutput,
   TargetsRunPlan,
 } from "./model.js"
-import { run } from "./run.js"
+import { prepare } from "./prepare.js"
 
 interface ConfirmRunProps {
   readonly ctx: DeploymentTargetsContext
@@ -34,5 +34,5 @@ export const confirmRun = async ({
     }
   }
 
-  return run({ io, input, plan, ctx, listener })
+  return prepare({ io, input, plan, ctx, listener })
 }
