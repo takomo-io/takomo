@@ -152,7 +152,7 @@
     "pretty-ms": "8.0.0",
     "ramda": "0.28.0",
     "readdirp": "3.6.0",
-    "semver": "7.3.8",
+    "semver": "7.5.2",
     "source-map-support": "0.5.21",
     "ts-dedent": "2.2.0",
     "uuid": "9.0.0",
