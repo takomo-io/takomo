@@ -11,13 +11,17 @@ import {
   executeUndeployStacksCommand,
 } from "../src/commands/stacks.js"
 
+const stackName = "sam",
+  stackPath = "/sam.yml/eu-north-1",
+  projectDir = `${process.cwd()}/integration-test/configs/sam`
+
 const deploy = (
   timeout: number,
   autoConfirmEnabled: boolean,
 ): StacksOperationOutputMatcher =>
   executeDeployStacksCommand({
     autoConfirmEnabled,
-    projectDir: `${process.cwd()}/integration-test/configs/sam`,
+    projectDir,
     var: [`timeout=${timeout}`],
     answers: {
       confirmStackDeploy: "CONTINUE",
@@ -29,13 +33,10 @@ const deploy = (
 const undeploy = (autoConfirmEnabled: boolean): StacksOperationOutputMatcher =>
   executeUndeployStacksCommand({
     autoConfirmEnabled,
-    projectDir: `${process.cwd()}/integration-test/configs/sam`,
+    projectDir,
     var: [`timeout=1`],
     answers: { confirmUndeploy: "CONTINUE", chooseCommandPath: "/" },
   })
-
-const stackName = "sam"
-const stackPath = "/sam.yml/eu-north-1"
 
 describe("SAM", () => {
   test("Deploy", () =>
