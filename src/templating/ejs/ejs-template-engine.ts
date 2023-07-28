@@ -58,6 +58,10 @@ export class EjsTemplateEngine implements TemplateEngine {
     variables,
   }: RenderTemplateFileProps): Promise<string> {
     const templateString = await readFileContents(pathToFile)
-    return this.renderTemplate({ templateString, variables })
+    return this.renderTemplate({
+      templateString,
+      variables,
+      sourceDescription: `file ${pathToFile}`,
+    })
   }
 }

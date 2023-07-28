@@ -68,11 +68,13 @@ export class HandlebarsTemplateEngine implements TemplateEngine {
     this.#instance.registerPartial(name, partial)
   }
 
-  // TODO: Add error handling (like done in utils.js/renderTemplate)
   async renderTemplate({
     templateString,
     variables,
+    sourceDescription,
   }: RenderTemplateProps): Promise<string> {
+    this.#logger.trace(`Render template from ${sourceDescription}`)
+
     const template = this.#instance.compile(templateString, {
       noEscape: true,
       strict: true,
@@ -94,11 +96,16 @@ export class HandlebarsTemplateEngine implements TemplateEngine {
 
       return renderedTemplate
     } catch (e: any) {
+      this.#logger.error(
+        `An error occurred while rendering template from ${sourceDescription}`,
+        e,
+      )
       const errorMessage = buildErrorMessage(
-        `An error occurred while rendering template`,
+        `An error occurred while rendering template from ${sourceDescription}`,
         templateString,
         e,
       )
+
       throw new TakomoError(errorMessage)
     }
   }
@@ -118,17 +125,10 @@ export class HandlebarsTemplateEngine implements TemplateEngine {
 
     const templateString = await readFileContents(absolutePath)
 
-    try {
-      return this.renderTemplate({
-        templateString,
-        variables,
-      })
-    } catch (e) {
-      this.#logger.error(
-        `An error occurred while rendering template from file ${pathToFile}`,
-      )
-
-      throw e
-    }
+    return this.renderTemplate({
+      templateString,
+      variables,
+      sourceDescription: `file ${pathToFile}`,
+    })
   }
 }

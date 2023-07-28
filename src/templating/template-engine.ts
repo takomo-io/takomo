@@ -9,6 +9,10 @@ export interface RenderTemplateProps {
    * Variables used to render the template string
    */
   readonly variables: unknown
+  /**
+   * Description of template source
+   */
+  readonly sourceDescription: string
 }
 
 export interface RenderTemplateFileProps {

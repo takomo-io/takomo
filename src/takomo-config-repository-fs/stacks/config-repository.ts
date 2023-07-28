@@ -17,9 +17,9 @@ import { EjsTemplateEngineProvider } from "../../templating/ejs/ejs-template-eng
 import { InternalHandlebarsTemplateEngineProvider } from "../../templating/handlebars/internal-handlebars-template-engine-provider.js"
 import { TemplateEngineProvider } from "../../templating/template-engine-provider.js"
 import {
+  FilePath,
   dirExists,
   fileExists,
-  FilePath,
   readFileContents,
 } from "../../utils/files.js"
 import { TkmLogger } from "../../utils/logging.js"
@@ -161,6 +161,7 @@ export const createFileSystemStacksConfigRepository = async ({
     return templateEngine.renderTemplate({
       templateString: content,
       variables,
+      sourceDescription: "inline template",
     })
   }
 
