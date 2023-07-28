@@ -20,6 +20,7 @@ describe("HandlebarsTemplateEngine", () => {
         variables: {
           person: "Papa",
         },
+        sourceDescription: "inline",
       })
       expect(rendered).toStrictEqual("hello Papa!\n")
     })
@@ -54,6 +55,7 @@ describe("HandlebarsTemplateEngine", () => {
       const rendered = await te.renderTemplate({
         templateString: "Beware of {{person}}",
         variables: { person: "Zorro" },
+        sourceDescription: "inline",
       })
 
       expect(rendered).toEqual("Beware of Zorro")
