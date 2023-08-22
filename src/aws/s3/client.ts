@@ -15,7 +15,7 @@ export const createS3Client = (props: InternalAwsClientProps): S3Client => {
   const client = new S3({
     region: props.region,
     credentials: props.credentialProvider,
-    retryStrategy: customRetryStrategy(),
+    retryStrategy: customRetryStrategy(props.logger),
     requestHandler: customRequestHandler(25),
   })
 

@@ -25,7 +25,7 @@ export const createStsClient = (props: InternalAwsClientProps): StsClient => {
   const client = new STS({
     region: props.region,
     credentials: props.credentialProvider,
-    retryStrategy: customRetryStrategy(),
+    retryStrategy: customRetryStrategy(props.logger),
     requestHandler: customRequestHandler(25),
   })
 
