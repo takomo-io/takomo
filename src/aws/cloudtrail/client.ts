@@ -18,7 +18,7 @@ export const createCloudTrailClient = (
   const client = new CloudTrail({
     region: props.region,
     credentials: props.credentialProvider,
-    retryStrategy: customRetryStrategy(),
+    retryStrategy: customRetryStrategy(props.logger),
     requestHandler: customRequestHandler(25),
   })
 

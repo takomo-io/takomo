@@ -19,7 +19,6 @@ import {
   DetailedCloudFormationStack,
   DetailedCloudFormationStackSummary,
   EventId,
-  isTerminalResourceStatus,
   ResourceStatus,
   StackDriftDetectionId,
   StackDriftDetectionStatusOutput,
@@ -29,6 +28,7 @@ import {
   StackPolicyBody,
   StackStatus,
   TemplateSummary,
+  isTerminalResourceStatus,
 } from "./model.js"
 
 import { arrayToMap } from "../../utils/collections.js"
@@ -190,7 +190,7 @@ export const createCloudFormationClient = (
   const client = new CloudFormation({
     region: props.region,
     credentials: props.credentialProvider,
-    retryStrategy: customRetryStrategy(),
+    retryStrategy: customRetryStrategy(props.logger),
     requestHandler: customRequestHandler(25),
   })
 

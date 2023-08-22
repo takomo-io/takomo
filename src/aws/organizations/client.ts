@@ -24,7 +24,7 @@ export const createOrganizationsClient = (
   const client = new Organizations({
     region: props.region,
     credentials: props.credentialProvider,
-    retryStrategy: customRetryStrategy(),
+    retryStrategy: customRetryStrategy(props.logger),
     requestHandler: customRequestHandler(25),
   })
 
