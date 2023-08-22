@@ -95,7 +95,7 @@ export const createCredentialManager = ({
         masterCredentials: credentialProvider,
         clientConfig: {
           region: "us-east-1",
-          retryStrategy: customRetryStrategy(),
+          retryStrategy: customRetryStrategy(logger),
         },
         params: {
           RoleArn: iamRoleArn,
