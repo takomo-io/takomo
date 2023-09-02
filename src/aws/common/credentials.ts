@@ -3,6 +3,7 @@ import {
   AssumeRoleWithWebIdentityCommandInput,
 } from "@aws-sdk/client-sts"
 import {
+  fromEnv,
   fromNodeProviderChain,
   fromTemporaryCredentials,
 } from "@aws-sdk/credential-providers"
@@ -147,6 +148,13 @@ const initDefaultCredentialProviderChain = async (
 ): Promise<AwsCredentialIdentityProvider> => {
   if (credentials) {
     return async () => credentials
+  }
+
+  if (
+    process.env["AWS_ACCESS_KEY_ID"] &&
+    process.env["AWS_SECRET_ACCESS_KEY"]
+  ) {
+    return fromEnv()
   }
 
   return fromNodeProviderChain({
