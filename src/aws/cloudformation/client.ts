@@ -54,6 +54,10 @@ import {
   convertTemplateSummary,
 } from "./convert.js"
 import { evaluateDescribeChangeSet } from "./rules/describe-change-set-rule.js"
+import {
+  apiRequestListenerMiddleware,
+  apiRequestListenerMiddlewareOptions,
+} from "../common/request-listener.js"
 
 export interface CloudFormationClient {
   readonly validateTemplate: (input: ValidateTemplateInput) => Promise<boolean>
@@ -178,7 +182,6 @@ export const createCloudFormationClient = (
 ): CloudFormationClient => {
   const {
     logger,
-    middleware,
     describeEventsBulkhead,
     getTemplateSummaryScheduler,
     validateTemplateBulkhead,
@@ -194,7 +197,10 @@ export const createCloudFormationClient = (
     requestHandler: customRequestHandler(25),
   })
 
-  client.middlewareStack.use(middleware)
+  client.middlewareStack.add(
+    apiRequestListenerMiddleware(logger, props.id, props.listener),
+    apiRequestListenerMiddlewareOptions,
+  )
 
   const getStackPolicy = (
     stackName: string,

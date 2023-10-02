@@ -7,12 +7,20 @@ import {
   InitializeHandlerOutput,
   MetadataBearer,
   Pluggable,
+  // AbsoluteLocation,
+  // HandlerExecutionContext,
+  // InitializeHandler,
+  // InitializeHandlerArguments,
+  // InitializeHandlerOptions,
+  // InitializeHandlerOutput,
+  // MetadataBearer,
+  // Pluggable,
 } from "@aws-sdk/types"
 import { toCompactJson } from "../../utils/json.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { ClientListener } from "./client.js"
 
-const apiRequestListenerMiddleware =
+export const apiRequestListenerMiddleware =
   (logger: TkmLogger, clientId: string, listener: ClientListener) =>
   <Output extends MetadataBearer = MetadataBearer>(
     next: InitializeHandler<any, Output>,
@@ -53,14 +61,14 @@ const apiRequestListenerMiddleware =
       end: Number(end / BigInt(1000000)),
       time: Number(total / BigInt(1000000)),
       retries: ($metadata.attempts ?? 1) - 1,
-      api: clientName,
-      action: commandName,
+      api: clientName!,
+      action: commandName!,
     })
 
     return response
   }
 
-const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
+export const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
   AbsoluteLocation = {
   name: "apiRequestListener",
   tags: ["API_REQUEST_LISTENER"],

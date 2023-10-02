@@ -16,7 +16,6 @@ import {
   CloudFormationClientProps,
 } from "./common/client.js"
 import { CallerIdentity, Region } from "./common/model.js"
-import { createApiRequestListenerPlugin } from "./common/request-listener.js"
 import {
   createOrganizationsClient,
   OrganizationsClient,
@@ -124,7 +123,7 @@ export const createAwsClientProvider = ({
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
         waitStackRollbackToCompletePollInterval: 2000,
-        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
+        listener,
       })
 
       regions.add(props.region)
@@ -136,7 +135,7 @@ export const createAwsClientProvider = ({
     ): Promise<CloudTrailClient> => {
       const client = createCloudTrailClient({
         ...props,
-        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
+        listener,
       })
       regions.add(props.region)
       return client
@@ -144,7 +143,7 @@ export const createAwsClientProvider = ({
     createS3Client: async (props: AwsClientProps): Promise<S3Client> => {
       const client = createS3Client({
         ...props,
-        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
+        listener,
       })
       regions.add(props.region)
       return client
@@ -152,7 +151,7 @@ export const createAwsClientProvider = ({
     createStsClient: async (props: AwsClientProps): Promise<StsClient> => {
       const client = createStsClient({
         ...props,
-        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
+        listener,
       })
       regions.add(props.region)
       return client
@@ -162,7 +161,7 @@ export const createAwsClientProvider = ({
     ): Promise<OrganizationsClient> => {
       const client = createOrganizationsClient({
         ...props,
-        middleware: createApiRequestListenerPlugin(logger, props.id, listener),
+        listener,
       })
       regions.add(props.region)
       return client

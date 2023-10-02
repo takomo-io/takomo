@@ -11,6 +11,10 @@ import { customRequestHandler } from "../common/request-handler.js"
 import { customRetryStrategy } from "../common/retry.js"
 import { convertAccount, convertOU, convertRoot } from "./convert.js"
 import { Account, OU, OUId } from "./model.js"
+import {
+  apiRequestListenerMiddleware,
+  apiRequestListenerMiddlewareOptions,
+} from "../common/request-listener.js"
 
 export interface OrganizationsClient {
   readonly listAccounts: () => Promise<ReadonlyArray<Account>>
@@ -28,7 +32,10 @@ export const createOrganizationsClient = (
     requestHandler: customRequestHandler(25),
   })
 
-  client.middlewareStack.use(props.middleware)
+  client.middlewareStack.add(
+    apiRequestListenerMiddleware(props.logger, props.id, props.listener),
+    apiRequestListenerMiddlewareOptions,
+  )
 
   const listAccounts = async (): Promise<ReadonlyArray<Account>> => {
     const accounts = new Array<Account>()

@@ -4,6 +4,10 @@ import { customRequestHandler } from "../common/request-handler.js"
 import { customRetryStrategy } from "../common/retry.js"
 import { convertCloudTrailEvents } from "./convert.js"
 import { CloudTrailEvent } from "./model.js"
+import {
+  apiRequestListenerMiddleware,
+  apiRequestListenerMiddlewareOptions,
+} from "../common/request-listener.js"
 
 export interface CloudTrailClient {
   readonly lookupEvents: (
@@ -22,7 +26,10 @@ export const createCloudTrailClient = (
     requestHandler: customRequestHandler(25),
   })
 
-  client.middlewareStack.use(props.middleware)
+  client.middlewareStack.add(
+    apiRequestListenerMiddleware(props.logger, props.id, props.listener),
+    apiRequestListenerMiddlewareOptions,
+  )
 
   const lookupEvents = (
     startTime: Date,

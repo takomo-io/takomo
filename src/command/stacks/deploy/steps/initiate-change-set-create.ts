@@ -54,7 +54,7 @@ export const initiateChangeSetCreate: StackOperationStep<
     ChangeSetType: changeSetType,
     [templateKey]: templateLocation,
     ChangeSetName: changeSetName,
-    Capabilities: stack.capabilities?.slice() ?? defaultCapabilities,
+    Capabilities: stack.capabilities?.slice() ?? defaultCapabilities.slice(),
     Parameters: parameters.map((p) => ({
       ParameterKey: p.key,
       ParameterValue: p.value,

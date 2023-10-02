@@ -10,6 +10,10 @@ import { InternalAwsClientProps } from "../common/client.js"
 import { CallerIdentity } from "../common/model.js"
 import { customRequestHandler } from "../common/request-handler.js"
 import { customRetryStrategy } from "../common/retry.js"
+import {
+  apiRequestListenerMiddleware,
+  apiRequestListenerMiddlewareOptions,
+} from "../common/request-listener.js"
 
 export interface StsClient {
   readonly getCallerIdentity: () => Promise<CallerIdentity>
@@ -29,7 +33,10 @@ export const createStsClient = (props: InternalAwsClientProps): StsClient => {
     requestHandler: customRequestHandler(25),
   })
 
-  client.middlewareStack.use(props.middleware)
+  client.middlewareStack.add(
+    apiRequestListenerMiddleware(props.logger, props.id, props.listener),
+    apiRequestListenerMiddlewareOptions,
+  )
 
   const getCallerIdentity = (): Promise<CallerIdentity> =>
     client.getCallerIdentity({}).then((res) => ({

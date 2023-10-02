@@ -33,7 +33,7 @@ export const initiateStackUpdate: StackOperationStep<
 
   const client = await stack.getCloudFormationClient()
   const hasChanges = await client.updateStack({
-    Capabilities: capabilities,
+    Capabilities: capabilities.slice(),
     ClientRequestToken: clientToken,
     Parameters: parameters.map((p) => ({
       ParameterKey: p.key,

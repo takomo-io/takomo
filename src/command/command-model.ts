@@ -4,6 +4,7 @@ import { StackGroupPath } from "../stacks/stack-group.js"
 import { InternalStack, StackPath } from "../stacks/stack.js"
 import { CommandStatus } from "../takomo-core/command.js"
 import { Timer } from "../utils/timer.js"
+import { Capability } from "@aws-sdk/client-cloudformation"
 
 /**
  * Command path.
@@ -12,7 +13,7 @@ export type CommandPath = StackGroupPath | StackPath
 
 export type DeploymentOperation = "deploy" | "undeploy"
 
-export const defaultCapabilities = [
+export const defaultCapabilities: ReadonlyArray<Capability> = [
   "CAPABILITY_IAM",
   "CAPABILITY_NAMED_IAM",
   "CAPABILITY_AUTO_EXPAND",
