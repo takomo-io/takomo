@@ -16,7 +16,7 @@ export const initiateStackCreate: StackOperationStep<
 
   const client = await stack.getCloudFormationClient()
   const stackId = await client.createStack({
-    Capabilities: capabilities,
+    Capabilities: capabilities.slice(),
     ClientRequestToken: clientToken,
     DisableRollback: false,
     EnableTerminationProtection: stack.terminationProtection,

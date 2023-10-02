@@ -54,7 +54,7 @@ export interface CloudFormationClientProps extends AwsClientProps {
 }
 
 export interface InternalAwsClientProps extends AwsClientProps {
-  readonly middleware: Pluggable<any, any>
+  readonly listener: ClientListener
 }
 
 export interface ApiCallProps {
@@ -98,7 +98,7 @@ export const withClientScheduler = <C, T>(
   taskId: string,
   scheduler: Scheduler,
   fn: (client: C) => Promise<T>,
-  onError?: (e: any) => T,
+  onError?: (e: Error) => T,
 ): Promise<T> =>
   scheduler.execute<T>({ taskId, fn: () => fn(client) }).catch((e) => {
     if (onError) {
@@ -178,7 +178,7 @@ export const withClientBulkhead = <C, T>(
   client: C,
   bulkhead: IPolicy,
   fn: (client: C) => Promise<T>,
-  onError?: (e: any) => T,
+  onError?: (e: Error) => T,
 ): Promise<T> =>
   bulkhead
     .execute(() => fn(client))
