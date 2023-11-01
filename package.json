@@ -51,9 +51,7 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint --quiet --fix"
-    ],
-    "*.{js,ts}": [
+      "eslint --quiet --fix",
       "prettier --write --ignore-unknown"
     ]
   },
@@ -82,9 +80,9 @@
   "devDependencies": {
     "ts-jest": "29.1.1",
     "@jest/globals": "29.7.0",
-    "@aws-sdk/client-ec2": "3.433.0",
-    "@commitlint/cli": "18.0.0",
-    "@commitlint/config-conventional": "18.0.0",
+    "@aws-sdk/client-ec2": "3.440.0",
+    "@commitlint/cli": "18.2.0",
+    "@commitlint/config-conventional": "18.1.0",
     "@jest/console": "29.7.0",
     "@takomo/test-custom-helper-lowercase": "0.0.1",
     "@takomo/test-custom-helper-uppercase": "0.0.1",
@@ -121,24 +119,23 @@
     "prettier-plugin-organize-imports": "3.2.3",
     "lint-staged": "15.0.2",
     "ts-node": "10.9.1",
-    "typedoc": "0.25.2",
+    "typedoc": "0.25.3",
     "typescript": "5.2.2",
     "semantic-release": "21.1.2",
     "npm-check-updates": "16.14.6"
   },
   "dependencies": {
-    "@aws-sdk/client-cloudformation": "3.433.0",
-    "@aws-sdk/client-cloudtrail": "3.433.0",
-    "@aws-sdk/client-organizations": "3.433.0",
-    "@aws-sdk/client-s3": "3.433.0",
-    "@aws-sdk/client-secrets-manager": "3.433.0",
-    "@aws-sdk/client-ssm": "3.433.0",
-    "@aws-sdk/client-sts": "3.433.0",
-    "@aws-sdk/credential-providers": "3.433.0",
-    "@aws-sdk/middleware-retry": "3.374.0",
-    "@aws-sdk/node-http-handler": "3.374.0",
+    "@aws-sdk/client-cloudformation": "3.438.0",
+    "@aws-sdk/client-cloudtrail": "3.438.0",
+    "@aws-sdk/client-organizations": "3.438.0",
+    "@aws-sdk/client-s3": "3.440.0",
+    "@aws-sdk/client-secrets-manager": "3.438.0",
+    "@aws-sdk/client-ssm": "3.438.0",
+    "@aws-sdk/client-sts": "3.438.0",
+    "@aws-sdk/credential-providers": "3.438.0",
+    "@smithy/middleware-retry": "2.0.18",
+    "@smithy/node-http-handler": "2.1.8",
     "@aws-sdk/types": "3.433.0",
-    "@aws-sdk/middleware-stack": "3.374.0",
     "chalk": "5.3.0",
     "cockatiel": "2.0.1",
     "date-and-time": "2.4.3",
