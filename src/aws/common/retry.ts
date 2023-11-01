@@ -1,7 +1,7 @@
 import {
   defaultRetryDecider,
   StandardRetryStrategy,
-} from "@aws-sdk/middleware-retry"
+} from "@smithy/middleware-retry"
 import { RetryStrategy } from "@aws-sdk/types"
 import { TkmLogger } from "../../utils/logging.js"
 import { randomInt } from "../../utils/random.js"
