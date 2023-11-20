@@ -74,7 +74,7 @@ export interface ConfigSetExecution {
 }
 
 export interface ConfigSetExecutionTarget<C> {
-  readonly vars: any
+  readonly vars: Record<string, unknown>
   readonly configSets: ReadonlyArray<ConfigSetExecution>
   readonly id: ExecutionTargetId
   readonly data: C
@@ -103,10 +103,12 @@ export interface CreateConfigSetTargetListenerProps {
 
 export interface ConfigSetTargetListener {
   readonly onTargetBegin: () => Promise<void>
-  readonly onGroupBegin: (group: ConfigSetExecutionGroup<any>) => Promise<void>
+  readonly onGroupBegin: (
+    group: ConfigSetExecutionGroup<unknown>,
+  ) => Promise<void>
   readonly onTargetComplete: () => Promise<void>
   readonly onGroupComplete: (
-    group: ConfigSetExecutionGroup<any>,
+    group: ConfigSetExecutionGroup<unknown>,
   ) => Promise<void>
 }
 

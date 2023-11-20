@@ -82,7 +82,7 @@ export const collectAddedTags = (
           operation: "create",
           newValue: t.value,
           currentValue: undefined,
-        } as TagSpec),
+        }) as TagSpec,
     )
     .sort((a, b) => a.key.localeCompare(b.key))
 }
@@ -101,7 +101,7 @@ export const collectRemovedTags = (
           operation: "delete",
           currentValue: t.value,
           newValue: undefined,
-        } as TagSpec),
+        }) as TagSpec,
     )
     .sort((a, b) => a.key.localeCompare(b.key))
 }

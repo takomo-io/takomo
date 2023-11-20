@@ -5,8 +5,8 @@ import { Choice } from "./cli-io.js"
 inquirer.registerPrompt("autocomplete", inquirerPrompt)
 
 export interface QuestionOptions {
-  validate?: (input: any) => string | boolean
-  filter?: (input: any) => any
+  validate?: (input: unknown) => string | boolean
+  filter?: (input: unknown) => unknown
 }
 
 export interface UserActions {
@@ -28,7 +28,7 @@ export interface UserActions {
   ) => Promise<T[]>
   autocomplete: (
     message: string,
-    source: (answersSoFar: any, input: string) => Promise<string[]>,
+    source: (answersSoFar: unknown, input: string) => Promise<string[]>,
   ) => Promise<string>
 }
 
@@ -98,7 +98,7 @@ export const createInquirerUserActions = (print: () => void): UserActions => ({
 
   autocomplete: async (
     msg: string,
-    source: (answersSoFar: any, input: string) => Promise<string[]>,
+    source: (answersSoFar: unknown, input: string) => Promise<string[]>,
   ): Promise<string> => {
     const { answer } = await inquirer.prompt([
       {
