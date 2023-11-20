@@ -192,6 +192,7 @@ export const createStacksSchemas = (
     .max(100)
     .regex(/^(\/[a-zA-Z][a-zA-Z0-9-]*)+\.yml\/?/)
     .custom((value, helpers) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [path, regionPart] = value.split(".yml", 2)
       if (!regionPart) {
         return value
@@ -216,6 +217,7 @@ export const createStacksSchemas = (
     .max(100)
     .regex(/^(((\/|(\.\.\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\.yml\/?/)
     .custom((value, helpers) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [path, regionPart] = value.split(".yml", 2)
       if (!regionPart) {
         return value

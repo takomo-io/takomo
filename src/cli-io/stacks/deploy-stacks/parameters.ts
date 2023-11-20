@@ -44,7 +44,7 @@ export const collectRemovedParameters = (
           operation: "delete",
           currentNoEcho: noEcho,
           newNoEcho: false,
-        } as ParameterSpec),
+        }) as ParameterSpec,
     )
     .sort((a, b) => a.key.localeCompare(b.key))
 }
@@ -65,7 +65,7 @@ export const collectAddedParameters = (
           operation: "create",
           newNoEcho: noEcho,
           currentNoEcho: false,
-        } as ParameterSpec),
+        }) as ParameterSpec,
     )
     .sort((a, b) => a.key.localeCompare(b.key))
 }
@@ -99,7 +99,7 @@ export const collectUpdatedParameters = (
           operation: "update",
           newNoEcho: newParam.noEcho,
           currentNoEcho: existingParam?.noEcho || false,
-        } as ParameterSpec),
+        }) as ParameterSpec,
     )
     .sort((a, b) => a.key.localeCompare(b.key))
 }

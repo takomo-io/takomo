@@ -31,13 +31,13 @@ export const createTargetListenerInternal = (
     )
   }
 
-  const onGroupBegin = async (group: ConfigSetExecutionGroup<any>) => {
+  const onGroupBegin = async (group: ConfigSetExecutionGroup<unknown>) => {
     logger.info(
       `Process ${groupsName} '${group.id}' with ${group.targets.length} ${targetsName}`,
     )
   }
 
-  const onGroupComplete = async (group: ConfigSetExecutionGroup<any>) => {
+  const onGroupComplete = async (group: ConfigSetExecutionGroup<unknown>) => {
     logger.info(`Completed ${groupsName} '${group.id}'`)
   }
 

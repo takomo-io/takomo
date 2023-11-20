@@ -17,7 +17,7 @@ interface MessageProps {
 }
 
 export interface BaseIO extends UserActions {
-  print: (text?: any, ...optionalParams: any[]) => void
+  print: (text?: unknown, ...optionalParams: unknown[]) => void
   subheader: (props: MessageProps) => void
   header: (props: MessageProps) => void
   message: (props: MessageProps) => void

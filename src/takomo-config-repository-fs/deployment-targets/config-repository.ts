@@ -149,9 +149,8 @@ const loadExternallyPersistedDeploymentTargets = async (
 export const createFileSystemDeploymentTargetsConfigRepository = async (
   props: FileSystemDeploymentTargetsConfigRepositoryProps,
 ): Promise<DeploymentTargetsConfigRepository> => {
-  const stacksConfigRepository = await createFileSystemStacksConfigRepository(
-    props,
-  )
+  const stacksConfigRepository =
+    await createFileSystemStacksConfigRepository(props)
 
   const {
     projectDir,
@@ -229,9 +228,8 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
           cache,
         )
 
-      const externalConfigSets = await loadConfigSetsFromConfigSetsDir(
-        configSetsDir,
-      )
+      const externalConfigSets =
+        await loadConfigSetsFromConfigSetsDir(configSetsDir)
 
       const result = await buildDeploymentConfig(
         ctx,
