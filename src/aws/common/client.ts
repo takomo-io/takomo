@@ -1,4 +1,4 @@
-import { AwsCredentialIdentityProvider, Pluggable } from "@aws-sdk/types"
+import { AwsCredentialIdentityProvider } from "@aws-sdk/types"
 import { IPolicy } from "cockatiel"
 import { TkmLogger } from "../../utils/logging.js"
 import { Scheduler } from "../../utils/scheduler.js"
@@ -69,28 +69,6 @@ export interface ApiCallProps {
 
 export interface ClientListener {
   readonly onApiCall: (props: ApiCallProps) => void
-}
-
-export const pagedOperation = async <T, P, R extends PagedResponse>(
-  operation: (params: P) => Promise<R>,
-  params: P,
-  extractor: (response: R) => ReadonlyArray<T> | undefined,
-  nextToken?: string,
-): Promise<ReadonlyArray<T>> => {
-  const response = await operation({
-    ...params,
-    NextToken: nextToken,
-  })
-
-  const items = extractor(response) || []
-  if (!response.NextToken) {
-    return items
-  }
-
-  return [
-    ...items,
-    ...(await pagedOperation(operation, params, extractor, response.NextToken)),
-  ]
 }
 
 export const withClientScheduler = <C, T>(
