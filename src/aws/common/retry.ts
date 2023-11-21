@@ -12,6 +12,20 @@ const ADDITIONAL_RETRYABLE_ERROR_CODES = [
   "TimeoutError",
 ]
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const decideByLowLevelError = (logger: TkmLogger, error: any): boolean => {
+  // Fix for random ENOTFOUND errors, see https://github.com/aws/aws-sdk-js-v3/issues/5236
+  if (
+    (error.code && error.code === "ENOTFOUND") ||
+    `${error}`.includes("ENOTFOUND")
+  ) {
+    logger.warn(`Retry low level nodejs error: ${error}`)
+    return true
+  }
+
+  return false
+}
+
 export const customRetryStrategy = (logger: TkmLogger): RetryStrategy => {
   return new StandardRetryStrategy(async () => 30, {
     retryDecider: (error) => {
@@ -28,7 +42,14 @@ export const customRetryStrategy = (logger: TkmLogger): RetryStrategy => {
         `Retry decision from additional error codes: ${additionalRetryableErrorCodesDecision}`,
       )
 
-      return defaultRetryDecision || additionalRetryableErrorCodesDecision
+      const lowLevelDecision = decideByLowLevelError(logger, error)
+      logger.trace(`Retry decision from low level error: ${lowLevelDecision}`)
+
+      return (
+        defaultRetryDecision ||
+        additionalRetryableErrorCodesDecision ||
+        lowLevelDecision
+      )
     },
     delayDecider: (delayBase, attempts) => {
       const expBackoff = Math.pow(2, attempts)
