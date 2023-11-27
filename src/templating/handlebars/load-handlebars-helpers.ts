@@ -11,7 +11,8 @@ export const loadHandlebarsHelpers = async (
 ): Promise<void> => {
   for (const helpersDir of helpersDirs) {
     if (!(await dirExists(helpersDir))) {
-      throw new TakomoError(`Helpers dir ${helpersDir} does not exists`)
+      logger.warn(`Helpers dir ${helpersDir} does not exist`)
+      continue
     }
 
     const helperFiles = await readdirp.promise(helpersDir, {

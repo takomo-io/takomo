@@ -12,12 +12,15 @@ import { loadHandlebarsPartials } from "./load-handlebars-partials.js"
 
 export interface HandlebarsTemplateEngineProviderProps {
   /**
-   * List of directories from where to load Handlebars partial files.
+   * List of file paths to directories from where to load Handlebars partial files.
+   * The file paths can be absolute or relative to the current project dir.
+   * Non-existing file paths are ignored.
    */
   readonly partialsDirs?: ReadonlyArray<FilePath>
-
   /**
-   * List of directories from where to load Handlebars helpers implemented with plain JavaScript.
+   * List of file paths to directories from where to load Handlebars helpers
+   * implemented with plain JavaScript. The file paths can be absolute or relative
+   * to the current project dir. Non-existing file paths are ignored.
    */
   readonly helpersDirs?: ReadonlyArray<FilePath>
   /**
