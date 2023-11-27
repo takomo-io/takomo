@@ -84,6 +84,12 @@ export {
   TemplateEngineProvider,
 } from "./templating/template-engine-provider.js"
 export {
+  HandlebarsSafeString,
+  HandlebarsCompileOptions,
+  HandlebarsHelperOptions,
+  HandlebarsTemplateDelegate,
+} from "./templating/handlebars/handlebars-template-engine.js"
+export {
   RenderTemplateFileProps,
   RenderTemplateProps,
   TemplateEngine,

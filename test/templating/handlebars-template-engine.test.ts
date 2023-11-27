@@ -61,4 +61,36 @@ describe("HandlebarsTemplateEngine", () => {
       expect(rendered).toEqual("Beware of Zorro")
     })
   })
+
+  describe("#safeString", () => {
+    test("success", () => {
+      const te = templateEngine()
+      const ss = te.safeString("My string")
+      expect(ss.toString()).toStrictEqual("My string")
+      expect(ss.toHTML()).toStrictEqual("My string")
+    })
+  })
+
+  describe("#compile", () => {
+    test("static template", () => {
+      const te = templateEngine()
+      const template = te.compile("Nothing to see here")
+      expect(template({})).toStrictEqual("Nothing to see here")
+    })
+    test("simple variable", () => {
+      const te = templateEngine()
+      const template = te.compile("Hello {{name}}!")
+      expect(template({ name: "Geralt" })).toStrictEqual("Hello Geralt!")
+    })
+    test("html with default options", () => {
+      const te = templateEngine()
+      const template = te.compile("<div></div>")
+      expect(template({})).toStrictEqual("<div></div>")
+    })
+    test("html with no escape option", () => {
+      const te = templateEngine()
+      const template = te.compile("<div></div>", { noEscape: true })
+      expect(template({})).toStrictEqual("<div></div>")
+    })
+  })
 })

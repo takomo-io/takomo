@@ -76,7 +76,12 @@ export class HandlebarsTemplateEngineProvider
 
     const helpers = await Promise.all(
       this.#helperProviders.map((provider) =>
-        provider.init({ projectDir, logger }),
+        provider.init({
+          projectDir,
+          logger,
+          safeString: te.safeString,
+          compile: te.compile,
+        }),
       ),
     )
 
