@@ -1,4 +1,4 @@
-import { Policy } from "cockatiel"
+import { bulkhead } from "cockatiel"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
 import { StackPath } from "../../../stacks/stack.js"
 import { resolveCommandOutputBase } from "../../../takomo-core/command.js"
@@ -47,14 +47,14 @@ export const executeUndeployContext = async (
     plan.operations.length,
   )
 
-  const bulkhead = Policy.bulkhead(ctx.concurrentStacks, 1000)
+  const bh = bulkhead(ctx.concurrentStacks, 1000)
 
   const executions = operations.reduce((executions, operation) => {
     const dependents = ignoreDependencies
       ? []
       : operation.dependents.map((d) => executions.get(d)!)
 
-    const execution = bulkhead.execute(() =>
+    const execution = bh.execute(() =>
       deleteStack(
         timer,
         ctx,

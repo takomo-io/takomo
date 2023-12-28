@@ -1,4 +1,4 @@
-import { Policy } from "cockatiel"
+import { bulkhead } from "cockatiel"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
 import { StackPath } from "../../../stacks/stack.js"
 import {
@@ -40,7 +40,7 @@ const executeStacksInParallel = async (
   stacksOperationListener: StacksOperationListener,
   expectNoChanges: boolean,
 ): Promise<StacksOperationOutput> => {
-  const bulkhead = Policy.bulkhead(ctx.concurrentStacks, 1000)
+  const bh = bulkhead(ctx.concurrentStacks, 1000)
 
   const executions = operations.reduce((executions, operation) => {
     const { stack, type, currentStack } = operation
@@ -57,7 +57,7 @@ const executeStacksInParallel = async (
           return dependency
         })
 
-    const execution = bulkhead.execute(() =>
+    const execution = bh.execute(() =>
       deployStack(
         timer,
         ctx,
