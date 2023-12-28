@@ -1,4 +1,4 @@
-import { IPolicy, Policy } from "cockatiel"
+import { IPolicy, bulkhead } from "cockatiel"
 import { InternalCredentialManager } from "../../../aws/common/credentials.js"
 import { ConfigSetContext } from "../../../config-sets/config-set-model.js"
 import {
@@ -91,7 +91,7 @@ export const executeGroup = async <R extends CommandOutput, C>({
 }: ExecuteGroupProps<R, C>): Promise<ConfigSetGroupExecutionResult<R>> => {
   await targetListener.onGroupBegin(group)
 
-  const policy = Policy.bulkhead(concurrentTargets, 10000)
+  const policy = bulkhead(concurrentTargets, 10000)
   const results = new Array<ConfigSetTargetExecutionResult<R>>()
 
   const operations = group.targets.map((target) =>

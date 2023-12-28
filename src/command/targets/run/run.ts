@@ -1,6 +1,6 @@
 import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { exec } from "child_process"
-import { IPolicy, Policy } from "cockatiel"
+import { IPolicy, bulkhead } from "cockatiel"
 import { extname } from "path"
 import * as R from "ramda"
 import { promisify } from "util"
@@ -342,6 +342,7 @@ export const processDeploymentTarget = async (
       timer: timer.stop(),
       value,
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     logger.error(`Map command failed for target '${target.name}'`, error)
     return {
@@ -399,7 +400,7 @@ export const processDeploymentGroup = async (
   io.info(`Run deployment group: ${group.path}`)
   const results = new Array<DeploymentTargetRunResult>()
 
-  const deploymentPolicy = Policy.bulkhead(concurrentTargets, 10000)
+  const deploymentPolicy = bulkhead(concurrentTargets, 10000)
 
   const operations = group.targets.map((target) =>
     convertToOperation(
@@ -519,6 +520,7 @@ export const run = async (
       timer: childTimer.stop(),
       outputFormat: input.outputFormat,
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     io.error(`Reduce command failed`, error)
     return {

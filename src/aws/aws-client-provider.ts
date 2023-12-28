@@ -1,4 +1,4 @@
-import { IPolicy, Policy } from "cockatiel"
+import { IPolicy, bulkhead } from "cockatiel"
 import { TkmLogger } from "../utils/logging.js"
 import { createScheduler, Scheduler } from "../utils/scheduler.js"
 import { checksum } from "../utils/strings.js"
@@ -54,7 +54,7 @@ interface AwsClientProviderProps {
 const createDescribeEventsBulkhead = (): IPolicy => {
   const limit = 2
   const queue = 1000
-  return Policy.bulkhead(limit, queue)
+  return bulkhead(limit, queue)
 }
 
 const createGetTemplateSummaryScheduler = (logger: TkmLogger): Scheduler =>
@@ -69,7 +69,7 @@ const createGetTemplateSummaryScheduler = (logger: TkmLogger): Scheduler =>
 const createValidateTemplateBulkhead = (): IPolicy => {
   const limit = 4
   const queue = 1000
-  return Policy.bulkhead(limit, queue)
+  return bulkhead(limit, queue)
 }
 
 interface ConcurrencyControls {
