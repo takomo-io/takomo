@@ -229,7 +229,7 @@ describe("#loadProjectConfig", () => {
     )
 
     const expected: InternalTakomoProjectConfig = {
-      requiredVersion: ">1.0.0 || >=6.0.0-alpha.0",
+      requiredVersion: ">1.0.0 || >=7.0.0-alpha.0",
       deploymentTargets: undefined,
       regions: ["eu-central-1", "eu-west-1", "us-east-1"],
       resolvers: [],
