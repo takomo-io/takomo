@@ -37,13 +37,14 @@ import { parseLogLevel } from "./options/parse-log-level.js"
 import { parseOutputFormat } from "./options/parse-output-format.js"
 import { parseVarArgs } from "./options/parse-var-args.js"
 import { parseVarFileOptions } from "./options/parse-var-file-options.js"
+import _ from "lodash"
 
 export interface RunProps {
   readonly overridingHandler?: (args: Arguments) => void
   readonly showHelpOnFail?: boolean
 }
 
-const resolveProjectDir = (projectDirArg: any): FilePath => {
+const resolveProjectDir = (projectDirArg: unknown): FilePath => {
   if (projectDirArg) {
     const projectDir = projectDirArg.toString()
     return expandFilePath(process.cwd(), projectDir)
@@ -53,6 +54,7 @@ const resolveProjectDir = (projectDirArg: any): FilePath => {
 }
 
 export const initCommandContext = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   argv: any,
   credentials?: AwsCredentialIdentity,
 ): Promise<FileSystemCommandContext> => {
@@ -114,6 +116,7 @@ export const initCommandContext = async (
   })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const onError = (e: any): void => {
   console.log()
   console.log(red("ERROR"))
@@ -133,7 +136,7 @@ export const onError = (e: any): void => {
       console.log()
       console.log(red("[!] How to fix:"))
       console.log()
-      e.instructions.forEach((instruction: any) => {
+      e.instructions.forEach((instruction: unknown) => {
         console.log(red(`  - ${instruction}`))
       })
     }
@@ -219,14 +222,14 @@ export const onComplete = async ({
 
     const allApiCalls = ctx.awsClientProvider.getApiCalls()
 
-    const apiCallsByClient = R.groupBy(R.prop("clientId"), allApiCalls)
+    const apiCallsByClient = _.groupBy(allApiCalls, "clientId")
     const clientIds = Object.keys(apiCallsByClient).sort()
     clientIds.forEach((clientId) => {
       clientsTable.cell("Client id", clientId).newRow()
       const clientApiCalls = apiCallsByClient[clientId]
-      const clientApiCallsByAction: Record<string, ApiCallProps[]> = R.groupBy(
-        (a) => `${a.api}:${a.action}`,
+      const clientApiCallsByAction: Record<string, ApiCallProps[]> = _.groupBy(
         clientApiCalls,
+        (a) => `${a.api}:${a.action}`,
       )
       const actionNames = Object.keys(clientApiCallsByAction).sort()
       actionNames.forEach((actionName) => {
@@ -252,9 +255,9 @@ export const onComplete = async ({
 
     clientsTable.newRow().cell("Client id", "Total").newRow()
 
-    const totalApiCallsByAction: Record<string, ApiCallProps[]> = R.groupBy(
-      (a) => `${a.api}:${a.action}`,
+    const totalApiCallsByAction: Record<string, ApiCallProps[]> = _.groupBy(
       allApiCalls,
+      (a) => `${a.api}:${a.action}`,
     )
     Object.keys(totalApiCallsByAction)
       .sort()
@@ -359,6 +362,7 @@ interface HandleProps<
   IN extends CommandInput,
   OUT extends CommandOutput,
 > {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   argv: any
   input?: (ctx: FileSystemCommandContext, input: CommandInput) => Promise<IN>
   io: (ctx: FileSystemCommandContext, logger: TkmLogger) => I

@@ -1,6 +1,6 @@
 import { LogLevel } from "../../utils/logging.js"
 
-export const parseLogLevel = (log: string, quiet: boolean): LogLevel => {
+export const parseLogLevel = (log: unknown, quiet: boolean): LogLevel => {
   if (quiet) {
     return "none"
   }
