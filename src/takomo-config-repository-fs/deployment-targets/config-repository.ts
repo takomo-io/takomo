@@ -10,7 +10,7 @@ import {
   DeploymentTargetRepository,
 } from "../../takomo-deployment-targets-repository/index.js"
 import { StacksConfigRepository } from "../../takomo-stacks-context/index.js"
-
+import _ from "lodash"
 import { CredentialManager } from "../../aws/common/credentials.js"
 import { Cache } from "../../caches/cache.js"
 import { ConfigSetName } from "../../config-sets/config-set-model.js"
@@ -139,9 +139,7 @@ const loadExternallyPersistedDeploymentTargets = async (
 
   return new Map(
     Array.from(
-      Object.entries(
-        R.groupBy(R.prop("deploymentGroupPath"), mergedDeploymentTargets),
-      ),
+      Object.entries(_.groupBy(mergedDeploymentTargets, "deploymentGroupPath")),
     ),
   )
 }

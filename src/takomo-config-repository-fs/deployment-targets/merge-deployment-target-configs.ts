@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import { DeploymentTargetConfigItem } from "../../takomo-deployment-targets-repository/index.js"
 import { mergeArrays } from "../../utils/collections.js"
 import { merge } from "../../utils/objects.js"
@@ -37,7 +37,7 @@ const mergeDeploymentTargetConfigsInternal = ([
 export const mergeDeploymentTargetConfigs = (
   items: ReadonlyArray<DeploymentTargetConfigItem>,
 ): ReadonlyArray<DeploymentTargetConfigItem> => {
-  const itemsByName = R.groupBy(R.prop("name"), items)
+  const itemsByName = _.groupBy(items, "name")
   return Array.from(Object.values(itemsByName)).map(
     mergeDeploymentTargetConfigsInternal,
   )

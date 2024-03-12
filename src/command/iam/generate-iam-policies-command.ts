@@ -1,6 +1,6 @@
 import Joi, { AnySchema } from "joi"
 import * as R from "ramda"
-
+import _ from "lodash"
 import { AwsClientProvider } from "../../aws/aws-client-provider.js"
 import { CloudTrailEvent } from "../../aws/cloudtrail/model.js"
 import { CredentialManager } from "../../aws/common/credentials.js"
@@ -163,9 +163,9 @@ const generateIamPolicies = async (
     [],
   )
 
-  const eventsByIdentity = R.groupBy(
-    (e) => e.cloudTrailEvent.userIdentity?.arn,
+  const eventsByIdentity = _.groupBy(
     events,
+    (e) => e.cloudTrailEvent.userIdentity?.arn,
   )
 
   const policies = Object.entries(eventsByIdentity)
