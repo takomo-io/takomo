@@ -1,19 +1,19 @@
 import * as R from "ramda"
-import {
-  DetailedChangeSet,
-  LogicalResourceId,
-  ResourceChangeAction,
-  ResourceChangeReplacement,
-} from "../../../aws/cloudformation/model.js"
+import { DetailedChangeSet } from "../../../aws/cloudformation/model.js"
 import { bold, green, orange, red, yellow } from "../../../utils/colors.js"
 import { BaseIO } from "../../cli-io.js"
+import {
+  ChangeAction,
+  Replacement,
+  ResourceAttribute,
+} from "@aws-sdk/client-cloudformation"
 
 type ResourceOperation = "update" | "create" | "remove" | "replace"
 
 export const formatResourceChange = (
-  action: ResourceChangeAction,
-  replacement: ResourceChangeReplacement,
-  logicalResourceId: LogicalResourceId,
+  action: ChangeAction,
+  replacement: Replacement,
+  logicalResourceId: string,
   columnLength: number,
 ): string => {
   switch (action) {
@@ -39,26 +39,39 @@ export const formatResourceChange = (
   }
 }
 
+// TODO: add support for ChangeAction.Dynamic and ChangeAction.Import
 const resolveResourceOperation = (
-  action: ResourceChangeAction,
-  replacement: ResourceChangeReplacement,
+  action: ChangeAction,
+  replacement: Replacement,
 ): ResourceOperation => {
   switch (action) {
-    case "Add":
+    case ChangeAction.Add:
       return "create"
-    case "Modify":
-      if (replacement === "True") {
+    case ChangeAction.Modify:
+      if (replacement === Replacement.True) {
         return "replace"
-      } else if (replacement === "Conditional") {
+      } else if (replacement === Replacement.Conditional) {
         return "replace"
       } else {
         return "update"
       }
-    case "Remove":
+    case ChangeAction.Remove:
       return "remove"
     default:
       throw new Error(`Unsupported change action: ${action}`)
   }
+}
+
+const printAttributeAfterValue = (value: string | undefined): string => {
+  if (!value) {
+    return "<undefined>"
+  }
+
+  if (value === "{{changeSet:KNOWN_AFTER_APPLY}}") {
+    return "<known after deploy>"
+  }
+
+  return value
 }
 
 export const printResources = (
@@ -76,7 +89,7 @@ export const printResources = (
 
   const maxResourceNameLength = R.apply(
     Math.max,
-    changes.map((c) => c.resourceChange.logicalResourceId.length),
+    changes.map((c) => c.ResourceChange!.LogicalResourceId!.length),
   )
 
   const resourceNameColumnLength = Math.max(27, maxResourceNameLength)
@@ -88,62 +101,90 @@ export const printResources = (
 
   changes.forEach((change) => {
     const {
-      logicalResourceId,
-      action,
-      replacement,
-      scope,
-      physicalResourceId,
-      resourceType,
-      details,
-    } = change.resourceChange
+      LogicalResourceId,
+      Action,
+      Replacement,
+      Scope = [],
+      PhysicalResourceId,
+      ResourceType,
+      Details = [],
+    } = change.ResourceChange!
 
     io.message({
       text: formatResourceChange(
-        action,
-        replacement,
-        logicalResourceId,
+        Action!,
+        Replacement!,
+        LogicalResourceId!,
         resourceNameColumnLength,
       ),
       marginTop: true,
     })
-    io.message({ text: `      type:                      ${resourceType}` })
+    io.message({ text: `      type:                      ${ResourceType}` })
     io.message({
       text: `      physical id:               ${
-        physicalResourceId || "<known after deploy>"
+        PhysicalResourceId ?? "<known after deploy>"
       }`,
     })
 
-    if (replacement) {
-      io.message({ text: `      replacement:               ${replacement}` })
+    if (Replacement) {
+      io.message({ text: `      replacement:               ${Replacement}` })
     }
 
-    if (scope.length > 0) {
-      io.message({ text: `      scope:                     ${scope}` })
+    if (Scope.length > 0) {
+      io.message({ text: `      scope:                     ${Scope}` })
     }
 
-    if (details.length > 0) {
+    if (Details.length > 0) {
       io.message({ text: `      details:` })
-      details.forEach((detail) => {
+      Details.forEach((detail) => {
         io.message({
-          text: `        - causing entity:        ${detail.causingEntity}`,
+          text: `        - causing entity:        ${detail.CausingEntity}`,
+          marginTop: true,
         })
         io.message({
-          text: `          evaluation:            ${detail.evaluation}`,
+          text: `          evaluation:            ${detail.Evaluation}`,
         })
         io.message({
-          text: `          change source:         ${detail.changeSource}`,
+          text: `          change source:         ${detail.ChangeSource}`,
         })
 
-        if (detail.target) {
-          io.message({ text: `          target:` })
+        if (detail.Target) {
+          io.message({ text: `target:`, indent: 10 })
           io.message({
-            text: `            attribute:           ${detail.target.attribute}`,
+            text: `attribute:           ${detail.Target.Attribute}`,
+            indent: 12,
           })
+
+          if (detail.Target.Attribute === ResourceAttribute.Properties) {
+            io.message({
+              text: `property name:       ${detail.Target.Name}`,
+              indent: 12,
+            })
+          }
+
           io.message({
-            text: `            name:                ${detail.target.name}`,
+            text: `path:                ${detail.Target.Path}`,
+            indent: 12,
           })
+
           io.message({
-            text: `            require recreation:  ${detail.target.requiresRecreation}`,
+            text: `change type:         ${detail.Target.AttributeChangeType}`,
+            indent: 12,
+          })
+
+          io.message({
+            text: `before value:        ${detail.Target.BeforeValue}`,
+            indent: 12,
+          })
+
+          io.message({
+            text: `after value:         ${printAttributeAfterValue(detail.Target.AfterValue)}`,
+            indent: 12,
+          })
+
+          io.message({
+            text: `require recreation:  ${detail.Target.RequiresRecreation}`,
+            indent: 12,
           })
         } else {
           io.message({ text: `          target:                undefined` })
@@ -159,8 +200,8 @@ export const printResources = (
   const operationCounts = R.countBy(
     (c) =>
       resolveResourceOperation(
-        c.resourceChange.action,
-        c.resourceChange.replacement,
+        c.ResourceChange!.Action!,
+        c.ResourceChange!.Replacement!,
       ),
     changes,
   )

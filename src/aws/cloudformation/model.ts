@@ -2,6 +2,14 @@
  * CloudFormation stack id.
  */
 import { ClientRequestToken, Tag } from "../common/model.js"
+import {
+  Change,
+  ChangeAction,
+  ChangeSetStatus,
+  Replacement,
+  RequiresRecreation,
+  ResourceAttribute,
+} from "@aws-sdk/client-cloudformation"
 
 export type StackId = string
 
@@ -296,20 +304,6 @@ export type ChangeSetId = string
 export type ChangeSetName = string
 export type ChangeSetStatusReason = string
 export type ChangeSetType = "CREATE" | "UPDATE"
-export type ChangeSetStatus =
-  | "CREATE_PENDING"
-  | "CREATE_IN_PROGRESS"
-  | "CREATE_COMPLETE"
-  | "DELETE_COMPLETE"
-  | "FAILED"
-
-export type ResourceAttribute =
-  | "Properties"
-  | "Metadata"
-  | "CreationPolicy"
-  | "UpdatePolicy"
-  | "DeletionPolicy"
-  | "Tags"
 
 export type ChangeSource =
   | "ResourceReference"
@@ -319,7 +313,6 @@ export type ChangeSource =
   | "Automatic"
 
 export type CausingEntity = string
-export type RequiresRecreation = "Never" | "Conditionally" | "Always"
 export type PropertyName = string
 export type EvaluationType = "Static" | "Dynamic"
 
@@ -336,23 +329,14 @@ export interface ResourceChangeDetail {
   readonly causingEntity?: CausingEntity
 }
 
-export type ChangeType = "Resource"
-export type ResourceChangeAction = "Add" | "Modify" | "Remove" | "Import"
-export type ResourceChangeReplacement = "True" | "False" | "Conditional"
-
 export interface ResourceChange {
-  readonly action: ResourceChangeAction
+  readonly action: ChangeAction
   readonly logicalResourceId: LogicalResourceId
   readonly physicalResourceId?: PhysicalResourceId
   readonly resourceType: ResourceType
-  readonly replacement: ResourceChangeReplacement
+  readonly replacement: Replacement
   readonly scope: ReadonlyArray<ResourceAttribute>
   readonly details: ReadonlyArray<ResourceChangeDetail>
-}
-
-export interface Change {
-  readonly type: ChangeType
-  readonly resourceChange: ResourceChange
 }
 
 export interface BaseChangeSet<P> {

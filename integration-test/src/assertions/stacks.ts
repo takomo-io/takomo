@@ -451,7 +451,7 @@ const createStackResultsMatcher = (
         iamRoleArn: `arn:aws:iam::${accountId}:role/${roleName}`,
       }
 
-      const [stack, stackPolicy]: [any, any] = await Promise.all([
+      const [stack, stackPolicy] = await Promise.all([
         aws.cloudFormation.describeStack(params),
         aws.cloudFormation.getStackPolicy(params),
       ])
@@ -460,7 +460,7 @@ const createStackResultsMatcher = (
         if (expected) {
           for (const [key, value] of Object.entries(expected)) {
             if (value !== undefined && value !== null) {
-              expect(stack[key]).toStrictEqual(value)
+              expect(stack[key as keyof Stack]).toStrictEqual(value)
             }
           }
         }
@@ -470,8 +470,8 @@ const createStackResultsMatcher = (
         }
 
         if (expectedTags) {
-          const actual = stack["Tags"].reduce(
-            (collected: any, tag: any) => ({
+          const actual = stack["Tags"]?.reduce(
+            (collected, tag) => ({
               ...collected,
               [tag.Key!]: tag.Value!,
             }),
@@ -482,8 +482,8 @@ const createStackResultsMatcher = (
         }
 
         if (expectedOutputs) {
-          const actual = stack["Outputs"].reduce(
-            (collected: any, output: any) => ({
+          const actual = stack["Outputs"]?.reduce(
+            (collected, output) => ({
               ...collected,
               [output.OutputKey!]: output.OutputValue!,
             }),
@@ -557,7 +557,7 @@ export interface StacksOperationOutputMatcher {
   expectCommandToSkip: (message: string) => StackResultsMatcher
   expectCommandToFail: (message: string) => StackResultsMatcher
   expectCommandToCancel: () => StackResultsMatcher
-  expectCommandToThrow: (error: any) => Promise<void>
+  expectCommandToThrow: (error: Error | string) => Promise<void>
 }
 
 export interface ListStacksOutputMatcher {
@@ -601,7 +601,7 @@ export const createStacksOperationOutputMatcher = (
       expect(output.error).toBeUndefined()
     })
 
-  const expectCommandToThrow = async (error: any): Promise<void> => {
+  const expectCommandToThrow = async (error: Error | string): Promise<void> => {
     await expect(executor).rejects.toThrow(error)
   }
 
