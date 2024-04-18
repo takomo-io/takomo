@@ -36,7 +36,7 @@ export interface TargetsOperationOutputMatcher {
   readonly expectCommandToSucceed: () => DeploymentGroupResultMatcher
   readonly expectCommandToFail: () => DeploymentGroupResultMatcher
   readonly expectCommandToSkip: () => DeploymentGroupResultMatcher
-  readonly expectCommandToThrow: (error: any) => Promise<void>
+  readonly expectCommandToThrow: (error: Error | string) => Promise<void>
 }
 
 export interface ExpectStackResultProps {
@@ -324,7 +324,7 @@ export const createTargetsOperationOutputMatcher = (
       expect(output.error).toBeUndefined()
     })
 
-  const expectCommandToThrow = async (error: any): Promise<void> => {
+  const expectCommandToThrow = async (error: Error | string): Promise<void> => {
     if (typeof error === "string") {
       await expect(executor).rejects.toThrow(error)
     } else {

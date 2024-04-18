@@ -1,30 +1,19 @@
 import * as CF from "@aws-sdk/client-cloudformation"
 import { ClientRequestToken, TagKey, TagValue } from "../common/model.js"
 import {
-  CausingEntity,
   ChangeSet,
   ChangeSetId,
   ChangeSetName,
-  ChangeSetStatus,
   ChangeSetStatusReason,
-  ChangeSource,
-  ChangeType,
   CloudFormationStack,
   DetailedCloudFormationStackSummary,
   EnableTerminationProtection,
-  EvaluationType,
   EventId,
   LogicalResourceId,
   PhysicalResourceId,
-  PropertyName,
-  RequiresRecreation,
-  ResourceAttribute,
-  ResourceChangeAction,
-  ResourceChangeReplacement,
   ResourceProperties,
   ResourceStatus,
   ResourceStatusReason,
-  ResourceTargetDefinition,
   ResourceType,
   StackCapability,
   StackDriftDetectionId,
@@ -93,25 +82,11 @@ export const convertStack = ({
   return convertStackInternal(s)
 }
 
-const convertResourceChangeTarget = (
-  target?: CF.ResourceTargetDefinition,
-): ResourceTargetDefinition | undefined => {
-  if (!target) {
-    return undefined
-  }
-
-  return {
-    attribute: target.Attribute as ResourceAttribute,
-    name: target.Name as PropertyName,
-    requiresRecreation: target.RequiresRecreation as RequiresRecreation,
-  }
-}
-
 export const convertChangeSet = (o: CF.DescribeChangeSetOutput): ChangeSet => ({
   id: o.ChangeSetId as ChangeSetId,
   name: o.ChangeSetName as ChangeSetName,
   stackId: o.StackId as StackId,
-  status: o.Status as ChangeSetStatus,
+  status: o.Status!,
   statusReason: o.StatusReason as ChangeSetStatusReason,
   parameters: (o.Parameters ?? []).map((p) => ({
     key: p.ParameterKey as StackParameterKey,
@@ -121,26 +96,7 @@ export const convertChangeSet = (o: CF.DescribeChangeSetOutput): ChangeSet => ({
     key: t.Key as TagKey,
     value: t.Value as TagValue,
   })),
-  changes: (o.Changes ?? []).map((c) => ({
-    type: c.Type as ChangeType,
-    resourceChange: {
-      action: c.ResourceChange?.Action as ResourceChangeAction,
-      logicalResourceId: c.ResourceChange
-        ?.LogicalResourceId as LogicalResourceId,
-      physicalResourceId: c.ResourceChange
-        ?.PhysicalResourceId as PhysicalResourceId,
-      resourceType: c.ResourceChange?.ResourceType as ResourceType,
-      replacement: c.ResourceChange?.Replacement as ResourceChangeReplacement,
-      scope: c.ResourceChange?.Scope?.map((a) => a as ResourceAttribute) ?? [],
-      details:
-        c.ResourceChange?.Details?.map((d) => ({
-          target: convertResourceChangeTarget(d.Target),
-          evaluation: d.Evaluation as EvaluationType,
-          causingEntity: d.CausingEntity as CausingEntity,
-          changeSource: d.ChangeSource as ChangeSource,
-        })) ?? [],
-    },
-  })),
+  changes: o.Changes ?? [],
 })
 
 export const convertTemplateSummary = ({

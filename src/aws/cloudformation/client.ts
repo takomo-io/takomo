@@ -375,31 +375,32 @@ export const createCloudFormationClient = (
   const createChangeSet = (
     params: CreateChangeSetInput,
   ): Promise<ChangeSetId> =>
-    client.createChangeSet(params).then((res) => res.Id!)
+    client
+      .createChangeSet({ ...params, Description: "Created with Takomo" })
+      .then((res) => res.Id!)
 
   const deleteChangeSet = (
     stackName: string,
     changeSetName: string,
-  ): Promise<boolean> => {
-    const params = {
-      StackName: stackName,
-      ChangeSetName: changeSetName,
-    }
-
-    return client.deleteChangeSet(params).then(() => true)
-  }
+  ): Promise<boolean> =>
+    client
+      .deleteChangeSet({
+        StackName: stackName,
+        ChangeSetName: changeSetName,
+      })
+      .then(() => true)
 
   const describeChangeSet = (
     stackName: string,
     changeSetName: string,
-  ): Promise<ChangeSet> => {
-    const params = {
-      ChangeSetName: changeSetName,
-      StackName: stackName,
-    }
-
-    return client.describeChangeSet(params).then(convertChangeSet)
-  }
+  ): Promise<ChangeSet> =>
+    client
+      .describeChangeSet({
+        ChangeSetName: changeSetName,
+        StackName: stackName,
+        IncludePropertyValues: true,
+      })
+      .then(convertChangeSet)
 
   const waitUntilChangeSetIsReady = async (
     stackName: string,

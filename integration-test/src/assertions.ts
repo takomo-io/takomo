@@ -2,7 +2,9 @@ import { toPrettyJson } from "../../src/utils/json.js"
 
 const assertRecursivelyInternal = (
   path: ReadonlyArray<string>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   actual: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expected: any,
 ): string | undefined => {
   const actualType = typeof actual
