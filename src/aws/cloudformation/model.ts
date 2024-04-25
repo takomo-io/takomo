@@ -2,14 +2,7 @@
  * CloudFormation stack id.
  */
 import { ClientRequestToken, Tag } from "../common/model.js"
-import {
-  Change,
-  ChangeAction,
-  ChangeSetStatus,
-  Replacement,
-  RequiresRecreation,
-  ResourceAttribute,
-} from "@aws-sdk/client-cloudformation"
+import { Change, ChangeSetStatus } from "@aws-sdk/client-cloudformation"
 
 export type StackId = string
 
@@ -315,29 +308,6 @@ export type ChangeSource =
 export type CausingEntity = string
 export type PropertyName = string
 export type EvaluationType = "Static" | "Dynamic"
-
-export interface ResourceTargetDefinition {
-  readonly attribute: ResourceAttribute
-  readonly name: PropertyName
-  readonly requiresRecreation: RequiresRecreation
-}
-
-export interface ResourceChangeDetail {
-  readonly target?: ResourceTargetDefinition
-  readonly evaluation: EvaluationType
-  readonly changeSource: ChangeSource
-  readonly causingEntity?: CausingEntity
-}
-
-export interface ResourceChange {
-  readonly action: ChangeAction
-  readonly logicalResourceId: LogicalResourceId
-  readonly physicalResourceId?: PhysicalResourceId
-  readonly resourceType: ResourceType
-  readonly replacement: Replacement
-  readonly scope: ReadonlyArray<ResourceAttribute>
-  readonly details: ReadonlyArray<ResourceChangeDetail>
-}
 
 export interface BaseChangeSet<P> {
   readonly id: ChangeSetId
