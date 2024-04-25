@@ -17,7 +17,7 @@ const provider: TakomoConfigProvider = async (): Promise<TakomoConfig> => {
         }: RenderTemplateProps) => {
           let rendered = templateString
           for (const [key, value] of Array.from(
-            Object.entries((variables as any).var),
+            Object.entries((variables as Record<string, unknown>).var),
           )) {
             while (rendered.includes(`@var.${key}@`)) {
               rendered = rendered.replace(`@var.${key}@`, `${value}`)
@@ -32,7 +32,11 @@ const provider: TakomoConfigProvider = async (): Promise<TakomoConfig> => {
           variables,
         }: RenderTemplateFileProps) => {
           const templateString = await readFileContents(pathToFile)
-          return renderTemplate({ templateString, variables })
+          return renderTemplate({
+            templateString,
+            variables,
+            sourceDescription: "",
+          })
         }
 
         return {
