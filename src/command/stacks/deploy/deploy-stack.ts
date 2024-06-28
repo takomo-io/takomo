@@ -1,7 +1,7 @@
 import { CloudFormationStackSummary } from "../../../aws/cloudformation/model.js"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
 import { InternalStack } from "../../../stacks/stack.js"
-import { StacksConfigRepository } from "../../../takomo-stacks-context/index.js"
+import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { Timer } from "../../../utils/timer.js"
 import { StackOperationType, StackResult } from "../../command-model.js"

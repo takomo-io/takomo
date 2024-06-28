@@ -5,7 +5,7 @@ import {
   OutputFormat,
   resolveCommandOutputBase,
 } from "../../../takomo-core/command.js"
-import { StacksConfigRepository } from "../../../takomo-stacks-context/index.js"
+import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { Timer } from "../../../utils/timer.js"
 import { StackResult } from "../../command-model.js"
 import { StacksOperationListener } from "../common/model.js"

@@ -3,16 +3,14 @@ import { CommandContext } from "../../../context/command-context.js"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
 import { createStacksSchemas } from "../../../schema/stacks-schema.js"
 import { CommandHandler } from "../../../takomo-core/command.js"
-import {
-  buildStacksContext,
-  StacksConfigRepository,
-} from "../../../takomo-stacks-context/index.js"
+import { buildStacksContext } from "../../../takomo-stacks-context/config/build-stacks-context.js"
 import { validateInput } from "../../../utils/validation.js"
 import { StacksDeployOperationInput, StacksOperationOutput } from "../model.js"
 import { executeDeployContext } from "./execute-deploy-context.js"
 import { DeployStacksIO } from "./model.js"
 import { buildStacksDeployPlan } from "./plan.js"
 import { validateStacksDeployPlan } from "./validate.js"
+import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 
 const modifyInput = async (
   input: StacksDeployOperationInput,

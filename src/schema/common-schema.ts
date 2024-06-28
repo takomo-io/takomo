@@ -1,4 +1,5 @@
 import Joi, { AnySchema, ObjectSchema, StringSchema } from "joi"
+import { getErrorMessage } from "../utils/errors.js"
 
 export interface CommonSchema {
   readonly data: ObjectSchema
@@ -37,8 +38,8 @@ export const createCommonSchema = (): CommonSchema => {
       if (type === "string") {
         try {
           JSON.parse(value)
-        } catch (e: any) {
-          return helpers.error("parseError", { error: e.message })
+        } catch (e: unknown) {
+          return helpers.error("parseError", { error: getErrorMessage(e) })
         }
       }
 

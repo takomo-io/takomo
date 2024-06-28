@@ -10,11 +10,11 @@ import {
   DeploymentConfig,
   DeploymentGroupConfig,
 } from "../config/targets-config.js"
-import { StacksConfigRepository } from "../takomo-stacks-context/index.js"
 import { DeploymentGroupPath } from "../targets/targets-model.js"
 import { collectFromHierarchy } from "../utils/collections.js"
 import { TkmLogger } from "../utils/logging.js"
 import { InternalCommandContext } from "./command-context.js"
+import { StacksConfigRepository } from "../takomo-stacks-context/model.js"
 
 export interface DeploymentTargetsConfigRepository
   extends StacksConfigRepository {

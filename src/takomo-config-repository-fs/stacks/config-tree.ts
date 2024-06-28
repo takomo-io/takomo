@@ -3,13 +3,13 @@ import readdirp from "readdirp"
 import { CommandContext } from "../../context/command-context.js"
 import { createStacksSchemas } from "../../schema/stacks-schema.js"
 import { StackGroupPath } from "../../stacks/stack-group.js"
-import { StackGroupConfigNode } from "../../takomo-stacks-context/index.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 import { TemplateEngine } from "../../templating/template-engine.js"
 import { FilePath } from "../../utils/files.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { validate } from "../../utils/validation.js"
 import { parseStackConfigFile, parseStackGroupConfigFile } from "./parser.js"
+import { StackGroupConfigNode } from "../../takomo-stacks-context/config/config-tree.js"
 
 export const buildStackGroupConfigNode = async (
   ctx: CommandContext,
@@ -66,6 +66,7 @@ export const buildStackGroupConfigNode = async (
         stackGroupPath === ROOT_STACK_GROUP_PATH
           ? `/${f.basename}`
           : `${stackGroupPath}/${f.basename}`,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getConfig: (variables: any) =>
         parseStackConfigFile(
           ctx,
@@ -88,6 +89,7 @@ export const buildStackGroupConfigNode = async (
     parentPath: parentStackGroupPath,
     stacks,
     children,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getConfig: async (variables: any) =>
       file
         ? parseStackGroupConfigFile(

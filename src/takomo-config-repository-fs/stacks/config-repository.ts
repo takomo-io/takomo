@@ -7,10 +7,9 @@ import { HookRegistry } from "../../hooks/hook-registry.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
 import { BlueprintPath } from "../../stacks/stack.js"
 import {
-  ConfigTree,
   StacksConfigRepository,
   StacksConfigRepositoryProps,
-} from "../../takomo-stacks-context/index.js"
+} from "../../takomo-stacks-context/model.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
 import { EjsTemplateEngineProvider } from "../../templating/ejs/ejs-template-engine-provider.js"
@@ -30,6 +29,7 @@ import {
   loadCustomSchemas,
 } from "./extensions.js"
 import { parseBlueprintConfigFile } from "./parser.js"
+import { ConfigTree } from "../../takomo-stacks-context/config/config-tree.js"
 
 export interface FileSystemStacksConfigRepositoryProps {
   readonly ctx: InternalCommandContext
@@ -133,6 +133,7 @@ export const createFileSystemStacksConfigRepository = async ({
     : additionalSchemasDirs
 
   const getStackTemplateContentsFromFile = async (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     variables: any,
     filename: string,
     dynamic: boolean,
@@ -150,6 +151,7 @@ export const createFileSystemStacksConfigRepository = async ({
   }
 
   const getStackTemplateContentsFromInline = async (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     variables: any,
     content: string,
     dynamic: boolean,
@@ -236,6 +238,7 @@ export const createFileSystemStacksConfigRepository = async ({
 
     getBlueprint: async (
       blueprint: BlueprintPath,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       variables: any,
     ): Promise<StackConfig> => {
       const pathToBlueprint = path.join(blueprintsDir, blueprint)
