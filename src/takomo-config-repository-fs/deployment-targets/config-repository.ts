@@ -9,7 +9,6 @@ import {
   createOrganizationDeploymentTargetRepositoryProvider,
   DeploymentTargetRepository,
 } from "../../takomo-deployment-targets-repository/index.js"
-import { StacksConfigRepository } from "../../takomo-stacks-context/index.js"
 import _ from "lodash"
 import { CredentialManager } from "../../aws/common/credentials.js"
 import { Cache } from "../../caches/cache.js"
@@ -34,6 +33,7 @@ import {
 } from "../stacks/config-repository.js"
 import { mergeDeploymentTargetConfigs } from "./merge-deployment-target-configs.js"
 import { parseConfigFile } from "./parser.js"
+import { StacksConfigRepository } from "../../takomo-stacks-context/model.js"
 
 interface FileSystemDeploymentTargetsConfigRepositoryProps
   extends FileSystemStacksConfigRepositoryProps {

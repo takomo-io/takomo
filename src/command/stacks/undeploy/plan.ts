@@ -1,7 +1,6 @@
 import * as R from "ramda"
 import { CloudFormationStack } from "../../../aws/cloudformation/model.js"
 import { InternalStack, StackPath } from "../../../stacks/stack.js"
-import { sortStacksForUndeploy } from "../../../takomo-stacks-context/index.js"
 
 import {
   getStackPath,
@@ -11,6 +10,7 @@ import {
 } from "../../../takomo-stacks-model/util.js"
 import { arrayToMap } from "../../../utils/collections.js"
 import { CommandPath } from "../../command-model.js"
+import { sortStacksForUndeploy } from "../../../takomo-stacks-context/dependencies.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 

@@ -4,7 +4,7 @@ import {
   StackStatus,
 } from "../../../aws/cloudformation/model.js"
 import { InternalStack, StackPath } from "../../../stacks/stack.js"
-import { sortStacksForDeploy } from "../../../takomo-stacks-context/index.js"
+import { sortStacksForDeploy } from "../../../takomo-stacks-context/dependencies.js"
 import {
   getStackPath,
   isNotObsolete,

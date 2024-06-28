@@ -9,7 +9,7 @@ import {
   ConfigSetTargetExecutorProps,
   executeConfigSetPlan,
 } from "../../../takomo-execution-plans/index.js"
-import { StacksConfigRepository } from "../../../takomo-stacks-context/index.js"
+import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { TakomoError } from "../../../utils/errors.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { DeploymentOperation } from "../../command-model.js"
@@ -155,6 +155,8 @@ const createExecutor = ({
         expectNoChanges,
         prune,
       )
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       logger.error("An error occurred", error)
       timer.stop()

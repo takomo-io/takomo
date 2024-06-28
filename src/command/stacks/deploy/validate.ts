@@ -1,6 +1,6 @@
 import * as R from "ramda"
 import { StackStatus } from "../../../aws/cloudformation/model.js"
-import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context/index.js"
+import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context/common.js"
 import { TakomoError } from "../../../utils/errors.js"
 import { StackDeployOperation, StacksDeployPlan } from "./plan.js"
 

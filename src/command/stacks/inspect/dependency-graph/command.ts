@@ -2,10 +2,7 @@ import Joi, { AnySchema } from "joi"
 import { CommandContext } from "../../../../context/command-context.js"
 import { createStacksSchemas } from "../../../../schema/stacks-schema.js"
 import { CommandHandler } from "../../../../takomo-core/command.js"
-import {
-  buildStacksContext,
-  StacksConfigRepository,
-} from "../../../../takomo-stacks-context/index.js"
+import { buildStacksContext } from "../../../../takomo-stacks-context/config/build-stacks-context.js"
 import { isNotObsolete } from "../../../../takomo-stacks-model/util.js"
 import { validateInput } from "../../../../utils/validation.js"
 import {
@@ -13,6 +10,7 @@ import {
   DependencyGraphIO,
   DependencyGraphOutput,
 } from "./model.js"
+import { StacksConfigRepository } from "../../../../takomo-stacks-context/model.js"
 
 const inputSchema = (ctx: CommandContext): AnySchema => {
   const { commandPath } = createStacksSchemas({ regions: ctx.regions })

@@ -5,11 +5,7 @@ import { InternalStacksContext } from "../../../../context/stacks-context.js"
 import { createStacksSchemas } from "../../../../schema/stacks-schema.js"
 import { InternalStack, StackPath } from "../../../../stacks/stack.js"
 import { CommandHandler } from "../../../../takomo-core/command.js"
-import {
-  buildStacksContext,
-  sortStacksForDeploy,
-  StacksConfigRepository,
-} from "../../../../takomo-stacks-context/index.js"
+import { StacksConfigRepository } from "../../../../takomo-stacks-context/model.js"
 import {
   getStackPath,
   isNotObsolete,
@@ -23,6 +19,8 @@ import {
   ShowConfigurationIO,
   ShowConfigurationOutput,
 } from "./model.js"
+import { buildStacksContext } from "../../../../takomo-stacks-context/config/build-stacks-context.js"
+import { sortStacksForDeploy } from "../../../../takomo-stacks-context/dependencies.js"
 
 const modifyStacks = async (
   input: ShowConfigurationInput,

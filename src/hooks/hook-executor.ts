@@ -1,4 +1,5 @@
 import { Hook, HookConfig, HookInput, HookOutputObject } from "./hook.js"
+import { getErrorMessage } from "../utils/errors.js"
 
 export class HookExecutor implements Hook {
   readonly config: HookConfig
@@ -47,16 +48,16 @@ export class HookExecutor implements Hook {
 
       if (result instanceof Error) {
         return {
-          message: result.message || "Error",
+          message: result.message ?? "Error",
           success: false,
           value: result,
         }
       }
 
       return result
-    } catch (e: any) {
+    } catch (e: unknown) {
       return {
-        message: e.message ?? "Error",
+        message: getErrorMessage(e),
         success: false,
       }
     }

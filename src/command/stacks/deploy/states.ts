@@ -11,7 +11,7 @@ import {
 import { ClientRequestToken } from "../../../aws/common/model.js"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
 import { CommandStatus } from "../../../takomo-core/command.js"
-import { StacksConfigRepository } from "../../../takomo-stacks-context/index.js"
+import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import {
   StackOperationType,
