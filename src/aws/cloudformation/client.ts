@@ -8,7 +8,7 @@ import {
   ValidateTemplateInput,
 } from "@aws-sdk/client-cloudformation"
 import { IPolicy } from "cockatiel"
-import takeRightWhile from "lodash.takerightwhile"
+import _ from "lodash"
 import * as R from "ramda"
 import {
   ACTIVE_STACK_STATUSES,
@@ -503,7 +503,7 @@ export const createCloudFormationClient = (
     await sleep(waitStackDeployToCompletePollInterval)
 
     const events = (await describeStackEvents(stackId)).slice().reverse()
-    const newEvents = takeRightWhile(
+    const newEvents = _.takeRightWhile(
       events,
       (e) => e.id !== latestEventId,
     ).filter((e) => e.clientRequestToken === clientToken)
@@ -584,7 +584,7 @@ export const createCloudFormationClient = (
 
     const events = (await describeStackEvents(stackId)).slice().reverse()
 
-    const newEvents = takeRightWhile(
+    const newEvents = _.takeRightWhile(
       events,
       (e) => e.id !== latestEventId,
     ).filter((e) => e.clientRequestToken === clientToken)
@@ -625,7 +625,7 @@ export const createCloudFormationClient = (
 
     const events = (await describeStackEvents(stackId)).slice().reverse()
 
-    const newEvents = takeRightWhile(
+    const newEvents = _.takeRightWhile(
       events,
       (e) => e.id !== latestEventId,
     ).filter((e) => e.clientRequestToken === clientToken)
