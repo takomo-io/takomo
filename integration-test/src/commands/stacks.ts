@@ -8,7 +8,7 @@ import { undeployStacksCommand } from "../../../src/command/stacks/undeploy/comm
 import { InternalCommandContext } from "../../../src/context/command-context.js"
 import { FileSystemCommandContext } from "../../../src/takomo-config-repository-fs/context/create-file-system-command-context.js"
 import { createFileSystemStacksConfigRepository } from "../../../src/takomo-config-repository-fs/stacks/config-repository.js"
-import { StacksConfigRepository } from "../../../src/takomo-stacks-context/index.js"
+import { StacksConfigRepository } from "../../../src/takomo-stacks-context/model.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../src/takomo-stacks-model/constants.js"
 import { FilePath } from "../../../src/utils/files.js"
 import { createConsoleLogger, LogLevel } from "../../../src/utils/logging.js"
