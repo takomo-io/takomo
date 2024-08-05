@@ -1,5 +1,5 @@
 import { InternalStack } from "../../../src/stacks/stack.js"
-import { sortStacksForDeploy } from "../../../src/takomo-stacks-context/index.js"
+import { sortStacksForDeploy } from "../../../src/takomo-stacks-context/dependencies.js"
 import { getStackPaths } from "../../../src/takomo-stacks-model/util.js"
 import { createStack } from "../helpers.js"
 
