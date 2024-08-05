@@ -1,6 +1,6 @@
 import { mock } from "jest-mock-extended"
 import { validateCommandPath } from "../../../src/takomo-stacks-context/config/build-stacks-context.js"
-import { ConfigTree } from "../../../src/takomo-stacks-context/index.js"
+import { ConfigTree } from "../../../src/takomo-stacks-context/config/config-tree.js"
 
 const tree: ConfigTree = {
   rootStackGroup: {
