@@ -17,7 +17,8 @@ const provider: TakomoConfigProvider = async (): Promise<TakomoConfig> => {
         }: RenderTemplateProps) => {
           let rendered = templateString
           for (const [key, value] of Array.from(
-            Object.entries((variables as Record<string, unknown>).var),
+            // eslint-disable-next-line
+            Object.entries((variables as Record<string, any>).var),
           )) {
             while (rendered.includes(`@var.${key}@`)) {
               rendered = rendered.replace(`@var.${key}@`, `${value}`)

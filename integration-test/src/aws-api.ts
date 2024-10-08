@@ -3,35 +3,42 @@ import { EC2 } from "@aws-sdk/client-ec2"
 import { SecretsManager } from "@aws-sdk/client-secrets-manager"
 import { SSM } from "@aws-sdk/client-ssm"
 import { STS } from "@aws-sdk/client-sts"
-import { CredentialProvider, Credentials } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { AwsClientProvider } from "../../src/aws/aws-client-provider.js"
 import { StackPolicyBody } from "../../src/aws/cloudformation/model.js"
 import { initDefaultCredentialManager } from "../../src/aws/common/credentials.js"
 import { CallerIdentity, Region } from "../../src/aws/common/model.js"
 import { TkmLogger } from "../../src/utils/logging.js"
+import {
+  AwsCredentialIdentity,
+  AwsCredentialIdentityProvider,
+} from "@aws-sdk/types"
 
-const ssmClient = (region: Region, credentials: CredentialProvider): SSM =>
-  new SSM({ region, credentials })
+const ssmClient = (
+  region: Region,
+  credentials: AwsCredentialIdentityProvider,
+): SSM => new SSM({ region, credentials })
 
 const secretsClient = (
   region: Region,
-  credentials: CredentialProvider,
+  credentials: AwsCredentialIdentityProvider,
 ): SecretsManager => new SecretsManager({ region, credentials })
 
-const ec2Client = (region: Region, credentials: CredentialProvider): EC2 =>
-  new EC2({ region, credentials })
+const ec2Client = (
+  region: Region,
+  credentials: AwsCredentialIdentityProvider,
+): EC2 => new EC2({ region, credentials })
 
-const stsClient = (credentials: CredentialProvider): STS =>
+const stsClient = (credentials: AwsCredentialIdentityProvider): STS =>
   new STS({ region: "us-east-1", credentials })
 
 const cloudFormationClient = (
   region: Region,
-  credentials: CredentialProvider,
+  credentials: AwsCredentialIdentityProvider,
 ): CloudFormation => new CloudFormation({ region, credentials })
 
 export type DescribeStackArgs = {
-  credentials: Credentials
+  credentials: AwsCredentialIdentity
   iamRoleArn?: string
   region: Region
   stackName: string
@@ -80,7 +87,7 @@ const getStackPolicy = async ({
 }
 
 export type PutParamArgs = {
-  credentials: Credentials
+  credentials: AwsCredentialIdentity
   iamRoleArn?: string
   region: string
   name: string
@@ -89,7 +96,7 @@ export type PutParamArgs = {
 }
 
 export interface CreateSecretArgs {
-  credentials: Credentials
+  credentials: AwsCredentialIdentity
   iamRoleArn?: string
   region: string
   name: string
@@ -97,7 +104,7 @@ export interface CreateSecretArgs {
 }
 
 export interface PutSecretArgs {
-  credentials: Credentials
+  credentials: AwsCredentialIdentity
   iamRoleArn?: string
   region: string
   secretId: string
@@ -117,7 +124,7 @@ export interface PutSecretResponse {
 }
 
 export type TagVpcArgs = {
-  credentials: Credentials
+  credentials: AwsCredentialIdentity
   iamRoleArn?: string
   region: string
   tagKey: string
@@ -251,7 +258,7 @@ const tagVpc = async ({
 }
 
 const getCallerIdentity = async (
-  credentials: Credentials,
+  credentials: AwsCredentialIdentity,
 ): Promise<CallerIdentity> =>
   stsClient(async () => credentials)
     .getCallerIdentity({})
