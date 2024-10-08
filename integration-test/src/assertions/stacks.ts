@@ -346,14 +346,14 @@ const createStackResultsMatcher = (
       const { name, region } = actualStackResult.stack
       const credentials = await actualStackResult.stack.getCredentials()
 
-      const { accountId } =
-        await actualStackResult.stack.credentialManager.getCallerIdentity()
+      // const { accountId } =
+      //   await actualStackResult.stack.credentialManager.getCallerIdentity()
 
       const params = {
         region,
         credentials,
         stackName: name,
-        iamRoleArn: `arn:aws:iam::${accountId}:role/OrganizationAccountAccessRole`,
+        //iamRoleArn: `arn:aws:iam::${accountId}:role/OrganizationAccountAccessRole`,
       }
 
       const [stack, actualStackPolicy] = await Promise.all([
