@@ -1,6 +1,5 @@
 import { AwsCredentialIdentity } from "@aws-sdk/types"
 import Table from "easy-table"
-import inquirer from "inquirer"
 import { createRequire } from "module"
 import os from "os"
 import * as R from "ramda"
@@ -38,6 +37,7 @@ import { parseOutputFormat } from "./options/parse-output-format.js"
 import { parseVarArgs } from "./options/parse-var-args.js"
 import { parseVarFileOptions } from "./options/parse-var-file-options.js"
 import _ from "lodash"
+import { input } from "@inquirer/prompts"
 
 export interface RunProps {
   readonly overridingHandler?: (args: Arguments) => void
@@ -374,17 +374,10 @@ interface HandleProps<
   executor: CommandHandler<C, I, IN, OUT>
 }
 
-const promptMfaCode = async (mfaSerial: string): Promise<string> => {
-  const { answer } = await inquirer.prompt([
-    {
-      message: `Enter MFA code for ${mfaSerial}`,
-      type: "input",
-      name: "answer",
-    },
-  ])
-
-  return answer
-}
+const promptMfaCode = (mfaSerial: string): Promise<string> =>
+  input({
+    message: `Enter MFA code for ${mfaSerial}`,
+  })
 
 const defaultInputBuilder = async <IN extends CommandInput>(
   ctx: FileSystemCommandContext,

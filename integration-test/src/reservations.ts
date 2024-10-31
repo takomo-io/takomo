@@ -34,8 +34,8 @@ export interface SingleAccountTestReservation {
 }
 
 export const withReservation = (
-  testFn: (reservation: TestReservation) => Promise<any>,
-): (() => Promise<any>) => {
+  testFn: (reservation: TestReservation) => Promise<unknown>,
+): (() => Promise<unknown>) => {
   const reservation = getReservation()
   const credentials = reservation.credentials
   const accountIds = reservation.accounts.map((a) => a.id)
@@ -43,8 +43,8 @@ export const withReservation = (
 }
 
 export const withSingleAccountReservation = (
-  testFn: (reservation: SingleAccountTestReservation) => Promise<any>,
-): (() => Promise<any>) => {
+  testFn: (reservation: SingleAccountTestReservation) => Promise<unknown>,
+): (() => Promise<unknown>) => {
   const reservation = getReservation()
   const credentials = reservation.credentials
   const accountIds = reservation.accounts.map((a) => a.id)

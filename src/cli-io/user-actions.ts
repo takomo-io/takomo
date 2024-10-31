@@ -1,21 +1,8 @@
-import inquirer from "inquirer"
-import inquirerPrompt from "inquirer-autocomplete-prompt"
+import { search, confirm, checkbox, select } from "@inquirer/prompts"
 import { Choice } from "./cli-io.js"
-
-inquirer.registerPrompt("autocomplete", inquirerPrompt)
-
-export interface QuestionOptions {
-  validate?: (input: unknown) => string | boolean
-  filter?: (input: unknown) => unknown
-}
 
 export interface UserActions {
   confirm: (message: string, marginTop: boolean) => Promise<boolean>
-  question: (
-    message: string,
-    marginTop: boolean,
-    options: QuestionOptions,
-  ) => Promise<string>
   choose: <T>(
     message: string,
     choices: Choice<T>[],
@@ -28,34 +15,13 @@ export interface UserActions {
   ) => Promise<T[]>
   autocomplete: (
     message: string,
-    source: (answersSoFar: unknown, input: string) => Promise<string[]>,
+    source: (input?: string) => Promise<string[]>,
   ) => Promise<string>
 }
 
 export const createInquirerUserActions = (print: () => void): UserActions => ({
-  question: async (
-    msg: string,
-    marginTop = false,
-    options: QuestionOptions = {},
-  ): Promise<string> => {
-    if (marginTop) {
-      print()
-    }
-
-    const { answer } = await inquirer.prompt([
-      {
-        ...options,
-        message: msg,
-        type: "input",
-        name: "answer",
-      },
-    ])
-
-    return answer
-  },
-
   choose: async <T>(
-    msg: string,
+    message: string,
     choices: Choice<T>[],
     marginTop = false,
   ): Promise<T> => {
@@ -63,20 +29,14 @@ export const createInquirerUserActions = (print: () => void): UserActions => ({
       print()
     }
 
-    const { answer } = await inquirer.prompt([
-      {
-        choices,
-        message: msg,
-        name: "answer",
-        type: "list",
-      },
-    ])
-
-    return answer
+    return select({
+      choices,
+      message,
+    })
   },
 
   chooseMany: async <T>(
-    msg: string,
+    message: string,
     choices: Choice<T>[],
     marginTop = false,
   ): Promise<T[]> => {
@@ -84,48 +44,32 @@ export const createInquirerUserActions = (print: () => void): UserActions => ({
       print()
     }
 
-    const { answer } = await inquirer.prompt([
-      {
-        choices,
-        message: msg,
-        name: "answer",
-        type: "checkbox",
-      },
-    ])
-
-    return answer
+    return checkbox({
+      choices,
+      message,
+    })
   },
 
   autocomplete: async (
-    msg: string,
-    source: (answersSoFar: unknown, input: string) => Promise<string[]>,
+    message: string,
+    source: (input?: string) => Promise<string[]>,
   ): Promise<string> => {
-    const { answer } = await inquirer.prompt([
-      {
-        message: msg,
-        source,
-        name: "answer",
-        type: "autocomplete",
-        pageSize: 10,
-      },
-    ])
+    const answer = await search({
+      message,
+      source,
+      pageSize: 10,
+    })
 
-    return answer
+    return String(answer)
   },
 
-  confirm: async (msg: string, marginTop = false): Promise<boolean> => {
+  confirm: async (message: string, marginTop = false): Promise<boolean> => {
     if (marginTop) {
       print()
     }
 
-    const { answer } = await inquirer.prompt([
-      {
-        message: msg,
-        name: "answer",
-        type: "confirm",
-      },
-    ])
-
-    return answer
+    return confirm({
+      message,
+    })
   },
 })
