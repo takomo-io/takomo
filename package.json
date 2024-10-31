@@ -88,7 +88,7 @@
     "@takomo/test-custom-helper-uppercase": "0.0.1",
     "@takomo/test-custom-resolver-code": "0.0.1",
     "@takomo/test-custom-resolver-name": "0.0.1",
-    "@types/diff": "6.0.0",
+    "@types/diff": "5.2.3",
     "@types/folder-hash": "4.0.4",
     "@types/inquirer": "9.0.7",
     "@types/jest": "29.5.14",
