@@ -5,10 +5,6 @@ import {
   DeploymentTargetsContext,
 } from "../../../context/targets-context.js"
 import { OutputFormat } from "../../../takomo-core/command.js"
-import {
-  ConfigSetTargetExecutorProps,
-  executeConfigSetPlan,
-} from "../../../takomo-execution-plans/index.js"
 import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { TakomoError } from "../../../utils/errors.js"
 import { TkmLogger } from "../../../utils/logging.js"
@@ -26,6 +22,8 @@ import {
   DeploymentTargetsOperationOutput,
   PlanHolder,
 } from "./model.js"
+import { ConfigSetTargetExecutorProps } from "../../../takomo-execution-plans/config-set/model.js"
+import { executeConfigSetPlan } from "../../../takomo-execution-plans/config-set/execute/plan.js"
 
 interface CreateExecutorProps {
   readonly outputFormat: OutputFormat

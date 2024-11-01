@@ -4,11 +4,6 @@ import {
   DeploymentTargetConfig,
 } from "../../../../config/targets-config.js"
 import { DeploymentTargetsContext } from "../../../../context/targets-context.js"
-import {
-  ConfigSetExecutionGroup,
-  ConfigSetExecutionPlan,
-  ConfigSetExecutionTarget,
-} from "../../../../takomo-execution-plans/index.js"
 import { TkmLogger } from "../../../../utils/logging.js"
 import {
   createConfigSetExecutionPlan,
@@ -16,6 +11,11 @@ import {
 } from "./create-config-set-execution-plan.js"
 import { getExecutionRoleArn } from "./get-execution-role-arn.js"
 import { PlannedDeploymentTarget } from "./model.js"
+import {
+  ConfigSetExecutionGroup,
+  ConfigSetExecutionPlan,
+  ConfigSetExecutionTarget,
+} from "../../../../takomo-execution-plans/config-set/model.js"
 
 export type ConfigSetExecutionPlanTargetsSelectionProps =
   TargetsSelectionCriteria

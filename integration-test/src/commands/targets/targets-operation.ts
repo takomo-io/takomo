@@ -11,12 +11,12 @@ import { DeploymentTargetsOperationOutput } from "../../../../src/command/target
 import { ConfigSetName } from "../../../../src/config-sets/config-set-model.js"
 import { StackPath } from "../../../../src/stacks/stack.js"
 import { CommandStatus } from "../../../../src/takomo-core/command.js"
-import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans/index.js"
 import {
   DeploymentGroupPath,
   DeploymentTargetName,
 } from "../../../../src/targets/targets-model.js"
 import { ExecuteCommandProps } from "../common.js"
+import { ConfigSetGroupExecutionResult } from "../../../../src/takomo-execution-plans/config-set/model.js"
 
 export interface ExecuteDeployTargetsCommandProps extends ExecuteCommandProps {
   readonly groups?: ReadonlyArray<string>
