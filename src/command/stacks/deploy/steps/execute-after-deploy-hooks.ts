@@ -15,7 +15,13 @@ export const executeAfterDeployHooks: StackOperationStep<
     logger,
     transitions,
     stackAfterOperation,
+    skipHooks,
   } = state
+
+  if (skipHooks) {
+    logger.info("Skip executing after deploy hooks")
+    return transitions.completeStackOperation(state)
+  }
 
   const { result, message, error } = await executeHooks({
     ctx,

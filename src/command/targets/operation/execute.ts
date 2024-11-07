@@ -53,6 +53,9 @@ const executeOperationInternal = async (
         input: {
           ...input,
           expectNoChanges,
+          emit: false,
+          skipParameters: false,
+          skipHooks: false,
         },
         ctx,
         credentialManager,

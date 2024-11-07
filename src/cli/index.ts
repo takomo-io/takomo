@@ -14,6 +14,7 @@ const packageJson = require("../../package.json")
  * @hidden
  */
 export const run = (props: RunProps = { showHelpOnFail: true }): void => {
+  // eslint-disable-next-line
   yargs(hideBin(process.argv))
     .command(stacksCmd(props))
     .command(deploymentTargetsCmd(props))

@@ -9,6 +9,10 @@ export interface StacksOperationInput extends CommandInput {
 
 export interface StacksDeployOperationInput extends StacksOperationInput {
   readonly expectNoChanges: boolean
+  readonly skipHooks: boolean
+  readonly skipParameters: boolean
+  readonly emit: boolean
+  readonly outDir?: string
 }
 
 export interface StacksUndeployOperationInput extends StacksOperationInput {

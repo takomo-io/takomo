@@ -13,6 +13,9 @@ export const ROLE_NAME_OPT = "role-name"
 export const CONFIG_FILE_OPT = "config-file"
 export const CONFIG_SET_OPT = "config-set"
 export const RESET_CACHE_OPT = "reset-cache"
+export const OUT_DIR_OPT = "out-dir"
+export const SKIP_PARAMETERS_OPT = "skip-parameters"
+export const SKIP_HOOKS_OPT = "skip-hooks"
 
 export const outputFormatOptions = {
   [OUTPUT_OPT]: {
@@ -20,6 +23,36 @@ export const outputFormatOptions = {
     choices: ["text", "json", "yaml"],
     default: "text",
     string: true,
+    global: false,
+    demandOption: false,
+  },
+}
+
+export const outputDirOptions = {
+  [OUT_DIR_OPT]: {
+    description: "Emit output files to this dir",
+    string: true,
+    default: undefined,
+    global: false,
+    demandOption: false,
+  },
+}
+
+export const skipHooksOptions = {
+  [SKIP_HOOKS_OPT]: {
+    description: "Skip executing hooks",
+    boolean: true,
+    default: false,
+    global: false,
+    demandOption: false,
+  },
+}
+
+export const skipParametersOptions = {
+  [SKIP_PARAMETERS_OPT]: {
+    description: "Skip parameters and executing resolvers",
+    boolean: true,
+    default: false,
     global: false,
     demandOption: false,
   },

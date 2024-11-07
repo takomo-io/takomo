@@ -33,6 +33,10 @@ export const deployStack = async (
   configRepository: StacksConfigRepository,
   stacksOperationListener: StacksOperationListener,
   expectNoChanges: boolean,
+  emit: boolean,
+  skipHooks: boolean,
+  skipParameters: boolean,
+  outDir?: string,
   currentStack?: CloudFormationStackSummary,
 ): Promise<StackResult> => {
   const logger = io.childLogger(stack.path)
@@ -63,9 +67,13 @@ export const deployStack = async (
     configRepository,
     stacksOperationListener,
     expectNoChanges,
+    emit,
+    skipHooks,
+    skipParameters,
     stackExistedBeforeOperation: currentStack !== undefined,
     totalTimer: timer.startChild(stack.path),
     transitions: createDeployStackTransitions(),
+    outDir,
   }
 
   return executeSteps(initialState)

@@ -45,6 +45,7 @@ import { waitDependenciesToComplete } from "./steps/wait-dependencies-to-complet
 import { waitFailedStackDeleteToComplete } from "./steps/wait-failed-stack-delete-to-complete.js"
 import { waitStackCreateOrUpdateToComplete } from "./steps/wait-stack-create-or-update-to-complete.js"
 import { waitStackRollbackToComplete } from "./steps/wait-stack-rollback-to-complete.js"
+import { emitStackTemplate } from "./steps/emit-stack-template.js"
 
 export interface DeployStackTransitions extends StackOperationTransitions {
   initiateFailedStackDelete: StackOperationStep<CurrentStackHolder>
@@ -90,6 +91,8 @@ export interface DeployStackTransitions extends StackOperationTransitions {
   waitStackCreateOrUpdateToComplete: StackOperationStep<StackOperationClientTokenHolder>
 
   executeAfterDeployHooks: StackOperationStep<StackOperationResultHolder>
+
+  emitStackTemplate: StackOperationStep<TemplateSummaryHolder>
 }
 
 export const createDeployStackTransitions = (): DeployStackTransitions => ({
@@ -206,6 +209,11 @@ export const createDeployStackTransitions = (): DeployStackTransitions => ({
     "update-termination-protection",
     executeAfterDeployHooksOnError(updateTerminationProtection),
   ),
+
+  emitStackTemplate: inProgress(
+    "emit-stack-template",
+    executeAfterDeployHooksOnError(emitStackTemplate),
+  ),
 })
 
 export const executeAfterDeployHooksOnError =
@@ -215,6 +223,7 @@ export const executeAfterDeployHooksOnError =
   async (state: S) => {
     try {
       return await step(state)
+      // eslint-disable-next-line
     } catch (error: any) {
       state.logger.error("An error occurred", error)
       return state.transitions.executeAfterDeployHooks({

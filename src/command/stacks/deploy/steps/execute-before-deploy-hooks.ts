@@ -14,7 +14,13 @@ export const executeBeforeDeployHooks: StackOperationStep<
     logger,
     transitions,
     currentStack,
+    skipHooks,
   } = state
+
+  if (skipHooks) {
+    logger.info("Skip executing before deploy hooks")
+    return transitions.prepareParameters(state)
+  }
 
   const { result, message, error } = await executeHooks({
     ctx,

@@ -39,6 +39,10 @@ export interface InitialDeployStackState extends InitialStackOperationState {
   readonly state: DeployState
   readonly transitions: DeployStackTransitions
   readonly expectNoChanges: boolean
+  readonly emit: boolean
+  readonly skipHooks: boolean
+  readonly skipParameters: boolean
+  readonly outDir?: string
 }
 
 export interface CurrentStackHolder extends InitialDeployStackState {
