@@ -24,12 +24,17 @@ import {
 import {
   createTestDeployStacksIO,
   createTestDetectDriftIO,
+  createTestEmitStackTemplatesIO,
   createTestListStacksIO,
   createTestUndeployStacksIO,
   TestDeployStacksIOAnswers,
   TestUndeployStacksIOAnswers,
 } from "../io.js"
 import { createTestCommandContext, ExecuteCommandProps } from "./common.js"
+import {
+  createEmitStackTemplatesOutputMatcher,
+  EmitStackTemplatesOutputMatcher,
+} from "../assertions/emit-stack-templates-assertions.js"
 
 export interface CreateCtxAndConfigRepositoryProps {
   readonly projectDir: FilePath
@@ -86,6 +91,61 @@ export interface ExecuteUndeployStacksCommandProps extends ExecuteCommandProps {
   readonly prune?: boolean
 }
 
+export interface ExecuteEmitStackTemplatesCommandProps
+  extends ExecuteCommandProps {
+  readonly outDir?: string
+  readonly skipHooks?: boolean
+  readonly skipParameters?: boolean
+}
+
+export const executeEmitStackTemplatesCommand = (
+  props: ExecuteEmitStackTemplatesCommandProps,
+): EmitStackTemplatesOutputMatcher =>
+  createEmitStackTemplatesOutputMatcher(async () => {
+    const logLevel = props.logLevel ?? "info"
+    const ignoreDependencies = props.ignoreDependencies ?? false
+
+    const ctxAndConfig = await createCtxAndConfigRepository({
+      ignoreDependencies,
+      logLevel,
+      projectDir: props.projectDir,
+      autoConfirmEnabled: props.autoConfirmEnabled ?? true,
+      var: props.var ?? [],
+      varFile: props.varFile ?? [],
+      feature: props.feature ?? [],
+    })
+
+    const logger = createConsoleLogger({
+      logLevel,
+      name: basename(expect.getState().testPath!),
+    })
+
+    const credentialManager = await initDefaultCredentialManager(
+      () => Promise.resolve(""),
+      logger,
+      ctxAndConfig.ctx.awsClientProvider,
+      ctxAndConfig.ctx.credentials,
+    )
+
+    return deployStacksCommand({
+      ...ctxAndConfig,
+      credentialManager,
+      io: createTestEmitStackTemplatesIO(logger),
+      input: {
+        ignoreDependencies,
+        expectNoChanges: false,
+        commandPath: props.commandPath ?? ROOT_STACK_GROUP_PATH,
+        timer: new Timer("total"),
+        interactive: false,
+        outputFormat: "text",
+        emit: true,
+        skipHooks: props.skipHooks ?? false,
+        skipParameters: props.skipParameters ?? false,
+        outDir: props.outDir,
+      },
+    })
+  })
+
 export const executeDeployStacksCommand = (
   props: ExecuteDeployStacksCommandProps,
 ): StacksOperationOutputMatcher =>
@@ -126,6 +186,9 @@ export const executeDeployStacksCommand = (
         timer: new Timer("total"),
         interactive: props.interactive ?? false,
         outputFormat: "text",
+        emit: false,
+        skipParameters: false,
+        skipHooks: false,
       },
     })
   })

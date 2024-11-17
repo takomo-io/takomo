@@ -2,12 +2,6 @@ import { ConfigSetName } from "../../../config-sets/config-set-model.js"
 import { DeploymentTargetsContext } from "../../../context/targets-context.js"
 import { CommandInput, IO, OutputFormat } from "../../../takomo-core/command.js"
 import {
-  ConfigSetExecutionPlan,
-  ConfigSetPlanExecutionResult,
-  ConfigSetTargetListener,
-  CreateConfigSetTargetListenerProps,
-} from "../../../takomo-execution-plans/index.js"
-import {
   DeploymentGroupPath,
   DeploymentTargetNamePattern,
   Label,
@@ -19,6 +13,12 @@ import { DeployStacksIO } from "../../stacks/deploy/model.js"
 import { StacksOperationOutput } from "../../stacks/model.js"
 import { UndeployStacksIO } from "../../stacks/undeploy/model.js"
 import { PlannedDeploymentTarget } from "../common/plan/model.js"
+import {
+  ConfigSetExecutionPlan,
+  ConfigSetPlanExecutionResult,
+  ConfigSetTargetListener,
+  CreateConfigSetTargetListenerProps,
+} from "../../../takomo-execution-plans/config-set/model.js"
 
 export type ConfirmOperationAnswer =
   | "CANCEL"

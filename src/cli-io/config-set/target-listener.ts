@@ -2,7 +2,7 @@ import {
   ConfigSetExecutionGroup,
   ConfigSetTargetListener,
   CreateConfigSetTargetListenerProps,
-} from "../../takomo-execution-plans/index.js"
+} from "../../takomo-execution-plans/config-set/model.js"
 import { TkmLogger } from "../../utils/logging.js"
 
 export const createTargetListenerInternal = (

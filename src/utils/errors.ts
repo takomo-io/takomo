@@ -31,6 +31,7 @@ export class ValidationError extends TakomoError {
 
 type ErrorWithMessage = {
   message: string
+  name: string
 }
 
 const isErrorWithMessage = (error: unknown): error is ErrorWithMessage => {
@@ -42,7 +43,7 @@ const isErrorWithMessage = (error: unknown): error is ErrorWithMessage => {
   )
 }
 
-const toErrorWithMessage = (maybeError: unknown): ErrorWithMessage => {
+export const toErrorWithMessage = (maybeError: unknown): ErrorWithMessage => {
   if (isErrorWithMessage(maybeError)) {
     return maybeError
   }

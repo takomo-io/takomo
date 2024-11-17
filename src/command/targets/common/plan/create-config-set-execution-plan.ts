@@ -5,11 +5,6 @@ import {
 import { DeploymentGroupConfig } from "../../../../config/targets-config.js"
 import { DeploymentTargetsContext } from "../../../../context/targets-context.js"
 import {
-  ConfigSetExecutionGroup,
-  ConfigSetExecutionPlan,
-  ConfigSetExecutionStage,
-} from "../../../../takomo-execution-plans/index.js"
-import {
   DeploymentGroupPath,
   DeploymentTargetNamePattern,
   Label,
@@ -18,6 +13,11 @@ import { TkmLogger } from "../../../../utils/logging.js"
 import { CommandPath } from "../../../command-model.js"
 import { PlannedDeploymentTarget } from "./model.js"
 import { selectDeploymentGroups } from "./select-deployment-groups.js"
+import {
+  ConfigSetExecutionGroup,
+  ConfigSetExecutionPlan,
+  ConfigSetExecutionStage,
+} from "../../../../takomo-execution-plans/config-set/model.js"
 
 export type ExecutionGroupConverter = (
   group: DeploymentGroupConfig,

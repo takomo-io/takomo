@@ -13,8 +13,8 @@ import {
   DeploymentTargetsConfigRepository,
   DeploymentTargetsContext,
 } from "../../../src/context/targets-context.js"
-import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans/index.js"
 import { createConsoleLogger } from "../../../src/utils/logging.js"
+import { ConfigSetExecutionTarget } from "../../../src/takomo-execution-plans/config-set/model.js"
 
 const ctx: DeploymentTargetsContext = {
   autoConfirmEnabled: false,

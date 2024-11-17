@@ -20,6 +20,7 @@ export const defaultCapabilities: ReadonlyArray<Capability> = [
 ]
 
 export interface HookOutputValues {
+  // eslint-disable-next-line
   [hookName: string]: any
 }
 
@@ -44,6 +45,7 @@ export interface StackResult {
   readonly stackExistedBeforeOperation: boolean
   readonly stackAfterOperation?: CloudFormationStack
   readonly error?: Error
+  readonly templateBody?: string
 }
 
 export type StackOperationType = "CREATE" | "RECREATE" | "UPDATE" | "DELETE"

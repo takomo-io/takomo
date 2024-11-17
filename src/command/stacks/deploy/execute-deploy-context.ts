@@ -39,6 +39,10 @@ const executeStacksInParallel = async (
   outputFormat: OutputFormat,
   stacksOperationListener: StacksOperationListener,
   expectNoChanges: boolean,
+  emit: boolean,
+  skipHooks: boolean,
+  skipParameters: boolean,
+  outDir?: string,
 ): Promise<StacksOperationOutput> => {
   const bh = bulkhead(ctx.concurrentStacks, 1000)
 
@@ -69,6 +73,10 @@ const executeStacksInParallel = async (
         configRepository,
         stacksOperationListener,
         expectNoChanges,
+        emit,
+        skipHooks,
+        skipParameters,
+        outDir,
         currentStack,
       ),
     )
@@ -94,7 +102,15 @@ export const executeDeployContext = async (
   plan: StacksDeployPlan,
   configRepository: StacksConfigRepository,
 ): Promise<StacksOperationOutput> => {
-  const { ignoreDependencies, expectNoChanges, timer } = input
+  const {
+    ignoreDependencies,
+    expectNoChanges,
+    timer,
+    emit,
+    outDir,
+    skipHooks,
+    skipParameters,
+  } = input
   const { operations } = plan
 
   io.debugObject("Deploy stacks in the following order:", () =>
@@ -143,6 +159,10 @@ export const executeDeployContext = async (
       input.outputFormat,
       deployStacksListener,
       expectNoChanges,
+      emit,
+      skipHooks,
+      skipParameters,
+      outDir,
     )
   }
 
@@ -179,6 +199,10 @@ export const executeDeployContext = async (
       configRepository,
       deployStacksListener,
       expectNoChanges,
+      emit,
+      skipHooks,
+      skipParameters,
+      outDir,
       operation.currentStack,
     )
 
@@ -208,6 +232,10 @@ export const executeDeployContext = async (
         input.outputFormat,
         deployStacksListener,
         expectNoChanges,
+        emit,
+        skipHooks,
+        skipParameters,
+        outDir,
       )
     }
   }

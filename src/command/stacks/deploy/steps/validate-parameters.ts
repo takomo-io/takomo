@@ -72,66 +72,74 @@ export const validateParameters: StackOperationStep<TemplateSummaryHolder> = (
     templateSummary,
     stack,
     expectNoChanges,
+    emit,
+    skipParameters,
   } = input
 
-  parameters.forEach((parameter) => {
-    const templateParameter = templateSummary.parameters.find(
-      (p) => p.key === parameter.key,
-    )
-
-    if (!templateParameter) {
-      throw new TakomoError(
-        `Parameter '${parameter.key}' is defined in the stack configuration but not found from the template`,
-      )
-    }
-
-    if (parameter.immutable && templateParameter.noEcho) {
-      throw new ImmutableNoEchoParameterError(parameter)
-    }
-  })
-
-  templateSummary.parameters
-    .filter((p) => p.defaultValue === undefined)
-    .forEach((templateParameter) => {
-      if (!parameters.some((p) => p.key === templateParameter.key)) {
-        throw new TakomoError(
-          `Parameter '${templateParameter.key}' is defined in the template but not found from the stack configuration`,
-        )
-      }
-    })
-
-  const validationErrors = validateParameterSchemas(parameters, stack.schemas)
-
-  if (validationErrors.length > 0) {
-    const message = validationErrors.map((e) => `  - ${e}`).join("\n")
-    const error = new TakomoError(
-      `Validation errors in stack parameters:\n${message}`,
-    )
-
-    return transitions.executeAfterDeployHooks({
-      events: [],
-      ...input,
-      error,
-      success: false,
-      status: "FAILED",
-      message: resolveResultMessage(input.operationType, false),
-    })
-  }
-
-  if (currentStack) {
+  if (!skipParameters) {
     parameters.forEach((parameter) => {
-      const currentParameter = currentStack.parameters.find(
+      const templateParameter = templateSummary.parameters.find(
         (p) => p.key === parameter.key,
       )
 
-      if (
-        currentParameter &&
-        parameter.immutable &&
-        currentParameter.value !== parameter.value
-      ) {
-        throw new ImmutableParameterError(parameter)
+      if (!templateParameter) {
+        throw new TakomoError(
+          `Parameter '${parameter.key}' is defined in the stack configuration but not found from the template`,
+        )
+      }
+
+      if (parameter.immutable && templateParameter.noEcho) {
+        throw new ImmutableNoEchoParameterError(parameter)
       }
     })
+
+    templateSummary.parameters
+      .filter((p) => p.defaultValue === undefined)
+      .forEach((templateParameter) => {
+        if (!parameters.some((p) => p.key === templateParameter.key)) {
+          throw new TakomoError(
+            `Parameter '${templateParameter.key}' is defined in the template but not found from the stack configuration`,
+          )
+        }
+      })
+
+    const validationErrors = validateParameterSchemas(parameters, stack.schemas)
+
+    if (validationErrors.length > 0) {
+      const message = validationErrors.map((e) => `  - ${e}`).join("\n")
+      const error = new TakomoError(
+        `Validation errors in stack parameters:\n${message}`,
+      )
+
+      return transitions.executeAfterDeployHooks({
+        events: [],
+        ...input,
+        error,
+        success: false,
+        status: "FAILED",
+        message: resolveResultMessage(input.operationType, false),
+      })
+    }
+
+    if (currentStack) {
+      parameters.forEach((parameter) => {
+        const currentParameter = currentStack.parameters.find(
+          (p) => p.key === parameter.key,
+        )
+
+        if (
+          currentParameter &&
+          parameter.immutable &&
+          currentParameter.value !== parameter.value
+        ) {
+          throw new ImmutableParameterError(parameter)
+        }
+      })
+    }
+  }
+
+  if (emit) {
+    return transitions.emitStackTemplate(input)
   }
 
   if (state.autoConfirm && !expectNoChanges) {

@@ -7,6 +7,7 @@ import { getReservation } from "../reservations.js"
 interface CliAssertions {
   readonly expectJson: (expected: unknown) => CliAssertions
   readonly expectYaml: (expected: unknown) => CliAssertions
+  readonly expectText: (expected: string) => CliAssertions
   readonly assert: () => void
 }
 
@@ -46,6 +47,18 @@ const createCliAssertions = (
     })
   }
 
+  const expectText = (expected: unknown): CliAssertions => {
+    const assertion = (stdout: string) => {
+      console.log(`stdout:\n${stdout}`)
+      expect(stdout).toStrictEqual(expected)
+    }
+
+    return createCliAssertions({
+      ...props,
+      assertions: [...props.assertions, assertion],
+    })
+  }
+
   const assert = async (): Promise<void> => {
     const stdout = await props.executor()
     props.assertions.forEach((assertion) => assertion(stdout))
@@ -54,6 +67,7 @@ const createCliAssertions = (
   return {
     expectJson,
     expectYaml,
+    expectText,
     assert,
   }
 }

@@ -8,19 +8,17 @@ import {
 } from "../../../../src/takomo-core/command.js"
 import {
   ConfigSetExecutionPlan,
-  ConfigSetTargetExecutor,
-  ConfigSetTargetExecutorProps,
-  ConfigSetTargetListenerProvider,
-} from "../../../../src/takomo-execution-plans/config-set/model.js"
-import {
   ConfigSetPlanExecutionResult,
   ConfigSetTargetExecutionResult,
+  ConfigSetTargetExecutor,
+  ConfigSetTargetExecutorProps,
   ConfigSetTargetListener,
-  executeConfigSetPlan,
-} from "../../../../src/takomo-execution-plans/index.js"
+  ConfigSetTargetListenerProvider,
+} from "../../../../src/takomo-execution-plans/config-set/model.js"
 import { ExecutionTargetId } from "../../../../src/takomo-execution-plans/model.js"
 import { createConsoleLogger } from "../../../../src/utils/logging.js"
 import { Timer } from "../../../../src/utils/timer.js"
+import { executeConfigSetPlan } from "../../../../src/takomo-execution-plans/config-set/execute/plan"
 
 const logger = createConsoleLogger({
   logLevel: "info",
@@ -35,7 +33,7 @@ const ctx: ConfigSetContext = {
     commandPaths: ["/"],
     legacy: false,
   }),
-  hasConfigSet: (name: ConfigSetName) => true,
+  hasConfigSet: () => true,
 }
 
 const targetListenerProvider: ConfigSetTargetListenerProvider =
@@ -47,10 +45,10 @@ const targetListenerProvider: ConfigSetTargetListenerProvider =
       logger.info("target complete")
     },
     onGroupBegin: async (group) => {
-      logger.info("group begin")
+      logger.info(`group begin ${group.id}`)
     },
     onGroupComplete: async (group) => {
-      logger.info("group complete")
+      logger.info(`group complete ${group.id}`)
     },
   })
 const defaultCredentialManager = mock<InternalCredentialManager>()

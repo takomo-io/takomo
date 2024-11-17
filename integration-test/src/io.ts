@@ -25,6 +25,7 @@ import { DeploymentTargetsOperationIO } from "../../src/command/targets/operatio
 import { DeploymentTargetsRunIO } from "../../src/command/targets/run/model.js"
 import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants.js"
 import { TkmLogger } from "../../src/utils/logging.js"
+import { createEmitStackTemplatesIO } from "../../src/cli-io/stacks/deploy-stacks/emit-stack-templates-io.js"
 
 export interface TestDeployStacksIOAnswers {
   confirmDeploy: ConfirmDeployAnswer
@@ -100,3 +101,7 @@ export const createTestUndeployTargetsIO = (
 export const createTestRunTargetsIO = (
   logger: TkmLogger,
 ): DeploymentTargetsRunIO => createRunTargetsIO({ logger })
+
+export const createTestEmitStackTemplatesIO = (
+  logger: TkmLogger,
+): DeployStacksIO => createEmitStackTemplatesIO({ logger })

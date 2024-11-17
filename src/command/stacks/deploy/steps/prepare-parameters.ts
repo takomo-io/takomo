@@ -15,7 +15,13 @@ const getValueForLog = (
 export const prepareParameters: StackOperationStep<
   DetailedCurrentStackHolder
 > = async (state: DetailedCurrentStackHolder) => {
-  const { stack, ctx, logger, transitions, variables } = state
+  const { stack, ctx, logger, transitions, variables, skipParameters } = state
+
+  if (skipParameters) {
+    logger.info("Skip parameters")
+    return transitions.prepareTags({ ...state, parameters: [] })
+  }
+
   const logConfidentialInfo = ctx.confidentialValuesLoggingEnabled
 
   const parameters = await Promise.all(

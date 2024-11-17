@@ -53,7 +53,7 @@ export const chooseCommandPathInternal = async (
     new Array<string>(),
   )
 
-  const source = async (answersSoFar: any, input: string): Promise<string[]> =>
+  const source = async (input?: string): Promise<string[]> =>
     input ? allCommandPaths.filter((p) => p.includes(input)) : allCommandPaths
 
   return io.autocomplete("Choose command path", source)
@@ -204,7 +204,7 @@ export interface IOProps extends BaseIOProps {
   readonly quiet?: boolean
 }
 
-export const formatDate = (d: any): string => (d ? formatTimestamp(d) : "-")
+export const formatDate = (d?: Date): string => (d ? formatTimestamp(d) : "-")
 
 export const createStacksOperationListenerInternal = (
   logger: TkmLogger,
