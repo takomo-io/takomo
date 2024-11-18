@@ -1,7 +1,7 @@
 import { Arguments, Argv, CommandModule } from "yargs"
 import { CommandPath } from "../../command/command-model.js"
 import { deployStacksCommand } from "../../command/stacks/deploy/command.js"
-import { deployStacksCommandIamPolicy } from "../../command/stacks/deploy/iam-policy.js"
+import { emitStackTemplatesCommandIamPolicy } from "../../command/stacks/deploy/iam-policy.js"
 import { createFileSystemStacksConfigRepository } from "../../takomo-config-repository-fs/stacks/config-repository.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 import { commonEpilog, handle, RunProps } from "../common.js"
@@ -33,7 +33,7 @@ const describe = "Emit stack templates within the given command path"
 
 const builder = (yargs: Argv<CommandArgs>) =>
   yargs
-    .epilog(commonEpilog(deployStacksCommandIamPolicy))
+    .epilog(commonEpilog(emitStackTemplatesCommandIamPolicy))
     .example(
       "$0 emit /networking",
       "Emit stack templates within /networking path to stdout",

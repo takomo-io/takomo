@@ -36,3 +36,33 @@ Statement:
       - sts:AssumeRole
     Resource: "*"
 `
+
+export const emitStackTemplatesCommandIamPolicy = (): string => `
+# Minimum permissions. Additional permissions might be needed if hooks or 
+# parameter resolvers are used. 
+Statement: 
+  - Sid: CloudFormation
+    Effect: Allow
+    Action:
+      - cloudformation:GetTemplate
+      - cloudformation:ValidateTemplate
+      - cloudformation:DescribeStacks
+      - cloudformation:GetTemplateSummary
+    Resource: "*"
+  
+  # S3 permissions needed only if template bucket is used.
+  # Specify resource to restrict access to specific buckets.  
+  - Sid: S3
+    Effect: Allow
+    Action:
+      - s3:PutObject
+    Resource: "*"
+  
+  # IAM permissions needed only if command roles are used  
+  # Specify resource to restrict access to specific roles.  
+  - Sid: IAM
+    Effect: Allow
+    Action:
+      - sts:AssumeRole
+    Resource: "*"
+`
