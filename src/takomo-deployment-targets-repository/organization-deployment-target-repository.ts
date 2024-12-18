@@ -196,7 +196,7 @@ export const createOrganizationDeploymentTargetRepositoryProvider =
 
             if (cachedConfig) {
               logger.info("Deployment targets found from cache")
-              const deserializedConfig = JSON.parse(cachedConfig)
+              const deserializedConfig = JSON.parse(cachedConfig as string)
               return deserializedConfig as ReadonlyArray<DeploymentTargetConfigItemWrapper>
             }
           }

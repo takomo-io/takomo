@@ -16,14 +16,14 @@ const toFilePath = (cacheDir: FilePath, key: string): FilePath =>
   join(cacheDir, key)
 
 interface CacheItem {
-  readonly value: string
+  readonly value: unknown
   readonly version: number
   readonly timestamp: number
 }
 
 const currentCacheEngineVersion = 1
 
-const createCacheItem = (value: string): CacheItem => ({
+const createCacheItem = (value: unknown): CacheItem => ({
   value,
   version: currentCacheEngineVersion,
   timestamp: Date.now(),
@@ -35,7 +35,7 @@ export const createFileSystemCache = (
 ): Cache => {
   logger.debug(`Initialize file system cache with cache dir: ${cacheDir}`)
 
-  const get = async (key: string): Promise<string | undefined> => {
+  const get = async (key: string): Promise<unknown | undefined> => {
     const filePath = toFilePath(cacheDir, key)
     if (!(await fileExists(filePath))) {
       logger.debug(
@@ -58,7 +58,7 @@ export const createFileSystemCache = (
       }
 
       return cacheItem.value
-    } catch (e) {
+    } catch {
       throw new TakomoError(
         `Failed to load cached value from path: ${filePath}`,
         {
@@ -71,7 +71,7 @@ export const createFileSystemCache = (
     }
   }
 
-  const put = async (key: string, value: string): Promise<void> => {
+  const put = async (key: string, value: unknown): Promise<void> => {
     const filePath = toFilePath(cacheDir, key)
     const dirPath = dirname(filePath)
     if (!(await dirExists(dirPath))) {

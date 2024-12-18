@@ -3,6 +3,7 @@ import { StackGroup, StackGroupPath } from "../stacks/stack-group.js"
 import { InternalStack, Stack, StackPath } from "../stacks/stack.js"
 import { TemplateEngine } from "../templating/template-engine.js"
 import { CommandContext, InternalCommandContext } from "./command-context.js"
+import { Cache } from "../caches/cache.js"
 
 /**
  * Provides access to the current stack context and
@@ -19,6 +20,11 @@ export interface StacksContext extends CommandContext {
    * Template engine instance.
    */
   readonly templateEngine: TemplateEngine
+
+  /**
+   * Shared cache for values that needs to be persisted for the duration of the current operation.
+   */
+  readonly cache: Cache
 
   /**
    * Return a stack by exact path or throw an error if no stack is found.
@@ -40,6 +46,7 @@ export interface StacksContext extends CommandContext {
 }
 
 export interface InternalStacksContext extends InternalCommandContext {
+  readonly cache: Cache
   readonly concurrentStacks: number
   readonly credentialManager: CredentialManager
   readonly templateEngine: TemplateEngine

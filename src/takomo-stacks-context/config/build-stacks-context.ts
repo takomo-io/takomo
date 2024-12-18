@@ -24,6 +24,7 @@ import { collectStacks } from "./collect-stacks.js"
 import { ConfigTree } from "./config-tree.js"
 import { coreHookProviders } from "./hooks.js"
 import { processConfigTree } from "./process-config-tree.js"
+import { inMemoryCache } from "../../caches/cache.js"
 
 export interface BuildConfigContextInput {
   readonly configRepository: StacksConfigRepository
@@ -136,6 +137,7 @@ export const buildStacksContext = async ({
     rootStackGroup,
     stacks,
     concurrentStacks: 20,
+    cache: inMemoryCache(),
     getStackGroup: (stackGroupPath: StackGroupPath) =>
       stackGroups.get(stackGroupPath),
     getStackByExactPath: (path: StackPath, stackGroupPath?: StackGroupPath) => {

@@ -1,0 +1,19 @@
+regions: us-east-1
+template: stack5.yml
+parameters:
+  Code3:
+    resolver: external-stack-output
+    stack: account-c-stack4
+    output: MyCode
+    commandRole: arn:aws:iam::{{ var.ACCOUNT_3_ID }}:role/OrganizationAccountAccessRole
+    region: eu-north-1
+    cache: true
+  Code4:
+    resolver: external-stack-output
+    stack: account-a-stack1
+    output: MyCode
+    commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+    cache: true
+depends:
+  - /account-a/stack1.yml
+  - /account-c/stack4.yml
