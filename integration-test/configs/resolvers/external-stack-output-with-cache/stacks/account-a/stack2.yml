@@ -1,0 +1,11 @@
+regions: eu-west-1
+template: stack2.yml
+parameters:
+  Code:
+    resolver: external-stack-output
+    stack: account-a-stack1
+    region: us-east-1
+    output: MyCode
+    confidential: true
+    cache: true
+depends: /account-a/stack1.yml

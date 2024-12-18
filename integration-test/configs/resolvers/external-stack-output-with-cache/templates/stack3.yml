@@ -1,0 +1,16 @@
+Parameters:
+  Code:
+    Type: String
+    Description: Code
+    AllowedValues:
+      - "123456789"
+  Code2:
+    Type: String
+    Description: Code
+    AllowedValues:
+      - Reggae
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub log-group-${Code}-${Code2}
