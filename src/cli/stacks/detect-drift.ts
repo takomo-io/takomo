@@ -1,5 +1,5 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createDetectDriftIO } from "../../cli-io/index.js"
+import { createDetectDriftIO } from "../../cli-io/stacks/detect-drift-io.js"
 import { CommandPath } from "../../command/command-model.js"
 import { detectDriftCommand } from "../../command/stacks/drift/command.js"
 import { detectDriftCommandIamPolicy } from "../../command/stacks/drift/iam-policy.js"

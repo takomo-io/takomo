@@ -1,5 +1,5 @@
 import { dedent } from "ts-dedent"
-import { createListStacksIO } from "../../../../src/cli-io/index.js"
+import { createListStacksIO } from "../../../../src/cli-io/stacks/list-stacks-io.js"
 import { formatDate } from "../../../../src/cli-io/stacks/common.js"
 import { green } from "../../../../src/utils/colors.js"
 import {

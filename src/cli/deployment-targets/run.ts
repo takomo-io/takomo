@@ -1,5 +1,5 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createRunTargetsIO } from "../../cli-io/index.js"
+import { createRunTargetsIO } from "../../cli-io/deployment-targets/run-targets-io.js"
 import { deploymentTargetsRunCommand } from "../../command/targets/run/command.js"
 import { DeploymentTargetsRunInput } from "../../command/targets/run/model.js"
 import { createFileSystemDeploymentTargetsConfigRepository } from "../../takomo-config-repository-fs/deployment-targets/config-repository.js"

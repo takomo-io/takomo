@@ -1,10 +1,7 @@
 import { mock } from "jest-mock-extended"
 import { dedent } from "ts-dedent"
 import { CloudFormationStack } from "../../../../src/aws/cloudformation/model.js"
-import {
-  createUndeployStacksIO,
-  UserActions,
-} from "../../../../src/cli-io/index.js"
+import { createUndeployStacksIO } from "../../../../src/cli-io/stacks/undeploy-stacks-io.js"
 import {
   CONFIRM_UNDEPLOY_ANSWER_CANCEL,
   CONFIRM_UNDEPLOY_ANSWER_CONTINUE,
@@ -21,6 +18,7 @@ import {
 } from "../../../../src/utils/logging.js"
 import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
 import { mockInternalStack, MockInternalStackProps } from "../../mocks.js"
+import { UserActions } from "../../../../src/cli-io/user-actions.js"
 
 const actions = mock<UserActions>()
 
