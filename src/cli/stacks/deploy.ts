@@ -1,5 +1,5 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createDeployStacksIO } from "../../cli-io/index.js"
+import { createDeployStacksIO } from "../../cli-io/stacks/deploy-stacks/deploy-stacks-io.js"
 import { CommandPath } from "../../command/command-model.js"
 import { deployStacksCommand } from "../../command/stacks/deploy/command.js"
 import { deployStacksCommandIamPolicy } from "../../command/stacks/deploy/iam-policy.js"

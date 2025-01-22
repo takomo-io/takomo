@@ -1,6 +1,6 @@
 import { mock } from "jest-mock-extended"
 import { dedent } from "ts-dedent"
-import { createUndeployStacksIO } from "../../../../src/cli-io/index.js"
+import { createUndeployStacksIO } from "../../../../src/cli-io/stacks/undeploy-stacks-io.js"
 import { StackResult } from "../../../../src/command/command-model.js"
 import { InternalStack } from "../../../../src/stacks/stack.js"
 import { green } from "../../../../src/utils/colors.js"

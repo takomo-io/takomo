@@ -1,5 +1,5 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createDependencyGraphIO } from "../../../cli-io/index.js"
+import { createDependencyGraphIO } from "../../../cli-io/stacks/inspect/dependency-graph-io.js"
 import { CommandPath } from "../../../command/command-model.js"
 import { dependencyGraphCommand } from "../../../command/stacks/inspect/dependency-graph/command.js"
 import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository.js"

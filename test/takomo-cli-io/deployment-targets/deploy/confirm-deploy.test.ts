@@ -1,9 +1,6 @@
 import { mock } from "jest-mock-extended"
 import { dedent } from "ts-dedent"
-import {
-  createDeployTargetsIO,
-  UserActions,
-} from "../../../../src/cli-io/index.js"
+import { createDeployTargetsIO } from "../../../../src/cli-io/deployment-targets/deploy-targets-io.js"
 import { PlannedDeploymentTarget } from "../../../../src/command/targets/common/plan/model.js"
 import { TargetsExecutionPlan } from "../../../../src/command/targets/operation/model.js"
 import { bold } from "../../../../src/utils/colors.js"
@@ -12,6 +9,7 @@ import {
   LogWriter,
 } from "../../../../src/utils/logging.js"
 import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
+import { UserActions } from "../../../../src/cli-io/user-actions.js"
 
 const actions = mock<UserActions>()
 

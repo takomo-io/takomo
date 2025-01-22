@@ -11,7 +11,7 @@ import {
   initDefaultCredentialManager,
   InternalCredentialManager,
 } from "../aws/common/credentials.js"
-import { formatCommandStatus } from "../cli-io/index.js"
+import { formatCommandStatus } from "../cli-io/formatters.js"
 import { InternalCommandContext } from "../context/command-context.js"
 import { parseBoolean, parseStringArray } from "../parser/common-parser.js"
 import {

@@ -2,13 +2,6 @@ import { basename, join } from "path"
 import * as R from "ramda"
 import { createHookRegistry } from "../../hooks/hook-registry.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
-import {
-  createDeploymentTargetConfigItemSchema,
-  createDeploymentTargetRepositoryRegistry,
-  createFileSystemDeploymentTargetRepositoryProvider,
-  createOrganizationDeploymentTargetRepositoryProvider,
-  DeploymentTargetRepository,
-} from "../../takomo-deployment-targets-repository/index.js"
 import _ from "lodash"
 import { CredentialManager } from "../../aws/common/credentials.js"
 import { Cache } from "../../caches/cache.js"
@@ -34,6 +27,13 @@ import {
 import { mergeDeploymentTargetConfigs } from "./merge-deployment-target-configs.js"
 import { parseConfigFile } from "./parser.js"
 import { StacksConfigRepository } from "../../takomo-stacks-context/model.js"
+import {
+  createDeploymentTargetConfigItemSchema,
+  DeploymentTargetRepository,
+} from "../../takomo-deployment-targets-repository/deployment-target-repository.js"
+import { createDeploymentTargetRepositoryRegistry } from "../../takomo-deployment-targets-repository/deployment-target-repository-registry.js"
+import { createFileSystemDeploymentTargetRepositoryProvider } from "../../takomo-deployment-targets-repository/filesystem-deployment-target-repository.js"
+import { createOrganizationDeploymentTargetRepositoryProvider } from "../../takomo-deployment-targets-repository/organization-deployment-target-repository.js"
 
 interface FileSystemDeploymentTargetsConfigRepositoryProps
   extends FileSystemStacksConfigRepositoryProps {

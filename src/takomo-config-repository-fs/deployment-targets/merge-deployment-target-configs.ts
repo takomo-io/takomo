@@ -1,7 +1,7 @@
 import _ from "lodash"
-import { DeploymentTargetConfigItem } from "../../takomo-deployment-targets-repository/index.js"
 import { mergeArrays } from "../../utils/collections.js"
 import { merge } from "../../utils/objects.js"
+import { DeploymentTargetConfigItem } from "../../takomo-deployment-targets-repository/deployment-target-repository.js"
 
 const mergeDeploymentTargetConfigsInternal = ([
   first,

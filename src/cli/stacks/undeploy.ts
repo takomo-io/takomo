@@ -1,5 +1,5 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createUndeployStacksIO } from "../../cli-io/index.js"
+import { createUndeployStacksIO } from "../../cli-io/stacks/undeploy-stacks-io.js"
 import { CommandPath } from "../../command/command-model.js"
 import { undeployStacksCommand } from "../../command/stacks/undeploy/command.js"
 import { undeployStacksCommandIamPolicy } from "../../command/stacks/undeploy/iam-policy.js"

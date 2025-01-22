@@ -1,5 +1,4 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { IOProps } from "../../cli-io/index.js"
 import { DeploymentOperation } from "../../command/command-model.js"
 import { deploymentTargetsOperationCommand } from "../../command/targets/operation/command.js"
 import { DeploymentTargetsOperationIO } from "../../command/targets/operation/model.js"
@@ -18,6 +17,7 @@ import {
   TARGET_OPT,
 } from "../constants.js"
 import { DeploymentTargetsOperationCommandArgs, GROUPS_OPT } from "./common.js"
+import { IOProps } from "../../cli-io/stacks/common.js"
 
 export interface DeploymentTargetsDeployCommandArgs
   extends DeploymentTargetsOperationCommandArgs {

@@ -4,7 +4,7 @@ import {
   CloudFormationStackSummary,
   StackDriftDetectionStatusOutput,
 } from "../../../../src/aws/cloudformation/model.js"
-import { createDetectDriftIO } from "../../../../src/cli-io/index.js"
+import { createDetectDriftIO } from "../../../../src/cli-io/stacks/detect-drift-io.js"
 import { StackDriftInfo } from "../../../../src/command/stacks/drift/model.js"
 import { green, red } from "../../../../src/utils/colors.js"
 import {

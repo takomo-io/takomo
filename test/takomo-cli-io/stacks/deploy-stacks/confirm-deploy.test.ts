@@ -6,8 +6,7 @@ import {
   CONFIRM_DEPLOY_ANSWER_CONTINUE_AND_REVIEW,
   CONFIRM_DEPLOY_ANSWER_CONTINUE_NO_REVIEW,
   createDeployStacksIO,
-  UserActions,
-} from "../../../../src/cli-io/index.js"
+} from "../../../../src/cli-io/stacks/deploy-stacks/deploy-stacks-io.js"
 import { StackOperationType } from "../../../../src/command/command-model.js"
 import { StackDeployOperation } from "../../../../src/command/stacks/deploy/plan.js"
 import {
@@ -25,6 +24,7 @@ import {
 } from "../../../../src/utils/logging.js"
 import { createCapturingLogWriter } from "../../../capturing-log-writer.js"
 import { mockInternalStack, MockInternalStackProps } from "../../mocks.js"
+import { UserActions } from "../../../../src/cli-io/user-actions.js"
 
 const actions = mock<UserActions>()
 

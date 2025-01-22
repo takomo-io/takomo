@@ -1,5 +1,5 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { createShowConfigurationIO } from "../../../cli-io/index.js"
+import { createShowConfigurationIO } from "../../../cli-io/stacks/inspect/show-configuration-io.js"
 import { CommandPath } from "../../../command/command-model.js"
 import { showConfigurationCommand } from "../../../command/stacks/inspect/configuration/command.js"
 import { createFileSystemStacksConfigRepository } from "../../../takomo-config-repository-fs/stacks/config-repository.js"
