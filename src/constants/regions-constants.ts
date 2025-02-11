@@ -27,6 +27,7 @@ export const DEFAULT_REGIONS: ReadonlyArray<Region> = [
   "il-central-1",
   "me-south-1",
   "me-central-1",
+  "mx-central-1",
   "sa-east-1",
   "us-east-1",
   "us-east-2",
