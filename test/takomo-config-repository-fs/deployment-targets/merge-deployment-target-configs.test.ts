@@ -1,5 +1,5 @@
 import { mergeDeploymentTargetConfigs } from "../../../src/takomo-config-repository-fs/deployment-targets/merge-deployment-target-configs.js"
-import { DeploymentTargetConfigItem } from "../../../src/takomo-deployment-targets-repository/index.js"
+import { DeploymentTargetConfigItem } from "../../../src/takomo-deployment-targets-repository/deployment-target-repository.js"
 
 describe("#mergeDeploymentTargetConfigs", () => {
   test("empty list of targets", () => {

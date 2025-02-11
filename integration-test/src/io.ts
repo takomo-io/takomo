@@ -1,14 +1,4 @@
 import { anyArray, anyBoolean, mock } from "jest-mock-extended"
-import {
-  createDeployStacksIO,
-  createDeployTargetsIO,
-  createDetectDriftIO,
-  createListStacksIO,
-  createRunTargetsIO,
-  createUndeployStacksIO,
-  createUndeployTargetsIO,
-  UserActions,
-} from "../../src/cli-io/index.js"
 import { CommandPath } from "../../src/command/command-model.js"
 import {
   ConfirmDeployAnswer,
@@ -26,6 +16,14 @@ import { DeploymentTargetsRunIO } from "../../src/command/targets/run/model.js"
 import { ROOT_STACK_GROUP_PATH } from "../../src/takomo-stacks-model/constants.js"
 import { TkmLogger } from "../../src/utils/logging.js"
 import { createEmitStackTemplatesIO } from "../../src/cli-io/stacks/deploy-stacks/emit-stack-templates-io.js"
+import { UserActions } from "../../src/cli-io/user-actions.js"
+import { createDeployStacksIO } from "../../src/cli-io/stacks/deploy-stacks/deploy-stacks-io.js"
+import { createUndeployStacksIO } from "../../src/cli-io/stacks/undeploy-stacks-io.js"
+import { createListStacksIO } from "../../src/cli-io/stacks/list-stacks-io.js"
+import { createDetectDriftIO } from "../../src/cli-io/stacks/detect-drift-io.js"
+import { createDeployTargetsIO } from "../../src/cli-io/deployment-targets/deploy-targets-io.js"
+import { createUndeployTargetsIO } from "../../src/cli-io/deployment-targets/undeploy-targets-io.js"
+import { createRunTargetsIO } from "../../src/cli-io/deployment-targets/run-targets-io.js"
 
 export interface TestDeployStacksIOAnswers {
   confirmDeploy: ConfirmDeployAnswer

@@ -1,7 +1,7 @@
 import Joi from "joi"
 import { Arguments, Argv, CommandModule } from "yargs"
 import { IamRoleName, Region } from "../../aws/common/model.js"
-import { createGenerateIamPoliciesIO } from "../../cli-io/index.js"
+import { createGenerateIamPoliciesIO } from "../../cli-io/iam/generate-iam-policies-io.js"
 import { generateIamPoliciesCommand } from "../../command/iam/generate-iam-policies-command.js"
 import { handle, RunProps } from "../common.js"
 import { ROLE_NAME_OPT } from "../constants.js"

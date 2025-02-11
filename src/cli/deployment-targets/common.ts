@@ -1,5 +1,5 @@
 import { Arguments, Argv, CommandModule } from "yargs"
-import { IOProps } from "../../cli-io/index.js"
+import { IOProps } from "../../cli-io/stacks/common.js"
 import {
   CommandPath,
   DeploymentOperation,

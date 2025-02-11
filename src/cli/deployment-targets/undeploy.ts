@@ -1,4 +1,4 @@
-import { createUndeployTargetsIO } from "../../cli-io/index.js"
+import { createUndeployTargetsIO } from "../../cli-io/deployment-targets/undeploy-targets-io.js"
 import { undeployTargetsOperationCommandIamPolicy } from "../../command/targets/operation/iam-policy.js"
 import { GROUPS_OPT, targetsOperationCommand } from "./common.js"
 
