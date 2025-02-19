@@ -18,6 +18,7 @@ import {
 } from "../../../targets/targets-model.js"
 import { Timer } from "../../../utils/timer.js"
 import { DeploymentTargetsListener } from "../operation/model.js"
+import { TkmLogger } from "../../../utils/logging.js"
 
 export interface DeploymentTargetsRunInput extends CommandInput {
   readonly groups: ReadonlyArray<DeploymentGroupPath>
@@ -87,6 +88,11 @@ export interface MapFunctionProps {
    * Map arguments from the command line
    */
   readonly args: unknown
+
+  /**
+   * Logger instance.
+   */
+  readonly logger: TkmLogger
 }
 
 /**
@@ -107,6 +113,11 @@ export interface ReduceFunctionProps<T> {
    * Targets returned from map functions
    */
   readonly targets: ReadonlyArray<T>
+
+  /**
+   * Logger instance.
+   */
+  readonly logger: TkmLogger
 }
 
 /**

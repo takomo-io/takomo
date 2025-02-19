@@ -143,6 +143,7 @@ const runJsMapFunction = async ({
   return mapperFn({
     credentials,
     target,
+    logger: logger.childLogger("map"),
     deploymentGroupPath: group.path,
     args: mapArgs,
   })
@@ -197,6 +198,7 @@ interface RunReduceCommandProps {
   readonly ctx: DeploymentTargetsContext
   readonly credentials: AwsCredentialIdentity
   readonly targetResults: ReadonlyArray<unknown>
+  readonly logger: TkmLogger
 }
 
 const runReduceProcessCommand = async ({
@@ -228,6 +230,7 @@ const runJsReduceFunction = async ({
   ctx,
   reduceCommand,
   targetResults,
+  logger,
 }: RunReduceCommandProps): Promise<unknown> => {
   const fullReduceFunctionPath = expandFilePath(ctx.projectDir, reduceCommand)
 
@@ -242,6 +245,7 @@ const runJsReduceFunction = async ({
 
   return reduceFn({
     credentials,
+    logger,
     targets: targetResults,
   })
 }
@@ -510,6 +514,7 @@ export const run = async (
     const result = await runReduceCommand({
       targetResults,
       ctx,
+      logger: io.childLogger("reduce"),
       credentials: reduceCredentials,
       reduceCommand: input.reduceCommand,
     })
