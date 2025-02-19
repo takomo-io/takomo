@@ -5,7 +5,8 @@ export interface MyTarget {
   message: string
 }
 
-const map: MapFunction<MyTarget> = async ({ target }) => {
+const map: MapFunction<MyTarget> = async ({ target, logger }) => {
+  logger.info(`Mapping target ${target.accountId}`)
   return {
     accountId: target.accountId!,
     message: target.vars.message,
