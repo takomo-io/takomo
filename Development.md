@@ -2,7 +2,7 @@
 
 ## Tools
 
-Use Nodejs v20.11.0.
+Use Nodejs v22.14.0.
 
 ## Developing
 
