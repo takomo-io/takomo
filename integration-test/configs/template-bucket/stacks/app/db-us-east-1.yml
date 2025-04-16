@@ -1,0 +1,8 @@
+templateBucket:
+  name: {{ var.name }}-us-east-1
+  keyPrefix: my-files/
+template:
+  inline: |
+    Resources:
+      Log:
+        Type: AWS::Logs::LogGroup

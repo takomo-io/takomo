@@ -1,0 +1,13 @@
+regions: eu-west-1
+parameters:
+  Name: {{ var.name }}-eu-west-1
+template:
+  inline: |
+    Parameters:
+      Name:
+        Type: String
+    Resources:
+      Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          BucketName: !Ref Name

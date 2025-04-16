@@ -13,6 +13,8 @@ export interface S3Client {
     key: string,
     object: string,
   ) => Promise<boolean>
+
+  readonly getBucketLocation: (bucketName: string) => Promise<string>
 }
 
 export const createS3Client = (props: InternalAwsClientProps): S3Client => {
@@ -41,7 +43,15 @@ export const createS3Client = (props: InternalAwsClientProps): S3Client => {
       })
       .then(() => true)
 
+  const getBucketLocation = (bucketName: string): Promise<string> =>
+    client
+      .getBucketLocation({
+        Bucket: bucketName,
+      })
+      .then((r) => r.LocationConstraint ?? "us-east-1")
+
   return {
     putObject,
+    getBucketLocation,
   }
 }
