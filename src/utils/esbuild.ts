@@ -18,7 +18,7 @@ export const compileTypescript = async ({
     packages: "external",
     platform: "node",
     logLevel: "error",
-    target: "node20.11.0",
+    target: "node22.14.0",
     format: "esm",
     outfile,
     entryPoints: entryPoints.slice(),
