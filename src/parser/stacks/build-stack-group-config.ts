@@ -20,10 +20,11 @@ import { parseStackPolicy } from "./parse-stack-policy.js"
 import { parseTags } from "./parse-tags.js"
 import { parseTemplateBucket } from "./parse-template-bucket.js"
 import { parseTimeout } from "./parse-timeout.js"
+import { ParsedYamlDocument } from "../../utils/yaml.js"
 
 export const buildStackGroupConfig = (
   ctx: CommandContext,
-  record: Record<string, unknown>,
+  record: ParsedYamlDocument,
 ): Result<StackGroupConfig, ValidationError> => {
   const { error } = createStackGroupConfigSchema({
     regions: ctx.regions,
@@ -40,6 +41,10 @@ export const buildStackGroupConfig = (
         details,
       ),
     )
+  }
+
+  if (typeof record === "number" || typeof record === "string") {
+    throw new Error("Invalid yaml document")
   }
 
   const schemas = parseSchemas(record.schemas)

@@ -11,6 +11,7 @@ import { parseYaml } from "../../utils/yaml.js"
 
 export const parseBlueprintConfigFile = async (
   ctx: CommandContext,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: any,
   templateEngine: TemplateEngine,
   logger: TkmLogger,
@@ -27,6 +28,7 @@ export const parseBlueprintConfigFile = async (
 
 export const parseStackConfigFile = async (
   ctx: CommandContext,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: any,
   templateEngine: TemplateEngine,
   logger: TkmLogger,
@@ -43,6 +45,7 @@ export const parseStackConfigFile = async (
 
 const parseStackConfigFileInternal = async (
   ctx: CommandContext,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: any,
   templateEngine: TemplateEngine,
   logger: TkmLogger,
@@ -54,8 +57,8 @@ const parseStackConfigFileInternal = async (
     variables,
   })
 
-  const parsedFile = (await parseYaml(pathToFile, rendered)) || {}
-  const result = await buildStackConfig(ctx, parsedFile, configType)
+  const parsedFile = parseYaml(pathToFile, rendered)
+  const result = buildStackConfig(ctx, parsedFile, configType)
   if (result.isOk()) {
     return result.value
   }
@@ -68,6 +71,7 @@ const parseStackConfigFileInternal = async (
 
 export const parseStackGroupConfigFile = async (
   ctx: CommandContext,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: any,
   templateEngine: TemplateEngine,
   logger: TkmLogger,
@@ -78,7 +82,7 @@ export const parseStackGroupConfigFile = async (
     variables,
   })
 
-  const parsedFile = (await parseYaml(pathToFile, rendered)) || {}
+  const parsedFile = parseYaml(pathToFile, rendered)
   const result = buildStackGroupConfig(ctx, parsedFile)
 
   if (result.isOk()) {

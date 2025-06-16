@@ -107,15 +107,17 @@ export const parseRegex = (
 ): RegExp | undefined => {
   try {
     return pattern ? new RegExp(pattern) : undefined
-  } catch (e) {
+  } catch {
     throw new TakomoError(
       `Invalid regex pattern ${pattern} provided in ${path}`,
     )
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseVars = (value: any): Vars => value ?? {}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseCommandRole = (value: any): CommandRole | undefined =>
   parse(
     value,

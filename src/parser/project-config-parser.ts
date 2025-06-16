@@ -48,6 +48,7 @@ const validateRequiredVersion = async (
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseExternalResolver = (value: any): ExternalResolverConfig => {
   if (typeof value === "string") {
     return {
@@ -62,6 +63,7 @@ export const parseExternalResolver = (value: any): ExternalResolverConfig => {
 }
 
 export const parseExternalHandlebarsHelper = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
 ): ExternalHandlebarsHelperConfig => {
   if (typeof value === "string") {
@@ -77,6 +79,7 @@ export const parseExternalHandlebarsHelper = (
 }
 
 export const parseExternalHandlebarsHelpers = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
 ): ReadonlyArray<ExternalHandlebarsHelperConfig> => {
   if (value === null || value === undefined) {
@@ -97,6 +100,7 @@ const parseFilePaths = (
   parseStringArray(value).map((f) => expandFilePath(projectDir, f))
 
 export const parseExternalResolvers = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
 ): ReadonlyArray<ExternalResolverConfig> => {
   if (value === null || value === undefined) {
@@ -110,6 +114,7 @@ export const parseExternalResolvers = (
   return value.map(parseExternalResolver)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseFeatures = (value: any): Features => {
   const defaults = defaultFeatures()
   if (value === null || value === undefined) {
@@ -120,6 +125,7 @@ export const parseFeatures = (value: any): Features => {
 }
 
 export const parseDeploymentTargetsConfig = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
 ): TakomoProjectDeploymentTargetsConfig | undefined => {
   if (value === null || value === undefined) {
@@ -144,6 +150,7 @@ export const parseDeploymentTargetsConfig = (
 
 const parseEsbuildConfig = (
   projectDir: FilePath,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
 ): EsbuildConfig | undefined => {
   if (value === null || value === undefined) {
@@ -167,6 +174,7 @@ const parseEsbuildConfig = (
 
 interface ConfigFileItem {
   readonly absolutePath: FilePath
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly contents: any
 }
 
@@ -260,7 +268,8 @@ export const collectProjectConfigFileHierarchy = async (
     }
   }
 
-  const contents = (await parseYamlFile(absolutePath)) ?? {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const contents: any = (await parseYamlFile(absolutePath)) ?? {}
   const pair = { absolutePath, contents }
   if (!contents.extends) {
     return [...collected, pair]

@@ -24,6 +24,7 @@ import {
 import { mergeConfigSets, parseConfigSets } from "../config-set-parser.js"
 import { parseDeploymentGroups } from "./parse-deployment-groups.js"
 import { parseTargetSchemas } from "./parse-target-schemas.js"
+import { ParsedYamlDocument } from "../../utils/yaml.js"
 
 export const buildDeploymentConfig = async (
   ctx: CommandContext,
@@ -31,9 +32,10 @@ export const buildDeploymentConfig = async (
   schemaRegistry: DeploymentTargetsSchemaRegistry,
   externalDeploymentTargets: Map<DeploymentGroupPath, ReadonlyArray<unknown>>,
   externalConfigSets: Map<ConfigSetName, ConfigSet>,
-  record: Record<string, unknown>,
+  record: ParsedYamlDocument,
 ): Promise<Result<DeploymentConfig, ValidationError>> => {
   const externalTargetNames = Array.from(externalDeploymentTargets.values())
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .map((targets) => targets.map((t) => (t as any).name as string))
     .flat()
 
@@ -69,6 +71,10 @@ export const buildDeploymentConfig = async (
         details,
       ),
     )
+  }
+
+  if (typeof record === "number" || typeof record === "string") {
+    throw new Error("Invalid yaml document")
   }
 
   const vars = merge(ctx.variables.var, parseVars(record.vars))

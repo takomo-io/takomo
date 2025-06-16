@@ -77,10 +77,12 @@ const loadDeploymentTargetFile = async (
     variables,
   })
 
-  const item = (await parseYaml(
-    pathToFile,
-    rendered,
-  )) as DeploymentTargetConfigItem
+  const parsedItem = parseYaml(pathToFile, rendered)
+  if (typeof parsedItem === "number" || typeof parsedItem === "string") {
+    throw new Error("Invalid yaml document")
+  }
+
+  const item = parsedItem as unknown as DeploymentTargetConfigItem
 
   const deploymentGroupPath = resolveDeploymentGroupPath(item, props)
   const name = resolveDeploymentTargetName(item, props)
