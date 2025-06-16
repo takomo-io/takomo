@@ -1,5 +1,5 @@
 import path from "path"
-import readdirp from "readdirp"
+import { readdirpPromise } from "readdirp"
 import { CommandContext } from "../../context/command-context.js"
 import { createStacksSchemas } from "../../schema/stacks-schema.js"
 import { StackGroupPath } from "../../stacks/stack-group.js"
@@ -32,7 +32,7 @@ export const buildStackGroupConfigNode = async (
     path.basename(stackGroupDir),
     `Directory ${stackGroupDir} name is not suitable for a stack group`,
   )
-  const files = await readdirp.promise(stackGroupDir, {
+  const files = await readdirpPromise(stackGroupDir, {
     alwaysStat: true,
     depth: 0,
     fileFilter: (e) => e.basename.endsWith(configFileExtension),

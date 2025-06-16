@@ -1,4 +1,4 @@
-import readdirp from "readdirp"
+import { readdirpPromise } from "readdirp"
 import { TakomoError } from "../../utils/errors.js"
 import { dirExists, FilePath } from "../../utils/files.js"
 import { TkmLogger } from "../../utils/logging.js"
@@ -15,7 +15,7 @@ export const loadHandlebarsHelpers = async (
       continue
     }
 
-    const helperFiles = await readdirp.promise(helpersDir, {
+    const helperFiles = await readdirpPromise(helpersDir, {
       alwaysStat: true,
       depth: 100,
       type: "files",

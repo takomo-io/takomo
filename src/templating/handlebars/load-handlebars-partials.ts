@@ -1,4 +1,4 @@
-import readdirp from "readdirp"
+import { readdirpPromise } from "readdirp"
 import { dirExists, FilePath } from "../../utils/files.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { HandlebarsTemplateEngine } from "./handlebars-template-engine.js"
@@ -14,7 +14,7 @@ export const loadHandlebarsPartials = async (
       continue
     }
 
-    const partialFiles = await readdirp.promise(partialsDir, {
+    const partialFiles = await readdirpPromise(partialsDir, {
       alwaysStat: true,
       depth: 100,
       type: "files",
