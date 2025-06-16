@@ -1,5 +1,5 @@
 import "source-map-support/register.js"
-export {
+export type {
   BaseCloudFormationStack,
   CloudFormationStack,
   StackCapability,
@@ -9,42 +9,42 @@ export {
   StackParameter,
   StackStatus,
 } from "./aws/cloudformation/model.js"
-export { CredentialManager } from "./aws/common/credentials.js"
-export { CallerIdentity, Tag } from "./aws/common/model.js"
+export type { CredentialManager } from "./aws/common/credentials.js"
+export type { CallerIdentity, Tag } from "./aws/common/model.js"
 export { run } from "./cli/index.js"
-export {
+export type {
   HookOutputValues,
   StackOperationVariables,
 } from "./command/command-model.js"
-export {
+export type {
   MapFunction,
   MapFunctionProps,
   ReduceFunction,
   ReduceFunctionProps,
 } from "./command/targets/run/model.js"
-export { ContextVars, EnvVars, Variables, Vars } from "./common/model.js"
-export {
+export type { ContextVars, EnvVars, Variables, Vars } from "./common/model.js"
+export type {
   ConfigSetInstruction,
   ConfigSetInstructionsHolder,
   ConfigSetName,
   StageName,
 } from "./config-sets/config-set-model.js"
-export { ParameterConfig } from "./config/common-config.js"
-export {
+export type { ParameterConfig } from "./config/common-config.js"
+export type {
   DeploymentTargetRepositoryConfig,
   TakomoProjectConfig,
   TakomoProjectDeploymentTargetsConfig,
 } from "./config/project-config.js"
-export { DeploymentTargetConfig } from "./config/targets-config.js"
-export { CommandContext } from "./context/command-context.js"
-export { StacksContext } from "./context/stacks-context.js"
-export {
+export type { DeploymentTargetConfig } from "./config/targets-config.js"
+export type { CommandContext } from "./context/command-context.js"
+export type { StacksContext } from "./context/stacks-context.js"
+export type {
   TakomoConfig,
   TakomoConfigProps,
   TakomoConfigProvider,
 } from "./extensions/config-customizer.js"
-export { HookProvider } from "./hooks/hook-provider.js"
-export {
+export type { HookProvider } from "./hooks/hook-provider.js"
+export type {
   Hook,
   HookConfig,
   HookInput,
@@ -56,43 +56,41 @@ export {
   HookStatus,
   HookType,
 } from "./hooks/hook.js"
-export {
+export type {
   ResolverConfig,
   ResolverProvider,
   ResolverProviderSchemaProps,
 } from "./resolvers/resolver-provider.js"
-export { Resolver, ResolverInput } from "./resolvers/resolver.js"
-export { Stack } from "./stacks/stack.js"
-export { CommandRole, OutputFormat } from "./takomo-core/command.js"
-export {
+export type { Resolver, ResolverInput } from "./resolvers/resolver.js"
+export type { Stack } from "./stacks/stack.js"
+export type { CommandRole, OutputFormat } from "./takomo-core/command.js"
+export type {
   InitSchemaProps,
   SchemaProvider,
 } from "./takomo-stacks-model/schemas.js"
-export { DeploymentStatus, Label } from "./targets/targets-model.js"
+export type { DeploymentStatus, Label } from "./targets/targets-model.js"
 export { EjsTemplateEngineProvider } from "./templating/ejs/ejs-template-engine-provider.js"
-export {
+export type {
   HandlebarsHelperProvider,
   InitHandlebarsHelperProps,
 } from "./templating/handlebars/handlebars-helper-provider.js"
-export { HandlebarsHelper } from "./templating/handlebars/handlebars-helper.js"
-export {
-  HandlebarsTemplateEngineProvider,
-  HandlebarsTemplateEngineProviderProps,
-} from "./templating/handlebars/handlebars-template-engine-provider.js"
-export {
+export type { HandlebarsHelper } from "./templating/handlebars/handlebars-helper.js"
+export { HandlebarsTemplateEngineProvider } from "./templating/handlebars/handlebars-template-engine-provider.js"
+export type { HandlebarsTemplateEngineProviderProps } from "./templating/handlebars/handlebars-template-engine-provider.js"
+export type {
   TemplateEngineProps,
   TemplateEngineProvider,
 } from "./templating/template-engine-provider.js"
-export {
-  HandlebarsSafeString,
+export type {
   HandlebarsCompileOptions,
   HandlebarsHelperOptions,
   HandlebarsTemplateDelegate,
 } from "./templating/handlebars/handlebars-template-engine.js"
-export {
+export { HandlebarsSafeString } from "./templating/handlebars/handlebars-template-engine.js"
+export type {
   RenderTemplateFileProps,
   RenderTemplateProps,
   TemplateEngine,
 } from "./templating/template-engine.js"
-export { FilePath } from "./utils/files.js"
-export { LogLevel, TkmLogger } from "./utils/logging.js"
+export type { FilePath } from "./utils/files.js"
+export type { LogLevel, TkmLogger } from "./utils/logging.js"
