@@ -1,5 +1,5 @@
 import { basename, dirname, relative } from "path"
-import readdirp from "readdirp"
+import { readdirpPromise } from "readdirp"
 
 import {
   DeploymentGroupPath,
@@ -20,7 +20,7 @@ import { InvalidDeploymentTargetFileLocationError } from "./errors.js"
 
 interface LoadDeploymentTargetFileProps {
   readonly templateEngine: TemplateEngine
-  readonly variables: any
+  readonly variables: unknown
   readonly baseDir: FilePath
   readonly pathToFile: FilePath
   readonly inferDeploymentGroupPathFromDirName: boolean
@@ -143,7 +143,7 @@ export const createFileSystemDeploymentTargetRepositoryProvider =
 
         logger.debug(`Load deployment targets from dir: ${expandedDir}`)
 
-        const deploymentTargetFiles = await readdirp.promise(expandedDir, {
+        const deploymentTargetFiles = await readdirpPromise(expandedDir, {
           alwaysStat: true,
           depth: 100,
           type: "files",

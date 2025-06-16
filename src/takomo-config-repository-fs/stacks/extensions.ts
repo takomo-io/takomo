@@ -1,4 +1,4 @@
-import readdirp from "readdirp"
+import { readdirpPromise } from "readdirp"
 import { HookRegistry } from "../../hooks/hook-registry.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
@@ -17,7 +17,7 @@ export const loadCustomResolvers = async (
 
   logger.debug(`Found resolvers dir: ${resolversDir}`)
 
-  const resolverFiles = await readdirp.promise(resolversDir, {
+  const resolverFiles = await readdirpPromise(resolversDir, {
     alwaysStat: true,
     depth: 100,
     type: "files",
@@ -41,7 +41,7 @@ export const loadCustomHooks = async (
 
   logger.debug(`Found hooks dir: ${hooksDir}`)
 
-  const hookFiles = await readdirp.promise(hooksDir, {
+  const hookFiles = await readdirpPromise(hooksDir, {
     alwaysStat: true,
     depth: 100,
     type: "files",
@@ -71,7 +71,7 @@ export const loadCustomSchemas = async ({
 
     logger.debug(`Found schemas dir: ${schemasDir}`)
 
-    const schemaFiles = await readdirp.promise(schemasDir, {
+    const schemaFiles = await readdirpPromise(schemasDir, {
       alwaysStat: true,
       depth: 100,
       type: "files",
