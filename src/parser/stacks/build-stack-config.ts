@@ -20,10 +20,11 @@ import { parseTags } from "./parse-tags.js"
 import { parseTemplateBucket } from "./parse-template-bucket.js"
 import { parseTemplate } from "./parse-template.js"
 import { parseTimeout } from "./parse-timeout.js"
+import { ParsedYamlDocument } from "../../utils/yaml.js"
 
 export const buildStackConfig = (
   ctx: CommandContext,
-  record: Record<string, unknown>,
+  record: ParsedYamlDocument,
   configType: "stack" | "blueprint",
 ): Result<StackConfig, ValidationError> => {
   const { error } = createStackConfigSchema({
@@ -39,6 +40,10 @@ export const buildStackConfig = (
     return err(
       new ValidationError("Validation errors in stack configuration", details),
     )
+  }
+
+  if (typeof record === "number" || typeof record === "string") {
+    throw new Error("Invalid yaml document")
   }
 
   const schemas = parseSchemas(record.schemas)

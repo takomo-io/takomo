@@ -6,15 +6,22 @@ import { buildErrorMessage } from "./templating.js"
 
 export type YamlFormattedString = string
 
-export const parseYamlString = (contents: YamlFormattedString): unknown =>
-  yaml.load(contents)
+export type ParsedYamlDocument = Record<string, unknown> | string | number
+
+export const parseYamlString = (
+  contents: YamlFormattedString,
+): ParsedYamlDocument => {
+  const parsed = yaml.load(contents)
+  return parsed ? (parsed as ParsedYamlDocument) : {}
+}
 
 export const parseYaml = (
   filePath: FilePath,
   contents: YamlFormattedString,
-): any => {
+): ParsedYamlDocument => {
   try {
-    return yaml.load(contents)
+    return parseYamlString(contents)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     if (e.name === "YAMLException") {
       const errorMessage = buildErrorMessage(
@@ -42,11 +49,13 @@ export const parseYaml = (
   }
 }
 
-export const parseYamlFile = async (pathToYamlFile: FilePath): Promise<any> =>
+export const parseYamlFile = async (
+  pathToYamlFile: FilePath,
+): Promise<ParsedYamlDocument> =>
   readFileContents(pathToYamlFile).then((c) => parseYaml(pathToYamlFile, c))
 
 export const formatYaml = (object: unknown): YamlFormattedString =>
-  yaml.dump(JSON.parse(stringify(object)), {
+  yaml.dump(JSON.parse(stringify(object)!), {
     skipInvalid: true,
     lineWidth: 300,
     noRefs: true,
