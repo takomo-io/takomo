@@ -10,7 +10,8 @@
     "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "isolatedModules": true
   },
   "include": ["src/**/*"],
   "exclude": ["test/**/*", "integration-test/**/*", "node_modules", "dist"],

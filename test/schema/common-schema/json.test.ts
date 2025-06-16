@@ -12,7 +12,7 @@ const invalid: Array<[string | number | boolean | string[], string]> = [
   ["", '"value" is not valid JSON: Unexpected end of JSON input'],
   [
     "{ssdjksd:",
-    "\"value\" is not valid JSON: Expected property name or '}' in JSON at position 1",
+    "\"value\" is not valid JSON: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
   ],
   [1, '"value" must be a string or object'],
   [true, '"value" must be a string or object'],
