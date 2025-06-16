@@ -1,5 +1,4 @@
-import * as R from "ramda"
-
+import _ from "lodash"
 import { DeploymentTargetsListener } from "../../command/targets/operation/model.js"
 import {
   DeploymentTargetsRunIO,
@@ -43,7 +42,7 @@ export const createRunTargetsIO = (props: IOProps): DeploymentTargetsRunIO => {
     io.subheader({ text: "Targets run plan", marginTop: true })
     io.longMessage(splitTextInLines(70, confirmDescription), false, false, 0)
 
-    const targetCount = R.sum(groups.map((g) => g.targets.length))
+    const targetCount = _.sum(groups.map((g) => g.targets.length))
 
     io.message({
       text: `Following ${targetCount} targets will be run:`,
