@@ -38,7 +38,8 @@
     "linux"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "prepare": "husky",
