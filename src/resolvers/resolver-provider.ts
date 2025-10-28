@@ -1,4 +1,5 @@
 import Joi from "joi"
+import * as z from "zod"
 import { ParameterConfig } from "../config/common-config.js"
 import { CommandContext } from "../context/command-context.js"
 import { Resolver, ResolverName } from "./resolver.js"
@@ -26,6 +27,27 @@ export interface ResolverProviderSchemaProps {
   readonly base: Joi.ObjectSchema
 }
 
+/**
+ * An interface representing the input object passed to {@linkcode ResolverProvider.zodSchema}
+ * function when the resolver provider schema is constructed.
+ */
+export interface ResolverProviderZodSchemaProps {
+  /**
+   * Context object providing access to the project configuration.
+   */
+  readonly ctx: CommandContext
+
+  /**
+   * A Zod library reference that can be used to create validation rules.
+   */
+  readonly zod: typeof z
+
+  /**
+   * A pre-initialized Zod object schema for the resolver provider.
+   */
+  readonly base: z.ZodObject
+}
+
 export type ResolverConfig = ParameterConfig
 
 /**
@@ -47,4 +69,10 @@ export interface ResolverProvider {
    * Create a schema used to validate properties used to initialize a new resolver.
    */
   readonly schema?: (props: ResolverProviderSchemaProps) => Joi.ObjectSchema
+
+  /**
+   * Create a Zod schema used to validate properties used to initialize a new resolver.
+   * If both Joi and Zod schemas are provided, Zod schema will be used.
+   */
+  readonly zodSchema?: (props: ResolverProviderZodSchemaProps) => z.ZodObject
 }

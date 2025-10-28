@@ -1,4 +1,5 @@
 import Joi from "joi"
+import * as z from "zod"
 import { StackParameterKey } from "../aws/cloudformation/model.js"
 import { ParameterConfig } from "../config/common-config.js"
 import { ExternalResolverConfig } from "../config/project-config.js"
@@ -41,6 +42,16 @@ export const defaultSchema = (resolverName: string): Joi.ObjectSchema =>
     ],
   })
 
+export const defaultZodSchema = (resolverName: string): z.ZodObject =>
+  z.looseObject({
+    resolver: z.literal(resolverName),
+    confidential: z.boolean().optional(),
+    immutable: z.boolean().optional(),
+    schema: z
+      .union([z.string(), z.looseObject({ name: z.string() })])
+      .optional(),
+  })
+
 export class ResolverRegistry {
   private readonly providers: Map<ResolverName, ResolverProvider> = new Map()
   private readonly logger: TkmLogger
@@ -70,7 +81,35 @@ export class ResolverRegistry {
     }
 
     const provider = this.getProvider(name)
-    if (provider.schema) {
+
+    // Zod schema takes precedence over Joi schema
+    if (provider.zodSchema) {
+      const zodSchema = provider.zodSchema({
+        ctx,
+        base: defaultZodSchema(name),
+        zod: z,
+      })
+
+      if (zodSchema instanceof z.ZodObject === false) {
+        throw new TakomoError(
+          `Error in parameter '${parameterName}' of stack ${stackPath}:\n\n` +
+            `  - value returned from resolver zodSchema function is not a Zod object schema`,
+        )
+      }
+
+      const result = zodSchema.safeParse(props)
+      if (!result.success) {
+        const details = result.error.issues
+          .map((d) => `  - ${d.message}`)
+          .join("\n")
+        throw new TakomoError(
+          `${result.error.issues.length} validation error(s) in parameter '${parameterName}' of stack ${stackPath}:\n\n${details}`,
+        )
+      }
+    }
+
+    // Legacy Joi schema validation
+    else if (provider.schema) {
       const schema = provider.schema({
         ctx,
         joi: Joi.defaults((schema) => schema),
@@ -143,6 +182,7 @@ export class ResolverRegistry {
     Array.from(this.providers.keys()).sort()
 
   private registerProvider = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     provider: any,
     sourceDescription: string,
   ): void => {

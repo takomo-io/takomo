@@ -1,11 +1,12 @@
-import { ObjectSchema } from "joi"
+import * as z from "zod"
 import { expandFilePath, fileExists, readFileContents } from "../utils/files.js"
 import {
   ResolverProvider,
-  ResolverProviderSchemaProps,
+  ResolverProviderZodSchemaProps,
 } from "./resolver-provider.js"
 import { Resolver, ResolverInput } from "./resolver.js"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const init = async ({ file }: any): Promise<Resolver> => {
   if (!file) {
     throw new Error("file is required property")
@@ -16,6 +17,7 @@ const init = async ({ file }: any): Promise<Resolver> => {
       logger,
       parameterName,
       ctx,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }: ResolverInput): Promise<any> => {
       logger.debug(
         `Resolving value for parameter '${parameterName}' from file: ${file}`,
@@ -35,13 +37,16 @@ const init = async ({ file }: any): Promise<Resolver> => {
 
 const name = "file-contents"
 
-const schema = ({ joi, base }: ResolverProviderSchemaProps): ObjectSchema =>
-  base.keys({
-    file: joi.string().required(),
+const zodSchema = ({
+  base,
+  zod,
+}: ResolverProviderZodSchemaProps): z.ZodObject =>
+  base.extend({
+    file: zod.string().min(1),
   })
 
 export const createFileContentsResolverProvider = (): ResolverProvider => ({
   name,
   init,
-  schema,
+  zodSchema,
 })
