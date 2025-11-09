@@ -2,7 +2,8 @@ import { StackParameterKey } from "../aws/cloudformation/model.js"
 import { IamRoleArn } from "../aws/common/model.js"
 import { StackOperationVariables } from "../command/command-model.js"
 import { StacksContext } from "../context/stacks-context.js"
-import { Stack, StackPath } from "../stacks/stack.js"
+import { StackPath } from "../stacks/stack.js"
+import { StandardStack } from "../stacks/standard-stack.js"
 import { TkmLogger } from "../utils/logging.js"
 
 /**
@@ -21,6 +22,7 @@ export interface Resolver {
    * @param input Resolver input
    * @returns Resolved parameter value
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly resolve: (input: ResolverInput) => Promise<any>
 
   /**
@@ -54,7 +56,7 @@ export interface ResolverInput {
   /**
    * The stack where the parameter whose value is being resolved belongs to.
    */
-  readonly stack: Stack
+  readonly stack: StandardStack
 
   /**
    * Context object providing access to the project configuration.

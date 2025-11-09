@@ -5,8 +5,7 @@ import {
   DetailedCloudFormationStack,
   TemplateSummary,
 } from "../../../../aws/cloudformation/model.js"
-
-import { InternalStack } from "../../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../../stacks/standard-stack.js"
 import { arrayToMap } from "../../../../utils/collections.js"
 import { TakomoError } from "../../../../utils/errors.js"
 import { prettyPrintJson } from "../../../../utils/json.js"
@@ -62,7 +61,7 @@ const enrichChangeSet = (
 }
 
 const hasStackPolicyChanged = (
-  stack: InternalStack,
+  stack: InternalStandardStack,
   currentStack?: DetailedCloudFormationStack,
 ): boolean => {
   if (!currentStack && stack.stackPolicy) {

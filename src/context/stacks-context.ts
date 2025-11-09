@@ -1,9 +1,13 @@
 import { CredentialManager } from "../aws/common/credentials.js"
 import { StackGroup, StackGroupPath } from "../stacks/stack-group.js"
-import { InternalStack, Stack, StackPath } from "../stacks/stack.js"
+import {
+  InternalStandardStack,
+  StandardStack,
+} from "../stacks/standard-stack.js"
 import { TemplateEngine } from "../templating/template-engine.js"
 import { CommandContext, InternalCommandContext } from "./command-context.js"
 import { Cache } from "../caches/cache.js"
+import { StackPath } from "../stacks/stack.js"
 
 /**
  * Provides access to the current stack context and
@@ -33,7 +37,7 @@ export interface StacksContext extends CommandContext {
   readonly getStackByExactPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => Stack
+  ) => StandardStack
 
   /**
    * Return 0 or more stacks by path. The stack path can be relative if
@@ -42,7 +46,7 @@ export interface StacksContext extends CommandContext {
   readonly getStacksByPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => ReadonlyArray<Stack>
+  ) => ReadonlyArray<StandardStack>
 }
 
 export interface InternalStacksContext extends InternalCommandContext {
@@ -51,16 +55,16 @@ export interface InternalStacksContext extends InternalCommandContext {
   readonly credentialManager: CredentialManager
   readonly templateEngine: TemplateEngine
   readonly rootStackGroup: StackGroup
-  readonly stacks: ReadonlyArray<InternalStack>
+  readonly stacks: ReadonlyArray<InternalStandardStack>
   readonly getStackGroup: (
     stackGroupPath: StackGroupPath,
   ) => StackGroup | undefined
   readonly getStackByExactPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => InternalStack
+  ) => InternalStandardStack
   readonly getStacksByPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => ReadonlyArray<InternalStack>
+  ) => ReadonlyArray<InternalStandardStack>
 }

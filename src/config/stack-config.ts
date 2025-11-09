@@ -7,7 +7,8 @@ import {
 import { AccountId, Region, TagKey } from "../aws/common/model.js"
 import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
 import { HookConfig } from "../hooks/hook.js"
-import { BlueprintPath, RawTagValue, StackPath } from "../stacks/stack.js"
+import { RawTagValue, StackPath } from "../stacks/stack.js"
+import { BlueprintPath } from "../stacks/standard-stack.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
 import {
   ParameterConfigs,

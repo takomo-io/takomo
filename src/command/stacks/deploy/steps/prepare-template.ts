@@ -1,5 +1,5 @@
 import path from "path"
-import { InternalStack } from "../../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../../stacks/standard-stack.js"
 import { arrayToObject } from "../../../../utils/collections.js"
 import { StackOperationVariables } from "../../../command-model.js"
 import { StackOperationStep } from "../../common/steps.js"
@@ -8,8 +8,9 @@ import { TagsHolder } from "../states.js"
 
 export const createVariablesForStackTemplate = (
   variables: StackOperationVariables,
-  stack: InternalStack,
+  stack: InternalStandardStack,
   parameters: ReadonlyArray<StackParameterInfo>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   const stackPath = stack.path
   const pathSegments = stackPath.substring(1).split("/")

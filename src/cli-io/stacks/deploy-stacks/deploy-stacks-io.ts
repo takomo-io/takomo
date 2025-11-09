@@ -15,7 +15,7 @@ import {
 import { StacksDeployPlan } from "../../../command/stacks/deploy/plan.js"
 import { StacksOperationOutput } from "../../../command/stacks/model.js"
 import { StackGroup } from "../../../stacks/stack-group.js"
-import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { bold, green, orange, yellow } from "../../../utils/colors.js"
 import { diffStrings } from "../../../utils/strings.js"
 import { createBaseIO } from "../../cli-io.js"
@@ -33,6 +33,7 @@ import { printResources } from "./resources.js"
 import { printStackPolicy } from "./stack-policy.js"
 import { printTags } from "./tags.js"
 import { printTerminationProtection } from "./termination-protection.js"
+import { StackPath } from "../../../stacks/stack.js"
 
 interface ConfirmStackDeployAnswerChoice {
   readonly name: string
@@ -244,7 +245,7 @@ export const createDeployStacksIO = (
     })
 
   const confirmStackDeploy = async (
-    stack: InternalStack,
+    stack: InternalStandardStack,
     templateBody: TemplateBody,
     templateSummary: TemplateSummary,
     operationType: StackOperationType,

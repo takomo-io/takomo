@@ -12,11 +12,12 @@ import { IO } from "../../../takomo-core/command.js"
 
 import { TagKey, TagValue } from "../../../aws/common/model.js"
 import { StackGroup } from "../../../stacks/stack-group.js"
-import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { CommandPath, StackOperationType } from "../../command-model.js"
 import { StacksOperationListener } from "../common/model.js"
 import { StacksOperationOutput } from "../model.js"
 import { StacksDeployPlan } from "./plan.js"
+import { StackPath } from "../../../stacks/stack.js"
 
 export type ConfirmDeployAnswer =
   | "CANCEL"
@@ -34,7 +35,7 @@ export interface DeployStacksIO extends IO<StacksOperationOutput> {
     rootStackGroup: StackGroup,
   ) => Promise<CommandPath>
   readonly confirmStackDeploy: (
-    stack: InternalStack,
+    stack: InternalStandardStack,
     templateBody: TemplateBody,
     templateSummary: TemplateSummary,
     operationType: StackOperationType,

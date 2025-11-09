@@ -2,14 +2,14 @@ import {
   CloudFormationStackSummary,
   StackName,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStack } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { getStackNames } from "../../../takomo-stacks-model/util.js"
 import { arrayToMap } from "../../../utils/collections.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { checksum } from "../../../utils/strings.js"
 
 const makeCredentialsRegionHash = async (
-  stack: InternalStack,
+  stack: InternalStandardStack,
 ): Promise<string> => {
   const { accessKeyId, secretAccessKey, sessionToken } =
     await stack.getCredentials()
@@ -20,7 +20,7 @@ const makeCredentialsRegionHash = async (
 }
 
 const loadCfStacks = (
-  stacks: ReadonlyArray<InternalStack>,
+  stacks: ReadonlyArray<InternalStandardStack>,
 ): Promise<Map<StackName, CloudFormationStackSummary>> => {
   const stackNames = getStackNames(stacks)
   return stacks[0]
@@ -29,14 +29,14 @@ const loadCfStacks = (
 }
 
 export interface StackPair {
-  readonly stack: InternalStack
+  readonly stack: InternalStandardStack
   readonly current?: CloudFormationStackSummary
 }
 
 const buildHashStackMap = (
-  stackHashPairs: ReadonlyArray<[string, InternalStack]>,
-): Map<string, InternalStack[]> => {
-  const stackHashMap = new Map<string, InternalStack[]>()
+  stackHashPairs: ReadonlyArray<[string, InternalStandardStack]>,
+): Map<string, InternalStandardStack[]> => {
+  const stackHashMap = new Map<string, InternalStandardStack[]>()
   stackHashPairs.forEach(([hash, stack]) => {
     const stacks = stackHashMap.get(hash)
     if (stacks) {
@@ -51,11 +51,11 @@ const buildHashStackMap = (
 
 export const loadCurrentCfStacks = async (
   logger: TkmLogger,
-  stacks: ReadonlyArray<InternalStack>,
+  stacks: ReadonlyArray<InternalStandardStack>,
 ): Promise<ReadonlyArray<StackPair>> => {
   logger.info("Load current stacks")
 
-  const stackHashPairs: ReadonlyArray<[string, InternalStack]> =
+  const stackHashPairs: ReadonlyArray<[string, InternalStandardStack]> =
     await Promise.all(
       stacks.map(async (stack) => {
         const hash = await makeCredentialsRegionHash(stack)

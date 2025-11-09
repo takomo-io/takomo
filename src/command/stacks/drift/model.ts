@@ -2,7 +2,7 @@ import {
   CloudFormationStackSummary,
   StackDriftDetectionStatusOutput,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStack } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import {
   CommandInput,
   CommandOutput,
@@ -12,7 +12,7 @@ import { CommandPath } from "../../command-model.js"
 
 export interface StackDriftInfo {
   readonly current?: CloudFormationStackSummary
-  readonly stack: InternalStack
+  readonly stack: InternalStandardStack
   readonly driftDetectionStatus?: StackDriftDetectionStatusOutput
 }
 

@@ -1,7 +1,6 @@
 import * as R from "ramda"
 import { CloudFormationStack } from "../../../aws/cloudformation/model.js"
-import { InternalStack, StackPath } from "../../../stacks/stack.js"
-
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import {
   getStackPath,
   isNotObsolete,
@@ -11,6 +10,7 @@ import {
 import { arrayToMap } from "../../../utils/collections.js"
 import { CommandPath } from "../../command-model.js"
 import { sortStacksForUndeploy } from "../../../takomo-stacks-context/dependencies.js"
+import { StackPath } from "../../../stacks/stack.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
@@ -19,7 +19,7 @@ export const resolveUndeployOperationType = (
 ): StackUndeployOperationType => (currentStack ? "DELETE" : "SKIP")
 
 export interface StackUndeployOperation {
-  readonly stack: InternalStack
+  readonly stack: InternalStandardStack
   readonly type: StackUndeployOperationType
   readonly currentStack?: CloudFormationStack
   readonly dependents: ReadonlyArray<StackPath>
@@ -31,8 +31,8 @@ export interface StacksUndeployPlan {
 }
 
 const convertToUndeployOperation = async (
-  stacksByPath: Map<StackPath, InternalStack>,
-  stack: InternalStack,
+  stacksByPath: Map<StackPath, InternalStandardStack>,
+  stack: InternalStandardStack,
   prune: boolean,
 ): Promise<StackUndeployOperation> => {
   const currentStack = await stack.getCurrentCloudFormationStack()
@@ -56,8 +56,8 @@ const convertToUndeployOperation = async (
 }
 
 const collectStackDependents = (
-  stacksByPath: Map<StackPath, InternalStack>,
-  stack: InternalStack,
+  stacksByPath: Map<StackPath, InternalStandardStack>,
+  stack: InternalStandardStack,
 ): ReadonlyArray<StackPath> =>
   stack.dependents.reduce((collected, dependent) => {
     const dependentStack = stacksByPath.get(dependent)
@@ -73,7 +73,7 @@ const collectStackDependents = (
   }, new Array<StackPath>())
 
 export const buildStacksUndeployPlan = async (
-  stacks: ReadonlyArray<InternalStack>,
+  stacks: ReadonlyArray<InternalStandardStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   prune: boolean,

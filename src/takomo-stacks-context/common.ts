@@ -1,12 +1,12 @@
 import { CommandPath } from "../command/command-model.js"
-import { InternalStack } from "../stacks/stack.js"
+import { InternalStandardStack } from "../stacks/standard-stack.js"
 import { TakomoError } from "../utils/errors.js"
 
 export const isStackGroupPath = (commandPath: CommandPath): boolean =>
   !commandPath.includes(".yml")
 
 export const validateStackCredentialManagersWithAllowedAccountIds = async (
-  stacks: ReadonlyArray<InternalStack>,
+  stacks: ReadonlyArray<InternalStandardStack>,
 ): Promise<void> => {
   const stacksWithIdentities = await Promise.all(
     stacks.map(async (stack) => {

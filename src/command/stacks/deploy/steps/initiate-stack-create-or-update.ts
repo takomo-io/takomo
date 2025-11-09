@@ -1,10 +1,10 @@
 import { CloudFormationStack } from "../../../../aws/cloudformation/model.js"
-import { InternalStack } from "../../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../../stacks/standard-stack.js"
 import { StackOperationStep } from "../../common/steps.js"
 import { TemplateSummaryHolder } from "../states.js"
 
 const hasTerminationProtectionChanged = (
-  stack: InternalStack,
+  stack: InternalStandardStack,
   currentStack: CloudFormationStack,
 ): boolean =>
   stack.terminationProtection !== currentStack.enableTerminationProtection

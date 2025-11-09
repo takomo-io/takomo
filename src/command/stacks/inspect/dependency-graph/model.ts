@@ -1,4 +1,4 @@
-import { InternalStack } from "../../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../../stacks/standard-stack.js"
 import {
   CommandInput,
   CommandOutput,
@@ -11,7 +11,7 @@ export interface DependencyGraphInput extends CommandInput {
 }
 
 export interface DependencyGraphOutput extends CommandOutput {
-  readonly stacks: ReadonlyArray<InternalStack>
+  readonly stacks: ReadonlyArray<InternalStandardStack>
 }
 
 export type DependencyGraphIO = IO<DependencyGraphOutput>

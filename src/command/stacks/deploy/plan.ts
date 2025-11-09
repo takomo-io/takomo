@@ -3,7 +3,7 @@ import {
   CloudFormationStackSummary,
   StackStatus,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { sortStacksForDeploy } from "../../../takomo-stacks-context/dependencies.js"
 import {
   getStackPath,
@@ -17,13 +17,14 @@ import {
   loadCurrentCfStacks,
   StackPair,
 } from "../common/load-current-cf-stacks.js"
+import { StackPath } from "../../../stacks/stack.js"
 
 /**
  * TODO: Move somewhere else
  */
 export const collectStackDependencies = (
-  stacksByPath: Map<StackPath, InternalStack>,
-  stack: InternalStack,
+  stacksByPath: Map<StackPath, InternalStandardStack>,
+  stack: InternalStandardStack,
 ): ReadonlyArray<StackPath> =>
   stack.dependencies.reduce((collected, dependency) => {
     const dependencyStack = stacksByPath.get(dependency)
@@ -39,7 +40,7 @@ export const collectStackDependencies = (
   }, new Array<StackPath>())
 
 export interface StackDeployOperation {
-  readonly stack: InternalStack
+  readonly stack: InternalStandardStack
   readonly type: StackOperationType
   readonly currentStack?: CloudFormationStackSummary
 }
@@ -82,7 +83,7 @@ const convertToOperation = ({
 })
 
 export const buildStacksDeployPlan = async (
-  stacks: ReadonlyArray<InternalStack>,
+  stacks: ReadonlyArray<InternalStandardStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   logger: TkmLogger,

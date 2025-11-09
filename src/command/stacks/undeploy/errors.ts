@@ -1,8 +1,8 @@
-import { InternalStack } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { TakomoError } from "../../../utils/errors.js"
 
 export class IncompatibleIgnoreDependenciesOptionOnDeleteError extends TakomoError {
-  constructor(stacks: ReadonlyArray<InternalStack>) {
+  constructor(stacks: ReadonlyArray<InternalStandardStack>) {
     const stacksPaths = stacks.map((s) => `  - ${s.path}`).join("\n")
 
     super(

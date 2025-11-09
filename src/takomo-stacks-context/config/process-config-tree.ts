@@ -10,11 +10,7 @@ import {
   StackGroup,
   StackGroupPath,
 } from "../../stacks/stack-group.js"
-import {
-  InternalStack,
-  normalizeStackPath,
-  StackPath,
-} from "../../stacks/stack.js"
+import { normalizeStackPath, StackPath } from "../../stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
 import { isWithinCommandPath } from "../../takomo-stacks-model/util.js"
@@ -29,11 +25,12 @@ import { StacksConfigRepository } from "../model.js"
 import { buildStack } from "./build-stack.js"
 import { ConfigTree, StackGroupConfigNode } from "./config-tree.js"
 import { doCreateStackGroup } from "./create-stack-group.js"
+import { InternalStandardStack } from "../../stacks/standard-stack.js"
 
 export class ProcessStatus {
   readonly #stackGroups = new Map<StackGroupPath, StackGroup>()
-  readonly #stacks = new Map<StackPath, InternalStack>()
-  readonly #newStacks = new Map<StackPath, InternalStack>()
+  readonly #stacks = new Map<StackPath, InternalStandardStack>()
+  readonly #newStacks = new Map<StackPath, InternalStandardStack>()
 
   getRootStackGroup = (): StackGroup =>
     this.getStackGroup(ROOT_STACK_GROUP_PATH)
@@ -47,7 +44,7 @@ export class ProcessStatus {
     this.#stackGroups.set(stackGroup.path, stackGroup)
   }
 
-  setStackProcessed = (stack: InternalStack): void => {
+  setStackProcessed = (stack: InternalStandardStack): void => {
     this.#stacks.set(stack.path, stack)
     this.#newStacks.set(stack.path, stack)
   }
@@ -61,17 +58,17 @@ export class ProcessStatus {
     return stackGroup
   }
 
-  getNewlyProcessedStacks = (): InternalStack[] =>
+  getNewlyProcessedStacks = (): InternalStandardStack[] =>
     Array.from(this.#newStacks.values())
   getStackGroups = (): StackGroup[] => Array.from(this.#stackGroups.values())
-  getStacks = (): InternalStack[] => Array.from(this.#stacks.values())
+  getStacks = (): InternalStandardStack[] => Array.from(this.#stacks.values())
 
   reset = (): void => this.#newStacks.clear()
 }
 
 const populateChildrenAndStacks = (
   stackGroup: StackGroup,
-  allStacks: ReadonlyArray<InternalStack>,
+  allStacks: ReadonlyArray<InternalStandardStack>,
   allStackGroups: ReadonlyArray<StackGroup>,
 ): StackGroup => {
   const children = allStackGroups

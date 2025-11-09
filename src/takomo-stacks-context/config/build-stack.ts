@@ -27,14 +27,11 @@ import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
 import { createAwsSchemas } from "../../schema/aws-schema.js"
 import { StackGroup } from "../../stacks/stack-group.js"
 import {
-  createStack,
-  InternalStack,
-  normalizeStackPath,
-  RawTagValue,
-  StackPath,
-  StackProps,
+  createStandardStack,
+  InternalStandardStack,
+  StandardStackProps,
   Template,
-} from "../../stacks/stack.js"
+} from "../../stacks/standard-stack.js"
 import { CommandRole, Project } from "../../takomo-core/command.js"
 import { StackPropertyDefaults } from "../../takomo-stacks-model/constants.js"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
@@ -53,6 +50,11 @@ import { makeStackName } from "./make-stack-name.js"
 import { mergeStackSchemas } from "./merge-stack-schemas.js"
 import { buildParameters } from "./parameters.js"
 import { ProcessStatus } from "./process-config-tree.js"
+import {
+  normalizeStackPath,
+  RawTagValue,
+  StackPath,
+} from "../../stacks/stack.js"
 
 export interface StackPropBuilderProps {
   readonly stackConfig: StackConfig
@@ -335,7 +337,7 @@ export const buildStack = async (
   commandPath: CommandPath,
   status: ProcessStatus,
   configRepository: StacksConfigRepository,
-): Promise<InternalStack[]> => {
+): Promise<InternalStandardStack[]> => {
   const { stackName } = createAwsSchemas({ regions: ctx.regions })
 
   logger.debug(`Build stack with path '${node.path}'`)
@@ -445,7 +447,7 @@ export const buildStack = async (
         const templateBucket = buildTemplateBucket(builderProps)
         const dependencies = buildDependencies(builderProps)
 
-        const props: StackProps = {
+        const props: StandardStackProps = {
           name,
           template,
           region,
@@ -478,7 +480,7 @@ export const buildStack = async (
         validateTags(exactPath, schemas?.tags ?? [], props.tags)
         validateName(exactPath, schemas?.name ?? [], name)
 
-        return createStack(props)
+        return createStandardStack(props)
       }),
   )
 }

@@ -1,11 +1,11 @@
 import { DetailedCloudFormationStack } from "../../../aws/cloudformation/model.js"
-import { InternalStack } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { bold, green, grey, red } from "../../../utils/colors.js"
 import { BaseIO } from "../../cli-io.js"
 
 export const printTerminationProtection = (
   io: BaseIO,
-  stack: InternalStack,
+  stack: InternalStandardStack,
   existingStack?: DetailedCloudFormationStack,
 ): void => {
   const formatCurrent = (enabled?: boolean): string => {

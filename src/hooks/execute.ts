@@ -1,7 +1,7 @@
 import { CloudFormationStack } from "../aws/cloudformation/model.js"
 import { StackOperationVariables } from "../command/command-model.js"
 import { InternalStacksContext } from "../context/stacks-context.js"
-import { Stack } from "../stacks/stack.js"
+import { StandardStack } from "../stacks/standard-stack.js"
 import { TkmLogger } from "../utils/logging.js"
 import { HookExecutor } from "./hook-executor.js"
 import {
@@ -13,7 +13,7 @@ import {
 
 interface ExecuteHooksProps {
   readonly ctx: InternalStacksContext
-  readonly stack: Stack
+  readonly stack: StandardStack
   readonly variables: StackOperationVariables
   readonly hooks: ReadonlyArray<HookExecutor>
   readonly operation: HookOperation
@@ -84,6 +84,7 @@ export const executeHooks = async ({
           result: "skip",
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       logger.error(
         `An error occurred while executing hook (name: ${hook.config.name}, type: ${hook.config.type})`,

@@ -1,10 +1,10 @@
-import { Stack } from "../../../stacks/stack.js"
+import { StandardStack } from "../../../stacks/standard-stack.js"
 import { StackResult } from "../../command-model.js"
 
 export interface StacksOperationListener {
-  readonly onStackOperationBegin: (stack: Stack) => Promise<void>
+  readonly onStackOperationBegin: (stack: StandardStack) => Promise<void>
   readonly onStackOperationComplete: (
-    stack: Stack,
+    stack: StandardStack,
     result: StackResult,
   ) => Promise<void>
 }

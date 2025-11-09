@@ -1,54 +1,31 @@
-import { CloudFormation } from "@aws-sdk/client-cloudformation"
 import { AwsCredentialIdentity } from "@aws-sdk/types"
-import {
-  CloudFormationStack,
-  StackCapability,
-  StackName,
-  StackParameterKey,
-  StackPolicyBody,
-} from "../aws/cloudformation/model.js"
-
-import { CloudFormationClient } from "../aws/cloudformation/client.js"
+import { StackName, StackParameterKey } from "../aws/cloudformation/model.js"
 import {
   CredentialManager,
   InternalCredentialManager,
 } from "../aws/common/credentials.js"
 import { AccountId, Region, TagKey } from "../aws/common/model.js"
-import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
+import { TimeoutConfig, Vars } from "../common/model.js"
 import { HookExecutor } from "../hooks/hook-executor.js"
 import { ResolverExecutor } from "../resolvers/resolver-executor.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
-import { ROOT_STACK_GROUP_PATH } from "../takomo-stacks-model/constants.js"
 import { Schemas } from "../takomo-stacks-model/schemas.js"
-import { FilePath } from "../utils/files.js"
 import { TkmLogger } from "../utils/logging.js"
 import { StackGroupName, StackGroupPath } from "./stack-group.js"
-
-export type RawTagValue = string | number | boolean
+import { ROOT_STACK_GROUP_PATH } from "../takomo-stacks-model/constants.js"
 
 /**
  * Stack path.
  */
 export type StackPath = string
 
-/**
- * Blueprint path.
- */
-export type BlueprintPath = string
-
-export interface Template {
-  readonly dynamic: boolean
-  readonly filename?: FilePath
-  readonly inline?: string
-}
+export type RawTagValue = string | number | boolean
 
 export interface StackProps {
   project?: Project
   path: StackPath
   stackGroupPath: StackGroupPath
   name: StackName
-  template: Template
-  templateBucket?: TemplateBucketConfig
   region: Region
   accountIds: ReadonlyArray<AccountId>
   commandRole?: CommandRole
@@ -60,19 +37,15 @@ export interface StackProps {
   data: Vars
   hooks: ReadonlyArray<HookExecutor>
   credentialManager: InternalCredentialManager
-  capabilities?: ReadonlyArray<StackCapability>
   ignore: boolean
   obsolete: boolean
   terminationProtection: boolean
   logger: TkmLogger
-  getCloudFormationClient: () => Promise<CloudFormationClient>
-  stackPolicy?: StackPolicyBody
-  stackPolicyDuringUpdate?: StackPolicyBody
   schemas?: Schemas
 }
 
 /**
- * An interface representing a CloudFormation stack configuration.
+ * An interface representing a stack configuration.
  */
 export interface Stack {
   /**
@@ -129,111 +102,20 @@ export interface Stack {
    * Logger instance associated with the stack
    */
   readonly logger: TkmLogger
-
-  /**
-   * Get CloudFormation client
-   */
-  readonly getClient: () => Promise<CloudFormation>
-
-  /**
-   * Get current CloudFormation stack
-   */
-  readonly getCurrentCloudFormationStack: () => Promise<
-    CloudFormationStack | undefined
-  >
 }
 
 export interface InternalStack extends Stack {
-  readonly template: Template
-  readonly templateBucket?: TemplateBucketConfig
   readonly accountIds: ReadonlyArray<AccountId>
   readonly commandRole?: CommandRole
   readonly tags: Map<TagKey, RawTagValue>
   readonly timeout: TimeoutConfig
   readonly parameters: Map<StackParameterKey, ResolverExecutor>
   readonly hooks: ReadonlyArray<HookExecutor>
-  readonly capabilities?: ReadonlyArray<StackCapability>
   readonly ignore: boolean
   readonly obsolete: boolean
   readonly terminationProtection: boolean
-  readonly stackPolicy?: StackPolicyBody
-  readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly schemas?: Schemas
-  readonly getCloudFormationClient: () => Promise<CloudFormationClient>
   readonly credentialManager: InternalCredentialManager
-  readonly toProps: () => StackProps
-}
-
-export const createStack = (props: StackProps): InternalStack => {
-  const {
-    accountIds,
-    capabilities,
-    commandRole,
-    credentialManager,
-    data,
-    dependents,
-    dependencies,
-    hooks,
-    ignore,
-    obsolete,
-    logger,
-    name,
-    parameters,
-    path,
-    project,
-    region,
-    stackGroupPath,
-    tags,
-    template,
-    templateBucket,
-    terminationProtection,
-    timeout,
-    getCloudFormationClient,
-    stackPolicy,
-    stackPolicyDuringUpdate,
-    schemas,
-  } = props
-
-  const getClient = async () =>
-    getCloudFormationClient().then((c) => c.getNativeClient())
-
-  const getCurrentCloudFormationStack = () =>
-    getCloudFormationClient().then((c) => c.describeStack(name))
-
-  const getCredentials = () => credentialManager.getCredentials()
-
-  return {
-    accountIds,
-    capabilities,
-    commandRole,
-    getCredentials,
-    credentialManager,
-    data,
-    dependents,
-    dependencies,
-    getClient,
-    getCloudFormationClient,
-    getCurrentCloudFormationStack,
-    hooks,
-    ignore,
-    obsolete,
-    logger,
-    name,
-    parameters,
-    path,
-    project,
-    region,
-    stackGroupPath,
-    tags,
-    template,
-    templateBucket,
-    terminationProtection,
-    timeout,
-    stackPolicy,
-    stackPolicyDuringUpdate,
-    schemas,
-    toProps: () => props,
-  }
 }
 
 const normalizeStackPathInternal = (

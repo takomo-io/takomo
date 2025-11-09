@@ -5,7 +5,7 @@ import { InternalCommandContext } from "../../context/command-context.js"
 import { TakomoConfig } from "../../extensions/config-customizer.js"
 import { HookRegistry } from "../../hooks/hook-registry.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
-import { BlueprintPath } from "../../stacks/stack.js"
+import { BlueprintPath } from "../../stacks/standard-stack.js"
 import {
   StacksConfigRepository,
   StacksConfigRepositoryProps,
