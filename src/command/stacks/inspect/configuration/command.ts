@@ -21,13 +21,13 @@ import {
 } from "./model.js"
 import { buildStacksContext } from "../../../../takomo-stacks-context/config/build-stacks-context.js"
 import { sortStacksForDeploy } from "../../../../takomo-stacks-context/dependencies.js"
-import { StackPath } from "../../../../stacks/stack.js"
+import { InternalStack, StackPath } from "../../../../stacks/stack.js"
 
 const modifyStacks = async (
   input: ShowConfigurationInput,
   ctx: InternalStacksContext,
   io: ShowConfigurationIO,
-): Promise<ReadonlyArray<InternalStandardStack>> => {
+): Promise<ReadonlyArray<InternalStack>> => {
   const stacks = ctx.stacks
 
   if (!input.interactive) {

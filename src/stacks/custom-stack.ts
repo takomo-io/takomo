@@ -74,3 +74,10 @@ export const createCustomStack = (
     toProps: () => props,
   }
 }
+
+export const isCustomStackProps = (
+  props: StackProps,
+): props is CustomStackProps => "type" in props
+
+export const isCustomStack = (stack: Stack): stack is InternalCustomStack =>
+  "type" in stack

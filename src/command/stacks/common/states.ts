@@ -1,5 +1,5 @@
 import { StackEvent } from "../../../aws/cloudformation/model.js"
-import { InternalStandardStack } from "../../../stacks/standard-stack.js"
+import { InternalStack } from "../../../stacks/stack.js"
 import { CommandStatus } from "../../../takomo-core/command.js"
 import { Timer } from "../../../utils/timer.js"
 import { StackOperationType } from "../../command-model.js"
@@ -7,7 +7,7 @@ import { StacksOperationListener } from "./model.js"
 import { StackOperationTransitions } from "./transitions.js"
 
 export interface InitialStackOperationState {
-  readonly stack: InternalStandardStack
+  readonly stack: InternalStack
   readonly stackExistedBeforeOperation: boolean
   readonly operationType: StackOperationType
   readonly totalTimer: Timer

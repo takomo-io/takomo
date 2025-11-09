@@ -1,5 +1,6 @@
-import { StackConfig } from "../../config/stack-config.js"
+import { CustomStackConfig } from "../../config/custom-stack-config.js"
 import { StackGroupConfig } from "../../config/stack-group-config.js"
+import { StandardStackConfig } from "../../config/standard-stack-config.js"
 import { CommandContext } from "../../context/command-context.js"
 import { buildStackConfig } from "../../parser/stacks/build-stack-config.js"
 import { buildStackGroupConfig } from "../../parser/stacks/build-stack-group-config.js"
@@ -16,8 +17,8 @@ export const parseBlueprintConfigFile = async (
   templateEngine: TemplateEngine,
   logger: TkmLogger,
   pathToFile: FilePath,
-): Promise<StackConfig> =>
-  parseStackConfigFileInternal(
+): Promise<StandardStackConfig> =>
+  parseStandardStackConfigFileInternal(
     ctx,
     variables,
     templateEngine,
@@ -33,17 +34,32 @@ export const parseStackConfigFile = async (
   templateEngine: TemplateEngine,
   logger: TkmLogger,
   pathToFile: FilePath,
-): Promise<StackConfig> =>
-  parseStackConfigFileInternal(
-    ctx,
-    variables,
-    templateEngine,
-    logger,
+): Promise<StandardStackConfig | CustomStackConfig> => {
+  const rendered = await templateEngine.renderTemplateFile({
     pathToFile,
-    "stack",
-  )
+    variables,
+  })
 
-const parseStackConfigFileInternal = async (
+  const parsedFile = parseYaml(pathToFile, rendered)
+  if (typeof parsedFile === "number" || typeof parsedFile === "string") {
+    throw new Error("Invalid yaml document")
+  }
+
+  if (parsedFile.type !== undefined) {
+    return parseStandardStackConfigFileInternal(
+      ctx,
+      variables,
+      templateEngine,
+      logger,
+      pathToFile,
+      "stack",
+    )
+  }
+
+  throw new Error("Parsing custom stack configs is not implemented yet")
+}
+
+const parseStandardStackConfigFileInternal = async (
   ctx: CommandContext,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: any,
@@ -51,7 +67,7 @@ const parseStackConfigFileInternal = async (
   logger: TkmLogger,
   pathToFile: FilePath,
   configType: "blueprint" | "stack",
-): Promise<StackConfig> => {
+): Promise<StandardStackConfig> => {
   const rendered = await templateEngine.renderTemplateFile({
     pathToFile,
     variables,

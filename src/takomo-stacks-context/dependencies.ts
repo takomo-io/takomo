@@ -1,16 +1,17 @@
 import * as R from "ramda"
-import {
-  createStandardStack,
-  InternalStandardStack,
-  StandardStackProps,
-} from "../stacks/standard-stack.js"
 import { TakomoError } from "../utils/errors.js"
 import { ObsoleteDependenciesError } from "./errors.js"
-import { normalizeStackPath, StackPath } from "../stacks/stack.js"
+import {
+  createInternalStack,
+  InternalStack,
+  normalizeStackPath,
+  StackPath,
+  StackProps,
+} from "../stacks/stack.js"
 
 export const checkCyclicDependenciesForStack = (
-  stack: InternalStandardStack,
-  stacks: Map<StackPath, InternalStandardStack>,
+  stack: InternalStack,
+  stacks: Map<StackPath, InternalStack>,
   collectedDependencies: ReadonlyArray<StackPath>,
 ): void => {
   if (stack.dependencies.length === 0) {
@@ -34,13 +35,13 @@ export const checkCyclicDependenciesForStack = (
 }
 
 export const checkCyclicDependencies = (
-  stacks: Map<StackPath, InternalStandardStack>,
+  stacks: Map<StackPath, InternalStack>,
 ): void => {
   stacks.forEach((s) => checkCyclicDependenciesForStack(s, stacks, [s.path]))
 }
 
 export const checkObsoleteDependencies = (
-  stacks: Map<StackPath, InternalStandardStack>,
+  stacks: Map<StackPath, InternalStack>,
 ): void => {
   const stacksWithObsoleteDependencies = Array.from(stacks.values())
     .filter((stack) => !stack.obsolete)
@@ -71,7 +72,7 @@ export const checkObsoleteDependencies = (
 
 export const collectAllDependencies = (
   stackPath: StackPath,
-  stacks: InternalStandardStack[],
+  stacks: InternalStack[],
 ): StackPath[] => {
   const stack = stacks.find((s) => s.path === stackPath)!
   return R.uniq(
@@ -84,7 +85,7 @@ export const collectAllDependencies = (
 
 export const collectAllDependents = (
   stackPath: StackPath,
-  stacks: InternalStandardStack[],
+  stacks: InternalStack[],
 ): StackPath[] => {
   const stack = stacks.find((s) => s.path === stackPath)!
   return R.uniq(
@@ -97,7 +98,7 @@ export const collectAllDependents = (
 
 export const collectStackDirectDependents = (
   stackPath: StackPath,
-  stacks: StandardStackProps[],
+  stacks: StackProps[],
 ): string[] =>
   stacks
     .filter((s) => s.path !== stackPath)
@@ -107,17 +108,15 @@ export const collectStackDirectDependents = (
         : dependents
     }, new Array<string>())
 
-export const populateDependents = (
-  stacks: StandardStackProps[],
-): StandardStackProps[] =>
+export const populateDependents = (stacks: StackProps[]): StackProps[] =>
   stacks.reduce((collected, stack) => {
     const dependents = collectStackDirectDependents(stack.path, stacks)
     return [...collected, { ...stack, dependents }]
-  }, new Array<StandardStackProps>())
+  }, new Array<StackProps>())
 
 export const processStackDependencies = (
-  stacks: ReadonlyArray<InternalStandardStack>,
-): ReadonlyArray<InternalStandardStack> => {
+  stacks: ReadonlyArray<InternalStack>,
+): ReadonlyArray<InternalStack> => {
   const processed = stacks
     .map((stack) => stack.toProps())
     .map((stack) => {
@@ -171,16 +170,16 @@ export const processStackDependencies = (
     })
 
   return populateDependents(processed).map((props) =>
-    createStandardStack(props),
+    createInternalStack(props),
   )
 }
 
 const sortStacks = (
-  stacks: ReadonlyArray<InternalStandardStack>,
-  selector: (stack: InternalStandardStack) => ReadonlyArray<StackPath>,
-): ReadonlyArray<InternalStandardStack> => {
+  stacks: ReadonlyArray<InternalStack>,
+  selector: (stack: InternalStack) => ReadonlyArray<StackPath>,
+): ReadonlyArray<InternalStack> => {
   const unsorted = new Map(stacks.map((s) => [s.path, s]))
-  const sorted = new Array<InternalStandardStack>()
+  const sorted = new Array<InternalStack>()
   while (unsorted.size > 0) {
     Array.from(unsorted.values())
       .filter((s) => selector(s).filter((d) => unsorted.has(d)).length === 0)
@@ -195,11 +194,9 @@ const sortStacks = (
 }
 
 export const sortStacksForUndeploy = (
-  stacks: ReadonlyArray<InternalStandardStack>,
-): ReadonlyArray<InternalStandardStack> =>
-  sortStacks(stacks, (s) => s.dependents)
+  stacks: ReadonlyArray<InternalStack>,
+): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependents)
 
 export const sortStacksForDeploy = (
-  stacks: ReadonlyArray<InternalStandardStack>,
-): ReadonlyArray<InternalStandardStack> =>
-  sortStacks(stacks, (s) => s.dependencies)
+  stacks: ReadonlyArray<InternalStack>,
+): ReadonlyArray<InternalStack> => sortStacks(stacks, (s) => s.dependencies)

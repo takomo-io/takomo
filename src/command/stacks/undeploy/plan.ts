@@ -1,6 +1,9 @@
 import * as R from "ramda"
 import { CloudFormationStack } from "../../../aws/cloudformation/model.js"
-import { InternalStandardStack } from "../../../stacks/standard-stack.js"
+import {
+  InternalStandardStack,
+  isStandardStack,
+} from "../../../stacks/standard-stack.js"
 import {
   getStackPath,
   isNotObsolete,
@@ -10,20 +13,43 @@ import {
 import { arrayToMap } from "../../../utils/collections.js"
 import { CommandPath } from "../../command-model.js"
 import { sortStacksForUndeploy } from "../../../takomo-stacks-context/dependencies.js"
-import { StackPath } from "../../../stacks/stack.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import {
+  InternalCustomStack,
+  isCustomStack,
+} from "../../../stacks/custom-stack.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
 export const resolveUndeployOperationType = (
-  currentStack?: CloudFormationStack,
+  currentStack?: unknown,
 ): StackUndeployOperationType => (currentStack ? "DELETE" : "SKIP")
 
-export interface StackUndeployOperation {
+export interface StandardStackUndeployOperation {
   readonly stack: InternalStandardStack
   readonly type: StackUndeployOperationType
   readonly currentStack?: CloudFormationStack
   readonly dependents: ReadonlyArray<StackPath>
 }
+
+export interface CustomStackUndeployOperation {
+  readonly stack: InternalCustomStack
+  readonly type: StackUndeployOperationType
+  readonly currentStack?: unknown // TODO: Set type when implemented
+  readonly dependents: ReadonlyArray<StackPath>
+}
+
+export type StackUndeployOperation =
+  | StandardStackUndeployOperation
+  | CustomStackUndeployOperation
+
+export const isStandardStackUndeployOperation = (
+  op: StackUndeployOperation,
+): op is StandardStackUndeployOperation => isStandardStack(op.stack)
+
+export const isCustomStackUndeployOperation = (
+  op: StackUndeployOperation,
+): op is CustomStackUndeployOperation => isCustomStack(op.stack)
 
 export interface StacksUndeployPlan {
   readonly operations: ReadonlyArray<StackUndeployOperation>
@@ -31,12 +57,10 @@ export interface StacksUndeployPlan {
 }
 
 const convertToUndeployOperation = async (
-  stacksByPath: Map<StackPath, InternalStandardStack>,
-  stack: InternalStandardStack,
+  stacksByPath: Map<StackPath, InternalStack>,
+  stack: InternalStack,
   prune: boolean,
 ): Promise<StackUndeployOperation> => {
-  const currentStack = await stack.getCurrentCloudFormationStack()
-  const type = resolveUndeployOperationType(currentStack)
   const dependentFilter = prune ? isObsolete : isNotObsolete
   const dependents = stack.dependents.filter((dependentPath) => {
     const dependent = stacksByPath.get(dependentPath)
@@ -47,12 +71,31 @@ const convertToUndeployOperation = async (
     return dependentFilter(dependent)
   })
 
-  return {
-    stack,
-    type,
-    dependents,
-    currentStack,
+  if (isCustomStack(stack)) {
+    const currentStack = undefined // TODO: Implement when custom stacks are supported
+    const type = resolveUndeployOperationType(currentStack)
+
+    return {
+      stack,
+      type,
+      dependents,
+      currentStack,
+    }
   }
+
+  if (isStandardStack(stack)) {
+    const currentStack = await stack.getCurrentCloudFormationStack()
+    const type = resolveUndeployOperationType(currentStack)
+
+    return {
+      stack,
+      type,
+      dependents,
+      currentStack,
+    }
+  }
+
+  throw new Error("Unknown stack type")
 }
 
 const collectStackDependents = (

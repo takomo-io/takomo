@@ -13,6 +13,8 @@ import { Schemas } from "../takomo-stacks-model/schemas.js"
 import { TkmLogger } from "../utils/logging.js"
 import { StackGroupName, StackGroupPath } from "./stack-group.js"
 import { ROOT_STACK_GROUP_PATH } from "../takomo-stacks-model/constants.js"
+import { createStandardStack, isStandardStackProps } from "./standard-stack.js"
+import { createCustomStack, isCustomStackProps } from "./custom-stack.js"
 
 /**
  * Stack path.
@@ -116,6 +118,7 @@ export interface InternalStack extends Stack {
   readonly terminationProtection: boolean
   readonly schemas?: Schemas
   readonly credentialManager: InternalCredentialManager
+  readonly toProps: () => StackProps
 }
 
 const normalizeStackPathInternal = (
@@ -165,4 +168,15 @@ export const normalizeStackPath = (
     parentPath.slice(1).split("/"),
     stackPath.split("/"),
   )
+}
+
+export const createInternalStack = (props: StackProps): InternalStack => {
+  if (isStandardStackProps(props)) {
+    return createStandardStack(props)
+  }
+  if (isCustomStackProps(props)) {
+    return createCustomStack(props)
+  }
+
+  throw new Error(`Unknown stack props`)
 }

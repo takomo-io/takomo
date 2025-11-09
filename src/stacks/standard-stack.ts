@@ -9,6 +9,7 @@ import { TemplateBucketConfig } from "../common/model.js"
 import { FilePath } from "../utils/files.js"
 import { InternalStack, Stack, StackProps } from "./stack.js"
 import { InternalCredentialManager } from "../aws/common/credentials.js"
+import { isCustomStackProps } from "./custom-stack.js"
 
 /**
  * Blueprint path.
@@ -104,7 +105,6 @@ export const createStandardStack = (
     commandRole,
     getCredentials,
     credentialManager,
-    // internalCredentialManager: credentialManager,
     data,
     dependents,
     dependencies,
@@ -132,3 +132,10 @@ export const createStandardStack = (
     toProps: () => props,
   }
 }
+
+export const isStandardStackProps = (
+  props: StackProps,
+): props is StandardStackProps => !("type" in props)
+
+export const isStandardStack = (stack: Stack): stack is InternalStandardStack =>
+  !("type" in stack)

@@ -7,7 +7,7 @@ import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
 import { HookConfig } from "../hooks/hook.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
 import { Schemas } from "../takomo-stacks-model/schemas.js"
-import { RawTagValue } from "./stack.js"
+import { InternalStack, RawTagValue } from "./stack.js"
 import { InternalStandardStack } from "./standard-stack.js"
 
 export type StackGroupPath = string
@@ -23,7 +23,7 @@ export interface StackGroupProps {
   parentPath?: StackGroupPath
   templateBucket?: TemplateBucketConfig
   children: ReadonlyArray<StackGroup>
-  stacks: ReadonlyArray<InternalStandardStack>
+  stacks: ReadonlyArray<InternalStack>
   timeout?: TimeoutConfig
   tags: Map<TagKey, RawTagValue>
   hooks: ReadonlyArray<HookConfig>
@@ -48,7 +48,7 @@ export interface StackGroup {
   readonly root: boolean
   readonly templateBucket?: TemplateBucketConfig
   readonly children: ReadonlyArray<StackGroup>
-  readonly stacks: ReadonlyArray<InternalStandardStack>
+  readonly stacks: ReadonlyArray<InternalStack>
   readonly timeout?: TimeoutConfig
   readonly tags: Map<TagKey, RawTagValue>
   readonly hooks: ReadonlyArray<HookConfig>

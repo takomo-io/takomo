@@ -1,11 +1,8 @@
 import * as R from "ramda"
 import { StackName } from "../aws/cloudformation/model.js"
 import { CommandPath } from "../command/command-model.js"
-import {
-  InternalStandardStack,
-  StandardStack,
-} from "../stacks/standard-stack.js"
-import { StackPath } from "../stacks/stack.js"
+import { StandardStack } from "../stacks/standard-stack.js"
+import { InternalStack, StackPath } from "../stacks/stack.js"
 
 export const getStackPath = ({ path }: StandardStack): StackPath => path
 
@@ -19,10 +16,9 @@ export const getStackNames: (
   stacks: ReadonlyArray<StandardStack>,
 ) => ReadonlyArray<StackName> = R.map(getStackName)
 
-export const isObsolete = (stack: InternalStandardStack): boolean =>
-  stack.obsolete
+export const isObsolete = (stack: InternalStack): boolean => stack.obsolete
 
-export const isNotObsolete = (stack: InternalStandardStack): boolean =>
+export const isNotObsolete = (stack: InternalStack): boolean =>
   !isObsolete(stack)
 
 export const isWithinCommandPath = (
