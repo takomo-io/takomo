@@ -3,84 +3,15 @@ import { Timer } from "../../../utils/timer.js"
 import { StackResult } from "../../command-model.js"
 import { StacksOperationListener } from "../common/model.js"
 import { executeSteps } from "../common/steps.js"
+import { InitialUndeployCustomStackState } from "./custom-stack/states.js"
+import { createUndeployCustomStackTransitions } from "./custom-stack/transitions.js"
 import { UndeployStacksIO } from "./model.js"
 import {
-  CustomStackUndeployOperation,
-  isCustomStackUndeployOperation,
   isStandardStackUndeployOperation,
   StackUndeployOperation,
-  StandardStackUndeployOperation,
 } from "./plan.js"
-import { InitialUndeployStackState } from "./states.js"
-import { createUndeployStackTransitions } from "./transitions.js"
-
-const deleteStandardStack = async (
-  timer: Timer,
-  ctx: InternalStacksContext,
-  io: UndeployStacksIO,
-  operation: StandardStackUndeployOperation,
-  dependents: Promise<StackResult>[],
-  stacksOperationListener: StacksOperationListener,
-): Promise<StackResult> => {
-  const { stack, currentStack } = operation
-  const logger = io.childLogger(operation.stack.path)
-
-  const variables = {
-    ...ctx.variables,
-    hooks: {},
-  }
-
-  const initial: InitialUndeployStackState = {
-    ctx,
-    stack,
-    io,
-    logger,
-    variables,
-    dependents,
-    currentStack,
-    stacksOperationListener,
-    stackExistedBeforeOperation: currentStack !== undefined,
-    operationType: "DELETE",
-    totalTimer: timer.startChild(stack.path),
-    transitions: createUndeployStackTransitions(),
-  }
-
-  return executeSteps(initial)
-}
-
-const deleteCustomStack = async (
-  timer: Timer,
-  ctx: InternalStacksContext,
-  io: UndeployStacksIO,
-  operation: CustomStackUndeployOperation,
-  dependents: Promise<StackResult>[],
-  stacksOperationListener: StacksOperationListener,
-): Promise<StackResult> => {
-  const { stack, currentStack } = operation
-  const logger = io.childLogger(operation.stack.path)
-
-  const variables = {
-    ...ctx.variables,
-    hooks: {},
-  }
-
-  const initial: InitialUndeployStackState = {
-    ctx,
-    stack,
-    io,
-    logger,
-    variables,
-    dependents,
-    currentStack,
-    stacksOperationListener,
-    stackExistedBeforeOperation: currentStack !== undefined,
-    operationType: "DELETE",
-    totalTimer: timer.startChild(stack.path),
-    transitions: createUndeployStackTransitions(),
-  }
-
-  return executeSteps(initial)
-}
+import { InitialUndeployStandardStackState } from "./standard-stack/states.js"
+import { createUndeployStackTransitions } from "./standard-stack/transitions.js"
 
 export const deleteStack = async (
   timer: Timer,
@@ -90,27 +21,48 @@ export const deleteStack = async (
   dependents: Promise<StackResult>[],
   stacksOperationListener: StacksOperationListener,
 ): Promise<StackResult> => {
+  const logger = io.childLogger(operation.stack.path)
+
+  const variables = {
+    ...ctx.variables,
+    hooks: {},
+  }
+
   if (isStandardStackUndeployOperation(operation)) {
-    return deleteStandardStack(
-      timer,
+    const { stack, currentStack } = operation
+    const initial: InitialUndeployStandardStackState = {
       ctx,
+      stack,
       io,
-      operation,
+      logger,
+      variables,
       dependents,
+      currentStack,
       stacksOperationListener,
-    )
-  }
+      stackExistedBeforeOperation: currentStack !== undefined,
+      operationType: "DELETE",
+      totalTimer: timer.startChild(stack.path),
+      transitions: createUndeployStackTransitions(),
+    }
 
-  if (isCustomStackUndeployOperation(operation)) {
-    return deleteCustomStack(
-      timer,
+    return executeSteps(initial)
+  } else {
+    const { stack, currentStack } = operation
+    const initial: InitialUndeployCustomStackState = {
       ctx,
+      stack,
       io,
-      operation,
+      logger,
+      variables,
       dependents,
+      currentStack,
       stacksOperationListener,
-    )
-  }
+      stackExistedBeforeOperation: currentStack !== undefined,
+      operationType: "DELETE",
+      totalTimer: timer.startChild(stack.path),
+      transitions: createUndeployCustomStackTransitions(),
+    }
 
-  throw new Error("Unsupported stack undeploy operation")
+    return executeSteps(initial)
+  }
 }

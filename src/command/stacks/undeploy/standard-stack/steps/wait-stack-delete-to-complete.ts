@@ -1,5 +1,5 @@
 import * as R from "ramda"
-import { StackOperationStep } from "../../common/steps.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { ClientTokenHolder } from "../states.js"
 
 export const waitStackDeleteToComplete: StackOperationStep<

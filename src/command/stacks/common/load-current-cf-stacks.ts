@@ -2,14 +2,21 @@ import {
   CloudFormationStackSummary,
   StackName,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStandardStack } from "../../../stacks/standard-stack.js"
-import { getStackNames } from "../../../takomo-stacks-model/util.js"
+import {
+  InternalCustomStack,
+  isCustomStack,
+} from "../../../stacks/custom-stack.js"
+import { InternalStack } from "../../../stacks/stack.js"
+import {
+  InternalStandardStack,
+  isStandardStack,
+} from "../../../stacks/standard-stack.js"
 import { arrayToMap } from "../../../utils/collections.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { checksum } from "../../../utils/strings.js"
 
 const makeCredentialsRegionHash = async (
-  stack: InternalStandardStack,
+  stack: InternalStack,
 ): Promise<string> => {
   const { accessKeyId, secretAccessKey, sessionToken } =
     await stack.getCredentials()
@@ -20,23 +27,35 @@ const makeCredentialsRegionHash = async (
 }
 
 const loadCfStacks = (
-  stacks: ReadonlyArray<InternalStandardStack>,
-): Promise<Map<StackName, CloudFormationStackSummary>> => {
-  const stackNames = getStackNames(stacks)
-  return stacks[0]
+  stacks: ReadonlyArray<InternalStack>,
+): Promise<Map<StackName, CloudFormationStackSummary | unknown>> => {
+  const customStacks = stacks.filter(isCustomStack)
+  const standardStacks = stacks.filter(isStandardStack)
+
+  // TODO: Load custom stacks
+
+  const standardStackNames = standardStacks.map((s) => s.name)
+  return standardStacks[0]
     .getCloudFormationClient()
-    .then((client) => client.listNotDeletedStacks(stackNames))
+    .then((client) => client.listNotDeletedStacks(standardStackNames))
 }
 
-export interface StackPair {
+export interface CustomStackPair {
+  readonly stack: InternalCustomStack
+  readonly current?: unknown
+}
+
+export interface StandardStackPair {
   readonly stack: InternalStandardStack
   readonly current?: CloudFormationStackSummary
 }
 
+export type StackPair = CustomStackPair | StandardStackPair
+
 const buildHashStackMap = (
-  stackHashPairs: ReadonlyArray<[string, InternalStandardStack]>,
-): Map<string, InternalStandardStack[]> => {
-  const stackHashMap = new Map<string, InternalStandardStack[]>()
+  stackHashPairs: ReadonlyArray<[string, InternalStack]>,
+): Map<string, InternalStack[]> => {
+  const stackHashMap = new Map<string, InternalStack[]>()
   stackHashPairs.forEach(([hash, stack]) => {
     const stacks = stackHashMap.get(hash)
     if (stacks) {
@@ -49,13 +68,13 @@ const buildHashStackMap = (
   return stackHashMap
 }
 
-export const loadCurrentCfStacks = async (
+export const loadCurrentStacks = async (
   logger: TkmLogger,
-  stacks: ReadonlyArray<InternalStandardStack>,
+  stacks: ReadonlyArray<InternalStack>,
 ): Promise<ReadonlyArray<StackPair>> => {
   logger.info("Load current stacks")
 
-  const stackHashPairs: ReadonlyArray<[string, InternalStandardStack]> =
+  const stackHashPairs: ReadonlyArray<[string, InternalStack]> =
     await Promise.all(
       stacks.map(async (stack) => {
         const hash = await makeCredentialsRegionHash(stack)

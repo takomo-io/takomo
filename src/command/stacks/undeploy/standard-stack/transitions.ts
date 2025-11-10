@@ -1,18 +1,18 @@
-import { StackOperationStep } from "../common/steps.js"
+import { StackOperationStep } from "../../common/steps.js"
 import {
   defaultStackOperationTransitions,
   inProgress,
   StackOperationTransitions,
-} from "../common/transitions.js"
+} from "../../common/transitions.js"
 import {
   ClientTokenHolder,
   CurrentStackHolder,
-  InitialUndeployStackState,
+  InitialUndeployStandardStackState,
   StackOperationResultHolder,
 } from "./states.js"
 import { executeAfterUndeployHooks } from "./steps/execute-after-undeploy-hooks.js"
-import { executeBeforeUndeployHooks } from "./steps/execute-before-undeploy-hooks.js"
 import { initiateStackDeletion } from "./steps/initiate-stack-delete.js"
+import { executeBeforeUndeployHooks } from "./steps/execute-before-undeploy-hooks.js"
 import { waitDependentsToComplete } from "./steps/wait-dependents-to-complete.js"
 import { waitStackDeleteToComplete } from "./steps/wait-stack-delete-to-complete.js"
 
@@ -25,7 +25,6 @@ export interface UndeployStackTransitions extends StackOperationTransitions {
 
 export const createUndeployStackTransitions = (): UndeployStackTransitions => ({
   ...defaultStackOperationTransitions,
-
   executeAfterUndeployHooks: inProgress(
     "execute-after-hooks",
     executeAfterUndeployHooks,
@@ -46,7 +45,7 @@ export const createUndeployStackTransitions = (): UndeployStackTransitions => ({
 })
 
 export const executeAfterUndeployHooksOnError =
-  <S extends InitialUndeployStackState>(
+  <S extends InitialUndeployStandardStackState>(
     step: StackOperationStep<S>,
   ): StackOperationStep<S> =>
   async (state: S) => {

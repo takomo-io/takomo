@@ -1,6 +1,7 @@
-import { StackResult } from "../../../command-model.js"
-import { StackOperationStep } from "../../common/steps.js"
-import { InitialUndeployStackState } from "../states.js"
+import { StackOperationStep } from "../../../common/steps.js"
+import { StackResult } from "../../../../command-model.js"
+import { InitialUndeployStandardStackState } from "../../standard-stack/states.js"
+import { InitialUndeployCustomStackState } from "../states.js"
 
 const hasSomeDependentFailed = (results: ReadonlyArray<StackResult>): boolean =>
   results.some((r) => !r.success)
@@ -11,7 +12,7 @@ const hasSomeDependentSkipped = (
   results.some((r) => r.status === "SKIPPED" && r.stackExistedBeforeOperation)
 
 export const waitDependentsToComplete: StackOperationStep<
-  InitialUndeployStackState
+  InitialUndeployCustomStackState
 > = async (state) => {
   const { transitions, dependents, currentStack } = state
 

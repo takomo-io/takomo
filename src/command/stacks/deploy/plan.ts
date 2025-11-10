@@ -14,7 +14,7 @@ import { arrayToMap } from "../../../utils/collections.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { CommandPath, StackOperationType } from "../../command-model.js"
 import {
-  loadCurrentCfStacks,
+  loadCurrentStacks,
   StackPair,
 } from "../common/load-current-cf-stacks.js"
 import { StackPath } from "../../../stacks/stack.js"
@@ -104,7 +104,7 @@ export const buildStacksDeployPlan = async (
     .filter(isNotObsolete)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
-  const stackPairs = await loadCurrentCfStacks(logger, sortedStacks)
+  const stackPairs = await loadCurrentStacks(logger, sortedStacks)
   const operations = stackPairs.map(convertToOperation)
 
   return {
