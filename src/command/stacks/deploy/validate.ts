@@ -2,7 +2,11 @@ import * as R from "ramda"
 import { StackStatus } from "../../../aws/cloudformation/model.js"
 import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context/common.js"
 import { TakomoError } from "../../../utils/errors.js"
-import { StackDeployOperation, StacksDeployPlan } from "./plan.js"
+import {
+  isStandardStackDeployOperation,
+  StackDeployOperation,
+  StacksDeployPlan,
+} from "./plan.js"
 
 export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
   [
@@ -21,8 +25,12 @@ export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
 export const validateStacksStatus = (
   operations: ReadonlyArray<StackDeployOperation>,
 ): void => {
+  const standardStackOperations = operations.filter(
+    isStandardStackDeployOperation,
+  )
+
   const stacksInInvalidStatus = []
-  for (const operation of operations) {
+  for (const operation of standardStackOperations) {
     const { currentStack } = operation
     if (currentStack && !isStackReadyForDeploy(currentStack.status)) {
       stacksInInvalidStatus.push(operation)

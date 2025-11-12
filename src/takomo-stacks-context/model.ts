@@ -19,6 +19,7 @@ import { TakomoError } from "../utils/errors.js"
 import { Timer } from "../utils/timer.js"
 import { ConfigTree } from "./config/config-tree.js"
 import { StackPath } from "../stacks/stack.js"
+import { CustomStackHandlerRegistry } from "../custom-stack-handler/custom-stack-handler-registry.js"
 
 export class CommandPathMatchesNoStacksError extends TakomoError {
   constructor(commandPath: CommandPath, availableStackPaths: StackPath[]) {
@@ -234,6 +235,7 @@ export interface StacksConfigRepository {
     resolverRegistry: ResolverRegistry,
     hookRegistry: HookRegistry,
     schemaRegistry: SchemaRegistry,
+    customStackHandlerRegistry: CustomStackHandlerRegistry,
   ) => Promise<void>
 
   templateEngine: TemplateEngine

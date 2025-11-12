@@ -30,6 +30,8 @@ import {
 } from "./extensions.js"
 import { parseBlueprintConfigFile } from "./parser.js"
 import { ConfigTree } from "../../takomo-stacks-context/config/config-tree.js"
+import { CustomStackHandler } from "../../custom-stack-handler/custom-stack-handler.js"
+import { CustomStackHandlerRegistry } from "../../custom-stack-handler/custom-stack-handler-registry.js"
 
 export interface FileSystemStacksConfigRepositoryProps {
   readonly ctx: InternalCommandContext
@@ -185,12 +187,17 @@ export const createFileSystemStacksConfigRepository = async ({
       resolverRegistry: ResolverRegistry,
       hookRegistry: HookRegistry,
       schemaRegistry: SchemaRegistry,
+      customStackHandlerRegistry: CustomStackHandlerRegistry,
     ): Promise<void> => {
       await Promise.all([
         loadCustomResolvers(resolversDir, logger, resolverRegistry),
         loadCustomHooks(hooksDir, logger, hookRegistry),
         loadCustomSchemas({ schemasDirs, logger, registry: schemaRegistry }),
       ])
+
+      takomoConfig.customStackHandlers?.forEach((provider) => {
+        customStackHandlerRegistry.registerProvider(provider)
+      })
 
       for (const [i, provider] of (
         takomoConfig.hookProviders ?? []

@@ -1,10 +1,10 @@
 import * as R from "ramda"
-import { Schemas } from "../../../../takomo-stacks-model/schemas.js"
-import { arrayToObject } from "../../../../utils/collections.js"
-import { TakomoError } from "../../../../utils/errors.js"
-import { StackOperationStep } from "../../common/steps.js"
-import { resolveResultMessage } from "../common.js"
-import { StackParameterInfo } from "../model.js"
+import { Schemas } from "../../../../../takomo-stacks-model/schemas.js"
+import { arrayToObject } from "../../../../../utils/collections.js"
+import { TakomoError } from "../../../../../utils/errors.js"
+import { StackOperationStep } from "../../../common/steps.js"
+import { resolveResultMessage } from "../../common.js"
+import { StackParameterInfo } from "../../model.js"
 import { TemplateSummaryHolder } from "../states.js"
 
 export class ImmutableParameterError extends TakomoError {

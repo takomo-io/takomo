@@ -1,5 +1,6 @@
 import { StackEvent } from "../../../../aws/cloudformation/model.js"
 import { InternalStacksContext } from "../../../../context/stacks-context.js"
+import { CustomStackHandler } from "../../../../custom-stack-handler/custom-stack-handler.js"
 import { InternalCustomStack } from "../../../../stacks/custom-stack.js"
 import { CommandStatus } from "../../../../takomo-core/command.js"
 import { TkmLogger } from "../../../../utils/logging.js"
@@ -18,6 +19,7 @@ export interface InitialUndeployCustomStackState
   readonly transitions: UndeployCustomStackTransitions
   readonly stack: InternalCustomStack
   readonly currentStack?: unknown
+  readonly customStackHandler: CustomStackHandler<any, any>
 }
 
 export interface StackOperationResultHolder

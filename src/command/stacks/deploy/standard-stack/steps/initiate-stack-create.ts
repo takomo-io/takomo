@@ -1,6 +1,6 @@
-import { uuid } from "../../../../utils/strings.js"
-import { defaultCapabilities } from "../../../command-model.js"
-import { StackOperationStep } from "../../common/steps.js"
+import { uuid } from "../../../../../utils/strings.js"
+import { defaultCapabilities } from "../../../../command-model.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { TemplateSummaryHolder } from "../states.js"
 
 export const initiateStackCreate: StackOperationStep<

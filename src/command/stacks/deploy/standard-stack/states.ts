@@ -7,24 +7,24 @@ import {
   StackId,
   TemplateBody,
   TemplateSummary,
-} from "../../../aws/cloudformation/model.js"
-import { ClientRequestToken } from "../../../aws/common/model.js"
-import { InternalStacksContext } from "../../../context/stacks-context.js"
-import { CommandStatus } from "../../../takomo-core/command.js"
-import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
-import { TkmLogger } from "../../../utils/logging.js"
+} from "../../../../aws/cloudformation/model.js"
+import { ClientRequestToken } from "../../../../aws/common/model.js"
+import { InternalStacksContext } from "../../../../context/stacks-context.js"
+import { CommandStatus } from "../../../../takomo-core/command.js"
+import { StacksConfigRepository } from "../../../../takomo-stacks-context/model.js"
+import { TkmLogger } from "../../../../utils/logging.js"
 import {
   StackOperationType,
   StackOperationVariables,
   StackResult,
-} from "../../command-model.js"
-import { InitialStackOperationState } from "../common/states.js"
+} from "../../../command-model.js"
+import { InitialStackOperationState } from "../../common/states.js"
 import {
   DeployStacksIO,
   DeployState,
   StackParameterInfo,
   StackTagInfo,
-} from "./model.js"
+} from "../model.js"
 import { DeployStackTransitions } from "./transitions.js"
 
 export interface InitialDeployStackState extends InitialStackOperationState {

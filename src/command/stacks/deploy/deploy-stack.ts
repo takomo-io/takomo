@@ -1,6 +1,6 @@
 import { CloudFormationStackSummary } from "../../../aws/cloudformation/model.js"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
-import { InternalStandardStack } from "../../../stacks/standard-stack.js"
+import { InternalStack } from "../../../stacks/stack.js"
 import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { Timer } from "../../../utils/timer.js"
@@ -8,12 +8,12 @@ import { StackOperationType, StackResult } from "../../command-model.js"
 import { StacksOperationListener } from "../common/model.js"
 import { executeSteps } from "../common/steps.js"
 import { DeployStacksIO, DeployState } from "./model.js"
-import { InitialDeployStackState } from "./states.js"
-import { createDeployStackTransitions } from "./transitions.js"
+import { InitialDeployStackState } from "./standard-stack/states.js"
+import { createDeployStackTransitions } from "./standard-stack/transitions.js"
 
 const logStackConfig = (
   logger: TkmLogger,
-  stack: InternalStandardStack,
+  stack: InternalStack,
   confidentialValuesLoggingEnabled: boolean,
 ): void => {
   const filterFn = confidentialValuesLoggingEnabled
@@ -27,7 +27,7 @@ export const deployStack = async (
   ctx: InternalStacksContext,
   io: DeployStacksIO,
   state: DeployState,
-  stack: InternalStandardStack,
+  stack: InternalStack,
   dependencies: Promise<StackResult>[],
   operationType: StackOperationType,
   configRepository: StacksConfigRepository,

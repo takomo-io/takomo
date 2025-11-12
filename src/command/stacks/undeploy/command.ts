@@ -14,6 +14,7 @@ import { UndeployStacksIO } from "./model.js"
 import { buildStacksUndeployPlan } from "./plan.js"
 import { validateStacksUndeployPlan } from "./validate.js"
 import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
+import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 
 const modifyInput = async (
   input: StacksUndeployOperationInput,
@@ -33,7 +34,6 @@ const modifyInput = async (
 
 const undeployStacks = async (
   ctx: InternalStacksContext,
-  configRepository: StacksConfigRepository,
   io: UndeployStacksIO,
   input: StacksUndeployOperationInput,
 ): Promise<StacksOperationOutput> => {
@@ -44,6 +44,7 @@ const undeployStacks = async (
     modifiedInput.commandPath,
     modifiedInput.ignoreDependencies,
     modifiedInput.prune,
+    ctx.customStackHandlerRegistry,
   )
 
   await validateStacksUndeployPlan(plan)
@@ -80,5 +81,5 @@ export const undeployStacksCommand: CommandHandler<
         validateCommandRoles: false,
       }),
     )
-    .then((ctx) => undeployStacks(ctx, configRepository, io, input))
+    .then((ctx) => undeployStacks(ctx, io, input))
     .then(io.printOutput)

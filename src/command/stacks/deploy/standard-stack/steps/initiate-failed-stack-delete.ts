@@ -1,5 +1,5 @@
-import { uuid } from "../../../../utils/strings.js"
-import { StackOperationStep } from "../../common/steps.js"
+import { uuid } from "../../../../../utils/strings.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { CurrentStackHolder } from "../states.js"
 
 export const initiateFailedStackDelete: StackOperationStep<

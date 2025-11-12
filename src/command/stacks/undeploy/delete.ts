@@ -61,6 +61,7 @@ export const deleteStack = async (
       operationType: "DELETE",
       totalTimer: timer.startChild(stack.path),
       transitions: createUndeployCustomStackTransitions(),
+      customStackHandler: operation.customStackHandler,
     }
 
     return executeSteps(initial)

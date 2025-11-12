@@ -1,8 +1,7 @@
 import { CommandPath } from "../command/command-model.js"
-import { StandardStack } from "../stacks/standard-stack.js"
-import { InternalStack, StackPath } from "../stacks/stack.js"
+import { InternalStack, Stack, StackPath } from "../stacks/stack.js"
 
-export const getStackPath = ({ path }: StandardStack): StackPath => path
+export const getStackPath = ({ path }: Stack): StackPath => path
 
 export const isObsolete = (stack: InternalStack): boolean => stack.obsolete
 

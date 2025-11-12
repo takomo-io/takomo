@@ -1,10 +1,10 @@
-import { StackOperationStep } from "../common/steps.js"
+import { StackOperationStep } from "../../common/steps.js"
 import {
   defaultStackOperationTransitions,
   inProgress,
   StackOperationTransitions,
-} from "../common/transitions.js"
-import { resolveResultMessage } from "./common.js"
+} from "../../common/transitions.js"
+import { resolveResultMessage } from "../common.js"
 import {
   ChangeSetHolder,
   ChangeSetNameHolder,

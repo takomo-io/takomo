@@ -1,10 +1,10 @@
-import { ChangeSetType } from "../../../../aws/cloudformation/model.js"
-import { uuid } from "../../../../utils/strings.js"
+import { ChangeSetType } from "../../../../../aws/cloudformation/model.js"
+import { uuid } from "../../../../../utils/strings.js"
 import {
   defaultCapabilities,
   StackOperationType,
-} from "../../../command-model.js"
-import { StackOperationStep } from "../../common/steps.js"
+} from "../../../../command-model.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { TemplateSummaryHolder } from "../states.js"
 
 export const resolveChangeSetType = (

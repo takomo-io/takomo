@@ -1,12 +1,18 @@
 import { StackOperationStep } from "../../../common/steps.js"
-import { InitialUndeployCustomStackState } from "../../standard-stack/states.js"
+import { InitialUndeployCustomStackState } from "../states.js"
 
 export const deleteStack: StackOperationStep<
   InitialUndeployCustomStackState
 > = async (state) => {
-  const { transitions, stack, currentStack } = state
+  const { transitions, customStackHandler, stack, currentStack } = state
 
-  // TODO: Execute deletion and handle errors
+  // TODO: handle errors
+
+  const result = await customStackHandler.delete({
+    config: stack.config,
+    logger: state.logger,
+    state: currentStack,
+  })
 
   return transitions.completeStackOperation({
     ...state,

@@ -4,9 +4,9 @@ import {
   inProgress,
   StackOperationTransitions,
 } from "../../common/transitions.js"
-import { waitDependentsToComplete } from "../steps/wait-dependents-to-complete.js"
 import { InitialUndeployCustomStackState } from "./states.js"
 import { deleteStack } from "./steps/delete-stack.js"
+import { waitDependentsToComplete } from "./steps/wait-dependents-to-complete.js"
 
 export interface UndeployCustomStackTransitions
   extends StackOperationTransitions {

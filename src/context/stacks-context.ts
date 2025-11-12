@@ -8,6 +8,7 @@ import { TemplateEngine } from "../templating/template-engine.js"
 import { CommandContext, InternalCommandContext } from "./command-context.js"
 import { Cache } from "../caches/cache.js"
 import { StackPath } from "../stacks/stack.js"
+import { CustomStackHandlerRegistry } from "../custom-stack-handler/custom-stack-handler-registry.js"
 
 /**
  * Provides access to the current stack context and
@@ -54,6 +55,7 @@ export interface InternalStacksContext extends InternalCommandContext {
   readonly concurrentStacks: number
   readonly credentialManager: CredentialManager
   readonly templateEngine: TemplateEngine
+  readonly customStackHandlerRegistry: CustomStackHandlerRegistry
   readonly rootStackGroup: StackGroup
   readonly stacks: ReadonlyArray<InternalStandardStack>
   readonly getStackGroup: (

@@ -1,4 +1,4 @@
-import { StackOperationStep } from "../../common/steps.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { TemplateLocationHolder } from "../states.js"
 
 export const validateTemplate: StackOperationStep<

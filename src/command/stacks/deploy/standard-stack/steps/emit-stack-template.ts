@@ -1,13 +1,13 @@
-import { StackOperationStep } from "../../common/steps.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { TemplateSummaryHolder } from "../states.js"
 import {
   createDir,
   createFile,
   dirExists,
   expandFilePath,
-} from "../../../../utils/files.js"
+} from "../../../../../utils/files.js"
 import { join, dirname } from "path"
-import { toErrorWithMessage } from "../../../../utils/errors.js"
+import { toErrorWithMessage } from "../../../../../utils/errors.js"
 
 export const emitStackTemplate: StackOperationStep<
   TemplateSummaryHolder

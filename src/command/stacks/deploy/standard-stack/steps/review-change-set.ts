@@ -1,5 +1,5 @@
-import { uuid } from "../../../../utils/strings.js"
-import { StackOperationStep } from "../../common/steps.js"
+import { uuid } from "../../../../../utils/strings.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { ChangeSetHolder } from "../states.js"
 
 export const reviewChangeSet: StackOperationStep<ChangeSetHolder> = async (

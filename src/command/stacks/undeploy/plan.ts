@@ -18,6 +18,8 @@ import {
   InternalCustomStack,
   isCustomStack,
 } from "../../../stacks/custom-stack.js"
+import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
+import { CustomStackHandler } from "../../../custom-stack-handler/custom-stack-handler.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
@@ -35,8 +37,9 @@ export interface StandardStackUndeployOperation {
 export interface CustomStackUndeployOperation {
   readonly stack: InternalCustomStack
   readonly type: StackUndeployOperationType
-  readonly currentStack?: unknown // TODO: Set type when implemented
+  readonly currentStack?: unknown
   readonly dependents: ReadonlyArray<StackPath>
+  readonly customStackHandler: CustomStackHandler<any, any>
 }
 
 export type StackUndeployOperation =
@@ -60,6 +63,7 @@ const convertToUndeployOperation = async (
   stacksByPath: Map<StackPath, InternalStack>,
   stack: InternalStack,
   prune: boolean,
+  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StackUndeployOperation> => {
   const dependentFilter = prune ? isObsolete : isNotObsolete
   const dependents = stack.dependents.filter((dependentPath) => {
@@ -72,7 +76,17 @@ const convertToUndeployOperation = async (
   })
 
   if (isCustomStack(stack)) {
-    const currentStack = undefined // TODO: Implement when custom stacks are supported
+    const customStackHandler = await customStackHandlerRegistry.initHandler(
+      stack.type,
+      stack.config,
+    )
+
+    // TODO: Handler error
+    const currentStack = await customStackHandler.getCurrentState({
+      logger: stack.logger,
+      config: stack.config,
+    })
+
     const type = resolveUndeployOperationType(currentStack)
 
     return {
@@ -80,6 +94,7 @@ const convertToUndeployOperation = async (
       type,
       dependents,
       currentStack,
+      customStackHandler,
     }
   }
 
@@ -99,8 +114,8 @@ const convertToUndeployOperation = async (
 }
 
 const collectStackDependents = (
-  stacksByPath: Map<StackPath, InternalStandardStack>,
-  stack: InternalStandardStack,
+  stacksByPath: Map<StackPath, InternalStack>,
+  stack: InternalStack,
 ): ReadonlyArray<StackPath> =>
   stack.dependents.reduce((collected, dependent) => {
     const dependentStack = stacksByPath.get(dependent)
@@ -116,10 +131,11 @@ const collectStackDependents = (
   }, new Array<StackPath>())
 
 export const buildStacksUndeployPlan = async (
-  stacks: ReadonlyArray<InternalStandardStack>,
+  stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   prune: boolean,
+  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StacksUndeployPlan> => {
   const pruneFilter = prune ? isObsolete : isNotObsolete
   const stacksByPath = arrayToMap(stacks, getStackPath)
@@ -147,7 +163,12 @@ export const buildStacksUndeployPlan = async (
 
   const operations = await Promise.all(
     selectedStacks.map((stack) =>
-      convertToUndeployOperation(stacksByPath, stack, prune),
+      convertToUndeployOperation(
+        stacksByPath,
+        stack,
+        prune,
+        customStackHandlerRegistry,
+      ),
     ),
   )
 

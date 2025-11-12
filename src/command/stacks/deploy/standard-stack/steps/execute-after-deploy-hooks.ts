@@ -1,6 +1,6 @@
-import { executeHooks } from "../../../../hooks/execute.js"
-import { toHookOperation, toHookStatus } from "../../common/hooks.js"
-import { StackOperationStep } from "../../common/steps.js"
+import { executeHooks } from "../../../../../hooks/execute.js"
+import { toHookOperation, toHookStatus } from "../../../common/hooks.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { StackOperationResultHolder } from "../states.js"
 
 export const executeAfterDeployHooks: StackOperationStep<

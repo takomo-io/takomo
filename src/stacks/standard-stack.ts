@@ -7,9 +7,8 @@ import {
 import { CloudFormationClient } from "../aws/cloudformation/client.js"
 import { TemplateBucketConfig } from "../common/model.js"
 import { FilePath } from "../utils/files.js"
-import { InternalStack, Stack, StackProps } from "./stack.js"
+import { BaseInternalStack, Stack, StackProps } from "./stack.js"
 import { InternalCredentialManager } from "../aws/common/credentials.js"
-import { isCustomStackProps } from "./custom-stack.js"
 
 /**
  * Blueprint path.
@@ -48,7 +47,9 @@ export interface StandardStack extends Stack {
   >
 }
 
-export interface InternalStandardStack extends StandardStack, InternalStack {
+export interface InternalStandardStack
+  extends StandardStack,
+    BaseInternalStack {
   readonly template: Template
   readonly templateBucket?: TemplateBucketConfig
   readonly capabilities?: ReadonlyArray<StackCapability>

@@ -8,3 +8,7 @@ export interface StacksOperationListener {
     result: StackResult,
   ) => Promise<void>
 }
+
+export type CustomStackState = {
+  value: unknown
+}

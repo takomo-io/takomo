@@ -1,5 +1,5 @@
-import { StackResult } from "../../../command-model.js"
-import { StackOperationStep } from "../../common/steps.js"
+import { StackResult } from "../../../../command-model.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { InitialDeployStackState } from "../states.js"
 
 const hasSomeDependencyFailed = (

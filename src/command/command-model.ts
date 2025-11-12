@@ -2,7 +2,7 @@ import { CloudFormationStack, StackEvent } from "../aws/cloudformation/model.js"
 import { Variables } from "../common/model.js"
 import { StackGroupPath } from "../stacks/stack-group.js"
 import { StackPath } from "../stacks/stack.js"
-import { InternalStandardStack } from "../stacks/standard-stack.js"
+import { InternalStack } from "../stacks/stack.js"
 import { CommandStatus } from "../takomo-core/command.js"
 import { Timer } from "../utils/timer.js"
 import { Capability } from "@aws-sdk/client-cloudformation"
@@ -36,7 +36,7 @@ export interface StackOperationVariables extends Variables {
 }
 
 export interface StackResult {
-  readonly stack: InternalStandardStack
+  readonly stack: InternalStack
   readonly message: string
   readonly status: CommandStatus
   readonly events: ReadonlyArray<StackEvent>

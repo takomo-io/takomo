@@ -1,5 +1,6 @@
 import { HookProvider } from "../hooks/hook-provider.js"
 import { ResolverProvider } from "../resolvers/resolver-provider.js"
+import { CustomStackHandlerProvider } from "../custom-stack-handler/custom-stack-handler-provider.js"
 import { SchemaProvider } from "../takomo-stacks-model/schemas.js"
 import { TemplateEngineProvider } from "../templating/template-engine-provider.js"
 import { FilePath } from "../utils/files.js"
@@ -8,6 +9,11 @@ import { FilePath } from "../utils/files.js"
  * Takomo custom configuration.
  */
 export interface TakomoConfig {
+  /**
+   * List of custom stack handler providers.
+   */
+  readonly customStackHandlers?: Array<CustomStackHandlerProvider<any, any>>
+
   /**
    * List of hook providers.
    */

@@ -3,7 +3,10 @@ import {
   CloudFormationStackSummary,
   StackStatus,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStandardStack } from "../../../stacks/standard-stack.js"
+import {
+  InternalStandardStack,
+  isStandardStack,
+} from "../../../stacks/standard-stack.js"
 import { sortStacksForDeploy } from "../../../takomo-stacks-context/dependencies.js"
 import {
   getStackPath,
@@ -14,10 +17,18 @@ import { arrayToMap } from "../../../utils/collections.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { CommandPath, StackOperationType } from "../../command-model.js"
 import {
+  isCustomStackPair,
+  isStandardStackPair,
   loadCurrentStacks,
   StackPair,
 } from "../common/load-current-cf-stacks.js"
 import { StackPath } from "../../../stacks/stack.js"
+import {
+  InternalCustomStack,
+  isCustomStack,
+} from "../../../stacks/custom-stack.js"
+import { CustomStackState } from "../common/model.js"
+import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 
 /**
  * TODO: Move somewhere else
@@ -39,11 +50,29 @@ export const collectStackDependencies = (
     ])
   }, new Array<StackPath>())
 
-export interface StackDeployOperation {
+export interface StandardStackDeployOperation {
   readonly stack: InternalStandardStack
   readonly type: StackOperationType
   readonly currentStack?: CloudFormationStackSummary
 }
+
+export interface CustomStackDeployOperation {
+  readonly stack: InternalCustomStack
+  readonly type: StackOperationType
+  readonly currentStack?: CustomStackState
+}
+
+export type StackDeployOperation =
+  | StandardStackDeployOperation
+  | CustomStackDeployOperation
+
+export const isStandardStackDeployOperation = (
+  op: StackDeployOperation,
+): op is StandardStackDeployOperation => isStandardStack(op.stack)
+
+export const isCustomStackDeployOperation = (
+  op: StackDeployOperation,
+): op is CustomStackDeployOperation => isCustomStack(op.stack)
 
 export interface StacksDeployPlan {
   readonly operations: ReadonlyArray<StackDeployOperation>
@@ -73,20 +102,32 @@ export const resolveOperationType = (
   }
 }
 
-const convertToOperation = ({
-  stack,
-  current,
-}: StackPair): StackDeployOperation => ({
-  stack,
-  type: resolveOperationType(current?.status),
-  currentStack: current,
-})
+const convertToOperation = (pair: StackPair): StackDeployOperation => {
+  if (isStandardStackPair(pair)) {
+    return {
+      stack: pair.stack,
+      type: resolveOperationType(pair.current?.status),
+      currentStack: pair.current,
+    }
+  }
+
+  if (isCustomStackPair(pair)) {
+    return {
+      stack: pair.stack,
+      type: pair.current ? "UPDATE" : "CREATE",
+      currentStack: pair.current,
+    }
+  }
+
+  throw new Error("Unreachable")
+}
 
 export const buildStacksDeployPlan = async (
   stacks: ReadonlyArray<InternalStandardStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   logger: TkmLogger,
+  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StacksDeployPlan> => {
   const stacksByPath = arrayToMap(stacks, getStackPath)
   const stacksToDeploy = stacks
@@ -104,7 +145,11 @@ export const buildStacksDeployPlan = async (
     .filter(isNotObsolete)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
-  const stackPairs = await loadCurrentStacks(logger, sortedStacks)
+  const stackPairs = await loadCurrentStacks(
+    logger,
+    sortedStacks,
+    customStackHandlerRegistry,
+  )
   const operations = stackPairs.map(convertToOperation)
 
   return {

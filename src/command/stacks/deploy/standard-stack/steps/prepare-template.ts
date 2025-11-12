@@ -1,9 +1,9 @@
 import path from "path"
-import { InternalStandardStack } from "../../../../stacks/standard-stack.js"
-import { arrayToObject } from "../../../../utils/collections.js"
-import { StackOperationVariables } from "../../../command-model.js"
-import { StackOperationStep } from "../../common/steps.js"
-import { StackParameterInfo } from "../model.js"
+import { InternalStandardStack } from "../../../../../stacks/standard-stack.js"
+import { arrayToObject } from "../../../../../utils/collections.js"
+import { StackOperationVariables } from "../../../../command-model.js"
+import { StackOperationStep } from "../../../common/steps.js"
+import { StackParameterInfo } from "../../model.js"
 import { TagsHolder } from "../states.js"
 
 export const createVariablesForStackTemplate = (

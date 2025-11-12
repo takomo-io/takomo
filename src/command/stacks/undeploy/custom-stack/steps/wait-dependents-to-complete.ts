@@ -1,6 +1,5 @@
 import { StackOperationStep } from "../../../common/steps.js"
 import { StackResult } from "../../../../command-model.js"
-import { InitialUndeployStandardStackState } from "../../standard-stack/states.js"
 import { InitialUndeployCustomStackState } from "../states.js"
 
 const hasSomeDependentFailed = (results: ReadonlyArray<StackResult>): boolean =>
@@ -39,7 +38,7 @@ export const waitDependentsToComplete: StackOperationStep<
     })
   }
 
-  return transitions.executeBeforeUndeployHooks({
+  return transitions.deleteStack({
     ...state,
     currentStack,
   })

@@ -1,4 +1,4 @@
-import { StackOperationStep } from "../../common/steps.js"
+import { StackOperationStep } from "../../../common/steps.js"
 import { CurrentStackHolder } from "../states.js"
 
 export const continueUpdateRollback: StackOperationStep<
