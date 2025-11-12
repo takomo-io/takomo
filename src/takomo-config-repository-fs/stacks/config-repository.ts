@@ -196,7 +196,7 @@ export const createFileSystemStacksConfigRepository = async ({
       ])
 
       takomoConfig.customStackHandlers?.forEach((provider) => {
-        customStackHandlerRegistry.registerProvider(provider)
+        customStackHandlerRegistry.registerHandler(provider)
       })
 
       for (const [i, provider] of (

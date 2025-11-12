@@ -1,5 +1,10 @@
 import { InternalCredentialManager } from "../aws/common/credentials.js"
-import { BaseInternalStack, InternalStack, Stack, StackProps } from "./stack.js"
+import {
+  BaseInternalStack,
+  Stack as InternalStack,
+  Stack,
+  StackProps,
+} from "./stack.js"
 
 export type CustomStackType = string
 
@@ -11,7 +16,7 @@ export interface CustomStackProps extends StackProps {
 /**
  * An interface representing a custom stack configuration.
  */
-export interface CustomStack extends Stack {
+export interface CustomStack extends InternalStack {
   readonly type: CustomStackType
 }
 
@@ -83,5 +88,9 @@ export const isCustomStackProps = (
   props: StackProps,
 ): props is CustomStackProps => "type" in props
 
-export const isCustomStack = (stack: Stack): stack is InternalCustomStack =>
+export const isInternalCustomStack = (
+  stack: InternalStack,
+): stack is InternalCustomStack => "type" in stack
+
+export const isCustomStack = (stack: Stack): stack is CustomStack =>
   "type" in stack

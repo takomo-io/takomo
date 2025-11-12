@@ -6,12 +6,12 @@ import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom
 import {
   CustomStack,
   InternalCustomStack,
-  isCustomStack,
+  isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
 import { InternalStack, StackPath } from "../../../stacks/stack.js"
 import {
   InternalStandardStack,
-  isStandardStack,
+  isInternalStandardStack,
 } from "../../../stacks/standard-stack.js"
 import { arrayToMap } from "../../../utils/collections.js"
 import { TkmLogger } from "../../../utils/logging.js"
@@ -51,11 +51,11 @@ export interface StandardStackPair {
 export type StackPair = CustomStackPair | StandardStackPair
 
 export const isCustomStackPair = (pair: StackPair): pair is CustomStackPair =>
-  isCustomStack(pair.stack)
+  isInternalCustomStack(pair.stack)
 
 export const isStandardStackPair = (
   pair: StackPair,
-): pair is StandardStackPair => isStandardStack(pair.stack)
+): pair is StandardStackPair => isInternalStandardStack(pair.stack)
 
 const buildHashStackMap = <S extends InternalStack>(
   stackHashPairs: ReadonlyArray<[string, S]>,
@@ -110,10 +110,7 @@ const loadCurrentCustomStacks = async (
   // TODO: Handle errors
   const stackMap = new Map<StackPath, CustomStackState>()
   for (const stack of stacks) {
-    const handler = await customStackHandlerRegistry.initHandler(
-      stack.type,
-      stack.config,
-    )
+    const handler = await customStackHandlerRegistry.getHandler(stack.type)
     const state = await handler.getCurrentState({
       logger: stack.logger,
       config: stack.config,
@@ -132,13 +129,13 @@ export const loadCurrentStacks = async (
 ): Promise<ReadonlyArray<StackPair>> => {
   logger.info("Load current stacks")
 
-  const standardStacks = stacks.filter(isStandardStack)
+  const standardStacks = stacks.filter(isInternalStandardStack)
   const currentStandardStacks = await loadCurrentStandardStacks(
     logger,
     standardStacks,
   )
 
-  const customStacks = stacks.filter(isCustomStack)
+  const customStacks = stacks.filter(isInternalCustomStack)
   const currentCustomStacks = await loadCurrentCustomStacks(
     logger,
     customStacks,
@@ -146,12 +143,12 @@ export const loadCurrentStacks = async (
   )
 
   return stacks.map((stack) => {
-    if (isStandardStack(stack)) {
+    if (isInternalStandardStack(stack)) {
       return {
         stack,
         current: currentStandardStacks.get(stack.path),
       }
-    } else if (isCustomStack(stack)) {
+    } else if (isInternalCustomStack(stack)) {
       return {
         stack,
         current: currentCustomStacks.get(stack.path),

@@ -7,7 +7,12 @@ import {
 import { CloudFormationClient } from "../aws/cloudformation/client.js"
 import { TemplateBucketConfig } from "../common/model.js"
 import { FilePath } from "../utils/files.js"
-import { BaseInternalStack, Stack, StackProps } from "./stack.js"
+import {
+  BaseInternalStack,
+  Stack as InternalStack,
+  Stack,
+  StackProps,
+} from "./stack.js"
 import { InternalCredentialManager } from "../aws/common/credentials.js"
 
 /**
@@ -33,7 +38,7 @@ export interface StandardStackProps extends StackProps {
 /**
  * An interface representing a standard CloudFormation stack configuration.
  */
-export interface StandardStack extends Stack {
+export interface StandardStack extends InternalStack {
   /**
    * Get CloudFormation client
    */
@@ -138,5 +143,9 @@ export const isStandardStackProps = (
   props: StackProps,
 ): props is StandardStackProps => !("type" in props)
 
-export const isStandardStack = (stack: Stack): stack is InternalStandardStack =>
+export const isInternalStandardStack = (
+  stack: InternalStack,
+): stack is InternalStandardStack => !("type" in stack)
+
+export const isStandardStack = (stack: Stack): stack is StandardStack =>
   !("type" in stack)

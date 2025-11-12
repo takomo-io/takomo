@@ -7,6 +7,7 @@ import {
   ResolverProviderSchemaProps,
 } from "./resolver-provider.js"
 import { Resolver, ResolverInput } from "./resolver.js"
+import { isStandardStack } from "../stacks/standard-stack.js"
 
 const init = async (props: any): Promise<Resolver> => ({
   dependencies: (): StackPath[] => [props.stack],
@@ -30,6 +31,12 @@ const init = async (props: any): Promise<Resolver> => ({
     if (!referencedStack) {
       // TODO: We should be able to detect this earlier - when the configuration is being built
       throw new Error(`Stack not found with path: ${props.stack}`)
+    }
+
+    if (!isStandardStack(referencedStack)) {
+      throw new Error(
+        `Stack with path ${props.stack} is not a standard stack. Stack output resolver can only be used with standard stacks`,
+      )
     }
 
     if (rest.length > 0) {

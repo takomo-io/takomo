@@ -37,6 +37,7 @@ import { isStandardStackConfig } from "../../config/standard-stack-config.js"
 import { buildStandardStack } from "./build-standard-stack.js"
 import { isCustomStackConfig } from "../../config/custom-stack-config.js"
 import { buildCustomStack } from "./build-custom-stack.js"
+import { CustomStackHandlerRegistry } from "../../custom-stack-handler/custom-stack-handler-registry.js"
 
 export interface StackPropBuilderProps {
   readonly stackConfig: StackConfig
@@ -251,6 +252,7 @@ export const buildStack = async (
   commandPath: CommandPath,
   status: ProcessStatus,
   configRepository: StacksConfigRepository,
+  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<InternalStack[]> => {
   const stackPath = node.path
 
@@ -282,6 +284,10 @@ export const buildStack = async (
   }
 
   if (isCustomStackConfig(stackConfig)) {
+    const customStackHandler = customStackHandlerRegistry.getHandler(
+      stackConfig.type,
+    )
+
     return buildCustomStack(
       stackPath,
       ctx,
@@ -295,7 +301,7 @@ export const buildStack = async (
       stackGroup,
       commandPath,
       status,
-      configRepository,
+      customStackHandler,
     )
   }
 

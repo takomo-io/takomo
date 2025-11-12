@@ -1,50 +1,42 @@
-import {
-  CustomStackHandlerProvider,
-  CustomStackHandlerProviderSchemaProps,
-} from "./custom-stack-handler-provider.js"
+import { CustomStackHandler } from "./custom-stack-handler.js"
 
 type CmdCustomStackHandlerConfig = {}
 type CmdCustomStackHandlerState = {}
-type CmdCustomStackHandlerProvider = CustomStackHandlerProvider<
+
+export const createCmdCustomStackHandler = (): CustomStackHandler<
   CmdCustomStackHandlerConfig,
   CmdCustomStackHandlerState
->
+> => {
+  return {
+    type: "cmd",
 
-export const createCmdCustomStackHandlerProvider =
-  (): CmdCustomStackHandlerProvider => {
-    return {
-      type: "cmd",
+    parseConfig: (props) => {
+      throw new Error("Function not implemented.")
+    },
 
-      schema: (props: CustomStackHandlerProviderSchemaProps) =>
-        props.joi.object({}),
+    getCurrentState: async () => {
+      return {
+        state: undefined,
+      }
+    },
 
-      init: async () => {
-        return {
-          getCurrentState: async () => {
-            return {
-              state: undefined,
-            }
-          },
+    create: async () => {
+      return {
+        outputs: {},
+      }
+    },
 
-          create: async () => {
-            return {
-              outputs: {},
-            }
-          },
+    update: async () => {
+      return {
+        state: {},
+        outputs: {},
+      }
+    },
 
-          update: async () => {
-            return {
-              state: {},
-              outputs: {},
-            }
-          },
-
-          delete: async () => {
-            return {
-              success: true,
-            }
-          },
-        }
-      },
-    }
+    delete: async () => {
+      return {
+        success: true,
+      }
+    },
   }
+}

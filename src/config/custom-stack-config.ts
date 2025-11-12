@@ -3,6 +3,7 @@ import { StackConfig } from "./stack-config.js"
 
 export interface CustomStackConfig extends StackConfig {
   readonly type: CustomStackType
+  readonly config?: Record<string, unknown>
 }
 
 export const isCustomStackConfig = (

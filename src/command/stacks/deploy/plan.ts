@@ -5,7 +5,7 @@ import {
 } from "../../../aws/cloudformation/model.js"
 import {
   InternalStandardStack,
-  isStandardStack,
+  isInternalStandardStack,
 } from "../../../stacks/standard-stack.js"
 import { sortStacksForDeploy } from "../../../takomo-stacks-context/dependencies.js"
 import {
@@ -25,7 +25,7 @@ import {
 import { StackPath } from "../../../stacks/stack.js"
 import {
   InternalCustomStack,
-  isCustomStack,
+  isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
 import { CustomStackState } from "../common/model.js"
 import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
@@ -68,11 +68,11 @@ export type StackDeployOperation =
 
 export const isStandardStackDeployOperation = (
   op: StackDeployOperation,
-): op is StandardStackDeployOperation => isStandardStack(op.stack)
+): op is StandardStackDeployOperation => isInternalStandardStack(op.stack)
 
 export const isCustomStackDeployOperation = (
   op: StackDeployOperation,
-): op is CustomStackDeployOperation => isCustomStack(op.stack)
+): op is CustomStackDeployOperation => isInternalCustomStack(op.stack)
 
 export interface StacksDeployPlan {
   readonly operations: ReadonlyArray<StackDeployOperation>

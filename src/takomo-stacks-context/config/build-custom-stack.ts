@@ -12,7 +12,6 @@ import { isWithinCommandPath } from "../../takomo-stacks-model/util.js"
 import { TakomoError } from "../../utils/errors.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { validate } from "../../utils/validation.js"
-import { StacksConfigRepository } from "../model.js"
 import { getCredentialManager } from "./get-credential-provider.js"
 import { initializeHooks } from "./hooks.js"
 import { mergeStackSchemas } from "./merge-stack-schemas.js"
@@ -44,6 +43,7 @@ import {
   validateTags,
 } from "./build-stack.js"
 import { CustomStackConfig } from "../../config/custom-stack-config.js"
+import { CustomStackHandler } from "../../custom-stack-handler/custom-stack-handler.js"
 
 export const buildCustomStack = async (
   stackPath: StackPath,
@@ -58,7 +58,7 @@ export const buildCustomStack = async (
   stackGroup: StackGroup,
   commandPath: CommandPath,
   status: ProcessStatus,
-  configRepository: StacksConfigRepository,
+  customStackHandler: CustomStackHandler<any, any>,
 ): Promise<InternalCustomStack[]> => {
   const { stackName } = createAwsSchemas({ regions: ctx.regions })
 
@@ -138,8 +138,14 @@ export const buildCustomStack = async (
         const timeout = buildTimeout(builderProps)
         const dependencies = buildDependencies(builderProps)
 
+        const { config } = await customStackHandler.parseConfig({
+          config: stackConfig.config ?? {},
+          logger,
+        })
+
         const props: CustomStackProps = {
           type: stackConfig.type,
+          config,
           name,
           region,
           parameters,

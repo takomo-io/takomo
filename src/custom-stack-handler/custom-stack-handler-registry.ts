@@ -1,18 +1,13 @@
-import { TakomoError } from "../utils/errors.js"
 import { TkmLogger } from "../utils/logging.js"
-import { CustomStackHandlerProvider } from "./custom-stack-handler-provider.js"
 import { CustomStackHandler } from "./custom-stack-handler.js"
 import { CustomStackType } from "../stacks/custom-stack.js"
-import { createCmdCustomStackHandlerProvider } from "./cmd-custom-stack-handler.js"
+import { createCmdCustomStackHandler } from "./cmd-custom-stack-handler.js"
 
 export interface CustomStackHandlerRegistry {
-  readonly initHandler: (
-    type: CustomStackType,
-    props: unknown,
-  ) => Promise<CustomStackHandler<any, any>>
-  readonly hasProvider: (type: CustomStackType) => boolean
-  readonly registerProvider: (
-    provider: CustomStackHandlerProvider<any, any>,
+  readonly getHandler: (type: CustomStackType) => CustomStackHandler<any, any>
+
+  readonly registerHandler: (
+    provider: CustomStackHandler<any, any>,
   ) => Promise<void>
 }
 
@@ -23,54 +18,43 @@ interface CreateCustomStackHandlerRegistryProps {
 export const createCustomStackHandlerRegistry = ({
   logger,
 }: CreateCustomStackHandlerRegistryProps): CustomStackHandlerRegistry => {
-  const providers = new Map<
+  const handlers = new Map<
     CustomStackType,
-    CustomStackHandlerProvider<any, any>
+    CustomStackHandler<unknown, unknown>
   >()
 
-  const hasProvider = (type: CustomStackType): boolean => providers.has(type)
-
-  const registerProvider = async (
-    provider: CustomStackHandlerProvider<any, any>,
+  const registerHandler = async (
+    handler: CustomStackHandler<unknown, unknown>,
   ): Promise<void> => {
-    if (hasProvider(provider.type)) {
-      throw new TakomoError(
-        `Custom stack handler provider already registered with type '${provider.type}'`,
+    const existingHandler = handlers.get(handler.type)
+    if (existingHandler) {
+      throw new Error(
+        `Custom stack handler already registered for with type '${handler.type}'`,
       )
     }
 
-    logger.debug(
-      `Registered custom stack handler provider with type '${provider.type}'`,
-    )
+    logger.debug(`Registered custom stack handler with type '${handler.type}'`)
 
-    providers.set(provider.type, provider)
+    handlers.set(handler.type, handler)
   }
-  const getProvider = (
+
+  const getHandler = (
     type: CustomStackType,
-  ): CustomStackHandlerProvider<any, any> => {
-    const provider = providers.get(type)
-    if (!provider) {
-      throw new Error(`No provider found for custom stack with type '${type}'`)
+  ): CustomStackHandler<unknown, unknown> => {
+    const handler = handlers.get(type)
+    if (!handler) {
+      throw new Error(`Custom stack handler not found with type '${type}'`)
     }
 
-    return provider
-  }
-
-  const initHandler = async (
-    type: CustomStackType,
-    props: unknown,
-  ): Promise<CustomStackHandler<any, any>> => {
-    const provider = getProvider(type)
-    return provider.init(props)
+    return handler
   }
 
   return {
-    registerProvider,
-    initHandler,
-    hasProvider,
+    registerHandler,
+    getHandler,
   }
 }
 
 export const coreCustomStackHandlerProviders = (): ReadonlyArray<
-  CustomStackHandlerProvider<any, any>
-> => [createCmdCustomStackHandlerProvider()]
+  CustomStackHandler<any, any>
+> => [createCmdCustomStackHandler()]

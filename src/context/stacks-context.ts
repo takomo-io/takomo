@@ -1,13 +1,10 @@
 import { CredentialManager } from "../aws/common/credentials.js"
 import { StackGroup, StackGroupPath } from "../stacks/stack-group.js"
-import {
-  InternalStandardStack,
-  StandardStack,
-} from "../stacks/standard-stack.js"
+import { StandardStack } from "../stacks/standard-stack.js"
 import { TemplateEngine } from "../templating/template-engine.js"
 import { CommandContext, InternalCommandContext } from "./command-context.js"
 import { Cache } from "../caches/cache.js"
-import { StackPath } from "../stacks/stack.js"
+import { InternalStack, Stack, StackPath } from "../stacks/stack.js"
 import { CustomStackHandlerRegistry } from "../custom-stack-handler/custom-stack-handler-registry.js"
 
 /**
@@ -38,7 +35,7 @@ export interface StacksContext extends CommandContext {
   readonly getStackByExactPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => StandardStack
+  ) => Stack
 
   /**
    * Return 0 or more stacks by path. The stack path can be relative if
@@ -47,7 +44,7 @@ export interface StacksContext extends CommandContext {
   readonly getStacksByPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => ReadonlyArray<StandardStack>
+  ) => ReadonlyArray<Stack>
 }
 
 export interface InternalStacksContext extends InternalCommandContext {
@@ -57,16 +54,16 @@ export interface InternalStacksContext extends InternalCommandContext {
   readonly templateEngine: TemplateEngine
   readonly customStackHandlerRegistry: CustomStackHandlerRegistry
   readonly rootStackGroup: StackGroup
-  readonly stacks: ReadonlyArray<InternalStandardStack>
+  readonly stacks: ReadonlyArray<InternalStack>
   readonly getStackGroup: (
     stackGroupPath: StackGroupPath,
   ) => StackGroup | undefined
   readonly getStackByExactPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => InternalStandardStack
+  ) => InternalStack
   readonly getStacksByPath: (
     path: StackPath,
     stackGroupPath?: StackGroupPath,
-  ) => ReadonlyArray<InternalStandardStack>
+  ) => ReadonlyArray<InternalStack>
 }

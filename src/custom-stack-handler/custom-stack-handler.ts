@@ -1,3 +1,4 @@
+import { CustomStackType } from "../stacks/custom-stack.js"
 import { TkmLogger } from "../utils/logging.js"
 
 export interface GetCurrentStateProps<CONFIG> {
@@ -31,6 +32,15 @@ export interface UpdateCustomStackResult<STATE> {
   readonly outputs?: Record<string, string>
 }
 
+export interface ParseConfigProps {
+  readonly logger: TkmLogger
+  readonly config: unknown
+}
+
+export interface ParseConfigResult<CONFIG> {
+  readonly config: CONFIG
+}
+
 export interface DeleteCustomStackProps<CONFIG, STATE> {
   readonly logger: TkmLogger
   readonly state: STATE
@@ -42,9 +52,15 @@ export interface DeleteCustomStackResult {
 }
 
 export interface CustomStackHandler<CONFIG, STATE> {
+  readonly type: CustomStackType
+
   readonly getCurrentState: (
     props: GetCurrentStateProps<CONFIG>,
   ) => Promise<STATE>
+
+  readonly parseConfig: (
+    props: ParseConfigProps,
+  ) => Promise<ParseConfigResult<CONFIG>>
 
   readonly create: (
     props: CreateCustomStackProps<CONFIG>,

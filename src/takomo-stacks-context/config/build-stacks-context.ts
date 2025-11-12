@@ -105,7 +105,7 @@ export const buildStacksContext = async ({
   })
 
   coreCustomStackHandlerProviders().forEach((p) =>
-    customStackHandlerRegistry.registerProvider(p),
+    customStackHandlerRegistry.registerHandler(p),
   )
 
   await configRepository.loadExtensions(
@@ -129,6 +129,7 @@ export const buildStacksContext = async ({
     commandPath ?? ROOT_STACK_GROUP_PATH,
     configTree,
     configRepository,
+    customStackHandlerRegistry,
   )
 
   const stackGroups = collectStackGroups(rootStackGroup)

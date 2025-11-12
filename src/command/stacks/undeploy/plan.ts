@@ -2,7 +2,7 @@ import * as R from "ramda"
 import { CloudFormationStack } from "../../../aws/cloudformation/model.js"
 import {
   InternalStandardStack,
-  isStandardStack,
+  isInternalStandardStack,
 } from "../../../stacks/standard-stack.js"
 import {
   getStackPath,
@@ -16,7 +16,7 @@ import { sortStacksForUndeploy } from "../../../takomo-stacks-context/dependenci
 import { InternalStack, StackPath } from "../../../stacks/stack.js"
 import {
   InternalCustomStack,
-  isCustomStack,
+  isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
 import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 import { CustomStackHandler } from "../../../custom-stack-handler/custom-stack-handler.js"
@@ -48,11 +48,11 @@ export type StackUndeployOperation =
 
 export const isStandardStackUndeployOperation = (
   op: StackUndeployOperation,
-): op is StandardStackUndeployOperation => isStandardStack(op.stack)
+): op is StandardStackUndeployOperation => isInternalStandardStack(op.stack)
 
 export const isCustomStackUndeployOperation = (
   op: StackUndeployOperation,
-): op is CustomStackUndeployOperation => isCustomStack(op.stack)
+): op is CustomStackUndeployOperation => isInternalCustomStack(op.stack)
 
 export interface StacksUndeployPlan {
   readonly operations: ReadonlyArray<StackUndeployOperation>
@@ -75,11 +75,8 @@ const convertToUndeployOperation = async (
     return dependentFilter(dependent)
   })
 
-  if (isCustomStack(stack)) {
-    const customStackHandler = await customStackHandlerRegistry.initHandler(
-      stack.type,
-      stack.config,
-    )
+  if (isInternalCustomStack(stack)) {
+    const customStackHandler = customStackHandlerRegistry.getHandler(stack.type)
 
     // TODO: Handler error
     const currentStack = await customStackHandler.getCurrentState({
@@ -98,7 +95,7 @@ const convertToUndeployOperation = async (
     }
   }
 
-  if (isStandardStack(stack)) {
+  if (isInternalStandardStack(stack)) {
     const currentStack = await stack.getCurrentCloudFormationStack()
     const type = resolveUndeployOperationType(currentStack)
 
