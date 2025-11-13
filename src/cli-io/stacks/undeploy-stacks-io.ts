@@ -6,6 +6,8 @@ import {
   UndeployStacksIO,
 } from "../../command/stacks/undeploy/model.js"
 import {
+  isCustomStackUndeployOperation,
+  isStandardStackUndeployOperation,
   StacksUndeployPlan,
   StackUndeployOperationType,
 } from "../../command/stacks/undeploy/plan.js"
@@ -21,6 +23,7 @@ import {
   IOProps,
   printStacksOperationOutput,
 } from "./common.js"
+import { isCustomStack } from "../../stacks/custom-stack.js"
 
 interface ConfirmUndeployAnswerOption {
   readonly name: string
@@ -98,32 +101,61 @@ export const createUndeployStacksIO = (
 
     const stackPathColumnLength = Math.max(27, maxStackPathLength)
 
-    for (const { stack, currentStack, type, dependents } of operations) {
-      const stackIdentity = await stack.credentialManager.getCallerIdentity()
+    for (const operation of operations) {
+      const stackIdentity =
+        await operation.stack.credentialManager.getCallerIdentity()
 
-      io.longMessage(
-        [
-          `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
-          `      name:                      ${stack.name}`,
-          `      status:                    ${formatStackStatus(
-            currentStack?.status,
-          )}`,
-          `      last change:               ${formatLastModify(currentStack)}`,
-          `      account id:                ${stackIdentity.accountId}`,
-          `      region:                    ${stack.region}`,
-          "      credentials:",
-          `        user id:                 ${stackIdentity.userId}`,
-          `        account id:              ${stackIdentity.accountId}`,
-          `        arn:                     ${stackIdentity.arn}`,
-        ],
-        true,
-        false,
-        0,
-      )
+      if (isStandardStackUndeployOperation(operation)) {
+        const { stack, currentStack, type } = operation
 
-      if (dependents.length > 0) {
+        io.longMessage(
+          [
+            `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
+            `      name:                      ${stack.name}`,
+            `      status:                    ${formatStackStatus(
+              currentStack?.status,
+            )}`,
+            `      last change:               ${formatLastModify(currentStack)}`,
+            `      account id:                ${stackIdentity.accountId}`,
+            `      region:                    ${stack.region}`,
+            "      credentials:",
+            `        user id:                 ${stackIdentity.userId}`,
+            `        account id:              ${stackIdentity.accountId}`,
+            `        arn:                     ${stackIdentity.arn}`,
+          ],
+          true,
+          false,
+          0,
+        )
+      }
+
+      if (isCustomStackUndeployOperation(operation)) {
+        const { stack, currentStack, type } = operation
+
+        io.longMessage(
+          [
+            `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
+            `      name:                      ${stack.name}`,
+            `      status:                    ${formatStackStatus(
+              currentStack ? "CREATE_COMPLETE" : undefined,
+            )}`,
+            `      last change:               not available for custom stacks`,
+            `      account id:                ${stackIdentity.accountId}`,
+            `      region:                    ${stack.region}`,
+            "      credentials:",
+            `        user id:                 ${stackIdentity.userId}`,
+            `        account id:              ${stackIdentity.accountId}`,
+            `        arn:                     ${stackIdentity.arn}`,
+          ],
+          true,
+          false,
+          0,
+        )
+      }
+
+      if (operation.dependents.length > 0) {
         io.message({ text: "dependents:", indent: 6 })
-        dependents.forEach((d) => {
+        operation.dependents.forEach((d) => {
           io.message({ text: `- ${d}`, indent: 8 })
         })
       } else {

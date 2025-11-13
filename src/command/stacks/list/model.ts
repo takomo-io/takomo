@@ -13,6 +13,7 @@ export interface StackInfo {
   readonly status?: StackStatus
   readonly createdTime?: Date
   readonly updatedTime?: Date
+  readonly type: "standard" | "custom"
 }
 
 export interface ListStacksInput extends CommandInput {

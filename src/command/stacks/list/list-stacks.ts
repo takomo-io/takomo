@@ -1,8 +1,13 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { StackStatus } from "../../../aws/cloudformation/model.js"
 import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
 import { TkmLogger } from "../../../utils/logging.js"
-import { loadCurrentCfStacks } from "../common/load-current-cf-stacks.js"
-import { ListStacksInput, ListStacksOutput } from "./model.js"
+import {
+  isCustomStackPair,
+  isStandardStackPair,
+  loadCurrentStacks,
+} from "../common/load-current-cf-stacks.js"
+import { ListStacksInput, ListStacksOutput, StackInfo } from "./model.js"
 
 export const listStacks = async (
   ctx: InternalStacksContext,
@@ -15,15 +20,35 @@ export const listStacks = async (
     .filter((stack) => stack.path.startsWith(commandPath))
     .filter(isNotObsolete)
 
-  const stackPairs = await loadCurrentCfStacks(logger, stacksWithinCommandPath)
+  const stackPairs = await loadCurrentStacks(
+    logger,
+    stacksWithinCommandPath,
+    ctx.customStackHandlerRegistry,
+  )
 
-  const results = stackPairs.map(({ stack, current }) => ({
-    path: stack.path,
-    name: stack.name,
-    status: current?.status,
-    createdTime: current?.creationTime,
-    updatedTime: current?.lastUpdatedTime,
-  }))
+  const results: ReadonlyArray<StackInfo> = stackPairs.map((pair) => {
+    if (isCustomStackPair(pair)) {
+      return {
+        path: pair.stack.path,
+        name: pair.stack.name,
+        status: (pair.current ? "CREATE_COMPLETE" : "PENDING") as StackStatus,
+        type: "custom",
+      }
+    }
+
+    if (isStandardStackPair(pair)) {
+      return {
+        path: pair.stack.path,
+        name: pair.stack.name,
+        status: pair.current?.status,
+        createdTime: pair.current?.creationTime,
+        updatedTime: pair.current?.lastUpdatedTime,
+        type: "standard",
+      }
+    }
+
+    throw new Error(`Unknown stack pair type`)
+  })
 
   return {
     success: true,

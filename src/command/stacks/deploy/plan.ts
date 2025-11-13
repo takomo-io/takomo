@@ -22,7 +22,7 @@ import {
   loadCurrentStacks,
   StackPair,
 } from "../common/load-current-cf-stacks.js"
-import { StackPath } from "../../../stacks/stack.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
 import {
   InternalCustomStack,
   isInternalCustomStack,
@@ -34,8 +34,8 @@ import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom
  * TODO: Move somewhere else
  */
 export const collectStackDependencies = (
-  stacksByPath: Map<StackPath, InternalStandardStack>,
-  stack: InternalStandardStack,
+  stacksByPath: Map<StackPath, InternalStack>,
+  stack: InternalStack,
 ): ReadonlyArray<StackPath> =>
   stack.dependencies.reduce((collected, dependency) => {
     const dependencyStack = stacksByPath.get(dependency)
