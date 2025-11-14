@@ -9,7 +9,6 @@ import {
 } from "../../../stacks/standard-stack.js"
 import { sortStacksForDeploy } from "../../../takomo-stacks-context/dependencies.js"
 import {
-  getStackPath,
   isNotObsolete,
   isWithinCommandPath,
 } from "../../../takomo-stacks-model/util.js"
@@ -129,9 +128,7 @@ export const buildStacksDeployPlan = async (
   logger: TkmLogger,
   customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StacksDeployPlan> => {
-  console.log(JSON.stringify(stacks, undefined, 2))
-
-  const stacksByPath = arrayToMap(stacks, getStackPath)
+  const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(

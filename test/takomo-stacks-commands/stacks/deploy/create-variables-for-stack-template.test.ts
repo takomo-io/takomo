@@ -2,8 +2,6 @@ import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { InternalCredentialManager } from "../../../../src/aws/common/credentials.js"
 import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/standard-stack/steps/prepare-template.js"
-import { InternalStack } from "../../../../src/stacks/stack.js"
-import { createConsoleLogger } from "../../../../src/utils/logging.js"
 import { logger } from "../../../logger.js"
 import { InternalStandardStack } from "../../../../src/stacks/standard-stack.js"
 

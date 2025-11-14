@@ -12,8 +12,6 @@ import {
 } from "../../../../src/command/stacks/undeploy/plan.js"
 import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
-import { create } from "lodash"
-import { createCustomStack } from "../../../../src/stacks/custom-stack.js"
 import { createCustomStackHandlerRegistry } from "../../../../src/custom-stack-handler/custom-stack-handler-registry.js"
 import { logger } from "../../../logger.js"
 import { STANDARD_STACK_TYPE } from "../../../../src/stacks/standard-stack.js"

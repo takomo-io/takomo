@@ -5,7 +5,7 @@ import {
   StackName,
 } from "../../src/aws/cloudformation/model.js"
 import { Region } from "../../src/aws/common/model.js"
-import { InternalStack, StackPath } from "../../src/stacks/stack.js"
+import { StackPath } from "../../src/stacks/stack.js"
 import {
   InternalStandardStack,
   STANDARD_STACK_TYPE,
