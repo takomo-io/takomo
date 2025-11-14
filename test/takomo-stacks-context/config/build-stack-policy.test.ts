@@ -1,4 +1,4 @@
-import { buildStackPolicy } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { buildStackPolicy } from "../../../src/takomo-stacks-context/config/build-standard-stack.js"
 import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildStackPolicy", () => {

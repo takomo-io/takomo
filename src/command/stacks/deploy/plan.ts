@@ -129,6 +129,8 @@ export const buildStacksDeployPlan = async (
   logger: TkmLogger,
   customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StacksDeployPlan> => {
+  console.log(JSON.stringify(stacks, undefined, 2))
+
   const stacksByPath = arrayToMap(stacks, getStackPath)
   const stacksToDeploy = stacks
     .filter((s) => isWithinCommandPath(s.path, commandPath))

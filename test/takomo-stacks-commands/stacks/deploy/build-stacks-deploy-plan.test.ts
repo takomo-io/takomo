@@ -11,9 +11,14 @@ import {
   buildStacksDeployPlan,
   StacksDeployPlan,
 } from "../../../../src/command/stacks/deploy/plan.js"
-import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
+import { StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
-import { createConsoleLogger } from "../../../../src/utils/logging.js"
+import {
+  InternalStandardStack,
+  STANDARD_STACK_TYPE,
+} from "../../../../src/stacks/standard-stack.js"
+import { createCustomStackHandlerRegistry } from "../../../../src/custom-stack-handler/custom-stack-handler-registry.js"
+import { logger } from "../../../logger.js"
 
 interface CreateStackProps {
   readonly name: StackName
@@ -24,12 +29,12 @@ interface CreateStackProps {
   readonly dependencies?: ReadonlyArray<StackPath>
 }
 
-let allStacks = new Array<InternalStack>()
-let pendingStacks = new Array<InternalStack>()
+let allStacks = new Array<InternalStandardStack>()
+let pendingStacks = new Array<InternalStandardStack>()
 
 beforeEach(() => {
-  allStacks = new Array<InternalStack>()
-  pendingStacks = new Array<InternalStack>()
+  allStacks = new Array<InternalStandardStack>()
+  pendingStacks = new Array<InternalStandardStack>()
 })
 
 const stack = ({
@@ -39,7 +44,7 @@ const stack = ({
   status,
   obsolete = false,
   dependencies = [],
-}: CreateStackProps): InternalStack => {
+}: CreateStackProps): InternalStandardStack => {
   const listNotDeletedStacks = async (
     stackNames?: ReadonlyArray<StackName>,
   ): Promise<Map<StackName, DetailedCloudFormationStackSummary>> => {
@@ -65,7 +70,15 @@ const stack = ({
 
   const cfClient = mock<CloudFormationClient>({ listNotDeletedStacks })
 
-  const s = mock<InternalStack>({ name, path, region, dependencies, obsolete })
+  const s = mock<InternalStandardStack>({
+    name,
+    path,
+    region,
+    dependencies,
+    obsolete,
+    type: STANDARD_STACK_TYPE,
+  })
+
   s.getCloudFormationClient.mockReturnValue(Promise.resolve(cfClient))
   s.getCredentials.mockReturnValue(
     Promise.resolve({ accessKeyId: "", secretAccessKey: "", sessionToken: "" }),
@@ -79,7 +92,7 @@ const stack = ({
   return s
 }
 
-const logger = createConsoleLogger({ logLevel: "warn" })
+const customStackHandlerRegistry = createCustomStackHandlerRegistry({ logger })
 
 interface ExpectedOperation {
   readonly path: StackPath
@@ -111,6 +124,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     assertPlan(plan, { type: "UPDATE", path: "/one.yml/eu-west-1" })
@@ -128,6 +142,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     assertPlan(plan, { type: "CREATE", path: "/two.yml/eu-central-1" })
@@ -146,6 +161,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     assertPlan(plan, { type: "RECREATE", path: "/two.yml/eu-central-1" })
@@ -170,6 +186,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     assertPlan(
@@ -206,6 +223,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     assertPlan(
@@ -230,6 +248,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     expect(plan.operations).toHaveLength(0)
@@ -256,6 +275,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     expect(plan.operations).toHaveLength(0)
@@ -283,6 +303,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     expect(plan.operations).toHaveLength(0)
@@ -309,6 +330,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
+      customStackHandlerRegistry,
     )
 
     assertPlan(plan, { type: "UPDATE", path: "/one.yml/eu-central-1" })

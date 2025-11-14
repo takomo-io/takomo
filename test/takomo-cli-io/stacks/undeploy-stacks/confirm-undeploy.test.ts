@@ -9,6 +9,7 @@ import {
 import {
   StackUndeployOperation,
   StackUndeployOperationType,
+  StandardStackUndeployOperation,
 } from "../../../../src/command/stacks/undeploy/plan.js"
 import { bold, cyan, green, grey, red } from "../../../../src/utils/colors.js"
 import { formatTimestamp } from "../../../../src/utils/date.js"
@@ -40,7 +41,7 @@ const createIO = (writer: LogWriter) =>
 const mockOperation = (
   type: StackUndeployOperationType,
   stackProps: MockInternalStackProps,
-): StackUndeployOperation => {
+): StandardStackUndeployOperation => {
   const { currentStack } = stackProps
   return {
     type,

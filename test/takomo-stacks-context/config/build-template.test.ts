@@ -1,4 +1,4 @@
-import { buildTemplate } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { buildTemplate } from "../../../src/takomo-stacks-context/config/build-standard-stack.js"
 import { createStackConfig, createStackGroup } from "../helpers.js"
 
 const stackGroup = createStackGroup()

@@ -1,13 +1,11 @@
 import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { mock } from "jest-mock-extended"
 import { InternalCredentialManager } from "../../../../src/aws/common/credentials.js"
-import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/steps/prepare-template.js"
+import { createVariablesForStackTemplate } from "../../../../src/command/stacks/deploy/standard-stack/steps/prepare-template.js"
 import { InternalStack } from "../../../../src/stacks/stack.js"
 import { createConsoleLogger } from "../../../../src/utils/logging.js"
-
-const logger = createConsoleLogger({
-  logLevel: "info",
-})
+import { logger } from "../../../logger.js"
+import { InternalStandardStack } from "../../../../src/stacks/standard-stack.js"
 
 describe("#createVariablesForStackTemplate", () => {
   test("returns correct variables #1", () => {
@@ -24,7 +22,8 @@ describe("#createVariablesForStackTemplate", () => {
       hooks: {},
     }
 
-    const stack: InternalStack = {
+    const stack: InternalStandardStack = {
+      type: "standard",
       accountIds: [],
       capabilities: [],
       commandRole: {
@@ -175,7 +174,8 @@ describe("#createVariablesForStackTemplate", () => {
       },
     }
 
-    const stack: InternalStack = {
+    const stack: InternalStandardStack = {
+      type: "standard",
       accountIds: [],
       capabilities: [],
       credentialManager: mock<InternalCredentialManager>(),

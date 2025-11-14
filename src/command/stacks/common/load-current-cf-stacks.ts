@@ -79,6 +79,8 @@ const loadCurrentStandardStacks = async (
 ): Promise<Map<StackPath, CloudFormationStackSummary>> => {
   logger.debug("Load current standard stacks")
 
+  console.log(JSON.stringify(stacks, undefined, 2))
+
   const stackHashPairs: ReadonlyArray<[string, InternalStandardStack]> =
     await Promise.all(
       stacks.map(async (stack) => {
@@ -90,7 +92,12 @@ const loadCurrentStandardStacks = async (
   const stackHashMap = buildHashStackMap(stackHashPairs)
 
   const stackMap = new Map<StackPath, CloudFormationStackSummary>()
+  console.log("stacksWithSameCredentials-----")
   for (const stacksWithSameCredentials of stackHashMap.values()) {
+    stacksWithSameCredentials.forEach((s) => {
+      console.log(JSON.stringify(s, undefined, 2))
+    })
+
     const cfStacks = await loadCfStacks(stacksWithSameCredentials)
     for (const [stackPath, cfStack] of cfStacks) {
       stackMap.set(stackPath, cfStack)

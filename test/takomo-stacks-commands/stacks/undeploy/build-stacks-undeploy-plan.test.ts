@@ -12,6 +12,11 @@ import {
 } from "../../../../src/command/stacks/undeploy/plan.js"
 import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
+import { create } from "lodash"
+import { createCustomStack } from "../../../../src/stacks/custom-stack.js"
+import { createCustomStackHandlerRegistry } from "../../../../src/custom-stack-handler/custom-stack-handler-registry.js"
+import { logger } from "../../../logger.js"
+import { STANDARD_STACK_TYPE } from "../../../../src/stacks/standard-stack.js"
 
 interface CreateStackProps {
   readonly name: StackName
@@ -54,6 +59,7 @@ const stack = ({
     region,
     dependents,
     obsolete,
+    type: STANDARD_STACK_TYPE,
     getCurrentCloudFormationStack,
   })
 
@@ -81,6 +87,8 @@ const assertPlan = (
   expect(actualOperations).toStrictEqual(expectedOperations)
 }
 
+const customStackHandlerRegistry = createCustomStackHandlerRegistry({ logger })
+
 describe("#buildStacksUndeployPlan", () => {
   test("empty plan", async () => {
     const plan = await buildStacksUndeployPlan(
@@ -88,6 +96,7 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
+      customStackHandlerRegistry,
     )
     assertPlan(plan)
   })
@@ -98,6 +107,7 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
+      customStackHandlerRegistry,
     )
     assertPlan(plan, { type: "SKIP", path: "/a.yml/eu-north-1" })
   })
@@ -115,6 +125,7 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
+      customStackHandlerRegistry,
     )
     assertPlan(plan, { type: "DELETE", path: "/a.yml/eu-north-1" })
   })
@@ -138,6 +149,7 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
+      customStackHandlerRegistry,
     )
     assertPlan(
       plan,
@@ -166,6 +178,7 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
+      customStackHandlerRegistry,
     )
     assertPlan(
       plan,
@@ -195,6 +208,7 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
+      customStackHandlerRegistry,
     )
     assertPlan(plan, { type: "DELETE", path: "/a.yml/eu-north-1" })
   })
@@ -221,6 +235,7 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
+      customStackHandlerRegistry,
     )
     assertPlan(plan)
   })
