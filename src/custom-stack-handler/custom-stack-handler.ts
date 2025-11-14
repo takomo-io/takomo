@@ -1,4 +1,4 @@
-import { CustomStackType } from "../stacks/custom-stack.js"
+import { CustomStackType } from "../stacks/stack.js"
 import { TkmLogger } from "../utils/logging.js"
 
 export interface GetCurrentStateProps<CONFIG> {
@@ -14,6 +14,7 @@ export interface CreateCustomStackProps<CONFIG> {
   readonly logger: TkmLogger
   readonly config: CONFIG
   readonly parameters: Record<string, string>
+  readonly tags: Record<string, string>
 }
 
 export interface CreateCustomStackResult {
@@ -25,6 +26,7 @@ export interface UpdateCustomStackProps<CONFIG, STATE> {
   readonly state: STATE
   readonly config: CONFIG
   readonly parameters: Record<string, string>
+  readonly tags: Record<string, string>
 }
 
 export interface UpdateCustomStackResult<STATE> {

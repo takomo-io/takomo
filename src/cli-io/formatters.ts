@@ -4,8 +4,10 @@ import {
   StackEvent,
   StackStatus,
 } from "../aws/cloudformation/model.js"
+import { CustomStackStatus } from "../stacks/custom-stack.js"
 import { CommandStatus } from "../takomo-core/command.js"
 import { cyan, green, grey, red, yellow } from "../utils/colors.js"
+import { exhaustiveCheck } from "../utils/exhaustive-check.js"
 
 export const formatCommandStatus = (status: CommandStatus): string => {
   switch (status) {
@@ -42,7 +44,22 @@ export const formatResourceStatus = (status: ResourceStatus): string => {
   return status
 }
 
-export const formatStackStatus = (status?: StackStatus): string => {
+export const formatCustomStackStatus = (status?: CustomStackStatus): string => {
+  if (!status) {
+    return cyan("PENDING")
+  }
+
+  switch (status) {
+    case "CREATE_COMPLETED":
+      return green(status)
+    case "PENDING":
+      return cyan(status)
+    default:
+      return exhaustiveCheck(status)
+  }
+}
+
+export const formatStandardStackStatus = (status?: StackStatus): string => {
   if (!status) {
     return cyan("PENDING")
   }

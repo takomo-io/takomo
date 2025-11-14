@@ -27,7 +27,7 @@ import {
   InternalCustomStack,
   isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
-import { CustomStackState } from "../common/model.js"
+import { CustomStackState } from "../../../stacks/custom-stack.js"
 import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 
 /**
@@ -123,7 +123,7 @@ const convertToOperation = (pair: StackPair): StackDeployOperation => {
 }
 
 export const buildStacksDeployPlan = async (
-  stacks: ReadonlyArray<InternalStandardStack>,
+  stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   logger: TkmLogger,

@@ -1,4 +1,4 @@
-import { CustomStackType } from "../stacks/custom-stack.js"
+import { CustomStackType } from "../stacks/stack.js"
 import { StackConfig } from "./stack-config.js"
 
 export interface CustomStackConfig extends StackConfig {

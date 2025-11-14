@@ -15,15 +15,20 @@ import { StackGroup } from "../../stacks/stack-group.js"
 import { StackPath } from "../../stacks/stack.js"
 import { grey, red } from "../../utils/colors.js"
 import { createBaseIO } from "../cli-io.js"
-import { formatStackEvent, formatStackStatus } from "../formatters.js"
+import {
+  formatCustomStackStatus,
+  formatStackEvent,
+  formatStandardStackStatus,
+} from "../formatters.js"
 import {
   chooseCommandPathInternal,
   createStacksOperationListenerInternal,
+  formatCustomStackLastModify,
   formatLastModify,
   IOProps,
   printStacksOperationOutput,
 } from "./common.js"
-import { isCustomStack } from "../../stacks/custom-stack.js"
+import { exhaustiveCheck } from "../../utils/exhaustive-check.js"
 
 interface ConfirmUndeployAnswerOption {
   readonly name: string
@@ -53,7 +58,7 @@ const formatStackOperation = (
       const skipKey = `* ${stackPath}:`.padEnd(columnLength + 4)
       return grey(`${skipKey}(stack not found and will be skipped)`)
     default:
-      throw new Error(`Unsupported stack operation type: '${type}'`)
+      return exhaustiveCheck(type)
   }
 }
 
@@ -112,7 +117,7 @@ export const createUndeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
-            `      status:                    ${formatStackStatus(
+            `      status:                    ${formatStandardStackStatus(
               currentStack?.status,
             )}`,
             `      last change:               ${formatLastModify(currentStack)}`,
@@ -136,10 +141,10 @@ export const createUndeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
-            `      status:                    ${formatStackStatus(
-              currentStack ? "CREATE_COMPLETE" : undefined,
+            `      status:                    ${formatCustomStackStatus(
+              currentStack?.status,
             )}`,
-            `      last change:               not available for custom stacks`,
+            `      last change:               ${formatCustomStackLastModify(currentStack)}`,
             `      account id:                ${stackIdentity.accountId}`,
             `      region:                    ${stack.region}`,
             "      credentials:",

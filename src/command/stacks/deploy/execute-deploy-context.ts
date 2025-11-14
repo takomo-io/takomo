@@ -63,13 +63,12 @@ const executeStacksInParallel = async (
 
     const execution = bh.execute(() =>
       deployStack(
+        operation,
         timer,
         ctx,
         io,
         state,
-        stack,
         dependencies,
-        type,
         configRepository,
         stacksOperationListener,
         expectNoChanges,
@@ -77,7 +76,6 @@ const executeStacksInParallel = async (
         skipHooks,
         skipParameters,
         outDir,
-        currentStack,
       ),
     )
 
@@ -189,13 +187,12 @@ export const executeDeployContext = async (
     }
 
     const execution = await deployStack(
+      operation,
       timer,
       ctx,
       io,
       state,
-      stack,
       dependencies,
-      operation.type,
       configRepository,
       deployStacksListener,
       expectNoChanges,
@@ -203,7 +200,6 @@ export const executeDeployContext = async (
       skipHooks,
       skipParameters,
       outDir,
-      operation.currentStack,
     )
 
     if (execution.status === "CANCELLED" || execution.status === "FAILED") {

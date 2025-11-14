@@ -1,7 +1,7 @@
 import { TkmLogger } from "../utils/logging.js"
 import { CustomStackHandler } from "./custom-stack-handler.js"
-import { CustomStackType } from "../stacks/custom-stack.js"
 import { createCmdCustomStackHandler } from "./cmd-custom-stack-handler.js"
+import { CustomStackType } from "../stacks/stack.js"
 
 export interface CustomStackHandlerRegistry {
   readonly getHandler: (type: CustomStackType) => CustomStackHandler<any, any>

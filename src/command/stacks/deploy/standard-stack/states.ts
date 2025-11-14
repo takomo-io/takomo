@@ -10,6 +10,7 @@ import {
 } from "../../../../aws/cloudformation/model.js"
 import { ClientRequestToken } from "../../../../aws/common/model.js"
 import { InternalStacksContext } from "../../../../context/stacks-context.js"
+import { InternalStandardStack } from "../../../../stacks/standard-stack.js"
 import { CommandStatus } from "../../../../takomo-core/command.js"
 import { StacksConfigRepository } from "../../../../takomo-stacks-context/model.js"
 import { TkmLogger } from "../../../../utils/logging.js"
@@ -27,7 +28,9 @@ import {
 } from "../model.js"
 import { DeployStackTransitions } from "./transitions.js"
 
-export interface InitialDeployStackState extends InitialStackOperationState {
+export interface InitialDeployStandardStackState
+  extends InitialStackOperationState {
+  readonly stack: InternalStandardStack
   readonly io: DeployStacksIO
   readonly ctx: InternalStacksContext
   readonly configRepository: StacksConfigRepository
@@ -45,22 +48,23 @@ export interface InitialDeployStackState extends InitialStackOperationState {
   readonly outDir?: string
 }
 
-export interface CurrentStackHolder extends InitialDeployStackState {
+export interface CurrentStackHolder extends InitialDeployStandardStackState {
   readonly currentStack: CloudFormationStackSummary
 }
 
-export interface DetailedCurrentStackHolder extends InitialDeployStackState {
+export interface DetailedCurrentStackHolder
+  extends InitialDeployStandardStackState {
   readonly currentStack?: DetailedCloudFormationStack
 }
 
 export interface DeleteFailedStackClientTokenHolder
-  extends InitialDeployStackState {
+  extends InitialDeployStandardStackState {
   readonly deleteFailedStackClientToken: ClientRequestToken
   readonly currentStack: CloudFormationStackSummary
 }
 
 export interface ContinueStackRollbackClientTokenHolder
-  extends InitialDeployStackState {
+  extends InitialDeployStandardStackState {
   readonly continueStackRollbackClientToken: ClientRequestToken
   readonly currentStack: CloudFormationStackSummary
 }
@@ -103,7 +107,8 @@ export interface StackOperationClientTokenHolder extends TagsHolder {
   readonly stackId: StackId
 }
 
-export interface StackOperationResultHolder extends InitialDeployStackState {
+export interface StackOperationResultHolder
+  extends InitialDeployStandardStackState {
   readonly message: string
   readonly success: boolean
   readonly status: CommandStatus

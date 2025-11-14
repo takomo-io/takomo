@@ -12,17 +12,26 @@ import {
   ConfirmStackDeployAnswer,
   DeployStacksIO,
 } from "../../../command/stacks/deploy/model.js"
-import { StacksDeployPlan } from "../../../command/stacks/deploy/plan.js"
+import {
+  isCustomStackDeployOperation,
+  isStandardStackDeployOperation,
+  StacksDeployPlan,
+} from "../../../command/stacks/deploy/plan.js"
 import { StacksOperationOutput } from "../../../command/stacks/model.js"
 import { StackGroup } from "../../../stacks/stack-group.js"
 import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { bold, green, orange, yellow } from "../../../utils/colors.js"
 import { diffStrings } from "../../../utils/strings.js"
 import { createBaseIO } from "../../cli-io.js"
-import { formatStackEvent, formatStackStatus } from "../../formatters.js"
+import {
+  formatCustomStackStatus,
+  formatStackEvent,
+  formatStandardStackStatus,
+} from "../../formatters.js"
 import {
   chooseCommandPathInternal,
   createStacksOperationListenerInternal,
+  formatCustomStackLastModify,
   formatLastModify,
   IOProps,
   printStacksOperationOutput,
@@ -165,31 +174,63 @@ export const createDeployStacksIO = (
 
     const stackPathColumnLength = Math.max(27, maxStackPathLength)
 
-    for (const { stack, type, currentStack } of operations) {
-      const stackIdentity = await stack.credentialManager.getCallerIdentity()
-      io.longMessage(
-        [
-          `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
-          `      name:                      ${stack.name}`,
-          `      status:                    ${formatStackStatus(
-            currentStack?.status,
-          )}`,
-          `      last change:               ${formatLastModify(currentStack)}`,
-          `      account id:                ${stackIdentity.accountId}`,
-          `      region:                    ${stack.region}`,
-          "      credentials:",
-          `        user id:                 ${stackIdentity.userId}`,
-          `        account id:              ${stackIdentity.accountId}`,
-          `        arn:                     ${stackIdentity.arn}`,
-        ],
-        true,
-        false,
-        0,
-      )
+    for (const operation of operations) {
+      const stackIdentity =
+        await operation.stack.credentialManager.getCallerIdentity()
 
-      if (stack.dependencies.length > 0) {
+      if (isStandardStackDeployOperation(operation)) {
+        const { stack, type, currentStack } = operation
+
+        io.longMessage(
+          [
+            `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
+            `      name:                      ${stack.name}`,
+            `      stack type:                ${stack.type}`,
+            `      status:                    ${formatStandardStackStatus(
+              currentStack?.status,
+            )}`,
+            `      last change:               ${formatLastModify(currentStack)}`,
+            `      account id:                ${stackIdentity.accountId}`,
+            `      region:                    ${stack.region}`,
+            "      credentials:",
+            `        user id:                 ${stackIdentity.userId}`,
+            `        account id:              ${stackIdentity.accountId}`,
+            `        arn:                     ${stackIdentity.arn}`,
+          ],
+          true,
+          false,
+          0,
+        )
+      }
+
+      if (isCustomStackDeployOperation(operation)) {
+        const { stack, type, currentStack } = operation
+
+        io.longMessage(
+          [
+            `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
+            `      name:                      ${stack.name}`,
+            `      stack type:                ${stack.type}`,
+            `      status:                    ${formatCustomStackStatus(
+              currentStack?.status,
+            )}`,
+            `      last change:               ${formatCustomStackLastModify(currentStack)}`,
+            `      account id:                ${stackIdentity.accountId}`,
+            `      region:                    ${stack.region}`,
+            "      credentials:",
+            `        user id:                 ${stackIdentity.userId}`,
+            `        account id:              ${stackIdentity.accountId}`,
+            `        arn:                     ${stackIdentity.arn}`,
+          ],
+          true,
+          false,
+          0,
+        )
+      }
+
+      if (operation.stack.dependencies.length > 0) {
         io.message({ text: "dependencies:", indent: 6 })
-        stack.dependencies
+        operation.stack.dependencies
           .map((d) => `- ${d}`)
           .forEach((d) => {
             io.message({ text: d, indent: 8 })

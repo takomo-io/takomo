@@ -8,7 +8,6 @@ import { HookConfig } from "../hooks/hook.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
 import { Schemas } from "../takomo-stacks-model/schemas.js"
 import { InternalStack, RawTagValue } from "./stack.js"
-import { InternalStandardStack } from "./standard-stack.js"
 
 export type StackGroupPath = string
 export type StackGroupName = string

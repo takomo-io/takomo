@@ -12,7 +12,7 @@ import {
   CurrentStackHolder,
   DeleteFailedStackClientTokenHolder,
   DetailedCurrentStackHolder,
-  InitialDeployStackState,
+  InitialDeployStandardStackState,
   ParametersHolder,
   StackOperationClientTokenHolder,
   StackOperationResultHolder,
@@ -217,7 +217,7 @@ export const createDeployStackTransitions = (): DeployStackTransitions => ({
 })
 
 export const executeAfterDeployHooksOnError =
-  <S extends InitialDeployStackState>(
+  <S extends InitialDeployStandardStackState>(
     step: StackOperationStep<S>,
   ): StackOperationStep<S> =>
   async (state: S) => {

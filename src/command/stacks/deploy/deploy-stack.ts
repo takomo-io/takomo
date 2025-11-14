@@ -1,14 +1,27 @@
+import { T } from "ramda"
 import { CloudFormationStackSummary } from "../../../aws/cloudformation/model.js"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
+import {
+  isCustomStack,
+  isInternalCustomStack,
+} from "../../../stacks/custom-stack.js"
 import { InternalStack } from "../../../stacks/stack.js"
+import { isInternalStandardStack } from "../../../stacks/standard-stack.js"
 import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { Timer } from "../../../utils/timer.js"
 import { StackOperationType, StackResult } from "../../command-model.js"
 import { StacksOperationListener } from "../common/model.js"
 import { executeSteps } from "../common/steps.js"
+import { InitialDeployCustomStackState } from "./custom-stack/states.js"
+import { createDeployCustomStackTransitions } from "./custom-stack/transitions.js"
 import { DeployStacksIO, DeployState } from "./model.js"
-import { InitialDeployStackState } from "./standard-stack/states.js"
+import {
+  isCustomStackDeployOperation,
+  isStandardStackDeployOperation,
+  StackDeployOperation,
+} from "./plan.js"
+import { InitialDeployStandardStackState } from "./standard-stack/states.js"
 import { createDeployStackTransitions } from "./standard-stack/transitions.js"
 
 const logStackConfig = (
@@ -23,13 +36,14 @@ const logStackConfig = (
 }
 
 export const deployStack = async (
+  operation: StackDeployOperation,
   timer: Timer,
   ctx: InternalStacksContext,
   io: DeployStacksIO,
   state: DeployState,
-  stack: InternalStack,
+  // stack: InternalStack,
   dependencies: Promise<StackResult>[],
-  operationType: StackOperationType,
+  // operationType: StackOperationType,
   configRepository: StacksConfigRepository,
   stacksOperationListener: StacksOperationListener,
   expectNoChanges: boolean,
@@ -37,44 +51,84 @@ export const deployStack = async (
   skipHooks: boolean,
   skipParameters: boolean,
   outDir?: string,
-  currentStack?: CloudFormationStackSummary,
+  // currentStack?: CloudFormationStackSummary,
 ): Promise<StackResult> => {
-  const logger = io.childLogger(stack.path)
+  const logger = io.childLogger(operation.stack.path)
 
-  if (currentStack) {
-    logger.info(`Stack status: ${currentStack.status}`)
-  } else {
-    logger.info(`Stack status: PENDING`)
+  if (isStandardStackDeployOperation(operation)) {
+    const { currentStack, stack, type } = operation
+    logStackConfig(logger, stack, ctx.confidentialValuesLoggingEnabled)
+
+    const variables = {
+      ...ctx.variables,
+      hooks: {},
+    }
+
+    if (currentStack) {
+      logger.info(`Stack status: ${currentStack.status}`)
+    } else {
+      logger.info(`Stack status: PENDING`)
+    }
+
+    const initialState: InitialDeployStandardStackState = {
+      io,
+      stack,
+      variables,
+      logger,
+      dependencies,
+      operationType: type,
+      state,
+      currentStack,
+      ctx,
+      configRepository,
+      stacksOperationListener,
+      expectNoChanges,
+      emit,
+      skipHooks,
+      skipParameters,
+      stackExistedBeforeOperation: currentStack !== undefined,
+      totalTimer: timer.startChild(stack.path),
+      transitions: createDeployStackTransitions(),
+      outDir,
+    }
+
+    return executeSteps(initialState)
   }
 
-  logStackConfig(logger, stack, ctx.confidentialValuesLoggingEnabled)
+  if (isCustomStackDeployOperation(operation)) {
+    const { currentStack, stack, type } = operation
+    logStackConfig(logger, stack, ctx.confidentialValuesLoggingEnabled)
 
-  const variables = {
-    ...ctx.variables,
-    hooks: {},
+    const variables = {
+      ...ctx.variables,
+      hooks: {},
+    }
+
+    logger.info(
+      `Stack status: ${currentStack ? "CREATE_COMPLETED" : "PENDING"}`,
+    )
+
+    const handler = ctx.customStackHandlerRegistry.getHandler(stack.type)
+
+    const initialState: InitialDeployCustomStackState = {
+      io,
+      stack,
+      variables,
+      logger,
+      dependencies,
+      operationType: type,
+      state,
+      currentStack,
+      ctx,
+      stacksOperationListener,
+      stackExistedBeforeOperation: currentStack !== undefined,
+      totalTimer: timer.startChild(stack.path),
+      transitions: createDeployCustomStackTransitions(),
+      customStackHandler: handler,
+    }
+
+    return executeSteps(initialState)
   }
 
-  const initialState: InitialDeployStackState = {
-    io,
-    stack,
-    variables,
-    logger,
-    dependencies,
-    operationType,
-    state,
-    currentStack,
-    ctx,
-    configRepository,
-    stacksOperationListener,
-    expectNoChanges,
-    emit,
-    skipHooks,
-    skipParameters,
-    stackExistedBeforeOperation: currentStack !== undefined,
-    totalTimer: timer.startChild(stack.path),
-    transitions: createDeployStackTransitions(),
-    outDir,
-  }
-
-  return executeSteps(initialState)
+  throw new Error(`Unknown stack type`)
 }

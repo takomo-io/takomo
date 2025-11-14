@@ -1,0 +1,55 @@
+import {
+  CloudFormationStack,
+  StackEvent,
+} from "../../../../aws/cloudformation/model.js"
+import { InternalStacksContext } from "../../../../context/stacks-context.js"
+import { CustomStackHandler } from "../../../../custom-stack-handler/custom-stack-handler.js"
+import { InternalCustomStack } from "../../../../stacks/custom-stack.js"
+import { CommandStatus } from "../../../../takomo-core/command.js"
+import { TkmLogger } from "../../../../utils/logging.js"
+import {
+  StackOperationType,
+  StackOperationVariables,
+  StackResult,
+} from "../../../command-model.js"
+import { CustomStackState } from "../../../../stacks/custom-stack.js"
+import { InitialStackOperationState } from "../../common/states.js"
+import { DeployStacksIO, DeployState } from "../model.js"
+import { DeployCustomStackTransitions } from "./transitions.js"
+
+export interface InitialDeployCustomStackState
+  extends InitialStackOperationState {
+  readonly stack: InternalCustomStack
+  readonly io: DeployStacksIO
+  readonly ctx: InternalStacksContext
+  readonly variables: StackOperationVariables
+  readonly logger: TkmLogger
+  readonly currentStack?: CustomStackState
+  readonly dependencies: ReadonlyArray<Promise<StackResult>>
+  readonly operationType: StackOperationType
+  readonly state: DeployState
+  readonly transitions: DeployCustomStackTransitions
+  readonly customStackHandler: CustomStackHandler<any, any>
+}
+
+export interface ParametersHolder extends InitialDeployCustomStackState {
+  readonly parameters: Record<string, string>
+}
+
+export interface TagsHolder extends ParametersHolder {
+  readonly tags: Record<string, string>
+}
+
+export interface CurrentStackHolder extends TagsHolder {
+  readonly currentStack: CustomStackState
+}
+
+export interface StackOperationResultHolder
+  extends InitialDeployCustomStackState {
+  readonly message: string
+  readonly success: boolean
+  readonly status: CommandStatus
+  readonly events: ReadonlyArray<StackEvent>
+  readonly stackAfterOperation?: CloudFormationStack
+  readonly error?: Error
+}

@@ -16,7 +16,7 @@ import {
 import { arrayToMap } from "../../../utils/collections.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { checksum } from "../../../utils/strings.js"
-import { CustomStackState } from "./model.js"
+import { CustomStackState } from "../../../stacks/custom-stack.js"
 
 const makeCredentialsRegionHash = async (
   stack: InternalStack,

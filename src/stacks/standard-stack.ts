@@ -9,11 +9,14 @@ import { TemplateBucketConfig } from "../common/model.js"
 import { FilePath } from "../utils/files.js"
 import {
   BaseInternalStack,
+  CustomStackType,
   Stack as InternalStack,
   Stack,
   StackProps,
 } from "./stack.js"
 import { InternalCredentialManager } from "../aws/common/credentials.js"
+
+export const STANDARD_STACK_TYPE = "standard"
 
 /**
  * Blueprint path.
@@ -95,6 +98,7 @@ export const createStandardStack = (
     stackPolicy,
     stackPolicyDuringUpdate,
     schemas,
+    type,
   } = props
 
   const getClient = async () =>
@@ -106,6 +110,7 @@ export const createStandardStack = (
   const getCredentials = () => credentialManager.getCredentials()
 
   return {
+    type,
     accountIds,
     capabilities,
     commandRole,
@@ -141,11 +146,11 @@ export const createStandardStack = (
 
 export const isStandardStackProps = (
   props: StackProps,
-): props is StandardStackProps => !("type" in props)
+): props is StandardStackProps => props.type === STANDARD_STACK_TYPE
 
 export const isInternalStandardStack = (
   stack: InternalStack,
-): stack is InternalStandardStack => !("type" in stack)
+): stack is InternalStandardStack => stack.type === STANDARD_STACK_TYPE
 
 export const isStandardStack = (stack: Stack): stack is StandardStack =>
-  !("type" in stack)
+  stack.type === STANDARD_STACK_TYPE

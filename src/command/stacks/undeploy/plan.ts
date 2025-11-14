@@ -20,6 +20,7 @@ import {
 } from "../../../stacks/custom-stack.js"
 import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 import { CustomStackHandler } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { CustomStackState } from "../../../stacks/custom-stack.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
@@ -37,7 +38,7 @@ export interface StandardStackUndeployOperation {
 export interface CustomStackUndeployOperation {
   readonly stack: InternalCustomStack
   readonly type: StackUndeployOperationType
-  readonly currentStack?: unknown
+  readonly currentStack?: CustomStackState
   readonly dependents: ReadonlyArray<StackPath>
   readonly customStackHandler: CustomStackHandler<any, any>
 }

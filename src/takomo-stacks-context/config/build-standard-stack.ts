@@ -16,6 +16,7 @@ import { StackGroup } from "../../stacks/stack-group.js"
 import {
   createStandardStack,
   InternalStandardStack,
+  STANDARD_STACK_TYPE,
   StandardStackProps,
   Template,
 } from "../../stacks/standard-stack.js"
@@ -249,6 +250,7 @@ export const buildStandardStack = async (
         const dependencies = buildDependencies(builderProps)
 
         const props: StandardStackProps = {
+          type: STANDARD_STACK_TYPE,
           name,
           template,
           region,

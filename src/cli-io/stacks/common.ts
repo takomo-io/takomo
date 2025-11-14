@@ -7,6 +7,7 @@ import {
 } from "../../aws/cloudformation/model.js"
 import { CommandPath, StackResult } from "../../command/command-model.js"
 import { StacksOperationListener } from "../../command/stacks/common/model.js"
+import { CustomStackState } from "../../stacks/custom-stack.js"
 import { StacksOperationOutput } from "../../command/stacks/model.js"
 import { StackGroup } from "../../stacks/stack-group.js"
 import { StackPath } from "../../stacks/stack.js"
@@ -29,6 +30,26 @@ export const formatLastModify = (
   }
 
   const lastUpdateTime = stack.lastUpdatedTime ?? stack.creationTime
+
+  return (
+    formatTimestamp(lastUpdateTime) +
+    "      (" +
+    prettyMs(Date.now() - lastUpdateTime.getTime(), { unitCount: 2 }) +
+    " ago)"
+  )
+}
+
+export const formatCustomStackLastModify = (
+  stack: CustomStackState | undefined,
+): string => {
+  if (!stack) {
+    return "-"
+  }
+
+  const lastUpdateTime = stack.lastUpdatedTime ?? stack.creationTime
+  if (!lastUpdateTime) {
+    return "-"
+  }
 
   return (
     formatTimestamp(lastUpdateTime) +

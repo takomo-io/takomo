@@ -1,6 +1,6 @@
 import { StackResult } from "../../../../command-model.js"
 import { StackOperationStep } from "../../../common/steps.js"
-import { InitialDeployStandardStackState } from "../states.js"
+import { InitialDeployCustomStackState } from "../states.js"
 
 const hasSomeDependencyFailed = (
   dependencyResults: ReadonlyArray<StackResult>,
@@ -14,7 +14,7 @@ const hasSomeDependencySkipped = (
   )
 
 export const waitDependenciesToComplete: StackOperationStep<
-  InitialDeployStandardStackState
+  InitialDeployCustomStackState
 > = async (state) => {
   const { logger, dependencies, transitions, operationType, currentStack } =
     state
@@ -40,31 +40,9 @@ export const waitDependenciesToComplete: StackOperationStep<
         message: "Dependencies skipped",
       })
     }
-
-    return transitions.executeBeforeDeployHooks({
-      ...state,
-      currentStack,
-    })
   }
 
-  if (operationType === "RECREATE") {
-    return transitions.initiateFailedStackDelete({
-      ...state,
-      currentStack,
-    })
-  }
-
-  if (
-    operationType === "UPDATE" &&
-    currentStack.status === "UPDATE_ROLLBACK_FAILED"
-  ) {
-    return transitions.continueUpdateRollback({
-      ...state,
-      currentStack,
-    })
-  }
-
-  return transitions.enrichCurrentStack({
+  return transitions.prepareParameters({
     ...state,
     currentStack,
   })
