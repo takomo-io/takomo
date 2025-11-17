@@ -33,10 +33,12 @@ describe("List stacks", () => {
         {
           path: "/security-groups1.yml/eu-west-1",
           name: "security-groups1",
+          type: "standard",
         },
         {
           path: "/vpc1.yml/eu-west-1",
           name: "vpc1",
+          type: "standard",
         },
       ],
     }
@@ -91,12 +93,14 @@ describe("List stacks", () => {
       results: [
         {
           path: "/security-groups1.yml/eu-west-1",
+          type: "standard",
           name: "security-groups1",
           status: "CREATE_COMPLETE",
           createdTime: isDefined,
         },
         {
           path: "/vpc1.yml/eu-west-1",
+          type: "standard",
           name: "vpc1",
           status: "CREATE_COMPLETE",
           createdTime: isDefined,
@@ -139,6 +143,7 @@ describe("List stacks", () => {
       results: [
         {
           path: "/security-groups1.yml/eu-west-1",
+          type: "standard",
           name: "security-groups1",
           status: "CREATE_COMPLETE",
           createdTime: isDefined,

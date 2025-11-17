@@ -70,6 +70,18 @@ RECYCLER_PASSWORD = <YOUR PASSWORD>
 
 Integration tests are located in `integration-test` dir. CI pipeline runs all integration tests but locally you should run only one test at a time using your IDE.
 
+Run single integration test:
+
+```
+npm run single-integration-test <path to integration test>
+```
+
+Example:
+
+```
+npm run single-integration-test integration-test/test/list-stacks.test.ts
+```
+
 ## Developing features
 
 Create a new feature branch from the latest release tag. Name your branch with `feat/` prefix.

@@ -30,7 +30,6 @@ import {
 } from "./extensions.js"
 import { parseBlueprintConfigFile } from "./parser.js"
 import { ConfigTree } from "../../takomo-stacks-context/config/config-tree.js"
-import { CustomStackHandler } from "../../custom-stack-handler/custom-stack-handler.js"
 import { CustomStackHandlerRegistry } from "../../custom-stack-handler/custom-stack-handler-registry.js"
 
 export interface FileSystemStacksConfigRepositoryProps {

@@ -21,6 +21,7 @@ import { parseTemplateBucket } from "./parse-template-bucket.js"
 import { parseTemplate } from "./parse-template.js"
 import { parseTimeout } from "./parse-timeout.js"
 import { ParsedYamlDocument } from "../../utils/yaml.js"
+import { parseCustomStackType } from "./parse-custom-stack-type.js"
 
 export const buildStackConfig = (
   ctx: CommandContext,
@@ -46,6 +47,7 @@ export const buildStackConfig = (
     throw new Error("Invalid yaml document")
   }
 
+  const type = parseCustomStackType(record.type)
   const schemas = parseSchemas(record.schemas)
   const data = parseData(record.data)
   const hooks = parseHooks(record.hooks)
@@ -57,6 +59,7 @@ export const buildStackConfig = (
   )
 
   return ok({
+    type,
     accountIds,
     data,
     hooks,

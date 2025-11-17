@@ -46,7 +46,7 @@
     "build": "tsc",
     "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects test --maxWorkers=2 --ci --verbose",
     "integration-test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects integration-test --maxWorkers=5 --ci --verbose",
-    "single-integration-test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects integration-test --ci --verbose -i integration-test/test/resolvers/external-stack-output-with-cache.test.ts",
+    "single-integration-test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --selectProjects integration-test --ci --verbose -i",
     "single-test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --ci --verbose -i",
     "clean": "rm -f package-lock.json && rm -rf node_modules && rm -rf dist",
     "clean-build": "npm run clean && npm install && npm run build",

@@ -1,4 +1,5 @@
 import { CustomStackType } from "../stacks/stack.js"
+import { STANDARD_STACK_TYPE } from "../stacks/standard-stack.js"
 import { StackConfig } from "./stack-config.js"
 
 export interface CustomStackConfig extends StackConfig {
@@ -9,4 +10,4 @@ export interface CustomStackConfig extends StackConfig {
 export const isCustomStackConfig = (
   config: StackConfig,
 ): config is CustomStackConfig =>
-  (config as CustomStackConfig).type !== undefined
+  config.type !== undefined && config.type !== STANDARD_STACK_TYPE

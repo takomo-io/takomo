@@ -39,6 +39,7 @@ export const createStackConfigSchema = (
     schemas,
     inheritTags,
     blueprintPath,
+    customStackType,
   } = createStacksSchemas({ ...props })
 
   const timeout = [timeoutInMinutes, timeoutObject]
@@ -70,5 +71,6 @@ export const createStackConfigSchema = (
     capabilities: stackCapabilities,
     stackPolicy: json,
     stackPolicyDuringUpdate: json,
+    type: customStackType,
   })
 }

@@ -4,6 +4,7 @@ import { StandardStackConfig } from "../../config/standard-stack-config.js"
 import { CommandContext } from "../../context/command-context.js"
 import { buildStackConfig } from "../../parser/stacks/build-stack-config.js"
 import { buildStackGroupConfig } from "../../parser/stacks/build-stack-group-config.js"
+import { STANDARD_STACK_TYPE } from "../../stacks/standard-stack.js"
 import { TemplateEngine } from "../../templating/template-engine.js"
 import { TakomoError } from "../../utils/errors.js"
 import { FilePath } from "../../utils/files.js"
@@ -45,7 +46,10 @@ export const parseStackConfigFile = async (
     throw new Error("Invalid yaml document")
   }
 
-  if (parsedFile.type !== undefined) {
+  if (
+    parsedFile.type === undefined ||
+    parsedFile.type === STANDARD_STACK_TYPE
+  ) {
     return parseStandardStackConfigFileInternal(
       ctx,
       variables,
