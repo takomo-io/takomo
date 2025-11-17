@@ -26,6 +26,7 @@ const emptyStackConfig = {
   schemas: undefined,
   inheritTags: undefined,
   blueprint: undefined,
+  type: undefined,
 }
 
 const ctx: CommandContext = {
