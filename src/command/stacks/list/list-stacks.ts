@@ -31,8 +31,10 @@ export const listStacks = async (
       return {
         path: pair.stack.path,
         name: pair.stack.name,
+        type: pair.stack.type,
         status: (pair.current ? "CREATE_COMPLETE" : "PENDING") as StackStatus,
-        type: "custom",
+        createdTime: pair.current?.creationTime,
+        updatedTime: pair.current?.lastUpdatedTime,
       }
     }
 
@@ -40,10 +42,10 @@ export const listStacks = async (
       return {
         path: pair.stack.path,
         name: pair.stack.name,
+        type: pair.stack.type,
         status: pair.current?.status,
         createdTime: pair.current?.creationTime,
         updatedTime: pair.current?.lastUpdatedTime,
-        type: "standard",
       }
     }
 

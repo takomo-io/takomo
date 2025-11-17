@@ -47,6 +47,7 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
           table
             .cell("Path", stack.path)
             .cell("Name", stack.name)
+            .cell("Type", stack.type)
             .cell("Status", formatStandardStackStatus(stack.status))
             .cell("Created", formatDate(stack.createdTime))
             .cell("Updated", formatDate(stack.updatedTime))

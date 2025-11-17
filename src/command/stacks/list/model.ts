@@ -1,5 +1,5 @@
 import { StackName, StackStatus } from "../../../aws/cloudformation/model.js"
-import { StackPath } from "../../../stacks/stack.js"
+import { CustomStackType, StackPath } from "../../../stacks/stack.js"
 import {
   CommandInput,
   IO,
@@ -10,10 +10,10 @@ import { CommandPath } from "../../command-model.js"
 export interface StackInfo {
   readonly path: StackPath
   readonly name: StackName
+  readonly type: CustomStackType
   readonly status?: StackStatus
   readonly createdTime?: Date
   readonly updatedTime?: Date
-  readonly type: "standard" | "custom"
 }
 
 export interface ListStacksInput extends CommandInput {

@@ -27,7 +27,7 @@ npm test
 Run single unit test from `test` dir:
 
 ```
-npm run single-test -- <path to test, e.g. test/takomo-stacks-commands/stacks/deploy/build-stacks-deploy-plan.test.ts>
+npm run single-test <path to test, e.g. test/takomo-stacks-commands/stacks/deploy/build-stacks-deploy-plan.test.ts>
 ```
 
 Audit dependencies:
