@@ -2,7 +2,7 @@ import { StackName, StackParameterKey } from "../aws/cloudformation/model.js"
 import { AccountId, Region, TagKey } from "../aws/common/model.js"
 import { TimeoutConfig, Vars } from "../common/model.js"
 import { HookConfig } from "../hooks/hook.js"
-import { CustomStackType, RawTagValue, StackPath } from "../stacks/stack.js"
+import { RawTagValue, StackPath } from "../stacks/stack.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
 import { ParameterConfigs, SchemasConfig } from "./common-config.js"
 
@@ -23,5 +23,4 @@ export interface StackConfig {
   readonly obsolete?: boolean
   readonly terminationProtection?: boolean
   readonly schemas?: SchemasConfig
-  readonly type?: CustomStackType
 }

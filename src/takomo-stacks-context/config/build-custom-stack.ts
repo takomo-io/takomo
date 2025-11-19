@@ -139,13 +139,13 @@ export const buildCustomStack = async (
         const dependencies = buildDependencies(builderProps)
 
         const { config } = await customStackHandler.parseConfig({
-          config: stackConfig.config ?? {},
+          config: stackConfig.customConfig ?? {},
           logger,
         })
 
         const props: CustomStackProps = {
-          type: stackConfig.type,
-          config,
+          customType: stackConfig.customType,
+          customConfig: config,
           name,
           region,
           parameters,

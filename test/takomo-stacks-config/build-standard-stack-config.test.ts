@@ -1,7 +1,7 @@
 import { mock } from "jest-mock-extended"
 import { TakomoProjectConfig } from "../../src/config/project-config.js"
 import { CommandContext } from "../../src/context/command-context.js"
-import { buildStackConfig } from "../../src/parser/stacks/build-stack-config.js"
+import { buildStandardStackConfig } from "../../src/parser/stacks/build-standard-stack-config.js"
 
 const emptyStackConfig = {
   accountIds: undefined,
@@ -26,8 +26,8 @@ const emptyStackConfig = {
   schemas: undefined,
   inheritTags: undefined,
   blueprint: undefined,
-  type: undefined,
 }
+
 
 const ctx: CommandContext = {
   confidentialValuesLoggingEnabled: false,
@@ -51,10 +51,10 @@ const ctx: CommandContext = {
   resetCache: false,
 }
 
-describe("#buildStackConfig", () => {
+describe("#buildStandardStackConfig", () => {
   test("empty config object", () => {
-    expect(buildStackConfig(ctx, {}, "stack")._unsafeUnwrap()).toStrictEqual(
-      emptyStackConfig,
-    )
+    expect(
+      buildStandardStackConfig(ctx, {}, "stack")._unsafeUnwrap(),
+    ).toStrictEqual(emptyStackConfig)
   })
 })

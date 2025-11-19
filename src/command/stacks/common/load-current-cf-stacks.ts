@@ -4,7 +4,6 @@ import {
 } from "../../../aws/cloudformation/model.js"
 import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 import {
-  CustomStack,
   InternalCustomStack,
   isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
@@ -109,10 +108,10 @@ const loadCurrentCustomStacks = async (
   // TODO: Handle errors
   const stackMap = new Map<StackPath, CustomStackState>()
   for (const stack of stacks) {
-    const handler = await customStackHandlerRegistry.getHandler(stack.type)
+    const handler = customStackHandlerRegistry.getHandler(stack.customType)
     const state = await handler.getCurrentState({
       logger: stack.logger,
-      config: stack.config,
+      config: stack.customConfig,
     })
 
     stackMap.set(stack.path, state)

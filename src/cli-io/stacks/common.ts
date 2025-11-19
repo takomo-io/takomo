@@ -7,10 +7,10 @@ import {
 } from "../../aws/cloudformation/model.js"
 import { CommandPath, StackResult } from "../../command/command-model.js"
 import { StacksOperationListener } from "../../command/stacks/common/model.js"
-import { CustomStackState } from "../../stacks/custom-stack.js"
+import { CustomStackState, isCustomStack } from "../../stacks/custom-stack.js"
 import { StacksOperationOutput } from "../../command/stacks/model.js"
 import { StackGroup } from "../../stacks/stack-group.js"
-import { CustomStackType, StackPath } from "../../stacks/stack.js"
+import { StackPath } from "../../stacks/stack.js"
 import { CommandStatus } from "../../takomo-core/command.js"
 import { getStackPath } from "../../takomo-stacks-model/util.js"
 import { collectFromHierarchy } from "../../utils/collections.js"
@@ -118,7 +118,7 @@ export const printFailedStackResults = (
 interface OutputStackResult {
   readonly path: StackPath
   readonly name: StackName
-  readonly type: CustomStackType
+  readonly custom: boolean
   readonly status: CommandStatus
   readonly time: number
   readonly message: string
@@ -131,7 +131,7 @@ const toOutputStackResult = (
 ): OutputStackResult => ({
   path: result.stack.path,
   name: result.stack.name,
-  type: result.stack.type,
+  custom: isCustomStack(result.stack),
   status: result.status,
   time: result.timer.getTimeElapsed(),
   message: result.message,
@@ -199,7 +199,7 @@ export const printStacksOperationOutput = ({
     table
       .cell("Path", result.stack.path)
       .cell("Name", result.stack.name)
-      .cell("Type", result.stack.type)
+      .cell("Type", isCustomStack(result.stack) ? "custom" : "standard")
       .cell("Status", formatCommandStatus(result.status))
       .cell("Time", result.timer.getFormattedTimeElapsed())
       .cell("Message", result.message)

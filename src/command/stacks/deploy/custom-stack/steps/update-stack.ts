@@ -15,10 +15,10 @@ export const updateStack: StackOperationStep<CurrentStackHolder> = async (
     customStackHandler,
   } = state
 
-  logger.info(`Updating custom stack of type '${stack.type}'`)
+  logger.info(`Updating custom stack of type '${stack.customType}'`)
   const result = await customStackHandler.update({
     state: currentStack,
-    config: stack.config,
+    config: stack.customConfig,
     logger,
     parameters,
     tags,

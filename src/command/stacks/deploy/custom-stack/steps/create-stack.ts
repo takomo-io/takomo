@@ -14,9 +14,9 @@ export const createStack: StackOperationStep<TagsHolder> = async (state) => {
 
   // TODO: Perform stack create or update operation here...
 
-  logger.info(`Creating custom stack of type '${stack.type}'`)
+  logger.info(`Creating custom stack of type '${stack.customType}'`)
   const result = await customStackHandler.create({
-    config: stack.config,
+    config: stack.customConfig,
     logger,
     parameters,
     tags,

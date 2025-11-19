@@ -13,10 +13,7 @@ import {
 } from "../../../../src/command/stacks/deploy/plan.js"
 import { StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
-import {
-  InternalStandardStack,
-  STANDARD_STACK_TYPE,
-} from "../../../../src/stacks/standard-stack.js"
+import { InternalStandardStack } from "../../../../src/stacks/standard-stack.js"
 import { createCustomStackHandlerRegistry } from "../../../../src/custom-stack-handler/custom-stack-handler-registry.js"
 import { logger } from "../../../logger.js"
 
@@ -76,7 +73,6 @@ const stack = ({
     region,
     dependencies,
     obsolete,
-    type: STANDARD_STACK_TYPE,
   })
 
   s.getCloudFormationClient.mockReturnValue(Promise.resolve(cfClient))

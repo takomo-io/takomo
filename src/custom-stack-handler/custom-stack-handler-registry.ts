@@ -26,6 +26,12 @@ export const createCustomStackHandlerRegistry = ({
   const registerHandler = async (
     handler: CustomStackHandler<unknown, unknown>,
   ): Promise<void> => {
+    if (handler.type === "standard") {
+      throw new Error(
+        `Cannot register custom stack handler with reserved type 'standard'`,
+      )
+    }
+
     const existingHandler = handlers.get(handler.type)
     if (existingHandler) {
       throw new Error(

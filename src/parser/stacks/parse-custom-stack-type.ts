@@ -1,10 +1,8 @@
 import { CustomStackType } from "../../stacks/stack.js"
 
-export const parseCustomStackType = (
-  value: unknown,
-): CustomStackType | undefined => {
+export const parseCustomStackType = (value: unknown): CustomStackType => {
   if (value === null || value === undefined) {
-    return undefined
+    throw new Error(`Custom stack type must be defined`)
   }
 
   if (typeof value !== "string") {

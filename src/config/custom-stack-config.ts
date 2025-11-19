@@ -1,13 +1,16 @@
 import { CustomStackType } from "../stacks/stack.js"
-import { STANDARD_STACK_TYPE } from "../stacks/standard-stack.js"
 import { StackConfig } from "./stack-config.js"
 
 export interface CustomStackConfig extends StackConfig {
-  readonly type: CustomStackType
-  readonly config?: Record<string, unknown>
+  readonly customType: CustomStackType
+  readonly customConfig?: unknown
 }
 
 export const isCustomStackConfig = (
-  config: StackConfig,
-): config is CustomStackConfig =>
-  config.type !== undefined && config.type !== STANDARD_STACK_TYPE
+  obj: StackConfig,
+): obj is CustomStackConfig =>
+  obj !== undefined &&
+  obj !== null &&
+  typeof obj === "object" &&
+  "customType" in obj &&
+  obj.customType !== undefined

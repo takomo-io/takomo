@@ -57,7 +57,6 @@ export interface StackProps {
   terminationProtection: boolean
   logger: TkmLogger
   schemas?: Schemas
-  type: CustomStackType
 }
 
 /**
@@ -118,11 +117,6 @@ export interface Stack {
    * Logger instance associated with the stack
    */
   readonly logger: TkmLogger
-
-  /**
-   * Type of the stack
-   */
-  readonly type: CustomStackType
 }
 
 export interface BaseInternalStack extends Stack {

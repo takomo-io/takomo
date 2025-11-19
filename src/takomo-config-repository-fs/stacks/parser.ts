@@ -2,9 +2,8 @@ import { CustomStackConfig } from "../../config/custom-stack-config.js"
 import { StackGroupConfig } from "../../config/stack-group-config.js"
 import { StandardStackConfig } from "../../config/standard-stack-config.js"
 import { CommandContext } from "../../context/command-context.js"
-import { buildStackConfig } from "../../parser/stacks/build-stack-config.js"
+import { buildStandardStackConfig } from "../../parser/stacks/build-standard-stack-config.js"
 import { buildStackGroupConfig } from "../../parser/stacks/build-stack-group-config.js"
-import { STANDARD_STACK_TYPE } from "../../stacks/standard-stack.js"
 import { TemplateEngine } from "../../templating/template-engine.js"
 import { TakomoError } from "../../utils/errors.js"
 import { FilePath } from "../../utils/files.js"
@@ -46,21 +45,17 @@ export const parseStackConfigFile = async (
     throw new Error("Invalid yaml document")
   }
 
-  if (
-    parsedFile.type === undefined ||
-    parsedFile.type === STANDARD_STACK_TYPE
-  ) {
-    return parseStandardStackConfigFileInternal(
-      ctx,
-      variables,
-      templateEngine,
-      logger,
-      pathToFile,
-      "stack",
-    )
+  if (typeof parsedFile.customType === "string") {
   }
 
-  throw new Error("Parsing custom stack configs is not implemented yet")
+  return parseStandardStackConfigFileInternal(
+    ctx,
+    variables,
+    templateEngine,
+    logger,
+    pathToFile,
+    "stack",
+  )
 }
 
 const parseStandardStackConfigFileInternal = async (
@@ -78,7 +73,7 @@ const parseStandardStackConfigFileInternal = async (
   })
 
   const parsedFile = parseYaml(pathToFile, rendered)
-  const result = buildStackConfig(ctx, parsedFile, configType)
+  const result = buildStandardStackConfig(ctx, parsedFile, configType)
   if (result.isOk()) {
     return result.value
   }

@@ -7,16 +7,13 @@ import {
 import { CloudFormationClient } from "../aws/cloudformation/client.js"
 import { TemplateBucketConfig } from "../common/model.js"
 import { FilePath } from "../utils/files.js"
-import {
-  BaseInternalStack,
-  CustomStackType,
-  Stack as InternalStack,
-  Stack,
-  StackProps,
-} from "./stack.js"
+import { BaseInternalStack, InternalStack, Stack, StackProps } from "./stack.js"
 import { InternalCredentialManager } from "../aws/common/credentials.js"
-
-export const STANDARD_STACK_TYPE = "standard"
+import {
+  isCustomStack,
+  isCustomStackProps,
+  isInternalCustomStack,
+} from "./custom-stack.js"
 
 /**
  * Blueprint path.
@@ -41,7 +38,7 @@ export interface StandardStackProps extends StackProps {
 /**
  * An interface representing a standard CloudFormation stack configuration.
  */
-export interface StandardStack extends InternalStack {
+export interface StandardStack extends Stack {
   /**
    * Get CloudFormation client
    */
@@ -98,7 +95,6 @@ export const createStandardStack = (
     stackPolicy,
     stackPolicyDuringUpdate,
     schemas,
-    type,
   } = props
 
   const getClient = async () =>
@@ -107,14 +103,10 @@ export const createStandardStack = (
   const getCurrentCloudFormationStack = () =>
     getCloudFormationClient().then((c) => c.describeStack(name))
 
-  const getCredentials = () => credentialManager.getCredentials()
-
   return {
-    type,
     accountIds,
     capabilities,
     commandRole,
-    getCredentials,
     credentialManager,
     data,
     dependents,
@@ -140,17 +132,18 @@ export const createStandardStack = (
     stackPolicy,
     stackPolicyDuringUpdate,
     schemas,
+    getCredentials: () => credentialManager.getCredentials(),
     toProps: () => props,
   }
 }
 
 export const isStandardStackProps = (
   props: StackProps,
-): props is StandardStackProps => props.type === STANDARD_STACK_TYPE
+): props is StandardStackProps => !isCustomStackProps(props)
 
 export const isInternalStandardStack = (
   stack: InternalStack,
-): stack is InternalStandardStack => stack.type === STANDARD_STACK_TYPE
+): stack is InternalStandardStack => !isInternalCustomStack(stack)
 
 export const isStandardStack = (stack: Stack): stack is StandardStack =>
-  stack.type === STANDARD_STACK_TYPE
+  !isCustomStack(stack)

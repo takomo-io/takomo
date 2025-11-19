@@ -6,10 +6,7 @@ import {
 } from "../../src/aws/cloudformation/model.js"
 import { Region } from "../../src/aws/common/model.js"
 import { StackPath } from "../../src/stacks/stack.js"
-import {
-  InternalStandardStack,
-  STANDARD_STACK_TYPE,
-} from "../../src/stacks/standard-stack.js"
+import { InternalStandardStack } from "../../src/stacks/standard-stack.js"
 
 export interface MockDetailedCloudFormationStackProps {
   readonly enableTerminationProtection?: boolean
@@ -47,7 +44,6 @@ export const mockInternalStack = ({
     terminationProtection,
     dependents,
     dependencies,
-    type: STANDARD_STACK_TYPE,
   })
 
   stack.credentialManager.getCallerIdentity.calledWith().mockResolvedValue({

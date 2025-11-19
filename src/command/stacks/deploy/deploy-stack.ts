@@ -1,16 +1,9 @@
-import { T } from "ramda"
-import { CloudFormationStackSummary } from "../../../aws/cloudformation/model.js"
 import { InternalStacksContext } from "../../../context/stacks-context.js"
-import {
-  isCustomStack,
-  isInternalCustomStack,
-} from "../../../stacks/custom-stack.js"
 import { InternalStack } from "../../../stacks/stack.js"
-import { isInternalStandardStack } from "../../../stacks/standard-stack.js"
 import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { Timer } from "../../../utils/timer.js"
-import { StackOperationType, StackResult } from "../../command-model.js"
+import { StackResult } from "../../command-model.js"
 import { StacksOperationListener } from "../common/model.js"
 import { executeSteps } from "../common/steps.js"
 import { InitialDeployCustomStackState } from "./custom-stack/states.js"
@@ -108,7 +101,7 @@ export const deployStack = async (
       `Stack status: ${currentStack ? "CREATE_COMPLETED" : "PENDING"}`,
     )
 
-    const handler = ctx.customStackHandlerRegistry.getHandler(stack.type)
+    const handler = ctx.customStackHandlerRegistry.getHandler(stack.customType)
 
     const initialState: InitialDeployCustomStackState = {
       io,

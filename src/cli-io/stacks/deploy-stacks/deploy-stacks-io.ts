@@ -42,7 +42,8 @@ import { printResources } from "./resources.js"
 import { printStackPolicy } from "./stack-policy.js"
 import { printTags } from "./tags.js"
 import { printTerminationProtection } from "./termination-protection.js"
-import { StackPath } from "../../../stacks/stack.js"
+import { Stack, StackPath } from "../../../stacks/stack.js"
+import { isCustomStack } from "../../../stacks/custom-stack.js"
 
 interface ConfirmStackDeployAnswerChoice {
   readonly name: string
@@ -128,6 +129,9 @@ const formatStackOperationType = (type: StackOperationType): string => {
   }
 }
 
+const getStackType = (stack: Stack): string =>
+  isCustomStack(stack) ? stack.customType : "standard"
+
 const ensureContentsEndsWithLineFeed = (content: string): string =>
   content.endsWith("\n") ? content : content + "\n"
 
@@ -185,7 +189,7 @@ export const createDeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
-            `      stack type:                ${stack.type}`,
+            `      stack type:                ${getStackType(stack)}`,
             `      status:                    ${formatStandardStackStatus(
               currentStack?.status,
             )}`,
@@ -210,7 +214,7 @@ export const createDeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
-            `      stack type:                ${stack.type}`,
+            `      stack type:                ${getStackType(stack)}`,
             `      status:                    ${formatCustomStackStatus(
               currentStack?.status,
             )}`,

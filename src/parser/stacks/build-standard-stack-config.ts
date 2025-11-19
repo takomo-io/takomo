@@ -1,5 +1,4 @@
 import { err, ok, Result } from "neverthrow"
-import { StackConfig } from "../../config/stack-config.js"
 import { CommandContext } from "../../context/command-context.js"
 import { createStackConfigSchema } from "../../schema/stack-config-schema.js"
 import { ValidationError } from "../../utils/errors.js"
@@ -21,13 +20,13 @@ import { parseTemplateBucket } from "./parse-template-bucket.js"
 import { parseTemplate } from "./parse-template.js"
 import { parseTimeout } from "./parse-timeout.js"
 import { ParsedYamlDocument } from "../../utils/yaml.js"
-import { parseCustomStackType } from "./parse-custom-stack-type.js"
+import { StandardStackConfig } from "../../config/standard-stack-config.js"
 
-export const buildStackConfig = (
+export const buildStandardStackConfig = (
   ctx: CommandContext,
   record: ParsedYamlDocument,
   configType: "stack" | "blueprint",
-): Result<StackConfig, ValidationError> => {
+): Result<StandardStackConfig, ValidationError> => {
   const { error } = createStackConfigSchema({
     regions: ctx.regions,
     configType,
@@ -47,7 +46,6 @@ export const buildStackConfig = (
     throw new Error("Invalid yaml document")
   }
 
-  const type = parseCustomStackType(record.type)
   const schemas = parseSchemas(record.schemas)
   const data = parseData(record.data)
   const hooks = parseHooks(record.hooks)
@@ -59,7 +57,6 @@ export const buildStackConfig = (
   )
 
   return ok({
-    type,
     accountIds,
     data,
     hooks,

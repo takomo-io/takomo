@@ -77,12 +77,14 @@ const convertToUndeployOperation = async (
   })
 
   if (isInternalCustomStack(stack)) {
-    const customStackHandler = customStackHandlerRegistry.getHandler(stack.type)
+    const customStackHandler = customStackHandlerRegistry.getHandler(
+      stack.customType,
+    )
 
     // TODO: Handler error
     const currentStack = await customStackHandler.getCurrentState({
       logger: stack.logger,
-      config: stack.config,
+      config: stack.customConfig,
     })
 
     const type = resolveUndeployOperationType(currentStack)

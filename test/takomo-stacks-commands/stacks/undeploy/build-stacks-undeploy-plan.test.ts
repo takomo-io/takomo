@@ -14,7 +14,6 @@ import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
 import { createCustomStackHandlerRegistry } from "../../../../src/custom-stack-handler/custom-stack-handler-registry.js"
 import { logger } from "../../../logger.js"
-import { STANDARD_STACK_TYPE } from "../../../../src/stacks/standard-stack.js"
 
 interface CreateStackProps {
   readonly name: StackName
@@ -57,7 +56,6 @@ const stack = ({
     region,
     dependents,
     obsolete,
-    type: STANDARD_STACK_TYPE,
     getCurrentCloudFormationStack,
   })
 

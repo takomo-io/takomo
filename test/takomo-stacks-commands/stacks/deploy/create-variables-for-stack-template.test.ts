@@ -21,7 +21,6 @@ describe("#createVariablesForStackTemplate", () => {
     }
 
     const stack: InternalStandardStack = {
-      type: "standard",
       accountIds: [],
       capabilities: [],
       commandRole: {
@@ -173,7 +172,6 @@ describe("#createVariablesForStackTemplate", () => {
     }
 
     const stack: InternalStandardStack = {
-      type: "standard",
       accountIds: [],
       capabilities: [],
       credentialManager: mock<InternalCredentialManager>(),

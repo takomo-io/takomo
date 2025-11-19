@@ -14,7 +14,6 @@ export interface StackDriftInfo {
   readonly current?: CloudFormationStackSummary
   readonly stack: InternalStack
   readonly driftDetectionStatus?: StackDriftDetectionStatusOutput
-  readonly type: "standard" | "custom"
 }
 
 export interface DetectDriftInput extends CommandInput {

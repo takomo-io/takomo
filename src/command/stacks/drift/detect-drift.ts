@@ -1,9 +1,9 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
-import { isInternalCustomStack } from "../../../stacks/custom-stack.js"
 import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import {
   isCustomStackPair,
+  isStandardStackPair,
   loadCurrentStacks,
 } from "../common/load-current-cf-stacks.js"
 import { DetectDriftInput, DetectDriftOutput, StackDriftInfo } from "./model.js"
@@ -26,8 +26,10 @@ export const detectDrift = async (
     ctx.customStackHandlerRegistry,
   )
 
+  const standardStacks = stackPairs.filter(isStandardStackPair)
+
   const stacks: ReadonlyArray<StackDriftInfo> = await Promise.all(
-    stackPairs.map(async (pair) => {
+    standardStacks.map(async (pair) => {
       if (isCustomStackPair(pair)) {
         return { stack: pair.stack, type: "custom" }
       }

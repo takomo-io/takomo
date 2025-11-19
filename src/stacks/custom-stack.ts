@@ -6,11 +6,6 @@ import {
   Stack,
   StackProps,
 } from "./stack.js"
-import {
-  isInternalStandardStack,
-  isStandardStack,
-  isStandardStackProps,
-} from "./standard-stack.js"
 
 export type CustomStackStatus = "PENDING" | "CREATE_COMPLETED"
 
@@ -25,18 +20,21 @@ export type CustomStackState = {
 }
 
 export interface CustomStackProps extends StackProps {
-  type: CustomStackType
-  config: Record<string, unknown>
+  customType: CustomStackType
+  customConfig?: unknown
 }
 
 /**
  * An interface representing a custom stack configuration.
  */
-export interface CustomStack extends Stack {}
+export interface CustomStack extends Stack {
+  readonly customType: CustomStackType
+}
 
 export interface InternalCustomStack extends CustomStack, BaseInternalStack {
   readonly credentialManager: InternalCredentialManager
-  readonly config: Record<string, unknown>
+  readonly customType: CustomStackType
+  readonly customConfig?: unknown
   readonly toProps: () => CustomStackProps
 }
 
@@ -64,18 +62,15 @@ export const createCustomStack = (
     terminationProtection,
     timeout,
     schemas,
-    type,
-    config,
+    customType,
+    customConfig,
   } = props
 
-  const getCredentials = () => credentialManager.getCredentials()
-
   return {
-    type,
-    config,
+    customType,
+    customConfig,
     accountIds,
     commandRole,
-    getCredentials,
     credentialManager,
     data,
     dependents,
@@ -94,17 +89,25 @@ export const createCustomStack = (
     terminationProtection,
     timeout,
     schemas,
+    getCredentials: () => credentialManager.getCredentials(),
     toProps: () => props,
   }
 }
 
+const hasCustomType = (obj: unknown): boolean =>
+  obj !== undefined &&
+  obj !== null &&
+  typeof obj === "object" &&
+  "customType" in obj &&
+  obj.customType !== undefined
+
 export const isCustomStackProps = (
   props: StackProps,
-): props is CustomStackProps => !isStandardStackProps(props)
+): props is CustomStackProps => hasCustomType(props)
 
 export const isInternalCustomStack = (
   stack: InternalStack,
-): stack is InternalCustomStack => !isInternalStandardStack(stack)
+): stack is InternalCustomStack => hasCustomType(stack)
 
 export const isCustomStack = (stack: Stack): stack is CustomStack =>
-  !isStandardStack(stack)
+  hasCustomType(stack)

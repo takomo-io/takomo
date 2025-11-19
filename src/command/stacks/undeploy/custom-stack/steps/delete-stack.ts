@@ -9,7 +9,7 @@ export const deleteStack: StackOperationStep<
   // TODO: handle errors
 
   const result = await customStackHandler.delete({
-    config: stack.config,
+    config: stack.customConfig,
     logger: state.logger,
     state: currentStack,
   })

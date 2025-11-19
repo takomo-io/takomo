@@ -285,7 +285,7 @@ export const buildStack = async (
 
   if (isCustomStackConfig(stackConfig)) {
     const customStackHandler = customStackHandlerRegistry.getHandler(
-      stackConfig.type,
+      stackConfig.customType,
     )
 
     return buildCustomStack(
