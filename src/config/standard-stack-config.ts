@@ -5,10 +5,11 @@ import {
 import { TemplateBucketConfig } from "../common/model.js"
 import { BlueprintPath } from "../stacks/standard-stack.js"
 import { TemplateConfig } from "./common-config.js"
-import { StackConfig } from "./stack-config.js"
+import { BaseStackConfig } from "./stack-config.js"
 import { isCustomStackConfig } from "./custom-stack-config.js"
 
-export interface StandardStackConfig extends StackConfig {
+export type StandardStackConfig = BaseStackConfig & {
+  readonly stackType: "standard"
   readonly template?: TemplateConfig
   readonly templateBucket?: TemplateBucketConfig
   readonly capabilities?: ReadonlyArray<StackCapability>
@@ -18,5 +19,5 @@ export interface StandardStackConfig extends StackConfig {
 }
 
 export const isStandardStackConfig = (
-  config: StackConfig,
+  config: BaseStackConfig,
 ): config is StandardStackConfig => !isCustomStackConfig(config)

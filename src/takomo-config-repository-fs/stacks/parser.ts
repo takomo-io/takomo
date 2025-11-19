@@ -9,6 +9,7 @@ import { TakomoError } from "../../utils/errors.js"
 import { FilePath } from "../../utils/files.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { parseYaml } from "../../utils/yaml.js"
+import { buildCustomStackConfig } from "../../parser/stacks/build-custom-stack-config.js"
 
 export const parseBlueprintConfigFile = async (
   ctx: CommandContext,
@@ -17,15 +18,24 @@ export const parseBlueprintConfigFile = async (
   templateEngine: TemplateEngine,
   logger: TkmLogger,
   pathToFile: FilePath,
-): Promise<StandardStackConfig> =>
-  parseStandardStackConfigFileInternal(
-    ctx,
-    variables,
-    templateEngine,
-    logger,
+): Promise<StandardStackConfig> => {
+  const rendered = await templateEngine.renderTemplateFile({
     pathToFile,
+    variables,
+  })
+
+  const parsedFile = parseYaml(pathToFile, rendered)
+  if (typeof parsedFile === "number" || typeof parsedFile === "string") {
+    throw new Error("Invalid yaml document")
+  }
+
+  return parseStandardStackConfigFileInternal(
+    ctx,
+    pathToFile,
+    parsedFile,
     "blueprint",
   )
+}
 
 export const parseStackConfigFile = async (
   ctx: CommandContext,
@@ -45,34 +55,30 @@ export const parseStackConfigFile = async (
     throw new Error("Invalid yaml document")
   }
 
-  if (typeof parsedFile.customType === "string") {
+  if (parsedFile.customType === undefined) {
+    return parseStandardStackConfigFileInternal(
+      ctx,
+      pathToFile,
+      parsedFile,
+      "stack",
+    )
   }
 
-  return parseStandardStackConfigFileInternal(
-    ctx,
-    variables,
-    templateEngine,
-    logger,
-    pathToFile,
-    "stack",
+  if (typeof parsedFile.customType === "string") {
+    return parseCustomStackConfigFile(ctx, pathToFile, parsedFile)
+  }
+
+  throw new TakomoError(
+    `Validation errors in stack file ${pathToFile}:\n- customType must be a string`,
   )
 }
 
 const parseStandardStackConfigFileInternal = async (
   ctx: CommandContext,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  variables: any,
-  templateEngine: TemplateEngine,
-  logger: TkmLogger,
   pathToFile: FilePath,
+  parsedFile: Record<string, unknown>,
   configType: "blueprint" | "stack",
 ): Promise<StandardStackConfig> => {
-  const rendered = await templateEngine.renderTemplateFile({
-    pathToFile,
-    variables,
-  })
-
-  const parsedFile = parseYaml(pathToFile, rendered)
   const result = buildStandardStackConfig(ctx, parsedFile, configType)
   if (result.isOk()) {
     return result.value
@@ -81,6 +87,23 @@ const parseStandardStackConfigFileInternal = async (
   const details = result.error.messages.map((m: unknown) => `- ${m}`).join("\n")
   throw new TakomoError(
     `Validation errors in ${configType} file ${pathToFile}:\n${details}`,
+  )
+}
+
+const parseCustomStackConfigFile = async (
+  ctx: CommandContext,
+  pathToFile: FilePath,
+  parsedFile: Record<string, unknown>,
+): Promise<CustomStackConfig> => {
+  const result = buildCustomStackConfig(ctx, parsedFile)
+
+  if (result.isOk()) {
+    return result.value
+  }
+
+  const details = result.error.messages.map((m: unknown) => `- ${m}`).join("\n")
+  throw new TakomoError(
+    `Validation errors in stack file ${pathToFile}:\n${details}`,
   )
 }
 

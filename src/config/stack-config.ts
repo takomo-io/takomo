@@ -5,8 +5,11 @@ import { HookConfig } from "../hooks/hook.js"
 import { RawTagValue, StackPath } from "../stacks/stack.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
 import { ParameterConfigs, SchemasConfig } from "./common-config.js"
+import { CustomStackConfig } from "./custom-stack-config.js"
+import { StandardStackConfig } from "./standard-stack-config.js"
 
-export interface StackConfig {
+export interface BaseStackConfig {
+  readonly stackType: "custom" | "standard"
   readonly project?: Project
   readonly name?: StackName
   readonly regions: ReadonlyArray<Region>
@@ -24,3 +27,5 @@ export interface StackConfig {
   readonly terminationProtection?: boolean
   readonly schemas?: SchemasConfig
 }
+
+export type StackConfig = CustomStackConfig | StandardStackConfig

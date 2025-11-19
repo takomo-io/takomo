@@ -1,13 +1,14 @@
 import { CustomStackType } from "../stacks/stack.js"
-import { StackConfig } from "./stack-config.js"
+import { BaseStackConfig } from "./stack-config.js"
 
-export interface CustomStackConfig extends StackConfig {
+export type CustomStackConfig = BaseStackConfig & {
+  readonly stackType: "custom"
   readonly customType: CustomStackType
   readonly customConfig?: unknown
 }
 
 export const isCustomStackConfig = (
-  obj: StackConfig,
+  obj: BaseStackConfig,
 ): obj is CustomStackConfig =>
   obj !== undefined &&
   obj !== null &&

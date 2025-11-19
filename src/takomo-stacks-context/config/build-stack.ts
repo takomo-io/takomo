@@ -9,7 +9,7 @@ import {
 } from "../../aws/common/model.js"
 import { CommandPath } from "../../command/command-model.js"
 import { TimeoutConfig, Vars } from "../../common/model.js"
-import { StackConfig } from "../../config/stack-config.js"
+import { BaseStackConfig } from "../../config/stack-config.js"
 import { InternalCommandContext } from "../../context/command-context.js"
 import { HookRegistry } from "../../hooks/hook-registry.js"
 import { HookConfig } from "../../hooks/hook.js"
@@ -38,11 +38,12 @@ import { buildStandardStack } from "./build-standard-stack.js"
 import { isCustomStackConfig } from "../../config/custom-stack-config.js"
 import { buildCustomStack } from "./build-custom-stack.js"
 import { CustomStackHandlerRegistry } from "../../custom-stack-handler/custom-stack-handler-registry.js"
+import { exhaustiveCheck } from "../../utils/exhaustive-check.js"
 
 export interface StackPropBuilderProps {
-  readonly stackConfig: StackConfig
+  readonly stackConfig: BaseStackConfig
   readonly stackGroup: StackGroup
-  readonly blueprint?: StackConfig
+  readonly blueprint?: BaseStackConfig
 }
 
 export const validateData = (
@@ -265,23 +266,6 @@ export const buildStack = async (
   )
 
   const stackConfig = await node.getConfig(stackVariables)
-  if (isStandardStackConfig(stackConfig)) {
-    return buildStandardStack(
-      stackPath,
-      ctx,
-      logger,
-      defaultCredentialManager,
-      credentialManagers,
-      resolverRegistry,
-      schemaRegistry,
-      hookRegistry,
-      stackConfig,
-      stackGroup,
-      commandPath,
-      status,
-      configRepository,
-    )
-  }
 
   if (isCustomStackConfig(stackConfig)) {
     const customStackHandler = customStackHandlerRegistry.getHandler(
@@ -305,7 +289,23 @@ export const buildStack = async (
     )
   }
 
-  throw new TakomoError(
-    `Unknown stack config type for stack with path '${stackPath}'`,
-  )
+  if (isStandardStackConfig(stackConfig)) {
+    return buildStandardStack(
+      stackPath,
+      ctx,
+      logger,
+      defaultCredentialManager,
+      credentialManagers,
+      resolverRegistry,
+      schemaRegistry,
+      hookRegistry,
+      stackConfig,
+      stackGroup,
+      commandPath,
+      status,
+      configRepository,
+    )
+  }
+
+  return exhaustiveCheck(stackConfig)
 }

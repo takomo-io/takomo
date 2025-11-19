@@ -19,14 +19,13 @@ import { parseTimeout } from "./parse-timeout.js"
 import { parseCustomStackType } from "./parse-custom-stack-type.js"
 import { CustomStackConfig } from "../../config/custom-stack-config.js"
 
-export const buildStandardStackConfig = (
+export const buildCustomStackConfig = (
   ctx: CommandContext,
   record: Record<string, unknown>,
-  configType: "stack" | "blueprint",
 ): Result<CustomStackConfig, ValidationError> => {
   const { error } = createStackConfigSchema({
     regions: ctx.regions,
-    configType,
+    configType: "stack",
   }).validate(record, {
     abortEarly: false,
     convert: false,
@@ -46,6 +45,8 @@ export const buildStandardStackConfig = (
   const accountIds = parseAccountIds(record.accountIds)
 
   return ok({
+    stackType: "custom",
+    customConfig: record.customConfig,
     customType,
     accountIds,
     data,

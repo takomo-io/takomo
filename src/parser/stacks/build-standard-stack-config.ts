@@ -57,6 +57,7 @@ export const buildStandardStackConfig = (
   )
 
   return ok({
+    stackType: "standard",
     accountIds,
     data,
     hooks,

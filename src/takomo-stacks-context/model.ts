@@ -4,7 +4,6 @@ import { IamRoleArn } from "../aws/common/model.js"
 import { CommandPath } from "../command/command-model.js"
 import { EnvVars, Variables } from "../common/model.js"
 import { ParameterConfig } from "../config/common-config.js"
-import { StackConfig } from "../config/stack-config.js"
 import { HookRegistry } from "../hooks/hook-registry.js"
 import { ResolverRegistry } from "../resolvers/resolver-registry.js"
 import { Resolver, ResolverInput, ResolverName } from "../resolvers/resolver.js"
@@ -20,6 +19,7 @@ import { Timer } from "../utils/timer.js"
 import { ConfigTree } from "./config/config-tree.js"
 import { StackPath } from "../stacks/stack.js"
 import { CustomStackHandlerRegistry } from "../custom-stack-handler/custom-stack-handler-registry.js"
+import { StandardStackConfig } from "../config/standard-stack-config.js"
 
 export class CommandPathMatchesNoStacksError extends TakomoError {
   constructor(commandPath: CommandPath, availableStackPaths: StackPath[]) {
@@ -227,7 +227,7 @@ export interface StacksConfigRepository {
     blueprint: BlueprintPath,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     variables: any,
-  ) => Promise<StackConfig>
+  ) => Promise<StandardStackConfig>
 
   buildConfigTree: () => Promise<ConfigTree>
 

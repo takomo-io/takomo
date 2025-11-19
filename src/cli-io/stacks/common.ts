@@ -118,7 +118,7 @@ export const printFailedStackResults = (
 interface OutputStackResult {
   readonly path: StackPath
   readonly name: StackName
-  readonly custom: boolean
+  readonly type: "standard" | "custom"
   readonly status: CommandStatus
   readonly time: number
   readonly message: string
@@ -131,7 +131,7 @@ const toOutputStackResult = (
 ): OutputStackResult => ({
   path: result.stack.path,
   name: result.stack.name,
-  custom: isCustomStack(result.stack),
+  type: isCustomStack(result.stack) ? "custom" : "standard",
   status: result.status,
   time: result.timer.getTimeElapsed(),
   message: result.message,
