@@ -1,4 +1,5 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 import { Timer } from "../../../utils/timer.js"
 import { StackResult } from "../../command-model.js"
 import { StacksOperationListener } from "../common/model.js"
@@ -7,6 +8,7 @@ import { InitialUndeployCustomStackState } from "./custom-stack/states.js"
 import { createUndeployCustomStackTransitions } from "./custom-stack/transitions.js"
 import { UndeployStacksIO } from "./model.js"
 import {
+  isCustomStackUndeployOperation,
   isStandardStackUndeployOperation,
   StackUndeployOperation,
 } from "./plan.js"
@@ -46,7 +48,9 @@ export const deleteStack = async (
     }
 
     return executeSteps(initial)
-  } else {
+  }
+
+  if (isCustomStackUndeployOperation(operation)) {
     const { stack, currentStack } = operation
     const initial: InitialUndeployCustomStackState = {
       ctx,
@@ -55,7 +59,6 @@ export const deleteStack = async (
       logger,
       variables,
       dependents,
-      currentStack,
       stacksOperationListener,
       stackExistedBeforeOperation: currentStack !== undefined,
       operationType: "DELETE",
@@ -66,4 +69,6 @@ export const deleteStack = async (
 
     return executeSteps(initial)
   }
+
+  return exhaustiveCheck(operation)
 }

@@ -26,7 +26,7 @@ import {
   InternalCustomStack,
   isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
-import { CustomStackState } from "../../../stacks/custom-stack.js"
+import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
 import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 
 /**

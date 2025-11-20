@@ -1,5 +1,5 @@
 import { TkmLogger } from "../utils/logging.js"
-import { CustomStackHandler } from "./custom-stack-handler.js"
+import { CustomStackHandler, CustomStackState } from "./custom-stack-handler.js"
 import { createCmdCustomStackHandler } from "./cmd-custom-stack-handler.js"
 import { CustomStackType } from "../stacks/stack.js"
 
@@ -20,11 +20,11 @@ export const createCustomStackHandlerRegistry = ({
 }: CreateCustomStackHandlerRegistryProps): CustomStackHandlerRegistry => {
   const handlers = new Map<
     CustomStackType,
-    CustomStackHandler<unknown, unknown>
+    CustomStackHandler<unknown, CustomStackState>
   >()
 
   const registerHandler = async (
-    handler: CustomStackHandler<unknown, unknown>,
+    handler: CustomStackHandler<unknown, CustomStackState>,
   ): Promise<void> => {
     if (handler.type === "standard") {
       throw new Error(
@@ -46,7 +46,7 @@ export const createCustomStackHandlerRegistry = ({
 
   const getHandler = (
     type: CustomStackType,
-  ): CustomStackHandler<unknown, unknown> => {
+  ): CustomStackHandler<unknown, CustomStackState> => {
     const handler = handlers.get(type)
     if (!handler) {
       throw new Error(`Custom stack handler not found with type '${type}'`)

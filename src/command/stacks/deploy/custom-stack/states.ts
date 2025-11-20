@@ -12,7 +12,7 @@ import {
   StackOperationVariables,
   StackResult,
 } from "../../../command-model.js"
-import { CustomStackState } from "../../../../stacks/custom-stack.js"
+import { CustomStackState } from "../../../../custom-stack-handler/custom-stack-handler.js"
 import { InitialStackOperationState } from "../../common/states.js"
 import { DeployStacksIO, DeployState } from "../model.js"
 import { DeployCustomStackTransitions } from "./transitions.js"

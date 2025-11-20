@@ -26,8 +26,8 @@ const emptyStackConfig = {
   schemas: undefined,
   inheritTags: undefined,
   blueprint: undefined,
+  stackType: "standard",
 }
-
 
 const ctx: CommandContext = {
   confidentialValuesLoggingEnabled: false,

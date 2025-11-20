@@ -14,7 +14,9 @@ import {
 } from "../../../stacks/standard-stack.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { checksum } from "../../../utils/strings.js"
-import { CustomStackState } from "../../../stacks/custom-stack.js"
+import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
+import { CustomStackHandler } from "../../../custom-stack-handler/custom-stack-handler.js"
 
 const makeCredentialsRegionHash = async (
   stack: InternalStack,
@@ -98,6 +100,69 @@ const loadCurrentStandardStacks = async (
   return stackMap
 }
 
+const parseCustomStackConfig = async (
+  stack: InternalCustomStack,
+  handler: CustomStackHandler<any, any>,
+): Promise<void> => {
+  try {
+    const { success, config, message, error } = await handler.parseConfig({
+      config: stack.customConfig,
+      logger: stack.logger,
+    })
+
+    if (!success) {
+      stack.logger.error(
+        `Parsing custom stack config failed for stack ${stack.path}: ${message}`,
+      )
+      throw (
+        error ??
+        new Error(`Parsing custom stack config failed for stack ${stack.path}`)
+      )
+    }
+
+    return config
+  } catch (e) {
+    stack.logger.error(
+      `Parsing custom stack config failed for stack ${stack.path}`,
+      e,
+    )
+
+    throw e
+  }
+}
+
+const getCustomStackState = async (
+  stack: InternalCustomStack,
+  handler: CustomStackHandler<any, any>,
+  config: unknown,
+): Promise<CustomStackState> => {
+  try {
+    const { success, state, message, error } = await handler.getCurrentState({
+      logger: stack.logger,
+      config,
+    })
+
+    if (!success) {
+      stack.logger.error(
+        `Getting custom stack state failed for stack ${stack.path}: ${message}`,
+      )
+      throw (
+        error ??
+        new Error(`Getting custom stack state failed for stack ${stack.path}`)
+      )
+    }
+
+    return state
+  } catch (e) {
+    stack.logger.error(
+      `Getting custom stack state failed for stack ${stack.path}`,
+      e,
+    )
+
+    throw e
+  }
+}
+
 const loadCurrentCustomStacks = async (
   logger: TkmLogger,
   stacks: ReadonlyArray<InternalCustomStack>,
@@ -109,10 +174,8 @@ const loadCurrentCustomStacks = async (
   const stackMap = new Map<StackPath, CustomStackState>()
   for (const stack of stacks) {
     const handler = customStackHandlerRegistry.getHandler(stack.customType)
-    const state = await handler.getCurrentState({
-      logger: stack.logger,
-      config: stack.customConfig,
-    })
+    const config = await parseCustomStackConfig(stack, handler)
+    const state = await getCustomStackState(stack, handler, config)
 
     stackMap.set(stack.path, state)
   }
@@ -147,13 +210,15 @@ export const loadCurrentStacks = async (
         stack,
         current: currentStandardStacks.get(stack.name),
       }
-    } else if (isInternalCustomStack(stack)) {
+    }
+
+    if (isInternalCustomStack(stack)) {
       return {
         stack,
         current: currentCustomStacks.get(stack.path),
       }
     }
 
-    throw new Error("Unknown stack type")
+    return exhaustiveCheck(stack)
   })
 }

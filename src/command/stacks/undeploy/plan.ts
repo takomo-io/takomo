@@ -20,7 +20,8 @@ import {
 } from "../../../stacks/custom-stack.js"
 import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 import { CustomStackHandler } from "../../../custom-stack-handler/custom-stack-handler.js"
-import { CustomStackState } from "../../../stacks/custom-stack.js"
+import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
@@ -41,6 +42,7 @@ export interface CustomStackUndeployOperation {
   readonly currentStack?: CustomStackState
   readonly dependents: ReadonlyArray<StackPath>
   readonly customStackHandler: CustomStackHandler<any, any>
+  readonly customConfig: unknown
 }
 
 export type StackUndeployOperation =
@@ -81,10 +83,18 @@ const convertToUndeployOperation = async (
       stack.customType,
     )
 
+    // TODO: Do these in a separate step to allow handler errors to be handled properly
+
+    // TODO: Handler error
+    const { config } = await customStackHandler.parseConfig({
+      config: stack.customConfig,
+      logger: stack.logger,
+    })
+
     // TODO: Handler error
     const currentStack = await customStackHandler.getCurrentState({
       logger: stack.logger,
-      config: stack.customConfig,
+      config,
     })
 
     const type = resolveUndeployOperationType(currentStack)
@@ -95,6 +105,7 @@ const convertToUndeployOperation = async (
       dependents,
       currentStack,
       customStackHandler,
+      customConfig: config,
     }
   }
 
@@ -110,7 +121,7 @@ const convertToUndeployOperation = async (
     }
   }
 
-  throw new Error("Unknown stack type")
+  return exhaustiveCheck(stack)
 }
 
 const collectStackDependents = (

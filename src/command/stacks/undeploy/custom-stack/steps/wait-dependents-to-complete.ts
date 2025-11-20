@@ -1,6 +1,6 @@
 import { StackOperationStep } from "../../../common/steps.js"
 import { StackResult } from "../../../../command-model.js"
-import { InitialUndeployCustomStackState } from "../states.js"
+import { CurrentStateHolder } from "../states.js"
 
 const hasSomeDependentFailed = (results: ReadonlyArray<StackResult>): boolean =>
   results.some((r) => !r.success)
@@ -11,9 +11,9 @@ const hasSomeDependentSkipped = (
   results.some((r) => r.status === "SKIPPED" && r.stackExistedBeforeOperation)
 
 export const waitDependentsToComplete: StackOperationStep<
-  InitialUndeployCustomStackState
+  CurrentStateHolder
 > = async (state) => {
-  const { transitions, dependents, currentStack } = state
+  const { transitions, dependents, currentState } = state
 
   const dependentResults = await Promise.all(dependents)
 
@@ -31,15 +31,12 @@ export const waitDependentsToComplete: StackOperationStep<
     })
   }
 
-  if (!currentStack) {
+  if (!currentState) {
     return transitions.skipStackOperation({
       ...state,
       message: "Stack not found",
     })
   }
 
-  return transitions.deleteStack({
-    ...state,
-    currentStack,
-  })
+  return transitions.deleteStack(state)
 }

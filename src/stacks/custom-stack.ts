@@ -9,16 +9,6 @@ import {
 
 export type CustomStackStatus = "PENDING" | "CREATE_COMPLETED"
 
-export type CustomStackState = {
-  value: unknown
-  status?: CustomStackStatus
-  lastUpdatedTime?: Date
-  creationTime?: Date
-  parameters?: Record<string, string>
-  tags?: Record<string, string>
-  outputs?: Record<string, string>
-}
-
 export interface CustomStackProps extends StackProps {
   customType: CustomStackType
   customConfig?: unknown

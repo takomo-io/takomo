@@ -16,20 +16,19 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
 
     getCurrentState: async () => {
       return {
-        state: undefined,
+        success: true,
       }
     },
 
     create: async () => {
       return {
-        outputs: {},
+        success: true,
       }
     },
 
     update: async () => {
       return {
-        state: {},
-        outputs: {},
+        success: true,
       }
     },
 

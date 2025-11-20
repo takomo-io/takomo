@@ -1,12 +1,25 @@
+import { CustomStackStatus } from "../stacks/custom-stack.js"
 import { CustomStackType } from "../stacks/stack.js"
 import { TkmLogger } from "../utils/logging.js"
+
+export type CustomStackState = {
+  status?: CustomStackStatus
+  lastUpdatedTime?: Date
+  creationTime?: Date
+  parameters?: Record<string, string>
+  tags?: Record<string, string>
+  outputs?: Record<string, string>
+}
 
 export interface GetCurrentStateProps<CONFIG> {
   readonly logger: TkmLogger
   readonly config: CONFIG
 }
 
-export interface GetCurrentStateResult<STATE> {
+export interface GetCurrentStateResult<STATE extends CustomStackState> {
+  readonly success: boolean
+  readonly error?: Error
+  readonly message?: string
   readonly state?: STATE
 }
 
@@ -18,10 +31,16 @@ export interface CreateCustomStackProps<CONFIG> {
 }
 
 export interface CreateCustomStackResult {
+  readonly success: boolean
+  readonly error?: Error
+  readonly message?: string
   readonly outputs?: Record<string, string>
 }
 
-export interface UpdateCustomStackProps<CONFIG, STATE> {
+export interface UpdateCustomStackProps<
+  CONFIG,
+  STATE extends CustomStackState,
+> {
   readonly logger: TkmLogger
   readonly state: STATE
   readonly config: CONFIG
@@ -29,8 +48,10 @@ export interface UpdateCustomStackProps<CONFIG, STATE> {
   readonly tags: Record<string, string>
 }
 
-export interface UpdateCustomStackResult<STATE> {
-  readonly state: STATE
+export interface UpdateCustomStackResult {
+  readonly success: boolean
+  readonly error?: Error
+  readonly message?: string
   readonly outputs?: Record<string, string>
 }
 
@@ -40,10 +61,16 @@ export interface ParseConfigProps {
 }
 
 export interface ParseConfigResult<CONFIG> {
+  readonly success: boolean
+  readonly error?: Error
+  readonly message?: string
   readonly config: CONFIG
 }
 
-export interface DeleteCustomStackProps<CONFIG, STATE> {
+export interface DeleteCustomStackProps<
+  CONFIG,
+  STATE extends CustomStackState,
+> {
   readonly logger: TkmLogger
   readonly state: STATE
   readonly config: CONFIG
@@ -51,9 +78,11 @@ export interface DeleteCustomStackProps<CONFIG, STATE> {
 
 export interface DeleteCustomStackResult {
   readonly success: boolean
+  readonly error?: Error
+  readonly message?: string
 }
 
-export interface CustomStackHandler<CONFIG, STATE> {
+export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
   readonly type: CustomStackType
 
   readonly getCurrentState: (
@@ -70,7 +99,7 @@ export interface CustomStackHandler<CONFIG, STATE> {
 
   readonly update: (
     props: UpdateCustomStackProps<CONFIG, STATE>,
-  ) => Promise<UpdateCustomStackResult<STATE>>
+  ) => Promise<UpdateCustomStackResult>
 
   readonly delete: (
     props: DeleteCustomStackProps<CONFIG, STATE>,
