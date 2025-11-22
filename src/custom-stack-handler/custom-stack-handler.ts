@@ -20,11 +20,10 @@ export type Outputs = Record<OutputName, OutputValue>
  */
 export type CustomStackState = {
   /**
-   * The status of the custom stack. This is an optional property that can be
-   * used to represent the current status of the custom stack, which is used to determine
-   * whether the stack exists or not.
+   * The status of the custom stack. This property is mandatory and is
+   * used to represent the current status of the custom stack.
    */
-  status?: CustomStackStatus
+  status: CustomStackStatus
 
   /**
    * Optional property representing the last updated time of the custom stack.

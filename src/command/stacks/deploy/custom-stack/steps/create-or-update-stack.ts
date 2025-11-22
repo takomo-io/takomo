@@ -4,14 +4,15 @@ import { TagsHolder } from "../states.js"
 export const createOrUpdateStack: StackOperationStep<TagsHolder> = async (
   state,
 ) => {
-  const { transitions, currentStack } = state
+  const { transitions, operationType } = state
 
-  if (currentStack) {
-    return transitions.updateStack({
-      ...state,
-      currentStack: currentStack,
-    })
+  if (operationType === "UPDATE") {
+    return transitions.updateStack(state)
   }
 
-  return transitions.createStack(state)
+  if (operationType === "CREATE") {
+    return transitions.createStack(state)
+  }
+
+  throw new Error(`Unsupported operation type: ${operationType}`)
 }

@@ -14,7 +14,6 @@ import { UndeployStacksIO } from "./model.js"
 import { buildStacksUndeployPlan } from "./plan.js"
 import { validateStacksUndeployPlan } from "./validate.js"
 import { StacksConfigRepository } from "../../../takomo-stacks-context/model.js"
-import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 
 const modifyInput = async (
   input: StacksUndeployOperationInput,
@@ -44,7 +43,6 @@ const undeployStacks = async (
     modifiedInput.commandPath,
     modifiedInput.ignoreDependencies,
     modifiedInput.prune,
-    ctx.customStackHandlerRegistry,
   )
 
   await validateStacksUndeployPlan(plan)

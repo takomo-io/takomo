@@ -135,16 +135,16 @@ export const createUndeployStacksIO = (
       }
 
       if (isCustomStackUndeployOperation(operation)) {
-        const { stack, currentStack, type } = operation
+        const { stack, currentState, type } = operation
 
         io.longMessage(
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
             `      status:                    ${formatCustomStackStatus(
-              currentStack?.status,
+              currentState.status,
             )}`,
-            `      last change:               ${formatCustomStackLastModify(currentStack)}`,
+            `      last change:               ${formatCustomStackLastModify(currentState)}`,
             `      account id:                ${stackIdentity.accountId}`,
             `      region:                    ${stack.region}`,
             "      credentials:",

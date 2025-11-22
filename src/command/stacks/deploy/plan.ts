@@ -27,7 +27,6 @@ import {
   isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
 import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
-import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
 
 /**
  * TODO: Move somewhere else
@@ -53,12 +52,14 @@ export interface StandardStackDeployOperation {
   readonly stack: InternalStandardStack
   readonly type: StackOperationType
   readonly currentStack?: CloudFormationStackSummary
+  readonly stackExistedBeforeOperation: boolean
 }
 
 export interface CustomStackDeployOperation {
   readonly stack: InternalCustomStack
   readonly type: StackOperationType
-  readonly currentStack?: CustomStackState
+  readonly currentState: CustomStackState
+  readonly stackExistedBeforeOperation: boolean
 }
 
 export type StackDeployOperation =
@@ -105,16 +106,18 @@ const convertToOperation = (pair: StackPair): StackDeployOperation => {
   if (isStandardStackPair(pair)) {
     return {
       stack: pair.stack,
-      type: resolveOperationType(pair.current?.status),
-      currentStack: pair.current,
+      type: resolveOperationType(pair.currentStack?.status),
+      currentStack: pair.currentStack,
+      stackExistedBeforeOperation: pair.currentStack !== undefined,
     }
   }
 
   if (isCustomStackPair(pair)) {
     return {
       stack: pair.stack,
-      type: pair.current ? "UPDATE" : "CREATE",
-      currentStack: pair.current,
+      type: pair.currentState?.status === "PENDING" ? "CREATE" : "UPDATE",
+      currentState: pair.currentState,
+      stackExistedBeforeOperation: pair.currentState.status !== "PENDING",
     }
   }
 
@@ -126,7 +129,6 @@ export const buildStacksDeployPlan = async (
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   logger: TkmLogger,
-  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StacksDeployPlan> => {
   const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
@@ -144,11 +146,7 @@ export const buildStacksDeployPlan = async (
     .filter(isNotObsolete)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
-  const stackPairs = await loadCurrentStacks(
-    logger,
-    sortedStacks,
-    customStackHandlerRegistry,
-  )
+  const stackPairs = await loadCurrentStacks(logger, sortedStacks)
   const operations = stackPairs.map(convertToOperation)
 
   return {

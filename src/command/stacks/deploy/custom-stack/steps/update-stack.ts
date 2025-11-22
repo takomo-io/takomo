@@ -1,37 +1,56 @@
 import { StackOperationStep } from "../../../common/steps.js"
-import { CurrentStackHolder } from "../states.js"
+import { TagsHolder } from "../states.js"
 
-export const updateStack: StackOperationStep<CurrentStackHolder> = async (
-  state,
-) => {
+export const updateStack: StackOperationStep<TagsHolder> = async (state) => {
   const {
     stack,
     logger,
     transitions,
-    operationType,
     parameters,
     tags,
-    currentStack,
+    currentStatus,
     customStackHandler,
   } = state
 
   logger.info(`Updating custom stack of type '${stack.customType}'`)
-  const result = await customStackHandler.update({
-    state: currentStack,
-    config: stack.customConfig,
-    logger,
-    parameters,
-    tags,
-  })
 
-  return transitions.completeStackOperation({
-    ...state,
-    events: [], // TODO: Should we get events somehow?
-    status: "SUCCESS",
-    message:
-      operationType === "UPDATE"
-        ? "Stack update succeeded"
-        : "Stack create succeeded",
-    success: true,
-  })
+  try {
+    const result = await customStackHandler.update({
+      state: currentStatus,
+      config: stack.customConfig,
+      logger,
+      parameters,
+      tags,
+    })
+
+    if (result.success) {
+      logger.info("Custom stack update succeeded")
+
+      return transitions.completeStackOperation({
+        ...state,
+        events: [],
+        status: "SUCCESS",
+        message: "Stack update succeeded",
+        success: true,
+      })
+    }
+
+    logger.error("Custom stack update failed", result.error)
+
+    return transitions.failStackOperation({
+      ...state,
+      error: result.error,
+      events: [],
+      message: result.message ?? "Stack update failed",
+    })
+  } catch (e) {
+    logger.error("Custom stack update failed due to unhandled error", e)
+
+    return transitions.failStackOperation({
+      ...state,
+      error: e as Error,
+      events: [],
+      message: "Stack update failed",
+    })
+  }
 }

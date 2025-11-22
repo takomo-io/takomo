@@ -18,20 +18,27 @@ import {
   InternalCustomStack,
   isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
-import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom-stack-handler-registry.js"
-import { CustomStackHandler } from "../../../custom-stack-handler/custom-stack-handler.js"
 import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
 import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
-import {
-  getCustomStackState,
-  parseCustomStackConfig,
-} from "../common/load-current-cf-stacks.js"
+import { getCustomStackState } from "../common/load-current-cf-stacks.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
 export const resolveUndeployOperationType = (
   currentStack?: unknown,
 ): StackUndeployOperationType => (currentStack ? "DELETE" : "SKIP")
+
+export const resolveUndeployCustomStackOperationType = (
+  currentState: CustomStackState,
+): StackUndeployOperationType => {
+  switch (currentState.status) {
+    case "CREATE_COMPLETED":
+    case "UPDATE_COMPLETED":
+      return "DELETE"
+    case "PENDING":
+      return "SKIP"
+  }
+}
 
 export interface StandardStackUndeployOperation {
   readonly stack: InternalStandardStack
@@ -43,10 +50,8 @@ export interface StandardStackUndeployOperation {
 export interface CustomStackUndeployOperation {
   readonly stack: InternalCustomStack
   readonly type: StackUndeployOperationType
-  readonly currentStack?: CustomStackState
+  readonly currentState: CustomStackState
   readonly dependents: ReadonlyArray<StackPath>
-  readonly customStackHandler: CustomStackHandler<any, any>
-  readonly customConfig: unknown
 }
 
 export type StackUndeployOperation =
@@ -70,7 +75,6 @@ const convertToUndeployOperation = async (
   stacksByPath: Map<StackPath, InternalStack>,
   stack: InternalStack,
   prune: boolean,
-  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StackUndeployOperation> => {
   const dependentFilter = prune ? isObsolete : isNotObsolete
   const dependents = stack.dependents.filter((dependentPath) => {
@@ -83,27 +87,14 @@ const convertToUndeployOperation = async (
   })
 
   if (isInternalCustomStack(stack)) {
-    const customStackHandler = customStackHandlerRegistry.getHandler(
-      stack.customType,
-    )
-
-    const config = await parseCustomStackConfig(stack, customStackHandler)
-
-    const currentStack = await getCustomStackState(
-      stack,
-      customStackHandler,
-      config,
-    )
-
-    const type = resolveUndeployOperationType(currentStack)
+    const currentState = await getCustomStackState(stack)
+    const type = resolveUndeployOperationType(currentState)
 
     return {
       stack,
       type,
       dependents,
-      currentStack,
-      customStackHandler,
-      customConfig: config,
+      currentState,
     }
   }
 
@@ -144,7 +135,6 @@ export const buildStacksUndeployPlan = async (
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   prune: boolean,
-  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StacksUndeployPlan> => {
   const pruneFilter = prune ? isObsolete : isNotObsolete
   const stacksByPath = arrayToMap(stacks, getStackPath)
@@ -172,12 +162,7 @@ export const buildStacksUndeployPlan = async (
 
   const operations = await Promise.all(
     selectedStacks.map((stack) =>
-      convertToUndeployOperation(
-        stacksByPath,
-        stack,
-        prune,
-        customStackHandlerRegistry,
-      ),
+      convertToUndeployOperation(stacksByPath, stack, prune),
     ),
   )
 

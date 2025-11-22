@@ -47,7 +47,7 @@ const executeStacksInParallel = async (
   const bh = bulkhead(ctx.concurrentStacks, 1000)
 
   const executions = operations.reduce((executions, operation) => {
-    const { stack, type, currentStack } = operation
+    const { stack } = operation
     const dependencies = ignoreDependencies
       ? []
       : stack.dependencies.map((d) => {
@@ -181,7 +181,7 @@ export const executeDeployContext = async (
         events: [],
         message: "Cancelled",
         operationType: operation.type,
-        stackExistedBeforeOperation: operation.currentStack !== undefined,
+        stackExistedBeforeOperation: operation.stackExistedBeforeOperation,
       })
       continue
     }

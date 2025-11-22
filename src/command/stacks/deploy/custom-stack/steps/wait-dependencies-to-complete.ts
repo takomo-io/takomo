@@ -16,8 +16,7 @@ const hasSomeDependencySkipped = (
 export const waitDependenciesToComplete: StackOperationStep<
   InitialDeployCustomStackState
 > = async (state) => {
-  const { logger, dependencies, transitions, operationType, currentStack } =
-    state
+  const { logger, dependencies, transitions, currentStatus } = state
 
   logger.debug(`Wait ${dependencies.length} dependencies to complete`)
   const dependencyResults = await Promise.all(dependencies)
@@ -30,20 +29,18 @@ export const waitDependenciesToComplete: StackOperationStep<
     })
   }
 
-  if (currentStack === undefined) {
-    if (hasSomeDependencySkipped(dependencyResults)) {
-      logger.info(
-        "At least one dependency stacks creation was skipped, cancel stack creation",
-      )
-      return transitions.cancelStackOperation({
-        ...state,
-        message: "Dependencies skipped",
-      })
-    }
+  if (hasSomeDependencySkipped(dependencyResults)) {
+    logger.info(
+      "At least one dependency stacks creation was skipped, cancel stack creation",
+    )
+    return transitions.cancelStackOperation({
+      ...state,
+      message: "Dependencies skipped",
+    })
   }
 
   return transitions.prepareParameters({
     ...state,
-    currentStack,
+    currentStatus,
   })
 }

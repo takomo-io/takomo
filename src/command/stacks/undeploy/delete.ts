@@ -51,7 +51,7 @@ export const deleteStack = async (
   }
 
   if (isCustomStackUndeployOperation(operation)) {
-    const { stack, currentStack, customConfig, customStackHandler } = operation
+    const { stack, currentState } = operation
     const initial: InitialUndeployCustomStackState = {
       ctx,
       stack,
@@ -60,12 +60,11 @@ export const deleteStack = async (
       variables,
       dependents,
       stacksOperationListener,
-      stackExistedBeforeOperation: currentStack !== undefined,
+      currentState,
+      stackExistedBeforeOperation: currentState !== undefined,
       operationType: "DELETE",
       totalTimer: timer.startChild(stack.path),
       transitions: createUndeployCustomStackTransitions(),
-      customStackHandler,
-      customConfig,
     }
 
     return executeSteps(initial)

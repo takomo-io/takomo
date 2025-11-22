@@ -89,7 +89,7 @@ export const deployStack = async (
   }
 
   if (isCustomStackDeployOperation(operation)) {
-    const { currentStack, stack, type } = operation
+    const { currentState, stack, type } = operation
     logStackConfig(logger, stack, ctx.confidentialValuesLoggingEnabled)
 
     const variables = {
@@ -97,9 +97,7 @@ export const deployStack = async (
       hooks: {},
     }
 
-    logger.info(
-      `Stack status: ${currentStack ? "CREATE_COMPLETED" : "PENDING"}`,
-    )
+    logger.info(`Stack status: ${currentState.status}`)
 
     const handler = ctx.customStackHandlerRegistry.getHandler(stack.customType)
 
@@ -111,10 +109,10 @@ export const deployStack = async (
       dependencies,
       operationType: type,
       state,
-      currentStack,
+      currentStatus: currentState,
       ctx,
       stacksOperationListener,
-      stackExistedBeforeOperation: currentStack !== undefined,
+      stackExistedBeforeOperation: currentState !== undefined,
       totalTimer: timer.startChild(stack.path),
       transitions: createDeployCustomStackTransitions(),
       customStackHandler: handler,

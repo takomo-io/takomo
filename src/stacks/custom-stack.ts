@@ -1,4 +1,5 @@
 import { InternalCredentialManager } from "../aws/common/credentials.js"
+import { CustomStackHandler } from "../custom-stack-handler/custom-stack-handler.js"
 import {
   BaseInternalStack,
   CustomStackType,
@@ -7,11 +8,15 @@ import {
   StackProps,
 } from "./stack.js"
 
-export type CustomStackStatus = "PENDING" | "CREATE_COMPLETED"
+export type CustomStackStatus =
+  | "PENDING"
+  | "CREATE_COMPLETED"
+  | "UPDATE_COMPLETED"
 
 export interface CustomStackProps extends StackProps {
   customType: CustomStackType
-  customConfig?: unknown
+  customConfig: unknown
+  customStackHandler: CustomStackHandler<any, any>
 }
 
 /**
@@ -24,7 +29,8 @@ export interface CustomStack extends Stack {
 export interface InternalCustomStack extends CustomStack, BaseInternalStack {
   readonly credentialManager: InternalCredentialManager
   readonly customType: CustomStackType
-  readonly customConfig?: unknown
+  readonly customConfig: unknown
+  readonly customStackHandler: CustomStackHandler<any, any>
   readonly toProps: () => CustomStackProps
 }
 
@@ -54,11 +60,13 @@ export const createCustomStack = (
     schemas,
     customType,
     customConfig,
+    customStackHandler,
   } = props
 
   return {
     customType,
     customConfig,
+    customStackHandler,
     accountIds,
     commandRole,
     credentialManager,

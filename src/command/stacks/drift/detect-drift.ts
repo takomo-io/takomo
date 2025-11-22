@@ -20,11 +20,7 @@ export const detectDrift = async (
     .filter((stack) => stack.path.startsWith(input.commandPath))
     .filter(isNotObsolete)
 
-  const stackPairs = await loadCurrentStacks(
-    logger,
-    stacksWithinCommandPath,
-    ctx.customStackHandlerRegistry,
-  )
+  const stackPairs = await loadCurrentStacks(logger, stacksWithinCommandPath)
 
   const standardStacks = stackPairs.filter(isStandardStackPair)
 
@@ -34,7 +30,7 @@ export const detectDrift = async (
         return { stack: pair.stack, type: "custom" }
       }
 
-      const { stack, current } = pair
+      const { stack, currentStack: current } = pair
 
       if (!current) {
         return { current, stack, type: "standard" }

@@ -20,11 +20,7 @@ export const listStacks = async (
     .filter((stack) => stack.path.startsWith(commandPath))
     .filter(isNotObsolete)
 
-  const stackPairs = await loadCurrentStacks(
-    logger,
-    stacksWithinCommandPath,
-    ctx.customStackHandlerRegistry,
-  )
+  const stackPairs = await loadCurrentStacks(logger, stacksWithinCommandPath)
 
   const results: ReadonlyArray<StackInfo> = stackPairs.map((pair) => {
     if (isCustomStackPair(pair)) {
@@ -32,9 +28,11 @@ export const listStacks = async (
         path: pair.stack.path,
         name: pair.stack.name,
         type: "custom",
-        status: (pair.current ? "CREATE_COMPLETE" : "PENDING") as StackStatus,
-        createdTime: pair.current?.creationTime,
-        updatedTime: pair.current?.lastUpdatedTime,
+        status: (pair.currentState
+          ? "CREATE_COMPLETE"
+          : "PENDING") as StackStatus,
+        createdTime: pair.currentState?.creationTime,
+        updatedTime: pair.currentState?.lastUpdatedTime,
       }
     }
 
@@ -43,9 +41,9 @@ export const listStacks = async (
         path: pair.stack.path,
         name: pair.stack.name,
         type: "standard",
-        status: pair.current?.status,
-        createdTime: pair.current?.creationTime,
-        updatedTime: pair.current?.lastUpdatedTime,
+        status: pair.currentStack?.status,
+        createdTime: pair.currentStack?.creationTime,
+        updatedTime: pair.currentStack?.lastUpdatedTime,
       }
     }
 

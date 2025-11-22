@@ -24,7 +24,7 @@ export interface InitialDeployCustomStackState
   readonly ctx: InternalStacksContext
   readonly variables: StackOperationVariables
   readonly logger: TkmLogger
-  readonly currentStack?: CustomStackState
+  readonly currentStatus: CustomStackState
   readonly dependencies: ReadonlyArray<Promise<StackResult>>
   readonly operationType: StackOperationType
   readonly state: DeployState
@@ -38,10 +38,6 @@ export interface ParametersHolder extends InitialDeployCustomStackState {
 
 export interface TagsHolder extends ParametersHolder {
   readonly tags: Record<string, string>
-}
-
-export interface CurrentStackHolder extends TagsHolder {
-  readonly currentStack: CustomStackState
 }
 
 export interface StackOperationResultHolder

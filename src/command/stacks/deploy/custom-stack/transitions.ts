@@ -5,7 +5,6 @@ import {
   StackOperationTransitions,
 } from "../../common/transitions.js"
 import {
-  CurrentStackHolder,
   InitialDeployCustomStackState,
   ParametersHolder,
   TagsHolder,
@@ -25,7 +24,7 @@ export interface DeployCustomStackTransitions
   reviewDeployment: StackOperationStep<TagsHolder>
   createOrUpdateStack: StackOperationStep<TagsHolder>
   createStack: StackOperationStep<TagsHolder>
-  updateStack: StackOperationStep<CurrentStackHolder>
+  updateStack: StackOperationStep<TagsHolder>
 }
 
 export const createDeployCustomStackTransitions =

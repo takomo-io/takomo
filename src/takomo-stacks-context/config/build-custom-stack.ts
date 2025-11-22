@@ -45,6 +45,36 @@ import {
 import { CustomStackConfig } from "../../config/custom-stack-config.js"
 import { CustomStackHandler } from "../../custom-stack-handler/custom-stack-handler.js"
 
+const parseCustomStackConfig = async (
+  stackPath: StackPath,
+  logger: TkmLogger,
+  handler: CustomStackHandler<any, any>,
+  config: unknown,
+): Promise<void> => {
+  try {
+    const result = await handler.parseConfig({
+      config,
+      logger,
+    })
+
+    if (result.success) {
+      return result.config
+    }
+
+    const { message, error } = result
+
+    logger.error(
+      `Parsing custom stack config failed for stack ${stackPath}: ${message}`,
+      error,
+    )
+    throw new Error(`Parsing custom stack config failed for stack ${stackPath}`)
+  } catch (e) {
+    logger.error(`Parsing custom stack config failed for stack ${stackPath}`, e)
+
+    throw e
+  }
+}
+
 export const buildCustomStack = async (
   stackPath: StackPath,
   ctx: InternalCommandContext,
@@ -138,14 +168,17 @@ export const buildCustomStack = async (
         const timeout = buildTimeout(builderProps)
         const dependencies = buildDependencies(builderProps)
 
-        const { config } = await customStackHandler.parseConfig({
-          config: stackConfig.customConfig ?? {},
+        const config = await parseCustomStackConfig(
+          exactPath,
           logger,
-        })
+          customStackHandler,
+          stackConfig.customConfig,
+        )
 
         const props: CustomStackProps = {
           customType: stackConfig.customType,
           customConfig: config,
+          customStackHandler,
           name,
           region,
           parameters,

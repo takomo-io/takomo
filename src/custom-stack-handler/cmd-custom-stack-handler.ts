@@ -1,7 +1,7 @@
-import { CustomStackHandler } from "./custom-stack-handler.js"
+import { CustomStackHandler, CustomStackState } from "./custom-stack-handler.js"
 
 type CmdCustomStackHandlerConfig = {}
-type CmdCustomStackHandlerState = {}
+type CmdCustomStackHandlerState = {} & CustomStackState
 
 export const createCmdCustomStackHandler = (): CustomStackHandler<
   CmdCustomStackHandlerConfig,
@@ -17,21 +17,28 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
     getCurrentState: async (props) => {
       return {
         success: true,
-        state: {},
+        status: "PENDING",
+        state: {
+          status: "PENDING",
+        },
       }
     },
 
     create: async (props) => {
       return {
         success: true,
-        state: {},
+        state: {
+          status: "CREATE_COMPLETED",
+        },
       }
     },
 
     update: async (props) => {
       return {
         success: true,
-        state: {},
+        state: {
+          status: "UPDATE_COMPLETED",
+        },
       }
     },
 

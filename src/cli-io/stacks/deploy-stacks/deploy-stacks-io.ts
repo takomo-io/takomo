@@ -208,7 +208,7 @@ export const createDeployStacksIO = (
       }
 
       if (isCustomStackDeployOperation(operation)) {
-        const { stack, type, currentStack } = operation
+        const { stack, type, currentState } = operation
 
         io.longMessage(
           [
@@ -216,9 +216,9 @@ export const createDeployStacksIO = (
             `      name:                      ${stack.name}`,
             `      stack type:                ${getStackType(stack)}`,
             `      status:                    ${formatCustomStackStatus(
-              currentStack?.status,
+              currentState.status,
             )}`,
-            `      last change:               ${formatCustomStackLastModify(currentStack)}`,
+            `      last change:               ${formatCustomStackLastModify(currentState)}`,
             `      account id:                ${stackIdentity.accountId}`,
             `      region:                    ${stack.region}`,
             "      credentials:",
