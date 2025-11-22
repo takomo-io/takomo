@@ -15,6 +15,9 @@ interface CreateCustomStackHandlerRegistryProps {
   readonly logger: TkmLogger
 }
 
+// Reserved types that cannot be used by custom stack handlers
+const reservedTypes: ReadonlyArray<CustomStackType> = ["standard", "custom"]
+
 export const createCustomStackHandlerRegistry = ({
   logger,
 }: CreateCustomStackHandlerRegistryProps): CustomStackHandlerRegistry => {
@@ -26,11 +29,13 @@ export const createCustomStackHandlerRegistry = ({
   const registerHandler = async (
     handler: CustomStackHandler<unknown, CustomStackState>,
   ): Promise<void> => {
-    if (handler.type === "standard") {
-      throw new Error(
-        `Cannot register custom stack handler with reserved type 'standard'`,
-      )
-    }
+    reservedTypes.forEach((type) => {
+      if (handler.type === type) {
+        throw new Error(
+          `Cannot register custom stack handler with reserved type '${type}'`,
+        )
+      }
+    })
 
     const existingHandler = handlers.get(handler.type)
     if (existingHandler) {

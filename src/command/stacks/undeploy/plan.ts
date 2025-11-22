@@ -22,6 +22,10 @@ import { CustomStackHandlerRegistry } from "../../../custom-stack-handler/custom
 import { CustomStackHandler } from "../../../custom-stack-handler/custom-stack-handler.js"
 import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
 import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
+import {
+  getCustomStackState,
+  parseCustomStackConfig,
+} from "../common/load-current-cf-stacks.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
@@ -83,19 +87,13 @@ const convertToUndeployOperation = async (
       stack.customType,
     )
 
-    // TODO: Do these in a separate step to allow handler errors to be handled properly
+    const config = await parseCustomStackConfig(stack, customStackHandler)
 
-    // TODO: Handler error
-    const { config } = await customStackHandler.parseConfig({
-      config: stack.customConfig,
-      logger: stack.logger,
-    })
-
-    // TODO: Handler error
-    const currentStack = await customStackHandler.getCurrentState({
-      logger: stack.logger,
+    const currentStack = await getCustomStackState(
+      stack,
+      customStackHandler,
       config,
-    })
+    )
 
     const type = resolveUndeployOperationType(currentStack)
 

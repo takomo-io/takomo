@@ -19,13 +19,7 @@ export interface InitialUndeployCustomStackState
   readonly transitions: UndeployCustomStackTransitions
   readonly stack: InternalCustomStack
   readonly customStackHandler: CustomStackHandler<any, any>
-}
-
-export interface CustomConfigHolder extends InitialUndeployCustomStackState {
   readonly customConfig: unknown
-}
-
-export interface CurrentStateHolder extends CustomConfigHolder {
   readonly currentState?: unknown
 }
 

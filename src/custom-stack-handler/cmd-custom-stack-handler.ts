@@ -14,25 +14,28 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
       throw new Error("Function not implemented.")
     },
 
-    getCurrentState: async () => {
+    getCurrentState: async (props) => {
       return {
         success: true,
+        state: {},
       }
     },
 
-    create: async () => {
+    create: async (props) => {
       return {
         success: true,
+        state: {},
       }
     },
 
-    update: async () => {
+    update: async (props) => {
       return {
         success: true,
+        state: {},
       }
     },
 
-    delete: async () => {
+    delete: async (props) => {
       return {
         success: true,
       }

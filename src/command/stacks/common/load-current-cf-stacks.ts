@@ -100,27 +100,29 @@ const loadCurrentStandardStacks = async (
   return stackMap
 }
 
-const parseCustomStackConfig = async (
+export const parseCustomStackConfig = async (
   stack: InternalCustomStack,
   handler: CustomStackHandler<any, any>,
 ): Promise<void> => {
   try {
-    const { success, config, message, error } = await handler.parseConfig({
+    const result = await handler.parseConfig({
       config: stack.customConfig,
       logger: stack.logger,
     })
 
-    if (!success) {
-      stack.logger.error(
-        `Parsing custom stack config failed for stack ${stack.path}: ${message}`,
-      )
-      throw (
-        error ??
-        new Error(`Parsing custom stack config failed for stack ${stack.path}`)
-      )
+    if (result.success) {
+      return result.config
     }
 
-    return config
+    const { message, error } = result
+
+    stack.logger.error(
+      `Parsing custom stack config failed for stack ${stack.path}: ${message}`,
+      error,
+    )
+    throw new Error(
+      `Parsing custom stack config failed for stack ${stack.path}`,
+    )
   } catch (e) {
     stack.logger.error(
       `Parsing custom stack config failed for stack ${stack.path}`,
@@ -131,28 +133,28 @@ const parseCustomStackConfig = async (
   }
 }
 
-const getCustomStackState = async (
+export const getCustomStackState = async (
   stack: InternalCustomStack,
   handler: CustomStackHandler<any, any>,
   config: unknown,
 ): Promise<CustomStackState> => {
   try {
-    const { success, state, message, error } = await handler.getCurrentState({
+    const result = await handler.getCurrentState({
       logger: stack.logger,
       config,
     })
 
-    if (!success) {
-      stack.logger.error(
-        `Getting custom stack state failed for stack ${stack.path}: ${message}`,
-      )
-      throw (
-        error ??
-        new Error(`Getting custom stack state failed for stack ${stack.path}`)
-      )
+    if (result.success) {
+      return result.state
     }
 
-    return state
+    const { message, error } = result
+
+    stack.logger.error(
+      `Getting custom stack state failed for stack ${stack.path}: ${message}`,
+      error,
+    )
+    throw new Error(`Getting custom stack state failed for stack ${stack.path}`)
   } catch (e) {
     stack.logger.error(
       `Getting custom stack state failed for stack ${stack.path}`,

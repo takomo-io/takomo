@@ -1,9 +1,9 @@
 import { StackOperationStep } from "../../../common/steps.js"
-import { CurrentStateHolder } from "../states.js"
+import { InitialUndeployCustomStackState } from "../states.js"
 
-export const deleteStack: StackOperationStep<CurrentStateHolder> = async (
-  state,
-) => {
+export const deleteStack: StackOperationStep<
+  InitialUndeployCustomStackState
+> = async (state) => {
   const {
     transitions,
     customStackHandler,
@@ -13,22 +13,32 @@ export const deleteStack: StackOperationStep<CurrentStateHolder> = async (
   } = state
 
   try {
-    const { success, message, error } = await customStackHandler.delete({
+    const result = await customStackHandler.delete({
       config: customConfig,
       logger: state.logger,
       state: currentState,
     })
 
-    return transitions.completeStackOperation({
+    if (result.success) {
+      return transitions.completeStackOperation({
+        ...state,
+        events: [],
+        status: "SUCCESS",
+        message: "Stack delete succeeded",
+        success: true,
+      })
+    }
+
+    logger.error("Stack delete failed", result.error)
+
+    return transitions.failStackOperation({
       ...state,
+      error: result.error,
       events: [],
-      status: success ? "SUCCESS" : "FAILED",
-      message: message ?? "Stack delete succeeded",
-      success,
-      error,
+      message: result.message ?? "Stack delete failed",
     })
   } catch (e) {
-    logger.error("Stack delete failed", e)
+    logger.error("Stack delete failed due to unhandled error", e)
     return transitions.failStackOperation({
       ...state,
       error: e as Error,
