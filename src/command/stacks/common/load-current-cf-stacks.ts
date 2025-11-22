@@ -15,6 +15,7 @@ import { TkmLogger } from "../../../utils/logging.js"
 import { checksum } from "../../../utils/strings.js"
 import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
 import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
+import { StacksContext } from "../../../index.js"
 
 const makeCredentialsRegionHash = async (
   stack: InternalStack,
@@ -98,16 +99,18 @@ const loadCurrentStandardStacks = async (
   return stackMap
 }
 
-export const getCustomStackState = async ({
-  customStackHandler,
-  customConfig,
-  logger,
-  path,
-}: InternalCustomStack): Promise<CustomStackState> => {
+export const getCustomStackState = async (
+  ctx: StacksContext,
+  stack: InternalCustomStack,
+): Promise<CustomStackState> => {
+  const { customStackHandler, customConfig, logger, path } = stack
+
   try {
     const result = await customStackHandler.getCurrentState({
       logger,
       config: customConfig,
+      stack,
+      ctx,
     })
 
     if (result.success) {
@@ -131,13 +134,14 @@ export const getCustomStackState = async ({
 const loadCurrentCustomStacks = async (
   logger: TkmLogger,
   stacks: ReadonlyArray<InternalCustomStack>,
+  ctx: StacksContext,
 ): Promise<Map<StackPath, CustomStackState>> => {
   logger.debug("Load current custom stacks")
 
   // TODO: Handle errors
   const stackMap = new Map<StackPath, CustomStackState>()
   for (const stack of stacks) {
-    const state = await getCustomStackState(stack)
+    const state = await getCustomStackState(ctx, stack)
 
     stackMap.set(stack.path, state)
   }
@@ -148,6 +152,7 @@ const loadCurrentCustomStacks = async (
 export const loadCurrentStacks = async (
   logger: TkmLogger,
   stacks: ReadonlyArray<InternalStack>,
+  ctx: StacksContext,
 ): Promise<ReadonlyArray<StackPair>> => {
   logger.info("Load current stacks")
 
@@ -162,6 +167,7 @@ export const loadCurrentStacks = async (
   const currentCustomStacks = await loadCurrentCustomStacks(
     logger,
     customStacks,
+    ctx,
   )
 
   const stackPairs: ReadonlyArray<StackPair> = stacks.map((stack) => {

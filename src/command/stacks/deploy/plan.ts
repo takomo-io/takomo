@@ -27,6 +27,7 @@ import {
   isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
 import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { StacksContext } from "../../../index.js"
 
 /**
  * TODO: Move somewhere else
@@ -129,6 +130,7 @@ export const buildStacksDeployPlan = async (
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   logger: TkmLogger,
+  ctx: StacksContext,
 ): Promise<StacksDeployPlan> => {
   const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
@@ -146,7 +148,7 @@ export const buildStacksDeployPlan = async (
     .filter(isNotObsolete)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
-  const stackPairs = await loadCurrentStacks(logger, sortedStacks)
+  const stackPairs = await loadCurrentStacks(logger, sortedStacks, ctx)
   const operations = stackPairs.map(convertToOperation)
 
   return {

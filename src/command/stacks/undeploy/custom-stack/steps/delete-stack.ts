@@ -4,10 +4,12 @@ import { InitialUndeployCustomStackState } from "../states.js"
 export const deleteStack: StackOperationStep<
   InitialUndeployCustomStackState
 > = async (state) => {
-  const { transitions, currentState, logger, stack } = state
+  const { transitions, currentState, logger, stack, ctx } = state
 
   try {
     const result = await stack.customStackHandler.delete({
+      ctx,
+      stack,
       config: stack.customConfig,
       logger: state.logger,
       state: currentState,

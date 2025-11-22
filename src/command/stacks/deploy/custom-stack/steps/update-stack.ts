@@ -10,6 +10,7 @@ export const updateStack: StackOperationStep<TagsHolder> = async (state) => {
     tags,
     currentStatus,
     customStackHandler,
+    ctx,
   } = state
 
   logger.info(`Updating custom stack of type '${stack.customType}'`)
@@ -21,6 +22,8 @@ export const updateStack: StackOperationStep<TagsHolder> = async (state) => {
       logger,
       parameters,
       tags,
+      stack,
+      ctx,
     })
 
     if (result.success) {

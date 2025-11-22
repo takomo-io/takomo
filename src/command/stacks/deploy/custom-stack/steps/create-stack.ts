@@ -2,8 +2,15 @@ import { StackOperationStep } from "../../../common/steps.js"
 import { TagsHolder } from "../states.js"
 
 export const createStack: StackOperationStep<TagsHolder> = async (state) => {
-  const { stack, logger, transitions, parameters, tags, customStackHandler } =
-    state
+  const {
+    stack,
+    logger,
+    transitions,
+    parameters,
+    tags,
+    customStackHandler,
+    ctx,
+  } = state
 
   logger.info(`Creating custom stack of type '${stack.customType}'`)
 
@@ -13,6 +20,8 @@ export const createStack: StackOperationStep<TagsHolder> = async (state) => {
       logger,
       parameters,
       tags,
+      ctx,
+      stack,
     })
 
     if (result.success) {

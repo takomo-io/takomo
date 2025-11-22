@@ -55,6 +55,7 @@ const parseCustomStackConfig = async (
     const result = await handler.parseConfig({
       config,
       logger,
+      stackPath,
     })
 
     if (result.success) {

@@ -12,8 +12,7 @@ import {
 } from "../../../../src/command/stacks/undeploy/plan.js"
 import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
-import { createCustomStackHandlerRegistry } from "../../../../src/custom-stack-handler/custom-stack-handler-registry.js"
-import { logger } from "../../../logger.js"
+import { StacksContext } from "../../../../src/context/stacks-context.js"
 
 interface CreateStackProps {
   readonly name: StackName
@@ -83,33 +82,34 @@ const assertPlan = (
   expect(actualOperations).toStrictEqual(expectedOperations)
 }
 
-const customStackHandlerRegistry = createCustomStackHandlerRegistry({ logger })
+const ctx = mock<StacksContext>()
 
 describe("#buildStacksUndeployPlan", () => {
   test("empty plan", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [],
       ROOT_STACK_GROUP_PATH,
       false,
       false,
-      customStackHandlerRegistry,
     )
     assertPlan(plan)
   })
 
   test("single non-existing stack", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [stack({ name: "a", path: "/a.yml/eu-north-1", region: "eu-north-1" })],
       ROOT_STACK_GROUP_PATH,
       false,
       false,
-      customStackHandlerRegistry,
     )
     assertPlan(plan, { type: "SKIP", path: "/a.yml/eu-north-1" })
   })
 
   test("single existing stack", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -121,13 +121,13 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
-      customStackHandlerRegistry,
     )
     assertPlan(plan, { type: "DELETE", path: "/a.yml/eu-north-1" })
   })
 
   test("two existing stacks", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -145,7 +145,6 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
-      customStackHandlerRegistry,
     )
     assertPlan(
       plan,
@@ -156,6 +155,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("two existing stacks with dependents", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -174,7 +174,6 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
-      customStackHandlerRegistry,
     )
     assertPlan(
       plan,
@@ -185,6 +184,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("an obsolete stack that depends on another stack", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -204,13 +204,13 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
-      customStackHandlerRegistry,
     )
     assertPlan(plan, { type: "DELETE", path: "/a.yml/eu-north-1" })
   })
 
   test("two obsolete stacks with dependents", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -231,7 +231,6 @@ describe("#buildStacksUndeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       false,
-      customStackHandlerRegistry,
     )
     assertPlan(plan)
   })

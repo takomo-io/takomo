@@ -1,5 +1,6 @@
-import { CustomStackStatus } from "../stacks/custom-stack.js"
-import { CustomStackType } from "../stacks/stack.js"
+import { StacksContext } from "../index.js"
+import { CustomStack, CustomStackStatus } from "../stacks/custom-stack.js"
+import { CustomStackType, StackPath } from "../stacks/stack.js"
 import { TkmLogger } from "../utils/logging.js"
 
 export type ParameterName = string
@@ -64,6 +65,16 @@ export type GetCurrentStateProps<CONFIG> = {
    * The configuration object for the custom stack.
    */
   readonly config: CONFIG
+
+  /**
+   * The custom stack for which the current state is being retrieved.
+   */
+  readonly stack: CustomStack
+
+  /**
+   * The stacks context.
+   */
+  readonly ctx: StacksContext
 }
 
 /**
@@ -125,6 +136,16 @@ export type CreateCustomStackProps<CONFIG> = {
    * The tags to be used for the create operation.
    */
   readonly tags: Tags
+
+  /**
+   * The custom stack to be created.
+   */
+  readonly stack: CustomStack
+
+  /**
+   * The stacks context.
+   */
+  readonly ctx: StacksContext
 }
 
 /**
@@ -192,6 +213,16 @@ export type UpdateCustomStackProps<CONFIG, STATE extends CustomStackState> = {
    * The tags to be used for the update operation.
    */
   readonly tags: Tags
+
+  /**
+   * The custom stack to be updated.
+   */
+  readonly stack: CustomStack
+
+  /**
+   * The stacks context.
+   */
+  readonly ctx: StacksContext
 }
 
 export type SuccessfulUpdateCustomStackResult<STATE extends CustomStackState> =
@@ -236,6 +267,11 @@ export type ParseConfigProps = {
    * The raw configuration object to be parsed.
    */
   readonly config: unknown
+
+  /**
+   * The stack path of the custom stack.
+   */
+  readonly stackPath: StackPath
 }
 
 /**
@@ -278,14 +314,26 @@ export type DeleteCustomStackProps<CONFIG, STATE extends CustomStackState> = {
    * The logger instance to be used for logging.
    */
   readonly logger: TkmLogger
+
   /**
    * The current state of the custom stack.
    */
   readonly state: STATE
+
   /**
    * The configuration object for the custom stack.
    */
   readonly config: CONFIG
+
+  /**
+   * The custom stack to be deleted.
+   */
+  readonly stack: CustomStack
+
+  /**
+   * The stacks context.
+   */
+  readonly ctx: StacksContext
 }
 
 /**

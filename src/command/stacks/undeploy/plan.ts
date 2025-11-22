@@ -21,6 +21,7 @@ import {
 import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
 import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 import { getCustomStackState } from "../common/load-current-cf-stacks.js"
+import { StacksContext } from "../../../context/stacks-context.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
@@ -72,6 +73,7 @@ export interface StacksUndeployPlan {
 }
 
 const convertToUndeployOperation = async (
+  ctx: StacksContext,
   stacksByPath: Map<StackPath, InternalStack>,
   stack: InternalStack,
   prune: boolean,
@@ -87,7 +89,7 @@ const convertToUndeployOperation = async (
   })
 
   if (isInternalCustomStack(stack)) {
-    const currentState = await getCustomStackState(stack)
+    const currentState = await getCustomStackState(ctx, stack)
     const type = resolveUndeployOperationType(currentState)
 
     return {
@@ -131,6 +133,7 @@ const collectStackDependents = (
   }, new Array<StackPath>())
 
 export const buildStacksUndeployPlan = async (
+  ctx: StacksContext,
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
@@ -162,7 +165,7 @@ export const buildStacksUndeployPlan = async (
 
   const operations = await Promise.all(
     selectedStacks.map((stack) =>
-      convertToUndeployOperation(stacksByPath, stack, prune),
+      convertToUndeployOperation(ctx, stacksByPath, stack, prune),
     ),
   )
 

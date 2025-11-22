@@ -20,7 +20,11 @@ export const listStacks = async (
     .filter((stack) => stack.path.startsWith(commandPath))
     .filter(isNotObsolete)
 
-  const stackPairs = await loadCurrentStacks(logger, stacksWithinCommandPath)
+  const stackPairs = await loadCurrentStacks(
+    logger,
+    stacksWithinCommandPath,
+    ctx,
+  )
 
   const results: ReadonlyArray<StackInfo> = stackPairs.map((pair) => {
     if (isCustomStackPair(pair)) {
