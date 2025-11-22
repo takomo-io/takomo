@@ -9,7 +9,6 @@ import {
   TemplateSummary,
 } from "../../../aws/cloudformation/model.js"
 import { IO } from "../../../takomo-core/command.js"
-
 import { TagKey, TagValue } from "../../../aws/common/model.js"
 import { StackGroup } from "../../../stacks/stack-group.js"
 import { InternalStandardStack } from "../../../stacks/standard-stack.js"
@@ -18,6 +17,12 @@ import { StacksOperationListener } from "../common/model.js"
 import { StacksOperationOutput } from "../model.js"
 import { StacksDeployPlan } from "./plan.js"
 import { StackPath } from "../../../stacks/stack.js"
+import { InternalCustomStack } from "../../../stacks/custom-stack.js"
+import {
+  CustomStackState,
+  Parameters,
+  Tags,
+} from "../../../custom-stack-handler/custom-stack-handler.js"
 
 export type ConfirmDeployAnswer =
   | "CANCEL"
@@ -27,6 +32,11 @@ export type ConfirmDeployAnswer =
 export type ConfirmStackDeployAnswer =
   | "CANCEL"
   | "REVIEW_TEMPLATE"
+  | "CONTINUE"
+  | "CONTINUE_AND_SKIP_REMAINING_REVIEWS"
+
+export type ConfirmCustomStackDeployAnswer =
+  | "CANCEL"
   | "CONTINUE"
   | "CONTINUE_AND_SKIP_REMAINING_REVIEWS"
 
@@ -42,6 +52,13 @@ export interface DeployStacksIO extends IO<StacksOperationOutput> {
     existingStack?: DetailedCloudFormationStack,
     changeSet?: DetailedChangeSet,
   ) => Promise<ConfirmStackDeployAnswer>
+  readonly confirmCustomStackDeploy: (
+    stack: InternalCustomStack,
+    operationType: StackOperationType,
+    currentState: CustomStackState,
+    tags: Tags,
+    parameters: Parameters,
+  ) => Promise<ConfirmCustomStackDeployAnswer>
   readonly confirmDeploy: (
     plan: StacksDeployPlan,
   ) => Promise<ConfirmDeployAnswer>

@@ -8,6 +8,7 @@ import {
 } from "../../../aws/cloudformation/model.js"
 import { StackOperationType } from "../../../command/command-model.js"
 import {
+  ConfirmCustomStackDeployAnswer,
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
@@ -37,17 +38,30 @@ import {
   printStacksOperationOutput,
 } from "../common.js"
 import { printOutputs } from "./outputs.js"
-import { printParameters } from "./parameters.js"
+import { printCustomStackParameters, printParameters } from "./parameters.js"
 import { printResources } from "./resources.js"
 import { printStackPolicy } from "./stack-policy.js"
-import { printTags } from "./tags.js"
+import { printCustomStackTags, printTags } from "./tags.js"
 import { printTerminationProtection } from "./termination-protection.js"
 import { Stack, StackPath } from "../../../stacks/stack.js"
-import { isCustomStack } from "../../../stacks/custom-stack.js"
+import {
+  InternalCustomStack,
+  isCustomStack,
+} from "../../../stacks/custom-stack.js"
+import {
+  CustomStackState,
+  Parameters,
+  Tags,
+} from "../../../custom-stack-handler/custom-stack-handler.js"
 
 interface ConfirmStackDeployAnswerChoice {
   readonly name: string
   readonly value: ConfirmStackDeployAnswer
+}
+
+interface ConfirmCustomStackDeployAnswerChoice {
+  readonly name: string
+  readonly value: ConfirmCustomStackDeployAnswer
 }
 
 interface ConfirmDeployAnswerChoice {
@@ -74,6 +88,24 @@ export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE: ConfirmStackDeployAnswerChoic
   }
 
 export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS: ConfirmStackDeployAnswerChoice =
+  {
+    name: "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
+    value: "CONTINUE_AND_SKIP_REMAINING_REVIEWS",
+  }
+
+export const CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CANCEL: ConfirmCustomStackDeployAnswerChoice =
+  {
+    name: "cancel deploy of this stack and all remaining stacks",
+    value: "CANCEL",
+  }
+
+export const CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE: ConfirmCustomStackDeployAnswerChoice =
+  {
+    name: "continue to deploy the stack, then let me review the remaining stacks",
+    value: "CONTINUE",
+  }
+
+export const CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS: ConfirmCustomStackDeployAnswerChoice =
   {
     name: "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
     value: "CONTINUE_AND_SKIP_REMAINING_REVIEWS",
@@ -391,6 +423,57 @@ export const createDeployStacksIO = (
     return answer
   }
 
+  const confirmCustomStackDeploy = async (
+    stack: InternalCustomStack,
+    operationType: StackOperationType,
+    currentState: CustomStackState,
+    tags: Tags,
+    parameters: Parameters,
+  ): Promise<ConfirmCustomStackDeployAnswer> => {
+    if (autoConfirmEnabled) {
+      return "CONTINUE"
+    }
+
+    io.subheader({
+      text: "Review deployment plan for a stack:",
+      marginTop: true,
+    })
+    io.longMessage(
+      [
+        "A stack deployment plan has been created and is shown below.",
+        "",
+        `  stack path:                    ${stack.path}`,
+        `  stack name:                    ${stack.name}`,
+        `  stack region:                  ${stack.region}`,
+        `  operation:                     ${formatStackOperationType(
+          operationType,
+        )}`,
+      ],
+      false,
+      false,
+      0,
+    )
+
+    printCustomStackParameters(io, parameters, currentState.parameters)
+    printCustomStackTags(io, tags, currentState.tags)
+
+    const answer = await io.choose<ConfirmCustomStackDeployAnswer>(
+      "How do you want to continue the deployment?",
+      [
+        CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CANCEL,
+        CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE,
+        CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS,
+      ],
+      true,
+    )
+
+    if (answer === "CONTINUE_AND_SKIP_REMAINING_REVIEWS") {
+      autoConfirmEnabled = true
+    }
+
+    return answer
+  }
+
   const printStackEvent = (stackPath: StackPath, e: StackEvent): void =>
     logger.info(stackPath + " - " + formatStackEvent(e))
 
@@ -406,6 +489,7 @@ export const createDeployStacksIO = (
     chooseCommandPath,
     confirmDeploy,
     confirmStackDeploy,
+    confirmCustomStackDeploy,
     printOutput,
     printStackEvent,
     createStacksOperationListener,

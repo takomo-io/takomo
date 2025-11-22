@@ -10,6 +10,8 @@ import {
 import { bold, green, red, yellow } from "../../../utils/colors.js"
 import { BaseIO } from "../../cli-io.js"
 import { printValue } from "./common.js"
+import { Parameters } from "../../../custom-stack-handler/custom-stack-handler.js"
+import _ from "lodash"
 
 export type ParameterOperation = "update" | "create" | "delete"
 
@@ -146,6 +148,39 @@ export const buildParametersSpec = (
   }
 }
 
+export const buildCustomStackParametersSpec = (
+  currentParameters: Parameters | undefined,
+  updatedParameters: Parameters | undefined,
+): ParametersSpec => {
+  const newParameters = Object.entries(updatedParameters ?? {}).map(
+    ([key, value]) => ({
+      key,
+      value,
+      noEcho: false,
+      description: "",
+    }),
+  )
+
+  const existingParameters = Object.entries(currentParameters ?? {}).map(
+    ([key, value]) => ({
+      key,
+      value,
+      noEcho: false,
+      description: "",
+    }),
+  )
+
+  const updated = collectUpdatedParameters(newParameters, existingParameters)
+  const added = collectAddedParameters(newParameters, existingParameters)
+  const removed = collectRemovedParameters(newParameters, existingParameters)
+
+  return {
+    updated,
+    added,
+    removed,
+  }
+}
+
 export const printParameters = (
   io: BaseIO,
   changeSet?: DetailedChangeSet,
@@ -158,6 +193,78 @@ export const printParameters = (
   const { updated, added, removed } = buildParametersSpec(
     changeSet,
     existingStack,
+  )
+
+  const all = [...added, ...updated, ...removed]
+  if (all.length === 0) {
+    return false
+  }
+
+  const maxParamNameLength = R.apply(
+    Math.max,
+    all.map((t) => t.key.length),
+  )
+
+  const paramNameColumnLength = Math.max(27, maxParamNameLength)
+
+  io.message({ text: bold("Parameters:"), marginTop: true })
+
+  all.forEach((param) => {
+    io.message({
+      text: `  ${formatParameterOperation(param, paramNameColumnLength)}`,
+      marginTop: true,
+    })
+    io.message({
+      text: `      current value:             ${printValue(
+        param.currentValue,
+      )}`,
+    })
+    io.message({
+      text: `      new value:                 ${printValue(param.newValue)}`,
+    })
+  })
+
+  if (all.length < 2) {
+    return true
+  }
+
+  const counts = Object.entries(R.countBy((o) => o.operation, all))
+    .map(([key, count]) => {
+      switch (key) {
+        case "create":
+          return { order: "1", text: green(`create: ${count}`) }
+        case "update":
+          return { order: "2", text: yellow(`update: ${count}`) }
+        case "delete":
+          return { order: "3", text: red(`remove: ${count}`) }
+        default:
+          throw new Error(`Unsupported parameter operation: '${key}'`)
+      }
+    })
+    .sort((a, b) => a.order.localeCompare(b.order))
+    .map((o) => o.text)
+    .join(", ")
+
+  io.message({
+    text: `  changed parameters | total: ${all.length}, ${counts}`,
+    marginTop: true,
+  })
+
+  return true
+}
+
+export const printCustomStackParameters = (
+  io: BaseIO,
+  newParameters: Parameters,
+  currentParameters?: Parameters,
+): boolean => {
+  if (_.isEmpty(currentParameters) && _.isEmpty(newParameters)) {
+    return false
+  }
+
+  const { updated, added, removed } = buildCustomStackParametersSpec(
+    currentParameters,
+    newParameters,
   )
 
   const all = [...added, ...updated, ...removed]

@@ -1,4 +1,5 @@
 import {
+  ConfirmCustomStackDeployAnswer,
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
@@ -38,6 +39,11 @@ export const createEmitStackTemplatesIO = (
     return "CONTINUE"
   }
 
+  const confirmCustomStackDeploy =
+    async (): Promise<ConfirmCustomStackDeployAnswer> => {
+      return "CONTINUE"
+    }
+
   const printStackEvent = (): void => {}
 
   const chooseCommandPath = (rootStackGroup: StackGroup) =>
@@ -52,6 +58,7 @@ export const createEmitStackTemplatesIO = (
     chooseCommandPath,
     confirmDeploy,
     confirmStackDeploy,
+    confirmCustomStackDeploy,
     printOutput,
     printStackEvent,
     createStacksOperationListener,
