@@ -6,7 +6,6 @@ import {
 } from "../aws/common/credentials.js"
 import { AccountId, Region, TagKey } from "../aws/common/model.js"
 import { TimeoutConfig, Vars } from "../common/model.js"
-import { HookExecutor } from "../hooks/hook-executor.js"
 import { ResolverExecutor } from "../resolvers/resolver-executor.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
 import { Schemas } from "../takomo-stacks-model/schemas.js"
@@ -50,7 +49,6 @@ export interface StackProps {
   dependencies: ReadonlyArray<StackPath>
   dependents: ReadonlyArray<StackPath>
   data: Vars
-  hooks: ReadonlyArray<HookExecutor>
   credentialManager: InternalCredentialManager
   ignore: boolean
   obsolete: boolean
@@ -125,7 +123,6 @@ export interface BaseInternalStack extends Stack {
   readonly tags: Map<TagKey, RawTagValue>
   readonly timeout: TimeoutConfig
   readonly parameters: Map<StackParameterKey, ResolverExecutor>
-  readonly hooks: ReadonlyArray<HookExecutor>
   readonly ignore: boolean
   readonly obsolete: boolean
   readonly terminationProtection: boolean

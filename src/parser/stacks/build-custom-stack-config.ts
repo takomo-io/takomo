@@ -1,6 +1,5 @@
 import { err, ok, Result } from "neverthrow"
 import { CommandContext } from "../../context/command-context.js"
-import { createStackConfigSchema } from "../../schema/stack-config-schema.js"
 import { ValidationError } from "../../utils/errors.js"
 import {
   parseCommandRole,
@@ -18,14 +17,14 @@ import { parseTags } from "./parse-tags.js"
 import { parseTimeout } from "./parse-timeout.js"
 import { parseCustomStackType } from "./parse-custom-stack-type.js"
 import { CustomStackConfig } from "../../config/custom-stack-config.js"
+import { createCustomStackConfigSchema } from "../../schema/custom-stack-config-schema.js"
 
 export const buildCustomStackConfig = (
   ctx: CommandContext,
   record: Record<string, unknown>,
 ): Result<CustomStackConfig, ValidationError> => {
-  const { error } = createStackConfigSchema({
+  const { error } = createCustomStackConfigSchema({
     regions: ctx.regions,
-    configType: "stack",
   }).validate(record, {
     abortEarly: false,
     convert: false,
@@ -34,7 +33,10 @@ export const buildCustomStackConfig = (
   if (error) {
     const details = error.details.map((d) => d.message)
     return err(
-      new ValidationError("Validation errors in stack configuration", details),
+      new ValidationError(
+        "Validation errors in custom stack configuration",
+        details,
+      ),
     )
   }
 
@@ -46,7 +48,7 @@ export const buildCustomStackConfig = (
 
   return ok({
     stackType: "custom",
-    customConfig: record.customConfig,
+    customConfig: record.customConfig ?? {},
     customType,
     accountIds,
     data,

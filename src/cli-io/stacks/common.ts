@@ -11,7 +11,7 @@ import { isCustomStack } from "../../stacks/custom-stack.js"
 import { CustomStackState } from "../../custom-stack-handler/custom-stack-handler.js"
 import { StacksOperationOutput } from "../../command/stacks/model.js"
 import { StackGroup } from "../../stacks/stack-group.js"
-import { StackPath } from "../../stacks/stack.js"
+import { Stack, StackPath } from "../../stacks/stack.js"
 import { CommandStatus } from "../../takomo-core/command.js"
 import { getStackPath } from "../../takomo-stacks-model/util.js"
 import { collectFromHierarchy } from "../../utils/collections.js"
@@ -22,6 +22,9 @@ import { formatYaml } from "../../utils/yaml.js"
 import { BaseIO, BaseIOProps } from "../cli-io.js"
 import { printError } from "../common.js"
 import { formatCommandStatus, formatStackEvent } from "../formatters.js"
+
+export const formatStackType = (stack: Stack): string =>
+  isCustomStack(stack) ? `custom (${stack.customType})` : "standard"
 
 export const formatLastModify = (
   stack: CloudFormationStackSummary | undefined,

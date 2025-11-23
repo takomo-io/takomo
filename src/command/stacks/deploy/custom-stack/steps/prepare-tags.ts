@@ -14,7 +14,7 @@ export const prepareTags: StackOperationStep<ParametersHolder> = (state) => {
     return tag
   })
 
-  return transitions.createOrUpdateStack({
+  return transitions.reviewDeployment({
     ...state,
     tags: arrayToRecord(
       tags,

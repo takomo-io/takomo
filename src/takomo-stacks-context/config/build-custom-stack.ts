@@ -13,7 +13,6 @@ import { TakomoError } from "../../utils/errors.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { validate } from "../../utils/validation.js"
 import { getCredentialManager } from "./get-credential-provider.js"
-import { initializeHooks } from "./hooks.js"
 import { mergeStackSchemas } from "./merge-stack-schemas.js"
 import { buildParameters } from "./parameters.js"
 import { ProcessStatus } from "./process-config-tree.js"
@@ -28,7 +27,6 @@ import {
   buildCommandRole,
   buildData,
   buildDependencies,
-  buildHookConfigs,
   buildIgnore,
   buildObsolete,
   buildProject,
@@ -45,12 +43,17 @@ import {
 import { CustomStackConfig } from "../../config/custom-stack-config.js"
 import { CustomStackHandler } from "../../custom-stack-handler/custom-stack-handler.js"
 
+type ParseCustomStackConfigResult = {
+  error?: Error
+  customConfig?: unknown
+}
+
 const parseCustomStackConfig = async (
   stackPath: StackPath,
   logger: TkmLogger,
   handler: CustomStackHandler<any, any>,
   config: unknown,
-): Promise<void> => {
+): Promise<ParseCustomStackConfigResult> => {
   try {
     const result = await handler.parseConfig({
       config,
@@ -59,7 +62,7 @@ const parseCustomStackConfig = async (
     })
 
     if (result.success) {
-      return result.config
+      return { customConfig: result.config }
     }
 
     const { message, error } = result
@@ -68,10 +71,13 @@ const parseCustomStackConfig = async (
       `Parsing custom stack config failed for stack ${stackPath}: ${message}`,
       error,
     )
-    throw new Error(`Parsing custom stack config failed for stack ${stackPath}`)
-  } catch (e) {
-    logger.error(`Parsing custom stack config failed for stack ${stackPath}`, e)
 
+    return { error }
+  } catch (e) {
+    logger.error(
+      `Unhandled error while parsing custom stack config for stack ${stackPath}`,
+      e,
+    )
     throw e
   }
 }
@@ -98,7 +104,6 @@ export const buildCustomStack = async (
     stackGroup,
   }
 
-  const hookConfigs = buildHookConfigs(builderProps)
   const name = buildStackName(builderProps, stackPath)
   const regions = buildRegions(builderProps)
   const commandRole = buildCommandRole(builderProps)
@@ -138,8 +143,6 @@ export const buildCustomStack = async (
       )
     })
 
-  const hooks = await initializeHooks(hookConfigs, hookRegistry)
-
   const credentialManager = await getCredentialManager(
     commandRole,
     defaultCredentialManager,
@@ -169,23 +172,26 @@ export const buildCustomStack = async (
         const timeout = buildTimeout(builderProps)
         const dependencies = buildDependencies(builderProps)
 
-        const config = await parseCustomStackConfig(
+        const { customConfig, error } = await parseCustomStackConfig(
           exactPath,
           logger,
           customStackHandler,
           stackConfig.customConfig,
         )
 
+        if (error) {
+          throw error
+        }
+
         const props: CustomStackProps = {
           customType: stackConfig.customType,
-          customConfig: config,
+          customConfig,
           customStackHandler,
           name,
           region,
           parameters,
           commandRole,
           credentialManager,
-          hooks,
           ignore,
           obsolete,
           terminationProtection,

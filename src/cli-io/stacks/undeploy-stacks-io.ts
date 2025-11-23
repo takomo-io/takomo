@@ -25,6 +25,7 @@ import {
   createStacksOperationListenerInternal,
   formatCustomStackLastModify,
   formatLastModify,
+  formatStackType,
   IOProps,
   printStacksOperationOutput,
 } from "./common.js"
@@ -117,6 +118,7 @@ export const createUndeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
+            `      type:                      ${formatStackType(stack)}`,
             `      status:                    ${formatStandardStackStatus(
               currentStack?.status,
             )}`,
@@ -141,6 +143,7 @@ export const createUndeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
+            `      type:                      ${formatStackType(stack)}`,
             `      status:                    ${formatCustomStackStatus(
               currentState.status,
             )}`,

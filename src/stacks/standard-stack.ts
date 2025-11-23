@@ -14,6 +14,7 @@ import {
   isCustomStackProps,
   isInternalCustomStack,
 } from "./custom-stack.js"
+import { HookExecutor } from "../hooks/hook-executor.js"
 
 /**
  * Blueprint path.
@@ -33,6 +34,7 @@ export interface StandardStackProps extends StackProps {
   getCloudFormationClient: () => Promise<CloudFormationClient>
   stackPolicy?: StackPolicyBody
   stackPolicyDuringUpdate?: StackPolicyBody
+  hooks: ReadonlyArray<HookExecutor>
 }
 
 /**
@@ -60,6 +62,7 @@ export interface InternalStandardStack
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
+  readonly hooks: ReadonlyArray<HookExecutor>
   readonly getCloudFormationClient: () => Promise<CloudFormationClient>
   readonly credentialManager: InternalCredentialManager
   readonly toProps: () => StandardStackProps

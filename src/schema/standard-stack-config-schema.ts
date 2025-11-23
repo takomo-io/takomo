@@ -4,13 +4,13 @@ import { createAwsSchemas } from "./aws-schema.js"
 import { createCommonSchema } from "./common-schema.js"
 import { createStacksSchemas } from "./stacks-schema.js"
 
-interface CreateStackConfigSchemaProps {
+interface CreateStandardStackConfigSchemaProps {
   readonly regions: ReadonlyArray<Region>
   readonly configType: "stack" | "blueprint"
 }
 
-export const createStackConfigSchema = (
-  props: CreateStackConfigSchemaProps,
+export const createStandardStackConfigSchema = (
+  props: CreateStandardStackConfigSchemaProps,
 ): ObjectSchema => {
   const { project, data, json } = createCommonSchema()
   const {

@@ -34,6 +34,7 @@ import {
   createStacksOperationListenerInternal,
   formatCustomStackLastModify,
   formatLastModify,
+  formatStackType,
   IOProps,
   printStacksOperationOutput,
 } from "../common.js"
@@ -43,11 +44,8 @@ import { printResources } from "./resources.js"
 import { printStackPolicy } from "./stack-policy.js"
 import { printCustomStackTags, printTags } from "./tags.js"
 import { printTerminationProtection } from "./termination-protection.js"
-import { Stack, StackPath } from "../../../stacks/stack.js"
-import {
-  InternalCustomStack,
-  isCustomStack,
-} from "../../../stacks/custom-stack.js"
+import { StackPath } from "../../../stacks/stack.js"
+import { InternalCustomStack } from "../../../stacks/custom-stack.js"
 import {
   CustomStackState,
   Parameters,
@@ -161,9 +159,6 @@ const formatStackOperationType = (type: StackOperationType): string => {
   }
 }
 
-const getStackType = (stack: Stack): string =>
-  isCustomStack(stack) ? stack.customType : "standard"
-
 const ensureContentsEndsWithLineFeed = (content: string): string =>
   content.endsWith("\n") ? content : content + "\n"
 
@@ -221,7 +216,7 @@ export const createDeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
-            `      stack type:                ${getStackType(stack)}`,
+            `      type:                      ${formatStackType(stack)}`,
             `      status:                    ${formatStandardStackStatus(
               currentStack?.status,
             )}`,
@@ -246,7 +241,7 @@ export const createDeployStacksIO = (
           [
             `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
             `      name:                      ${stack.name}`,
-            `      stack type:                ${getStackType(stack)}`,
+            `      type:                      ${formatStackType(stack)}`,
             `      status:                    ${formatCustomStackStatus(
               currentState.status,
             )}`,
@@ -334,16 +329,17 @@ export const createDeployStacksIO = (
     }
 
     io.subheader({
-      text: "Review deployment plan for a stack:",
+      text: "Review deployment plan for a standard stack:",
       marginTop: true,
     })
     io.longMessage(
       [
         "A stack deployment plan has been created and is shown below.",
         "",
-        `  stack path:                    ${stack.path}`,
-        `  stack name:                    ${stack.name}`,
-        `  stack region:                  ${stack.region}`,
+        `  path:                          ${stack.path}`,
+        `  name:                          ${stack.name}`,
+        `  type:                          ${formatStackType(stack)}`,
+        `  region:                        ${stack.region}`,
         `  operation:                     ${formatStackOperationType(
           operationType,
         )}`,
@@ -435,16 +431,17 @@ export const createDeployStacksIO = (
     }
 
     io.subheader({
-      text: "Review deployment plan for a stack:",
+      text: "Review deployment plan for a custom stack:",
       marginTop: true,
     })
     io.longMessage(
       [
         "A stack deployment plan has been created and is shown below.",
         "",
-        `  stack path:                    ${stack.path}`,
-        `  stack name:                    ${stack.name}`,
-        `  stack region:                  ${stack.region}`,
+        `  path:                          ${stack.path}`,
+        `  name:                          ${stack.name}`,
+        `  type:                          ${formatStackType(stack)}`,
+        `  region:                        ${stack.region}`,
         `  operation:                     ${formatStackOperationType(
           operationType,
         )}`,

@@ -5,23 +5,38 @@ import { CustomStack } from "../stacks/custom-stack.js"
 import { executeShellCommand } from "../utils/exec.js"
 import { expandFilePath } from "../utils/files.js"
 import { TkmLogger } from "../utils/logging.js"
-import { CustomStackHandler, CustomStackState } from "./custom-stack-handler.js"
+import {
+  CustomStackHandler,
+  CustomStackState,
+  Tags,
+  Parameters,
+} from "./custom-stack-handler.js"
 import joi from "joi"
 import { TakomoError } from "../utils/errors.js"
 
-const commandConfigSchema = joi.object({
-  command: joi.string().required(),
+const commandStringSchema = joi.string().required()
+
+const commandConfigSchema = joi
+  .object({
+    command: commandStringSchema,
+    exposeStackCredentials: joi.boolean(),
+    exposeStackRegion: joi.boolean(),
+    cwd: joi.string(),
+    capture: joi.string().valid("all", "last-line"),
+  })
+  .required()
+
+const commandSchema = [commandConfigSchema, commandStringSchema]
+
+const schema = joi.object({
+  getCurrentStateCommand: commandSchema,
+  createCommand: commandSchema,
+  updateCommand: commandSchema,
+  deleteCommand: commandSchema,
   exposeStackCredentials: joi.boolean(),
   exposeStackRegion: joi.boolean(),
   cwd: joi.string(),
   capture: joi.string().valid("all", "last-line"),
-})
-
-const schema = commandConfigSchema.keys({
-  getCurrentStateCommand: commandConfigSchema.required(),
-  createCommand: commandConfigSchema.required(),
-  updateCommand: commandConfigSchema.required(),
-  deleteCommand: commandConfigSchema.required(),
 })
 
 type Capture = "last-line" | "all"
@@ -37,8 +52,10 @@ const captureValue = (capture: Capture, output: string): string => {
   }
 }
 
+type CommandString = string
+
 type CommandConfig = {
-  readonly command: string
+  readonly command: CommandString
   readonly exposeStackCredentials?: boolean
   readonly exposeStackRegion?: boolean
   readonly cwd?: string
@@ -46,10 +63,10 @@ type CommandConfig = {
 }
 
 type CmdCustomStackHandlerConfig = {
-  readonly createCommand: CommandConfig
-  readonly updateCommand: CommandConfig
-  readonly deleteCommand: CommandConfig
-  readonly getCurrentStateCommand: CommandConfig
+  readonly createCommand: CommandConfig | CommandString
+  readonly updateCommand: CommandConfig | CommandString
+  readonly deleteCommand: CommandConfig | CommandString
+  readonly getCurrentStateCommand: CommandConfig | CommandString
   readonly cwd?: string
   readonly exposeStackCredentials?: boolean
   readonly exposeStackRegion?: boolean
@@ -64,15 +81,29 @@ type ExecuteCommandProps = {
   stack: CustomStack
   ctx: StacksContext
   logger: TkmLogger
+  parameters?: Parameters
+  tags?: Tags
 }
 
-const executeCommand = async <T>({
+const toCommandConfig = (
+  config: CommandConfig | CommandString,
+): CommandConfig => {
+  if (typeof config === "string") {
+    return { command: config }
+  }
+
+  return config
+}
+
+const executeCommand = async ({
   config,
   handlerConfig,
   stack,
   ctx,
   logger,
-}: ExecuteCommandProps): Promise<T> => {
+  tags = {},
+  parameters = {},
+}: ExecuteCommandProps): Promise<string> => {
   const {
     command,
     exposeStackCredentials = handlerConfig.exposeStackCredentials,
@@ -88,17 +119,40 @@ const executeCommand = async <T>({
 
   const region = exposeStackRegion === true ? stack.region : undefined
 
+  const additionalVariables: Record<string, string> = {}
+
+  if (tags) {
+    Object.entries(tags).forEach(([key, value]) => {
+      const envVarName = `TKM_TAG_${key
+        .toUpperCase()
+        .replace(/[^A-Z0-9_]/g, "_")}`
+
+      additionalVariables[envVarName] = value
+    })
+  }
+
+  if (parameters) {
+    Object.entries(parameters).forEach(([key, value]) => {
+      const envVarName = `TKM_PARAM_${key
+        .toUpperCase()
+        .replace(/[^A-Z0-9_]/g, "_")}`
+
+      additionalVariables[envVarName] = value
+    })
+  }
+
   const env = prepareAwsEnvVariables({
     env: process.env,
     credentials,
     region,
+    additionalVariables,
   })
 
   const { stdout, success, error } = await executeShellCommand({
     command,
     env,
     cwd: cwd ? expandFilePath(ctx.projectDir, cwd) : ctx.projectDir,
-    stdoutListener: (data: string) => logger.info(data),
+    stdoutListener: (data: string) => logger.debug(data),
     stderrListener: (data: string) => logger.error(data),
   })
 
@@ -109,7 +163,7 @@ const executeCommand = async <T>({
   const output = captureValue(capture, (stdout ?? "").trim())
   logger.debug(`Command output: ${output}`)
 
-  return JSON.parse(output) as T
+  return output
 }
 
 export const createCmdCustomStackHandler = (): CustomStackHandler<
@@ -146,17 +200,29 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
 
     getCurrentState: async (props) => {
       try {
-        const state: CmdCustomStackHandlerState = await executeCommand({
+        const output = await executeCommand({
           ...props,
-          config: props.config.getCurrentStateCommand,
+          config: toCommandConfig(props.config.getCurrentStateCommand),
           handlerConfig: props.config,
         })
 
-        // TODO: Validate state?
+        try {
+          return {
+            success: true,
+            state: JSON.parse(output) as CmdCustomStackHandlerState,
+          }
+        } catch (e) {
+          const error = e as Error
+          props.logger.error(
+            `Get current state succeeded but parsing result failed for custom stack ${props.stack.path}`,
+            error,
+          )
 
-        return {
-          success: true,
-          state,
+          return {
+            success: false,
+            message: "Parsing get current state result failed",
+            error,
+          }
         }
       } catch (e) {
         const error = e as Error
@@ -175,17 +241,29 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
 
     create: async (props) => {
       try {
-        const state: CmdCustomStackHandlerState = await executeCommand({
+        const output = await executeCommand({
           ...props,
-          config: props.config.createCommand,
+          config: toCommandConfig(props.config.createCommand),
           handlerConfig: props.config,
         })
 
-        // TODO: Validate state?
+        try {
+          return {
+            success: true,
+            state: JSON.parse(output) as CmdCustomStackHandlerState,
+          }
+        } catch (e) {
+          const error = e as Error
+          props.logger.error(
+            `Create succeeded but parsing result failed for custom stack ${props.stack.path}`,
+            error,
+          )
 
-        return {
-          success: true,
-          state,
+          return {
+            success: false,
+            message: "Parsing create result failed",
+            error,
+          }
         }
       } catch (e) {
         const error = e as Error
@@ -204,17 +282,29 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
 
     update: async (props) => {
       try {
-        const state: CmdCustomStackHandlerState = await executeCommand({
+        const output = await executeCommand({
           ...props,
-          config: props.config.updateCommand,
+          config: toCommandConfig(props.config.updateCommand),
           handlerConfig: props.config,
         })
 
-        // TODO: Validate state?
+        try {
+          return {
+            success: true,
+            state: JSON.parse(output) as CmdCustomStackHandlerState,
+          }
+        } catch (e) {
+          const error = e as Error
+          props.logger.error(
+            `Update succeeded but parsing result failed for custom stack ${props.stack.path}`,
+            error,
+          )
 
-        return {
-          success: true,
-          state,
+          return {
+            success: false,
+            message: "Parsing update result failed",
+            error,
+          }
         }
       } catch (e) {
         const error = e as Error
@@ -233,9 +323,9 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
 
     delete: async (props) => {
       try {
-        const state: CmdCustomStackHandlerState = await executeCommand({
+        await executeCommand({
           ...props,
-          config: props.config.deleteCommand,
+          config: toCommandConfig(props.config.deleteCommand),
           handlerConfig: props.config,
         })
 
@@ -243,7 +333,6 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
 
         return {
           success: true,
-          state,
         }
       } catch (e) {
         const error = e as Error

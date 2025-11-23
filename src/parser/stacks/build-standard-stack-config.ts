@@ -1,6 +1,6 @@
 import { err, ok, Result } from "neverthrow"
 import { CommandContext } from "../../context/command-context.js"
-import { createStackConfigSchema } from "../../schema/stack-config-schema.js"
+import { createStandardStackConfigSchema } from "../../schema/standard-stack-config-schema.js"
 import { ValidationError } from "../../utils/errors.js"
 import {
   parseCommandRole,
@@ -27,7 +27,7 @@ export const buildStandardStackConfig = (
   record: ParsedYamlDocument,
   configType: "stack" | "blueprint",
 ): Result<StandardStackConfig, ValidationError> => {
-  const { error } = createStackConfigSchema({
+  const { error } = createStandardStackConfigSchema({
     regions: ctx.regions,
     configType,
   }).validate(record, {
