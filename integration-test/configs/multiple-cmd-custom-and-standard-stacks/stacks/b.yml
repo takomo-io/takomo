@@ -1,0 +1,10 @@
+regions: eu-west-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+template:
+  inline: |
+    Resources:
+      LogGroup2:
+        Type: AWS::Logs::LogGroup
+        Properties:
+          LogGroupName: myexampleloggroup
+depends: /a.yml

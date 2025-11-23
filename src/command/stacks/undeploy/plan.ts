@@ -90,7 +90,7 @@ const convertToUndeployOperation = async (
 
   if (isInternalCustomStack(stack)) {
     const currentState = await getCustomStackState(ctx, stack)
-    const type = resolveUndeployOperationType(currentState)
+    const type = resolveUndeployCustomStackOperationType(currentState)
 
     return {
       stack,

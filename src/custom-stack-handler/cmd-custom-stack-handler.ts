@@ -129,6 +129,8 @@ const executeCommand = async ({
 
       additionalVariables[envVarName] = value
     })
+
+    additionalVariables["TKM_TAGS_JSON"] = JSON.stringify(tags)
   }
 
   if (parameters) {
@@ -139,6 +141,8 @@ const executeCommand = async ({
 
       additionalVariables[envVarName] = value
     })
+
+    additionalVariables["TKM_PARAMETERS_JSON"] = JSON.stringify(parameters)
   }
 
   const env = prepareAwsEnvVariables({

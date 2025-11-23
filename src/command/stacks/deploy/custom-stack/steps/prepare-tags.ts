@@ -14,12 +14,18 @@ export const prepareTags: StackOperationStep<ParametersHolder> = (state) => {
     return tag
   })
 
-  return transitions.reviewDeployment({
+  const updatedState = {
     ...state,
     tags: arrayToRecord(
       tags,
       (p) => p.key,
       (p) => p.value,
     ),
-  })
+  }
+
+  if (state.state.autoConfirm) {
+    return transitions.createOrUpdateStack(updatedState)
+  }
+
+  return transitions.reviewDeployment(updatedState)
 }

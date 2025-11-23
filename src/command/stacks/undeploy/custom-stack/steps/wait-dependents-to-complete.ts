@@ -31,7 +31,7 @@ export const waitDependentsToComplete: StackOperationStep<
     })
   }
 
-  if (!currentState) {
+  if (currentState.status === "PENDING") {
     return transitions.skipStackOperation({
       ...state,
       message: "Stack not found",
