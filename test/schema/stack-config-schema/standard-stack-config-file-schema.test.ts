@@ -1,11 +1,11 @@
-import { createStackConfigSchema } from "../../../src/schema/stack-config-schema.js"
+import { createStandardStackConfigSchema } from "../../../src/schema/standard-stack-config-schema.js"
 
-const schema = createStackConfigSchema({
+const schema = createStandardStackConfigSchema({
   regions: ["eu-west-1"],
   configType: "stack",
 })
 
-describe("stack config file schema", () => {
+describe("standard stack config file schema", () => {
   test("regions is the only required property", () => {
     expect(schema.validate({ regions: "eu-west-1" })).toStrictEqual({
       value: {

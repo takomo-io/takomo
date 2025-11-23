@@ -81,6 +81,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       
         ${red("- /example.yml/eu-west-1:      (stack will be removed)")}
             name:                      example
+            type:                      standard
             status:                    ${cyan("PENDING")}
             last change:               -
             account id:                123456789012
@@ -125,6 +126,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
           "* /hello.yml/eu-north-1:       (stack not found and will be skipped)",
         )}
             name:                      hello
+            type:                      standard
             status:                    ${green("CREATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime,
@@ -183,6 +185,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
           "* /hello.yml/eu-north-1:       (stack not found and will be skipped)",
         )}
             name:                      hello
+            type:                      standard
             status:                    ${green("CREATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime,
@@ -197,6 +200,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       
         ${red("- /kitty.yml/eu-west-1:        (stack will be removed)")}
             name:                      kitty
+            type:                      standard
             status:                    ${green("UPDATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime2,
@@ -260,6 +264,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
 
         ${red("- /sample3.yml/eu-central-1:   (stack will be removed)")}
             name:                      sample3
+            type:                      standard
             status:                    ${cyan("PENDING")}
             last change:               -
             account id:                123456789012
@@ -272,6 +277,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
 
         ${red("- /sample2.yml/eu-central-1:   (stack will be removed)")}
             name:                      sample2
+            type:                      standard
             status:                    ${cyan("PENDING")}
             last change:               -
             account id:                123456789012
@@ -285,6 +291,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
 
         ${red("- /sample.yml/eu-central-1:    (stack will be removed)")}
             name:                      sample
+            type:                      standard
             status:                    ${cyan("PENDING")}
             last change:               -
             account id:                123456789012
@@ -297,6 +304,7 @@ describe("UndeployStacksIO#confirmUndeploy", () => {
       
         ${red("- /example1.yml/eu-north-1:    (stack will be removed)")}
             name:                      example1
+            type:                      standard
             status:                    ${cyan("PENDING")}
             last change:               -
             account id:                123456789012
