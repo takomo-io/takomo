@@ -78,7 +78,7 @@ describe("List stacks", () => {
         stackPath: "/vpc1.yml/eu-west-1",
         stackName: "vpc1",
       })
-      .expectStackCreateSuccess({
+      .expectStackUpdateSuccessWithNoChanges({
         stackPath: "/my-custom.yml/eu-west-1",
         stackName: "my-custom",
       })
