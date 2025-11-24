@@ -3,7 +3,10 @@ import {
   StackEvent,
 } from "../../../../aws/cloudformation/model.js"
 import { InternalStacksContext } from "../../../../context/stacks-context.js"
-import { CustomStackHandler } from "../../../../custom-stack-handler/custom-stack-handler.js"
+import {
+  CustomStackHandler,
+  CustomStackState,
+} from "../../../../custom-stacks/custom-stack-handler.js"
 import { InternalCustomStack } from "../../../../stacks/custom-stack.js"
 import { CommandStatus } from "../../../../takomo-core/command.js"
 import { TkmLogger } from "../../../../utils/logging.js"
@@ -12,7 +15,6 @@ import {
   StackOperationVariables,
   StackResult,
 } from "../../../command-model.js"
-import { CustomStackState } from "../../../../custom-stack-handler/custom-stack-handler.js"
 import { InitialStackOperationState } from "../../common/states.js"
 import { DeployStacksIO, DeployState } from "../model.js"
 import { DeployCustomStackTransitions } from "./transitions.js"

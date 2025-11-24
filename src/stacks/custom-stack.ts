@@ -1,5 +1,5 @@
 import { InternalCredentialManager } from "../aws/common/credentials.js"
-import { CustomStackHandler } from "../custom-stack-handler/custom-stack-handler.js"
+import { CustomStackHandler } from "../custom-stacks/custom-stack-handler.js"
 import {
   BaseInternalStack,
   CustomStackType,

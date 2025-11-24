@@ -34,8 +34,7 @@ import {
 import { createDeploymentTargetRepositoryRegistry } from "../../takomo-deployment-targets-repository/deployment-target-repository-registry.js"
 import { createFileSystemDeploymentTargetRepositoryProvider } from "../../takomo-deployment-targets-repository/filesystem-deployment-target-repository.js"
 import { createOrganizationDeploymentTargetRepositoryProvider } from "../../takomo-deployment-targets-repository/organization-deployment-target-repository.js"
-import { createCustomStack } from "../../stacks/custom-stack.js"
-import { createCustomStackHandlerRegistry } from "../../custom-stack-handler/custom-stack-handler-registry.js"
+import { createCustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
 
 interface FileSystemDeploymentTargetsConfigRepositoryProps
   extends FileSystemStacksConfigRepositoryProps {

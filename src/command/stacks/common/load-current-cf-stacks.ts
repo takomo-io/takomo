@@ -13,7 +13,7 @@ import {
 } from "../../../stacks/standard-stack.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { checksum } from "../../../utils/strings.js"
-import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { CustomStackState } from "../../../custom-stacks/custom-stack-handler.js"
 import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 import { StacksContext } from "../../../index.js"
 

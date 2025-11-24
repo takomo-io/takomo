@@ -28,7 +28,7 @@ import { inMemoryCache } from "../../caches/cache.js"
 import {
   coreCustomStackHandlerProviders,
   createCustomStackHandlerRegistry,
-} from "../../custom-stack-handler/custom-stack-handler-registry.js"
+} from "../../custom-stacks/custom-stack-handler-registry.js"
 
 export interface BuildConfigContextInput {
   readonly configRepository: StacksConfigRepository

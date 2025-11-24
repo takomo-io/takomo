@@ -1,11 +1,10 @@
 import { CredentialManager } from "../aws/common/credentials.js"
 import { StackGroup, StackGroupPath } from "../stacks/stack-group.js"
-import { StandardStack } from "../stacks/standard-stack.js"
 import { TemplateEngine } from "../templating/template-engine.js"
 import { CommandContext, InternalCommandContext } from "./command-context.js"
 import { Cache } from "../caches/cache.js"
 import { InternalStack, Stack, StackPath } from "../stacks/stack.js"
-import { CustomStackHandlerRegistry } from "../custom-stack-handler/custom-stack-handler-registry.js"
+import { CustomStackHandlerRegistry } from "../custom-stacks/custom-stack-handler-registry.js"
 
 /**
  * Provides access to the current stack context and

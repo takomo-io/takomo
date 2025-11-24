@@ -50,7 +50,7 @@ import {
   CustomStackState,
   Parameters,
   Tags,
-} from "../../../custom-stack-handler/custom-stack-handler.js"
+} from "../../../custom-stacks/custom-stack-handler.js"
 
 interface ConfirmStackDeployAnswerChoice {
   readonly name: string

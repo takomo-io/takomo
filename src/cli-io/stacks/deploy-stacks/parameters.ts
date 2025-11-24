@@ -10,7 +10,7 @@ import {
 import { bold, green, red, yellow } from "../../../utils/colors.js"
 import { BaseIO } from "../../cli-io.js"
 import { printValue } from "./common.js"
-import { Parameters } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { Parameters } from "../../../custom-stacks/custom-stack-handler.js"
 import _ from "lodash"
 
 export type ParameterOperation = "update" | "create" | "delete"

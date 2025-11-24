@@ -18,7 +18,7 @@ import {
   InternalCustomStack,
   isInternalCustomStack,
 } from "../../../stacks/custom-stack.js"
-import { CustomStackState } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { CustomStackState } from "../../../custom-stacks/custom-stack-handler.js"
 import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 import { getCustomStackState } from "../common/load-current-cf-stacks.js"
 import { StacksContext } from "../../../context/stacks-context.js"

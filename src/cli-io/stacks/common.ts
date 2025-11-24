@@ -8,7 +8,7 @@ import {
 import { CommandPath, StackResult } from "../../command/command-model.js"
 import { StacksOperationListener } from "../../command/stacks/common/model.js"
 import { isCustomStack } from "../../stacks/custom-stack.js"
-import { CustomStackState } from "../../custom-stack-handler/custom-stack-handler.js"
+import { CustomStackState } from "../../custom-stacks/custom-stack-handler.js"
 import { StacksOperationOutput } from "../../command/stacks/model.js"
 import { StackGroup } from "../../stacks/stack-group.js"
 import { Stack, StackPath } from "../../stacks/stack.js"

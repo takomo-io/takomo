@@ -14,7 +14,7 @@ import {
 import { StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
 import { InternalStandardStack } from "../../../../src/stacks/standard-stack.js"
-import { createCustomStackHandlerRegistry } from "../../../../src/custom-stack-handler/custom-stack-handler-registry.js"
+import { createCustomStackHandlerRegistry } from "../../../../src/custom-stacks/custom-stack-handler-registry.js"
 import { logger } from "../../../logger.js"
 
 interface CreateStackProps {

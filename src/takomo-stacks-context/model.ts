@@ -18,7 +18,7 @@ import { TakomoError } from "../utils/errors.js"
 import { Timer } from "../utils/timer.js"
 import { ConfigTree } from "./config/config-tree.js"
 import { StackPath } from "../stacks/stack.js"
-import { CustomStackHandlerRegistry } from "../custom-stack-handler/custom-stack-handler-registry.js"
+import { CustomStackHandlerRegistry } from "../custom-stacks/custom-stack-handler-registry.js"
 import { StandardStackConfig } from "../config/standard-stack-config.js"
 
 export class CommandPathMatchesNoStacksError extends TakomoError {

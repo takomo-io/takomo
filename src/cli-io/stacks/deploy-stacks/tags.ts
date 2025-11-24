@@ -8,7 +8,7 @@ import { Tag, TagKey, TagValue } from "../../../aws/common/model.js"
 import { bold, green, red, yellow } from "../../../utils/colors.js"
 import { BaseIO } from "../../cli-io.js"
 import { printValue } from "./common.js"
-import { Tags } from "../../../custom-stack-handler/custom-stack-handler.js"
+import { Tags } from "../../../custom-stacks/custom-stack-handler.js"
 
 export type TagOperation = "update" | "create" | "delete"
 

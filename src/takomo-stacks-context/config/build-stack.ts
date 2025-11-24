@@ -37,7 +37,7 @@ import { isStandardStackConfig } from "../../config/standard-stack-config.js"
 import { buildStandardStack } from "./build-standard-stack.js"
 import { isCustomStackConfig } from "../../config/custom-stack-config.js"
 import { buildCustomStack } from "./build-custom-stack.js"
-import { CustomStackHandlerRegistry } from "../../custom-stack-handler/custom-stack-handler-registry.js"
+import { CustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
 import { exhaustiveCheck } from "../../utils/exhaustive-check.js"
 
 export interface StackPropBuilderProps {

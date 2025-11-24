@@ -29,7 +29,7 @@ import { StacksConfigRepository } from "../model.js"
 import { ConfigTree, StackGroupConfigNode } from "./config-tree.js"
 import { doCreateStackGroup } from "./create-stack-group.js"
 import { buildStack } from "./build-stack.js"
-import { CustomStackHandlerRegistry } from "../../custom-stack-handler/custom-stack-handler-registry.js"
+import { CustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
 
 export class ProcessStatus {
   readonly #stackGroups = new Map<StackGroupPath, StackGroup>()

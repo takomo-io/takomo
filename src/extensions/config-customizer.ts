@@ -1,4 +1,4 @@
-import { CustomStackHandler } from "../custom-stack-handler/custom-stack-handler.js"
+import { CustomStackHandler } from "../custom-stacks/custom-stack-handler.js"
 import { HookProvider } from "../hooks/hook-provider.js"
 import { ResolverProvider } from "../resolvers/resolver-provider.js"
 import { SchemaProvider } from "../takomo-stacks-model/schemas.js"
