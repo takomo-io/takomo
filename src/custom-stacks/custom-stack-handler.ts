@@ -366,6 +366,87 @@ export type DeleteCustomStackResult =
   | FailedDeleteCustomStackResult
 
 /**
+ * Represents the properties passed to get changes of a custom stack operation.
+ */
+export type GetChangesProps<CONFIG, STATE extends CustomStackState> = {
+  /**
+   * The logger instance to be used for logging.
+   */
+  readonly logger: TkmLogger
+
+  /**
+   * The current state of the custom stack.
+   */
+  readonly state: STATE
+
+  /**
+   * The configuration object for the custom stack.
+   */
+  readonly config: CONFIG
+
+  /**
+   * The parameters to be used for the update operation.
+   */
+  readonly parameters: Parameters
+
+  /**
+   * The tags to be used for the update operation.
+   */
+  readonly tags: Tags
+
+  /**
+   * The custom stack to be updated.
+   */
+  readonly stack: CustomStack
+
+  /**
+   * The stacks context.
+   */
+  readonly ctx: StacksContext
+}
+
+/**
+ * Represents a change in a custom stack.
+ */
+export type CustomStackChange = {
+  readonly description: string
+}
+
+/**
+ * Represents a successful result of getting changes of a custom stack.
+ */
+export type SuccessfulGetChangesResult = {
+  success: true
+
+  /**
+   * The list of changes detected in the custom stack.
+   */
+  changes?: ReadonlyArray<CustomStackChange>
+}
+
+/**
+ * Represents a failed result of getting changes of a custom stack.
+ */
+export type FailedGetChangesResult = {
+  success: false
+  /**
+   * An optional message providing additional information about the operation result.
+   */
+  message?: string
+  /**
+   * An optional error object if the operation failed.
+   */
+  error?: Error
+}
+
+/**
+ * Represents the result of getting changes of a custom stack.
+ */
+export type GetChangesResult =
+  | SuccessfulGetChangesResult
+  | FailedGetChangesResult
+
+/**
  * Interface defining the contract for handling custom stack operations.
  */
 export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
@@ -384,6 +465,14 @@ export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
   readonly getCurrentState: (
     props: GetCurrentStateProps<CONFIG>,
   ) => Promise<GetCurrentStateResult<STATE>>
+
+  /**
+   * Gets the changes between the current state and the desired state of the custom stack.
+   * Invoked during deploy of an existing stack to determine whether there would be any changes in the stack.
+   */
+  readonly getChanges: (
+    props: GetChangesProps<CONFIG, STATE>,
+  ) => Promise<GetChangesResult>
 
   /**
    * Parses the custom stack configuration.

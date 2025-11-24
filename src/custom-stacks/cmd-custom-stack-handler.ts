@@ -10,6 +10,7 @@ import {
   CustomStackState,
   Tags,
   Parameters,
+  CustomStackChange,
 } from "./custom-stack-handler.js"
 import joi from "joi"
 import { TakomoError } from "../utils/errors.js"
@@ -33,6 +34,7 @@ const schema = joi.object({
   createCommand: commandSchema,
   updateCommand: commandSchema,
   deleteCommand: commandSchema,
+  getChangesCommand: commandSchema,
   exposeStackCredentials: joi.boolean(),
   exposeStackRegion: joi.boolean(),
   cwd: joi.string(),
@@ -67,6 +69,7 @@ type CmdCustomStackHandlerConfig = {
   readonly updateCommand: CommandConfig | CommandString
   readonly deleteCommand: CommandConfig | CommandString
   readonly getCurrentStateCommand: CommandConfig | CommandString
+  readonly getChangesCommand: CommandConfig | CommandString
   readonly cwd?: string
   readonly exposeStackCredentials?: boolean
   readonly exposeStackRegion?: boolean
@@ -214,6 +217,54 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
           return {
             success: true,
             state: JSON.parse(output) as CmdCustomStackHandlerState,
+          }
+        } catch (e) {
+          const error = e as Error
+          props.logger.error(
+            `Get current state succeeded but parsing result failed for custom stack ${props.stack.path}`,
+            error,
+          )
+
+          return {
+            success: false,
+            message: "Parsing get current state result failed",
+            error,
+          }
+        }
+      } catch (e) {
+        const error = e as Error
+        props.logger.error(
+          `Getting current state failed for custom stack ${props.stack.path}`,
+          error,
+        )
+
+        return {
+          success: false,
+          message: "Unhandled error",
+          error,
+        }
+      }
+    },
+
+    getChanges: async (props) => {
+      try {
+        const output = await executeCommand({
+          ...props,
+          config: toCommandConfig(props.config.getChangesCommand),
+          handlerConfig: props.config,
+        })
+
+        if (output.trim() === "") {
+          return {
+            success: true,
+            changes: [],
+          }
+        }
+
+        try {
+          return {
+            success: true,
+            changes: JSON.parse(output) as ReadonlyArray<CustomStackChange>,
           }
         } catch (e) {
           const error = e as Error

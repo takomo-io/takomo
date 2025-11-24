@@ -14,8 +14,8 @@ import {
 import { StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
 import { InternalStandardStack } from "../../../../src/stacks/standard-stack.js"
-import { createCustomStackHandlerRegistry } from "../../../../src/custom-stacks/custom-stack-handler-registry.js"
 import { logger } from "../../../logger.js"
+import { StacksContext } from "../../../../src/index.js"
 
 interface CreateStackProps {
   readonly name: StackName
@@ -88,7 +88,7 @@ const stack = ({
   return s
 }
 
-const customStackHandlerRegistry = createCustomStackHandlerRegistry({ logger })
+const ctx = mock<StacksContext>()
 
 interface ExpectedOperation {
   readonly path: StackPath
@@ -120,7 +120,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     assertPlan(plan, { type: "UPDATE", path: "/one.yml/eu-west-1" })
@@ -138,7 +138,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     assertPlan(plan, { type: "CREATE", path: "/two.yml/eu-central-1" })
@@ -157,7 +157,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     assertPlan(plan, { type: "RECREATE", path: "/two.yml/eu-central-1" })
@@ -182,7 +182,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     assertPlan(
@@ -219,7 +219,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     assertPlan(
@@ -244,7 +244,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     expect(plan.operations).toHaveLength(0)
@@ -271,7 +271,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     expect(plan.operations).toHaveLength(0)
@@ -299,7 +299,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     expect(plan.operations).toHaveLength(0)
@@ -326,7 +326,7 @@ describe("#buildStacksDeployPlan", () => {
       ROOT_STACK_GROUP_PATH,
       false,
       logger,
-      customStackHandlerRegistry,
+      ctx,
     )
 
     assertPlan(plan, { type: "UPDATE", path: "/one.yml/eu-central-1" })
