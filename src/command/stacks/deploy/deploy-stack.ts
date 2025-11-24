@@ -111,6 +111,7 @@ export const deployStack = async (
       state,
       currentStatus: currentState,
       ctx,
+      emit,
       stacksOperationListener,
       stackExistedBeforeOperation: currentState !== undefined,
       totalTimer: timer.startChild(stack.path),

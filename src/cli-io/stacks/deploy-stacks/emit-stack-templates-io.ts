@@ -5,6 +5,7 @@ import {
   DeployStacksIO,
 } from "../../../command/stacks/deploy/model.js"
 import { StacksOperationOutput } from "../../../command/stacks/model.js"
+import { isStandardStack } from "../../../index.js"
 import { StackGroup } from "../../../stacks/stack-group.js"
 import { createBaseIO } from "../../cli-io.js"
 import {
@@ -28,9 +29,11 @@ export const createEmitStackTemplatesIO = (
   const printOutput = (
     output: StacksOperationOutput,
   ): StacksOperationOutput => {
-    output.results.forEach((result) => {
-      io.message({ text: String(result.templateBody), marginTop: true })
-    })
+    output.results
+      .filter((result) => isStandardStack(result.stack))
+      .forEach((result) => {
+        io.message({ text: String(result.templateBody), marginTop: true })
+      })
 
     return output
   }

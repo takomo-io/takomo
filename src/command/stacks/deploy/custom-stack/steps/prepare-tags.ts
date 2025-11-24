@@ -3,7 +3,7 @@ import { StackOperationStep } from "../../../common/steps.js"
 import { ParametersHolder } from "../states.js"
 
 export const prepareTags: StackOperationStep<ParametersHolder> = (state) => {
-  const { stack, logger, transitions } = state
+  const { stack, logger, transitions, emit } = state
 
   const tags = Array.from(stack.tags.entries()).map(([key, value]) => {
     const tag = {
@@ -21,6 +21,16 @@ export const prepareTags: StackOperationStep<ParametersHolder> = (state) => {
       (p) => p.key,
       (p) => p.value,
     ),
+  }
+
+  if (emit) {
+    return transitions.completeStackOperation({
+      ...updatedState,
+      message: "Emit template not supported",
+      success: true,
+      status: "SUCCESS",
+      events: [],
+    })
   }
 
   if (state.state.autoConfirm) {

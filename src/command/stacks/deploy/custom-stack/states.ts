@@ -32,6 +32,7 @@ export interface InitialDeployCustomStackState
   readonly state: DeployState
   readonly transitions: DeployCustomStackTransitions
   readonly customStackHandler: CustomStackHandler<any, any>
+  readonly emit: boolean
 }
 
 export interface ParametersHolder extends InitialDeployCustomStackState {
