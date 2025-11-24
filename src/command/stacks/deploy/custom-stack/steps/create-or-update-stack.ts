@@ -1,7 +1,7 @@
 import { StackOperationStep } from "../../../common/steps.js"
-import { TagsHolder } from "../states.js"
+import { ChangesHolder } from "../states.js"
 
-export const createOrUpdateStack: StackOperationStep<TagsHolder> = async (
+export const createOrUpdateStack: StackOperationStep<ChangesHolder> = async (
   state,
 ) => {
   const { transitions, operationType } = state

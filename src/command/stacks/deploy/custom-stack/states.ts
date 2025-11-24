@@ -4,6 +4,7 @@ import {
 } from "../../../../aws/cloudformation/model.js"
 import { InternalStacksContext } from "../../../../context/stacks-context.js"
 import {
+  CustomStackChange,
   CustomStackHandler,
   CustomStackState,
 } from "../../../../custom-stacks/custom-stack-handler.js"
@@ -33,6 +34,7 @@ export interface InitialDeployCustomStackState
   readonly transitions: DeployCustomStackTransitions
   readonly customStackHandler: CustomStackHandler<any, any>
   readonly emit: boolean
+  readonly expectNoChanges: boolean
 }
 
 export interface ParametersHolder extends InitialDeployCustomStackState {
@@ -41,6 +43,10 @@ export interface ParametersHolder extends InitialDeployCustomStackState {
 
 export interface TagsHolder extends ParametersHolder {
   readonly tags: Record<string, string>
+}
+
+export interface ChangesHolder extends TagsHolder {
+  readonly changes: ReadonlyArray<CustomStackChange>
 }
 
 export interface StackOperationResultHolder

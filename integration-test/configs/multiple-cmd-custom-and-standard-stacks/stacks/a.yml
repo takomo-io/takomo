@@ -3,7 +3,7 @@ commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessR
 customType: cmd
 customConfig:
   getCurrentStateCommand: cat {{ var.aCurrentState }}-state.json
-  getChangesCommand: echo ""
+  getChangesCommand: cat changes.json
   createCommand: cat {{ var.aCommandState }}-state.json
   updateCommand: cat {{ var.aCommandState }}-state.json
   deleteCommand: echo ok

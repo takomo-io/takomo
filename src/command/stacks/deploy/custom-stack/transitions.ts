@@ -5,12 +5,14 @@ import {
   StackOperationTransitions,
 } from "../../common/transitions.js"
 import {
+  ChangesHolder,
   InitialDeployCustomStackState,
   ParametersHolder,
   TagsHolder,
 } from "./states.js"
 import { createOrUpdateStack } from "./steps/create-or-update-stack.js"
 import { createStack } from "./steps/create-stack.js"
+import { getChanges } from "./steps/get-changes.js"
 import { prepareParameters } from "./steps/prepare-parameters.js"
 import { prepareTags } from "./steps/prepare-tags.js"
 import { reviewDeployment } from "./steps/review-deployment.js"
@@ -21,10 +23,11 @@ export interface DeployCustomStackTransitions
   extends StackOperationTransitions {
   prepareParameters: StackOperationStep<InitialDeployCustomStackState>
   prepareTags: StackOperationStep<ParametersHolder>
-  reviewDeployment: StackOperationStep<TagsHolder>
-  createOrUpdateStack: StackOperationStep<TagsHolder>
-  createStack: StackOperationStep<TagsHolder>
-  updateStack: StackOperationStep<TagsHolder>
+  getChanges: StackOperationStep<TagsHolder>
+  reviewDeployment: StackOperationStep<ChangesHolder>
+  createOrUpdateStack: StackOperationStep<ChangesHolder>
+  createStack: StackOperationStep<ChangesHolder>
+  updateStack: StackOperationStep<ChangesHolder>
 }
 
 export const createDeployCustomStackTransitions =
@@ -39,6 +42,8 @@ export const createDeployCustomStackTransitions =
     prepareParameters: inProgress("prepare-parameters", prepareParameters),
 
     prepareTags: inProgress("prepare-tags", prepareTags),
+
+    getChanges: inProgress("get-changes", getChanges),
 
     reviewDeployment: inProgress("review-deployment", reviewDeployment),
 

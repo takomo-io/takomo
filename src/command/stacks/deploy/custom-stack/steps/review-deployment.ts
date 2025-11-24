@@ -1,7 +1,7 @@
 import { StackOperationStep } from "../../../common/steps.js"
-import { TagsHolder } from "../states.js"
+import { ChangesHolder } from "../states.js"
 
-export const reviewDeployment: StackOperationStep<TagsHolder> = async (
+export const reviewDeployment: StackOperationStep<ChangesHolder> = async (
   state,
 ) => {
   const {
@@ -13,6 +13,7 @@ export const reviewDeployment: StackOperationStep<TagsHolder> = async (
     tags,
     parameters,
     state: deployState,
+    changes,
   } = state
 
   const answer = await io.confirmCustomStackDeploy(
@@ -21,6 +22,7 @@ export const reviewDeployment: StackOperationStep<TagsHolder> = async (
     currentStatus,
     tags,
     parameters,
+    changes,
   )
 
   if (answer === "CANCEL") {

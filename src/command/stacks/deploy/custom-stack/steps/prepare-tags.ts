@@ -33,9 +33,5 @@ export const prepareTags: StackOperationStep<ParametersHolder> = (state) => {
     })
   }
 
-  if (state.state.autoConfirm) {
-    return transitions.createOrUpdateStack(updatedState)
-  }
-
-  return transitions.reviewDeployment(updatedState)
+  return transitions.getChanges(updatedState)
 }

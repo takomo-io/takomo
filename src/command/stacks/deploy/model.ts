@@ -19,6 +19,7 @@ import { StacksDeployPlan } from "./plan.js"
 import { StackPath } from "../../../stacks/stack.js"
 import { InternalCustomStack } from "../../../stacks/custom-stack.js"
 import {
+  CustomStackChange,
   CustomStackState,
   Parameters,
   Tags,
@@ -58,6 +59,7 @@ export interface DeployStacksIO extends IO<StacksOperationOutput> {
     currentState: CustomStackState,
     tags: Tags,
     parameters: Parameters,
+    changes: ReadonlyArray<CustomStackChange>,
   ) => Promise<ConfirmCustomStackDeployAnswer>
   readonly confirmDeploy: (
     plan: StacksDeployPlan,

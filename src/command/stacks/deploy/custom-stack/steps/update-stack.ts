@@ -1,7 +1,7 @@
 import { StackOperationStep } from "../../../common/steps.js"
-import { TagsHolder } from "../states.js"
+import { ChangesHolder } from "../states.js"
 
-export const updateStack: StackOperationStep<TagsHolder> = async (state) => {
+export const updateStack: StackOperationStep<ChangesHolder> = async (state) => {
   const {
     stack,
     logger,

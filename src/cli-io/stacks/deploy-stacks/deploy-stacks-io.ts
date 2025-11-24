@@ -40,13 +40,14 @@ import {
 } from "../common.js"
 import { printOutputs } from "./outputs.js"
 import { printCustomStackParameters, printParameters } from "./parameters.js"
-import { printResources } from "./resources.js"
+import { printCustomStackChanges, printResources } from "./resources.js"
 import { printStackPolicy } from "./stack-policy.js"
 import { printCustomStackTags, printTags } from "./tags.js"
 import { printTerminationProtection } from "./termination-protection.js"
 import { StackPath } from "../../../stacks/stack.js"
 import { InternalCustomStack } from "../../../stacks/custom-stack.js"
 import {
+  CustomStackChange,
   CustomStackState,
   Parameters,
   Tags,
@@ -425,6 +426,7 @@ export const createDeployStacksIO = (
     currentState: CustomStackState,
     tags: Tags,
     parameters: Parameters,
+    changes: ReadonlyArray<CustomStackChange>,
   ): Promise<ConfirmCustomStackDeployAnswer> => {
     if (autoConfirmEnabled) {
       return "CONTINUE"
@@ -453,6 +455,7 @@ export const createDeployStacksIO = (
 
     printCustomStackParameters(io, parameters, currentState.parameters)
     printCustomStackTags(io, tags, currentState.tags)
+    printCustomStackChanges(io, changes)
 
     const answer = await io.choose<ConfirmCustomStackDeployAnswer>(
       "How do you want to continue the deployment?",
