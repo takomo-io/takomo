@@ -21,6 +21,11 @@ describe("List stacks", () => {
         stackName: "security-groups1",
         status: undefined,
       })
+      .expectStack({
+        stackPath: "/my-custom.yml/eu-west-1",
+        stackName: "my-custom",
+        status: "CREATE_COMPLETE",
+      })
       .assert())
 
   test("List all stacks before deploy with cli", async () => {
@@ -30,6 +35,12 @@ describe("List stacks", () => {
       message: "Success",
       time: isNumber,
       results: [
+        {
+          path: "/my-custom.yml/eu-west-1",
+          name: "my-custom",
+          type: "custom",
+          status: "CREATE_COMPLETE",
+        },
         {
           path: "/security-groups1.yml/eu-west-1",
           name: "security-groups1",
@@ -67,6 +78,10 @@ describe("List stacks", () => {
         stackPath: "/vpc1.yml/eu-west-1",
         stackName: "vpc1",
       })
+      .expectStackCreateSuccess({
+        stackPath: "/my-custom.yml/eu-west-1",
+        stackName: "my-custom",
+      })
       .assert())
 
   test("List all stacks", () =>
@@ -82,6 +97,12 @@ describe("List stacks", () => {
         stackName: "security-groups1",
         status: "CREATE_COMPLETE",
       })
+      .expectStack({
+        stackPath: "/my-custom.yml/eu-west-1",
+        stackName: "my-custom",
+        status: "CREATE_COMPLETE",
+      })
+
       .assert())
 
   test("List all stacks with cli", async () => {
@@ -91,6 +112,12 @@ describe("List stacks", () => {
       message: "Success",
       time: isNumber,
       results: [
+        {
+          path: "/my-custom.yml/eu-west-1",
+          name: "my-custom",
+          type: "custom",
+          status: "CREATE_COMPLETE",
+        },
         {
           path: "/security-groups1.yml/eu-west-1",
           type: "standard",

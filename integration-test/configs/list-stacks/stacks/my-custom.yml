@@ -1,0 +1,6 @@
+customType: cmd
+customConfig:
+  getCurrentStateCommand: cat custom-state.json
+  createCommand: cat custom-state.json
+  updateCommand: cat custom-state.json
+  deleteCommand: echo ok
