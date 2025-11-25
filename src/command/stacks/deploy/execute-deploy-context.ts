@@ -47,7 +47,7 @@ const executeStacksInParallel = async (
   const bh = bulkhead(ctx.concurrentStacks, 1000)
 
   const executions = operations.reduce((executions, operation) => {
-    const { stack, type, currentStack } = operation
+    const { stack } = operation
     const dependencies = ignoreDependencies
       ? []
       : stack.dependencies.map((d) => {
@@ -63,13 +63,12 @@ const executeStacksInParallel = async (
 
     const execution = bh.execute(() =>
       deployStack(
+        operation,
         timer,
         ctx,
         io,
         state,
-        stack,
         dependencies,
-        type,
         configRepository,
         stacksOperationListener,
         expectNoChanges,
@@ -77,7 +76,6 @@ const executeStacksInParallel = async (
         skipHooks,
         skipParameters,
         outDir,
-        currentStack,
       ),
     )
 
@@ -183,19 +181,18 @@ export const executeDeployContext = async (
         events: [],
         message: "Cancelled",
         operationType: operation.type,
-        stackExistedBeforeOperation: operation.currentStack !== undefined,
+        stackExistedBeforeOperation: operation.stackExistedBeforeOperation,
       })
       continue
     }
 
     const execution = await deployStack(
+      operation,
       timer,
       ctx,
       io,
       state,
-      stack,
       dependencies,
-      operation.type,
       configRepository,
       deployStacksListener,
       expectNoChanges,
@@ -203,7 +200,6 @@ export const executeDeployContext = async (
       skipHooks,
       skipParameters,
       outDir,
-      operation.currentStack,
     )
 
     if (execution.status === "CANCELLED" || execution.status === "FAILED") {

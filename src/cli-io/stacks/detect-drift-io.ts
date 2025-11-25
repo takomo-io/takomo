@@ -4,7 +4,7 @@ import {
   DetectDriftOutput,
 } from "../../command/stacks/drift/model.js"
 import { createBaseIO } from "../cli-io.js"
-import { formatDriftStatus, formatStackStatus } from "../formatters.js"
+import { formatDriftStatus, formatStandardStackStatus } from "../formatters.js"
 import { IOProps } from "./common.js"
 
 export const createDetectDriftIO = (props: IOProps): DetectDriftIO => {
@@ -18,7 +18,7 @@ export const createDetectDriftIO = (props: IOProps): DetectDriftIO => {
       table
         .cell("Path", stack.path)
         .cell("Name", stack.name)
-        .cell("Status", formatStackStatus(current?.status))
+        .cell("Status", formatStandardStackStatus(current?.status))
         .cell(
           "Drift status",
           formatDriftStatus(driftDetectionStatus?.stackDriftStatus),

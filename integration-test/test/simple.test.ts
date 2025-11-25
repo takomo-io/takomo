@@ -53,6 +53,7 @@ describe("Simple", () => {
             time: isNumber,
             message: "Stack create succeeded",
             status: "SUCCESS",
+            type: "standard",
           },
         ],
       })
@@ -74,6 +75,7 @@ describe("Simple", () => {
             time: isNumber,
             message: "Stack delete succeeded",
             status: "SUCCESS",
+            type: "standard",
           },
         ],
       })

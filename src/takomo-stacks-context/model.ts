@@ -4,17 +4,22 @@ import { IamRoleArn } from "../aws/common/model.js"
 import { CommandPath } from "../command/command-model.js"
 import { EnvVars, Variables } from "../common/model.js"
 import { ParameterConfig } from "../config/common-config.js"
-import { StackConfig } from "../config/stack-config.js"
 import { HookRegistry } from "../hooks/hook-registry.js"
 import { ResolverRegistry } from "../resolvers/resolver-registry.js"
 import { Resolver, ResolverInput, ResolverName } from "../resolvers/resolver.js"
-import { BlueprintPath, InternalStack, StackPath } from "../stacks/stack.js"
+import {
+  BlueprintPath,
+  InternalStandardStack,
+} from "../stacks/standard-stack.js"
 import { CommandStatus } from "../takomo-core/command.js"
 import { SchemaRegistry } from "../takomo-stacks-model/schemas.js"
 import { TemplateEngine } from "../templating/template-engine.js"
 import { TakomoError } from "../utils/errors.js"
 import { Timer } from "../utils/timer.js"
 import { ConfigTree } from "./config/config-tree.js"
+import { StackPath } from "../stacks/stack.js"
+import { CustomStackHandlerRegistry } from "../custom-stacks/custom-stack-handler-registry.js"
+import { StandardStackConfig } from "../config/standard-stack-config.js"
 
 export class CommandPathMatchesNoStacksError extends TakomoError {
   constructor(commandPath: CommandPath, availableStackPaths: StackPath[]) {
@@ -27,6 +32,7 @@ export class CommandPathMatchesNoStacksError extends TakomoError {
 }
 
 interface HookOutputValues {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [hookName: string]: any
 }
 
@@ -65,6 +71,7 @@ export class SingleResolverExecutor implements ResolverExecutor {
     this.#schema = schema
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolve = async (input: ResolverInput): Promise<any> =>
     this.#resolver.resolve(input)
 
@@ -143,6 +150,7 @@ export class ListResolverExecutor implements ResolverExecutor {
     this.#schema = schema
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolve = async (input: ResolverInput): Promise<any> =>
     Promise.all(
       this.#resolvers.map(async (resolver, index) =>
@@ -173,7 +181,7 @@ export class ListResolverExecutor implements ResolverExecutor {
 }
 
 export interface StackResult {
-  readonly stack: InternalStack
+  readonly stack: InternalStandardStack
   readonly message: string
   readonly status: CommandStatus
   readonly events: ReadonlyArray<StackEvent>
@@ -186,6 +194,7 @@ export interface StackResult {
  * Wrapper that executes parameter resolver.
  */
 export interface ResolverExecutor {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolve: (input: ResolverInput) => Promise<any>
 
   isConfidential: () => boolean
@@ -202,6 +211,7 @@ export interface ResolverExecutor {
 }
 
 export interface StacksConfigRepositoryProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly variables: any
   readonly filename?: string
   readonly inline?: string
@@ -215,8 +225,9 @@ export interface StacksConfigRepository {
 
   getBlueprint: (
     blueprint: BlueprintPath,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     variables: any,
-  ) => Promise<StackConfig>
+  ) => Promise<StandardStackConfig>
 
   buildConfigTree: () => Promise<ConfigTree>
 
@@ -224,6 +235,7 @@ export interface StacksConfigRepository {
     resolverRegistry: ResolverRegistry,
     hookRegistry: HookRegistry,
     schemaRegistry: SchemaRegistry,
+    customStackHandlerRegistry: CustomStackHandlerRegistry,
   ) => Promise<void>
 
   templateEngine: TemplateEngine

@@ -1,5 +1,5 @@
-import { buildCapabilities } from "../../../src/takomo-stacks-context/config/build-stack.js"
 import { createStackConfig, createStackGroup } from "../helpers.js"
+import { buildCapabilities } from "../../../src/takomo-stacks-context/config/build-standard-stack.js"
 
 describe("#buildCapabilities", () => {
   test("no capabilities", () => {

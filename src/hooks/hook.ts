@@ -1,6 +1,6 @@
 import { CloudFormationStack } from "../aws/cloudformation/model.js"
 import { StacksContext } from "../context/stacks-context.js"
-import { Stack } from "../stacks/stack.js"
+import { StandardStack } from "../stacks/standard-stack.js"
 import { StackOperationVariables } from "../takomo-stacks-context/model.js"
 import { TkmLogger } from "../utils/logging.js"
 
@@ -48,7 +48,7 @@ export interface HooksExecutionOutput {
  */
 export interface HookInput {
   readonly ctx: StacksContext
-  readonly stack: Stack
+  readonly stack: StandardStack
   readonly variables: StackOperationVariables
   readonly stage: HookStage
   readonly operation: HookOperation
@@ -74,6 +74,7 @@ export interface HookOutputObject {
   /**
    * Optional return value.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly value?: any
 
   /**

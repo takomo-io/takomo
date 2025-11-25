@@ -25,6 +25,10 @@ import { ConfigTree } from "./config-tree.js"
 import { coreHookProviders } from "./hooks.js"
 import { processConfigTree } from "./process-config-tree.js"
 import { inMemoryCache } from "../../caches/cache.js"
+import {
+  coreCustomStackHandlerProviders,
+  createCustomStackHandlerRegistry,
+} from "../../custom-stacks/custom-stack-handler-registry.js"
 
 export interface BuildConfigContextInput {
   readonly configRepository: StacksConfigRepository
@@ -96,10 +100,19 @@ export const buildStacksContext = async ({
 
   const schemaRegistry = createSchemaRegistry(logger)
 
+  const customStackHandlerRegistry = createCustomStackHandlerRegistry({
+    logger,
+  })
+
+  coreCustomStackHandlerProviders().forEach((p) =>
+    customStackHandlerRegistry.registerHandler(p),
+  )
+
   await configRepository.loadExtensions(
     resolverRegistry,
     hookRegistry,
     schemaRegistry,
+    customStackHandlerRegistry,
   )
 
   const credentialManagers = new Map<IamRoleArn, InternalCredentialManager>()
@@ -116,6 +129,7 @@ export const buildStacksContext = async ({
     commandPath ?? ROOT_STACK_GROUP_PATH,
     configTree,
     configRepository,
+    customStackHandlerRegistry,
   )
 
   const stackGroups = collectStackGroups(rootStackGroup)
@@ -135,6 +149,7 @@ export const buildStacksContext = async ({
     credentialManager,
     templateEngine,
     rootStackGroup,
+    customStackHandlerRegistry,
     stacks,
     concurrentStacks: 20,
     cache: inMemoryCache(),

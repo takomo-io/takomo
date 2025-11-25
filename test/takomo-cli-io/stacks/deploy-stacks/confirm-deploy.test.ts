@@ -55,6 +55,7 @@ const mockOperation = (
   return {
     type,
     currentStack,
+    stackExistedBeforeOperation: currentStack !== undefined,
     stack: mockInternalStack(stackProps),
   }
 }
@@ -88,6 +89,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
       
         ${green("+ /example.yml/eu-west-1:      (stack will be created)")}
             name:                      example
+            type:                      standard
             status:                    ${cyan("PENDING")}
             last change:               -
             account id:                123456789012
@@ -129,6 +131,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
       
         ${yellow("~ /hello.yml/eu-north-1:       (stack will be updated)")}
             name:                      hello
+            type:                      standard
             status:                    ${green("CREATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime,
@@ -172,6 +175,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
       
         ${orange("± /rds.yml/eu-west-1:          (stack will be replaced)")}
             name:                      rds
+            type:                      standard
             status:                    ${red("CREATE_FAILED")}
             last change:               ${formatTimestamp(
               creationTime,
@@ -256,6 +260,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
       
         ${yellow("~ /hello.yml/eu-north-1:       (stack will be updated)")}
             name:                      hello
+            type:                      standard
             status:                    ${green("CREATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime,
@@ -270,6 +275,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
 
         ${yellow("~ /hello3.yml/eu-central-1:    (stack will be updated)")}
             name:                      hello3
+            type:                      standard
             status:                    ${green("CREATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime,
@@ -284,6 +290,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
 
         ${yellow("~ /hello2.yml/eu-central-1:    (stack will be updated)")}
             name:                      hello2
+            type:                      standard
             status:                    ${green("CREATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime,
@@ -299,6 +306,7 @@ describe("DeployStacksIO#confirmDeploy", () => {
 
         ${yellow("~ /hello4.yml/eu-central-1:    (stack will be updated)")}
             name:                      hello4
+            type:                      standard
             status:                    ${green("CREATE_COMPLETE")}
             last change:               ${formatTimestamp(
               creationTime,

@@ -58,9 +58,9 @@ describe("DeployStacksIO#printOutput", () => {
 
     const expected = dedent`
 
-    Path               Name  Status   Time  Message
-    -----------------  ----  -------  ----  -------
-    /a.yml/eu-north-1  a     ${green("SUCCESS")}  1ms   Success
+    Path               Name  Type      Status   Time  Message
+    -----------------  ----  --------  -------  ----  -------
+    /a.yml/eu-north-1  a     standard  ${green("SUCCESS")}  1ms   Success
 
     
     `
@@ -84,10 +84,10 @@ describe("DeployStacksIO#printOutput", () => {
 
     const expected = dedent`
 
-    Path                 Name  Status   Time  Message
-    -------------------  ----  -------  ----  -------
-    /b.yml/eu-central-1  b     ${green("SUCCESS")}  1ms   Success
-    /a.yml/eu-north-1    a     ${green("SUCCESS")}  1ms   Success
+    Path                 Name  Type      Status   Time  Message
+    -------------------  ----  --------  -------  ----  -------
+    /b.yml/eu-central-1  b     standard  ${green("SUCCESS")}  1ms   Success
+    /a.yml/eu-north-1    a     standard  ${green("SUCCESS")}  1ms   Success
 
     
     `

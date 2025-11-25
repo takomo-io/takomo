@@ -10,6 +10,7 @@ import { CommandPath } from "../../command-model.js"
 export interface StackInfo {
   readonly path: StackPath
   readonly name: StackName
+  readonly type: "custom" | "standard"
   readonly status?: StackStatus
   readonly createdTime?: Date
   readonly updatedTime?: Date

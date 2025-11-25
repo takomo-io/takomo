@@ -12,6 +12,7 @@ import {
 } from "../../../../src/command/stacks/undeploy/plan.js"
 import { InternalStack, StackPath } from "../../../../src/stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../../../src/takomo-stacks-model/constants.js"
+import { StacksContext } from "../../../../src/context/stacks-context.js"
 
 interface CreateStackProps {
   readonly name: StackName
@@ -81,9 +82,12 @@ const assertPlan = (
   expect(actualOperations).toStrictEqual(expectedOperations)
 }
 
+const ctx = mock<StacksContext>()
+
 describe("#buildStacksUndeployPlan", () => {
   test("empty plan", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [],
       ROOT_STACK_GROUP_PATH,
       false,
@@ -94,6 +98,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("single non-existing stack", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [stack({ name: "a", path: "/a.yml/eu-north-1", region: "eu-north-1" })],
       ROOT_STACK_GROUP_PATH,
       false,
@@ -104,6 +109,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("single existing stack", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -121,6 +127,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("two existing stacks", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -148,6 +155,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("two existing stacks with dependents", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -176,6 +184,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("an obsolete stack that depends on another stack", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",
@@ -201,6 +210,7 @@ describe("#buildStacksUndeployPlan", () => {
 
   test("two obsolete stacks with dependents", async () => {
     const plan = await buildStacksUndeployPlan(
+      ctx,
       [
         stack({
           name: "a",

@@ -1,11 +1,14 @@
-import { StackConfig } from "../../config/stack-config.js"
+import { CustomStackConfig } from "../../config/custom-stack-config.js"
 import { StackGroupConfig } from "../../config/stack-group-config.js"
+import { StandardStackConfig } from "../../config/standard-stack-config.js"
 import { StackGroupName, StackGroupPath } from "../../stacks/stack-group.js"
 import { StackPath } from "../../stacks/stack.js"
 
 export interface StackConfigNode {
   readonly path: StackPath
-  readonly getConfig: (variables: any) => Promise<StackConfig>
+  readonly getConfig: (
+    variables: any,
+  ) => Promise<StandardStackConfig | CustomStackConfig>
 }
 
 export interface StackGroupConfigNode {

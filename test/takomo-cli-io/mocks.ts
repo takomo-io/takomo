@@ -5,7 +5,8 @@ import {
   StackName,
 } from "../../src/aws/cloudformation/model.js"
 import { Region } from "../../src/aws/common/model.js"
-import { InternalStack, StackPath } from "../../src/stacks/stack.js"
+import { StackPath } from "../../src/stacks/stack.js"
+import { InternalStandardStack } from "../../src/stacks/standard-stack.js"
 
 export interface MockDetailedCloudFormationStackProps {
   readonly enableTerminationProtection?: boolean
@@ -35,8 +36,8 @@ export const mockInternalStack = ({
   terminationProtection = false,
   dependents = [],
   dependencies = [],
-}: MockInternalStackProps): InternalStack => {
-  const stack = mockDeep<InternalStack>({
+}: MockInternalStackProps): InternalStandardStack => {
+  const stack = mockDeep<InternalStandardStack>({
     name,
     path,
     region,

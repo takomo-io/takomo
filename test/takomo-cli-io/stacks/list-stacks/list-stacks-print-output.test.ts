@@ -28,6 +28,7 @@ describe("ListStacksIO#printOutput", () => {
           status: "CREATE_COMPLETE",
           createdTime: now,
           updatedTime: now,
+          type: "standard",
         },
       ],
       message: "Success",
@@ -39,9 +40,9 @@ describe("ListStacksIO#printOutput", () => {
 
     const expected = dedent`
     
-    Path                   Name    Status           Created                    Updated                  
-    ---------------------  ------  ---------------  -------------------------  -------------------------
-    /stackA.yml/eu-west-1  stackA  ${green("CREATE_COMPLETE")}  ${formatDate(
+    Path                   Name    Type      Status           Created                    Updated                  
+    ---------------------  ------  --------  ---------------  -------------------------  -------------------------
+    /stackA.yml/eu-west-1  stackA  standard  ${green("CREATE_COMPLETE")}  ${formatDate(
       now,
     )}  ${formatDate(now)}
     

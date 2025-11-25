@@ -34,6 +34,7 @@ export interface StacksSchemas {
   templateBucket: ObjectSchema
   schemas: ObjectSchema
   blueprintPath: StringSchema
+  customStackType: StringSchema
 }
 
 export const createStacksSchemas = (
@@ -187,6 +188,7 @@ export const createStacksSchemas = (
   const ignore = Joi.boolean()
   const obsolete = Joi.boolean()
   const terminationProtection = Joi.boolean()
+  const customStackType = Joi.string()
 
   const stackPath = Joi.string()
     .max(100)
@@ -326,5 +328,6 @@ export const createStacksSchemas = (
     schemas,
     inheritTags,
     blueprintPath,
+    customStackType,
   }
 }

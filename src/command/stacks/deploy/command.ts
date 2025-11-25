@@ -41,6 +41,7 @@ const deployStacks = async (
     modifiedInput.commandPath,
     modifiedInput.ignoreDependencies,
     io,
+    ctx,
   )
 
   await validateStacksDeployPlan(plan)

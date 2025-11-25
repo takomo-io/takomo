@@ -24,6 +24,12 @@ Run unit tests from `test` dir:
 npm test
 ```
 
+Run single unit test from `test` dir:
+
+```
+npm run single-test <path to test, e.g. test/takomo-stacks-commands/stacks/deploy/build-stacks-deploy-plan.test.ts>
+```
+
 Audit dependencies:
 
 ```
@@ -64,6 +70,18 @@ RECYCLER_PASSWORD = <YOUR PASSWORD>
 
 Integration tests are located in `integration-test` dir. CI pipeline runs all integration tests but locally you should run only one test at a time using your IDE.
 
+Run single integration test:
+
+```
+npm run single-integration-test <path to integration test>
+```
+
+Example:
+
+```
+npm run single-integration-test integration-test/test/list-stacks.test.ts
+```
+
 ## Developing features
 
 Create a new feature branch from the latest release tag. Name your branch with `feat/` prefix.
@@ -89,6 +107,6 @@ See [release workflows](https://github.com/semantic-release/semantic-release/tre
 ### Branches
 
 - master (default distribution channel)
-  - When commits are pushed to the master branch, a new release is automatically made by semantic-release 
+  - When commits are pushed to the master branch, a new release is automatically made by semantic-release
 - alpha (pre-releases)
-  - When commits are pushed to the alpha branch, a new pre-release is automatically made by semantic-release 
+  - When commits are pushed to the alpha branch, a new pre-release is automatically made by semantic-release

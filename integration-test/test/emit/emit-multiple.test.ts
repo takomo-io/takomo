@@ -17,6 +17,8 @@ const projectDir = pathToConfigs("list-stacks"),
   vpcStackPath = "/vpc1.yml/eu-west-1",
   sgStackName = "security-groups1",
   sgStackPath = "/security-groups1.yml/eu-west-1",
+  customStackName = "my-custom",
+  customStackPath = "/my-custom.yml/eu-west-1",
   outDir = path.join(os.tmpdir(), `takomo-${Date.now()}`)
 
 beforeAll(async () => {
@@ -45,6 +47,10 @@ describe("Emit with multiple stacks", () => {
           stackName: sgStackName,
           stackPath: sgStackPath,
           templateBody: await readFileContents(pathToSgTemplate),
+        })
+        .expectNoStackTemplate({
+          stackName: customStackName,
+          stackPath: customStackPath,
         })
         .assert()
 

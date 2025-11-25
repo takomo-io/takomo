@@ -21,6 +21,7 @@ export interface Resolver {
    * @param input Resolver input
    * @returns Resolved parameter value
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly resolve: (input: ResolverInput) => Promise<any>
 
   /**

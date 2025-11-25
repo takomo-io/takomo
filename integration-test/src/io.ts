@@ -1,6 +1,7 @@
 import { anyArray, anyBoolean, mock } from "jest-mock-extended"
 import { CommandPath } from "../../src/command/command-model.js"
 import {
+  ConfirmCustomStackDeployAnswer,
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,

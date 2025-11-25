@@ -1,6 +1,5 @@
 import { InternalStack } from "../../../src/stacks/stack.js"
 import { sortStacksForDeploy } from "../../../src/takomo-stacks-context/dependencies.js"
-import { getStackPaths } from "../../../src/takomo-stacks-model/util.js"
 import { createStack } from "../helpers.js"
 
 describe("#sortStacksForDeploy", () => {
@@ -846,8 +845,8 @@ describe("#sortStacksForDeploy", () => {
       allStacks,
     )
 
-    const sorted = getStackPaths(sortStacksForDeploy(allStacks))
-    const expected = getStackPaths([
+    const sorted = sortStacksForDeploy(allStacks).map((s) => s.path)
+    const expected = [
       e_eu_north_1_a_2_eu_north_1,
       e_eu_north_1_a_3_eu_north_1,
       e_eu_north_1_a_4_eu_north_1,
@@ -891,7 +890,7 @@ describe("#sortStacksForDeploy", () => {
       e_eu_west_1_a_22_eu_west_1,
       e_eu_west_1_a_12_eu_west_1,
       e_eu_west_1_a_23_eu_west_1,
-    ])
+    ].map((s) => s.path)
 
     expect(sorted).toStrictEqual(expected)
   })

@@ -1,4 +1,4 @@
-import { buildStackPolicyDuringUpdate } from "../../../src/takomo-stacks-context/config/build-stack.js"
+import { buildStackPolicyDuringUpdate } from "../../../src/takomo-stacks-context/config/build-standard-stack.js"
 import { createStackConfig, createStackGroup } from "../helpers.js"
 
 describe("#buildStackPolicyDuringUpdate", () => {

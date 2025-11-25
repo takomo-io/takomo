@@ -1,0 +1,10 @@
+regions: eu-central-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_2_ID }}:role/OrganizationAccountAccessRole
+customType: cmd
+customConfig:
+  getCurrentStateCommand: cat {{ var.cCurrentState }}-state.json
+  getChangesCommand: cat changes.json
+  createCommand: cat {{ var.cCommandState }}-state.json
+  updateCommand: cat {{ var.cCommandState }}-state.json
+  deleteCommand: echo ok
+depends: /b.yml

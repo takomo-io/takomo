@@ -3,7 +3,7 @@ import {
   DetailedCloudFormationStack,
   StackPolicyBody,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStack } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { bold, green } from "../../../utils/colors.js"
 import { prettyPrintJson } from "../../../utils/json.js"
 import { diffStrings } from "../../../utils/strings.js"
@@ -49,7 +49,7 @@ export const resolvePolicyOperation = (
 
 export const printStackPolicy = (
   io: BaseIO,
-  stack: InternalStack,
+  stack: InternalStandardStack,
   existingStack?: DetailedCloudFormationStack,
 ): void => {
   const type = resolvePolicyOperation(
