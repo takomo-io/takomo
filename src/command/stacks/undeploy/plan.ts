@@ -33,11 +33,13 @@ export const resolveUndeployCustomStackOperationType = (
   currentState: CustomStackState,
 ): StackUndeployOperationType => {
   switch (currentState.status) {
-    case "CREATE_COMPLETED":
-    case "UPDATE_COMPLETED":
+    case "CREATE_COMPLETE":
+    case "UPDATE_COMPLETE":
       return "DELETE"
     case "PENDING":
       return "SKIP"
+    default:
+      return exhaustiveCheck(currentState.status)
   }
 }
 

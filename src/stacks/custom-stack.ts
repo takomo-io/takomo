@@ -10,8 +10,8 @@ import {
 
 export type CustomStackStatus =
   | "PENDING"
-  | "CREATE_COMPLETED"
-  | "UPDATE_COMPLETED"
+  | "CREATE_COMPLETE"
+  | "UPDATE_COMPLETE"
 
 export interface CustomStackProps extends StackProps {
   customType: CustomStackType

@@ -46,8 +46,8 @@ export const formatResourceStatus = (status: ResourceStatus): string => {
 
 export const formatCustomStackStatus = (status: CustomStackStatus): string => {
   switch (status) {
-    case "CREATE_COMPLETED":
-    case "UPDATE_COMPLETED":
+    case "CREATE_COMPLETE":
+    case "UPDATE_COMPLETE":
       return green(status)
     case "PENDING":
       return cyan(status)

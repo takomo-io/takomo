@@ -1,0 +1,32 @@
+regions: eu-north-1
+name: app-stack
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+customType: testing-custom-stack
+customConfig:
+  stackTemplate: |
+    Parameters:
+      Name:
+        Type: String
+      ExampleParam:
+        Type: String  
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+          LogGroupName: !Sub "${Name}-app"
+    Outputs:
+      NameOutput:
+        Description: Log group name
+        Value: !Ref Name
+      ExampleOutput:
+        Description: Log group name
+        Value: !Ref ExampleParam
+parameters:
+  Name:
+    resolver: stack-output
+    stack: /logs.yml
+    output: LogGroupNameOutput
+  ExampleParam: example-value
+tags:
+  Project: Takomo
+  Purpose: IntegrationTest
