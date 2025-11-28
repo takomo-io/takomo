@@ -52,17 +52,17 @@ const parseCustomStackConfig = async (
   stackPath: StackPath,
   logger: TkmLogger,
   handler: CustomStackHandler<any, any>,
-  config: unknown,
+  rawConfig: unknown,
 ): Promise<ParseCustomStackConfigResult> => {
   try {
     const result = await handler.parseConfig({
-      config,
+      rawConfig,
       logger,
       stackPath,
     })
 
     if (result.success) {
-      return { customConfig: result.config }
+      return { customConfig: result.parsedConfig }
     }
 
     const { message, error } = result

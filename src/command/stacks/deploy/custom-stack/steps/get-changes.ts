@@ -25,12 +25,12 @@ export const getChanges: StackOperationStep<TagsHolder> = async (state) => {
     tags,
     ctx,
     stack,
-    currentStatus,
+    currentState,
   } = state
 
   const result = await customStackHandler.getChanges({
     config: stack.customConfig,
-    state: currentStatus,
+    currentState,
     logger,
     parameters,
     tags,

@@ -37,20 +37,20 @@ const convertToCustomStackState = (stack?: Stack): CustomStackState => {
 
   const outputs = arrayToRecord(
     stack.Outputs ?? [],
-    (output) => output.OutputKey ?? "",
-    (output) => output.OutputValue ?? "",
+    (output) => output.OutputKey!,
+    (output) => output.OutputValue!,
   )
 
   const tags = arrayToRecord(
     stack.Tags ?? [],
-    (tag) => tag.Key ?? "",
-    (tag) => tag.Value ?? "",
+    (tag) => tag.Key!,
+    (tag) => tag.Value!,
   )
 
   const parameters = arrayToRecord(
     stack.Parameters ?? [],
-    (param) => param.ParameterKey ?? "",
-    (param) => param.ParameterValue ?? "",
+    (param) => param.ParameterKey!,
+    (param) => param.ParameterValue!,
   )
 
   return { status: "CREATE_COMPLETE", outputs, tags, parameters }
@@ -100,20 +100,20 @@ export const testingCustomStackHandler: CustomStackHandler<
     })
 
     try {
-      const state = await describeStack(client, stack.name)
+      const currentState = await describeStack(client, stack.name)
 
-      if (state) {
+      if (currentState) {
         return {
-          state,
+          currentState,
           success: true,
         }
       }
-      return { state: { status: "PENDING" }, success: true }
+      return { currentState: { status: "PENDING" }, success: true }
     } catch (e) {
       const error = e as any
       if (error.Code === "ValidationError") {
         if (error.message === `Stack with id ${stack.name} does not exist`) {
-          return { state: { status: "PENDING" }, success: true }
+          return { currentState: { status: "PENDING" }, success: true }
         }
       }
 
@@ -154,11 +154,11 @@ export const testingCustomStackHandler: CustomStackHandler<
     }
   },
   parseConfig: async ({
-    config,
+    rawConfig,
   }: ParseConfigProps): Promise<
     ParseConfigResult<TestingCustomStackHandlerConfig>
   > => {
-    const configObj = config as Record<string, unknown>
+    const configObj = rawConfig as Record<string, unknown>
 
     if (configObj.stackTemplate === undefined) {
       return {
@@ -176,7 +176,7 @@ export const testingCustomStackHandler: CustomStackHandler<
 
     return {
       success: true,
-      config: configObj as TestingCustomStackHandlerConfig,
+      parsedConfig: configObj as TestingCustomStackHandlerConfig,
     }
   },
   create: async ({
@@ -213,11 +213,11 @@ export const testingCustomStackHandler: CustomStackHandler<
         { StackName: stack.name },
       )
 
-      const state = await describeStack(client, stack.name)
+      const createdState = await describeStack(client, stack.name)
 
-      if (state) {
+      if (createdState) {
         return {
-          state,
+          createdState,
           success: true,
         }
       }
@@ -263,11 +263,11 @@ export const testingCustomStackHandler: CustomStackHandler<
         { StackName: stack.name },
       )
 
-      const state = await describeStack(client, stack.name)
+      const updatedState = await describeStack(client, stack.name)
 
-      if (state) {
+      if (updatedState) {
         return {
-          state,
+          updatedState,
           success: true,
         }
       }

@@ -34,9 +34,7 @@ export const deployStack = async (
   ctx: InternalStacksContext,
   io: DeployStacksIO,
   state: DeployState,
-  // stack: InternalStack,
   dependencies: Promise<StackResult>[],
-  // operationType: StackOperationType,
   configRepository: StacksConfigRepository,
   stacksOperationListener: StacksOperationListener,
   expectNoChanges: boolean,
@@ -44,7 +42,6 @@ export const deployStack = async (
   skipHooks: boolean,
   skipParameters: boolean,
   outDir?: string,
-  // currentStack?: CloudFormationStackSummary,
 ): Promise<StackResult> => {
   const logger = io.childLogger(operation.stack.path)
 
@@ -109,7 +106,7 @@ export const deployStack = async (
       dependencies,
       operationType: type,
       state,
-      currentStatus: currentState,
+      currentState,
       ctx,
       emit,
       expectNoChanges,

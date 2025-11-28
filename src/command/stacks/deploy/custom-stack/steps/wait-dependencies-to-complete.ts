@@ -16,7 +16,7 @@ const hasSomeDependencySkipped = (
 export const waitDependenciesToComplete: StackOperationStep<
   InitialDeployCustomStackState
 > = async (state) => {
-  const { logger, dependencies, transitions, currentStatus } = state
+  const { logger, dependencies, transitions } = state
 
   logger.debug(`Wait ${dependencies.length} dependencies to complete`)
   const dependencyResults = await Promise.all(dependencies)
@@ -39,8 +39,5 @@ export const waitDependenciesToComplete: StackOperationStep<
     })
   }
 
-  return transitions.prepareParameters({
-    ...state,
-    currentStatus,
-  })
+  return transitions.prepareParameters(state)
 }

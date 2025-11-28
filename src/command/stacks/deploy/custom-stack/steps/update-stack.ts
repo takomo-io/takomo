@@ -8,7 +8,7 @@ export const updateStack: StackOperationStep<ChangesHolder> = async (state) => {
     transitions,
     parameters,
     tags,
-    currentStatus,
+    currentState,
     customStackHandler,
     ctx,
   } = state
@@ -17,7 +17,7 @@ export const updateStack: StackOperationStep<ChangesHolder> = async (state) => {
 
   try {
     const result = await customStackHandler.update({
-      state: currentStatus,
+      currentState,
       config: stack.customConfig,
       logger,
       parameters,

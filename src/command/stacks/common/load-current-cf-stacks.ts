@@ -114,7 +114,7 @@ export const getCustomStackState = async (
     })
 
     if (result.success) {
-      return result.state
+      return result.currentState ?? { status: "PENDING" }
     }
 
     const { message, error } = result

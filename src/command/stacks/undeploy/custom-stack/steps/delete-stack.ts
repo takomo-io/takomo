@@ -12,7 +12,7 @@ export const deleteStack: StackOperationStep<
       stack,
       config: stack.customConfig,
       logger: state.logger,
-      state: currentState,
+      currentState,
     })
 
     if (result.success) {

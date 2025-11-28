@@ -9,7 +9,7 @@ export const reviewDeployment: StackOperationStep<ChangesHolder> = async (
     transitions,
     io,
     operationType,
-    currentStatus,
+    currentState,
     tags,
     parameters,
     state: deployState,
@@ -19,7 +19,7 @@ export const reviewDeployment: StackOperationStep<ChangesHolder> = async (
   const answer = await io.confirmCustomStackDeploy(
     stack,
     operationType,
-    currentStatus,
+    currentState,
     tags,
     parameters,
     changes,

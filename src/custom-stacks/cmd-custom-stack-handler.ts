@@ -181,7 +181,7 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
     type: "cmd",
 
     parseConfig: async (props) => {
-      const { config, stackPath } = props
+      const { rawConfig: config, stackPath } = props
       const { error } = schema.validate(config, {
         abortEarly: false,
         convert: false,
@@ -201,7 +201,7 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
 
       return {
         success: true,
-        config: config as CmdCustomStackHandlerConfig,
+        parsedConfig: config as CmdCustomStackHandlerConfig,
       }
     },
 
@@ -216,7 +216,7 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
         try {
           return {
             success: true,
-            state: JSON.parse(output) as CmdCustomStackHandlerState,
+            currentState: JSON.parse(output) as CmdCustomStackHandlerState,
           }
         } catch (e) {
           const error = e as Error
@@ -305,7 +305,7 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
         try {
           return {
             success: true,
-            state: JSON.parse(output) as CmdCustomStackHandlerState,
+            createdState: JSON.parse(output) as CmdCustomStackHandlerState,
           }
         } catch (e) {
           const error = e as Error
@@ -346,7 +346,7 @@ export const createCmdCustomStackHandler = (): CustomStackHandler<
         try {
           return {
             success: true,
-            state: JSON.parse(output) as CmdCustomStackHandlerState,
+            updatedState: JSON.parse(output) as CmdCustomStackHandlerState,
           }
         } catch (e) {
           const error = e as Error

@@ -27,7 +27,7 @@ export interface InitialDeployCustomStackState
   readonly ctx: InternalStacksContext
   readonly variables: StackOperationVariables
   readonly logger: TkmLogger
-  readonly currentStatus: CustomStackState
+  readonly currentState: CustomStackState
   readonly dependencies: ReadonlyArray<Promise<StackResult>>
   readonly operationType: StackOperationType
   readonly state: DeployState

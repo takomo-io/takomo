@@ -16,7 +16,7 @@ export type OutputValue = string
 export type Outputs = Record<OutputName, OutputValue>
 
 /**
- * Represents the state of a custom stack. All properties are optional to allow
+ * Represents the state of a custom stack. All but the `status` property are optional to allow
  * flexibility for different custom stack implementations.
  */
 export type CustomStackState = {
@@ -68,6 +68,8 @@ export type GetCurrentStateProps<CONFIG> = {
 
   /**
    * The custom stack for which the current state is being retrieved.
+   *
+   * Stack provides access for stack path, name, region, and AWS credentials.
    */
   readonly stack: CustomStack
 
@@ -80,13 +82,15 @@ export type GetCurrentStateProps<CONFIG> = {
 /**
  * Represents a successful result of getting the current state of a custom stack.
  */
-export type SuccessfulGetCurrentStateResult<CONFIG> = {
+export type SuccessfulGetCurrentStateResult<STATE extends CustomStackState> = {
   readonly success: true
 
   /**
-   * The current state of the custom stack.
+   * The current state of the custom stack. This property is optional to allow
+   * flexibility for different custom stack implementations. An undefined value
+   * indicates that the stack does not exist.
    */
-  readonly state: CONFIG
+  readonly currentState?: STATE
 }
 
 /**
@@ -139,6 +143,8 @@ export type CreateCustomStackProps<CONFIG> = {
 
   /**
    * The custom stack to be created.
+   *
+   * Stack provides access for stack path, name, region, and AWS credentials.
    */
   readonly stack: CustomStack
 
@@ -158,7 +164,7 @@ export type SuccessfulCreateCustomStackResult<STATE extends CustomStackState> =
     /**
      * The state of the custom stack after creation.
      */
-    readonly state: STATE
+    readonly createdState: STATE
   }
 
 /**
@@ -197,7 +203,7 @@ export type UpdateCustomStackProps<CONFIG, STATE extends CustomStackState> = {
   /**
    * The current state of the custom stack.
    */
-  readonly state: STATE
+  readonly currentState: STATE
 
   /**
    * The configuration object for the custom stack.
@@ -216,6 +222,8 @@ export type UpdateCustomStackProps<CONFIG, STATE extends CustomStackState> = {
 
   /**
    * The custom stack to be updated.
+   *
+   * Stack provides access for stack path, name, region, and AWS credentials.
    */
   readonly stack: CustomStack
 
@@ -225,24 +233,36 @@ export type UpdateCustomStackProps<CONFIG, STATE extends CustomStackState> = {
   readonly ctx: StacksContext
 }
 
+/**
+ * Represents a successful result of updating a custom stack.
+ *
+ * Contains the updated state of the custom stack after the operation completes successfully.
+ */
 export type SuccessfulUpdateCustomStackResult<STATE extends CustomStackState> =
   {
     readonly success: true
     /**
-     * The updated state of the custom stack.
+     * The updated state of the custom stack after the update operation.
+     * This reflects the new state of the stack with all changes applied.
      */
-    readonly state: STATE
+    readonly updatedState: STATE
   }
 
+/**
+ * Represents a failed result of updating a custom stack.
+ *
+ * Provides information about why the update operation failed, including
+ * optional error details and descriptive messages for troubleshooting.
+ */
 export type FailedUpdateCustomStackResult = {
   readonly success: false
   /**
-   * An optional error object if the operation failed.
+   * An optional error object containing detailed information about the failure.
    */
   readonly error?: Error
 
   /**
-   * An optional message providing additional information about the operation result.
+   * An optional human-readable message providing additional context about the failure.
    */
   readonly message?: string
 }
@@ -266,7 +286,7 @@ export type ParseConfigProps = {
   /**
    * The raw configuration object to be parsed.
    */
-  readonly config: unknown
+  readonly rawConfig: unknown
 
   /**
    * The stack path of the custom stack.
@@ -276,25 +296,37 @@ export type ParseConfigProps = {
 
 /**
  * Represents a successful result of parsing a custom stack configuration.
+ *
+ * Contains the validated and parsed configuration object that can be safely
+ * used in subsequent custom stack operations such as create, update and delete.
  */
 export type SuccessfulParseConfigResult<CONFIG> = {
   readonly success: true
-  readonly config: CONFIG
+  /**
+   * The successfully parsed and validated configuration object.
+   * This configuration will be used for all subsequent stack operations.
+   */
+  readonly parsedConfig: CONFIG
 }
 
 /**
  * Represents a failed result of parsing a custom stack configuration.
+ *
+ * Provides detailed information about validation or parsing failures,
+ * helping users understand what went wrong with their configuration.
  */
 export type FailedParseConfigResult = {
   readonly success: false
 
   /**
-   * An optional error object if the parsing failed.
+   * An optional error object containing detailed information about the parsing failure.
+   * This may include validation errors, schema mismatches, or other configuration issues.
    */
   readonly error?: Error
 
   /**
-   * An optional message providing additional information about the parsing result.
+   * An optional human-readable message describing why the configuration parsing failed.
+   * This should provide actionable information to help users fix their configuration.
    */
   readonly message?: string
 }
@@ -318,7 +350,7 @@ export type DeleteCustomStackProps<CONFIG, STATE extends CustomStackState> = {
   /**
    * The current state of the custom stack.
    */
-  readonly state: STATE
+  readonly currentState: STATE
 
   /**
    * The configuration object for the custom stack.
@@ -327,6 +359,8 @@ export type DeleteCustomStackProps<CONFIG, STATE extends CustomStackState> = {
 
   /**
    * The custom stack to be deleted.
+   *
+   * Stack provides access for stack path, name, region, and AWS credentials.
    */
   readonly stack: CustomStack
 
@@ -338,6 +372,9 @@ export type DeleteCustomStackProps<CONFIG, STATE extends CustomStackState> = {
 
 /**
  * Represents a successful result of deleting a custom stack.
+ *
+ * Indicates that the custom stack has been successfully removed and
+ * all associated resources have been cleaned up properly.
  */
 export type SuccessFullDeleteCustomStackResult = {
   readonly success: true
@@ -345,15 +382,19 @@ export type SuccessFullDeleteCustomStackResult = {
 
 /**
  * Represents a failed result of deleting a custom stack.
+ *
+ * Provides information about why the deletion operation failed,
+ * which can help with troubleshooting and retry strategies.
  */
 export type FailedDeleteCustomStackResult = {
   readonly success: false
   /**
-   * An optional message providing additional information about the operation result.
+   * An optional human-readable message describing why the deletion failed.
+   * This can provide context about partial deletions, dependency issues, or other problems.
    */
   readonly message?: string
   /**
-   * An optional error object if the operation failed.
+   * An optional error object containing detailed information about the deletion failure.
    */
   readonly error?: Error
 }
@@ -377,7 +418,7 @@ export type GetChangesProps<CONFIG, STATE extends CustomStackState> = {
   /**
    * The current state of the custom stack.
    */
-  readonly state: STATE
+  readonly currentState: STATE
 
   /**
    * The configuration object for the custom stack.
@@ -396,6 +437,8 @@ export type GetChangesProps<CONFIG, STATE extends CustomStackState> = {
 
   /**
    * The custom stack to be updated.
+   *
+   * Stack provides access for stack path, name, region, and AWS credentials.
    */
   readonly stack: CustomStack
 
@@ -406,35 +449,53 @@ export type GetChangesProps<CONFIG, STATE extends CustomStackState> = {
 }
 
 /**
- * Represents a change in a custom stack.
+ * Represents a change detected in a custom stack.
+ *
+ * This type is used to describe individual modifications that would be made
+ * to a custom stack during an update operation. The description should be
+ * human-readable and provide enough detail for users to understand the impact.
  */
 export type CustomStackChange = {
+  /**
+   * A human-readable description of the change.
+   * This should clearly explain what will be modified, added, or removed
+   * in a way that helps users understand the impact of the change.
+   */
   readonly description: string
 }
 
 /**
- * Represents a successful result of getting changes of a custom stack.
+ * Represents a successful result of detecting changes in a custom stack.
+ *
+ * Contains an optional list of changes that would be applied to the stack.
+ * An empty or undefined changes array indicates no modifications are needed.
  */
 export type SuccessfulGetChangesResult = {
   success: true
 
   /**
-   * The list of changes detected in the custom stack.
+   * An optional list of changes that would be applied to the custom stack.
+   * If undefined or empty, it indicates that no changes are required.
+   * Each change describes a specific modification that would be made.
    */
   changes?: ReadonlyArray<CustomStackChange>
 }
 
 /**
- * Represents a failed result of getting changes of a custom stack.
+ * Represents a failed result of detecting changes in a custom stack.
+ *
+ * Indicates that the change detection process encountered an error
+ * and could not determine what modifications would be required.
  */
 export type FailedGetChangesResult = {
   success: false
   /**
-   * An optional message providing additional information about the operation result.
+   * An optional human-readable message describing why change detection failed.
+   * This can help users understand what went wrong and how to resolve the issue.
    */
   message?: string
   /**
-   * An optional error object if the operation failed.
+   * An optional error object containing detailed information about the failure.
    */
   error?: Error
 }
@@ -447,56 +508,133 @@ export type GetChangesResult =
   | FailedGetChangesResult
 
 /**
- * Interface defining the contract for handling custom stack operations.
+ * Interface for handling custom stack operations in Takomo.
+ *
+ * A custom stack handler provides the core functionality for managing custom stacks
+ * throughout their lifecycle, including creation, updates, deletion, and state management.
+ * Custom stack handlers enable extending Takomo's capabilities beyond standard CloudFormation
+ * stacks to support other infrastructure provisioning tools or custom deployment logic.
+ *
+ * @template CONFIG - The configuration type for this custom stack handler
+ * @template STATE - The state type that extends CustomStackState, representing the current state of the stack
  */
 export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
   /**
-   * The type of the custom stack this handler manages.
+   * The type identifier for this custom stack handler.
+   *
+   * This unique identifier is used to match custom stack configurations
+   * with their corresponding handler implementation. It should be a
+   * descriptive string that clearly identifies the type of infrastructure
+   * or deployment tool this handler manages.
    */
   readonly type: CustomStackType
 
   /**
-   * Gets the current state of the custom stack.
+   * Retrieves the current state of the custom stack from the target environment.
    *
-   * During deploy operation, the existence of the stack determines whether to create
-   * or update the stack. During undeploy operation, the existence of the stack determines
-   * whether to attempt deletion or skip it.
+   * This method is crucial for determining the stack's lifecycle operations:
+   * - During deployment: determines whether to create a new stack or update an existing one
+   * - During undeployment: determines whether a stack exists and needs to be deleted
+   *
+   * The implementation should query the actual infrastructure to determine the
+   * real state, not just return cached or assumed values.
+   *
+   * @param props - Configuration and context needed to query the stack state
+   * @returns A promise resolving to the current state or an error result
    */
   readonly getCurrentState: (
     props: GetCurrentStateProps<CONFIG>,
   ) => Promise<GetCurrentStateResult<STATE>>
 
   /**
-   * Gets the changes between the current state and the desired state of the custom stack.
-   * Invoked during deploy of an existing stack to determine whether there would be any changes in the stack.
+   * Analyzes and returns the changes that would be applied to bring the stack
+   * from its current state to the desired state defined by the configuration.
+   *
+   * This method is invoked during deployment of existing stacks to:
+   * - Show users what changes will be made before applying them
+   * - Determine if any changes are actually required
+   * - Enable dry-run functionality for planning purposes
+   *
+   * The implementation should compare the current stack state with the desired
+   * configuration and return a detailed list of changes that would be applied.
+   * The format and granularity of changes is up to the implementation.
+   *
+   * @param props - Current state, desired configuration, and context for comparison
+   * @returns A promise resolving to the detected changes or an error result
    */
   readonly getChanges: (
     props: GetChangesProps<CONFIG, STATE>,
   ) => Promise<GetChangesResult>
 
   /**
-   * Parses the custom stack configuration.
+   * Validates and parses the raw configuration for this custom stack type.
+   *
+   * This method is responsible for:
+   * - Validating the configuration against the expected schema
+   * - Converting raw configuration data into a typed configuration object
+   * - Providing meaningful error messages for invalid configurations
+   * - Applying default values where appropriate
+   *
+   * The parsed configuration object will be passed to all subsequent operations,
+   * such as create, update, and delete.
+   *
+   * @param props - Raw configuration data and parsing context
+   * @returns A promise resolving to the parsed configuration or validation errors
    */
   readonly parseConfig: (
     props: ParseConfigProps,
   ) => Promise<ParseConfigResult<CONFIG>>
 
   /**
-   * Creates a new custom stack.
+   * Creates a new instance of the custom stack in the target environment.
+   *
+   * This method should:
+   * - Provision all necessary infrastructure resources
+   * - Apply the specified parameters and tags
+   * - Return the final state of the created stack
+   *
+   * The implementation should ensure idempotency where possible and provide
+   * detailed error information if the creation fails.
+   *
+   * @param props - Configuration, parameters, tags, and context for creation
+   * @returns A promise resolving to the created stack state or an error result
    */
   readonly create: (
     props: CreateCustomStackProps<CONFIG>,
   ) => Promise<CreateCustomStackResult<STATE>>
 
   /**
-   * Updates an existing custom stack.
+   * Updates an existing custom stack to match the desired configuration.
+   *
+   * This method should:
+   * - Apply configuration changes to the existing stack
+   * - Update parameters and tags as specified
+   * - Handle resource modifications, additions, and removals
+   * - Return the updated state of the stack
+   *
+   * The implementation should handle update conflicts gracefully and provide
+   * detailed information about what changes were actually applied.
+   *
+   * @param props - Current state, desired configuration, and context for update
+   * @returns A promise resolving to the updated stack state or an error result
    */
   readonly update: (
     props: UpdateCustomStackProps<CONFIG, STATE>,
   ) => Promise<UpdateCustomStackResult<STATE>>
 
   /**
-   * Deletes an existing custom stack.
+   * Removes the custom stack and all its associated resources from the target environment.
+   *
+   * This method should:
+   * - Clean up all resources created by the stack
+   * - Ensure complete removal without leaving orphaned resources
+   * - Handle cases where some resources have already been deleted
+   *
+   * The implementation should be as thorough as possible in cleanup while
+   * being resilient to partial failures and resource dependencies.
+   *
+   * @param props - Current state, configuration, and context for deletion
+   * @returns A promise resolving to success or detailed error information
    */
   readonly delete: (
     props: DeleteCustomStackProps<CONFIG, STATE>,
