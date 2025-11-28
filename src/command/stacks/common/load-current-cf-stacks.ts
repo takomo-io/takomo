@@ -75,7 +75,7 @@ const buildHashStackMap = <S extends InternalStack>(
 const loadCurrentStandardStacks = async (
   logger: TkmLogger,
   stacks: ReadonlyArray<InternalStandardStack>,
-): Promise<Map<StackPath, CloudFormationStackSummary>> => {
+): Promise<Map<StackPath, CloudFormationStackSummary | undefined>> => {
   logger.debug("Load current standard stacks")
 
   const stackHashPairs: ReadonlyArray<[string, InternalStandardStack]> =
@@ -88,15 +88,17 @@ const loadCurrentStandardStacks = async (
 
   const stackHashMap = buildHashStackMap(stackHashPairs)
 
-  const stackMap = new Map<StackPath, CloudFormationStackSummary>()
-  for (const stacksWithSameCredentials of stackHashMap.values()) {
-    const cfStacks = await loadCfStacks(stacksWithSameCredentials)
-    for (const [stackName, cfStack] of cfStacks) {
-      stackMap.set(stackName, cfStack)
-    }
-  }
+  const pairs = await Promise.all(
+    Array.from(stackHashMap.values()).map(async (stacksWithSameCredentials) => {
+      const cfStacks = await loadCfStacks(stacksWithSameCredentials)
+      return stacksWithSameCredentials.map((stack) => ({
+        stack,
+        current: cfStacks.get(stack.name),
+      }))
+    }),
+  )
 
-  return stackMap
+  return new Map(pairs.flat().map((p) => [p.stack.path, p.current] as const))
 }
 
 export const getCustomStackState = async (
