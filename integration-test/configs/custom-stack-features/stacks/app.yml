@@ -1,5 +1,6 @@
 regions: eu-north-1
 name: app-stack
+terminationProtection: {{ var.terminationProtection }}
 commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
 customType: testing-custom-stack
 customConfig:

@@ -3,6 +3,7 @@ import { StackStatus } from "../../../aws/cloudformation/model.js"
 import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context/common.js"
 import { TakomoError } from "../../../utils/errors.js"
 import {
+  isCustomStackUndeployOperation,
   isStandardStackUndeployOperation,
   StacksUndeployPlan,
   StackUndeployOperation,
@@ -57,6 +58,13 @@ const validateTerminationProtection = (
     if (isStandardStackUndeployOperation(operation)) {
       const { currentStack } = operation
       if (currentStack && currentStack.enableTerminationProtection) {
+        stacks.push(operation)
+      }
+    }
+
+    if (isCustomStackUndeployOperation(operation)) {
+      const { currentState, stack } = operation
+      if (currentState.status !== "PENDING" && stack.terminationProtection) {
         stacks.push(operation)
       }
     }
