@@ -38,6 +38,7 @@ export const createCustomStack = (
   props: CustomStackProps,
 ): InternalCustomStack => {
   const {
+    uuid,
     accountIds,
     commandRole,
     credentialManager,
@@ -63,6 +64,7 @@ export const createCustomStack = (
   } = props
 
   return {
+    uuid,
     customType,
     customConfig,
     customStackHandler,
