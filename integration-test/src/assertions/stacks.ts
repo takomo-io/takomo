@@ -30,6 +30,7 @@ import { StackPath } from "../../../src/stacks/stack.js"
 import { CommandStatus } from "../../../src/takomo-core/command.js"
 import { prettyPrintJson, toPrettyJson } from "../../../src/utils/json.js"
 import { aws } from "../aws-api.js"
+import { CustomStackStatus } from "../../../dist/stacks/custom-stack.js"
 
 export interface ExpectStackResultProps {
   readonly stackPath: StackPath
@@ -617,7 +618,7 @@ export const createStacksOperationOutputMatcher = (
 interface ExpectStackProps {
   readonly stackName: StackName
   readonly stackPath: StackPath
-  readonly status?: StackStatus
+  readonly status?: StackStatus | CustomStackStatus
 }
 
 export const createListStacksOutputMatcher = (

@@ -28,7 +28,9 @@ describe("Simple emit", () => {
   )
 
   test.only("Emit with cli", async () =>
-    executeWithCli(`node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir}`)
+    await executeWithCli(
+      `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir}`,
+    )
       .expectText("\n" + (await readFileContents(pathToTemplate)) + "\n")
       .assert())
 })

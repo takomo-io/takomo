@@ -37,8 +37,8 @@ describe("Simple", () => {
       })
       .assert())
 
-  test("Deploy with cli", () =>
-    executeWithCli(
+  test("Deploy with cli", async () =>
+    await executeWithCli(
       `node bin/tkm.mjs stacks deploy --quiet --output json -y -d ${projectDir}`,
     )
       .expectJson({
@@ -59,8 +59,8 @@ describe("Simple", () => {
       })
       .assert())
 
-  test("Undeploy with cli", () =>
-    executeWithCli(
+  test("Undeploy with cli", async () =>
+    await executeWithCli(
       `node bin/tkm.mjs stacks undeploy --quiet --output json -y -d ${projectDir}`,
     )
       .expectJson({

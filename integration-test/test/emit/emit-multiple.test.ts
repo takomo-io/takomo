@@ -67,7 +67,7 @@ describe("Emit with multiple stacks", () => {
   )
 
   test("Emit all stacks using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters`,
     )
       .expectText(
@@ -81,14 +81,14 @@ describe("Emit with multiple stacks", () => {
       .assert())
 
   test("Emit single stack using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters /vpc1.yml`,
     )
       .expectText("\n" + (await readFileContents(pathToVpcTemplate)) + "\n")
       .assert())
 
   test("Emit single stack with dependencies using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters /security-groups1.yml`,
     )
       .expectText(
@@ -102,7 +102,7 @@ describe("Emit with multiple stacks", () => {
       .assert())
 
   test("Emit single stack and ignore dependencies using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters --ignore-dependencies /security-groups1.yml`,
     )
       .expectText("\n" + (await readFileContents(pathToSgTemplate)) + "\n")

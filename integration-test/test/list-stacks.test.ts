@@ -24,7 +24,7 @@ describe("List stacks", () => {
       .expectStack({
         stackPath: "/my-custom.yml/eu-west-1",
         stackName: "my-custom",
-        status: "CREATE_COMPLETE",
+        status: "PENDING",
       })
       .assert())
 
@@ -39,7 +39,7 @@ describe("List stacks", () => {
           path: "/my-custom.yml/eu-west-1",
           name: "my-custom",
           type: "custom",
-          status: "CREATE_COMPLETE",
+          status: "PENDING",
         },
         {
           path: "/security-groups1.yml/eu-west-1",
@@ -100,7 +100,7 @@ describe("List stacks", () => {
       .expectStack({
         stackPath: "/my-custom.yml/eu-west-1",
         stackName: "my-custom",
-        status: "CREATE_COMPLETE",
+        status: "PENDING",
       })
 
       .assert())
@@ -116,7 +116,7 @@ describe("List stacks", () => {
           path: "/my-custom.yml/eu-west-1",
           name: "my-custom",
           type: "custom",
-          status: "CREATE_COMPLETE",
+          status: "PENDING",
         },
         {
           path: "/security-groups1.yml/eu-west-1",
