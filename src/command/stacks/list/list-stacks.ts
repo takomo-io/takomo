@@ -1,5 +1,4 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
-import { StackStatus } from "../../../aws/cloudformation/model.js"
 import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import {
@@ -8,6 +7,7 @@ import {
   loadCurrentStacks,
 } from "../common/load-current-cf-stacks.js"
 import { ListStacksInput, ListStacksOutput, StackInfo } from "./model.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 
 export const listStacks = async (
   ctx: InternalStacksContext,
@@ -32,9 +32,7 @@ export const listStacks = async (
         path: pair.stack.path,
         name: pair.stack.name,
         type: "custom",
-        status: (pair.currentState
-          ? "CREATE_COMPLETE"
-          : "PENDING") as StackStatus,
+        status: pair.currentState.status,
         createdTime: pair.currentState?.creationTime,
         updatedTime: pair.currentState?.lastUpdatedTime,
       }
@@ -51,7 +49,7 @@ export const listStacks = async (
       }
     }
 
-    throw new Error(`Unknown stack pair type`)
+    return exhaustiveCheck(pair)
   })
 
   return {

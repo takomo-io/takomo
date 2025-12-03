@@ -6,7 +6,7 @@ import {
 import { toPrettyJson } from "../../utils/json.js"
 import { formatYaml } from "../../utils/yaml.js"
 import { createBaseIO } from "../cli-io.js"
-import { formatStandardStackStatus } from "../formatters.js"
+import { formatStackInfoStatus } from "../formatters.js"
 import { formatDate, IOProps } from "./common.js"
 
 export const createListStacksIO = (props: IOProps): ListStacksIO => {
@@ -48,7 +48,7 @@ export const createListStacksIO = (props: IOProps): ListStacksIO => {
             .cell("Path", stack.path)
             .cell("Name", stack.name)
             .cell("Type", stack.type)
-            .cell("Status", formatStandardStackStatus(stack.status))
+            .cell("Status", formatStackInfoStatus(stack))
             .cell("Created", formatDate(stack.createdTime))
             .cell("Updated", formatDate(stack.updatedTime))
             .newRow()

@@ -17,6 +17,7 @@ import { formatCommandStatus } from "../formatters.js"
 import { IOProps } from "../stacks/common.js"
 import { createDeployStacksIO } from "../stacks/deploy-stacks/deploy-stacks-io.js"
 import { createUndeployStacksIO } from "../stacks/undeploy-stacks-io.js"
+import { isCustomStack } from "../../stacks/custom-stack.js"
 
 export interface Messages {
   confirmHeader: string
@@ -99,6 +100,10 @@ export const createDeploymentTargetsOperationIO = (
                     .cell("Command path", result.commandPath)
                     .cell("Stack path", stackResult.stack.path)
                     .cell("Stack name", stackResult.stack.name)
+                    .cell(
+                      "Stack type",
+                      isCustomStack(stackResult.stack) ? "custom" : "standard",
+                    )
                     .cell("Status", formatCommandStatus(stackResult.status))
                     .cell("Time", stackResult.timer.getFormattedTimeElapsed())
                     .cell("Message", stackResult.message)
@@ -112,6 +117,7 @@ export const createDeploymentTargetsOperationIO = (
                   .cell("Command path", result.commandPath)
                   .cell("Stack path", "-")
                   .cell("Stack name", "-")
+                  .cell("Stack type", "-")
                   .cell("Status", formatCommandStatus(result.status))
                   .cell("Time", result.result.timer.getFormattedTimeElapsed())
                   .cell("Message", result.result.message)

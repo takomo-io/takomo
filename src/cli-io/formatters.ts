@@ -4,6 +4,7 @@ import {
   StackEvent,
   StackStatus,
 } from "../aws/cloudformation/model.js"
+import { StackInfo } from "../command/stacks/list/model.js"
 import { CustomStackStatus } from "../stacks/custom-stack.js"
 import { CommandStatus } from "../takomo-core/command.js"
 import { cyan, green, grey, orange, red, yellow } from "../utils/colors.js"
@@ -91,6 +92,17 @@ export const formatStandardStackStatus = (status?: StackStatus): string => {
       return green(status)
     default:
       return status
+  }
+}
+
+export const formatStackInfoStatus = (info: StackInfo): string => {
+  switch (info.type) {
+    case "custom":
+      return formatCustomStackStatus(info.status)
+    case "standard":
+      return formatStandardStackStatus(info.status)
+    default:
+      return exhaustiveCheck(info)
   }
 }
 
