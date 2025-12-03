@@ -9,6 +9,7 @@ import {
 } from "./stack.js"
 
 export type CustomStackStatus =
+  | "UNKNOWN"
   | "PENDING"
   | "CREATE_COMPLETE"
   | "UPDATE_COMPLETE"

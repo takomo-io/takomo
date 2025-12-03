@@ -1,4 +1,7 @@
-import { CustomStackChange } from "../../../../../custom-stacks/custom-stack-handler.js"
+import {
+  CustomStackChange,
+  GetChangesResult,
+} from "../../../../../custom-stacks/custom-stack-handler.js"
 import { TakomoError } from "../../../../../utils/errors.js"
 import { indentLines } from "../../../../../utils/strings.js"
 import { StackOperationStep } from "../../../common/steps.js"
@@ -15,28 +18,50 @@ export class UnexpectedChangesInCustomStackError extends TakomoError {
   }
 }
 
-export const getChanges: StackOperationStep<TagsHolder> = async (state) => {
-  const {
-    transitions,
-    expectNoChanges,
-    customStackHandler,
-    logger,
-    parameters,
-    tags,
-    ctx,
-    stack,
-    currentState,
-  } = state
+const getChangesInternal = async ({
+  customStackHandler,
+  logger,
+  stack,
+  currentState,
+  ctx,
+  parameters,
+  tags,
+}: TagsHolder): Promise<GetChangesResult> => {
+  if (!customStackHandler.getChanges) {
+    logger.debug(
+      `Custom stack handler '${customStackHandler.type}' does not implement getChanges(), assuming changes are present`,
+    )
 
-  const result = await customStackHandler.getChanges({
-    config: stack.customConfig,
-    currentState,
-    logger,
-    parameters,
-    tags,
-    ctx,
-    stack,
-  })
+    return {
+      success: true,
+      changes: [{ description: "Changes present but no details available" }],
+    }
+  }
+
+  try {
+    return await customStackHandler.getChanges({
+      config: stack.customConfig,
+      currentState,
+      logger,
+      parameters,
+      tags,
+      ctx,
+      stack,
+    })
+  } catch (e) {
+    logger.error("Failed to get custom stack changes", e)
+    return {
+      success: false,
+      message: "Failed to get custom stack changes",
+      error: e as Error,
+    }
+  }
+}
+
+export const getChanges: StackOperationStep<TagsHolder> = async (state) => {
+  const { transitions, expectNoChanges, logger } = state
+
+  const result = await getChangesInternal(state)
 
   if (!result.success) {
     logger.error("Failed to get custom stack changes", result.error)

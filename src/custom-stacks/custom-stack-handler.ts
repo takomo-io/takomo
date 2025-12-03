@@ -532,17 +532,21 @@ export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
   /**
    * Retrieves the current state of the custom stack from the target environment.
    *
-   * This method is crucial for determining the stack's lifecycle operations:
+   * This function is crucial for determining the stack's lifecycle operations:
    * - During deployment: determines whether to create a new stack or update an existing one
    * - During undeployment: determines whether a stack exists and needs to be deleted
    *
    * The implementation should query the actual infrastructure to determine the
    * real state, not just return cached or assumed values.
    *
+   * Implementing this function is optional; if not provided, the stack will be assumed to be in a "UNKNOWN" state.
+   * - During deployment; stacks with "UNKNOWN" state are assumed to require creation (i.e. create function is always invoked).
+   * - During undeployment; stacks with "UNKNOWN" state are assumed to require deletion (i.e. delete function is always invoked).
+   *
    * @param props - Configuration and context needed to query the stack state
    * @returns A promise resolving to the current state or an error result
    */
-  readonly getCurrentState: (
+  readonly getCurrentState?: (
     props: GetCurrentStateProps<CONFIG>,
   ) => Promise<GetCurrentStateResult<STATE>>
 
@@ -550,7 +554,7 @@ export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
    * Analyzes and returns the changes that would be applied to bring the stack
    * from its current state to the desired state defined by the configuration.
    *
-   * This method is invoked during deployment of existing stacks to:
+   * This function is invoked during deployment of existing stacks to:
    * - Show users what changes will be made before applying them
    * - Determine if any changes are actually required
    * - Enable dry-run functionality for planning purposes
@@ -559,17 +563,20 @@ export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
    * configuration and return a detailed list of changes that would be applied.
    * The format and granularity of changes is up to the implementation.
    *
+   * Implementing this function is optional; if not provided, Takomo will assume that
+   * changes are always present but no detailed change information is available.
+   *
    * @param props - Current state, desired configuration, and context for comparison
    * @returns A promise resolving to the detected changes or an error result
    */
-  readonly getChanges: (
+  readonly getChanges?: (
     props: GetChangesProps<CONFIG, STATE>,
   ) => Promise<GetChangesResult>
 
   /**
    * Validates and parses the raw configuration for this custom stack type.
    *
-   * This method is responsible for:
+   * This function is responsible for:
    * - Validating the configuration against the expected schema
    * - Converting raw configuration data into a typed configuration object
    * - Providing meaningful error messages for invalid configurations
@@ -588,7 +595,7 @@ export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
   /**
    * Creates a new instance of the custom stack in the target environment.
    *
-   * This method should:
+   * This function should:
    * - Provision all necessary infrastructure resources
    * - Apply the specified parameters and tags
    * - Return the final state of the created stack
@@ -606,7 +613,7 @@ export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
   /**
    * Updates an existing custom stack to match the desired configuration.
    *
-   * This method should:
+   * This function should:
    * - Apply configuration changes to the existing stack
    * - Update parameters and tags as specified
    * - Handle resource modifications, additions, and removals
@@ -625,7 +632,7 @@ export interface CustomStackHandler<CONFIG, STATE extends CustomStackState> {
   /**
    * Removes the custom stack and all its associated resources from the target environment.
    *
-   * This method should:
+   * This function should:
    * - Clean up all resources created by the stack
    * - Ensure complete removal without leaving orphaned resources
    * - Handle cases where some resources have already been deleted

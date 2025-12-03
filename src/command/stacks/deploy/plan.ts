@@ -104,6 +104,21 @@ export const resolveOperationType = (
   }
 }
 
+export const resolveCustomStackOperationType = (
+  currentState: CustomStackState,
+): StackOperationType => {
+  switch (currentState.status) {
+    case "CREATE_COMPLETE":
+    case "UPDATE_COMPLETE":
+      return "UPDATE"
+    case "UNKNOWN":
+    case "PENDING":
+      return "CREATE"
+    default:
+      return exhaustiveCheck(currentState.status)
+  }
+}
+
 const convertToOperation = (pair: StackPair): StackDeployOperation => {
   if (isStandardStackPair(pair)) {
     return {
@@ -117,9 +132,11 @@ const convertToOperation = (pair: StackPair): StackDeployOperation => {
   if (isCustomStackPair(pair)) {
     return {
       stack: pair.stack,
-      type: pair.currentState?.status === "PENDING" ? "CREATE" : "UPDATE",
+      type: resolveCustomStackOperationType(pair.currentState),
       currentState: pair.currentState,
-      stackExistedBeforeOperation: pair.currentState.status !== "PENDING",
+      stackExistedBeforeOperation:
+        pair.currentState.status !== "PENDING" &&
+        pair.currentState.status !== "UNKNOWN",
     }
   }
 

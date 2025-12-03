@@ -24,7 +24,7 @@ import {
   ParseConfigResult,
   UpdateCustomStackProps,
   UpdateCustomStackResult,
-} from "../../../dist/index.js"
+} from "../../../src/index.js"
 import { arrayToRecord } from "../../../src/utils/collections.js"
 
 export type TestingCustomStackHandlerConfig = { stackTemplate: string }

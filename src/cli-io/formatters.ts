@@ -6,7 +6,7 @@ import {
 } from "../aws/cloudformation/model.js"
 import { CustomStackStatus } from "../stacks/custom-stack.js"
 import { CommandStatus } from "../takomo-core/command.js"
-import { cyan, green, grey, red, yellow } from "../utils/colors.js"
+import { cyan, green, grey, orange, red, yellow } from "../utils/colors.js"
 import { exhaustiveCheck } from "../utils/exhaustive-check.js"
 
 export const formatCommandStatus = (status: CommandStatus): string => {
@@ -51,6 +51,8 @@ export const formatCustomStackStatus = (status: CustomStackStatus): string => {
       return green(status)
     case "PENDING":
       return cyan(status)
+    case "UNKNOWN":
+      return orange(status)
     default:
       return exhaustiveCheck(status)
   }

@@ -111,6 +111,13 @@ export const getCustomStackState = async (
 ): Promise<CustomStackState> => {
   const { customStackHandler, customConfig, logger, path } = stack
 
+  if (!customStackHandler.getCurrentState) {
+    logger.debug(
+      `Custom stack handler '${customStackHandler.type}' does not implement getCurrentState() for stack ${path}, returning UNKNOWN state`,
+    )
+    return { status: "UNKNOWN" }
+  }
+
   try {
     const result = await customStackHandler.getCurrentState({
       logger,
@@ -132,7 +139,6 @@ export const getCustomStackState = async (
     throw new Error(`Getting custom stack state failed for stack ${path}`)
   } catch (e) {
     logger.error(`Getting custom stack state failed for stack ${path}`, e)
-
     throw e
   }
 }
