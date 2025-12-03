@@ -42,6 +42,7 @@ import {
 } from "./build-stack.js"
 import { CustomStackConfig } from "../../config/custom-stack-config.js"
 import { CustomStackHandler } from "../../custom-stacks/custom-stack-handler.js"
+import { uuid } from "../../utils/strings.js"
 
 type ParseCustomStackConfigResult = {
   error?: Error
@@ -184,6 +185,7 @@ export const buildCustomStack = async (
         }
 
         const props: CustomStackProps = {
+          uuid: uuid(),
           customType: stackConfig.customType,
           customConfig,
           customStackHandler,

@@ -33,9 +33,15 @@ export type CustomStackType = string
  */
 export type StackPath = string
 
+/**
+ * Unique identifier for a stack.
+ */
+export type StackUuid = string
+
 export type RawTagValue = string | number | boolean
 
 export interface StackProps {
+  uuid: StackUuid
   project?: Project
   path: StackPath
   stackGroupPath: StackGroupPath
@@ -118,6 +124,7 @@ export interface Stack {
 }
 
 export interface BaseInternalStack extends Stack {
+  readonly uuid: StackUuid
   readonly accountIds: ReadonlyArray<AccountId>
   readonly commandRole?: CommandRole
   readonly tags: Map<TagKey, RawTagValue>

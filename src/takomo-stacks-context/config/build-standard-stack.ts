@@ -53,6 +53,7 @@ import {
   validateName,
   validateTags,
 } from "./build-stack.js"
+import { uuid } from "../../utils/strings.js"
 
 export interface StandardStackPropBuilderProps {
   readonly stackConfig: StandardStackConfig
@@ -249,6 +250,7 @@ export const buildStandardStack = async (
         const dependencies = buildDependencies(builderProps)
 
         const props: StandardStackProps = {
+          uuid: uuid(),
           name,
           template,
           region,

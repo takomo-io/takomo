@@ -55,8 +55,7 @@ export interface StandardStack extends Stack {
 }
 
 export interface InternalStandardStack
-  extends StandardStack,
-    BaseInternalStack {
+  extends StandardStack, BaseInternalStack {
   readonly template: Template
   readonly templateBucket?: TemplateBucketConfig
   readonly capabilities?: ReadonlyArray<StackCapability>
@@ -72,6 +71,7 @@ export const createStandardStack = (
   props: StandardStackProps,
 ): InternalStandardStack => {
   const {
+    uuid,
     accountIds,
     capabilities,
     commandRole,
@@ -107,6 +107,7 @@ export const createStandardStack = (
     getCloudFormationClient().then((c) => c.describeStack(name))
 
   return {
+    uuid,
     accountIds,
     capabilities,
     commandRole,

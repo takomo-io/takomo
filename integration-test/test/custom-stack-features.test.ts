@@ -1,4 +1,8 @@
-import { executeDeployStacksCommand } from "../src/commands/stacks.js"
+import { TakomoError } from "../../src/utils/errors.js"
+import {
+  executeDeployStacksCommand,
+  executeUndeployStacksCommand,
+} from "../src/commands/stacks.js"
 
 const projectDir = `${process.cwd()}/integration-test/configs/custom-stack-features`
 
@@ -18,7 +22,7 @@ describe("Custom stack features", () => {
   test("Deploy", () =>
     executeDeployStacksCommand({
       projectDir,
-      var: [`randomId=${randomId}`],
+      var: [`randomId=${randomId}`, "terminationProtection=false"],
     })
       .expectCommandToSucceed()
       .expectStackCreateSuccess(
@@ -37,5 +41,25 @@ describe("Custom stack features", () => {
         },
         logsStack,
       )
+      .assert())
+
+  test("Undeploy with termination protection enabled", () =>
+    executeUndeployStacksCommand({
+      projectDir,
+      var: [`randomId=${randomId}`, "terminationProtection=true"],
+    }).expectCommandToThrow(
+      new TakomoError(
+        "Can't undeploy stacks because following stacks have termination protection enabled:\n\n" +
+          "  - /app.yml/eu-north-1",
+      ),
+    ))
+
+  test("Undeploy", () =>
+    executeUndeployStacksCommand({
+      projectDir,
+      var: [`randomId=${randomId}`, "terminationProtection=false"],
+    })
+      .expectCommandToSucceed()
+      .expectStackDeleteSuccess(appStack, logsStack)
       .assert())
 })

@@ -184,9 +184,12 @@ export const testingCustomStackHandler: CustomStackHandler<
     config,
     tags,
     parameters,
+    logger,
   }: CreateCustomStackProps<TestingCustomStackHandlerConfig>): Promise<
     CreateCustomStackResult<CustomStackState>
   > => {
+    logger.info(`About to create custom stack '${stack.name}'`)
+
     const credentials = await stack.getCredentials()
 
     const client = new CloudFormationClient({
@@ -195,6 +198,7 @@ export const testingCustomStackHandler: CustomStackHandler<
     })
 
     try {
+      logger.info(`Initiating stack creation`)
       await client.send(
         new CreateStackCommand({
           StackName: stack.name,
@@ -208,11 +212,13 @@ export const testingCustomStackHandler: CustomStackHandler<
           ),
         }),
       )
+      logger.info(`Waiting for stack creation to complete`)
       await waitUntilStackCreateComplete(
         { client, maxWaitTime: 3 * 60 * 1000 },
         { StackName: stack.name },
       )
 
+      logger.info(`Stack creation complete`)
       const createdState = await describeStack(client, stack.name)
 
       if (createdState) {
@@ -233,10 +239,13 @@ export const testingCustomStackHandler: CustomStackHandler<
     config,
     tags,
     parameters,
+    logger,
   }: UpdateCustomStackProps<
     TestingCustomStackHandlerConfig,
     CustomStackState
   >): Promise<UpdateCustomStackResult<CustomStackState>> => {
+    logger.info(`About to update custom stack '${stack.name}'`)
+
     const credentials = await stack.getCredentials()
 
     const client = new CloudFormationClient({
@@ -245,6 +254,7 @@ export const testingCustomStackHandler: CustomStackHandler<
     })
 
     try {
+      logger.info(`Initiating stack update`)
       await client.send(
         new UpdateStackCommand({
           StackName: stack.name,
@@ -258,10 +268,14 @@ export const testingCustomStackHandler: CustomStackHandler<
           ),
         }),
       )
+
+      logger.info(`Waiting for stack update to complete`)
       await waitUntilStackUpdateComplete(
         { client, maxWaitTime: 3 * 60 * 1000 },
         { StackName: stack.name },
       )
+
+      logger.info(`Stack update complete`)
 
       const updatedState = await describeStack(client, stack.name)
 
@@ -280,10 +294,12 @@ export const testingCustomStackHandler: CustomStackHandler<
   },
   delete: async ({
     stack,
+    logger,
   }: DeleteCustomStackProps<
     TestingCustomStackHandlerConfig,
     CustomStackState
   >): Promise<DeleteCustomStackResult> => {
+    logger.info(`About to delete custom stack '${stack.name}'`)
     const credentials = await stack.getCredentials()
 
     const client = new CloudFormationClient({
@@ -292,11 +308,16 @@ export const testingCustomStackHandler: CustomStackHandler<
     })
 
     try {
+      logger.info(`Initiating stack deletion`)
       await client.send(new DeleteStackCommand({ StackName: stack.name }))
+
+      logger.info(`Waiting for stack deletion to complete`)
       await waitUntilStackDeleteComplete(
         { client, maxWaitTime: 2 * 60 * 1000 },
         { StackName: stack.name },
       )
+
+      logger.info(`Stack deletion complete`)
 
       return {
         success: true,

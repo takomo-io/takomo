@@ -28,6 +28,7 @@ import {
 } from "../../../stacks/custom-stack.js"
 import { CustomStackState } from "../../../custom-stacks/custom-stack-handler.js"
 import { StacksContext } from "../../../index.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 
 /**
  * TODO: Move somewhere else
@@ -122,7 +123,7 @@ const convertToOperation = (pair: StackPair): StackDeployOperation => {
     }
   }
 
-  throw new Error("Unreachable")
+  return exhaustiveCheck(pair)
 }
 
 export const buildStacksDeployPlan = async (
