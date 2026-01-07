@@ -1,11 +1,10 @@
 import path from "path"
 import { InternalTakomoProjectConfig } from "../../config/project-config.js"
-import { StackConfig } from "../../config/stack-config.js"
 import { InternalCommandContext } from "../../context/command-context.js"
 import { TakomoConfig } from "../../extensions/config-customizer.js"
 import { HookRegistry } from "../../hooks/hook-registry.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
-import { BlueprintPath } from "../../stacks/stack.js"
+import { BlueprintPath } from "../../stacks/standard-stack.js"
 import {
   StacksConfigRepository,
   StacksConfigRepositoryProps,
@@ -30,6 +29,8 @@ import {
 } from "./extensions.js"
 import { parseBlueprintConfigFile } from "./parser.js"
 import { ConfigTree } from "../../takomo-stacks-context/config/config-tree.js"
+import { CustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
+import { StandardStackConfig } from "../../config/standard-stack-config.js"
 
 export interface FileSystemStacksConfigRepositoryProps {
   readonly ctx: InternalCommandContext
@@ -185,12 +186,17 @@ export const createFileSystemStacksConfigRepository = async ({
       resolverRegistry: ResolverRegistry,
       hookRegistry: HookRegistry,
       schemaRegistry: SchemaRegistry,
+      customStackHandlerRegistry: CustomStackHandlerRegistry,
     ): Promise<void> => {
       await Promise.all([
         loadCustomResolvers(resolversDir, logger, resolverRegistry),
         loadCustomHooks(hooksDir, logger, hookRegistry),
         loadCustomSchemas({ schemasDirs, logger, registry: schemaRegistry }),
       ])
+
+      takomoConfig.customStackHandlers?.forEach((provider) => {
+        customStackHandlerRegistry.registerHandler(provider)
+      })
 
       for (const [i, provider] of (
         takomoConfig.hookProviders ?? []
@@ -240,7 +246,7 @@ export const createFileSystemStacksConfigRepository = async ({
       blueprint: BlueprintPath,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       variables: any,
-    ): Promise<StackConfig> => {
+    ): Promise<StandardStackConfig> => {
       const pathToBlueprint = path.join(blueprintsDir, blueprint)
       if (!(await fileExists(pathToBlueprint))) {
         throw new Error(`Blueprint file ${blueprint} not found!`)

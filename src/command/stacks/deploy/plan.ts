@@ -3,10 +3,12 @@ import {
   CloudFormationStackSummary,
   StackStatus,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import {
+  InternalStandardStack,
+  isInternalStandardStack,
+} from "../../../stacks/standard-stack.js"
 import { sortStacksForDeploy } from "../../../takomo-stacks-context/dependencies.js"
 import {
-  getStackPath,
   isNotObsolete,
   isWithinCommandPath,
 } from "../../../takomo-stacks-model/util.js"
@@ -14,9 +16,19 @@ import { arrayToMap } from "../../../utils/collections.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { CommandPath, StackOperationType } from "../../command-model.js"
 import {
-  loadCurrentCfStacks,
+  isCustomStackPair,
+  isStandardStackPair,
+  loadCurrentStacks,
   StackPair,
 } from "../common/load-current-cf-stacks.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import {
+  InternalCustomStack,
+  isInternalCustomStack,
+} from "../../../stacks/custom-stack.js"
+import { CustomStackState } from "../../../custom-stacks/custom-stack-handler.js"
+import { StacksContext } from "../../../index.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 
 /**
  * TODO: Move somewhere else
@@ -38,11 +50,31 @@ export const collectStackDependencies = (
     ])
   }, new Array<StackPath>())
 
-export interface StackDeployOperation {
-  readonly stack: InternalStack
+export interface StandardStackDeployOperation {
+  readonly stack: InternalStandardStack
   readonly type: StackOperationType
   readonly currentStack?: CloudFormationStackSummary
+  readonly stackExistedBeforeOperation: boolean
 }
+
+export interface CustomStackDeployOperation {
+  readonly stack: InternalCustomStack
+  readonly type: StackOperationType
+  readonly currentState: CustomStackState
+  readonly stackExistedBeforeOperation: boolean
+}
+
+export type StackDeployOperation =
+  | StandardStackDeployOperation
+  | CustomStackDeployOperation
+
+export const isStandardStackDeployOperation = (
+  op: StackDeployOperation,
+): op is StandardStackDeployOperation => isInternalStandardStack(op.stack)
+
+export const isCustomStackDeployOperation = (
+  op: StackDeployOperation,
+): op is CustomStackDeployOperation => isInternalCustomStack(op.stack)
 
 export interface StacksDeployPlan {
   readonly operations: ReadonlyArray<StackDeployOperation>
@@ -72,22 +104,53 @@ export const resolveOperationType = (
   }
 }
 
-const convertToOperation = ({
-  stack,
-  current,
-}: StackPair): StackDeployOperation => ({
-  stack,
-  type: resolveOperationType(current?.status),
-  currentStack: current,
-})
+export const resolveCustomStackOperationType = (
+  currentState: CustomStackState,
+): StackOperationType => {
+  switch (currentState.status) {
+    case "CREATE_COMPLETE":
+    case "UPDATE_COMPLETE":
+      return "UPDATE"
+    case "UNKNOWN":
+    case "PENDING":
+      return "CREATE"
+    default:
+      return exhaustiveCheck(currentState.status)
+  }
+}
+
+const convertToOperation = (pair: StackPair): StackDeployOperation => {
+  if (isStandardStackPair(pair)) {
+    return {
+      stack: pair.stack,
+      type: resolveOperationType(pair.currentStack?.status),
+      currentStack: pair.currentStack,
+      stackExistedBeforeOperation: pair.currentStack !== undefined,
+    }
+  }
+
+  if (isCustomStackPair(pair)) {
+    return {
+      stack: pair.stack,
+      type: resolveCustomStackOperationType(pair.currentState),
+      currentState: pair.currentState,
+      stackExistedBeforeOperation:
+        pair.currentState.status !== "PENDING" &&
+        pair.currentState.status !== "UNKNOWN",
+    }
+  }
+
+  return exhaustiveCheck(pair)
+}
 
 export const buildStacksDeployPlan = async (
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
   logger: TkmLogger,
+  ctx: StacksContext,
 ): Promise<StacksDeployPlan> => {
-  const stacksByPath = arrayToMap(stacks, getStackPath)
+  const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
     .filter((s) => isWithinCommandPath(s.path, commandPath))
     .reduce(
@@ -103,7 +166,7 @@ export const buildStacksDeployPlan = async (
     .filter(isNotObsolete)
 
   const sortedStacks = sortStacksForDeploy(stacksToDeploy)
-  const stackPairs = await loadCurrentCfStacks(logger, sortedStacks)
+  const stackPairs = await loadCurrentStacks(logger, sortedStacks, ctx)
   const operations = stackPairs.map(convertToOperation)
 
   return {

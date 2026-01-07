@@ -8,35 +8,59 @@ import {
 } from "../../../aws/cloudformation/model.js"
 import { StackOperationType } from "../../../command/command-model.js"
 import {
+  ConfirmCustomStackDeployAnswer,
   ConfirmDeployAnswer,
   ConfirmStackDeployAnswer,
   DeployStacksIO,
 } from "../../../command/stacks/deploy/model.js"
-import { StacksDeployPlan } from "../../../command/stacks/deploy/plan.js"
+import {
+  isCustomStackDeployOperation,
+  isStandardStackDeployOperation,
+  StacksDeployPlan,
+} from "../../../command/stacks/deploy/plan.js"
 import { StacksOperationOutput } from "../../../command/stacks/model.js"
 import { StackGroup } from "../../../stacks/stack-group.js"
-import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import { InternalStandardStack } from "../../../stacks/standard-stack.js"
 import { bold, green, orange, yellow } from "../../../utils/colors.js"
 import { diffStrings } from "../../../utils/strings.js"
 import { createBaseIO } from "../../cli-io.js"
-import { formatStackEvent, formatStackStatus } from "../../formatters.js"
+import {
+  formatCustomStackStatus,
+  formatStackEvent,
+  formatStandardStackStatus,
+} from "../../formatters.js"
 import {
   chooseCommandPathInternal,
   createStacksOperationListenerInternal,
+  formatCustomStackLastModify,
   formatLastModify,
+  formatStackType,
   IOProps,
   printStacksOperationOutput,
 } from "../common.js"
 import { printOutputs } from "./outputs.js"
-import { printParameters } from "./parameters.js"
-import { printResources } from "./resources.js"
+import { printCustomStackParameters, printParameters } from "./parameters.js"
+import { printCustomStackChanges, printResources } from "./resources.js"
 import { printStackPolicy } from "./stack-policy.js"
-import { printTags } from "./tags.js"
+import { printCustomStackTags, printTags } from "./tags.js"
 import { printTerminationProtection } from "./termination-protection.js"
+import { StackPath } from "../../../stacks/stack.js"
+import { InternalCustomStack } from "../../../stacks/custom-stack.js"
+import {
+  CustomStackChange,
+  CustomStackState,
+  Parameters,
+  Tags,
+} from "../../../custom-stacks/custom-stack-handler.js"
 
 interface ConfirmStackDeployAnswerChoice {
   readonly name: string
   readonly value: ConfirmStackDeployAnswer
+}
+
+interface ConfirmCustomStackDeployAnswerChoice {
+  readonly name: string
+  readonly value: ConfirmCustomStackDeployAnswer
 }
 
 interface ConfirmDeployAnswerChoice {
@@ -63,6 +87,24 @@ export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE: ConfirmStackDeployAnswerChoic
   }
 
 export const CONFIRM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS: ConfirmStackDeployAnswerChoice =
+  {
+    name: "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
+    value: "CONTINUE_AND_SKIP_REMAINING_REVIEWS",
+  }
+
+export const CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CANCEL: ConfirmCustomStackDeployAnswerChoice =
+  {
+    name: "cancel deploy of this stack and all remaining stacks",
+    value: "CANCEL",
+  }
+
+export const CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE: ConfirmCustomStackDeployAnswerChoice =
+  {
+    name: "continue to deploy the stack, then let me review the remaining stacks",
+    value: "CONTINUE",
+  }
+
+export const CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS: ConfirmCustomStackDeployAnswerChoice =
   {
     name: "continue to deploy the stack, then deploy the remaining stacks without reviewing changes",
     value: "CONTINUE_AND_SKIP_REMAINING_REVIEWS",
@@ -164,31 +206,63 @@ export const createDeployStacksIO = (
 
     const stackPathColumnLength = Math.max(27, maxStackPathLength)
 
-    for (const { stack, type, currentStack } of operations) {
-      const stackIdentity = await stack.credentialManager.getCallerIdentity()
-      io.longMessage(
-        [
-          `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
-          `      name:                      ${stack.name}`,
-          `      status:                    ${formatStackStatus(
-            currentStack?.status,
-          )}`,
-          `      last change:               ${formatLastModify(currentStack)}`,
-          `      account id:                ${stackIdentity.accountId}`,
-          `      region:                    ${stack.region}`,
-          "      credentials:",
-          `        user id:                 ${stackIdentity.userId}`,
-          `        account id:              ${stackIdentity.accountId}`,
-          `        arn:                     ${stackIdentity.arn}`,
-        ],
-        true,
-        false,
-        0,
-      )
+    for (const operation of operations) {
+      const stackIdentity =
+        await operation.stack.credentialManager.getCallerIdentity()
 
-      if (stack.dependencies.length > 0) {
+      if (isStandardStackDeployOperation(operation)) {
+        const { stack, type, currentStack } = operation
+
+        io.longMessage(
+          [
+            `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
+            `      name:                      ${stack.name}`,
+            `      type:                      ${formatStackType(stack)}`,
+            `      status:                    ${formatStandardStackStatus(
+              currentStack?.status,
+            )}`,
+            `      last change:               ${formatLastModify(currentStack)}`,
+            `      account id:                ${stackIdentity.accountId}`,
+            `      region:                    ${stack.region}`,
+            "      credentials:",
+            `        user id:                 ${stackIdentity.userId}`,
+            `        account id:              ${stackIdentity.accountId}`,
+            `        arn:                     ${stackIdentity.arn}`,
+          ],
+          true,
+          false,
+          0,
+        )
+      }
+
+      if (isCustomStackDeployOperation(operation)) {
+        const { stack, type, currentState } = operation
+
+        io.longMessage(
+          [
+            `  ${formatStackOperation(stack.path, type, stackPathColumnLength)}`,
+            `      name:                      ${stack.name}`,
+            `      type:                      ${formatStackType(stack)}`,
+            `      status:                    ${formatCustomStackStatus(
+              currentState.status,
+            )}`,
+            `      last change:               ${formatCustomStackLastModify(currentState)}`,
+            `      account id:                ${stackIdentity.accountId}`,
+            `      region:                    ${stack.region}`,
+            "      credentials:",
+            `        user id:                 ${stackIdentity.userId}`,
+            `        account id:              ${stackIdentity.accountId}`,
+            `        arn:                     ${stackIdentity.arn}`,
+          ],
+          true,
+          false,
+          0,
+        )
+      }
+
+      if (operation.stack.dependencies.length > 0) {
         io.message({ text: "dependencies:", indent: 6 })
-        stack.dependencies
+        operation.stack.dependencies
           .map((d) => `- ${d}`)
           .forEach((d) => {
             io.message({ text: d, indent: 8 })
@@ -244,7 +318,7 @@ export const createDeployStacksIO = (
     })
 
   const confirmStackDeploy = async (
-    stack: InternalStack,
+    stack: InternalStandardStack,
     templateBody: TemplateBody,
     templateSummary: TemplateSummary,
     operationType: StackOperationType,
@@ -256,16 +330,17 @@ export const createDeployStacksIO = (
     }
 
     io.subheader({
-      text: "Review deployment plan for a stack:",
+      text: "Review deployment plan for a standard stack:",
       marginTop: true,
     })
     io.longMessage(
       [
         "A stack deployment plan has been created and is shown below.",
         "",
-        `  stack path:                    ${stack.path}`,
-        `  stack name:                    ${stack.name}`,
-        `  stack region:                  ${stack.region}`,
+        `  path:                          ${stack.path}`,
+        `  name:                          ${stack.name}`,
+        `  type:                          ${formatStackType(stack)}`,
+        `  region:                        ${stack.region}`,
         `  operation:                     ${formatStackOperationType(
           operationType,
         )}`,
@@ -345,6 +420,60 @@ export const createDeployStacksIO = (
     return answer
   }
 
+  const confirmCustomStackDeploy = async (
+    stack: InternalCustomStack,
+    operationType: StackOperationType,
+    currentState: CustomStackState,
+    tags: Tags,
+    parameters: Parameters,
+    changes: ReadonlyArray<CustomStackChange>,
+  ): Promise<ConfirmCustomStackDeployAnswer> => {
+    if (autoConfirmEnabled) {
+      return "CONTINUE"
+    }
+
+    io.subheader({
+      text: "Review deployment plan for a custom stack:",
+      marginTop: true,
+    })
+    io.longMessage(
+      [
+        "A stack deployment plan has been created and is shown below.",
+        "",
+        `  path:                          ${stack.path}`,
+        `  name:                          ${stack.name}`,
+        `  type:                          ${formatStackType(stack)}`,
+        `  region:                        ${stack.region}`,
+        `  operation:                     ${formatStackOperationType(
+          operationType,
+        )}`,
+      ],
+      false,
+      false,
+      0,
+    )
+
+    printCustomStackParameters(io, parameters, currentState.parameters)
+    printCustomStackTags(io, tags, currentState.tags)
+    printCustomStackChanges(io, changes)
+
+    const answer = await io.choose<ConfirmCustomStackDeployAnswer>(
+      "How do you want to continue the deployment?",
+      [
+        CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CANCEL,
+        CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE,
+        CONFIRM_CUSTOM_STACK_DEPLOY_ANSWER_CONTINUE_AND_SKIP_REMAINING_REVIEWS,
+      ],
+      true,
+    )
+
+    if (answer === "CONTINUE_AND_SKIP_REMAINING_REVIEWS") {
+      autoConfirmEnabled = true
+    }
+
+    return answer
+  }
+
   const printStackEvent = (stackPath: StackPath, e: StackEvent): void =>
     logger.info(stackPath + " - " + formatStackEvent(e))
 
@@ -360,6 +489,7 @@ export const createDeployStacksIO = (
     chooseCommandPath,
     confirmDeploy,
     confirmStackDeploy,
+    confirmCustomStackDeploy,
     printOutput,
     printStackEvent,
     createStacksOperationListener,

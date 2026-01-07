@@ -1,0 +1,12 @@
+regions: eu-north-1
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+customType: testing-custom-partial-stack
+customConfig:
+  stackTemplate: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties: {}
+tags:
+  Project: Takomo9
+  Purpose: IntegrationTestX

@@ -1,4 +1,5 @@
 import * as R from "ramda"
+import _ from "lodash"
 import {
   DetailedChangeSet,
   DetailedCloudFormationStack,
@@ -7,6 +8,7 @@ import { Tag, TagKey, TagValue } from "../../../aws/common/model.js"
 import { bold, green, red, yellow } from "../../../utils/colors.js"
 import { BaseIO } from "../../cli-io.js"
 import { printValue } from "./common.js"
+import { Tags } from "../../../custom-stacks/custom-stack-handler.js"
 
 export type TagOperation = "update" | "create" | "delete"
 
@@ -134,6 +136,102 @@ export const printTags = (
   }
 
   const { updated, added, removed } = buildTagsSpec(changeSet, existingStack)
+  const all = [...added, ...updated, ...removed]
+  if (all.length === 0) {
+    return false
+  }
+
+  const maxTagNameLength = R.apply(
+    Math.max,
+    all.map((t) => t.key.length),
+  )
+
+  const tagNameColumnLength = Math.max(27, maxTagNameLength)
+
+  io.message({ text: bold("Tags:"), marginTop: true })
+
+  all.forEach((tag) => {
+    io.message({
+      text: `  ${formatTagOperation(tag, tagNameColumnLength)}`,
+      marginTop: true,
+    })
+    io.message({
+      text: `      current value:             ${printValue(tag.currentValue)}`,
+    })
+    io.message({
+      text: `      new value:                 ${printValue(tag.newValue)}`,
+    })
+  })
+
+  if (all.length < 2) {
+    return true
+  }
+
+  const counts = Object.entries(R.countBy((o) => o.operation, all))
+    .map(([key, count]) => {
+      switch (key) {
+        case "create":
+          return { order: "1", text: green(`create: ${count}`) }
+        case "update":
+          return { order: "2", text: yellow(`update: ${count}`) }
+        case "delete":
+          return { order: "3", text: red(`remove: ${count}`) }
+        default:
+          throw new Error(`Unsupported tag operation: '${key}'`)
+      }
+    })
+    .sort((a, b) => a.order.localeCompare(b.order))
+    .map((o) => o.text)
+    .join(", ")
+
+  io.message({
+    text: `  changed tags | total: ${all.length}, ${counts}`,
+    marginTop: true,
+  })
+
+  return true
+}
+
+export const buildCustomStackTagsSpec = (
+  currentTags: Tags | undefined,
+  updatedTags: Tags | undefined,
+): TagsSpec => {
+  const newTags = Object.entries(updatedTags ?? {}).map(([key, value]) => ({
+    key,
+    value,
+  }))
+
+  const existingTags = Object.entries(currentTags ?? {}).map(
+    ([key, value]) => ({
+      key,
+      value,
+    }),
+  )
+
+  const updated = collectUpdatedTags(newTags, existingTags)
+  const added = collectAddedTags(newTags, existingTags)
+  const removed = collectRemovedTags(newTags, existingTags)
+
+  return {
+    updated,
+    added,
+    removed,
+  }
+}
+
+export const printCustomStackTags = (
+  io: BaseIO,
+  newTags: Tags,
+  currentTags?: Tags,
+): boolean => {
+  if (_.isEmpty(currentTags) && _.isEmpty(newTags)) {
+    return false
+  }
+
+  const { updated, added, removed } = buildCustomStackTagsSpec(
+    currentTags,
+    newTags,
+  )
   const all = [...added, ...updated, ...removed]
   if (all.length === 0) {
     return false

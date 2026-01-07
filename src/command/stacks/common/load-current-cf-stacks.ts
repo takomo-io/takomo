@@ -2,11 +2,20 @@ import {
   CloudFormationStackSummary,
   StackName,
 } from "../../../aws/cloudformation/model.js"
-import { InternalStack } from "../../../stacks/stack.js"
-import { getStackNames } from "../../../takomo-stacks-model/util.js"
-import { arrayToMap } from "../../../utils/collections.js"
+import {
+  InternalCustomStack,
+  isInternalCustomStack,
+} from "../../../stacks/custom-stack.js"
+import { InternalStack, StackUuid } from "../../../stacks/stack.js"
+import {
+  InternalStandardStack,
+  isInternalStandardStack,
+} from "../../../stacks/standard-stack.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import { checksum } from "../../../utils/strings.js"
+import { CustomStackState } from "../../../custom-stacks/custom-stack-handler.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
+import { StacksContext } from "../../../index.js"
 
 const makeCredentialsRegionHash = async (
   stack: InternalStack,
@@ -20,23 +29,37 @@ const makeCredentialsRegionHash = async (
 }
 
 const loadCfStacks = (
-  stacks: ReadonlyArray<InternalStack>,
+  stacks: ReadonlyArray<InternalStandardStack>,
 ): Promise<Map<StackName, CloudFormationStackSummary>> => {
-  const stackNames = getStackNames(stacks)
+  const stackNames = stacks.map((s) => s.name)
   return stacks[0]
     .getCloudFormationClient()
     .then((client) => client.listNotDeletedStacks(stackNames))
 }
 
-export interface StackPair {
-  readonly stack: InternalStack
-  readonly current?: CloudFormationStackSummary
+export type CustomStackPair = {
+  readonly stack: InternalCustomStack
+  readonly currentState: CustomStackState
 }
 
-const buildHashStackMap = (
-  stackHashPairs: ReadonlyArray<[string, InternalStack]>,
-): Map<string, InternalStack[]> => {
-  const stackHashMap = new Map<string, InternalStack[]>()
+export type StandardStackPair = {
+  readonly stack: InternalStandardStack
+  readonly currentStack?: CloudFormationStackSummary
+}
+
+export type StackPair = CustomStackPair | StandardStackPair
+
+export const isCustomStackPair = (pair: StackPair): pair is CustomStackPair =>
+  isInternalCustomStack(pair.stack)
+
+export const isStandardStackPair = (
+  pair: StackPair,
+): pair is StandardStackPair => isInternalStandardStack(pair.stack)
+
+const buildHashStackMap = <S extends InternalStack>(
+  stackHashPairs: ReadonlyArray<[string, S]>,
+): Map<string, S[]> => {
+  const stackHashMap = new Map<string, S[]>()
   stackHashPairs.forEach(([hash, stack]) => {
     const stacks = stackHashMap.get(hash)
     if (stacks) {
@@ -49,13 +72,13 @@ const buildHashStackMap = (
   return stackHashMap
 }
 
-export const loadCurrentCfStacks = async (
+export const loadCurrentStandardStacks = async (
   logger: TkmLogger,
-  stacks: ReadonlyArray<InternalStack>,
-): Promise<ReadonlyArray<StackPair>> => {
-  logger.info("Load current stacks")
+  stacks: ReadonlyArray<InternalStandardStack>,
+): Promise<Map<StackUuid, CloudFormationStackSummary | undefined>> => {
+  logger.debug("Load current standard stacks")
 
-  const stackHashPairs: ReadonlyArray<[string, InternalStack]> =
+  const stackHashPairs: ReadonlyArray<[string, InternalStandardStack]> =
     await Promise.all(
       stacks.map(async (stack) => {
         const hash = await makeCredentialsRegionHash(stack)
@@ -66,16 +89,123 @@ export const loadCurrentCfStacks = async (
   const stackHashMap = buildHashStackMap(stackHashPairs)
 
   const pairs = await Promise.all(
-    Array.from(stackHashMap.values()).map(async (stacks) => {
-      const cfStacks = await loadCfStacks(stacks)
-      return stacks.map((stack) => ({
+    Array.from(stackHashMap.values()).map(async (stacksWithSameCredentials) => {
+      const cfStacks = await loadCfStacks(stacksWithSameCredentials)
+      return stacksWithSameCredentials.map((stack) => ({
         stack,
         current: cfStacks.get(stack.name),
       }))
     }),
   )
 
-  const pairsByPath = arrayToMap(pairs.flat(), (p) => p.stack.path)
+  return new Map(
+    pairs.flat().map((p) => {
+      return [p.stack.uuid, p.current] as const
+    }),
+  )
+}
 
-  return stacks.map((stack) => pairsByPath.get(stack.path)!)
+export const getCustomStackState = async (
+  ctx: StacksContext,
+  stack: InternalCustomStack,
+): Promise<CustomStackState> => {
+  const { customStackHandler, customConfig, logger, path } = stack
+
+  if (!customStackHandler.getCurrentState) {
+    logger.debug(
+      `Custom stack handler '${customStackHandler.type}' does not implement getCurrentState() for stack ${path}, returning UNKNOWN state`,
+    )
+    return { status: "UNKNOWN" }
+  }
+
+  try {
+    const result = await customStackHandler.getCurrentState({
+      logger,
+      config: customConfig,
+      stack,
+      ctx,
+    })
+
+    if (result.success) {
+      return result.currentState ?? { status: "PENDING" }
+    }
+
+    const { message, error } = result
+
+    logger.error(
+      `Getting custom stack state failed for stack ${path}: ${message}`,
+      error,
+    )
+    throw new Error(`Getting custom stack state failed for stack ${path}`)
+  } catch (e) {
+    logger.error(`Getting custom stack state failed for stack ${path}`, e)
+    throw e
+  }
+}
+
+const loadCurrentCustomStacks = async (
+  logger: TkmLogger,
+  stacks: ReadonlyArray<InternalCustomStack>,
+  ctx: StacksContext,
+): Promise<Map<StackUuid, CustomStackState>> => {
+  logger.debug("Load current custom stacks")
+
+  // TODO: Handle errors
+  const stackMap = new Map<StackUuid, CustomStackState>()
+  for (const stack of stacks) {
+    const state = await getCustomStackState(ctx, stack)
+
+    stackMap.set(stack.uuid, state)
+  }
+
+  return stackMap
+}
+
+export const loadCurrentStacks = async (
+  logger: TkmLogger,
+  stacks: ReadonlyArray<InternalStack>,
+  ctx: StacksContext,
+): Promise<ReadonlyArray<StackPair>> => {
+  logger.info("Load current stacks")
+
+  const standardStacks = stacks.filter(isInternalStandardStack)
+  const currentStandardStacks = await loadCurrentStandardStacks(
+    logger,
+    standardStacks,
+  )
+
+  const customStacks = stacks.filter(isInternalCustomStack)
+  const currentCustomStacks = await loadCurrentCustomStacks(
+    logger,
+    customStacks,
+    ctx,
+  )
+
+  // TODO: Tämä ei näytä toimivan jos on saman nimisiä stackeja eri tileillä (niissä sama stack path)
+  const stackPairs: ReadonlyArray<StackPair> = stacks.map((stack) => {
+    if (isInternalStandardStack(stack)) {
+      return {
+        stack,
+        currentStack: currentStandardStacks.get(stack.uuid),
+      }
+    }
+
+    if (isInternalCustomStack(stack)) {
+      const currentState = currentCustomStacks.get(stack.uuid)
+      if (!currentState) {
+        throw new Error(
+          `Expected current state to exist for custom stack: ${stack.path}`,
+        )
+      }
+
+      return {
+        stack,
+        currentState,
+      }
+    }
+
+    return exhaustiveCheck(stack)
+  })
+
+  return stackPairs
 }

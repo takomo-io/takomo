@@ -2,7 +2,12 @@ import * as R from "ramda"
 import { StackStatus } from "../../../aws/cloudformation/model.js"
 import { validateStackCredentialManagersWithAllowedAccountIds } from "../../../takomo-stacks-context/common.js"
 import { TakomoError } from "../../../utils/errors.js"
-import { StacksUndeployPlan, StackUndeployOperation } from "./plan.js"
+import {
+  isCustomStackUndeployOperation,
+  isStandardStackUndeployOperation,
+  StacksUndeployPlan,
+  StackUndeployOperation,
+} from "./plan.js"
 
 export const isStackReadyForUndeploy = (stackStatus: StackStatus): boolean =>
   [
@@ -24,9 +29,11 @@ const validateStackStatus = (
 ): void => {
   const stacksInInvalidStatus = []
   for (const operation of operations) {
-    const { currentStack } = operation
-    if (currentStack && !isStackReadyForUndeploy(currentStack.status)) {
-      stacksInInvalidStatus.push(operation)
+    if (isStandardStackUndeployOperation(operation)) {
+      const { currentStack } = operation
+      if (currentStack && !isStackReadyForUndeploy(currentStack.status)) {
+        stacksInInvalidStatus.push(operation)
+      }
     }
   }
 
@@ -48,9 +55,18 @@ const validateTerminationProtection = (
 ): void => {
   const stacks = []
   for (const operation of operations) {
-    const { currentStack } = operation
-    if (currentStack && currentStack.enableTerminationProtection) {
-      stacks.push(operation)
+    if (isStandardStackUndeployOperation(operation)) {
+      const { currentStack } = operation
+      if (currentStack && currentStack.enableTerminationProtection) {
+        stacks.push(operation)
+      }
+    }
+
+    if (isCustomStackUndeployOperation(operation)) {
+      const { currentState, stack } = operation
+      if (currentState.status !== "PENDING" && stack.terminationProtection) {
+        stacks.push(operation)
+      }
     }
   }
 

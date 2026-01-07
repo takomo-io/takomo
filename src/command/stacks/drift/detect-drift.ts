@@ -1,8 +1,12 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
 import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
 import { TkmLogger } from "../../../utils/logging.js"
-import { loadCurrentCfStacks } from "../common/load-current-cf-stacks.js"
-import { DetectDriftInput, DetectDriftOutput } from "./model.js"
+import {
+  isCustomStackPair,
+  isStandardStackPair,
+  loadCurrentStacks,
+} from "../common/load-current-cf-stacks.js"
+import { DetectDriftInput, DetectDriftOutput, StackDriftInfo } from "./model.js"
 
 export const detectDrift = async (
   ctx: InternalStacksContext,
@@ -16,18 +20,30 @@ export const detectDrift = async (
     .filter((stack) => stack.path.startsWith(input.commandPath))
     .filter(isNotObsolete)
 
-  const stackPairs = await loadCurrentCfStacks(logger, stacksWithinCommandPath)
+  const stackPairs = await loadCurrentStacks(
+    logger,
+    stacksWithinCommandPath,
+    ctx,
+  )
 
-  const stacks = await Promise.all(
-    stackPairs.map(async ({ stack, current }) => {
+  const standardStacks = stackPairs.filter(isStandardStackPair)
+
+  const stacks: ReadonlyArray<StackDriftInfo> = await Promise.all(
+    standardStacks.map(async (pair) => {
+      if (isCustomStackPair(pair)) {
+        return { stack: pair.stack, type: "custom" }
+      }
+
+      const { stack, currentStack: current } = pair
+
       if (!current) {
-        return { current, stack }
+        return { current, stack, type: "standard" }
       }
 
       const client = await stack.getCloudFormationClient()
       const id = await client.detectDrift(stack.name)
       const driftDetectionStatus = await client.waitDriftDetectionToComplete(id)
-      return { stack, current, driftDetectionStatus }
+      return { stack, current, driftDetectionStatus, type: "standard" }
     }),
   )
 

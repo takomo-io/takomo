@@ -1,13 +1,15 @@
-import { StackConfig } from "../../config/stack-config.js"
+import { CustomStackConfig } from "../../config/custom-stack-config.js"
 import { StackGroupConfig } from "../../config/stack-group-config.js"
+import { StandardStackConfig } from "../../config/standard-stack-config.js"
 import { CommandContext } from "../../context/command-context.js"
-import { buildStackConfig } from "../../parser/stacks/build-stack-config.js"
+import { buildStandardStackConfig } from "../../parser/stacks/build-standard-stack-config.js"
 import { buildStackGroupConfig } from "../../parser/stacks/build-stack-group-config.js"
 import { TemplateEngine } from "../../templating/template-engine.js"
 import { TakomoError } from "../../utils/errors.js"
 import { FilePath } from "../../utils/files.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { parseYaml } from "../../utils/yaml.js"
+import { buildCustomStackConfig } from "../../parser/stacks/build-custom-stack-config.js"
 
 export const parseBlueprintConfigFile = async (
   ctx: CommandContext,
@@ -16,15 +18,24 @@ export const parseBlueprintConfigFile = async (
   templateEngine: TemplateEngine,
   logger: TkmLogger,
   pathToFile: FilePath,
-): Promise<StackConfig> =>
-  parseStackConfigFileInternal(
-    ctx,
-    variables,
-    templateEngine,
-    logger,
+): Promise<StandardStackConfig> => {
+  const rendered = await templateEngine.renderTemplateFile({
     pathToFile,
+    variables,
+  })
+
+  const parsedFile = parseYaml(pathToFile, rendered)
+  if (typeof parsedFile === "number" || typeof parsedFile === "string") {
+    throw new Error("Invalid yaml document")
+  }
+
+  return parseStandardStackConfigFileInternal(
+    ctx,
+    pathToFile,
+    parsedFile,
     "blueprint",
   )
+}
 
 export const parseStackConfigFile = async (
   ctx: CommandContext,
@@ -33,32 +44,42 @@ export const parseStackConfigFile = async (
   templateEngine: TemplateEngine,
   logger: TkmLogger,
   pathToFile: FilePath,
-): Promise<StackConfig> =>
-  parseStackConfigFileInternal(
-    ctx,
-    variables,
-    templateEngine,
-    logger,
-    pathToFile,
-    "stack",
-  )
-
-const parseStackConfigFileInternal = async (
-  ctx: CommandContext,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  variables: any,
-  templateEngine: TemplateEngine,
-  logger: TkmLogger,
-  pathToFile: FilePath,
-  configType: "blueprint" | "stack",
-): Promise<StackConfig> => {
+): Promise<StandardStackConfig | CustomStackConfig> => {
   const rendered = await templateEngine.renderTemplateFile({
     pathToFile,
     variables,
   })
 
   const parsedFile = parseYaml(pathToFile, rendered)
-  const result = buildStackConfig(ctx, parsedFile, configType)
+  if (typeof parsedFile === "number" || typeof parsedFile === "string") {
+    throw new Error("Invalid yaml document")
+  }
+
+  if (parsedFile.customType === undefined) {
+    return parseStandardStackConfigFileInternal(
+      ctx,
+      pathToFile,
+      parsedFile,
+      "stack",
+    )
+  }
+
+  if (typeof parsedFile.customType === "string") {
+    return parseCustomStackConfigFile(ctx, pathToFile, parsedFile)
+  }
+
+  throw new TakomoError(
+    `Validation errors in stack file ${pathToFile}:\n- customType must be a string`,
+  )
+}
+
+const parseStandardStackConfigFileInternal = async (
+  ctx: CommandContext,
+  pathToFile: FilePath,
+  parsedFile: Record<string, unknown>,
+  configType: "blueprint" | "stack",
+): Promise<StandardStackConfig> => {
+  const result = buildStandardStackConfig(ctx, parsedFile, configType)
   if (result.isOk()) {
     return result.value
   }
@@ -66,6 +87,23 @@ const parseStackConfigFileInternal = async (
   const details = result.error.messages.map((m: unknown) => `- ${m}`).join("\n")
   throw new TakomoError(
     `Validation errors in ${configType} file ${pathToFile}:\n${details}`,
+  )
+}
+
+const parseCustomStackConfigFile = async (
+  ctx: CommandContext,
+  pathToFile: FilePath,
+  parsedFile: Record<string, unknown>,
+): Promise<CustomStackConfig> => {
+  const result = buildCustomStackConfig(ctx, parsedFile)
+
+  if (result.isOk()) {
+    return result.value
+  }
+
+  const details = result.error.messages.map((m: unknown) => `- ${m}`).join("\n")
+  throw new TakomoError(
+    `Validation errors in stack file ${pathToFile}:\n${details}`,
   )
 }
 

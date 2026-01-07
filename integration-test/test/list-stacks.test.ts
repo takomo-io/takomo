@@ -21,6 +21,11 @@ describe("List stacks", () => {
         stackName: "security-groups1",
         status: undefined,
       })
+      .expectStack({
+        stackPath: "/my-custom.yml/eu-west-1",
+        stackName: "my-custom",
+        status: "PENDING",
+      })
       .assert())
 
   test("List all stacks before deploy with cli", async () => {
@@ -31,12 +36,20 @@ describe("List stacks", () => {
       time: isNumber,
       results: [
         {
+          path: "/my-custom.yml/eu-west-1",
+          name: "my-custom",
+          type: "custom",
+          status: "PENDING",
+        },
+        {
           path: "/security-groups1.yml/eu-west-1",
           name: "security-groups1",
+          type: "standard",
         },
         {
           path: "/vpc1.yml/eu-west-1",
           name: "vpc1",
+          type: "standard",
         },
       ],
     }
@@ -65,6 +78,10 @@ describe("List stacks", () => {
         stackPath: "/vpc1.yml/eu-west-1",
         stackName: "vpc1",
       })
+      .expectStackUpdateSuccessWithNoChanges({
+        stackPath: "/my-custom.yml/eu-west-1",
+        stackName: "my-custom",
+      })
       .assert())
 
   test("List all stacks", () =>
@@ -80,6 +97,12 @@ describe("List stacks", () => {
         stackName: "security-groups1",
         status: "CREATE_COMPLETE",
       })
+      .expectStack({
+        stackPath: "/my-custom.yml/eu-west-1",
+        stackName: "my-custom",
+        status: "PENDING",
+      })
+
       .assert())
 
   test("List all stacks with cli", async () => {
@@ -90,13 +113,21 @@ describe("List stacks", () => {
       time: isNumber,
       results: [
         {
+          path: "/my-custom.yml/eu-west-1",
+          name: "my-custom",
+          type: "custom",
+          status: "PENDING",
+        },
+        {
           path: "/security-groups1.yml/eu-west-1",
+          type: "standard",
           name: "security-groups1",
           status: "CREATE_COMPLETE",
           createdTime: isDefined,
         },
         {
           path: "/vpc1.yml/eu-west-1",
+          type: "standard",
           name: "vpc1",
           status: "CREATE_COMPLETE",
           createdTime: isDefined,
@@ -139,6 +170,7 @@ describe("List stacks", () => {
       results: [
         {
           path: "/security-groups1.yml/eu-west-1",
+          type: "standard",
           name: "security-groups1",
           status: "CREATE_COMPLETE",
           createdTime: isDefined,

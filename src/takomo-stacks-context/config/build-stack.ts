@@ -1,10 +1,5 @@
 import { AnySchema } from "joi"
-import * as R from "ramda"
-import {
-  StackCapability,
-  StackName,
-  StackPolicyBody,
-} from "../../aws/cloudformation/model.js"
+import { StackName } from "../../aws/cloudformation/model.js"
 import { InternalCredentialManager } from "../../aws/common/credentials.js"
 import {
   AccountId,
@@ -13,89 +8,45 @@ import {
   TagKey,
 } from "../../aws/common/model.js"
 import { CommandPath } from "../../command/command-model.js"
-import {
-  TemplateBucketConfig,
-  TimeoutConfig,
-  Vars,
-} from "../../common/model.js"
-import { TemplateConfig } from "../../config/common-config.js"
-import { StackConfig } from "../../config/stack-config.js"
+import { TimeoutConfig, Vars } from "../../common/model.js"
+import { BaseStackConfig } from "../../config/stack-config.js"
 import { InternalCommandContext } from "../../context/command-context.js"
 import { HookRegistry } from "../../hooks/hook-registry.js"
 import { HookConfig } from "../../hooks/hook.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
-import { createAwsSchemas } from "../../schema/aws-schema.js"
 import { StackGroup } from "../../stacks/stack-group.js"
-import {
-  createStack,
-  InternalStack,
-  normalizeStackPath,
-  RawTagValue,
-  StackPath,
-  StackProps,
-  Template,
-} from "../../stacks/stack.js"
 import { CommandRole, Project } from "../../takomo-core/command.js"
 import { StackPropertyDefaults } from "../../takomo-stacks-model/constants.js"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
-import { isWithinCommandPath } from "../../takomo-stacks-model/util.js"
 import { mapToObject, mergeArrays, mergeMaps } from "../../utils/collections.js"
 import { TakomoError } from "../../utils/errors.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { merge } from "../../utils/objects.js"
-import { validate } from "../../utils/validation.js"
 import { StacksConfigRepository } from "../model.js"
 import { StackConfigNode } from "./config-tree.js"
 import { createVariablesForStackConfigFile } from "./create-variables-for-stack-config-file.js"
-import { getCredentialManager } from "./get-credential-provider.js"
-import { initializeHooks } from "./hooks.js"
 import { makeStackName } from "./make-stack-name.js"
-import { mergeStackSchemas } from "./merge-stack-schemas.js"
-import { buildParameters } from "./parameters.js"
 import { ProcessStatus } from "./process-config-tree.js"
+import {
+  InternalStack,
+  normalizeStackPath,
+  RawTagValue,
+  StackPath,
+} from "../../stacks/stack.js"
+import { isStandardStackConfig } from "../../config/standard-stack-config.js"
+import { buildStandardStack } from "./build-standard-stack.js"
+import { isCustomStackConfig } from "../../config/custom-stack-config.js"
+import { buildCustomStack } from "./build-custom-stack.js"
+import { CustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
+import { exhaustiveCheck } from "../../utils/exhaustive-check.js"
 
 export interface StackPropBuilderProps {
-  readonly stackConfig: StackConfig
+  readonly stackConfig: BaseStackConfig
   readonly stackGroup: StackGroup
-  readonly blueprint?: StackConfig
+  readonly blueprint?: BaseStackConfig
 }
 
-const buildTemplateInternal = (
-  stackPath: StackPath,
-  { inline, filename, dynamic }: TemplateConfig,
-): Template => {
-  if (inline) {
-    return {
-      dynamic,
-      inline,
-    }
-  }
-
-  return {
-    dynamic,
-    filename: filename ?? stackPath.slice(1),
-  }
-}
-
-export const buildTemplate = (
-  { stackConfig, blueprint }: StackPropBuilderProps,
-  stackPath: StackPath,
-): Template => {
-  if (stackConfig.template) {
-    return buildTemplateInternal(stackPath, stackConfig.template)
-  }
-
-  if (blueprint?.template) {
-    return buildTemplateInternal(stackPath, blueprint.template)
-  }
-
-  return {
-    dynamic: true,
-    filename: stackPath.slice(1),
-  }
-}
-
-const validateData = (
+export const validateData = (
   stackPath: StackPath,
   schemas: ReadonlyArray<AnySchema>,
   data: Vars,
@@ -114,7 +65,7 @@ const validateData = (
   })
 }
 
-const validateTags = (
+export const validateTags = (
   stackPath: StackPath,
   schemas: ReadonlyArray<AnySchema>,
   tags: Map<string, RawTagValue>,
@@ -134,7 +85,7 @@ const validateTags = (
   })
 }
 
-const validateName = (
+export const validateName = (
   stackPath: StackPath,
   schemas: ReadonlyArray<AnySchema>,
   name: StackName,
@@ -193,13 +144,6 @@ export const buildCommandRole = ({
 }: StackPropBuilderProps): CommandRole | undefined =>
   stackConfig.commandRole ?? blueprint?.commandRole ?? stackGroup.commandRole
 
-export const buildCapabilities = ({
-  stackConfig,
-  blueprint,
-  stackGroup,
-}: StackPropBuilderProps): ReadonlyArray<StackCapability> | undefined =>
-  stackConfig.capabilities ?? blueprint?.capabilities ?? stackGroup.capabilities
-
 export const buildIgnore = ({
   stackConfig,
   blueprint,
@@ -223,13 +167,6 @@ export const buildTerminationProtection = ({
   blueprint?.terminationProtection ??
   stackGroup.terminationProtection
 
-export const buildStackPolicy = ({
-  stackConfig,
-  blueprint,
-  stackGroup,
-}: StackPropBuilderProps): StackPolicyBody | undefined =>
-  stackConfig.stackPolicy ?? blueprint?.stackPolicy ?? stackGroup.stackPolicy
-
 export const buildProject = ({
   stackConfig,
   blueprint,
@@ -247,16 +184,6 @@ export const buildTimeout = ({
   stackGroup.timeout ??
   StackPropertyDefaults.timeout()
 
-export const buildTemplateBucket = ({
-  stackConfig,
-  blueprint,
-  stackGroup,
-}: StackPropBuilderProps): TemplateBucketConfig | undefined =>
-  stackConfig.templateBucket ??
-  blueprint?.templateBucket ??
-  stackGroup.templateBucket ??
-  StackPropertyDefaults.templateBucket()
-
 export const buildDependencies = ({
   stackConfig,
   blueprint,
@@ -266,15 +193,6 @@ export const buildDependencies = ({
     stackConfig.depends ?? blueprint?.depends ?? StackPropertyDefaults.depends()
   return depends.map((d) => normalizeStackPath(stackGroup.path, d))
 }
-
-export const buildStackPolicyDuringUpdate = ({
-  stackConfig,
-  blueprint,
-  stackGroup,
-}: StackPropBuilderProps): StackPolicyBody | undefined =>
-  stackConfig.stackPolicyDuringUpdate ??
-  blueprint?.stackPolicyDuringUpdate ??
-  stackGroup.stackPolicyDuringUpdate
 
 export const buildData = ({
   stackConfig,
@@ -335,12 +253,12 @@ export const buildStack = async (
   commandPath: CommandPath,
   status: ProcessStatus,
   configRepository: StacksConfigRepository,
+  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<InternalStack[]> => {
-  const { stackName } = createAwsSchemas({ regions: ctx.regions })
-
-  logger.debug(`Build stack with path '${node.path}'`)
-
   const stackPath = node.path
+
+  logger.debug(`Build stack with path '${stackPath}'`)
+
   const stackVariables = createVariablesForStackConfigFile(
     ctx.variables,
     stackGroup,
@@ -348,137 +266,46 @@ export const buildStack = async (
   )
 
   const stackConfig = await node.getConfig(stackVariables)
-  const blueprint = stackConfig.blueprint
-    ? await configRepository.getBlueprint(stackConfig.blueprint, stackVariables)
-    : undefined
 
-  const builderProps: StackPropBuilderProps = {
-    stackConfig,
-    blueprint,
-    stackGroup,
+  if (isCustomStackConfig(stackConfig)) {
+    const customStackHandler = customStackHandlerRegistry.getHandler(
+      stackConfig.customType,
+    )
+
+    return buildCustomStack(
+      stackPath,
+      ctx,
+      logger,
+      defaultCredentialManager,
+      credentialManagers,
+      resolverRegistry,
+      schemaRegistry,
+      hookRegistry,
+      stackConfig,
+      stackGroup,
+      commandPath,
+      status,
+      customStackHandler,
+    )
   }
 
-  const hookConfigs = buildHookConfigs(builderProps)
-  const name = buildStackName(builderProps, stackPath)
-  const regions = buildRegions(builderProps)
-  const commandRole = buildCommandRole(builderProps)
-  const template = buildTemplate(builderProps, stackPath)
-  const accountIds = buildAccountIds(builderProps)
-  const capabilities = buildCapabilities(builderProps)
-  const ignore = buildIgnore(builderProps)
-  const obsolete = buildObsolete(builderProps)
-  const terminationProtection = buildTerminationProtection(builderProps)
-  const stackPolicy = buildStackPolicy(builderProps)
-  const stackPolicyDuringUpdate = buildStackPolicyDuringUpdate(builderProps)
-  const project = buildProject(builderProps)
-
-  const parameters = await buildParameters(
-    ctx,
-    stackPath,
-    mergeMaps(blueprint?.parameters ?? new Map(), stackConfig.parameters),
-    resolverRegistry,
-    schemaRegistry,
-  )
-
-  if (regions.length === 0) {
-    throw new TakomoError(`Stack ${stackPath} has no regions`)
+  if (isStandardStackConfig(stackConfig)) {
+    return buildStandardStack(
+      stackPath,
+      ctx,
+      logger,
+      defaultCredentialManager,
+      credentialManagers,
+      resolverRegistry,
+      schemaRegistry,
+      hookRegistry,
+      stackConfig,
+      stackGroup,
+      commandPath,
+      status,
+      configRepository,
+    )
   }
 
-  validate(stackName, name, `Name of stack ${stackPath} is not valid`)
-
-  R.uniq(
-    Array.from(parameters.values())
-      .reduce((collected, parameter) => {
-        return [...collected, parameter.getIamRoleArns()]
-      }, new Array<string[]>())
-      .flat(),
-  )
-    .map((iamRoleArn) => ({ iamRoleArn }))
-    .forEach((commandRole) => {
-      getCredentialManager(
-        commandRole,
-        defaultCredentialManager,
-        credentialManagers,
-      )
-    })
-
-  const hooks = await initializeHooks(hookConfigs, hookRegistry)
-
-  const credentialManager = await getCredentialManager(
-    commandRole,
-    defaultCredentialManager,
-    credentialManagers,
-  )
-
-  return await Promise.all(
-    regions
-      .filter((region) =>
-        isWithinCommandPath(commandPath, `${stackPath}/${region}`),
-      )
-      .filter((region) => !status.isStackProcessed(`${stackPath}/${region}`))
-      .map(async (region) => {
-        const exactPath = `${stackPath}/${region}`
-        const stackLogger = logger.childLogger(exactPath)
-        const getCloudFormationClient = async () => {
-          const identity = await credentialManager.getCallerIdentity()
-          return ctx.awsClientProvider.createCloudFormationClient({
-            credentialProvider: credentialManager.getCredentialProvider(),
-            region,
-            identity,
-            id: exactPath,
-            logger: stackLogger,
-          })
-        }
-
-        const schemas = await mergeStackSchemas(
-          ctx,
-          schemaRegistry,
-          exactPath,
-          stackGroup.schemas,
-          stackConfig.schemas,
-          blueprint?.schemas,
-        )
-
-        const tags = buildTags(builderProps)
-        const data = buildData(builderProps)
-        const timeout = buildTimeout(builderProps)
-        const templateBucket = buildTemplateBucket(builderProps)
-        const dependencies = buildDependencies(builderProps)
-
-        const props: StackProps = {
-          name,
-          template,
-          region,
-          parameters,
-          commandRole,
-          credentialManager,
-          hooks,
-          ignore,
-          obsolete,
-          terminationProtection,
-          capabilities,
-          accountIds,
-          getCloudFormationClient,
-          stackPolicy,
-          stackPolicyDuringUpdate,
-          path: exactPath,
-          stackGroupPath: stackGroup.path,
-          project,
-          tags,
-          timeout,
-          dependencies,
-          dependents: [],
-          templateBucket,
-          data,
-          logger: stackLogger,
-          schemas,
-        }
-
-        validateData(exactPath, schemas?.data ?? [], props.data)
-        validateTags(exactPath, schemas?.tags ?? [], props.tags)
-        validateName(exactPath, schemas?.name ?? [], name)
-
-        return createStack(props)
-      }),
-  )
+  return exhaustiveCheck(stackConfig)
 }

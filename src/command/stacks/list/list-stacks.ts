@@ -1,8 +1,13 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
 import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
 import { TkmLogger } from "../../../utils/logging.js"
-import { loadCurrentCfStacks } from "../common/load-current-cf-stacks.js"
-import { ListStacksInput, ListStacksOutput } from "./model.js"
+import {
+  isCustomStackPair,
+  isStandardStackPair,
+  loadCurrentStacks,
+} from "../common/load-current-cf-stacks.js"
+import { ListStacksInput, ListStacksOutput, StackInfo } from "./model.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
 
 export const listStacks = async (
   ctx: InternalStacksContext,
@@ -15,15 +20,37 @@ export const listStacks = async (
     .filter((stack) => stack.path.startsWith(commandPath))
     .filter(isNotObsolete)
 
-  const stackPairs = await loadCurrentCfStacks(logger, stacksWithinCommandPath)
+  const stackPairs = await loadCurrentStacks(
+    logger,
+    stacksWithinCommandPath,
+    ctx,
+  )
 
-  const results = stackPairs.map(({ stack, current }) => ({
-    path: stack.path,
-    name: stack.name,
-    status: current?.status,
-    createdTime: current?.creationTime,
-    updatedTime: current?.lastUpdatedTime,
-  }))
+  const results: ReadonlyArray<StackInfo> = stackPairs.map((pair) => {
+    if (isCustomStackPair(pair)) {
+      return {
+        path: pair.stack.path,
+        name: pair.stack.name,
+        type: "custom",
+        status: pair.currentState.status,
+        createdTime: pair.currentState?.creationTime,
+        updatedTime: pair.currentState?.lastUpdatedTime,
+      }
+    }
+
+    if (isStandardStackPair(pair)) {
+      return {
+        path: pair.stack.path,
+        name: pair.stack.name,
+        type: "standard",
+        status: pair.currentStack?.status,
+        createdTime: pair.currentStack?.creationTime,
+        updatedTime: pair.currentStack?.lastUpdatedTime,
+      }
+    }
+
+    return exhaustiveCheck(pair)
+  })
 
   return {
     success: true,

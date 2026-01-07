@@ -7,9 +7,11 @@ import {
 } from "../../aws/cloudformation/model.js"
 import { CommandPath, StackResult } from "../../command/command-model.js"
 import { StacksOperationListener } from "../../command/stacks/common/model.js"
+import { isCustomStack } from "../../stacks/custom-stack.js"
+import { CustomStackState } from "../../custom-stacks/custom-stack-handler.js"
 import { StacksOperationOutput } from "../../command/stacks/model.js"
 import { StackGroup } from "../../stacks/stack-group.js"
-import { StackPath } from "../../stacks/stack.js"
+import { Stack, StackPath } from "../../stacks/stack.js"
 import { CommandStatus } from "../../takomo-core/command.js"
 import { getStackPath } from "../../takomo-stacks-model/util.js"
 import { collectFromHierarchy } from "../../utils/collections.js"
@@ -21,6 +23,9 @@ import { BaseIO, BaseIOProps } from "../cli-io.js"
 import { printError } from "../common.js"
 import { formatCommandStatus, formatStackEvent } from "../formatters.js"
 
+export const formatStackType = (stack: Stack): string =>
+  isCustomStack(stack) ? `custom (${stack.customType})` : "standard"
+
 export const formatLastModify = (
   stack: CloudFormationStackSummary | undefined,
 ): string => {
@@ -29,6 +34,26 @@ export const formatLastModify = (
   }
 
   const lastUpdateTime = stack.lastUpdatedTime ?? stack.creationTime
+
+  return (
+    formatTimestamp(lastUpdateTime) +
+    "      (" +
+    prettyMs(Date.now() - lastUpdateTime.getTime(), { unitCount: 2 }) +
+    " ago)"
+  )
+}
+
+export const formatCustomStackLastModify = (
+  stack: CustomStackState | undefined,
+): string => {
+  if (!stack) {
+    return "-"
+  }
+
+  const lastUpdateTime = stack.lastUpdatedTime ?? stack.creationTime
+  if (!lastUpdateTime) {
+    return "-"
+  }
 
   return (
     formatTimestamp(lastUpdateTime) +
@@ -97,6 +122,7 @@ export const printFailedStackResults = (
 interface OutputStackResult {
   readonly path: StackPath
   readonly name: StackName
+  readonly type: "standard" | "custom"
   readonly status: CommandStatus
   readonly time: number
   readonly message: string
@@ -109,6 +135,7 @@ const toOutputStackResult = (
 ): OutputStackResult => ({
   path: result.stack.path,
   name: result.stack.name,
+  type: isCustomStack(result.stack) ? "custom" : "standard",
   status: result.status,
   time: result.timer.getTimeElapsed(),
   message: result.message,
@@ -176,6 +203,7 @@ export const printStacksOperationOutput = ({
     table
       .cell("Path", result.stack.path)
       .cell("Name", result.stack.name)
+      .cell("Type", isCustomStack(result.stack) ? "custom" : "standard")
       .cell("Status", formatCommandStatus(result.status))
       .cell("Time", result.timer.getFormattedTimeElapsed())
       .cell("Message", result.message)

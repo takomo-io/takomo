@@ -50,6 +50,23 @@ export const arrayToObject = <T extends object>(
     {},
   )
 
+export const arrayToRecord = <
+  T extends object,
+  K extends string | number | symbol,
+  V,
+>(
+  array: ReadonlyArray<T>,
+  keyExtractor: (item: T) => K,
+  valueExtractor: (item: T) => V,
+): Record<K, V> =>
+  array.reduce(
+    (collected, item) => ({
+      ...collected,
+      [keyExtractor(item)]: valueExtractor(item),
+    }),
+    {} as Record<K, V>,
+  )
+
 export const arrayToMap = <T>(
   items: ReadonlyArray<T>,
   keyExtractor: (item: T) => string,

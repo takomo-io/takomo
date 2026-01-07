@@ -17,6 +17,8 @@ const projectDir = pathToConfigs("list-stacks"),
   vpcStackPath = "/vpc1.yml/eu-west-1",
   sgStackName = "security-groups1",
   sgStackPath = "/security-groups1.yml/eu-west-1",
+  customStackName = "my-custom",
+  customStackPath = "/my-custom.yml/eu-west-1",
   outDir = path.join(os.tmpdir(), `takomo-${Date.now()}`)
 
 beforeAll(async () => {
@@ -46,6 +48,10 @@ describe("Emit with multiple stacks", () => {
           stackPath: sgStackPath,
           templateBody: await readFileContents(pathToSgTemplate),
         })
+        .expectNoStackTemplate({
+          stackName: customStackName,
+          stackPath: customStackPath,
+        })
         .assert()
 
       expect(
@@ -61,7 +67,7 @@ describe("Emit with multiple stacks", () => {
   )
 
   test("Emit all stacks using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters`,
     )
       .expectText(
@@ -75,14 +81,14 @@ describe("Emit with multiple stacks", () => {
       .assert())
 
   test("Emit single stack using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters /vpc1.yml`,
     )
       .expectText("\n" + (await readFileContents(pathToVpcTemplate)) + "\n")
       .assert())
 
   test("Emit single stack with dependencies using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters /security-groups1.yml`,
     )
       .expectText(
@@ -96,7 +102,7 @@ describe("Emit with multiple stacks", () => {
       .assert())
 
   test("Emit single stack and ignore dependencies using cli", async () =>
-    executeWithCli(
+    await executeWithCli(
       `node bin/tkm.mjs stacks emit --quiet -y -d ${projectDir} --skip-hooks --skip-parameters --ignore-dependencies /security-groups1.yml`,
     )
       .expectText("\n" + (await readFileContents(pathToSgTemplate)) + "\n")

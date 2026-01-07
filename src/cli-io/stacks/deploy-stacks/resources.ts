@@ -7,6 +7,7 @@ import {
   Replacement,
   ResourceAttribute,
 } from "@aws-sdk/client-cloudformation"
+import { CustomStackChange } from "../../../custom-stacks/custom-stack-handler.js"
 
 type ResourceOperation = "update" | "create" | "remove" | "replace"
 
@@ -227,6 +228,34 @@ export const printResources = (
 
   io.message({
     text: `  changed resources | total: ${changes.length}, ${counts}`,
+    marginTop: true,
+  })
+
+  return true
+}
+
+export const printCustomStackChanges = (
+  io: BaseIO,
+  changes: ReadonlyArray<CustomStackChange>,
+): boolean => {
+  if (changes.length === 0) {
+    return false
+  }
+
+  io.message({
+    text: bold("Changes:"),
+    marginTop: true,
+  })
+
+  changes.forEach((change) => {
+    io.message({
+      text: change.description,
+      marginTop: true,
+    })
+  })
+
+  io.message({
+    text: `  changes total: ${changes.length}`,
     marginTop: true,
   })
 

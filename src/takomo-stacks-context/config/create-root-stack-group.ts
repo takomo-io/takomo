@@ -1,5 +1,5 @@
 import { createStackGroup, StackGroup } from "../../stacks/stack-group.js"
-import { InternalStack } from "../../stacks/stack.js"
+import { InternalStandardStack } from "../../stacks/standard-stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 
 export const createRootStackGroup = (): StackGroup =>
@@ -9,7 +9,7 @@ export const createRootStackGroup = (): StackGroup =>
     tags: new Map(),
     path: ROOT_STACK_GROUP_PATH,
     children: new Array<StackGroup>(),
-    stacks: new Array<InternalStack>(),
+    stacks: new Array<InternalStandardStack>(),
     data: {},
     hooks: [],
     accountIds: [],

@@ -9,10 +9,18 @@ interface ExpectStackTemplateProps {
   readonly stackPath: StackPath
 }
 
+interface ExpectNoStackTemplateProps {
+  readonly stackName: StackName
+  readonly stackPath: StackPath
+}
+
 export interface EmitStackTemplatesOutputMatcher {
   expectCommandToSucceed: () => EmitStackTemplatesOutputMatcher
   expectStackTemplate: (
     props: ExpectStackTemplateProps,
+  ) => EmitStackTemplatesOutputMatcher
+  expectNoStackTemplate: (
+    props: ExpectNoStackTemplateProps,
   ) => EmitStackTemplatesOutputMatcher
   assert: () => Promise<StacksOperationOutput>
 }
@@ -72,9 +80,33 @@ export const createEmitStackTemplatesOutputMatcher = (
     )
   }
 
+  const expectNoStackTemplate = ({
+    stackName,
+    stackPath,
+  }: ExpectNoStackTemplateProps): EmitStackTemplatesOutputMatcher => {
+    const stackMatcher = (stackResult: StackResult): boolean => {
+      if (stackResult.stack.path !== stackPath) {
+        return false
+      }
+
+      expect(stackResult.stack.path).toEqual(stackPath)
+      expect(stackResult.stack.name).toEqual(stackName)
+      expect(stackResult.templateBody).toBeUndefined()
+
+      return true
+    }
+
+    return createEmitStackTemplatesOutputMatcher(
+      executor,
+      [...stackAssertions, stackMatcher],
+      outputAssertions,
+    )
+  }
+
   return {
     expectCommandToSucceed,
     expectStackTemplate,
+    expectNoStackTemplate,
     assert,
   }
 }

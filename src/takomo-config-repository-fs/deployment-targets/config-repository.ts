@@ -34,6 +34,7 @@ import {
 import { createDeploymentTargetRepositoryRegistry } from "../../takomo-deployment-targets-repository/deployment-target-repository-registry.js"
 import { createFileSystemDeploymentTargetRepositoryProvider } from "../../takomo-deployment-targets-repository/filesystem-deployment-target-repository.js"
 import { createOrganizationDeploymentTargetRepositoryProvider } from "../../takomo-deployment-targets-repository/organization-deployment-target-repository.js"
+import { createCustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
 
 interface FileSystemDeploymentTargetsConfigRepositoryProps
   extends FileSystemStacksConfigRepositoryProps {
@@ -169,6 +170,10 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
   }
 
   const hookRegistry = createHookRegistry({ logger })
+  const customStackHandlerRegistry = createCustomStackHandlerRegistry({
+    logger,
+  })
+
   const resolverRegistry = new ResolverRegistry(logger)
   const schemaRegistry = createDeploymentTargetsSchemaRegistry(logger)
 
@@ -176,6 +181,7 @@ export const createFileSystemDeploymentTargetsConfigRepository = async (
     resolverRegistry,
     hookRegistry,
     schemaRegistry,
+    customStackHandlerRegistry,
   )
 
   return {

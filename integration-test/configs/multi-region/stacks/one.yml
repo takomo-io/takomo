@@ -1,0 +1,11 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions:
+  - eu-north-1
+  - eu-west-1
+  - eu-central-1
+template:
+  inline: |
+    Resources:
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties: {}

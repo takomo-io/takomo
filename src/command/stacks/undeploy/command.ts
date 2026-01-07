@@ -33,13 +33,13 @@ const modifyInput = async (
 
 const undeployStacks = async (
   ctx: InternalStacksContext,
-  configRepository: StacksConfigRepository,
   io: UndeployStacksIO,
   input: StacksUndeployOperationInput,
 ): Promise<StacksOperationOutput> => {
   const modifiedInput = await modifyInput(input, ctx, io)
 
   const plan = await buildStacksUndeployPlan(
+    ctx,
     ctx.stacks,
     modifiedInput.commandPath,
     modifiedInput.ignoreDependencies,
@@ -80,5 +80,5 @@ export const undeployStacksCommand: CommandHandler<
         validateCommandRoles: false,
       }),
     )
-    .then((ctx) => undeployStacks(ctx, configRepository, io, input))
+    .then((ctx) => undeployStacks(ctx, io, input))
     .then(io.printOutput)

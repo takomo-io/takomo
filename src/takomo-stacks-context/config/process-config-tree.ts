@@ -26,9 +26,10 @@ import {
   processStackDependencies,
 } from "../dependencies.js"
 import { StacksConfigRepository } from "../model.js"
-import { buildStack } from "./build-stack.js"
 import { ConfigTree, StackGroupConfigNode } from "./config-tree.js"
 import { doCreateStackGroup } from "./create-stack-group.js"
+import { buildStack } from "./build-stack.js"
+import { CustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
 
 export class ProcessStatus {
   readonly #stackGroups = new Map<StackGroupPath, StackGroup>()
@@ -101,6 +102,7 @@ const processStackGroupConfigNode = async (
   status: ProcessStatus,
   node: StackGroupConfigNode,
   configRepository: StacksConfigRepository,
+  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<void> => {
   logger.trace(`Process stack group config node with path '${node.path}'`)
   if (!isWithinCommandPath(commandPath, node.path)) {
@@ -156,6 +158,7 @@ const processStackGroupConfigNode = async (
         commandPath,
         status,
         configRepository,
+        customStackHandlerRegistry,
       ),
     ),
   )
@@ -179,6 +182,7 @@ const processStackGroupConfigNode = async (
         status,
         child,
         configRepository,
+        customStackHandlerRegistry,
       ),
     ),
   )
@@ -195,6 +199,7 @@ export const processConfigTree = async (
   commandPath: CommandPath,
   configTree: ConfigTree,
   configRepository: StacksConfigRepository,
+  customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<StackGroup> => {
   const item = configTree.rootStackGroup
   const status = new ProcessStatus()
@@ -216,6 +221,7 @@ export const processConfigTree = async (
         status,
         item,
         configRepository,
+        customStackHandlerRegistry,
       )
     }
 

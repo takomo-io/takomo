@@ -1,7 +1,9 @@
 import * as R from "ramda"
 import { CloudFormationStack } from "../../../aws/cloudformation/model.js"
-import { InternalStack, StackPath } from "../../../stacks/stack.js"
-
+import {
+  InternalStandardStack,
+  isInternalStandardStack,
+} from "../../../stacks/standard-stack.js"
 import {
   getStackPath,
   isNotObsolete,
@@ -11,19 +13,62 @@ import {
 import { arrayToMap } from "../../../utils/collections.js"
 import { CommandPath } from "../../command-model.js"
 import { sortStacksForUndeploy } from "../../../takomo-stacks-context/dependencies.js"
+import { InternalStack, StackPath } from "../../../stacks/stack.js"
+import {
+  InternalCustomStack,
+  isInternalCustomStack,
+} from "../../../stacks/custom-stack.js"
+import { CustomStackState } from "../../../custom-stacks/custom-stack-handler.js"
+import { exhaustiveCheck } from "../../../utils/exhaustive-check.js"
+import { getCustomStackState } from "../common/load-current-cf-stacks.js"
+import { StacksContext } from "../../../context/stacks-context.js"
 
 export type StackUndeployOperationType = "DELETE" | "SKIP"
 
 export const resolveUndeployOperationType = (
-  currentStack?: CloudFormationStack,
+  currentStack?: unknown,
 ): StackUndeployOperationType => (currentStack ? "DELETE" : "SKIP")
 
-export interface StackUndeployOperation {
-  readonly stack: InternalStack
+export const resolveUndeployCustomStackOperationType = (
+  currentState: CustomStackState,
+): StackUndeployOperationType => {
+  switch (currentState.status) {
+    case "CREATE_COMPLETE":
+    case "UPDATE_COMPLETE":
+    case "UNKNOWN":
+      return "DELETE"
+    case "PENDING":
+      return "SKIP"
+    default:
+      return exhaustiveCheck(currentState.status)
+  }
+}
+
+export interface StandardStackUndeployOperation {
+  readonly stack: InternalStandardStack
   readonly type: StackUndeployOperationType
   readonly currentStack?: CloudFormationStack
   readonly dependents: ReadonlyArray<StackPath>
 }
+
+export interface CustomStackUndeployOperation {
+  readonly stack: InternalCustomStack
+  readonly type: StackUndeployOperationType
+  readonly currentState: CustomStackState
+  readonly dependents: ReadonlyArray<StackPath>
+}
+
+export type StackUndeployOperation =
+  | StandardStackUndeployOperation
+  | CustomStackUndeployOperation
+
+export const isStandardStackUndeployOperation = (
+  op: StackUndeployOperation,
+): op is StandardStackUndeployOperation => isInternalStandardStack(op.stack)
+
+export const isCustomStackUndeployOperation = (
+  op: StackUndeployOperation,
+): op is CustomStackUndeployOperation => isInternalCustomStack(op.stack)
 
 export interface StacksUndeployPlan {
   readonly operations: ReadonlyArray<StackUndeployOperation>
@@ -31,12 +76,11 @@ export interface StacksUndeployPlan {
 }
 
 const convertToUndeployOperation = async (
+  ctx: StacksContext,
   stacksByPath: Map<StackPath, InternalStack>,
   stack: InternalStack,
   prune: boolean,
 ): Promise<StackUndeployOperation> => {
-  const currentStack = await stack.getCurrentCloudFormationStack()
-  const type = resolveUndeployOperationType(currentStack)
   const dependentFilter = prune ? isObsolete : isNotObsolete
   const dependents = stack.dependents.filter((dependentPath) => {
     const dependent = stacksByPath.get(dependentPath)
@@ -47,12 +91,31 @@ const convertToUndeployOperation = async (
     return dependentFilter(dependent)
   })
 
-  return {
-    stack,
-    type,
-    dependents,
-    currentStack,
+  if (isInternalCustomStack(stack)) {
+    const currentState = await getCustomStackState(ctx, stack)
+    const type = resolveUndeployCustomStackOperationType(currentState)
+
+    return {
+      stack,
+      type,
+      dependents,
+      currentState,
+    }
   }
+
+  if (isInternalStandardStack(stack)) {
+    const currentStack = await stack.getCurrentCloudFormationStack()
+    const type = resolveUndeployOperationType(currentStack)
+
+    return {
+      stack,
+      type,
+      dependents,
+      currentStack,
+    }
+  }
+
+  return exhaustiveCheck(stack)
 }
 
 const collectStackDependents = (
@@ -73,6 +136,7 @@ const collectStackDependents = (
   }, new Array<StackPath>())
 
 export const buildStacksUndeployPlan = async (
+  ctx: StacksContext,
   stacks: ReadonlyArray<InternalStack>,
   commandPath: CommandPath,
   ignoreDependencies: boolean,
@@ -104,7 +168,7 @@ export const buildStacksUndeployPlan = async (
 
   const operations = await Promise.all(
     selectedStacks.map((stack) =>
-      convertToUndeployOperation(stacksByPath, stack, prune),
+      convertToUndeployOperation(ctx, stacksByPath, stack, prune),
     ),
   )
 

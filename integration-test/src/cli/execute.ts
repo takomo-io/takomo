@@ -8,7 +8,7 @@ interface CliAssertions {
   readonly expectJson: (expected: unknown) => CliAssertions
   readonly expectYaml: (expected: unknown) => CliAssertions
   readonly expectText: (expected: string) => CliAssertions
-  readonly assert: () => void
+  readonly assert: () => Promise<void>
 }
 
 type CliAssertion = (stdout: string) => void

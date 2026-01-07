@@ -1,13 +1,13 @@
 import * as R from "ramda"
+import { TakomoError } from "../utils/errors.js"
+import { ObsoleteDependenciesError } from "./errors.js"
 import {
-  createStack,
+  createInternalStack,
   InternalStack,
   normalizeStackPath,
   StackPath,
   StackProps,
 } from "../stacks/stack.js"
-import { TakomoError } from "../utils/errors.js"
-import { ObsoleteDependenciesError } from "./errors.js"
 
 export const checkCyclicDependenciesForStack = (
   stack: InternalStack,
@@ -169,7 +169,9 @@ export const processStackDependencies = (
       }
     })
 
-  return populateDependents(processed).map((props) => createStack(props))
+  return populateDependents(processed).map((props) =>
+    createInternalStack(props),
+  )
 }
 
 const sortStacks = (
