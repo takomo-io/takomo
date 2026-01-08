@@ -62,7 +62,7 @@ export type {
   ResolverProviderSchemaProps,
 } from "./resolvers/resolver-provider.js"
 export type { Resolver, ResolverInput } from "./resolvers/resolver.js"
-export type { StandardStack as Stack } from "./stacks/standard-stack.js"
+export type { Stack } from "./stacks/stack.js"
 export type { CommandRole, OutputFormat } from "./takomo-core/command.js"
 export type {
   InitSchemaProps,
