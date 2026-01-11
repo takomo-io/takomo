@@ -181,7 +181,6 @@ export const loadCurrentStacks = async (
     ctx,
   )
 
-  // TODO: Tämä ei näytä toimivan jos on saman nimisiä stackeja eri tileillä (niissä sama stack path)
   const stackPairs: ReadonlyArray<StackPair> = stacks.map((stack) => {
     if (isInternalStandardStack(stack)) {
       return {
