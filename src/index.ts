@@ -96,7 +96,7 @@ export type { FilePath } from "./utils/files.js"
 export type { LogLevel, TkmLogger } from "./utils/logging.js"
 export { isCustomStack } from "./stacks/custom-stack.js"
 export { isStandardStack } from "./stacks/standard-stack.js"
-export type { CustomStack } from "./stacks/custom-stack.js"
+export type { CustomStack, CustomStackStatus } from "./stacks/custom-stack.js"
 export type { StandardStack } from "./stacks/standard-stack.js"
 export type {
   CreateCustomStackProps,
