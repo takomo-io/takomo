@@ -18,11 +18,11 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.14.0
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: node_modules
         with:
           path: node_modules
@@ -32,7 +32,7 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             dist
@@ -42,15 +42,15 @@ jobs:
     runs-on: ubuntu-24.04
     needs: build
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.14.0
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: node_modules
           key: npm-${{ hashFiles('package-lock.json') }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             dist
@@ -61,15 +61,15 @@ jobs:
     runs-on: ubuntu-24.04
     needs: build
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.14.0
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: node_modules
           key: npm-${{ hashFiles('package-lock.json') }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             dist
