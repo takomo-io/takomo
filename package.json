@@ -1,6 +1,6 @@
 {
   "name": "takomo",
-  "version": "9.0.0-alpha.0",
+  "version": "10.0.0-alpha.0",
   "description": "Organize, configure and deploy CloudFormation stacks.",
   "keywords": [
     "aws",
@@ -31,7 +31,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=22.16.0"
+    "node": ">=24.14.0"
   },
   "os": [
     "darwin",
