@@ -2,7 +2,7 @@ import { AwsCredentialIdentity } from "@aws-sdk/types"
 import { exec } from "child_process"
 import { IPolicy, bulkhead } from "cockatiel"
 import { extname } from "path"
-import * as R from "ramda"
+import _ from "lodash"
 import { promisify } from "util"
 import { CredentialManager } from "../../../aws/common/credentials.js"
 import {
@@ -86,7 +86,7 @@ const captureValue = (
   const lines = output.trim().split("\n")
 
   if (captureLastLine) {
-    return (R.last(lines) ?? "") + "\n"
+    return (_.last(lines) ?? "") + "\n"
   }
 
   if (!captureAfterLine && !captureBeforeLine) {

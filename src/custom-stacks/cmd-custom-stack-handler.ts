@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import { prepareAwsEnvVariables } from "../aws/util.js"
 import { StacksContext } from "../context/stacks-context.js"
 import { CustomStack } from "../stacks/custom-stack.js"
@@ -48,7 +48,7 @@ const captureValue = (capture: Capture, output: string): string => {
     case "all":
       return output
     case "last-line":
-      return R.last(output.split("\n")) ?? ""
+      return _.last(output.split("\n")) ?? ""
     default:
       throw new Error(`Unknown value for capture: ${capture}`)
   }

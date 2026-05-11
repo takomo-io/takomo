@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import { InternalCredentialManager } from "../../aws/common/credentials.js"
 import { IamRoleArn } from "../../aws/common/model.js"
 import { CommandPath } from "../../command/command-model.js"
@@ -128,7 +128,7 @@ export const buildCustomStack = async (
 
   validate(stackName, name, `Name of stack ${stackPath} is not valid`)
 
-  R.uniq(
+  _.uniq(
     Array.from(parameters.values())
       .reduce((collected, parameter) => {
         return [...collected, parameter.getIamRoleArns()]

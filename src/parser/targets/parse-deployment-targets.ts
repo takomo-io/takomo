@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import { IamRoleName } from "../../aws/common/model.js"
 import { Vars } from "../../common/model.js"
 import { ConfigSetInstruction } from "../../config-sets/config-set-model.js"
@@ -32,7 +32,7 @@ export const parseDeploymentTarget = (
   )
 
   const configuredLabels = parseStringArray(value.labels)
-  const labels = R.uniq([...inheritedLabels, ...configuredLabels])
+  const labels = _.uniq([...inheritedLabels, ...configuredLabels])
   const vars = merge(inheritedVars, parseVars(value.vars))
 
   const deploymentRole =

@@ -9,7 +9,6 @@ import {
 } from "@aws-sdk/client-cloudformation"
 import { IPolicy } from "cockatiel"
 import _ from "lodash"
-import * as R from "ramda"
 import {
   ACTIVE_STACK_STATUSES,
   ChangeSet,
@@ -523,13 +522,13 @@ export const createCloudFormationClient = (
       }
     }
 
-    const latestEvent = R.last(events)
+    const latestEvent = _.last(events)
     const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
 
     if (timeoutConfig.timeout !== 0) {
       const elapsedTime = Date.now() - timeoutConfig.startTime
       if (elapsedTime > timeoutConfig.timeout * 1000) {
-        const latestStackEvent = R.last(
+        const latestStackEvent = _.last(
           updatedEvents.filter(
             ({ resourceType, physicalResourceId }) =>
               resourceType === "AWS::CloudFormation::Stack" &&
@@ -601,7 +600,7 @@ export const createCloudFormationClient = (
       }
     }
 
-    const latestEvent = R.last(events)
+    const latestEvent = _.last(events)
     const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
     return waitStackDeleteToComplete({
       ...props,
@@ -647,7 +646,7 @@ export const createCloudFormationClient = (
       }
     }
 
-    const latestEvent = R.last(events)
+    const latestEvent = _.last(events)
     const newLatestEventId = latestEvent ? latestEvent.id : latestEventId
     return waitStackRollbackToComplete({
       ...props,
