@@ -6,10 +6,11 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "lib": ["ES2024", "WebWorker"],
+    "lib": ["ES2024"],
     "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "rootDir": "./src",
     "outDir": "./dist",
     "isolatedModules": true
   },
