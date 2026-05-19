@@ -1,4 +1,5 @@
 import _ from "lodash"
+import util from "node:util"
 
 interface CollectFromHierarchyProps<T> {
   readonly sortSiblings?: (a: T, b: T) => number
@@ -89,7 +90,7 @@ interface MergeArraysProps<T> {
 export const mergeArrays = <T>({
   first,
   second,
-  equals = _.isEqual,
+  equals = util.isDeepStrictEqual,
   allowDuplicates = false,
 }: MergeArraysProps<T>): ReadonlyArray<T> => {
   const merged = [...first, ...second]
