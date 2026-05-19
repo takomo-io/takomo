@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2023",
+    "target": "ES2024",
     "module": "nodenext",
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "lib": ["ES2023", "dom"],
+    "lib": ["ES2024", "WebWorker"],
     "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
