@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import { IamRoleName } from "../../aws/common/model.js"
 import { Vars } from "../../common/model.js"
 import { ConfigSetInstruction } from "../../config-sets/config-set-model.js"
@@ -48,7 +48,7 @@ const parseDeploymentGroup = (
   )
 
   const configuredLabels = parseStringArray(group?.labels)
-  const labels = R.uniq([...inheritedLabels, ...configuredLabels])
+  const labels = _.uniq([...inheritedLabels, ...configuredLabels])
 
   const targetsSchema = parseTargetSchemas(group?.targetsSchema)
   const vars = merge(inheritedVars, parseVars(group?.vars))
@@ -113,7 +113,7 @@ export const parseDeploymentGroups = (
   }
 
   const filledValue = fillMissingDeploymentGroups(value)
-  const rootGroupPaths = R.uniq(
+  const rootGroupPaths = _.uniq(
     Object.keys(filledValue).map((key) => key.split("/")[0]),
   )
 

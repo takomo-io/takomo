@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import {
   StackCapability,
   StackPolicyBody,
@@ -190,7 +190,7 @@ export const buildStandardStack = async (
 
   validate(stackName, name, `Name of stack ${stackPath} is not valid`)
 
-  R.uniq(
+  _.uniq(
     Array.from(parameters.values())
       .reduce((collected, parameter) => {
         return [...collected, parameter.getIamRoleArns()]

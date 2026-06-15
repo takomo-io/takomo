@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import { InternalCredentialManager } from "../../aws/common/credentials.js"
 import { IamRoleArn } from "../../aws/common/model.js"
 import { CommandPath } from "../../command/command-model.js"
@@ -225,7 +225,7 @@ export const processConfigTree = async (
       )
     }
 
-    commandPaths = R.uniq(
+    commandPaths = _.uniq(
       status
         .getNewlyProcessedStacks()
         .filter((s) => !s.ignore)

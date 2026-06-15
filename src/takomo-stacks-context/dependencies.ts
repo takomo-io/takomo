@@ -1,4 +1,4 @@
-import * as R from "ramda"
+import _ from "lodash"
 import { TakomoError } from "../utils/errors.js"
 import { ObsoleteDependenciesError } from "./errors.js"
 import {
@@ -75,7 +75,7 @@ export const collectAllDependencies = (
   stacks: InternalStack[],
 ): StackPath[] => {
   const stack = stacks.find((s) => s.path === stackPath)!
-  return R.uniq(
+  return _.uniq(
     stack.dependencies.reduce((collected, dependencyPath) => {
       const childDependencies = collectAllDependencies(dependencyPath, stacks)
       return [...collected, ...childDependencies, dependencyPath]
@@ -88,7 +88,7 @@ export const collectAllDependents = (
   stacks: InternalStack[],
 ): StackPath[] => {
   const stack = stacks.find((s) => s.path === stackPath)!
-  return R.uniq(
+  return _.uniq(
     stack.dependents.reduce((collected, dependentPath) => {
       const childDependents = collectAllDependents(dependentPath, stacks)
       return [...collected, ...childDependents, dependentPath]
@@ -163,7 +163,7 @@ export const processStackDependencies = (
 
       return {
         ...stack,
-        dependencies: R.uniq(
+        dependencies: _.uniq(
           [...stackDependencies, ...parameterDependencies].flat(),
         ),
       }

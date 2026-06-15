@@ -1,5 +1,4 @@
 import { basename, join } from "path"
-import * as R from "ramda"
 import { createHookRegistry } from "../../hooks/hook-registry.js"
 import { ResolverRegistry } from "../../resolvers/resolver-registry.js"
 import _ from "lodash"
@@ -36,8 +35,7 @@ import { createFileSystemDeploymentTargetRepositoryProvider } from "../../takomo
 import { createOrganizationDeploymentTargetRepositoryProvider } from "../../takomo-deployment-targets-repository/organization-deployment-target-repository.js"
 import { createCustomStackHandlerRegistry } from "../../custom-stacks/custom-stack-handler-registry.js"
 
-interface FileSystemDeploymentTargetsConfigRepositoryProps
-  extends FileSystemStacksConfigRepositoryProps {
+interface FileSystemDeploymentTargetsConfigRepositoryProps extends FileSystemStacksConfigRepositoryProps {
   readonly pathToDeploymentConfigFile?: FilePath
   readonly deploymentDir: FilePath
   readonly configSetsDir: FilePath
@@ -135,7 +133,7 @@ const loadExternallyPersistedDeploymentTargets = async (
   })
 
   const mergedDeploymentTargets = mergeDeploymentTargetConfigs(
-    deploymentTargets.map(R.prop("item")),
+    deploymentTargets.map((t) => t.item),
   )
 
   return new Map(

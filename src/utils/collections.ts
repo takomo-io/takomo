@@ -1,4 +1,5 @@
-import * as R from "ramda"
+import _ from "lodash"
+import util from "node:util"
 
 interface CollectFromHierarchyProps<T> {
   readonly sortSiblings?: (a: T, b: T) => number
@@ -40,7 +41,7 @@ export const mapToObject = (
 export const arrayToObject = <T extends object>(
   array: ReadonlyArray<T>,
   keyExtractor: (item: T) => string,
-  valueExtractor: (item: T) => unknown = R.identity,
+  valueExtractor: (item: T) => unknown = (item) => item,
 ): Record<string, unknown> =>
   array.reduce(
     (collected, item) => ({
@@ -75,7 +76,7 @@ export const arrayToMap = <T>(
 export const findNonUniques = <Primitive>(
   items: ReadonlyArray<Primitive>,
 ): ReadonlyArray<Primitive> =>
-  R.uniq(
+  _.uniq(
     items.filter((item) => items.filter((i) => i === item).length > 1),
   ).sort()
 
@@ -89,7 +90,7 @@ interface MergeArraysProps<T> {
 export const mergeArrays = <T>({
   first,
   second,
-  equals = R.equals,
+  equals = util.isDeepStrictEqual,
   allowDuplicates = false,
 }: MergeArraysProps<T>): ReadonlyArray<T> => {
   const merged = [...first, ...second]
@@ -103,7 +104,7 @@ export const mergeArrays = <T>({
       return collected
     }
 
-    const lastDuplicate = R.findLast(eq, merged)
+    const lastDuplicate = _.findLast(merged, eq)
     if (!lastDuplicate) {
       throw new Error("Expected an item to be found")
     }
