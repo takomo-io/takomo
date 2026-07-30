@@ -1,6 +1,6 @@
 import path from "path"
 import { TestEnvironment } from "jest-environment-node"
-import { Recycler } from "testenv-recycler"
+import { Recycler } from "./testenv-recycler-client.js"
 
 const isInteger = (str) => /^\+?(0|[1-9]\d*)$/.test(str)
 
