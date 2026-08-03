@@ -1,6 +1,6 @@
 {
   "displayName": "integration-test",
-  "testEnvironment": "jest-environment-testenv-recycler",
+  "testEnvironment": "<rootDir>/env/testenv-recycler-environment.js",
   "testRegex": ["/test/.*\\.(test)?\\.(ts)$"],
   "setupFiles": ["./jest.setup.js"],
   "setupFilesAfterEnv": ["./jest.setup-after-env.js"],
