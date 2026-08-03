@@ -2,7 +2,7 @@
 import semver from "semver"
 import { run } from "../dist/index.js"
 
-const requiredVersion = "24.14.0"
+const requiredVersion = "26.5.1"
 if (!semver.satisfies(process.version, ">=" + requiredVersion)) {
   console.log("ERROR")
   console.log("-----")
