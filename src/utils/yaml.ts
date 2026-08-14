@@ -1,4 +1,4 @@
-import yaml from "js-yaml"
+import { load, dump } from "js-yaml"
 import stringify from "json-stable-stringify"
 import { TakomoError } from "./errors.js"
 import { FilePath, readFileContents } from "./files.js"
@@ -11,7 +11,7 @@ export type ParsedYamlDocument = Record<string, unknown> | string | number
 export const parseYamlString = (
   contents: YamlFormattedString,
 ): ParsedYamlDocument => {
-  const parsed = yaml.load(contents)
+  const parsed = load(contents)
   return parsed ? (parsed as ParsedYamlDocument) : {}
 }
 
@@ -19,6 +19,10 @@ export const parseYaml = (
   filePath: FilePath,
   contents: YamlFormattedString,
 ): ParsedYamlDocument => {
+  if (contents.trim() === "") {
+    return {}
+  }
+
   try {
     return parseYamlString(contents)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,7 +59,7 @@ export const parseYamlFile = async (
   readFileContents(pathToYamlFile).then((c) => parseYaml(pathToYamlFile, c))
 
 export const formatYaml = (object: unknown): YamlFormattedString =>
-  yaml.dump(JSON.parse(stringify(object)!), {
+  dump(JSON.parse(stringify(object)!), {
     skipInvalid: true,
     lineWidth: 300,
     noRefs: true,
