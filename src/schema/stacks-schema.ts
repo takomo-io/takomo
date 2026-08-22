@@ -217,7 +217,9 @@ export const createStacksSchemas = (
 
   const relativeStackPath = Joi.string()
     .max(100)
-    .regex(/^(((\/|(\.\.\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\.yml(\/[a-z0-9-]+)?$/)
+    .regex(
+      /^(?:\/|(?:\.\.\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\/[a-zA-Z][a-zA-Z0-9-]*)*\.yml(?:\/[a-z0-9-]+)?$/,
+    )
     .custom((value, helpers) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [path, regionPart] = value.split(".yml", 2)

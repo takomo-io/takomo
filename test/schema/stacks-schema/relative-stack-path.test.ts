@@ -52,23 +52,27 @@ const invalid = [
   ],
   [
     "/spaces are not allowed.yml",
-    '"value" with value "/spaces are not allowed.yml" fails to match the required pattern: /^(((\\/|(\\.\\.\\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\\.yml(\\/[a-z0-9-]+)?$/',
+    '"value" with value "/spaces are not allowed.yml" fails to match the required pattern: /^(?:\\/|(?:\\.\\.\\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\\/[a-zA-Z][a-zA-Z0-9-]*)*\\.yml(?:\\/[a-z0-9-]+)?$/',
   ],
   [
     "/invalid-extension.json",
-    '"value" with value "/invalid-extension.json" fails to match the required pattern: /^(((\\/|(\\.\\.\\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\\.yml(\\/[a-z0-9-]+)?$/',
+    '"value" with value "/invalid-extension.json" fails to match the required pattern: /^(?:\\/|(?:\\.\\.\\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\\/[a-zA-Z][a-zA-Z0-9-]*)*\\.yml(?:\\/[a-z0-9-]+)?$/',
   ],
   [
     "/underscores_are_BAD.yml",
-    '"value" with value "/underscores_are_BAD.yml" fails to match the required pattern: /^(((\\/|(\\.\\.\\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\\.yml(\\/[a-z0-9-]+)?$/',
+    '"value" with value "/underscores_are_BAD.yml" fails to match the required pattern: /^(?:\\/|(?:\\.\\.\\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\\/[a-zA-Z][a-zA-Z0-9-]*)*\\.yml(?:\\/[a-z0-9-]+)?$/',
   ],
   [
     "/1-begins-with-number.yml",
-    '"value" with value "/1-begins-with-number.yml" fails to match the required pattern: /^(((\\/|(\\.\\.\\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\\.yml(\\/[a-z0-9-]+)?$/',
+    '"value" with value "/1-begins-with-number.yml" fails to match the required pattern: /^(?:\\/|(?:\\.\\.\\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\\/[a-zA-Z][a-zA-Z0-9-]*)*\\.yml(?:\\/[a-z0-9-]+)?$/',
   ],
   [
     "/app.ymlxeu-west-1",
-    '"value" with value "/app.ymlxeu-west-1" fails to match the required pattern: /^(((\\/|(\\.\\.\\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\\.yml(\\/[a-z0-9-]+)?$/',
+    '"value" with value "/app.ymlxeu-west-1" fails to match the required pattern: /^(?:\\/|(?:\\.\\.\\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\\/[a-zA-Z][a-zA-Z0-9-]*)*\\.yml(?:\\/[a-z0-9-]+)?$/',
+  ],
+  [
+    "network../vpc.yml",
+    '"value" with value "network../vpc.yml" fails to match the required pattern: /^(?:\\/|(?:\\.\\.\\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\\/[a-zA-Z][a-zA-Z0-9-]*)*\\.yml(?:\\/[a-z0-9-]+)?$/',
   ],
   [
     "/dev/vpc/vpc.yml/moon-north-1",
