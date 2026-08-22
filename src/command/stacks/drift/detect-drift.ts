@@ -1,5 +1,8 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
-import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
+import {
+  isNotObsolete,
+  isWithinCommandPath,
+} from "../../../takomo-stacks-model/util.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import {
   isCustomStackPair,
@@ -17,7 +20,7 @@ export const detectDrift = async (
   const { timer } = input
 
   const stacksWithinCommandPath = ctx.stacks
-    .filter((stack) => stack.path.startsWith(input.commandPath))
+    .filter((stack) => isWithinCommandPath(input.commandPath, stack.path))
     .filter(isNotObsolete)
 
   const stackPairs = await loadCurrentStacks(

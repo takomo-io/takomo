@@ -107,6 +107,31 @@ const assertPlan = (
 }
 
 describe("#buildStacksDeployPlan", () => {
+  test("does not select stacks whose paths only share the command path prefix", async () => {
+    const plan = await buildStacksDeployPlan(
+      [
+        stack({
+          name: "dev",
+          region: "eu-west-1",
+          path: "/dev/app.yml/eu-west-1",
+          status: "CREATE_COMPLETE",
+        }),
+        stack({
+          name: "development",
+          region: "eu-west-1",
+          path: "/development/app.yml/eu-west-1",
+          status: "CREATE_COMPLETE",
+        }),
+      ],
+      "/dev",
+      false,
+      logger,
+      ctx,
+    )
+
+    assertPlan(plan, { type: "UPDATE", path: "/dev/app.yml/eu-west-1" })
+  })
+
   test("single existing stack", async () => {
     const plan = await buildStacksDeployPlan(
       [

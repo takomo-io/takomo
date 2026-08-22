@@ -10,5 +10,22 @@ export const isNotObsolete = (stack: InternalStack): boolean =>
 
 export const isWithinCommandPath = (
   commandPath: CommandPath,
-  other: CommandPath,
-): boolean => commandPath.startsWith(other.slice(0, commandPath.length))
+  path: CommandPath,
+): boolean => {
+  const pathSegments = path.split("/").filter(Boolean)
+  const commandPathSegments = commandPath.split("/").filter(Boolean)
+
+  return (
+    commandPathSegments.length <= pathSegments.length &&
+    commandPathSegments.every(
+      (segment, index) => segment === pathSegments[index],
+    )
+  )
+}
+
+export const isRelatedToCommandPath = (
+  commandPath: CommandPath,
+  path: CommandPath,
+): boolean =>
+  isWithinCommandPath(commandPath, path) ||
+  isWithinCommandPath(path, commandPath)

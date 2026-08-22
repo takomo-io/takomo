@@ -1,5 +1,8 @@
 import { InternalStacksContext } from "../../../context/stacks-context.js"
-import { isNotObsolete } from "../../../takomo-stacks-model/util.js"
+import {
+  isNotObsolete,
+  isWithinCommandPath,
+} from "../../../takomo-stacks-model/util.js"
 import { TkmLogger } from "../../../utils/logging.js"
 import {
   isCustomStackPair,
@@ -17,7 +20,7 @@ export const listStacks = async (
   const { timer, commandPath, outputFormat } = input
 
   const stacksWithinCommandPath = ctx.stacks
-    .filter((stack) => stack.path.startsWith(commandPath))
+    .filter((stack) => isWithinCommandPath(commandPath, stack.path))
     .filter(isNotObsolete)
 
   const stackPairs = await loadCurrentStacks(
