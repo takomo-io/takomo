@@ -12,6 +12,7 @@ import { StackGroupPath } from "../../stacks/stack-group.js"
 import { normalizeStackPath, StackPath } from "../../stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 import { createSchemaRegistry } from "../../takomo-stacks-model/schemas.js"
+import { isWithinCommandPath } from "../../takomo-stacks-model/util.js"
 import { arrayToMap, collectFromHierarchy } from "../../utils/collections.js"
 import { TkmLogger } from "../../utils/logging.js"
 import { isStackGroupPath } from "../common.js"
@@ -64,7 +65,7 @@ export const validateCommandPath = (
       throw new CommandPathMatchesNoStacksError(commandPath, stackPaths)
     }
   } else if (!stackGroupPaths.some((s) => s === commandPath)) {
-    if (!stackPaths.some((s) => commandPath.startsWith(s))) {
+    if (!stackPaths.some((s) => isWithinCommandPath(s, commandPath))) {
       throw new CommandPathMatchesNoStacksError(commandPath, stackPaths)
     }
   }
@@ -171,7 +172,7 @@ export const buildStacksContext = async ({
       const normalizedPath = stackGroupPath
         ? normalizeStackPath(stackGroupPath, path)
         : path
-      return stacks.filter((s) => s.path.startsWith(normalizedPath))
+      return stacks.filter((s) => isWithinCommandPath(normalizedPath, s.path))
     },
   }
 }

@@ -17,7 +17,7 @@ import {
 } from "../../stacks/stack.js"
 import { ROOT_STACK_GROUP_PATH } from "../../takomo-stacks-model/constants.js"
 import { SchemaRegistry } from "../../takomo-stacks-model/schemas.js"
-import { isWithinCommandPath } from "../../takomo-stacks-model/util.js"
+import { isRelatedToCommandPath } from "../../takomo-stacks-model/util.js"
 import { arrayToMap } from "../../utils/collections.js"
 import { TkmLogger } from "../../utils/logging.js"
 import {
@@ -105,7 +105,7 @@ const processStackGroupConfigNode = async (
   customStackHandlerRegistry: CustomStackHandlerRegistry,
 ): Promise<void> => {
   logger.trace(`Process stack group config node with path '${node.path}'`)
-  if (!isWithinCommandPath(commandPath, node.path)) {
+  if (!isRelatedToCommandPath(commandPath, node.path)) {
     logger.trace(
       `Stack group config node with path '${node.path}' is not within command path '${commandPath}'`,
     )
@@ -140,7 +140,7 @@ const processStackGroupConfigNode = async (
   const stacksToProcess = currentStackGroup.ignore
     ? []
     : node.stacks
-        .filter((item) => isWithinCommandPath(commandPath, item.path))
+        .filter((item) => isRelatedToCommandPath(commandPath, item.path))
         .filter((item) => !status.isStackProcessed(item.path))
 
   const processedStacks = await Promise.all(
@@ -165,7 +165,7 @@ const processStackGroupConfigNode = async (
 
   processedStacks.flat().forEach(status.setStackProcessed)
   const childrenToProcess = node.children.filter((child) =>
-    isWithinCommandPath(commandPath, child.path),
+    isRelatedToCommandPath(commandPath, child.path),
   )
 
   await Promise.all(

@@ -8,6 +8,7 @@ import {
   StackPath,
   StackProps,
 } from "../stacks/stack.js"
+import { isWithinCommandPath } from "../takomo-stacks-model/util.js"
 
 export const checkCyclicDependenciesForStack = (
   stack: InternalStack,
@@ -122,7 +123,7 @@ export const processStackDependencies = (
     .map((stack) => {
       const stackDependencies = stack.dependencies.map((dependency) => {
         const matching = stacks
-          .filter((other) => other.path.startsWith(dependency))
+          .filter((other) => isWithinCommandPath(dependency, other.path))
           .map((other) => other.path)
 
         if (matching.length === 0) {
@@ -146,7 +147,9 @@ export const processStackDependencies = (
             )
 
             const matching = stacks
-              .filter((other) => other.path.startsWith(normalizedDependency))
+              .filter((other) =>
+                isWithinCommandPath(normalizedDependency, other.path),
+              )
               .map((other) => other.path)
 
             if (matching.length === 0) {

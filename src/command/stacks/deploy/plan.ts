@@ -65,8 +65,7 @@ export interface CustomStackDeployOperation {
 }
 
 export type StackDeployOperation =
-  | StandardStackDeployOperation
-  | CustomStackDeployOperation
+  StandardStackDeployOperation | CustomStackDeployOperation
 
 export const isStandardStackDeployOperation = (
   op: StackDeployOperation,
@@ -152,7 +151,7 @@ export const buildStacksDeployPlan = async (
 ): Promise<StacksDeployPlan> => {
   const stacksByPath = arrayToMap(stacks, (s) => s.path)
   const stacksToDeploy = stacks
-    .filter((s) => isWithinCommandPath(s.path, commandPath))
+    .filter((s) => isWithinCommandPath(commandPath, s.path))
     .reduce(
       (collected, stack) =>
         R.uniq([
@@ -171,7 +170,7 @@ export const buildStacksDeployPlan = async (
 
   return {
     operations: ignoreDependencies
-      ? operations.filter((o) => isWithinCommandPath(o.stack.path, commandPath))
+      ? operations.filter((o) => isWithinCommandPath(commandPath, o.stack.path))
       : operations,
   }
 }

@@ -59,8 +59,7 @@ export interface CustomStackUndeployOperation {
 }
 
 export type StackUndeployOperation =
-  | StandardStackUndeployOperation
-  | CustomStackUndeployOperation
+  StandardStackUndeployOperation | CustomStackUndeployOperation
 
 export const isStandardStackUndeployOperation = (
   op: StackUndeployOperation,
@@ -145,7 +144,7 @@ export const buildStacksUndeployPlan = async (
   const pruneFilter = prune ? isObsolete : isNotObsolete
   const stacksByPath = arrayToMap(stacks, getStackPath)
   const stacksToUndeploy = stacks
-    .filter((s) => isWithinCommandPath(s.path, commandPath))
+    .filter((s) => isWithinCommandPath(commandPath, s.path))
     .reduce(
       (collected, stack) =>
         R.uniq([
@@ -162,7 +161,7 @@ export const buildStacksUndeployPlan = async (
 
   const selectedStacks = ignoreDependencies
     ? sortedStacks.filter((stack) =>
-        isWithinCommandPath(stack.path, commandPath),
+        isWithinCommandPath(commandPath, stack.path),
       )
     : sortedStacks
 

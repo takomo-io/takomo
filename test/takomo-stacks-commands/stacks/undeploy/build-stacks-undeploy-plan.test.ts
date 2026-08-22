@@ -85,6 +85,31 @@ const assertPlan = (
 const ctx = mock<StacksContext>()
 
 describe("#buildStacksUndeployPlan", () => {
+  test("does not select stacks whose paths only share the command path prefix", async () => {
+    const plan = await buildStacksUndeployPlan(
+      ctx,
+      [
+        stack({
+          name: "app",
+          path: "/dev/app.yml/eu-north-1",
+          region: "eu-north-1",
+          status: "CREATE_COMPLETE",
+        }),
+        stack({
+          name: "development-app",
+          path: "/development/app.yml/eu-north-1",
+          region: "eu-north-1",
+          status: "CREATE_COMPLETE",
+        }),
+      ],
+      "/dev",
+      false,
+      false,
+    )
+
+    assertPlan(plan, { type: "DELETE", path: "/dev/app.yml/eu-north-1" })
+  })
+
   test("empty plan", async () => {
     const plan = await buildStacksUndeployPlan(
       ctx,
