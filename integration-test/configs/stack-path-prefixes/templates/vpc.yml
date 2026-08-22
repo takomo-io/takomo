@@ -1,0 +1,8 @@
+Parameters:
+  CidrBlock:
+    Type: String
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref CidrBlock
