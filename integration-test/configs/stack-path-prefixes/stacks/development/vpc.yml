@@ -1,0 +1,3 @@
+template: vpc.yml
+parameters:
+  CidrBlock: "{{ var.developmentCidrBlock }}"
