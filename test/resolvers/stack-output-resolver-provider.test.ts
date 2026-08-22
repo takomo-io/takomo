@@ -96,7 +96,7 @@ describe("StackOutputResolverProvider", () => {
     test("should fail when a stack is invalid", () => {
       expectValidationErrors(schema)(
         { output: "foo", stack: "sdkjasdj" },
-        '"stack" with value "sdkjasdj" fails to match the required pattern: /^(((\\/|(\\.\\.\\/)+)?)[a-zA-Z][a-zA-Z0-9-]*)+\\.yml(\\/[a-z0-9-]+)?$/',
+        '"stack" with value "sdkjasdj" fails to match the required pattern: /^(?:\\/|(?:\\.\\.\\/)+)?[a-zA-Z][a-zA-Z0-9-]*(?:\\/[a-zA-Z][a-zA-Z0-9-]*)*\\.yml(?:\\/[a-z0-9-]+)?$/',
       )
     })
   })
