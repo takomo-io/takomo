@@ -76,4 +76,21 @@ describe("#executeShellCommand", () => {
     expect(output.code).toStrictEqual(1)
     expect(output.signal).toBeUndefined()
   })
+
+  test("Redacts stderr from errors when requested", async () => {
+    const sentinel = "CONFIDENTIAL_STDERR_SENTINEL"
+    const output = await executeShellCommand({
+      command: `node -e "process.stderr.write('${sentinel}'); process.exit(1)"`,
+      cwd,
+      env,
+      includeStderrInError: false,
+    })
+
+    expect(output.success).toStrictEqual(false)
+    expect(output.stderr).toStrictEqual(sentinel)
+    expect(output.error?.message).toStrictEqual(
+      "Shell command exited with code 1.\n\nstderr:\n*****",
+    )
+    expect(output.error?.message).not.toContain(sentinel)
+  })
 })

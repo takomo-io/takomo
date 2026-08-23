@@ -7,27 +7,25 @@ import {
   InitializeHandlerOutput,
   MetadataBearer,
   Pluggable,
-  // AbsoluteLocation,
-  // HandlerExecutionContext,
-  // InitializeHandler,
-  // InitializeHandlerArguments,
-  // InitializeHandlerOptions,
-  // InitializeHandlerOutput,
-  // MetadataBearer,
-  // Pluggable,
 } from "@aws-sdk/types"
 import { toCompactJson } from "../../utils/json.js"
 import { TkmLogger } from "../../utils/logging.js"
+import { redactConfidentialValue } from "../../utils/confidential.js"
 import { ClientListener } from "./client.js"
 
 export const apiRequestListenerMiddleware =
-  (logger: TkmLogger, clientId: string, listener: ClientListener) =>
-  <Output extends MetadataBearer = MetadataBearer>(
-    next: InitializeHandler<any, Output>,
+  (
+    logger: TkmLogger,
+    clientId: string,
+    listener: ClientListener,
+    confidentialValuesLoggingEnabled = false,
+  ) =>
+  <Input extends object, Output extends MetadataBearer = MetadataBearer>(
+    next: InitializeHandler<Input, Output>,
     context: HandlerExecutionContext,
-  ): InitializeHandler<any, Output> =>
+  ): InitializeHandler<Input, Output> =>
   async (
-    args: InitializeHandlerArguments<any>,
+    args: InitializeHandlerArguments<Input>,
   ): Promise<InitializeHandlerOutput<Output>> => {
     const {
       clientName,
@@ -48,8 +46,16 @@ export const apiRequestListenerMiddleware =
         toCompactJson({
           clientName,
           commandName,
-          input: inputFilterSensitiveLog(args.input),
-          output: outputFilterSensitiveLog(outputWithoutMetadata),
+          input: redactConfidentialValue(
+            inputFilterSensitiveLog(args.input),
+            true,
+            confidentialValuesLoggingEnabled,
+          ),
+          output: redactConfidentialValue(
+            outputFilterSensitiveLog(outputWithoutMetadata),
+            true,
+            confidentialValuesLoggingEnabled,
+          ),
           metadata: $metadata,
         }),
       )
@@ -76,14 +82,23 @@ export const apiRequestListenerMiddlewareOptions: InitializeHandlerOptions &
   priority: "low",
 }
 
-export const createApiRequestListenerPlugin = (
+export const createApiRequestListenerPlugin = <
+  Input extends object = object,
+  Output extends MetadataBearer = MetadataBearer,
+>(
   logger: TkmLogger,
   clientId: string,
   listener: ClientListener,
-): Pluggable<any, any> => ({
+  confidentialValuesLoggingEnabled = false,
+): Pluggable<Input, Output> => ({
   applyToStack: (clientStack) => {
     clientStack.add(
-      apiRequestListenerMiddleware(logger, clientId, listener),
+      apiRequestListenerMiddleware(
+        logger,
+        clientId,
+        listener,
+        confidentialValuesLoggingEnabled,
+      ),
       apiRequestListenerMiddlewareOptions,
     )
   },

@@ -34,7 +34,12 @@ export const createStsClient = (props: InternalAwsClientProps): StsClient => {
   })
 
   client.middlewareStack.add(
-    apiRequestListenerMiddleware(props.logger, props.id, props.listener),
+    apiRequestListenerMiddleware(
+      props.logger,
+      props.id,
+      props.listener,
+      props.confidentialValuesLoggingEnabled,
+    ),
     apiRequestListenerMiddlewareOptions,
   )
 

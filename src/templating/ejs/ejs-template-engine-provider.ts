@@ -15,10 +15,14 @@ export class EjsTemplateEngineProvider implements TemplateEngineProvider {
   constructor({ logger }: EjsTemplateEngineProviderProps) {
     this.#logger = logger
   }
-  async init({ projectDir }: TemplateEngineProps): Promise<TemplateEngine> {
+  async init({
+    projectDir,
+    confidentialValuesLoggingEnabled,
+  }: TemplateEngineProps): Promise<TemplateEngine> {
     return new EjsTemplateEngine({
       projectDir,
       logger: this.#logger,
+      confidentialValuesLoggingEnabled,
     })
   }
 }

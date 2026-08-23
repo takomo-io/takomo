@@ -11,6 +11,11 @@ export interface TemplateEngineProps {
    * Logger instance.
    */
   readonly logger: TkmLogger
+
+  /**
+   * Whether confidential values may be included in logs.
+   */
+  readonly confidentialValuesLoggingEnabled?: boolean
 }
 
 export interface TemplateEngineProvider {

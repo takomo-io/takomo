@@ -4,7 +4,12 @@ import { prepareAwsEnvVariables } from "../aws/util.js"
 import { executeShellCommand } from "../utils/exec.js"
 import { expandFilePath } from "../utils/files.js"
 import {
+  REDACTED_VALUE,
+  redactConfidentialValue,
+} from "../utils/confidential.js"
+import {
   ResolverProvider,
+  ResolverConfig,
   ResolverProviderSchemaProps,
 } from "./resolver-provider.js"
 import { Resolver, ResolverInput } from "./resolver.js"
@@ -22,15 +27,20 @@ const captureValue = (capture: Capture, output: string): string => {
   }
 }
 
-const init = async ({
-  command,
-  exposeStackCredentials,
-  exposeStackRegion,
-  capture = "all",
-  cwd,
-}: any): Promise<Resolver> => {
-  if (!command) {
+const init = async (config: ResolverConfig): Promise<Resolver> => {
+  const { command, exposeStackCredentials, exposeStackRegion, cwd } = config
+  const capture = config.capture ?? "all"
+
+  if (typeof command !== "string" || command.length === 0) {
     throw new Error("command is required property")
+  }
+
+  if (capture !== "all" && capture !== "last-line") {
+    throw new Error(`Unknown value for capture: ${String(capture)}`)
+  }
+
+  if (cwd !== undefined && typeof cwd !== "string") {
+    throw new Error("cwd must be a string")
   }
 
   return {
@@ -39,9 +49,15 @@ const init = async ({
       parameterName,
       stack,
       ctx,
-    }: ResolverInput): Promise<any> => {
+      confidential = false,
+    }: ResolverInput): Promise<string> => {
+      const logConfidentialInfo = ctx.confidentialValuesLoggingEnabled
       logger.debug(
-        `Resolving value for parameter '${parameterName}' with command: ${command}`,
+        `Resolving value for parameter '${parameterName}' with command: ${redactConfidentialValue(
+          command,
+          confidential,
+          logConfidentialInfo,
+        )}`,
       )
 
       const credentials =
@@ -61,15 +77,18 @@ const init = async ({
         command,
         env,
         cwd: cwd ? expandFilePath(ctx.projectDir, cwd) : ctx.projectDir,
-        stdoutListener: (data: string) => logger.info(data),
-        stderrListener: (data: string) => logger.error(data),
+        includeStderrInError: !confidential || logConfidentialInfo,
+        stderrListener:
+          !confidential || logConfidentialInfo
+            ? (data: string) => logger.error(data)
+            : undefined,
       })
 
       if (success) {
         return captureValue(capture, (stdout ?? "").trim())
       }
 
-      throw error
+      throw error ?? new Error(REDACTED_VALUE)
     },
   }
 }

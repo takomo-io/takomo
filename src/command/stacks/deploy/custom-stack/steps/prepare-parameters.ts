@@ -1,17 +1,7 @@
 import { arrayToRecord } from "../../../../../utils/collections.js"
 import { StackOperationStep } from "../../../common/steps.js"
 import { InitialDeployCustomStackState } from "../states.js"
-
-const getValueForLog = (
-  value: unknown,
-  confidential: boolean,
-  logConfidentialInfo: boolean,
-): unknown => {
-  if (!confidential) {
-    return value
-  }
-  return logConfidentialInfo ? value : "*****"
-}
+import { redactConfidentialValue } from "../../../../../utils/confidential.js"
 
 export const prepareParameters: StackOperationStep<
   InitialDeployCustomStackState
@@ -32,7 +22,7 @@ export const prepareParameters: StackOperationStep<
           logger: logger.childLogger(`param:${parameterName}`),
         })
 
-        const loggedValue = getValueForLog(
+        const loggedValue = redactConfidentialValue(
           value,
           executor.isConfidential(),
           logConfidentialInfo,

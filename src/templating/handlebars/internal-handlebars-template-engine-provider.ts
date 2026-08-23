@@ -18,9 +18,7 @@ interface InternalHandlebarsTemplateEngineProviderProps {
   readonly logger: TkmLogger
 }
 
-export class InternalHandlebarsTemplateEngineProvider
-  implements TemplateEngineProvider
-{
+export class InternalHandlebarsTemplateEngineProvider implements TemplateEngineProvider {
   readonly #partialsDir: FilePath
   readonly #helpersDir: FilePath
   readonly #projectConfig: InternalTakomoProjectConfig
@@ -36,8 +34,13 @@ export class InternalHandlebarsTemplateEngineProvider
   async init({
     projectDir,
     logger,
+    confidentialValuesLoggingEnabled,
   }: TemplateEngineProps): Promise<TemplateEngine> {
-    const te = new HandlebarsTemplateEngine({ projectDir, logger })
+    const te = new HandlebarsTemplateEngine({
+      projectDir,
+      logger,
+      confidentialValuesLoggingEnabled,
+    })
 
     for (const config of this.#projectConfig.helpers) {
       this.#logger.debug(

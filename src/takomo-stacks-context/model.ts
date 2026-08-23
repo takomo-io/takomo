@@ -73,7 +73,10 @@ export class SingleResolverExecutor implements ResolverExecutor {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolve = async (input: ResolverInput): Promise<any> =>
-    this.#resolver.resolve(input)
+    this.#resolver.resolve({
+      ...input,
+      confidential: input.confidential === true || this.isConfidential(),
+    })
 
   isConfidential = (): boolean => {
     if (this.#confidential === true) {
@@ -154,7 +157,11 @@ export class ListResolverExecutor implements ResolverExecutor {
   resolve = async (input: ResolverInput): Promise<any> =>
     Promise.all(
       this.#resolvers.map(async (resolver, index) =>
-        resolver.resolve({ ...input, listParameterIndex: index }),
+        resolver.resolve({
+          ...input,
+          confidential: input.confidential === true || this.isConfidential(),
+          listParameterIndex: index,
+        }),
       ),
     )
 

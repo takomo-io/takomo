@@ -55,6 +55,7 @@ export interface CloudFormationClientProps extends AwsClientProps {
 
 export interface InternalAwsClientProps extends AwsClientProps {
   readonly listener: ClientListener
+  readonly confidentialValuesLoggingEnabled: boolean
 }
 
 export interface ApiCallProps {

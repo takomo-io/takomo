@@ -125,6 +125,7 @@ export const createFileSystemStacksConfigRepository = async ({
   const templateEngine = await templateEngineProvider.init({
     projectDir,
     logger,
+    confidentialValuesLoggingEnabled: ctx.confidentialValuesLoggingEnabled,
   })
   const defaultSchemasDirExists = await dirExists(schemasDir)
   const additionalSchemasDirs = ctx.projectConfig.schemasDir

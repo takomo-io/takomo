@@ -80,16 +80,19 @@ export const initCommandContext = async (
   const envFilePaths = parseStringArray(argv["env-file"])
   const vars = parseVarArgs(argv.var)
 
-  const logger = createLogger({ logLevel, writer: console.log })
-  const awsClientProvider = createAwsClientProvider({ logger })
-
-  const iamGeneratePoliciesInstructionsEnabled = parseBoolean(
-    argv["show-generate-iam-policies"],
+  const confidentialValuesLoggingEnabled = parseBoolean(
+    argv["log-confidential-info"],
     false,
   )
 
-  const confidentialValuesLoggingEnabled = parseBoolean(
-    argv["log-confidential-info"],
+  const logger = createLogger({ logLevel, writer: console.log })
+  const awsClientProvider = createAwsClientProvider({
+    logger,
+    confidentialValuesLoggingEnabled,
+  })
+
+  const iamGeneratePoliciesInstructionsEnabled = parseBoolean(
+    argv["show-generate-iam-policies"],
     false,
   )
 

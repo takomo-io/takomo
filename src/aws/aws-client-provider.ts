@@ -49,6 +49,7 @@ export interface InternalAwsClientProvider extends AwsClientProvider {
 
 interface AwsClientProviderProps {
   readonly logger: TkmLogger
+  readonly confidentialValuesLoggingEnabled?: boolean
 }
 
 const createDescribeEventsBulkhead = (): IPolicy => {
@@ -80,6 +81,7 @@ interface ConcurrencyControls {
 
 export const createAwsClientProvider = ({
   logger,
+  confidentialValuesLoggingEnabled = false,
 }: AwsClientProviderProps): InternalAwsClientProvider => {
   const apiCalls = new Array<ApiCallProps>()
   const regions = new Set<Region>()
@@ -120,6 +122,7 @@ export const createAwsClientProvider = ({
       const client = createCloudFormationClient({
         ...props,
         ...controls,
+        confidentialValuesLoggingEnabled,
         waitStackDeployToCompletePollInterval: 2000,
         waitStackDeleteToCompletePollInterval: 2000,
         waitStackRollbackToCompletePollInterval: 2000,
@@ -136,6 +139,7 @@ export const createAwsClientProvider = ({
       const client = createCloudTrailClient({
         ...props,
         listener,
+        confidentialValuesLoggingEnabled,
       })
       regions.add(props.region)
       return client
@@ -144,6 +148,7 @@ export const createAwsClientProvider = ({
       const client = createS3Client({
         ...props,
         listener,
+        confidentialValuesLoggingEnabled,
       })
       regions.add(props.region)
       return client
@@ -152,6 +157,7 @@ export const createAwsClientProvider = ({
       const client = createStsClient({
         ...props,
         listener,
+        confidentialValuesLoggingEnabled,
       })
       regions.add(props.region)
       return client
@@ -162,6 +168,7 @@ export const createAwsClientProvider = ({
       const client = createOrganizationsClient({
         ...props,
         listener,
+        confidentialValuesLoggingEnabled,
       })
       regions.add(props.region)
       return client
