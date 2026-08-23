@@ -122,7 +122,7 @@ export const pagedOperationV2 = async <T, P, R extends PagedResponse>({
   params,
   extractor,
   nextToken,
-  onPage = () => true,
+  onPage = () => false,
   filter = () => true,
 }: PagedOperationV2Props<T, P, R>): Promise<ReadonlyArray<T>> => {
   const response = await operation({
