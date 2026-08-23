@@ -45,7 +45,8 @@ export const uploadTemplate: StackOperationStep<TemplateBodyHolder> = async (
           logger,
         })
 
-  const key = `${templateBucket.keyPrefix ?? ""}${stack.name}-${Date.now()}.yml`
+  const { accountId } = await stack.credentialManager.getCallerIdentity()
+  const key = `${templateBucket.keyPrefix ?? ""}${accountId}/${stack.region}/${stack.uuid}/${stack.name}-${uuid()}.yml`
   const templateS3Url = buildTemplateS3Url(templateBucket.name, key, location)
 
   logger.debug(`Upload template to: ${templateS3Url}`)
