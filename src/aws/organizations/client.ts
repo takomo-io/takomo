@@ -1,9 +1,10 @@
 import {
-  ListOrganizationalUnitsForParentCommand,
+  ListOrganizationalUnitsForParentCommandOutput,
   ListRootsCommand,
   Organizations,
   paginateListAccounts,
   paginateListAccountsForParent,
+  paginateListOrganizationalUnitsForParent,
 } from "@aws-sdk/client-organizations"
 import { InternalAwsClientProps } from "../common/client.js"
 import { AccountStatus } from "../common/model.js"
@@ -20,6 +21,30 @@ export interface OrganizationsClient {
   readonly listAccounts: () => Promise<ReadonlyArray<Account>>
   readonly listAccountsForOU: (ouId: OUId) => Promise<ReadonlyArray<Account>>
   readonly listOrganizationalUnits: () => Promise<ReadonlyArray<OU>>
+}
+
+export type OrganizationalUnitsPageProvider = (
+  parentId: OUId,
+) => AsyncIterable<ListOrganizationalUnitsForParentCommandOutput>
+
+export const collectOrganizationalUnitsForParent = async (
+  parent: OU,
+  pageProvider: OrganizationalUnitsPageProvider,
+): Promise<ReadonlyArray<OU>> => {
+  const ous = new Array<OU>()
+  for await (const { OrganizationalUnits = [] } of pageProvider(parent.id)) {
+    OrganizationalUnits.map((ou) => convertOU(ou, parent.path)).forEach((ou) =>
+      ous.push(ou),
+    )
+  }
+
+  const allOus = new Array<OU>(...ous)
+  for (const ou of ous) {
+    const children = await collectOrganizationalUnitsForParent(ou, pageProvider)
+    allOus.push(...children)
+  }
+
+  return allOus
 }
 
 export const createOrganizationsClient = (
@@ -73,23 +98,10 @@ export const createOrganizationsClient = (
     return accounts
   }
 
-  const listOrganizationalUnitsForParent = async (
-    parent: OU,
-  ): Promise<ReadonlyArray<OU>> => {
-    const { OrganizationalUnits = [] } = await client.send(
-      new ListOrganizationalUnitsForParentCommand({ ParentId: parent.id }),
-    )
-
-    const ous = OrganizationalUnits.map((ou) => convertOU(ou, parent.path))
-    const allOus = new Array<OU>(...ous)
-
-    for (const ou of ous) {
-      const children = await listOrganizationalUnitsForParent(ou)
-      allOus.push(...children)
-    }
-
-    return allOus
-  }
+  const organizationalUnitsPageProvider: OrganizationalUnitsPageProvider = (
+    parentId,
+  ) =>
+    paginateListOrganizationalUnitsForParent({ client }, { ParentId: parentId })
 
   const listOrganizationalUnits = async (): Promise<Array<OU>> => {
     const { Roots = [] } = await client.send(new ListRootsCommand({}))
@@ -97,7 +109,10 @@ export const createOrganizationsClient = (
 
     const allOus = new Array<OU>(...rootOus)
     for (const ou of rootOus) {
-      const children = await listOrganizationalUnitsForParent(ou)
+      const children = await collectOrganizationalUnitsForParent(
+        ou,
+        organizationalUnitsPageProvider,
+      )
       allOus.push(...children)
     }
 
