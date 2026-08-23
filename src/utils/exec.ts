@@ -3,9 +3,10 @@ import { spawn } from "child_process"
 interface RunShellCommandProps {
   readonly command: string
   readonly cwd: string
-  readonly env: any
+  readonly env: NodeJS.ProcessEnv
   readonly stdoutListener?: (data: string) => void
   readonly stderrListener?: (data: string) => void
+  readonly includeStderrInError?: boolean
 }
 
 interface RunShellCommandOutput {
@@ -18,8 +19,7 @@ interface RunShellCommandOutput {
   readonly signal?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = (data: string): void => {}
+const noop = (): void => {}
 
 export const executeShellCommand = ({
   command,
@@ -27,6 +27,7 @@ export const executeShellCommand = ({
   cwd,
   stdoutListener = noop,
   stderrListener = noop,
+  includeStderrInError = true,
 }: RunShellCommandProps): Promise<RunShellCommandOutput> => {
   const child = spawn(command, {
     shell: true,
@@ -36,6 +37,9 @@ export const executeShellCommand = ({
 
   let stdout = ""
   let stderr = ""
+
+  const getStderrForError = (): string =>
+    includeStderrInError ? stderr : "*****"
 
   child.stdout.on("data", (data) => {
     const str = data.toString()
@@ -66,7 +70,7 @@ export const executeShellCommand = ({
           stdout,
           stderr,
           error: new Error(
-            `Shell command exited with signal ${signal}.\n\nstderr:\n${stderr}`,
+            `Shell command exited with signal ${signal}.\n\nstderr:\n${getStderrForError()}`,
           ),
           code: code ?? undefined,
           success: false,
@@ -77,7 +81,7 @@ export const executeShellCommand = ({
           stdout,
           stderr,
           error: new Error(
-            `Shell command exited with code ${code}.\n\nstderr:\n${stderr}`,
+            `Shell command exited with code ${code}.\n\nstderr:\n${getStderrForError()}`,
           ),
           code: code ?? undefined,
           success: false,

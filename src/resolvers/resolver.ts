@@ -53,6 +53,12 @@ export interface Resolver {
  */
 export interface ResolverInput {
   /**
+   * Whether the resolved value is confidential and should be concealed from
+   * logs unless confidential-value logging is explicitly enabled.
+   */
+  readonly confidential?: boolean
+
+  /**
    * The stack where the parameter whose value is being resolved belongs to.
    */
   readonly stack: Stack

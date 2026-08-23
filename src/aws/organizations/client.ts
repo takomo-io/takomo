@@ -33,7 +33,12 @@ export const createOrganizationsClient = (
   })
 
   client.middlewareStack.add(
-    apiRequestListenerMiddleware(props.logger, props.id, props.listener),
+    apiRequestListenerMiddleware(
+      props.logger,
+      props.id,
+      props.listener,
+      props.confidentialValuesLoggingEnabled,
+    ),
     apiRequestListenerMiddlewareOptions,
   )
 

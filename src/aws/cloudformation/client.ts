@@ -197,7 +197,12 @@ export const createCloudFormationClient = (
   })
 
   client.middlewareStack.add(
-    apiRequestListenerMiddleware(logger, props.id, props.listener),
+    apiRequestListenerMiddleware(
+      logger,
+      props.id,
+      props.listener,
+      props.confidentialValuesLoggingEnabled,
+    ),
     apiRequestListenerMiddlewareOptions,
   )
 

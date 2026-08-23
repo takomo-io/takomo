@@ -9,6 +9,10 @@ import {
 import { TkmLogger } from "../../utils/logging.js"
 import { buildErrorMessage } from "../../utils/templating.js"
 import {
+  REDACTED_VALUE,
+  redactConfidentialValue,
+} from "../../utils/confidential.js"
+import {
   RenderTemplateFileProps,
   RenderTemplateProps,
   TemplateEngine,
@@ -31,6 +35,7 @@ export class PartialAlreadyRegisteredError extends TakomoError {
 interface HandlebarsTemplateEngineProps {
   readonly projectDir: FilePath
   readonly logger: TkmLogger
+  readonly confidentialValuesLoggingEnabled?: boolean
 }
 
 /**
@@ -109,10 +114,16 @@ export class HandlebarsTemplateEngine implements TemplateEngine {
   readonly #registeredPartials = new Map<string, string>()
   readonly #projectDir: FilePath
   readonly #logger: TkmLogger
+  readonly #confidentialValuesLoggingEnabled: boolean
 
-  constructor({ logger, projectDir }: HandlebarsTemplateEngineProps) {
+  constructor({
+    logger,
+    projectDir,
+    confidentialValuesLoggingEnabled = false,
+  }: HandlebarsTemplateEngineProps) {
     this.#projectDir = projectDir
     this.#logger = logger
+    this.#confidentialValuesLoggingEnabled = confidentialValuesLoggingEnabled
   }
 
   compile(
@@ -163,32 +174,50 @@ export class HandlebarsTemplateEngine implements TemplateEngine {
       strict: true,
     })
 
-    this.#logger.traceText(
-      "Template body before rendering:",
-      () => templateString,
+    this.#logger.traceText("Template body before rendering:", () =>
+      redactConfidentialValue(
+        templateString,
+        true,
+        this.#confidentialValuesLoggingEnabled,
+      ),
     )
 
-    this.#logger.traceObject("Render template with variables:", () => variables)
+    this.#logger.traceObject("Render template with variables:", () =>
+      redactConfidentialValue(
+        variables,
+        true,
+        this.#confidentialValuesLoggingEnabled,
+      ),
+    )
 
     try {
       const renderedTemplate = template(variables)
-      this.#logger.traceText(
-        "Template body after rendering:",
-        () => renderedTemplate,
+      this.#logger.traceText("Template body after rendering:", () =>
+        redactConfidentialValue(
+          renderedTemplate,
+          true,
+          this.#confidentialValuesLoggingEnabled,
+        ),
       )
 
       return renderedTemplate
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
+      const description = `An error occurred while rendering template from ${sourceDescription}`
       this.#logger.error(
-        `An error occurred while rendering template from ${sourceDescription}`,
-        e,
+        description,
+        redactConfidentialValue(
+          e,
+          true,
+          this.#confidentialValuesLoggingEnabled,
+        ),
       )
-      const errorMessage = buildErrorMessage(
-        `An error occurred while rendering template from ${sourceDescription}`,
-        templateString,
-        e,
-      )
+
+      if (!this.#confidentialValuesLoggingEnabled) {
+        throw new TakomoError(`${description}: ${REDACTED_VALUE}`)
+      }
+
+      const errorMessage = buildErrorMessage(description, templateString, e)
 
       throw new TakomoError(errorMessage)
     }

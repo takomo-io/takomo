@@ -26,7 +26,12 @@ export const createS3Client = (props: InternalAwsClientProps): S3Client => {
   })
 
   client.middlewareStack.add(
-    apiRequestListenerMiddleware(props.logger, props.id, props.listener),
+    apiRequestListenerMiddleware(
+      props.logger,
+      props.id,
+      props.listener,
+      props.confidentialValuesLoggingEnabled,
+    ),
     apiRequestListenerMiddlewareOptions,
   )
 

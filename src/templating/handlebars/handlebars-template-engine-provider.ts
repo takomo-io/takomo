@@ -36,9 +36,7 @@ export interface HandlebarsTemplateEngineProviderProps {
 /**
  * Handlebars template engine provider.
  */
-export class HandlebarsTemplateEngineProvider
-  implements TemplateEngineProvider
-{
+export class HandlebarsTemplateEngineProvider implements TemplateEngineProvider {
   readonly #partialsDirs: ReadonlyArray<FilePath>
   readonly #helpersDirs: ReadonlyArray<FilePath>
   readonly #helpers: ReadonlyArray<HandlebarsHelper>
@@ -54,8 +52,13 @@ export class HandlebarsTemplateEngineProvider
   async init({
     projectDir,
     logger,
+    confidentialValuesLoggingEnabled,
   }: TemplateEngineProps): Promise<TemplateEngine> {
-    const te = new HandlebarsTemplateEngine({ projectDir, logger })
+    const te = new HandlebarsTemplateEngine({
+      projectDir,
+      logger,
+      confidentialValuesLoggingEnabled,
+    })
 
     const helpersDirs = this.#helpersDirs.map((dir) =>
       expandFilePath(projectDir, dir),
