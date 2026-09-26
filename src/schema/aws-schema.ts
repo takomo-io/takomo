@@ -19,6 +19,7 @@ export interface AwsSchemas {
   accountEmail: StringSchema
   accountName: StringSchema
   accountAlias: StringSchema
+  deploymentConfig: ObjectSchema
 }
 
 interface CreateAwsSchemasProps {
@@ -107,6 +108,11 @@ export const createAwsSchemas = (props: CreateAwsSchemasProps): AwsSchemas => {
     .max(63)
     .regex(/^[a-z0-9](([a-z0-9]|-(?!-))*[a-z0-9])?$/)
 
+  const deploymentConfig = Joi.object({
+    mode: Joi.string().valid("STANDARD", "EXPRESS").optional(),
+    disableRollback: Joi.boolean().optional(),
+  })
+
   return {
     region,
     regions,
@@ -125,5 +131,6 @@ export const createAwsSchemas = (props: CreateAwsSchemasProps): AwsSchemas => {
     accountName,
     accountEmail,
     accountAlias,
+    deploymentConfig,
   }
 }

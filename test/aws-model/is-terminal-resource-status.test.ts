@@ -12,7 +12,7 @@ const cases: Array<[ResourceStatus, boolean]> = [
   ["DELETE_COMPLETE", true],
   ["DELETE_SKIPPED", false],
   ["UPDATE_IN_PROGRESS", false],
-  ["UPDATE_FAILED", false],
+  ["UPDATE_FAILED", true],
   ["UPDATE_COMPLETE", true],
   ["IMPORT_FAILED", true],
   ["IMPORT_COMPLETE", true],

@@ -1,0 +1,5 @@
+template: topic.yml
+deploymentConfig:
+  mode: STANDARD
+parameters:
+  DisplayName: {{ var.displayName }}

@@ -4,6 +4,7 @@ import {
 } from "../aws/cloudformation/model.js"
 import { AccountId, Region, TagKey } from "../aws/common/model.js"
 import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
+import { DeploymentConfigObject } from "../config/common-config.js"
 import { HookConfig } from "../hooks/hook.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
 import { Schemas } from "../takomo-stacks-model/schemas.js"
@@ -34,6 +35,7 @@ export interface StackGroupProps {
   stackPolicy?: StackPolicyBody
   stackPolicyDuringUpdate?: StackPolicyBody
   schemas?: Schemas
+  deploymentConfig?: DeploymentConfigObject
 }
 
 export interface StackGroup {
@@ -60,6 +62,7 @@ export interface StackGroup {
   readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly toProps: () => StackGroupProps
   readonly schemas?: Schemas
+  readonly deploymentConfig?: DeploymentConfigObject
 }
 
 export const createStackGroup = (props: StackGroupProps): StackGroup => {
@@ -85,6 +88,7 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     stackPolicy,
     stackPolicyDuringUpdate,
     schemas,
+    deploymentConfig,
   } = props
 
   return {
@@ -104,6 +108,7 @@ export const createStackGroup = (props: StackGroupProps): StackGroup => {
     stacks,
     tags,
     templateBucket,
+    deploymentConfig,
     terminationProtection,
     timeout,
     stackPolicy,

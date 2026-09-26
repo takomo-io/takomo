@@ -1,4 +1,8 @@
-import { TemplateBucketConfig, TimeoutConfig } from "../common/model.js"
+import {
+  DeploymentConfig,
+  TemplateBucketConfig,
+  TimeoutConfig,
+} from "../common/model.js"
 import { StackPath } from "../stacks/stack.js"
 
 export const ROOT_STACK_GROUP_PATH = "/"
@@ -8,4 +12,8 @@ export const StackPropertyDefaults = {
   depends: (): ReadonlyArray<StackPath> => [],
   timeout: (): TimeoutConfig => ({ create: 0, update: 0 }),
   templateBucket: (): TemplateBucketConfig | undefined => undefined,
+  deploymentConfig: (): DeploymentConfig => ({
+    mode: "STANDARD",
+    disableRollback: false,
+  }),
 }

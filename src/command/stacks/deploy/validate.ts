@@ -12,6 +12,7 @@ export const isStackReadyForDeploy = (stackStatus: StackStatus): boolean =>
   [
     "CREATE_COMPLETE",
     "UPDATE_COMPLETE",
+    "UPDATE_FAILED",
     "UPDATE_ROLLBACK_COMPLETE",
     "UPDATE_ROLLBACK_FAILED",
     "REVIEW_IN_PROGRESS",

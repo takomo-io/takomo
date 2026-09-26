@@ -4,7 +4,7 @@ import {
 } from "../aws/cloudformation/model.js"
 import { TemplateBucketConfig } from "../common/model.js"
 import { BlueprintPath } from "../stacks/standard-stack.js"
-import { TemplateConfig } from "./common-config.js"
+import { DeploymentConfigObject, TemplateConfig } from "./common-config.js"
 import { BaseStackConfig } from "./stack-config.js"
 import { isCustomStackConfig } from "./custom-stack-config.js"
 
@@ -16,6 +16,7 @@ export type StandardStackConfig = BaseStackConfig & {
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly blueprint?: BlueprintPath
+  readonly deploymentConfig?: DeploymentConfigObject
 }
 
 export const isStandardStackConfig = (

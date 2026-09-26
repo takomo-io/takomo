@@ -1,3 +1,4 @@
+import { DeploymentMode } from "../common/model.js"
 import { ResolverName } from "../resolvers/resolver.js"
 import { FilePath } from "../utils/files.js"
 
@@ -62,4 +63,9 @@ export interface TemplateConfig {
   readonly dynamic: boolean
   readonly filename?: FilePath
   readonly inline?: string
+}
+
+export interface DeploymentConfigObject {
+  readonly mode?: DeploymentMode
+  readonly disableRollback?: boolean
 }

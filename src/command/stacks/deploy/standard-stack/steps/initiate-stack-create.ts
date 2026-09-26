@@ -2,6 +2,7 @@ import { uuid } from "../../../../../utils/strings.js"
 import { defaultCapabilities } from "../../../../command-model.js"
 import { StackOperationStep } from "../../../common/steps.js"
 import { TemplateSummaryHolder } from "../states.js"
+import { getNativeDeploymentConfig } from "./util.js"
 
 export const initiateStackCreate: StackOperationStep<
   TemplateSummaryHolder
@@ -13,12 +14,12 @@ export const initiateStackCreate: StackOperationStep<
   const templateLocation = templateS3Url ?? templateBody
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
   const capabilities = stack.capabilities?.slice() ?? defaultCapabilities
+  const deploymentConfig = getNativeDeploymentConfig(stack)
 
   const client = await stack.getCloudFormationClient()
   const stackId = await client.createStack({
     Capabilities: capabilities.slice(),
     ClientRequestToken: clientToken,
-    DisableRollback: false,
     EnableTerminationProtection: stack.terminationProtection,
     Parameters: parameters.map((p) => ({
       ParameterKey: p.key,
@@ -30,6 +31,7 @@ export const initiateStackCreate: StackOperationStep<
     TimeoutInMinutes: stack.timeout.create || undefined,
     StackPolicyBody: stack.stackPolicy,
     [templateKey]: templateLocation,
+    DeploymentConfig: deploymentConfig,
   })
 
   return transitions.waitStackCreateOrUpdateToComplete({

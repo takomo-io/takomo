@@ -89,6 +89,7 @@ export const resolveOperationType = (
   switch (status) {
     case "CREATE_COMPLETE":
     case "UPDATE_COMPLETE":
+    case "UPDATE_FAILED":
     case "UPDATE_ROLLBACK_COMPLETE":
     case "UPDATE_ROLLBACK_FAILED":
     case "IMPORT_COMPLETE":

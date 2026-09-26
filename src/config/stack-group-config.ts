@@ -7,7 +7,7 @@ import { TemplateBucketConfig, TimeoutConfig, Vars } from "../common/model.js"
 import { HookConfig } from "../hooks/hook.js"
 import { RawTagValue } from "../stacks/stack.js"
 import { CommandRole, Project } from "../takomo-core/command.js"
-import { SchemasConfig } from "./common-config.js"
+import { DeploymentConfigObject, SchemasConfig } from "./common-config.js"
 
 export interface StackGroupConfig {
   readonly project?: Project
@@ -27,4 +27,5 @@ export interface StackGroupConfig {
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
   readonly schemas?: SchemasConfig
+  readonly deploymentConfig?: DeploymentConfigObject
 }

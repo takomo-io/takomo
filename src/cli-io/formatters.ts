@@ -77,6 +77,7 @@ export const formatStandardStackStatus = (status?: StackStatus): string => {
     case "ROLLBACK_FAILED":
     case "ROLLBACK_COMPLETE":
     case "DELETE_FAILED":
+    case "UPDATE_FAILED":
     case "UPDATE_ROLLBACK_IN_PROGRESS":
     case "UPDATE_ROLLBACK_FAILED":
     case "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS":

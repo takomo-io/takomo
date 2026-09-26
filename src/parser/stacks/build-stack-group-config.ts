@@ -21,6 +21,7 @@ import { parseTags } from "./parse-tags.js"
 import { parseTemplateBucket } from "./parse-template-bucket.js"
 import { parseTimeout } from "./parse-timeout.js"
 import { ParsedYamlDocument } from "../../utils/yaml.js"
+import { parseDeploymentConfig } from "./parse-deployment-config.js"
 
 export const buildStackGroupConfig = (
   ctx: CommandContext,
@@ -77,5 +78,6 @@ export const buildStackGroupConfig = (
       StackPropertyDefaults.inheritTags(),
     ),
     timeout: parseTimeout(record.timeout),
+    deploymentConfig: parseDeploymentConfig(record.deploymentConfig),
   })
 }

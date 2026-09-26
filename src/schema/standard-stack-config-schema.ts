@@ -21,6 +21,7 @@ export const createStandardStackConfigSchema = (
     accountId,
     accountIds,
     stackCapabilities,
+    deploymentConfig,
   } = createAwsSchemas({
     ...props,
   })
@@ -72,5 +73,6 @@ export const createStandardStackConfigSchema = (
     stackPolicy: json,
     stackPolicyDuringUpdate: json,
     type: customStackType,
+    deploymentConfig,
   })
 }

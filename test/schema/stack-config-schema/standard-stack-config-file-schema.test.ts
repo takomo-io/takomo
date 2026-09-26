@@ -13,4 +13,21 @@ describe("standard stack config file schema", () => {
       },
     })
   })
+
+  test("deployment config is accepted", () => {
+    const value = {
+      regions: "eu-west-1",
+      deploymentConfig: { mode: "EXPRESS", disableRollback: false },
+    }
+    expect(schema.validate(value)).toStrictEqual({ value })
+  })
+
+  test("unknown deployment config property is rejected", () => {
+    expect(
+      schema.validate({
+        regions: "eu-west-1",
+        deploymentConfig: { rollback: false },
+      }).error?.message,
+    ).toStrictEqual('"deploymentConfig.rollback" is not allowed')
+  })
 })

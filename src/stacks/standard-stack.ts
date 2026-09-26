@@ -5,7 +5,7 @@ import {
   StackPolicyBody,
 } from "../aws/cloudformation/model.js"
 import { CloudFormationClient } from "../aws/cloudformation/client.js"
-import { TemplateBucketConfig } from "../common/model.js"
+import { DeploymentConfig, TemplateBucketConfig } from "../common/model.js"
 import { FilePath } from "../utils/files.js"
 import { BaseInternalStack, InternalStack, Stack, StackProps } from "./stack.js"
 import { InternalCredentialManager } from "../aws/common/credentials.js"
@@ -30,6 +30,7 @@ export interface Template {
 export interface StandardStackProps extends StackProps {
   template: Template
   templateBucket?: TemplateBucketConfig
+  deploymentConfig: DeploymentConfig
   capabilities?: ReadonlyArray<StackCapability>
   getCloudFormationClient: () => Promise<CloudFormationClient>
   stackPolicy?: StackPolicyBody
@@ -58,6 +59,7 @@ export interface InternalStandardStack
   extends StandardStack, BaseInternalStack {
   readonly template: Template
   readonly templateBucket?: TemplateBucketConfig
+  readonly deploymentConfig: DeploymentConfig
   readonly capabilities?: ReadonlyArray<StackCapability>
   readonly stackPolicy?: StackPolicyBody
   readonly stackPolicyDuringUpdate?: StackPolicyBody
@@ -98,6 +100,7 @@ export const createStandardStack = (
     stackPolicy,
     stackPolicyDuringUpdate,
     schemas,
+    deploymentConfig,
   } = props
 
   const getClient = async () =>
@@ -132,6 +135,7 @@ export const createStandardStack = (
     template,
     templateBucket,
     terminationProtection,
+    deploymentConfig,
     timeout,
     stackPolicy,
     stackPolicyDuringUpdate,
