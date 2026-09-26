@@ -21,6 +21,7 @@ import { parseTemplate } from "./parse-template.js"
 import { parseTimeout } from "./parse-timeout.js"
 import { ParsedYamlDocument } from "../../utils/yaml.js"
 import { StandardStackConfig } from "../../config/standard-stack-config.js"
+import { parseDeploymentConfig } from "./parse-deployment-config.js"
 
 export const buildStandardStackConfig = (
   ctx: CommandContext,
@@ -80,5 +81,6 @@ export const buildStandardStackConfig = (
     inheritTags: parseOptionalBoolean(record.inheritTags),
     parameters: parseParameters(record.parameters),
     blueprint: parseOptionalString(record.blueprint),
+    deploymentConfig: parseDeploymentConfig(record.deploymentConfig),
   })
 }

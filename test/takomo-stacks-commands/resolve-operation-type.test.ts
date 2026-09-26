@@ -38,6 +38,10 @@ describe("#resolveOperationType", () => {
     expect(resolveOperationType("UPDATE_COMPLETE")).toBe("UPDATE")
   })
 
+  test("when UPDATE_FAILED is given returns UPDATE", () => {
+    expect(resolveOperationType("UPDATE_FAILED")).toBe("UPDATE")
+  })
+
   test("when UPDATE_ROLLBACK_COMPLETE is given returns UPDATE", () => {
     expect(resolveOperationType("UPDATE_ROLLBACK_COMPLETE")).toBe("UPDATE")
   })

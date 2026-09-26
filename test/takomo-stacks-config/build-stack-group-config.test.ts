@@ -23,6 +23,7 @@ const emptyStackGroupConfig = {
   stackPolicyDuringUpdate: undefined,
   schemas: undefined,
   inheritTags: true,
+  deploymentConfig: undefined,
 }
 
 const ctx: CommandContext = {
@@ -92,6 +93,18 @@ describe("#buildStackGroupConfig", () => {
       capabilities: undefined,
       ignore: undefined,
       obsolete: undefined,
+      deploymentConfig: undefined,
+    })
+  })
+
+  test("deployment config", () => {
+    expect(
+      buildStackGroupConfig(ctx, {
+        deploymentConfig: { mode: "EXPRESS", disableRollback: true },
+      })._unsafeUnwrap(),
+    ).toStrictEqual({
+      ...emptyStackGroupConfig,
+      deploymentConfig: { mode: "EXPRESS", disableRollback: true },
     })
   })
 })

@@ -1,0 +1,10 @@
+Description: IT - deployment config
+Parameters:
+  DisplayName:
+    Type: String
+
+Resources:
+  Topic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Ref DisplayName

@@ -28,4 +28,5 @@ export const createStackGroupFromParent = (
     stackPolicy: parent.stackPolicy,
     stackPolicyDuringUpdate: parent.stackPolicyDuringUpdate,
     schemas: parent.schemas,
+    deploymentConfig: parent.deploymentConfig,
   })

@@ -1,0 +1,7 @@
+commandRole: arn:aws:iam::{{ var.ACCOUNT_1_ID }}:role/OrganizationAccountAccessRole
+regions: eu-north-1
+template: update-failed.yml
+deploymentConfig:
+  disableRollback: true
+parameters:
+  CreateWaitCondition: {{ var.create_wait_condition }}

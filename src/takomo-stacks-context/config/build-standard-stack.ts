@@ -6,7 +6,7 @@ import {
 import { InternalCredentialManager } from "../../aws/common/credentials.js"
 import { IamRoleArn } from "../../aws/common/model.js"
 import { CommandPath } from "../../command/command-model.js"
-import { TemplateBucketConfig } from "../../common/model.js"
+import { DeploymentConfig, TemplateBucketConfig } from "../../common/model.js"
 import { TemplateConfig } from "../../config/common-config.js"
 import { InternalCommandContext } from "../../context/command-context.js"
 import { HookRegistry } from "../../hooks/hook-registry.js"
@@ -119,6 +119,26 @@ export const buildTemplateBucket = ({
   blueprint?.templateBucket ??
   stackGroup.templateBucket ??
   StackPropertyDefaults.templateBucket()
+
+export const buildDeploymentConfig = ({
+  stackConfig,
+  blueprint,
+  stackGroup,
+}: StandardStackPropBuilderProps): DeploymentConfig => {
+  const defaults = StackPropertyDefaults.deploymentConfig()
+  return {
+    mode:
+      stackConfig.deploymentConfig?.mode ??
+      blueprint?.deploymentConfig?.mode ??
+      stackGroup.deploymentConfig?.mode ??
+      defaults.mode,
+    disableRollback:
+      stackConfig.deploymentConfig?.disableRollback ??
+      blueprint?.deploymentConfig?.disableRollback ??
+      stackGroup.deploymentConfig?.disableRollback ??
+      defaults.disableRollback,
+  }
+}
 
 export const buildStackPolicyDuringUpdate = ({
   stackConfig,
@@ -247,6 +267,7 @@ export const buildStandardStack = async (
         const data = buildData(builderProps)
         const timeout = buildTimeout(builderProps)
         const templateBucket = buildTemplateBucket(builderProps)
+        const deploymentConfig = buildDeploymentConfig(builderProps)
         const dependencies = buildDependencies(builderProps)
 
         const props: StandardStackProps = {
@@ -277,6 +298,7 @@ export const buildStandardStack = async (
           data,
           logger: stackLogger,
           schemas,
+          deploymentConfig,
         }
 
         validateData(exactPath, schemas?.data ?? [], props.data)

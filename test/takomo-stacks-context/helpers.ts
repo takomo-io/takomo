@@ -9,7 +9,10 @@ import {
 } from "../../src/aws/cloudformation/model.js"
 import { InternalCredentialManager } from "../../src/aws/common/credentials.js"
 import { AccountId, Region, TagKey } from "../../src/aws/common/model.js"
-import { TemplateConfig } from "../../src/config/common-config.js"
+import {
+  DeploymentConfigObject,
+  TemplateConfig,
+} from "../../src/config/common-config.js"
 import { HookConfig } from "../../src/hooks/hook.js"
 import {
   StackGroup,
@@ -44,6 +47,7 @@ export interface CreateStackGroupProps {
   tags?: Map<TagKey, RawTagValue>
   data?: Record<string, any>
   hooks?: ReadonlyArray<HookConfig>
+  deploymentConfig?: DeploymentConfigObject
 }
 
 export const createStackGroup = (
@@ -159,6 +163,7 @@ export interface CreateStackConfigProps {
   depends?: ReadonlyArray<StackPath>
   data?: Record<string, any>
   hooks?: ReadonlyArray<HookConfig>
+  deploymentConfig?: DeploymentConfigObject
 }
 
 export const createStackConfig = (

@@ -67,6 +67,16 @@ export const populatePropertiesFromConfigFile = async (
     props.stackPolicyDuringUpdate = configFile.stackPolicyDuringUpdate
   }
 
+  if (configFile.deploymentConfig) {
+    props.deploymentConfig = {
+      mode:
+        configFile.deploymentConfig.mode ?? stackGroup.deploymentConfig?.mode,
+      disableRollback:
+        configFile.deploymentConfig.disableRollback ??
+        stackGroup.deploymentConfig?.disableRollback,
+    }
+  }
+
   if (configFile.timeout !== null) {
     props.timeout = configFile.timeout
   }

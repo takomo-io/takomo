@@ -26,3 +26,10 @@ export interface Variables {
   readonly context: ContextVars
   readonly [key: string]: unknown
 }
+
+export type DeploymentMode = "STANDARD" | "EXPRESS"
+
+export interface DeploymentConfig {
+  readonly mode: DeploymentMode
+  readonly disableRollback: boolean
+}

@@ -50,6 +50,7 @@ export type ActiveStackStatus =
   | "DELETE_IN_PROGRESS"
   | "DELETE_FAILED"
   | "UPDATE_IN_PROGRESS"
+  | "UPDATE_FAILED"
   | "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS"
   | "UPDATE_COMPLETE"
   | "UPDATE_ROLLBACK_IN_PROGRESS"
@@ -73,6 +74,7 @@ export const ACTIVE_STACK_STATUSES: ReadonlyArray<ActiveStackStatus> = [
   "DELETE_IN_PROGRESS",
   "DELETE_FAILED",
   "UPDATE_IN_PROGRESS",
+  "UPDATE_FAILED",
   "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
   "UPDATE_COMPLETE",
   "UPDATE_ROLLBACK_IN_PROGRESS",
@@ -101,9 +103,7 @@ export type EnableTerminationProtection = boolean
  * CloudFormation stack capability.
  */
 export type StackCapability =
-  | "CAPABILITY_IAM"
-  | "CAPABILITY_NAMED_IAM"
-  | "CAPABILITY_AUTO_EXPAND"
+  "CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND"
 
 /**
  * CloudFormation stack parameter key.
@@ -204,8 +204,7 @@ export interface CloudFormationStackSummary {
 /**
  * Detailed CloudFormation stack summary.
  */
-export interface DetailedCloudFormationStackSummary
-  extends CloudFormationStackSummary {
+export interface DetailedCloudFormationStackSummary extends CloudFormationStackSummary {
   readonly templateDescription: TemplateDescription
 }
 
@@ -240,8 +239,7 @@ export type StackPolicyBody = string
 /**
  * Detailed CloudFormation stack.
  */
-export interface DetailedCloudFormationStack
-  extends BaseCloudFormationStack<DetailedStackParameter> {
+export interface DetailedCloudFormationStack extends BaseCloudFormationStack<DetailedStackParameter> {
   readonly templateBody: TemplateBody
   readonly stackPolicyBody?: StackPolicyBody
 }
@@ -330,6 +328,7 @@ export const isTerminalResourceStatus = (status: ResourceStatus): boolean => {
     case "DELETE_COMPLETE":
     case "ROLLBACK_COMPLETE":
     case "UPDATE_COMPLETE":
+    case "UPDATE_FAILED":
     case "ROLLBACK_FAILED":
     case "CREATE_FAILED":
     case "DELETE_FAILED":
@@ -361,9 +360,7 @@ export type StackDriftDetectionId = string
 export type StackDriftDetectionStatusReason = string
 export type StackDriftStatus = "DRIFTED" | "IN_SYNC" | "UNKNOWN" | "NOT_CHECKED"
 export type StackDriftDetectionStatus =
-  | "DETECTION_IN_PROGRESS"
-  | "DETECTION_FAILED"
-  | "DETECTION_COMPLETE"
+  "DETECTION_IN_PROGRESS" | "DETECTION_FAILED" | "DETECTION_COMPLETE"
 
 export interface StackDriftDetectionStatusOutput {
   readonly stackId: StackId

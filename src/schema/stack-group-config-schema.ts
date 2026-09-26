@@ -19,6 +19,7 @@ export const createStackGroupConfigSchema = (
     accountId,
     accountIds,
     stackCapabilities,
+    deploymentConfig,
   } = createAwsSchemas({
     ...props,
   })
@@ -57,5 +58,6 @@ export const createStackGroupConfigSchema = (
     capabilities: stackCapabilities,
     stackPolicy: json,
     stackPolicyDuringUpdate: json,
+    deploymentConfig,
   })
 }

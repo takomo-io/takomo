@@ -3,6 +3,7 @@ import { uuid } from "../../../../../utils/strings.js"
 import { defaultCapabilities } from "../../../../command-model.js"
 import { StackOperationStep } from "../../../common/steps.js"
 import { UpdateStackHolder } from "../states.js"
+import { getNativeDeploymentConfig } from "./util.js"
 
 export const initiateStackUpdate: StackOperationStep<
   UpdateStackHolder
@@ -22,6 +23,7 @@ export const initiateStackUpdate: StackOperationStep<
   const templateLocation = templateS3Url ?? templateBody
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
   const capabilities = stack.capabilities?.slice() ?? defaultCapabilities
+  const deploymentConfig = getNativeDeploymentConfig(stack)
 
   // CloudFormation doesn't support removing of stack policy once it has been created.
   // As a workaround, when a stack policy is removed from the stack configuration, we
@@ -45,6 +47,7 @@ export const initiateStackUpdate: StackOperationStep<
     StackPolicyBody: stackPolicy,
     StackPolicyDuringUpdateBody: stack.stackPolicyDuringUpdate,
     [templateKey]: templateLocation,
+    DeploymentConfig: deploymentConfig,
   })
 
   if (hasChanges) {

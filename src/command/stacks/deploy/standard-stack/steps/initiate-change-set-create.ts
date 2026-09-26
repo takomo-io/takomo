@@ -6,6 +6,7 @@ import {
 } from "../../../../command-model.js"
 import { StackOperationStep } from "../../../common/steps.js"
 import { TemplateSummaryHolder } from "../states.js"
+import { getNativeDeploymentConfig } from "./util.js"
 
 export const resolveChangeSetType = (
   type: StackOperationType,
@@ -40,6 +41,7 @@ export const initiateChangeSetCreate: StackOperationStep<
   const changeSetType = resolveChangeSetType(operationType)
   const templateLocation = templateS3Url || templateBody
   const templateKey = templateS3Url ? "TemplateURL" : "TemplateBody"
+  const deploymentConfig = getNativeDeploymentConfig(stack)
 
   logger.info("Create change set")
   logger.debugObject("Change set data:", {
@@ -61,6 +63,7 @@ export const initiateChangeSetCreate: StackOperationStep<
       UsePreviousValue: false,
     })),
     Tags: tags.map((t) => ({ Key: t.key, Value: t.value })),
+    DeploymentConfig: deploymentConfig,
   })
 
   logger.debug(`Change set created successfully with id ${changeSetId}`)

@@ -40,7 +40,7 @@ export interface StacksSchemas {
 export const createStacksSchemas = (
   props: CreateStacksSchemasProps,
 ): StacksSchemas => {
-  const awsSchema = createAwsSchemas(props)
+  const { parameterName } = createAwsSchemas(props)
 
   const timeoutInMinutes = Joi.number().integer().min(0)
 
@@ -176,7 +176,7 @@ export const createStacksSchemas = (
     resolverParameterValue.optional(),
   )
 
-  const parameters = Joi.object().pattern(awsSchema.parameterName, [
+  const parameters = Joi.object().pattern(parameterName, [
     staticStringParameterValue,
     staticNumberParameterValue,
     staticBooleanParameterValue,

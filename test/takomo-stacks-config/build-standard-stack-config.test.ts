@@ -27,6 +27,7 @@ const emptyStackConfig = {
   inheritTags: undefined,
   blueprint: undefined,
   stackType: "standard",
+  deploymentConfig: undefined,
 }
 
 const ctx: CommandContext = {
@@ -56,5 +57,31 @@ describe("#buildStandardStackConfig", () => {
     expect(
       buildStandardStackConfig(ctx, {}, "stack")._unsafeUnwrap(),
     ).toStrictEqual(emptyStackConfig)
+  })
+
+  test("deployment config", () => {
+    expect(
+      buildStandardStackConfig(
+        ctx,
+        { deploymentConfig: { mode: "EXPRESS", disableRollback: true } },
+        "stack",
+      )._unsafeUnwrap(),
+    ).toStrictEqual({
+      ...emptyStackConfig,
+      deploymentConfig: { mode: "EXPRESS", disableRollback: true },
+    })
+  })
+
+  test("partial deployment config", () => {
+    expect(
+      buildStandardStackConfig(
+        ctx,
+        { deploymentConfig: { mode: "EXPRESS" } },
+        "stack",
+      )._unsafeUnwrap(),
+    ).toStrictEqual({
+      ...emptyStackConfig,
+      deploymentConfig: { mode: "EXPRESS", disableRollback: undefined },
+    })
   })
 })

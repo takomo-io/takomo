@@ -1,0 +1,33 @@
+#
+# Simulate a failing update with a wait condition that is never
+# signaled. The stack has rollback disabled, so a failed update
+# leaves it in UPDATE_FAILED status.
+#
+
+Description: IT - update failed
+Parameters:
+  CreateWaitCondition:
+    Type: String
+    Description: Create wait condition that fails
+    AllowedValues:
+      - false
+      - true
+
+Conditions:
+  WaitConditionEnabled: !Equals [ !Ref CreateWaitCondition, true ]
+
+Resources:
+  Topic:
+    Type: AWS::SNS::Topic
+
+  WaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    Condition: WaitConditionEnabled
+
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    Condition: WaitConditionEnabled
+    Properties:
+      Handle: !Ref WaitHandle
+      Timeout: 30
+      Count: 1
