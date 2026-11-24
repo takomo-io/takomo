@@ -32,10 +32,10 @@ export const createScheduler = ({
     concurrency,
     intervalCap,
     interval: intervalInMillis,
-    carryoverConcurrencyCount: true,
+    carryoverIntervalCount: true,
   })
 
-  queue.on("active", () => {
+  queue.addEventListener("active", () => {
     logger.debug(
       `Executor ${id}, size: ${queue.size}, pending: ${queue.pending}`,
     )
